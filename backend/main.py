@@ -1,4 +1,5 @@
 """Main FastAPI Application for Screened."""
+import json
 import logging
 import time
 from pathlib import Path
@@ -21,6 +22,7 @@ from backend.models import (
     ScoutResponse,
     TestPipelineRequest,
     TestPipelineResponse,
+    ChatRequest,
 )
 from backend.db.firestore import db
 from backend.tools.parallel_search import ParallelSearchTool
@@ -29,8 +31,10 @@ from backend.services.approval_service import approval_service
 from backend.services.export_service import export_service
 from backend.agents.outreach_drafter import OutreachDrafterAgent
 from backend.agents.opportunity_scout import OpportunityScoutAgent
+from backend.agents.producer_desk import producer_desk_agent
 from backend.orchestrator.events import broadcaster, EventType
 from backend.orchestrator.state_machine import orchestrator
+
 
 logging.basicConfig(
     level=logging.INFO,
@@ -151,7 +155,32 @@ async def stream_investigation_events(investigation_id: str):
     )
 
 
+# --- Conversational Producer Desk Streaming Chat Endpoint ---
+
+@app.post("/api/chat")
+async def chat_with_producer_desk(req: ChatRequest):
+    """Conversational endpoint streaming agent reasoning and embedded Function Calling tools."""
+    async def event_generator():
+        try:
+            async for event in producer_desk_agent.process_chat(req):
+                yield f"data: {json.dumps(event)}\n\n"
+        except Exception as e:
+            logger.error(f"Chat streaming error: {e}", exc_info=True)
+            yield f"data: {json.dumps({'type': 'ERROR', 'error': str(e)})}\n\n"
+
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )
+
+
 # --- Milestone M4: Opportunity Scout Endpoint ---
+
 
 @app.post("/api/scout", response_model=ScoutResponse)
 async def scout_festival_opportunities(req: ScoutRequest):

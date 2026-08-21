@@ -10,7 +10,8 @@ export type DetailDensity = 'SUMMARY' | 'STANDARD' | 'EVIDENCE';
 
 export type ApprovalStatus = 'PENDING_APPROVAL' | 'APPROVED' | 'REJECTED' | 'EXECUTED_SANDBOX';
 
-export type ActiveTool = 'DUE_DILIGENCE' | 'OPPORTUNITY_SCOUT';
+export type ActiveTool = 'CONVERSATIONAL_DESK' | 'DUE_DILIGENCE' | 'OPPORTUNITY_SCOUT' | 'DESIGN_PLAYGROUND';
+
 
 export type FilmFormat = 'SHORT' | 'FEATURE' | 'DOCUMENTARY' | 'ANIMATION' | 'EPISODIC';
 

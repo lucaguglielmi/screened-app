@@ -7,6 +7,7 @@ from .contradiction_analyst import ContradictionAnalystAgent, DisputeRecord
 from .report_writer import ReportWriterAgent, DossierReport
 from .outreach_drafter import OutreachDrafterAgent, compute_payload_hash
 from .opportunity_scout import OpportunityScoutAgent
+from .producer_desk import ProducerDeskAgent, producer_desk_agent
 
 __all__ = [
     "DisambiguatorAgent",
@@ -25,4 +26,7 @@ __all__ = [
     "OutreachDrafterAgent",
     "compute_payload_hash",
     "OpportunityScoutAgent",
+    "ProducerDeskAgent",
+    "producer_desk_agent",
 ]
+

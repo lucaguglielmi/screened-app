@@ -29,7 +29,11 @@ import { EvidenceDossier } from './components/EvidenceDossier';
 import { OutreachModal } from './components/OutreachModal';
 import { OpportunityScout } from './components/OpportunityScout';
 import { KeyboardHelpModal } from './components/KeyboardHelpModal';
+import { ChatContainer } from './components/chat/ChatContainer';
+import { DesignPlayground } from './components/playground/DesignPlayground';
+import { FilmProfile } from './types/investigation';
 import { isSoundMuted, setSoundMuted, playSuccessChime } from './utils/audio';
+
 
 const SPOTLIGHT_PRESETS = [
   {
@@ -80,8 +84,10 @@ export default function App() {
     }
   });
 
-  const [activeTool, setActiveTool] = useState<ActiveTool>('DUE_DILIGENCE');
+  const [activeTool, setActiveTool] = useState<ActiveTool>('CONVERSATIONAL_DESK');
+  const [initialScoutProfile, setInitialScoutProfile] = useState<FilmProfile | undefined>(undefined);
   const [query, setQuery] = useState('Aldergate Film Festival');
+
   const [optionalUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -343,7 +349,9 @@ export default function App() {
     setError(null);
     setOutreachDraft(null);
     setIsOutreachOpen(false);
+    setActiveTool('CONVERSATIONAL_DESK');
   };
+
 
   const handleDeepScreen = (festivalName: string) => {
     setActiveTool('DUE_DILIGENCE');
@@ -351,6 +359,12 @@ export default function App() {
     handleReset();
     handleStartInvestigation(festivalName);
   };
+
+  const handleScoutLaunch = (profile: FilmProfile) => {
+    setInitialScoutProfile(profile);
+    setActiveTool('OPPORTUNITY_SCOUT');
+  };
+
 
   const currentStatus = investigation?.status || 'DRAFT';
 
@@ -427,13 +441,30 @@ export default function App() {
           </div>
         )}
 
-        {/* View 1: Opportunity Scout */}
-        {activeTool === 'OPPORTUNITY_SCOUT' && (
-          <OpportunityScout onDeepScreen={handleDeepScreen} />
+        {/* View 1: Conversational Producer Desk (Home) */}
+        {activeTool === 'CONVERSATIONAL_DESK' && (
+          <ChatContainer
+            onLaunchDueDiligence={handleDeepScreen}
+            onLaunchOpportunityScout={handleScoutLaunch}
+          />
         )}
 
-        {/* View 2: Due Diligence */}
+        {/* View 2: Design Playground */}
+        {activeTool === 'DESIGN_PLAYGROUND' && (
+          <DesignPlayground />
+        )}
+
+        {/* View 3: Opportunity Scout */}
+        {activeTool === 'OPPORTUNITY_SCOUT' && (
+          <OpportunityScout
+            onDeepScreen={handleDeepScreen}
+            initialProfile={initialScoutProfile}
+          />
+        )}
+
+        {/* View 4: Due Diligence */}
         {activeTool === 'DUE_DILIGENCE' && (
+
           <>
             {!investigation && (
               <div className="space-y-12">

@@ -17,10 +17,11 @@ import { motion } from 'motion/react';
 
 interface Props {
   onDeepScreen: (festivalName: string) => void;
+  initialProfile?: FilmProfile;
 }
 
-export const OpportunityScout: React.FC<Props> = ({ onDeepScreen }) => {
-  const [profile, setProfile] = useState<FilmProfile>({
+export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile }) => {
+  const [profile, setProfile] = useState<FilmProfile>(() => initialProfile || {
     title: 'The Silent Echo',
     format: 'SHORT',
     genre: 'Drama',
@@ -34,6 +35,33 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen }) => {
   const [error, setError] = useState<string | null>(null);
   const [scoutResult, setScoutResult] = useState<ScoutResponse | null>(null);
   const [filterTag, setFilterTag] = useState<string>('ALL');
+
+  React.useEffect(() => {
+    if (initialProfile) {
+      setProfile(initialProfile);
+      executeScout(initialProfile);
+    }
+  }, [initialProfile]);
+
+  const executeScout = async (targetProfile: FilmProfile) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch('/api/scout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ profile: targetProfile }),
+      });
+      if (!res.ok) throw new Error('Scout request failed');
+      const data: ScoutResponse = await res.json();
+      setScoutResult(data);
+    } catch (err: any) {
+      setError(err.message || 'Failed to scout opportunities');
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   const handleScout = async (e: React.FormEvent) => {
     e.preventDefault();

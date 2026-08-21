@@ -79,3 +79,9 @@ export const playSuccessChime = () => {
     // Ignore audio errors
   }
 };
+
+export const soundEffects = {
+  playClick: playDialClick,
+  playSuccess: playSuccessChime,
+};
+

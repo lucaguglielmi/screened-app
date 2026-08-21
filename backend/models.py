@@ -1,7 +1,7 @@
 """Canonical Pydantic models for Screened investigation data."""
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field
 import uuid
 
@@ -220,3 +220,58 @@ class TestPipelineResponse(BaseModel):
     extractedClaims: List[AtomicClaim]
     summaryNarrative: str
     durationSeconds: float
+
+
+# --- Conversational Producer Desk & Tool Models ---
+
+class ToolCallType(str, Enum):
+    CONFIGURE_DUE_DILIGENCE = "configure_due_diligence"
+    CONFIGURE_OPPORTUNITY_SCOUT = "configure_opportunity_scout"
+    COMPARE_FESTIVALS_ARENA = "compare_festivals_arena"
+
+
+class DueDiligenceToolArgs(BaseModel):
+    festival_name: str
+    optional_url: Optional[str] = None
+    suspected_concerns: List[str] = Field(default_factory=list)
+    preflight_summary: str
+
+
+class OpportunityScoutToolArgs(BaseModel):
+    film_title: str = "Untitled Film"
+    format: FilmFormat = FilmFormat.SHORT
+    genre: str = "Drama"
+    runtime_minutes: int = 15
+    premiere_goal: PremiereGoal = PremiereGoal.WORLD_PREMIERE
+    budget_tier: str = "Micro (< £50k)"
+    target_regions: List[str] = Field(default_factory=lambda: ["UK & Europe"])
+    strategy_rationale: str
+
+
+class CompareFestivalsToolArgs(BaseModel):
+    festival_a: str
+    festival_b: str
+    key_comparison_vectors: List[str] = Field(default_factory=list)
+    verdict_summary: str
+
+
+class ChatToolCall(BaseModel):
+    id: str = Field(default_factory=generate_uuid)
+    toolName: ToolCallType
+    args: Dict[str, Any] = Field(default_factory=dict)
+
+
+class ChatMessage(BaseModel):
+    id: str = Field(default_factory=generate_uuid)
+    role: str  # "user" | "assistant" | "system"
+    content: str
+    toolCall: Optional[ChatToolCall] = None
+    timestamp: str = Field(default_factory=get_current_iso)
+
+
+class ChatRequest(BaseModel):
+    message: str
+    conversationHistory: List[ChatMessage] = Field(default_factory=list)
+    attachedFileName: Optional[str] = None
+    attachedFileContent: Optional[str] = None
+
