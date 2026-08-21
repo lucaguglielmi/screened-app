@@ -83,7 +83,7 @@ export const LeftNavigation: React.FC<Props> = ({
   };
 
   return (
-    <aside className="relative flex flex-col items-center justify-between w-16 sm:w-20 min-h-screen py-4 sm:py-6 bg-[#070913] border-r border-[#1B2040] select-none z-40 shrink-0 text-slate-300">
+    <aside className="relative hidden md:flex flex-col items-center justify-between w-16 sm:w-20 min-h-screen py-4 sm:py-6 bg-[#070913] border-r border-[#1B2040] select-none z-40 shrink-0 text-slate-300">
       {/* Top Section: Logo & Workspace Selector */}
       <div className="flex flex-col items-center gap-4 w-full">
         {/* App Logo */}

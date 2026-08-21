@@ -1,4 +1,5 @@
 import React from 'react';
+import { AgentAvatar } from './AgentAvatar';
 
 interface AgentThinkingPillProps {
   label?: string;
@@ -8,16 +9,16 @@ export const AgentThinkingPill: React.FC<AgentThinkingPillProps> = ({
   label = 'Executive Producer is analyzing festival records...',
 }) => {
   return (
-    <div className="flex items-center gap-2.5 my-3 px-4 py-2 rounded-full border border-amber-500/30 bg-zinc-900/80 backdrop-blur-md w-fit shadow-md animate-pulse">
-      <div className="flex space-x-1 items-center">
-        <div className="w-2 h-2 rounded-full bg-amber-400 animate-bounce" style={{ animationDelay: '0ms' }} />
-        <div className="w-2 h-2 rounded-full bg-amber-400 animate-bounce" style={{ animationDelay: '150ms' }} />
-        <div className="w-2 h-2 rounded-full bg-amber-400 animate-bounce" style={{ animationDelay: '300ms' }} />
+    <div className="flex items-center gap-3 my-4 px-4 py-2.5 rounded-2xl border border-indigo-500/40 bg-[#0E1124]/90 backdrop-blur-xl w-fit shadow-xl shadow-indigo-950/40">
+      <AgentAvatar size="sm" isThinking={true} />
+      <div className="flex space-x-1.5 items-center">
+        <div className="size-2 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: '0ms' }} />
+        <div className="size-2 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: '150ms' }} />
+        <div className="size-2 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: '300ms' }} />
       </div>
-      <span className="text-sm font-medium text-amber-300/90 tracking-wide">
+      <span className="text-base font-medium text-indigo-200 tracking-wide font-sans">
         {label}
       </span>
     </div>
   );
 };
-

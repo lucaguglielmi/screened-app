@@ -12,7 +12,6 @@ import {
 } from 'lucide-react';
 import { motion } from 'motion/react';
 
-
 interface Props {
   status: InvestigationStatus;
   events: ActivityEvent[];
@@ -83,27 +82,27 @@ export const LiveProgress: React.FC<Props> = ({
       className="max-w-4xl mx-auto space-y-6"
     >
       {/* Header Banner */}
-      <div className="p-6 rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+      <div className="p-6 sm:p-8 rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm">
+        <div className="space-y-1.5">
+          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#00D29E]">
             <Loader2 className="size-3.5 animate-spin" />
             <span>Autonomous Multi-Agent Pipeline Active</span>
           </div>
-          <h2 className="font-serif text-xl sm:text-2xl font-semibold text-paper-text dark:text-darkroom-text">
+          <h2 className="font-serif text-2xl sm:text-3xl font-bold text-paper-text dark:text-darkroom-text">
             Investigating {festivalName}
           </h2>
-          <p className="text-xs text-paper-muted dark:text-darkroom-muted">
+          <p className="text-base text-paper-muted dark:text-darkroom-muted leading-relaxed">
             Executing live Parallel Search API calls and Gemini claim extraction across 3 domains.
           </p>
         </div>
 
-        <div className="px-3 py-1.5 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-xs font-mono">
+        <div className="px-3.5 py-1.5 rounded-xl bg-[#00D29E]/15 border border-[#00D29E]/30 text-[#00D29E] text-xs font-mono font-semibold">
           State: {status}
         </div>
       </div>
 
       {/* Agents Multi-Card Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3.5">
         {AGENTS.map((agent, idx) => {
           const isActive = agent.activeStatus.includes(status);
           const isDone = 
@@ -116,30 +115,30 @@ export const LiveProgress: React.FC<Props> = ({
           return (
             <div
               key={idx}
-              className={`p-3.5 rounded-xl border transition-all ${
+              className={`p-4 rounded-2xl border transition-all ${
                 isActive
-                  ? 'border-indigo-600 bg-indigo-500/5 dark:border-indigo-500 dark:bg-indigo-500/10 shadow-sm'
+                  ? 'border-[#00D29E] bg-[#00D29E]/10 dark:border-[#00D29E] dark:bg-[#00D29E]/10 shadow-md'
                   : 'border-paper-border dark:border-darkroom-border bg-paper-card/50 dark:bg-darkroom-card/50 opacity-75'
               }`}
             >
               <div className="flex items-center justify-between">
-                <div className={`p-1.5 rounded-lg ${isActive ? 'bg-indigo-600 text-white' : 'bg-neutral-500/10 text-neutral-500'}`}>
-                  <Icon className="size-4" />
+                <div className={`p-2 rounded-xl ${isActive ? 'bg-[#00D29E] text-slate-950 shadow-md shadow-[#00D29E]/30' : 'bg-neutral-500/10 text-neutral-400'}`}>
+                  <Icon className="size-4.5" />
                 </div>
                 {isActive ? (
-                  <span className="size-2 rounded-full bg-indigo-600 dark:bg-indigo-400 animate-pulse" />
+                  <span className="size-2.5 rounded-full bg-[#00D29E] animate-pulse" />
                 ) : isDone ? (
-                  <CheckCircle2 className="size-3.5 text-emerald-500" />
+                  <CheckCircle2 className="size-4 text-[#00D29E]" />
                 ) : (
                   <span className="size-2 rounded-full bg-neutral-300 dark:bg-neutral-700" />
                 )}
               </div>
 
-              <div className="mt-2.5">
-                <div className="font-serif font-medium text-xs text-paper-text dark:text-darkroom-text truncate">
+              <div className="mt-3">
+                <div className="font-serif font-bold text-sm text-paper-text dark:text-darkroom-text truncate">
                   {agent.name}
                 </div>
-                <div className="text-[10px] font-mono text-paper-muted dark:text-darkroom-muted truncate">
+                <div className="text-xs font-mono text-paper-muted dark:text-darkroom-muted truncate">
                   {agent.role}
                 </div>
               </div>
@@ -149,29 +148,29 @@ export const LiveProgress: React.FC<Props> = ({
       </div>
 
       {/* Live SSE Activity Stream Console */}
-      <div className="rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border overflow-hidden">
+      <div className="rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border overflow-hidden shadow-sm">
         <div className="p-4 border-b border-paper-border dark:border-darkroom-border flex items-center justify-between">
-          <span className="font-mono text-xs uppercase tracking-wider text-paper-muted dark:text-darkroom-muted flex items-center gap-2">
-            <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="font-mono text-xs uppercase tracking-wider text-paper-muted dark:text-darkroom-muted flex items-center gap-2 font-semibold">
+            <span className="size-2 rounded-full bg-[#00D29E] animate-pulse" />
             Live Activity Stream (SSE)
           </span>
-          <span className="text-[11px] font-mono text-paper-muted dark:text-darkroom-muted">
+          <span className="text-xs font-mono text-paper-muted dark:text-darkroom-muted">
             {events.length} events logged
           </span>
         </div>
 
-        <div className="p-4 max-h-64 overflow-y-auto space-y-2.5 text-xs font-mono">
+        <div className="p-4 max-h-64 overflow-y-auto space-y-2.5 text-sm font-mono">
           {events.length === 0 ? (
-            <div className="text-paper-muted dark:text-darkroom-muted text-center py-6">
+            <div className="text-paper-muted dark:text-darkroom-muted text-center py-6 text-sm">
               Awaiting agent events...
             </div>
           ) : (
             events.map((evt, idx) => (
               <div key={idx} className="flex items-start gap-2.5 leading-relaxed">
-                <span className="text-paper-muted dark:text-darkroom-muted text-[10px] shrink-0 pt-0.5">
+                <span className="text-paper-muted dark:text-darkroom-muted text-xs shrink-0 pt-0.5">
                   {evt.timestamp ? new Date(evt.timestamp).toLocaleTimeString() : ''}
                 </span>
-                <span className="text-indigo-600 dark:text-indigo-400 font-semibold shrink-0">
+                <span className="text-[#00D29E] font-semibold shrink-0">
                   [{evt.agentName}]
                 </span>
                 <span className="text-paper-text dark:text-darkroom-text flex-1">

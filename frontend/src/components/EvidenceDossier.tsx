@@ -258,7 +258,7 @@ export const EvidenceDossier: React.FC<Props> = ({
             <Layers className="size-4" />
             <span>Festival Profile</span>
           </div>
-          <p className="text-xs sm:text-sm text-paper-text dark:text-darkroom-text leading-relaxed">
+          <p className="text-base text-paper-text dark:text-darkroom-text leading-relaxed">
             {dossier.festivalOverview}
           </p>
         </div>
@@ -269,7 +269,7 @@ export const EvidenceDossier: React.FC<Props> = ({
             <Building2 className="size-4" />
             <span>Organizer Profile</span>
           </div>
-          <p className="text-xs sm:text-sm text-paper-text dark:text-darkroom-text leading-relaxed">
+          <p className="text-base text-paper-text dark:text-darkroom-text leading-relaxed">
             {dossier.organizerProfile}
           </p>
         </div>
@@ -280,7 +280,7 @@ export const EvidenceDossier: React.FC<Props> = ({
             <Users className="size-4" />
             <span>Community Accounts</span>
           </div>
-          <p className="text-xs sm:text-sm text-paper-text dark:text-darkroom-text leading-relaxed">
+          <p className="text-base text-paper-text dark:text-darkroom-text leading-relaxed">
             {dossier.participantFeedback}
           </p>
         </div>
@@ -352,7 +352,7 @@ export const EvidenceDossier: React.FC<Props> = ({
                             </span>
                           )}
                         </div>
-                        <div className="text-sm font-medium text-paper-text dark:text-darkroom-text">
+                        <div className="text-base font-medium text-paper-text dark:text-darkroom-text leading-relaxed">
                           {claim.statement}
                         </div>
 
@@ -433,14 +433,14 @@ export const EvidenceDossier: React.FC<Props> = ({
       {/* Filmmaker Checklist & Unresolved Questions */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Due Diligence Checklist */}
-        <div className="p-5 rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border space-y-3">
+        <div className="p-6 rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border space-y-4">
           <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-emerald-600 dark:text-emerald-400 border-b border-paper-border dark:border-darkroom-border pb-2">
             <ListChecks className="size-4" />
             <span>Filmmaker Action Checklist</span>
           </div>
-          <ul className="space-y-2 text-xs sm:text-sm text-paper-text dark:text-darkroom-text">
+          <ul className="space-y-3 text-base text-paper-text dark:text-darkroom-text">
             {dossier.filmmakerChecklist.map((item, idx) => (
-              <li key={idx} className="flex items-start gap-2">
+              <li key={idx} className="flex items-start gap-2.5 leading-relaxed">
                 <span className="font-mono text-emerald-500 font-bold">[{idx + 1}]</span>
                 <span>{item}</span>
               </li>
@@ -449,14 +449,14 @@ export const EvidenceDossier: React.FC<Props> = ({
         </div>
 
         {/* Unresolved Questions */}
-        <div className="p-5 rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border space-y-3">
+        <div className="p-6 rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border space-y-4">
           <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-amber-600 dark:text-amber-400 border-b border-paper-border dark:border-darkroom-border pb-2">
             <HelpCircle className="size-4" />
             <span>Unresolved Questions</span>
           </div>
-          <ul className="space-y-2 text-xs sm:text-sm text-paper-text dark:text-darkroom-text">
+          <ul className="space-y-3 text-base text-paper-text dark:text-darkroom-text">
             {dossier.unresolvedQuestions.map((q, idx) => (
-              <li key={idx} className="flex items-start gap-2">
+              <li key={idx} className="flex items-start gap-2.5 leading-relaxed">
                 <span className="font-mono text-amber-500 font-bold">•</span>
                 <span>{q}</span>
               </li>

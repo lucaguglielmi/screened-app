@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { Paperclip, ArrowUp, Loader2, Sparkles } from 'lucide-react';
 import { soundEffects } from '../../utils/audio';
 
 interface ChatPromptBarProps {
@@ -52,23 +53,23 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
     <div className="w-full max-w-4xl mx-auto relative">
       {/* Drag & Drop overlay */}
       {isDragging && (
-        <div className="absolute inset-0 z-30 flex items-center justify-center rounded-2xl border-2 border-dashed border-amber-500 bg-zinc-950/90 backdrop-blur-md">
-          <div className="text-center text-amber-400">
-            <span className="text-3xl">📄</span>
-            <p className="mt-2 text-sm font-semibold">Drop PDF script synopsis or festival email</p>
+        <div className="absolute inset-0 z-30 flex items-center justify-center rounded-2xl border-2 border-dashed border-[#2018E6] bg-[#070913]/95 backdrop-blur-md">
+          <div className="text-center text-indigo-300">
+            <Sparkles className="size-8 mx-auto text-[#2018E6] animate-bounce" />
+            <p className="mt-2 text-base font-semibold">Drop PDF script synopsis or festival email</p>
           </div>
         </div>
       )}
 
       {/* Attached file chip */}
       {attachedFile && (
-        <div className="mb-2 flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs w-fit">
-          <span>📎</span>
+        <div className="mb-2 flex items-center gap-2 px-3 py-1.5 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-sm w-fit">
+          <Paperclip className="size-4 text-indigo-400" />
           <span className="font-medium truncate max-w-xs">{attachedFile.name}</span>
           <button
             type="button"
             onClick={() => setAttachedFile(null)}
-            className="ml-1 text-zinc-400 hover:text-white cursor-pointer"
+            className="ml-1 text-slate-400 hover:text-white cursor-pointer"
           >
             ✕
           </button>
@@ -81,7 +82,7 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
         onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
-        className="relative flex items-center rounded-2xl border border-zinc-700/80 bg-zinc-900/90 shadow-2xl backdrop-blur-xl focus-within:border-amber-500/70 focus-within:ring-2 focus-within:ring-amber-500/20 transition-all p-2"
+        className="relative flex items-center rounded-2xl border border-[#22274C] bg-[#0E1124]/95 shadow-2xl backdrop-blur-xl focus-within:border-[#2018E6]/80 focus-within:ring-2 focus-within:ring-[#2018E6]/20 transition-all p-2 gap-2"
       >
         <input
           type="file"
@@ -100,9 +101,9 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
           type="button"
           onClick={() => fileInputRef.current?.click()}
           title="Attach script synopsis or festival email"
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-zinc-400 hover:bg-zinc-800 hover:text-amber-400 transition-colors cursor-pointer"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-slate-400 hover:bg-[#151936] hover:text-indigo-400 transition-colors cursor-pointer"
         >
-          📎
+          <Paperclip className="size-5" />
         </button>
 
         {/* Text Input */}
@@ -111,29 +112,28 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask The Producer Desk about a festival, submission strategy, or paste an email..."
-          className="w-full bg-transparent px-3 py-2 text-base text-zinc-100 placeholder-zinc-500 focus:outline-none"
+          className="w-full bg-transparent px-3 py-2 text-base text-slate-100 placeholder-slate-400 focus:outline-none"
         />
 
         {/* Submit Button */}
         <button
           type="submit"
           disabled={isLoading || (!input.trim() && !attachedFile)}
-          className="flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-5 text-sm font-semibold text-zinc-950 shadow-md transition-all hover:brightness-110 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shrink-0"
+          className="flex h-11 items-center gap-2 rounded-xl bg-[#2018E6] hover:bg-[#1A13C7] px-5 text-base font-semibold text-white shadow-md shadow-[#2018E6]/30 transition-all hover:brightness-110 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shrink-0"
         >
           {isLoading ? (
-            <span className="flex items-center gap-1.5 text-sm">
-              <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-zinc-950 border-t-transparent" />
-              Thinking...
+            <span className="flex items-center gap-2 text-base">
+              <Loader2 className="size-4 animate-spin text-white" />
+              <span>Thinking...</span>
             </span>
           ) : (
             <>
-              <span className="text-sm font-semibold">Send</span>
-              <span className="text-zinc-900 font-bold text-base">↵</span>
+              <span className="text-base font-semibold">Send</span>
+              <ArrowUp className="size-4 text-white" />
             </>
           )}
         </button>
       </form>
     </div>
-
   );
 };

@@ -19,6 +19,7 @@ import {
   FilmProfile
 } from './types/investigation';
 import { LeftNavigation } from './components/navigation/LeftNavigation';
+import { MobileNavigation } from './components/navigation/MobileNavigation';
 import { EntityConfirmation } from './components/EntityConfirmation';
 import { LiveProgress } from './components/LiveProgress';
 import { EvidenceDossier } from './components/EvidenceDossier';
@@ -454,7 +455,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* Header Right: Command Palette Quick Trigger */}
+            {/* Header Right: Command Palette Quick Trigger & Mobile Navigation */}
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setIsCommandPaletteOpen(true)}
@@ -466,6 +467,18 @@ export default function App() {
                   <CommandIcon className="size-2.5" /> K
                 </span>
               </button>
+
+              {/* Mobile Menu Drawer Button */}
+              <MobileNavigation
+                activeTool={activeTool}
+                onChange={setActiveTool}
+                theme={theme}
+                onToggleTheme={toggleTheme}
+                soundMuted={soundMuted}
+                onToggleSound={toggleSound}
+                onOpenKeyboardHelp={() => setIsKeyboardHelpOpen(true)}
+                onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
+              />
             </div>
           </div>
         </header>
@@ -594,28 +607,28 @@ export default function App() {
                           onClick={() => { setQuery(preset.name); handleStartInvestigation(preset.name); }}
                           className="p-5 rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border hover:border-indigo-500/50 dark:hover:border-indigo-500/50 hover:shadow-md transition-all cursor-pointer space-y-3 group flex flex-col justify-between"
                         >
-                          <div className="space-y-2">
+                          <div className="space-y-2.5">
                             <div className="flex items-center justify-between">
-                              <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
+                              <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-[#00D29E]/15 text-[#00D29E] border border-[#00D29E]/30">
                                 {preset.badge}
                               </span>
                               <span className="text-xs font-mono text-paper-muted dark:text-darkroom-muted">
                                 Est. {preset.year}
                               </span>
                             </div>
-                            <h3 className="font-serif text-lg font-semibold text-paper-text dark:text-darkroom-text group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                            <h3 className="font-serif text-xl font-bold text-paper-text dark:text-darkroom-text group-hover:text-[#00D29E] transition-colors">
                               {preset.name}
                             </h3>
-                            <div className="flex items-center gap-1.5 text-xs font-mono text-paper-muted dark:text-darkroom-muted">
-                              <MapPin className="size-3.5 text-indigo-500" />
+                            <div className="flex items-center gap-1.5 text-sm font-mono text-paper-muted dark:text-darkroom-muted">
+                              <MapPin className="size-3.5 text-[#00D29E]" />
                               <span>{preset.city}</span>
                             </div>
-                            <p className="text-sm text-paper-muted dark:text-darkroom-muted line-clamp-2 pt-1">
+                            <p className="text-base text-paper-muted dark:text-darkroom-muted line-clamp-2 pt-1 leading-relaxed">
                               {preset.desc}
                             </p>
                           </div>
 
-                          <div className="pt-3 border-t border-paper-border dark:border-darkroom-border flex items-center justify-between text-xs font-mono text-indigo-600 dark:text-indigo-400">
+                          <div className="pt-3 border-t border-paper-border dark:border-darkroom-border flex items-center justify-between text-sm font-mono font-semibold text-[#00D29E]">
                             <span>Run Due Diligence</span>
                             <ShieldCheck className="size-4 group-hover:translate-x-1 transition-transform" />
                           </div>

@@ -12,7 +12,6 @@ import {
   Film, 
   Loader2 
 } from 'lucide-react';
-
 import { motion } from 'motion/react';
 
 interface Props {
@@ -62,7 +61,6 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
     }
   };
 
-
   const handleScout = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -100,14 +98,14 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
     <div className="space-y-8">
       {/* Header & Hero */}
       <section className="text-center max-w-2xl mx-auto space-y-3">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-[#F43F5E]/15 text-[#F43F5E] border border-[#F43F5E]/30">
           <Compass className="size-3.5" />
           <span>Strategic Festival Scouting</span>
         </div>
-        <h1 className="font-serif text-3xl sm:text-4xl font-semibold tracking-tight text-paper-text dark:text-darkroom-text">
+        <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-paper-text dark:text-darkroom-text">
           Find matching festivals for your film.
         </h1>
-        <p className="text-sm text-paper-muted dark:text-darkroom-muted leading-relaxed">
+        <p className="text-base text-paper-muted dark:text-darkroom-muted leading-relaxed">
           Screened scans open call-for-entries, deadlines, qualification lists (BAFTA/BIFA/Oscar), and fee schedules matching your specific runtime and premiere goals.
         </p>
       </section>
@@ -115,39 +113,39 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
       {/* Film Profile Intake Form */}
       <form
         onSubmit={handleScout}
-        className="max-w-3xl mx-auto p-6 rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border shadow-sm space-y-5"
+        className="max-w-3xl mx-auto p-6 sm:p-8 rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border shadow-sm space-y-6"
       >
-        <div className="flex items-center gap-2 border-b border-paper-border dark:border-darkroom-border pb-3">
-          <Film className="size-4 text-indigo-500" />
-          <h2 className="font-serif text-base font-semibold text-paper-text dark:text-darkroom-text">
+        <div className="flex items-center gap-2.5 border-b border-paper-border dark:border-darkroom-border pb-3">
+          <Film className="size-5 text-[#F43F5E]" />
+          <h2 className="font-serif text-lg font-semibold text-paper-text dark:text-darkroom-text">
             Film Profile & Premiere Strategy
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-sm">
           {/* Film Title */}
-          <div className="space-y-1">
-            <label className="font-mono uppercase text-paper-muted dark:text-darkroom-muted">
+          <div className="space-y-1.5">
+            <label className="font-semibold text-paper-text dark:text-darkroom-text">
               Film Title
             </label>
             <input
               type="text"
               value={profile.title}
               onChange={(e) => setProfile({ ...profile, title: e.target.value })}
-              className="w-full px-3 py-2 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-paper-text dark:text-darkroom-text focus:outline-none"
+              className="w-full px-4 py-2.5 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-base text-paper-text dark:text-darkroom-text focus:outline-none focus:border-[#F43F5E]"
               required
             />
           </div>
 
           {/* Format */}
-          <div className="space-y-1">
-            <label className="font-mono uppercase text-paper-muted dark:text-darkroom-muted">
+          <div className="space-y-1.5">
+            <label className="font-semibold text-paper-text dark:text-darkroom-text">
               Format
             </label>
             <select
               value={profile.format}
               onChange={(e) => setProfile({ ...profile, format: e.target.value as FilmFormat })}
-              className="w-full px-3 py-2 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-paper-text dark:text-darkroom-text focus:outline-none"
+              className="w-full px-4 py-2.5 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-base text-paper-text dark:text-darkroom-text focus:outline-none focus:border-[#F43F5E]"
             >
               <option value="SHORT">Short Film (&lt; 40 min)</option>
               <option value="FEATURE">Feature Narrative (&gt; 60 min)</option>
@@ -158,8 +156,8 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
           </div>
 
           {/* Genre */}
-          <div className="space-y-1">
-            <label className="font-mono uppercase text-paper-muted dark:text-darkroom-muted">
+          <div className="space-y-1.5">
+            <label className="font-semibold text-paper-text dark:text-darkroom-text">
               Primary Genre
             </label>
             <input
@@ -167,14 +165,14 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
               value={profile.genre}
               onChange={(e) => setProfile({ ...profile, genre: e.target.value })}
               placeholder="e.g. Drama, Thriller, Sci-Fi, Horror"
-              className="w-full px-3 py-2 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-paper-text dark:text-darkroom-text focus:outline-none"
+              className="w-full px-4 py-2.5 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-base text-paper-text dark:text-darkroom-text focus:outline-none focus:border-[#F43F5E]"
               required
             />
           </div>
 
           {/* Runtime */}
-          <div className="space-y-1">
-            <label className="font-mono uppercase text-paper-muted dark:text-darkroom-muted">
+          <div className="space-y-1.5">
+            <label className="font-semibold text-paper-text dark:text-darkroom-text">
               Runtime (Minutes)
             </label>
             <input
@@ -183,20 +181,20 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
               max={300}
               value={profile.runtimeMinutes}
               onChange={(e) => setProfile({ ...profile, runtimeMinutes: parseInt(e.target.value) || 1 })}
-              className="w-full px-3 py-2 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-paper-text dark:text-darkroom-text focus:outline-none"
+              className="w-full px-4 py-2.5 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-base text-paper-text dark:text-darkroom-text focus:outline-none focus:border-[#F43F5E]"
               required
             />
           </div>
 
           {/* Premiere Goal */}
-          <div className="space-y-1">
-            <label className="font-mono uppercase text-paper-muted dark:text-darkroom-muted">
+          <div className="space-y-1.5">
+            <label className="font-semibold text-paper-text dark:text-darkroom-text">
               Target Premiere Status
             </label>
             <select
               value={profile.premiereGoal}
               onChange={(e) => setProfile({ ...profile, premiereGoal: e.target.value as PremiereGoal })}
-              className="w-full px-3 py-2 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-paper-text dark:text-darkroom-text focus:outline-none"
+              className="w-full px-4 py-2.5 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-base text-paper-text dark:text-darkroom-text focus:outline-none focus:border-[#F43F5E]"
             >
               <option value="WORLD_PREMIERE">World Premiere Required</option>
               <option value="INTERNATIONAL_PREMIERE">International Premiere</option>
@@ -206,14 +204,14 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
           </div>
 
           {/* Target Regions */}
-          <div className="space-y-1">
-            <label className="font-mono uppercase text-paper-muted dark:text-darkroom-muted">
+          <div className="space-y-1.5">
+            <label className="font-semibold text-paper-text dark:text-darkroom-text">
               Target Submission Region
             </label>
             <select
               value={profile.targetRegions[0] || 'UK & Europe'}
               onChange={(e) => setProfile({ ...profile, targetRegions: [e.target.value] })}
-              className="w-full px-3 py-2 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-paper-text dark:text-darkroom-text focus:outline-none"
+              className="w-full px-4 py-2.5 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-base text-paper-text dark:text-darkroom-text focus:outline-none focus:border-[#F43F5E]"
             >
               <option value="UK & Europe">UK & Europe</option>
               <option value="North America">North America (US & Canada)</option>
@@ -223,20 +221,20 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
         </div>
 
         {/* Submit Action Button */}
-        <div className="pt-2">
+        <div className="pt-3">
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-medium text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-sm cursor-pointer"
+            className="w-full py-3.5 rounded-xl bg-[#F43F5E] hover:bg-[#E11D48] disabled:opacity-50 text-white font-bold text-base flex items-center justify-center gap-2.5 transition-all shadow-md shadow-[#F43F5E]/25 cursor-pointer"
           >
             {loading ? (
               <>
-                <Loader2 className="size-4 animate-spin" />
+                <Loader2 className="size-5 animate-spin" />
                 <span>Scanning 2026 Deadlines & Accreditations via Parallel...</span>
               </>
             ) : (
               <>
-                <Sparkles className="size-4" />
+                <Sparkles className="size-5" />
                 <span>Discover Verified Festival Opportunities</span>
               </>
             )}
@@ -246,7 +244,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
 
       {/* Error state */}
       {error && (
-        <div className="max-w-3xl mx-auto p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs">
+        <div className="max-w-3xl mx-auto p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-base">
           {error}
         </div>
       )}
@@ -260,22 +258,22 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
         >
           {/* Strategy Roadmap Narrative */}
           <div className="p-6 rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border space-y-3">
-            <div className="text-xs font-mono uppercase tracking-wider text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
-              <Compass className="size-4" />
+            <div className="text-sm font-mono font-semibold uppercase tracking-wider text-[#F43F5E] flex items-center gap-2">
+              <Compass className="size-4.5" />
               <span>Strategy Roadmap: {scoutResult.filmTitle}</span>
             </div>
-            <p className="font-serif text-sm sm:text-base text-paper-text dark:text-darkroom-text leading-relaxed whitespace-pre-line">
+            <p className="font-serif text-base sm:text-lg text-paper-text dark:text-darkroom-text leading-relaxed whitespace-pre-line">
               {scoutResult.strategySummary}
             </p>
           </div>
 
           {/* Filter Pills Strip */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <div className="text-xs font-mono text-paper-muted dark:text-darkroom-muted">
+            <div className="text-sm font-mono text-paper-muted dark:text-darkroom-muted">
               Found {scoutResult.opportunitiesFound} opportunities in {scoutResult.durationSeconds}s
             </div>
 
-            <div className="flex items-center gap-1 p-1 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-xs">
+            <div className="flex items-center gap-1.5 p-1.5 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-xs">
               {[
                 { id: 'ALL', label: 'All Calls' },
                 { id: 'BAFTA', label: 'BAFTA Qualifying' },
@@ -285,9 +283,9 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
                 <button
                   key={f.id}
                   onClick={() => setFilterTag(f.id)}
-                  className={`px-3 py-1 rounded-lg font-mono text-[11px] transition-all cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-lg font-mono text-xs transition-all cursor-pointer ${
                     filterTag === f.id
-                      ? 'bg-indigo-600 text-white shadow-xs font-medium'
+                      ? 'bg-[#F43F5E] text-white shadow-xs font-semibold'
                       : 'text-paper-muted dark:text-darkroom-muted hover:text-paper-text dark:hover:text-darkroom-text'
                   }`}
                 >
