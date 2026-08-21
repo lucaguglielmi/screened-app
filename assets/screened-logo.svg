@@ -1,0 +1,313 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 320" width="100%" height="100%">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#07080D" />
+      <stop offset="50%" stop-color="#0D0F18" />
+      <stop offset="100%" stop-color="#05060A" />
+    </linearGradient>
+
+    <radialGradient id="auroraGlow" cx="50%" cy="45%" r="60%">
+      <stop offset="0%" stop-color="#6366F1" stop-opacity="0.35" />
+      <stop offset="45%" stop-color="#3B82F6" stop-opacity="0.12" />
+      <stop offset="80%" stop-color="#0E101D" stop-opacity="0" />
+    </radialGradient>
+
+    <radialGradient id="lensGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#818CF8" stop-opacity="0.9" />
+      <stop offset="40%" stop-color="#6366F1" stop-opacity="0.5" />
+      <stop offset="100%" stop-color="#4338CA" stop-opacity="0" />
+    </radialGradient>
+
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="35%" stop-color="#F1F5F9" />
+      <stop offset="50%" stop-color="#C7D2FE" />
+      <stop offset="65%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#E2E8F0" />
+    </linearGradient>
+
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6366F1" />
+      <stop offset="50%" stop-color="#818CF8" />
+      <stop offset="100%" stop-color="#38BDF8" />
+    </linearGradient>
+
+    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#312E81" stop-opacity="0.8" />
+      <stop offset="50%" stop-color="#1E2238" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0.5" />
+    </linearGradient>
+
+    <!-- Dot Pattern -->
+    <pattern id="gridDots" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="12" cy="12" r="0.75" fill="#38BDF8" fill-opacity="0.12" />
+    </pattern>
+
+    <!-- Glow Filter -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <filter id="nodeGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <!-- Styles and Keyframe Animations -->
+    <style><![CDATA[
+      @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Space+Grotesk:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap');
+
+      .title-text {
+        font-family: 'Fraunces', 'Georgia', serif;
+        font-size: 58px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        fill: url(#textGrad);
+      }
+
+      .subtitle-text {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.26em;
+        fill: #94A3B8;
+        text-transform: uppercase;
+      }
+
+      .badge-text {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        fill: #CBD5E1;
+      }
+
+      /* Pulse Background Bloom */
+      @keyframes breathe {
+        0%, 100% { opacity: 0.55; transform: scale(1); }
+        50% { opacity: 0.85; transform: scale(1.08); }
+      }
+      .aurora {
+        transform-origin: 450px 140px;
+        animation: breathe 8s ease-in-out infinite;
+      }
+
+      /* Viewfinder Corner Reticles */
+      @keyframes reticlePulse {
+        0%, 100% { transform: scale(1); opacity: 0.7; }
+        50% { transform: scale(1.03); opacity: 1; }
+      }
+      .viewfinder-tl { transform-origin: 32px 32px; animation: reticlePulse 4s ease-in-out infinite; }
+      .viewfinder-tr { transform-origin: 868px 32px; animation: reticlePulse 4s ease-in-out infinite 1s; }
+      .viewfinder-bl { transform-origin: 32px 288px; animation: reticlePulse 4s ease-in-out infinite 2s; }
+      .viewfinder-br { transform-origin: 868px 288px; animation: reticlePulse 4s ease-in-out infinite 3s; }
+
+      /* Aperture Rotation and Radar Scan */
+      @keyframes rotateClockwise {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      @keyframes rotateCounter {
+        from { transform: rotate(360deg); }
+        to { transform: rotate(0deg); }
+      }
+      .aperture-outer {
+        transform-origin: 165px 145px;
+        animation: rotateClockwise 28s linear infinite;
+      }
+      .aperture-inner {
+        transform-origin: 165px 145px;
+        animation: rotateCounter 18s linear infinite;
+      }
+      .scanner-beam {
+        transform-origin: 165px 145px;
+        animation: rotateClockwise 6s linear infinite;
+      }
+
+      /* Constellation Nodes Pulse */
+      @keyframes nodePulse {
+        0%, 100% { r: 3.5; opacity: 0.7; }
+        50% { r: 5; opacity: 1; filter: drop-shadow(0 0 6px #818CF8); }
+      }
+      .node-1 { animation: nodePulse 3.2s ease-in-out infinite; }
+      .node-2 { animation: nodePulse 3.8s ease-in-out infinite 0.7s; }
+      .node-3 { animation: nodePulse 4.1s ease-in-out infinite 1.4s; }
+      .node-4 { animation: nodePulse 3.5s ease-in-out infinite 2.1s; }
+      .node-5 { animation: nodePulse 3.9s ease-in-out infinite 2.8s; }
+
+      /* Underline Draw */
+      @keyframes lineDraw {
+        0%, 100% { stroke-dashoffset: 0; opacity: 0.9; }
+        50% { stroke-dashoffset: 40; opacity: 0.6; }
+      }
+      .proof-line {
+        stroke-dasharray: 480;
+        animation: lineDraw 7s ease-in-out infinite;
+      }
+
+      /* Status Indicator Dot */
+      @keyframes liveBlink {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.3; transform: scale(0.85); }
+      }
+      .live-dot {
+        transform-origin: 762px 286px;
+        animation: liveBlink 2s ease-in-out infinite;
+      }
+
+      /* Light Ray Shimmer on Brand Name */
+      @keyframes shimmerSweep {
+        0% { transform: translateX(-200px); opacity: 0; }
+        30% { opacity: 0.4; }
+        60% { opacity: 0.4; }
+        100% { transform: translateX(650px); opacity: 0; }
+      }
+      .shimmer-bar {
+        animation: shimmerSweep 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      }
+    ]]></style>
+  </defs>
+
+  <!-- Card Background -->
+  <rect x="6" y="6" width="888" height="308" rx="20" fill="url(#bgGrad)" stroke="url(#borderGrad)" stroke-width="1.5" />
+  
+  <!-- Subtle Dot Matrix Pattern -->
+  <rect x="8" y="8" width="884" height="304" rx="18" fill="url(#gridDots)" />
+
+  <!-- Ambient Aurora Glow -->
+  <circle cx="450" cy="140" r="280" fill="url(#auroraGlow)" class="aurora" />
+
+  <!-- Viewfinder Frame Corner Reticles (Cinema Lens Motif) -->
+  <!-- Top-Left -->
+  <g class="viewfinder-tl">
+    <path d="M 36 54 L 36 36 L 54 36" fill="none" stroke="#818CF8" stroke-width="2" stroke-linecap="round" />
+    <circle cx="36" cy="36" r="1.5" fill="#38BDF8" />
+  </g>
+  <!-- Top-Right -->
+  <g class="viewfinder-tr">
+    <path d="M 846 36 L 864 36 L 864 54" fill="none" stroke="#818CF8" stroke-width="2" stroke-linecap="round" />
+    <circle cx="864" cy="36" r="1.5" fill="#38BDF8" />
+  </g>
+  <!-- Bottom-Left -->
+  <g class="viewfinder-bl">
+    <path d="M 36 266 L 36 284 L 54 284" fill="none" stroke="#818CF8" stroke-width="2" stroke-linecap="round" />
+    <circle cx="36" cy="284" r="1.5" fill="#38BDF8" />
+  </g>
+  <!-- Bottom-Right -->
+  <g class="viewfinder-br">
+    <path d="M 846 284 L 864 284 L 864 266" fill="none" stroke="#818CF8" stroke-width="2" stroke-linecap="round" />
+    <circle cx="864" cy="284" r="1.5" fill="#38BDF8" />
+  </g>
+
+  <!-- Frame Metadata Marks -->
+  <text x="68" y="44" font-family="'JetBrains Mono', monospace" font-size="9" fill="#64748B" letter-spacing="0.15em">FPS 24.00 · RAW 4K</text>
+  <text x="750" y="44" font-family="'JetBrains Mono', monospace" font-size="9" fill="#64748B" letter-spacing="0.15em">ISO 800 · F/1.8</text>
+
+  <!-- LEFT HERO EMBLEM: The Screened Aperture & Evidence Constellation -->
+  <g transform="translate(0, 0)">
+    <!-- Radial Ambient for Lens -->
+    <circle cx="165" cy="145" r="70" fill="url(#lensGlow)" />
+
+    <!-- Radar Scanner Sweep -->
+    <path d="M 165 145 L 225 125 A 65 65 0 0 1 230 155 Z" fill="url(#accentGrad)" fill-opacity="0.15" class="scanner-beam" />
+
+    <!-- Outer Film Aperture Ring -->
+    <circle cx="165" cy="145" r="64" fill="none" stroke="#312E81" stroke-width="1.2" stroke-dasharray="4 6" class="aperture-outer" />
+    <circle cx="165" cy="145" r="54" fill="none" stroke="#4F46E5" stroke-width="1" stroke-opacity="0.4" />
+    
+    <!-- Segmented Inner Calibrator -->
+    <circle cx="165" cy="145" r="42" fill="none" stroke="#818CF8" stroke-width="1.5" stroke-dasharray="14 10 6 10" class="aperture-inner" />
+    <circle cx="165" cy="145" r="28" fill="#0F111E" stroke="#6366F1" stroke-width="1.5" />
+
+    <!-- Crosshair Guides -->
+    <line x1="165" y1="76" x2="165" y2="92" stroke="#818CF8" stroke-width="1.5" stroke-linecap="round" />
+    <line x1="165" y1="198" x2="165" y2="214" stroke="#818CF8" stroke-width="1.5" stroke-linecap="round" />
+    <line x1="96" y1="145" x2="112" y2="145" stroke="#818CF8" stroke-width="1.5" stroke-linecap="round" />
+    <line x1="218" y1="145" x2="234" y2="145" stroke="#818CF8" stroke-width="1.5" stroke-linecap="round" />
+
+    <!-- Center Iris Node -->
+    <circle cx="165" cy="145" r="9" fill="#6366F1" filter="url(#glow)" />
+    <circle cx="165" cy="145" r="4" fill="#FFFFFF" />
+
+    <!-- Evidence Graph Constellation Threads -->
+    <!-- Node 1 (Top Right) -->
+    <line x1="165" y1="145" x2="225" y2="85" stroke="#6366F1" stroke-width="1.2" stroke-opacity="0.6" stroke-dasharray="3 3" />
+    <circle cx="225" cy="85" r="4" fill="#38BDF8" class="node-1" filter="url(#nodeGlow)" />
+
+    <!-- Node 2 (Bottom Right) -->
+    <line x1="165" y1="145" x2="232" y2="198" stroke="#818CF8" stroke-width="1.2" stroke-opacity="0.6" stroke-dasharray="4 2" />
+    <circle cx="232" cy="198" r="4" fill="#818CF8" class="node-2" filter="url(#nodeGlow)" />
+
+    <!-- Node 3 (Bottom Left) -->
+    <line x1="165" y1="145" x2="100" y2="195" stroke="#4F46E5" stroke-width="1.2" stroke-opacity="0.5" stroke-dasharray="3 3" />
+    <circle cx="100" cy="195" r="3.5" fill="#C084FC" class="node-3" filter="url(#nodeGlow)" />
+
+    <!-- Node 4 (Top Left) -->
+    <line x1="165" y1="145" x2="108" y2="92" stroke="#6366F1" stroke-width="1.2" stroke-opacity="0.5" stroke-dasharray="2 3" />
+    <circle cx="108" cy="92" r="3.5" fill="#38BDF8" class="node-4" filter="url(#nodeGlow)" />
+
+    <!-- Connecting Arc -->
+    <path d="M 225 85 Q 245 140 232 198" fill="none" stroke="#818CF8" stroke-width="1" stroke-opacity="0.35" />
+    <path d="M 108 92 Q 85 145 100 195" fill="none" stroke="#818CF8" stroke-width="1" stroke-opacity="0.35" />
+  </g>
+
+  <!-- CENTER / RIGHT: Brand Name, Underline of Proof, and Editorial Identity -->
+  <g transform="translate(270, 0)">
+    <!-- Clip Path for Shimmer Sweep -->
+    <clipPath id="titleClip">
+      <text x="0" y="142" class="title-text">SCREENED</text>
+    </clipPath>
+
+    <!-- Main Wordmark -->
+    <text x="0" y="142" class="title-text">SCREENED</text>
+
+    <!-- Dynamic Shimmer Light Sweep Effect -->
+    <g clip-path="url(#titleClip)">
+      <rect x="0" y="70" width="120" height="90" fill="url(#accentGrad)" opacity="0.3" class="shimmer-bar" transform="skewX(-25)" />
+    </g>
+
+    <!-- The "Underline of Proof" (Autonomous Evidence Trail Signature) -->
+    <path d="M 4 160 Q 180 163, 340 159 T 465 161" fill="none" stroke="url(#accentGrad)" stroke-width="3" stroke-linecap="round" class="proof-line" filter="url(#glow)" />
+    <circle cx="468" cy="161" r="2.5" fill="#38BDF8" filter="url(#glow)" />
+
+    <!-- Subtitle and Category -->
+    <text x="4" y="192" class="subtitle-text">Agentic Due Diligence · Cinema Credibility Checker</text>
+
+    <!-- Feature Pills / Evidence Chips -->
+    <g transform="translate(4, 218)">
+      <!-- Pill 1 -->
+      <rect x="0" y="0" width="112" height="24" rx="12" fill="#171A2E" stroke="#312E81" stroke-width="1" />
+      <circle cx="12" cy="12" r="3" fill="#818CF8" />
+      <text x="22" y="15.5" class="badge-text">EVIDENCE-LED</text>
+
+      <!-- Pill 2 -->
+      <rect x="122" y="0" width="138" height="24" rx="12" fill="#171A2E" stroke="#312E81" stroke-width="1" />
+      <circle cx="134" cy="12" r="3" fill="#38BDF8" />
+      <text x="144" y="15.5" class="badge-text">CHAIN OF CUSTODY</text>
+
+      <!-- Pill 3 -->
+      <rect x="270" y="0" width="144" height="24" rx="12" fill="#171A2E" stroke="#312E81" stroke-width="1" />
+      <circle cx="282" cy="12" r="3" fill="#C084FC" />
+      <text x="292" y="15.5" class="badge-text">AGENTIC SYNTHESIS</text>
+    </g>
+  </g>
+
+  <!-- BOTTOM STATUS TICKER -->
+  <g transform="translate(0, 0)">
+    <line x1="36" y1="268" x2="864" y2="268" stroke="#1E2238" stroke-width="1" />
+    
+    <!-- System Ready Mono Ticker -->
+    <text x="48" y="290" font-family="'JetBrains Mono', monospace" font-size="9.5" fill="#64748B" letter-spacing="0.1em">
+      SYSTEM: <tspan fill="#38BDF8">READY</tspan> · MODEL: <tspan fill="#94A3B8">GEMINI 2.5 FLASH</tspan> · PARALLEL TRACK: <tspan fill="#818CF8">ACTIVE</tspan>
+    </text>
+
+    <!-- Pulse Status Indicator on the right -->
+    <g>
+      <circle cx="710" cy="286" r="4" fill="#34D399" class="live-dot" filter="url(#glow)" />
+      <circle cx="710" cy="286" r="8" fill="#34D399" fill-opacity="0.25" class="live-dot" />
+      <text x="726" y="290" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#34D399" letter-spacing="0.12em">HUMAN-IN-THE-LOOP</text>
+    </g>
+  </g>
+</svg>
