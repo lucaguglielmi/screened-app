@@ -5,6 +5,7 @@ import { ChatBubble } from './ChatBubble';
 import { ChatPromptBar } from './ChatPromptBar';
 import { StarterPromptChips } from './StarterPromptChips';
 import { AgentThinkingPill } from './AgentThinkingPill';
+import { VectorFieldBackground } from '../animations/VectorFieldBackground';
 import { soundEffects } from '../../utils/audio';
 
 interface ChatContainerProps {
@@ -149,18 +150,28 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-4.5rem)] max-w-5xl mx-auto px-4 py-2">
+    <div className="relative flex flex-col h-[calc(100vh-5.5rem)] max-w-5xl mx-auto px-4 py-2">
+      {/* Animated Droplet Vector Field Background */}
+      <VectorFieldBackground
+        color="#FF2A55"
+        speed={0.7}
+        amplitude={0.22}
+        gridSpacing={40}
+        dropletLength={22}
+        opacity={0.35}
+      />
+
       {/* Scrollable Message Area */}
-      <div className="flex-1 overflow-y-auto pr-2 space-y-4">
+      <div className="relative z-10 flex-1 overflow-y-auto pr-2 space-y-4">
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center min-h-[60vh] text-center pt-8">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-600/10 border border-amber-500/30 text-3xl shadow-xl mb-4 animate-fade-in">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-600/10 border border-indigo-500/30 text-3xl shadow-xl mb-4 animate-fade-in backdrop-blur-md">
               🎬
             </div>
-            <h1 className="text-2xl font-bold tracking-tight text-zinc-100 sm:text-3xl mb-2">
+            <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl mb-2">
               The Producer Desk
             </h1>
-            <p className="max-w-xl text-xs sm:text-sm text-zinc-400 leading-relaxed mb-6">
+            <p className="max-w-xl text-base text-slate-300 leading-relaxed mb-6">
               Your autonomous cinema intelligence executive. Ask for due diligence vetting on any film festival,
               map out qualifying festival submission strategies for your slate, or drop an acceptance email for instant analysis.
             </p>

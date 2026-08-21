@@ -1,13 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { 
   Search, 
-  Sparkles, 
-  Cpu,
   AlertTriangle,
   History,
   MapPin,
   ShieldCheck
 } from 'lucide-react';
+
 
 
 import { 
@@ -391,22 +390,31 @@ export default function App() {
                 <span className="font-serif text-xl font-bold tracking-tight text-paper-text dark:text-darkroom-text">
                   Screened
                 </span>
-                <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-500 border border-indigo-500/20">
-                  {activeTool === 'CONVERSATIONAL_DESK' && 'The Desk'}
-                  {activeTool === 'DUE_DILIGENCE' && 'Due Diligence'}
-                  {activeTool === 'OPPORTUNITY_SCOUT' && 'Opportunity Scout'}
-                  {activeTool === 'DESIGN_PLAYGROUND' && 'Playground'}
-                </span>
+                {activeTool === 'CONVERSATIONAL_DESK' && (
+                  <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-[#2018E6]/20 text-indigo-400 border border-[#2018E6]/40">
+                    The Desk
+                  </span>
+                )}
+                {activeTool === 'DUE_DILIGENCE' && (
+                  <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-[#00D29E]/20 text-[#00D29E] border border-[#00D29E]/40">
+                    Due Diligence
+                  </span>
+                )}
+                {activeTool === 'OPPORTUNITY_SCOUT' && (
+                  <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-[#F43F5E]/20 text-[#F43F5E] border border-[#F43F5E]/40">
+                    Opportunity Scout
+                  </span>
+                )}
+                {activeTool === 'DESIGN_PLAYGROUND' && (
+                  <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-400 border border-purple-500/40">
+                    Playground
+                  </span>
+                )}
               </div>
-            </div>
-
-            <div className="flex items-center gap-3 shrink-0">
-              <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
-                <Cpu className="size-3.5" /> Vertex AI (gemini-2.5-flash)
-              </span>
             </div>
           </div>
         </header>
+
 
         {/* Main Workspace Area */}
         <main className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8 flex-1 w-full space-y-8">
@@ -475,12 +483,13 @@ export default function App() {
                       <button
                         type="submit"
                         disabled={loading || !query.trim()}
-                        className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-medium text-base flex items-center justify-center gap-2 transition-all shadow-xs shrink-0 cursor-pointer"
+                        className="px-6 py-3 rounded-xl bg-[#00D29E] hover:bg-[#00B887] disabled:opacity-50 text-slate-950 font-bold text-base flex items-center justify-center gap-2 transition-all shadow-md shrink-0 cursor-pointer"
                       >
-                        <Sparkles className="size-4.5" />
+                        <ShieldCheck className="size-5 text-slate-950" />
                         <span>Start Due Diligence</span>
                       </button>
                     </form>
+
 
                     {/* Recent Searches Pills */}
                     {recentSearches.length > 0 && (

@@ -8,11 +8,13 @@ import { StarterPromptChips } from '../chat/StarterPromptChips';
 import { MiniDueDiligence } from '../chat/mini_apps/MiniDueDiligence';
 import { MiniScoutCard } from '../chat/mini_apps/MiniScoutCard';
 import { MiniCompareArena } from '../chat/mini_apps/MiniCompareArena';
+import { DesignTokensLab } from './DesignTokensLab';
 import { soundEffects } from '../../utils/audio';
 
 export const DesignPlayground: React.FC = () => {
-  const [activeSection, setActiveSection] = useState<'ALL' | 'BUBBLES' | 'LOADERS' | 'MINI_APPS' | 'PROMPTS'>('ALL');
+  const [activeSection, setActiveSection] = useState<'TOKENS' | 'ALL' | 'BUBBLES' | 'LOADERS' | 'MINI_APPS' | 'PROMPTS'>('TOKENS');
   const [streamSimText, setStreamSimText] = useState<string>(
+
     'I have conducted an initial background check on the festival. Screening records indicate physical cinema leases at Curzon Soho.'
   );
   const [isSimulating, setIsSimulating] = useState(false);
@@ -160,7 +162,7 @@ export const DesignPlayground: React.FC = () => {
 
       {/* Section Navigation Tabs */}
       <div className="flex items-center gap-1.5 p-1 rounded-xl bg-zinc-900/80 border border-zinc-800 w-fit overflow-x-auto">
-        {(['ALL', 'BUBBLES', 'LOADERS', 'MINI_APPS', 'PROMPTS'] as const).map((sec) => (
+        {(['TOKENS', 'ALL', 'BUBBLES', 'LOADERS', 'MINI_APPS', 'PROMPTS'] as const).map((sec) => (
           <button
             key={sec}
             onClick={() => {
@@ -169,10 +171,11 @@ export const DesignPlayground: React.FC = () => {
             }}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
               activeSection === sec
-                ? 'bg-amber-500 text-zinc-950 font-semibold shadow-sm'
+                ? 'bg-indigo-600 text-white font-semibold shadow-sm'
                 : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/60'
             }`}
           >
+            {sec === 'TOKENS' && '🎨 Design Tokens & Motion'}
             {sec === 'ALL' && 'All Components'}
             {sec === 'BUBBLES' && '1. Chat Bubbles'}
             {sec === 'LOADERS' && '2. Loaders & Thinking'}
@@ -181,6 +184,12 @@ export const DesignPlayground: React.FC = () => {
           </button>
         ))}
       </div>
+
+      {/* SECTION 0: DESIGN TOKENS & MOTION LAB */}
+      {activeSection === 'TOKENS' && (
+        <DesignTokensLab />
+      )}
+
 
       {/* SECTION 1: CHAT BUBBLES */}
       {(activeSection === 'ALL' || activeSection === 'BUBBLES') && (

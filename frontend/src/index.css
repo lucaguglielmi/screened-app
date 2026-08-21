@@ -18,28 +18,53 @@
   --color-paper-text: #1C1917;
   --color-paper-muted: #78716C;
 
-  --color-darkroom-bg: #0C0D0F;
-  --color-darkroom-surface: #141619;
-  --color-darkroom-card: #1C1E23;
-  --color-darkroom-border: #2A2D35;
-  --color-darkroom-text: #F5F5F4;
-  --color-darkroom-muted: #A8A29E;
+  /* Midnight Darkroom Theme Tokens (Palette 1) */
+  --color-darkroom-bg: #070913;
+  --color-darkroom-surface: #0E1124;
+  --color-darkroom-card: #141731;
+  --color-darkroom-border: #22274C;
+  --color-darkroom-text: #F8F9FC;
+  --color-darkroom-muted: #9499B8;
 
-  /* Accent Indigo */
-  --color-indigo-accent: #6366F1;
-  --color-indigo-glow: rgba(99, 102, 241, 0.15);
+  /* Palette 1 Extended Swatches */
+  --color-midnight-void: #05050A;
+  --color-midnight-bg: #070913;
+  --color-midnight-surface: #0E1124;
+  --color-midnight-card: #141731;
+  --color-midnight-border: #22274C;
+  --color-midnight-indigo: #1E124A;
+  --color-midnight-violet: #2E107D;
+  --color-midnight-royal: #2018E6;
+  --color-midnight-glow: rgba(32, 24, 230, 0.25);
+
+  /* Palette 2 Tool Swatches */
+  --color-tool-diligence: #00D29E;
+  --color-tool-diligence-hover: #00B887;
+  --color-tool-diligence-glow: rgba(0, 210, 158, 0.25);
+
+  --color-tool-scout: #F43F5E;
+  --color-tool-scout-hover: #E11D48;
+  --color-tool-scout-glow: rgba(244, 63, 94, 0.25);
+
+  --color-tool-ocean: #0E86B3;
+  --color-tool-petrol: #0A3343;
+
+  /* Accent Desk Royal Blue (Palette 1 Primary) */
+  --color-indigo-accent: #2018E6;
+  --color-indigo-glow: rgba(32, 24, 230, 0.2);
 
   /* Claim State Colors */
-  --color-state-corroborated: #10B981;
-  --color-state-supported: #3B82F6;
+  --color-state-corroborated: #00D29E;
+  --color-state-supported: #0E86B3;
   --color-state-disputed: #F59E0B;
   --color-state-unverified: #6B7280;
 
   /* Claim Kind Colors */
-  --color-kind-fact: #3B82F6;
-  --color-kind-allegation: #EF4444;
+  --color-kind-fact: #0E86B3;
+  --color-kind-allegation: #F43F5E;
   --color-kind-opinion: #8B5CF6;
 }
+
 
 :root {
   font-family: var(--font-sans);
