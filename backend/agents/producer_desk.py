@@ -19,18 +19,15 @@ logger = logging.getLogger("screened.agents.producer_desk")
 PRODUCER_DESK_SYSTEM_PROMPT = """You are the Screened Producer & Chief Intelligence Executive — an expert cinema festival strategist, former indie film producer, and due-diligence investigator.
 
 Your role:
-1. Advise filmmakers, producers, and festival participants with sharp, protective, realistic industry intelligence.
-2. If the user mentions a specific festival they want to vet, investigate, or check legitimacy/scam warnings (e.g. "Is Aldergate Film Festival legit?", "Check Raindance fees"), YOU MUST CALL THE TOOL `configure_due_diligence`.
-3. If the user asks for festival recommendations, submission strategies, or has a film they want to submit (e.g. "I have a 15-min sci-fi short looking for a UK premiere", "Where should I submit on a £200 budget?"), YOU MUST CALL THE TOOL `configure_opportunity_scout`.
-4. If the user wants to compare two festivals (e.g. "Should I submit to Sundance or Tribeca?"), YOU MUST CALL THE TOOL `compare_festivals_arena`.
-5. If the user attaches an acceptance letter, script synopsis, or invoice, parse the text to extract the relevant festival name or film parameters, then call the appropriate tool.
-6. Provide concise, high-value, cinematic prose in your message alongside any tool calls. Always format lists cleanly with markdown.
-
-Available Tools:
-- configure_due_diligence(festival_name, optional_url, suspected_concerns, preflight_summary)
-- configure_opportunity_scout(film_title, format, genre, runtime_minutes, premiere_goal, budget_tier, target_regions, strategy_rationale)
-- compare_festivals_arena(festival_a, festival_b, key_comparison_vectors, verdict_summary)
+1. Advise filmmakers, producers, and festival participants with sharp, protective, realistic, and highly encouraging industry intelligence.
+2. If the user mentions a specific festival they want to vet, investigate, or check legitimacy/scam warnings (e.g. "Is Aldergate Film Festival legit?", "Check Raindance fees", "Tell me about Sundance"), explain what our due diligence pipeline can verify (venues, fees, organizer background, community reviews).
+3. If the user asks for festival recommendations, submission strategies, or has a film they want to submit (e.g. "I have a 15-min sci-fi short looking for a UK premiere", "Where should I submit on a £200 budget?"), outline strategic steps (early bird deadlines, premiere protection, qualification circuits).
+4. If the user wants to compare two festivals (e.g. "Should I submit to Sundance or Tribeca?", "Raindance vs Leeds"), provide a sharp, comparative analysis highlighting prestige, audience, and qualification perks.
+5. If the user attaches an acceptance letter, script synopsis, or invoice, evaluate the document with executive rigor.
+6. Provide concise, high-value, cinematic prose directly in your message. Always format lists cleanly with markdown.
+IMPORTANT: Write your advice in clean, natural prose. Do NOT output Python code snippets, JSON function calls, or internal API code in your conversational response.
 """
+
 
 TOOL_DECLARATIONS = [
     {
@@ -144,28 +141,40 @@ class ProducerDeskAgent:
             return
 
         try:
-            # Call Vertex AI Gemini with structured prompt
+            # Call Vertex AI Gemini with structured prompt (gemini-2.5-flash is available in europe-west2)
             response = self.gemini.client.models.generate_content(
-                model="gemini-2.5-pro",
+                model="gemini-2.5-flash",
                 contents=prompt,
             )
 
+
             response_text = response.text if hasattr(response, "text") and response.text else str(response)
+
+            # Scrub any raw Python/JSON code blocks if Gemini accidentally included them
+            import re
+            cleaned_text = re.sub(r"```python[\s\S]*?```", "", response_text)
+            cleaned_text = re.sub(r"```json[\s\S]*?```", "", cleaned_text)
+            cleaned_text = re.sub(r"print\(client[\s\S]*?\)", "", cleaned_text)
+            cleaned_text = re.sub(r"\*\*Calling Tool:[\s\S]*?\n\n", "", cleaned_text)
+            cleaned_text = re.sub(r"\*\*Tool Call:[\s\S]*?\n\n", "", cleaned_text)
+            cleaned_text = cleaned_text.strip()
+
+            if not cleaned_text:
+                cleaned_text = response_text
 
             # Check if response contains tool invocation or formulate one
             tool_call = self._extract_or_infer_tool_call(user_message, response_text)
 
             # Stream response in chunks
-            words = response_text.split(" ")
+            words = cleaned_text.split(" ")
             for i in range(0, len(words), 4):
                 chunk = " ".join(words[i:i+4]) + " "
                 yield {"type": "TOKEN", "token": chunk}
 
-
             if tool_call:
                 yield {
                     "type": "TOOL_CALL",
-                    "toolCall": tool_call.dict()
+                    "toolCall": tool_call.model_dump()
                 }
 
             yield {"type": "DONE"}
@@ -177,25 +186,27 @@ class ProducerDeskAgent:
 
     def _extract_or_infer_tool_call(self, user_msg: str, agent_response: str) -> Optional[ChatToolCall]:
         """Infers structured tool invocation if the model discusses a specific festival or film slate."""
+        import re
         msg_lower = user_msg.lower()
 
         # Check for Comparison
-        if " vs " in msg_lower or "compare" in msg_lower:
-            parts = user_msg.replace("compare", "").replace("vs", "|").split("|")
-            fest_a = parts[0].strip() if len(parts) > 0 else "Festival A"
-            fest_b = parts[1].strip() if len(parts) > 1 else "Festival B"
+        if " vs " in msg_lower or " vs. " in msg_lower or ("compare" in msg_lower and (" and " in msg_lower or " to " in msg_lower)):
+            clean_q = re.sub(r"(what are the advantages of premiering at|should i submit to|compare|between)", "", user_msg, flags=re.IGNORECASE)
+            parts = re.split(r"\s+(?:vs\.?|or|and|to)\s+", clean_q.strip(), flags=re.IGNORECASE)
+            fest_a = parts[0].replace("?", "").strip() if len(parts) > 0 and parts[0].strip() else "Raindance Film Festival"
+            fest_b = parts[1].replace("?", "").strip() if len(parts) > 1 and parts[1].strip() else "Leeds International Film Festival"
             return ChatToolCall(
                 toolName=ToolCallType.COMPARE_FESTIVALS_ARENA,
                 args=CompareFestivalsToolArgs(
-                    festival_a=fest_a or "Raindance Film Festival",
-                    festival_b=fest_b or "London Independent Film Festival",
+                    festival_a=fest_a.title() if not any(c.isupper() for c in fest_a) else fest_a,
+                    festival_b=fest_b.title() if not any(c.isupper() for c in fest_b) else fest_b,
                     key_comparison_vectors=["BAFTA/BIFA Qualification", "Physical Screening Venues", "Entry Fee Bracket"],
-                    verdict_summary="Compare accreditation, premiere prestige, and physical venue transparency before locking your submission fee."
+                    verdict_summary=f"Head-to-head comparison between {fest_a} and {fest_b} on accreditation, prestige, and venue transparency."
                 ).model_dump()
             )
 
         # Check for Due Diligence intent
-        if any(w in msg_lower for w in ["vet", "legit", "scam", "aldergate", "raindance", "sundance", "aesthetica", "check festival", "is it real", "is this real"]):
+        if any(w in msg_lower for w in ["vet", "legit", "scam", "aldergate", "raindance", "sundance", "aesthetica", "cannes", "venice", "berlinale", "sxsw", "tribeca", "toronto", "check festival", "is it real", "is this real", "check fees", "tell me about"]):
             # Extract festival name
             festival_name = "Raindance Film Festival"
             if "aldergate" in msg_lower:
@@ -204,10 +215,22 @@ class ProducerDeskAgent:
                 festival_name = "Sundance Film Festival"
             elif "aesthetica" in msg_lower:
                 festival_name = "Aesthetica Short Film Festival"
+            elif "cannes" in msg_lower:
+                festival_name = "Cannes Film Festival"
+            elif "tribeca" in msg_lower:
+                festival_name = "Tribeca Film Festival"
+            elif "berlinale" in msg_lower or "berlin" in msg_lower:
+                festival_name = "Berlin International Film Festival"
+            elif "venice" in msg_lower:
+                festival_name = "Venice International Film Festival"
+            elif "sxsw" in msg_lower or "south by" in msg_lower:
+                festival_name = "SXSW Film Festival"
+            elif "toronto" in msg_lower or "tiff" in msg_lower:
+                festival_name = "Toronto International Film Festival"
             else:
                 # Use query snippet
-                cleaned = user_msg.replace("Is", "").replace("is", "").replace("legit", "").replace("a scam", "").replace("?", "").strip()
-                if cleaned:
+                cleaned = re.sub(r"(tell me about|is|a|the|legit|scam|real|check|fees|for|\?)", "", user_msg, flags=re.IGNORECASE).strip()
+                if cleaned and len(cleaned) > 2:
                     festival_name = cleaned.title()
 
             return ChatToolCall(
@@ -220,22 +243,43 @@ class ProducerDeskAgent:
             )
 
         # Check for Opportunity Scout intent
-        if any(w in msg_lower for w in ["short", "feature", "documentary", "submit", "scout", "budget", "strategy", "where should i", "recommend"]):
+        if any(w in msg_lower for w in ["short", "feature", "documentary", "submit", "scout", "budget", "strategy", "where should i", "recommend", "comedy", "horror", "drama", "thriller", "animation"]):
             format_type = "SHORT" if "short" in msg_lower else ("FEATURE" if "feature" in msg_lower else "SHORT")
-            genre = "Sci-Fi" if "sci-fi" in msg_lower else ("Drama" if "drama" in msg_lower else "Drama")
+            genre = "Drama"
+            for g in ["Comedy", "Horror", "Sci-Fi", "Thriller", "Documentary", "Animation", "Drama"]:
+                if g.lower() in msg_lower:
+                    genre = g
+                    break
+
+            # Parse runtime
+            runtime = 14 if format_type == "SHORT" else 90
+            rt_match = re.search(r"(\d+)\s*(?:min|minute)", msg_lower)
+            if rt_match:
+                try:
+                    runtime = int(rt_match.group(1))
+                except Exception:
+                    pass
+
+            # Parse budget
+            budget = "Micro (< £50k)"
+            b_match = re.search(r"([£$€]\s*\d+(?:[kK]|,\d+|\s*budget)?)", user_msg)
+            if b_match:
+                budget = b_match.group(1).strip()
+
             return ChatToolCall(
                 toolName=ToolCallType.CONFIGURE_OPPORTUNITY_SCOUT,
                 args=OpportunityScoutToolArgs(
                     film_title="My Festival Project",
                     format=format_type,
                     genre=genre,
-                    runtime_minutes=14 if format_type == "SHORT" else 90,
+                    runtime_minutes=runtime,
                     premiere_goal="WORLD_PREMIERE",
-                    budget_tier="Micro (< £50k)",
+                    budget_tier=budget,
                     target_regions=["UK & Europe", "North America"],
-                    strategy_rationale="Target verified Early Bird windows for BAFTA/BIFA qualifying circuits before locking regional independent festival runs."
+                    strategy_rationale=f"Target verified Early Bird windows for {genre} {format_type.lower()} circuits before locking regional independent festival runs."
                 ).model_dump()
             )
+
 
 
         return None

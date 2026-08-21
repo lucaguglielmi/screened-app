@@ -100,13 +100,14 @@ Return a JSON object conforming to:
 
         try:
             response = self.gemini.client.models.generate_content(
-                model="gemini-2.5-pro",
+                model="gemini-2.5-flash",
                 contents=prompt,
                 config=types.GenerateContentConfig(
                     response_mime_type="application/json",
                     temperature=0.2,
                 ),
             )
+
             raw = json.loads(response.text or "{}")
 
             strategy_summary = raw.get(

@@ -90,13 +90,14 @@ Return a JSON object conforming to this schema:
 """
         try:
             response = self.gemini.client.models.generate_content(
-                model="gemini-2.5-pro",
+                model="gemini-2.5-flash",
                 contents=prompt,
                 config=types.GenerateContentConfig(
                     response_mime_type="application/json",
                     temperature=0.2,
                 ),
             )
+
             raw = json.loads(response.text or "{}")
             return DossierReport(
                 executiveSummary=raw.get("executiveSummary", f"Investigation completed for {entity.name} with {len(claims)} verified claims."),

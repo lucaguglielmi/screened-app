@@ -76,13 +76,14 @@ If there are NO contradictions or opposing claims, return an empty array `[]`.
 """
         try:
             response = self.gemini.client.models.generate_content(
-                model="gemini-2.5-pro",
+                model="gemini-2.5-flash",
                 contents=prompt,
                 config=types.GenerateContentConfig(
                     response_mime_type="application/json",
                     temperature=0.1,
                 ),
             )
+
             raw_disputes = json.loads(response.text or "[]")
             claim_map = {c.id: c for c in claims}
 
