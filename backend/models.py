@@ -66,6 +66,19 @@ class InvestigationStatus(str, Enum):
     CANCELLED = "CANCELLED"
 
 
+class ApprovalStatus(str, Enum):
+    PENDING_APPROVAL = "PENDING_APPROVAL"
+    APPROVED = "APPROVED"
+    REJECTED = "REJECTED"
+    EXECUTED_SANDBOX = "EXECUTED_SANDBOX"
+
+
+class DetailDensity(str, Enum):
+    SUMMARY = "SUMMARY"
+    STANDARD = "STANDARD"
+    EVIDENCE = "EVIDENCE"
+
+
 class SourceRecord(BaseModel):
     id: str = Field(default_factory=generate_uuid)
     url: str
@@ -110,6 +123,34 @@ class CandidateEntity(BaseModel):
     foundedYear: Optional[int] = None
     descriptor: str = ""
     sourceIds: List[str] = Field(default_factory=list)
+
+
+class OutreachDraft(BaseModel):
+    id: str = Field(default_factory=generate_uuid)
+    investigationId: str
+    claimId: Optional[str] = None
+    targetAudience: str = "Festival Management"
+    recipientEmail: str
+    recipientName: str
+    subject: str
+    body: str
+    payloadHash: str = ""
+    status: ApprovalStatus = ApprovalStatus.PENDING_APPROVAL
+    createdAt: str = Field(default_factory=get_current_iso)
+    executedAt: Optional[str] = None
+
+
+class DraftOutreachRequest(BaseModel):
+    claimId: Optional[str] = None
+    disputeId: Optional[str] = None
+    targetType: str = "FESTIVAL_ORGANIZER"  # FESTIVAL_ORGANIZER | VENUE_BOX_OFFICE
+    filmmakerNote: Optional[str] = None
+
+
+class ApproveOutreachRequest(BaseModel):
+    draftId: str
+    payloadHash: str
+    userConfirmed: bool = True
 
 
 class TestPipelineRequest(BaseModel):

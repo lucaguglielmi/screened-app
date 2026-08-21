@@ -6,6 +6,10 @@ export type VerificationStatus = 'CORROBORATED' | 'SUPPORTED' | 'DISPUTED' | 'UN
 
 export type Stance = 'SUPPORTS' | 'CONTRADICTS' | 'MENTIONS';
 
+export type DetailDensity = 'SUMMARY' | 'STANDARD' | 'EVIDENCE';
+
+export type ApprovalStatus = 'PENDING_APPROVAL' | 'APPROVED' | 'REJECTED' | 'EXECUTED_SANDBOX';
+
 export type InvestigationStatus = 
   | 'DRAFT'
   | 'DISAMBIGUATING'
@@ -15,6 +19,9 @@ export type InvestigationStatus =
   | 'ANALYZING_CONTRADICTIONS'
   | 'ASSEMBLING_DOSSIER'
   | 'READY'
+  | 'DRAFTING_OUTREACH'
+  | 'AWAITING_APPROVAL'
+  | 'EXECUTING_SANDBOX_SEND'
   | 'FAILED'
   | 'CANCELLED';
 
@@ -85,6 +92,21 @@ export interface DossierReport {
   filmmakerChecklist: string[];
 }
 
+export interface OutreachDraft {
+  id: string;
+  investigationId: string;
+  claimId?: string;
+  targetAudience: string;
+  recipientEmail: string;
+  recipientName: string;
+  subject: string;
+  body: string;
+  payloadHash: string;
+  status: ApprovalStatus;
+  createdAt: string;
+  executedAt?: string;
+}
+
 export interface ActivityEvent {
   id: string;
   investigationId: string;
@@ -111,4 +133,5 @@ export interface Investigation {
   disputes: DisputeRecord[];
   claims?: AtomicClaim[];
   sources?: SourceRecord[];
+  outreachDrafts?: OutreachDraft[];
 }

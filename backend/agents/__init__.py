@@ -5,6 +5,7 @@ from .domain_agents import FestivalAgent, OrganizerAgent, ParticipantsAgent, run
 from .claim_extractor import ClaimExtractorAgent
 from .contradiction_analyst import ContradictionAnalystAgent, DisputeRecord
 from .report_writer import ReportWriterAgent, DossierReport
+from .outreach_drafter import OutreachDrafterAgent, compute_payload_hash
 
 __all__ = [
     "DisambiguatorAgent",
@@ -20,4 +21,6 @@ __all__ = [
     "DisputeRecord",
     "ReportWriterAgent",
     "DossierReport",
+    "OutreachDrafterAgent",
+    "compute_payload_hash",
 ]

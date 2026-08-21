@@ -3,14 +3,19 @@ import logging
 import time
 from pathlib import Path
 from typing import Any, Dict, Optional
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import FileResponse, StreamingResponse, PlainTextResponse
 from pydantic import BaseModel
 
 from backend.config import settings
 from backend.models import (
+    AtomicClaim,
+    CandidateEntity,
+    DraftOutreachRequest,
+    ApproveOutreachRequest,
+    OutreachDraft,
     ResearchDomain,
     TestPipelineRequest,
     TestPipelineResponse,
@@ -18,7 +23,10 @@ from backend.models import (
 from backend.db.firestore import db
 from backend.tools.parallel_search import ParallelSearchTool
 from backend.services.gemini_client import GeminiClient
-from backend.orchestrator.events import broadcaster
+from backend.services.approval_service import approval_service
+from backend.services.export_service import export_service
+from backend.agents.outreach_drafter import OutreachDrafterAgent
+from backend.orchestrator.events import broadcaster, EventType
 from backend.orchestrator.state_machine import orchestrator
 
 logging.basicConfig(
@@ -44,6 +52,7 @@ app.add_middleware(
 
 parallel_tool = ParallelSearchTool()
 gemini_client = GeminiClient()
+outreach_drafter = OutreachDrafterAgent(gemini_client)
 
 
 class CreateInvestigationRequest(BaseModel):
@@ -92,7 +101,7 @@ async def create_investigation(req: CreateInvestigationRequest):
 
 @app.get("/api/investigations/{investigation_id}")
 async def get_investigation(investigation_id: str):
-    """Retrieve full investigation state including confirmed entity and dossier."""
+    """Retrieve full investigation state including confirmed entity, dossier, claims, and sources."""
     inv = await db.get_investigation(investigation_id)
     if not inv:
         raise HTTPException(status_code=404, detail="Investigation not found")
@@ -135,6 +144,104 @@ async def stream_investigation_events(investigation_id: str):
     )
 
 
+# --- Milestone M3: Sandbox Outreach & Action Approval Endpoints ---
+
+@app.post("/api/investigations/{investigation_id}/outreach/draft", response_model=OutreachDraft)
+async def draft_outreach_inquiry(investigation_id: str, req: DraftOutreachRequest):
+    """Draft a verification inquiry for a specific unverified claim or dispute."""
+    inv = await db.get_investigation(investigation_id)
+    if not inv:
+        raise HTTPException(status_code=404, detail="Investigation not found")
+
+    confirmed_entity_data = inv.get("confirmedEntity")
+    if not confirmed_entity_data:
+        raise HTTPException(status_code=400, detail="Entity must be confirmed before drafting outreach")
+
+    entity = CandidateEntity(**confirmed_entity_data)
+
+    target_claim = None
+    if req.claimId:
+        claims = await db.get_claims(investigation_id)
+        for c in claims:
+            if c.get("id") == req.claimId:
+                target_claim = AtomicClaim(**c)
+                break
+
+    draft = await outreach_drafter.draft_inquiry(
+        investigation_id=investigation_id,
+        entity=entity,
+        claim=target_claim,
+        target_type=req.targetType,
+        custom_note=req.filmmakerNote,
+    )
+
+    await approval_service.save_draft(draft)
+
+    await broadcaster.emit(
+        investigation_id=investigation_id,
+        event_type=EventType.DOSSIER_SYNTHESIZING,
+        agent_name="OutreachDrafter",
+        message=f"Drafted verification inquiry for {entity.name}. Awaiting user cryptographic approval.",
+        details={"draftId": draft.id, "payloadHash": draft.payloadHash},
+    )
+
+    return draft
+
+
+@app.post("/api/investigations/{investigation_id}/outreach/approve", response_model=OutreachDraft)
+async def approve_outreach_inquiry(investigation_id: str, req: ApproveOutreachRequest):
+    """Verify exact SHA-256 payload hash and execute simulated sandbox delivery."""
+    try:
+        draft = await approval_service.approve_and_sandbox_send(
+            draft_id=req.draftId,
+            submitted_hash=req.payloadHash,
+        )
+
+        await broadcaster.emit(
+            investigation_id=investigation_id,
+            event_type=EventType.DOSSIER_READY,
+            agent_name="ApprovalService",
+            message=f"Outreach inquiry approved (SHA-256 verified) and executed in SANDBOX mode.",
+            details={"draftId": draft.id, "executedAt": draft.executedAt},
+        )
+
+        return draft
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"Approval failed: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/investigations/{investigation_id}/export")
+async def export_investigation_dossier(investigation_id: str):
+    """Export the complete signed investigation dossier as an archival Markdown report."""
+    inv = await db.get_investigation(investigation_id)
+    if not inv:
+        raise HTTPException(status_code=404, detail="Investigation not found")
+
+    claims = await db.get_claims(investigation_id)
+    sources = await db.get_sources(investigation_id)
+
+    markdown_content = export_service.generate_markdown(
+        investigation_id=investigation_id,
+        entity_data=inv.get("confirmedEntity") or {"name": inv.get("query", "Unknown")},
+        dossier_data=inv.get("dossier") or {},
+        claims=claims,
+        sources=sources,
+        disputes=inv.get("disputes", []),
+    )
+
+    filename = f"screened-dossier-{investigation_id[:8]}.md"
+    return PlainTextResponse(
+        content=markdown_content,
+        media_type="text/markdown",
+        headers={
+            "Content-Disposition": f'attachment; filename="{filename}"'
+        },
+    )
+
+
 @app.post("/api/test-pipeline", response_model=TestPipelineResponse)
 async def test_walking_skeleton_pipeline(request: TestPipelineRequest):
     """Walking skeleton test endpoint executing live Parallel Search + Gemini claim extraction."""
@@ -142,8 +249,6 @@ async def test_walking_skeleton_pipeline(request: TestPipelineRequest):
     subject = request.festivalName.strip()
     if not subject:
         raise HTTPException(status_code=400, detail="Festival name is required")
-
-    logger.info(f"Triggering Walking Skeleton pipeline for: {subject}")
 
     try:
         search_queries = [

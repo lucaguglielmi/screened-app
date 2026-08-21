@@ -10,12 +10,15 @@ import {
 
 import { 
   ActivityEvent, 
+  AtomicClaim,
   CandidateEntity, 
-  Investigation
+  Investigation,
+  OutreachDraft
 } from './types/investigation';
 import { EntityConfirmation } from './components/EntityConfirmation';
 import { LiveProgress } from './components/LiveProgress';
 import { EvidenceDossier } from './components/EvidenceDossier';
+import { OutreachModal } from './components/OutreachModal';
 
 export default function App() {
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
@@ -29,10 +32,14 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-
   // Investigation state
   const [investigation, setInvestigation] = useState<Investigation | null>(null);
   const [events, setEvents] = useState<ActivityEvent[]>([]);
+
+  // Outreach Modal state
+  const [outreachDraft, setOutreachDraft] = useState<OutreachDraft | null>(null);
+  const [isOutreachOpen, setIsOutreachOpen] = useState(false);
+  const [outreachLoading, setOutreachLoading] = useState(false);
 
   useEffect(() => {
     localStorage.setItem('screened_theme', theme);
@@ -58,7 +65,6 @@ export default function App() {
         const activityEvent: ActivityEvent = JSON.parse(event.data);
         setEvents((prev) => [...prev, activityEvent]);
 
-        // Handle specific milestone triggers
         if (activityEvent.eventType === 'CANDIDATES_FOUND' && activityEvent.details?.candidates) {
           setInvestigation((prev) => prev ? {
             ...prev,
@@ -66,7 +72,6 @@ export default function App() {
             candidates: activityEvent.details.candidates,
           } : null);
         } else if (activityEvent.eventType === 'DOSSIER_READY') {
-          // Fetch final completed investigation state
           fetchInvestigation(investigation.id);
         } else if (activityEvent.eventType === 'PLANNING_STARTED') {
           setInvestigation((prev) => prev ? { ...prev, status: 'PLANNING' } : null);
@@ -83,7 +88,7 @@ export default function App() {
     };
 
     eventSource.onerror = () => {
-      // EventSource auto-reconnects
+      // Auto reconnect
     };
 
     return () => {
@@ -158,10 +163,73 @@ export default function App() {
     }
   };
 
+  const handleDraftOutreach = async (claim?: AtomicClaim) => {
+    if (!investigation) return;
+    setOutreachLoading(true);
+    try {
+      const res = await fetch(`/api/investigations/${investigation.id}/outreach/draft`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          claimId: claim?.id,
+          targetType: 'FESTIVAL_ORGANIZER',
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.detail || 'Failed to draft outreach.');
+      }
+
+      const draft: OutreachDraft = await res.json();
+      setOutreachDraft(draft);
+      setIsOutreachOpen(true);
+    } catch (err: any) {
+      setError(err.message || 'Failed to draft outreach inquiry.');
+    } finally {
+      setOutreachLoading(false);
+    }
+  };
+
+  const handleApproveOutreach = async (draftId: string, payloadHash: string) => {
+    if (!investigation) return;
+    setOutreachLoading(true);
+    try {
+      const res = await fetch(`/api/investigations/${investigation.id}/outreach/approve`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          draftId,
+          payloadHash,
+          userConfirmed: true,
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.detail || 'Failed to approve outreach.');
+      }
+
+      const updatedDraft: OutreachDraft = await res.json();
+      setOutreachDraft(updatedDraft);
+    } catch (err: any) {
+      setError(err.message || 'Approval failed.');
+    } finally {
+      setOutreachLoading(false);
+    }
+  };
+
+  const handleExport = () => {
+    if (!investigation) return;
+    window.open(`/api/investigations/${investigation.id}/export`, '_blank');
+  };
+
   const handleReset = () => {
     setInvestigation(null);
     setEvents([]);
     setError(null);
+    setOutreachDraft(null);
+    setIsOutreachOpen(false);
   };
 
   const currentStatus = investigation?.status || 'DRAFT';
@@ -214,7 +282,7 @@ export default function App() {
           </div>
         )}
 
-        {/* View Routing Based on Lifecycle State */}
+        {/* View Routing */}
         {!investigation && (
           <div className="space-y-10">
             {/* Hero */}
@@ -314,9 +382,20 @@ export default function App() {
             sources={investigation.sources || []}
             disputes={investigation.disputes || []}
             onNewInvestigation={handleReset}
+            onDraftOutreach={handleDraftOutreach}
+            onExport={handleExport}
           />
         )}
       </main>
+
+      {/* Outreach Sandbox Approval Modal */}
+      <OutreachModal
+        draft={outreachDraft}
+        isOpen={isOutreachOpen}
+        onClose={() => setIsOutreachOpen(false)}
+        onApprove={handleApproveOutreach}
+        loading={outreachLoading}
+      />
 
       {/* Footer */}
       <footer className="border-t border-paper-border dark:border-darkroom-border py-6 text-center text-xs text-paper-muted dark:text-darkroom-muted">
