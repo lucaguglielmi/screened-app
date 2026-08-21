@@ -9,10 +9,12 @@ import { MiniDueDiligence } from '../chat/mini_apps/MiniDueDiligence';
 import { MiniScoutCard } from '../chat/mini_apps/MiniScoutCard';
 import { MiniCompareArena } from '../chat/mini_apps/MiniCompareArena';
 import { DesignTokensLab } from './DesignTokensLab';
+import { AgentObservabilityLab } from './AgentObservabilityLab';
 import { soundEffects } from '../../utils/audio';
 
 export const DesignPlayground: React.FC = () => {
-  const [activeSection, setActiveSection] = useState<'TOKENS' | 'ALL' | 'BUBBLES' | 'LOADERS' | 'MINI_APPS' | 'PROMPTS'>('TOKENS');
+  const [activeSection, setActiveSection] = useState<'TOKENS' | 'TRACES' | 'ALL' | 'BUBBLES' | 'LOADERS' | 'MINI_APPS' | 'PROMPTS'>('TOKENS');
+
   const [streamSimText, setStreamSimText] = useState<string>(
 
     'I have conducted an initial background check on the festival. Screening records indicate physical cinema leases at Curzon Soho.'
@@ -162,7 +164,7 @@ export const DesignPlayground: React.FC = () => {
 
       {/* Section Navigation Tabs */}
       <div className="flex items-center gap-1.5 p-1 rounded-xl bg-zinc-900/80 border border-zinc-800 w-fit overflow-x-auto">
-        {(['TOKENS', 'ALL', 'BUBBLES', 'LOADERS', 'MINI_APPS', 'PROMPTS'] as const).map((sec) => (
+        {(['TOKENS', 'TRACES', 'ALL', 'BUBBLES', 'LOADERS', 'MINI_APPS', 'PROMPTS'] as const).map((sec) => (
           <button
             key={sec}
             onClick={() => {
@@ -176,6 +178,7 @@ export const DesignPlayground: React.FC = () => {
             }`}
           >
             {sec === 'TOKENS' && '🎨 Design Tokens & Motion'}
+            {sec === 'TRACES' && '⚡ Agent Traces & Telemetry'}
             {sec === 'ALL' && 'All Components'}
             {sec === 'BUBBLES' && '1. Chat Bubbles'}
             {sec === 'LOADERS' && '2. Loaders & Thinking'}
@@ -189,6 +192,12 @@ export const DesignPlayground: React.FC = () => {
       {activeSection === 'TOKENS' && (
         <DesignTokensLab />
       )}
+
+      {/* SECTION 0B: AGENT TRACES & TELEMETRY */}
+      {activeSection === 'TRACES' && (
+        <AgentObservabilityLab />
+      )}
+
 
 
       {/* SECTION 1: CHAT BUBBLES */}

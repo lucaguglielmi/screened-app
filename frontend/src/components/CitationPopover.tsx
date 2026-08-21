@@ -12,15 +12,22 @@ export const CitationPopover: React.FC<Props> = ({ evidence, sourceTier = 2 }) =
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="relative inline-block">
+    <div 
+      className="relative inline-block"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
       <button
         onClick={() => setOpen(!open)}
-        className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-mono bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-500/20 border border-indigo-500/20 transition-colors cursor-pointer"
+        onFocus={() => setOpen(true)}
+        onBlur={() => setOpen(false)}
+        className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-mono bg-[#2018E6]/15 text-indigo-400 hover:bg-[#2018E6]/25 border border-[#2018E6]/30 transition-colors cursor-pointer"
         title="View verbatim citation"
       >
         <Quote className="size-2.5" />
-        <span className="truncate max-w-[120px]">{evidence.sourceDomain || 'Source'}</span>
+        <span className="truncate max-w-[130px]">{evidence.sourceDomain || 'Source'}</span>
       </button>
+
 
       {open && (
         <>

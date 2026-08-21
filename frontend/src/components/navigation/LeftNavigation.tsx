@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   Sparkles, 
+
   ShieldCheck, 
   Compass, 
   Palette, 
@@ -12,7 +13,9 @@ import {
   Keyboard, 
   GripVertical, 
   ChevronsUpDown,
-  Check
+  Check,
+  Scale,
+  Command
 } from 'lucide-react';
 import { ActiveTool } from '../../types/investigation';
 import { soundEffects } from '../../utils/audio';
@@ -25,6 +28,7 @@ interface Props {
   soundMuted: boolean;
   onToggleSound: () => void;
   onOpenKeyboardHelp: () => void;
+  onOpenCommandPalette?: () => void;
 }
 
 export const LeftNavigation: React.FC<Props> = ({
@@ -35,7 +39,9 @@ export const LeftNavigation: React.FC<Props> = ({
   soundMuted,
   onToggleSound,
   onOpenKeyboardHelp,
+  onOpenCommandPalette,
 }) => {
+
   const [isProductMenuOpen, setIsProductMenuOpen] = useState(false);
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
   const flyoutRef = useRef<HTMLDivElement>(null);
@@ -177,10 +183,31 @@ export const LeftNavigation: React.FC<Props> = ({
           )}
         </div>
 
+        {/* 4. Why Screened (Impact & Research) */}
+        <div className="relative">
+          <button
+            onClick={() => handleSelectTool('WHY_SCREENED')}
+            onMouseEnter={() => setActiveTooltip('Why Screened')}
+            onMouseLeave={() => setActiveTooltip(null)}
+            className={`relative p-3 rounded-2xl transition-all cursor-pointer ${
+              activeTool === 'WHY_SCREENED'
+                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
+                : 'hover:bg-[#121633] text-slate-400 hover:text-indigo-300'
+            }`}
+          >
+            <Scale className="size-5" />
+          </button>
+          {activeTooltip === 'Why Screened' && (
+            <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-[#0E1124] text-indigo-300 text-sm font-medium whitespace-nowrap shadow-xl border border-indigo-500/30 z-50 pointer-events-none">
+              Why Screened Exists
+            </div>
+          )}
+        </div>
+
         {/* Separator Line */}
         <div className="w-8 h-px bg-[#1D234A] my-1" />
 
-        {/* 4. Products & Workspaces Flyout Trigger */}
+        {/* 5. Products & Workspaces Flyout Trigger */}
         <div className="relative">
           <button
             ref={triggerRef}
@@ -209,6 +236,17 @@ export const LeftNavigation: React.FC<Props> = ({
 
       {/* Bottom Section: Utility Controls */}
       <div className="flex flex-col items-center gap-3 w-full pt-2">
+        {/* Command Palette Trigger */}
+        {onOpenCommandPalette && (
+          <button
+            onClick={onOpenCommandPalette}
+            className="p-2.5 rounded-xl hover:bg-[#121633] text-slate-400 hover:text-indigo-400 transition-colors cursor-pointer"
+            title="Command Palette (⌘K)"
+          >
+            <Command className="size-4.5" />
+          </button>
+        )}
+
         {/* Component Design Playground */}
         <div className="relative">
           <button
@@ -331,10 +369,34 @@ export const LeftNavigation: React.FC<Props> = ({
                 )}
               </div>
               <p className="text-sm text-slate-400 line-clamp-1">
-                Film slate matching & deadline strategy
+                Slate distribution & festival matching
               </p>
             </div>
           </button>
+
+          {/* Section: Why Screened Exists */}
+          <div className="pt-2 border-t border-[#1B2042]">
+            <button
+              onClick={() => handleSelectTool('WHY_SCREENED')}
+              className={`w-full p-2.5 rounded-2xl flex items-center gap-3 transition-all text-left group cursor-pointer ${
+                activeTool === 'WHY_SCREENED'
+                  ? 'bg-[#151936] border border-indigo-500/50'
+                  : 'hover:bg-[#141838] border border-transparent'
+              }`}
+            >
+              <div className="size-9 rounded-xl bg-[#2018E6]/20 text-indigo-400 flex items-center justify-center shrink-0 border border-[#2018E6]/40">
+                <Scale className="size-4.5" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h4 className="text-sm font-semibold text-white group-hover:text-indigo-300">
+                  Why Screened Exists
+                </h4>
+                <p className="text-xs text-slate-400 line-clamp-1">
+                  Problem synthesis & empirical research
+                </p>
+              </div>
+            </button>
+          </div>
 
           {/* Quick Hub Option: The Desk */}
           <div className="pt-1.5 border-t border-[#1B2042]">

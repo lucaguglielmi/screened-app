@@ -4,10 +4,10 @@ import {
   AlertTriangle,
   History,
   MapPin,
-  ShieldCheck
+  ShieldCheck,
+  Command as CommandIcon,
+  Scale
 } from 'lucide-react';
-
-
 
 import { 
   ActivityEvent, 
@@ -15,7 +15,8 @@ import {
   AtomicClaim,
   CandidateEntity, 
   Investigation,
-  OutreachDraft
+  OutreachDraft,
+  FilmProfile
 } from './types/investigation';
 import { LeftNavigation } from './components/navigation/LeftNavigation';
 import { EntityConfirmation } from './components/EntityConfirmation';
@@ -26,8 +27,10 @@ import { OpportunityScout } from './components/OpportunityScout';
 import { KeyboardHelpModal } from './components/KeyboardHelpModal';
 import { ChatContainer } from './components/chat/ChatContainer';
 import { DesignPlayground } from './components/playground/DesignPlayground';
-import { FilmProfile } from './types/investigation';
+import { WhyScreened } from './components/WhyScreened';
+import { CommandPalette } from './components/CommandPalette';
 import { isSoundMuted, setSoundMuted, playSuccessChime } from './utils/audio';
+
 
 
 
@@ -96,6 +99,9 @@ export default function App() {
   const [outreachDraft, setOutreachDraft] = useState<OutreachDraft | null>(null);
   const [isOutreachOpen, setIsOutreachOpen] = useState(false);
   const [outreachLoading, setOutreachLoading] = useState(false);
+  // Command Palette & Keyboard state
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -120,22 +126,49 @@ export default function App() {
     });
   };
 
+  // Global Page-Level Paste Intake
+  useEffect(() => {
+    const handlePaste = (e: ClipboardEvent) => {
+      const activeEl = document.activeElement as HTMLElement;
+      if (['INPUT', 'TEXTAREA'].includes(activeEl?.tagName)) {
+        return; // normal paste inside focused field
+      }
+
+      const pastedText = e.clipboardData?.getData('text');
+      if (pastedText && pastedText.trim()) {
+        const cleaned = pastedText.trim();
+        setActiveTool('DUE_DILIGENCE');
+        setQuery(cleaned);
+        setTimeout(() => {
+          searchInputRef.current?.focus();
+        }, 50);
+      }
+    };
+
+    window.addEventListener('paste', handlePaste);
+    return () => window.removeEventListener('paste', handlePaste);
+  }, []);
+
   // Keyboard Shortcuts Listener
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsCommandPaletteOpen(prev => !prev);
+        return;
+      }
+
       // Don't trigger if user is actively typing in an input or textarea
       if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) {
         if (e.key === 'Escape') {
           (e.target as HTMLElement).blur();
+          setIsCommandPaletteOpen(false);
+          setIsKeyboardHelpOpen(false);
         }
         return;
       }
 
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault();
-        setActiveTool('DUE_DILIGENCE');
-        searchInputRef.current?.focus();
-      } else if (e.key === '/') {
+      if (e.key === '/') {
         e.preventDefault();
         setActiveTool('DUE_DILIGENCE');
         searchInputRef.current?.focus();
@@ -147,6 +180,7 @@ export default function App() {
       } else if (e.key.toLowerCase() === 'm') {
         toggleSound();
       } else if (e.key === 'Escape') {
+        setIsCommandPaletteOpen(false);
         setIsKeyboardHelpOpen(false);
         setIsOutreachOpen(false);
       }
@@ -155,6 +189,7 @@ export default function App() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
 
   const saveRecentSearch = (term: string) => {
     setRecentSearches(prev => {
@@ -375,6 +410,7 @@ export default function App() {
         soundMuted={soundMuted}
         onToggleSound={toggleSound}
         onOpenKeyboardHelp={() => setIsKeyboardHelpOpen(true)}
+        onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
       />
 
       {/* Main Scrollable Workspace Container */}
@@ -405,6 +441,11 @@ export default function App() {
                     Opportunity Scout
                   </span>
                 )}
+                {activeTool === 'WHY_SCREENED' && (
+                  <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">
+                    Why Screened
+                  </span>
+                )}
                 {activeTool === 'DESIGN_PLAYGROUND' && (
                   <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-400 border border-purple-500/40">
                     Playground
@@ -412,8 +453,23 @@ export default function App() {
                 )}
               </div>
             </div>
+
+            {/* Header Right: Command Palette Quick Trigger */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setIsCommandPaletteOpen(true)}
+                className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#0E1124] hover:bg-[#151936] text-slate-400 hover:text-slate-200 border border-[#22274C] transition-colors cursor-pointer text-xs font-mono"
+              >
+                <Search className="size-3.5 text-indigo-400" />
+                <span>Search or jump to...</span>
+                <span className="flex items-center gap-0.5 text-[10px] bg-[#1A1F45] text-slate-400 px-1.5 py-0.5 rounded border border-[#262D5F]">
+                  <CommandIcon className="size-2.5" /> K
+                </span>
+              </button>
+            </div>
           </div>
         </header>
+
 
 
         {/* Main Workspace Area */}
@@ -447,7 +503,16 @@ export default function App() {
             />
           )}
 
-          {/* View 4: Due Diligence */}
+          {/* View 4: Why Screened Exists */}
+          {activeTool === 'WHY_SCREENED' && (
+            <WhyScreened
+              onNavigateToDesk={() => setActiveTool('CONVERSATIONAL_DESK')}
+              onNavigateToDiligence={() => setActiveTool('DUE_DILIGENCE')}
+              onNavigateToScout={() => setActiveTool('OPPORTUNITY_SCOUT')}
+            />
+          )}
+
+          {/* View 5: Due Diligence */}
           {activeTool === 'DUE_DILIGENCE' && (
             <>
               {!investigation && (
@@ -611,6 +676,18 @@ export default function App() {
           )}
         </main>
 
+        {/* Global Command Palette (⌘K) */}
+        <CommandPalette
+          isOpen={isCommandPaletteOpen}
+          onClose={() => setIsCommandPaletteOpen(false)}
+          onSelectTool={setActiveTool}
+          onSearchFestival={handleDeepScreen}
+          theme={theme}
+          onToggleTheme={toggleTheme}
+          soundMuted={soundMuted}
+          onToggleSound={toggleSound}
+        />
+
         {/* Outreach Sandbox Approval Modal */}
         <OutreachModal
           draft={outreachDraft}
@@ -628,12 +705,26 @@ export default function App() {
 
         {/* Footer */}
         <footer className="border-t border-paper-border dark:border-darkroom-border py-6 text-center text-sm text-paper-muted dark:text-darkroom-muted no-print mt-auto">
-          <div className="max-w-6xl mx-auto px-4 space-y-1">
-            <div className="flex items-center justify-center gap-4">
+          <div className="max-w-6xl mx-auto px-4 space-y-2">
+            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
               <span>Screened — Built natively with Google ADK & Parallel Search API</span>
               <button
+                onClick={() => setActiveTool('WHY_SCREENED')}
+                className="underline hover:text-indigo-400 text-indigo-300 transition-colors cursor-pointer text-xs flex items-center gap-1"
+              >
+                <Scale className="size-3" />
+                <span>Why Screened exists</span>
+              </button>
+              <button
+                onClick={() => setIsCommandPaletteOpen(true)}
+                className="underline hover:text-indigo-400 transition-colors cursor-pointer text-xs flex items-center gap-1"
+              >
+                <CommandIcon className="size-3" />
+                <span>Command Menu (⌘K)</span>
+              </button>
+              <button
                 onClick={() => setIsKeyboardHelpOpen(true)}
-                className="underline hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer text-xs"
+                className="underline hover:text-indigo-400 transition-colors cursor-pointer text-xs"
               >
                 Shortcuts (?)
               </button>
@@ -641,6 +732,7 @@ export default function App() {
             <div className="text-xs opacity-75">All findings are cryptographically hashed and cited to verified web excerpts.</div>
           </div>
         </footer>
+
       </div>
     </div>
   );
