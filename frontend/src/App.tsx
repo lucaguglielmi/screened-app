@@ -10,15 +10,18 @@ import {
 
 import { 
   ActivityEvent, 
+  ActiveTool,
   AtomicClaim,
   CandidateEntity, 
   Investigation,
   OutreachDraft
 } from './types/investigation';
+import { ToolSwitcher } from './components/ToolSwitcher';
 import { EntityConfirmation } from './components/EntityConfirmation';
 import { LiveProgress } from './components/LiveProgress';
 import { EvidenceDossier } from './components/EvidenceDossier';
 import { OutreachModal } from './components/OutreachModal';
+import { OpportunityScout } from './components/OpportunityScout';
 
 export default function App() {
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
@@ -27,6 +30,7 @@ export default function App() {
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   });
 
+  const [activeTool, setActiveTool] = useState<ActiveTool>('DUE_DILIGENCE');
   const [query, setQuery] = useState('Aldergate Film Festival');
   const [optionalUrl] = useState('');
   const [loading, setLoading] = useState(false);
@@ -232,16 +236,23 @@ export default function App() {
     setIsOutreachOpen(false);
   };
 
+  const handleDeepScreen = (festivalName: string) => {
+    setActiveTool('DUE_DILIGENCE');
+    setQuery(festivalName);
+    handleReset();
+    handleStartInvestigation(festivalName);
+  };
+
   const currentStatus = investigation?.status || 'DRAFT';
 
   return (
     <div className="min-h-screen flex flex-col justify-between selection:bg-indigo-500/20">
       {/* Top Navbar */}
       <header className="border-b border-paper-border dark:border-darkroom-border bg-paper-surface/80 dark:bg-darkroom-surface/80 backdrop-blur sticky top-0 z-30 transition-colors">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
           <div 
             onClick={handleReset}
-            className="flex items-center gap-3 cursor-pointer"
+            className="flex items-center gap-3 cursor-pointer shrink-0"
           >
             <div className="size-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-serif font-bold text-lg shadow-sm">
               S
@@ -256,8 +267,11 @@ export default function App() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
+          {/* Tool Switcher */}
+          <ToolSwitcher activeTool={activeTool} onChange={setActiveTool} />
+
+          <div className="flex items-center gap-3 shrink-0">
+            <span className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
               <Cpu className="size-3.5" /> Parallel Search + Vertex AI
             </span>
 
@@ -282,109 +296,118 @@ export default function App() {
           </div>
         )}
 
-        {/* View Routing */}
-        {!investigation && (
-          <div className="space-y-10">
-            {/* Hero */}
-            <section className="text-center max-w-2xl mx-auto space-y-3">
-              <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-paper-text dark:text-darkroom-text">
-                Investigate before you submit.
-              </h1>
-              <p className="text-sm sm:text-base text-paper-muted dark:text-darkroom-muted leading-relaxed">
-                Autonomous multi-agent research across trade registries, press archives, and participant accounts. Transparent, cited facts — no blackbox scores.
-              </p>
-            </section>
+        {/* View 1: Opportunity Scout */}
+        {activeTool === 'OPPORTUNITY_SCOUT' && (
+          <OpportunityScout onDeepScreen={handleDeepScreen} />
+        )}
 
-            {/* Search Intake Box */}
-            <section className="max-w-2xl mx-auto space-y-3">
-              <form 
-                onSubmit={(e) => { e.preventDefault(); handleStartInvestigation(query); }}
-                className="p-2 rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border shadow-sm flex flex-col sm:flex-row gap-2 transition-colors"
-              >
-                <div className="relative flex-1 flex items-center">
-                  <Search className="size-5 absolute left-3.5 text-paper-muted dark:text-darkroom-muted" />
-                  <input
-                    type="text"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Enter festival name (e.g. Raindance, Aldergate, Sundance)..."
-                    className="w-full pl-11 pr-4 py-3 bg-transparent text-sm text-paper-text dark:text-darkroom-text placeholder-paper-muted dark:placeholder-darkroom-muted focus:outline-none"
-                    disabled={loading}
-                  />
-                </div>
-                <button
-                  type="submit"
-                  disabled={loading || !query.trim()}
-                  className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-medium text-sm flex items-center justify-center gap-2 transition-all shadow-sm shrink-0 cursor-pointer"
-                >
-                  <Sparkles className="size-4" />
-                  <span>Start Due Diligence</span>
-                </button>
-              </form>
+        {/* View 2: Due Diligence */}
+        {activeTool === 'DUE_DILIGENCE' && (
+          <>
+            {!investigation && (
+              <div className="space-y-10">
+                {/* Hero */}
+                <section className="text-center max-w-2xl mx-auto space-y-3">
+                  <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-paper-text dark:text-darkroom-text">
+                    Investigate before you submit.
+                  </h1>
+                  <p className="text-sm sm:text-base text-paper-muted dark:text-darkroom-muted leading-relaxed">
+                    Autonomous multi-agent research across trade registries, press archives, and participant accounts. Transparent, cited facts — no blackbox scores.
+                  </p>
+                </section>
 
-              {/* Quick suggestions */}
-              <div className="flex items-center justify-center gap-2 text-xs text-paper-muted dark:text-darkroom-muted">
-                <span className="font-mono">Quick Test:</span>
-                {['Aldergate Film Festival', 'Raindance Film Festival', 'Aesthetica Short Film Festival'].map((name) => (
-                  <button
-                    key={name}
-                    type="button"
-                    onClick={() => { setQuery(name); handleStartInvestigation(name); }}
-                    className="underline hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
+                {/* Search Intake Box */}
+                <section className="max-w-2xl mx-auto space-y-3">
+                  <form 
+                    onSubmit={(e) => { e.preventDefault(); handleStartInvestigation(query); }}
+                    className="p-2 rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border shadow-sm flex flex-col sm:flex-row gap-2 transition-colors"
                   >
-                    {name.split(' ')[0]}
-                  </button>
-                ))}
+                    <div className="relative flex-1 flex items-center">
+                      <Search className="size-5 absolute left-3.5 text-paper-muted dark:text-darkroom-muted" />
+                      <input
+                        type="text"
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        placeholder="Enter festival name (e.g. Raindance, Aldergate, Sundance)..."
+                        className="w-full pl-11 pr-4 py-3 bg-transparent text-sm text-paper-text dark:text-darkroom-text placeholder-paper-muted dark:placeholder-darkroom-muted focus:outline-none"
+                        disabled={loading}
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={loading || !query.trim()}
+                      className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-medium text-sm flex items-center justify-center gap-2 transition-all shadow-sm shrink-0 cursor-pointer"
+                    >
+                      <Sparkles className="size-4" />
+                      <span>Start Due Diligence</span>
+                    </button>
+                  </form>
+
+                  {/* Quick suggestions */}
+                  <div className="flex items-center justify-center gap-2 text-xs text-paper-muted dark:text-darkroom-muted">
+                    <span className="font-mono">Quick Test:</span>
+                    {['Aldergate Film Festival', 'Raindance Film Festival', 'Aesthetica Short Film Festival'].map((name) => (
+                      <button
+                        key={name}
+                        type="button"
+                        onClick={() => { setQuery(name); handleStartInvestigation(name); }}
+                        className="underline hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
+                      >
+                        {name.split(' ')[0]}
+                      </button>
+                    ))}
+                  </div>
+                </section>
               </div>
-            </section>
-          </div>
-        )}
+            )}
 
-        {/* State 1: Disambiguation in progress or Awaiting confirmation */}
-        {investigation && currentStatus === 'DISAMBIGUATING' && (
-          <LiveProgress
-            status={currentStatus}
-            events={events}
-            festivalName={investigation.query}
-          />
-        )}
+            {/* State 1: Disambiguation in progress or Awaiting confirmation */}
+            {investigation && currentStatus === 'DISAMBIGUATING' && (
+              <LiveProgress
+                status={currentStatus}
+                events={events}
+                festivalName={investigation.query}
+              />
+            )}
 
-        {investigation && currentStatus === 'AWAITING_ENTITY_CONFIRMATION' && (
-          <EntityConfirmation
-            candidates={investigation.candidates}
-            query={investigation.query}
-            onConfirm={handleConfirmEntity}
-            loading={loading}
-          />
-        )}
+            {investigation && currentStatus === 'AWAITING_ENTITY_CONFIRMATION' && (
+              <EntityConfirmation
+                candidates={investigation.candidates}
+                query={investigation.query}
+                onConfirm={handleConfirmEntity}
+                loading={loading}
+              />
+            )}
 
-        {/* State 2: Researching / Analyzing */}
-        {investigation && ['PLANNING', 'RESEARCHING', 'ANALYZING_CONTRADICTIONS', 'ASSEMBLING_DOSSIER'].includes(currentStatus) && (
-          <LiveProgress
-            status={currentStatus}
-            events={events}
-            festivalName={investigation.confirmedEntity?.name || investigation.query}
-          />
-        )}
+            {/* State 2: Researching / Analyzing */}
+            {investigation && ['PLANNING', 'RESEARCHING', 'ANALYZING_CONTRADICTIONS', 'ASSEMBLING_DOSSIER'].includes(currentStatus) && (
+              <LiveProgress
+                status={currentStatus}
+                events={events}
+                festivalName={investigation.confirmedEntity?.name || investigation.query}
+              />
+            )}
 
-        {/* State 3: Dossier Ready */}
-        {investigation && currentStatus === 'READY' && investigation.dossier && (
-          <EvidenceDossier
-            entity={investigation.confirmedEntity || {
-              id: 'default',
-              name: investigation.query,
-              entityType: 'FESTIVAL',
-              descriptor: '',
-              sourceIds: [],
-            }}
-            dossier={investigation.dossier}
-            claims={investigation.claims || []}
-            sources={investigation.sources || []}
-            disputes={investigation.disputes || []}
-            onNewInvestigation={handleReset}
-            onDraftOutreach={handleDraftOutreach}
-            onExport={handleExport}
-          />
+            {/* State 3: Dossier Ready */}
+            {investigation && currentStatus === 'READY' && investigation.dossier && (
+              <EvidenceDossier
+                entity={investigation.confirmedEntity || {
+                  id: 'default',
+                  name: investigation.query,
+                  entityType: 'FESTIVAL',
+                  descriptor: '',
+                  sourceIds: [],
+                }}
+                dossier={investigation.dossier}
+                claims={investigation.claims || []}
+                sources={investigation.sources || []}
+                disputes={investigation.disputes || []}
+                onNewInvestigation={handleReset}
+                onDraftOutreach={handleDraftOutreach}
+                onExport={handleExport}
+              />
+            )}
+          </>
         )}
       </main>
 

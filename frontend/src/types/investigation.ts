@@ -10,6 +10,12 @@ export type DetailDensity = 'SUMMARY' | 'STANDARD' | 'EVIDENCE';
 
 export type ApprovalStatus = 'PENDING_APPROVAL' | 'APPROVED' | 'REJECTED' | 'EXECUTED_SANDBOX';
 
+export type ActiveTool = 'DUE_DILIGENCE' | 'OPPORTUNITY_SCOUT';
+
+export type FilmFormat = 'SHORT' | 'FEATURE' | 'DOCUMENTARY' | 'ANIMATION' | 'EPISODIC';
+
+export type PremiereGoal = 'WORLD_PREMIERE' | 'INTERNATIONAL_PREMIERE' | 'NATIONAL_PREMIERE' | 'NO_PREFERENCE';
+
 export type InvestigationStatus = 
   | 'DRAFT'
   | 'DISAMBIGUATING'
@@ -105,6 +111,39 @@ export interface OutreachDraft {
   status: ApprovalStatus;
   createdAt: string;
   executedAt?: string;
+}
+
+export interface FilmProfile {
+  title: string;
+  format: FilmFormat;
+  genre: string;
+  runtimeMinutes: number;
+  premiereGoal: PremiereGoal;
+  targetRegions: string[];
+  budgetTier: string;
+  targetDeadlineMonth?: string;
+}
+
+export interface FestivalOpportunity {
+  id: string;
+  name: string;
+  cityCountry: string;
+  officialDomain?: string;
+  nextDeadline: string;
+  deadlineTier: string;
+  feeEstimate: string;
+  accreditationTags: string[];
+  strategicFitRationale: string;
+  eligibilityNotes: string;
+  submissionUrl?: string;
+}
+
+export interface ScoutResponse {
+  filmTitle: string;
+  opportunitiesFound: number;
+  opportunities: FestivalOpportunity[];
+  strategySummary: string;
+  durationSeconds: number;
 }
 
 export interface ActivityEvent {

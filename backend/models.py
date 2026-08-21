@@ -79,6 +79,21 @@ class DetailDensity(str, Enum):
     EVIDENCE = "EVIDENCE"
 
 
+class FilmFormat(str, Enum):
+    SHORT = "SHORT"
+    FEATURE = "FEATURE"
+    DOCUMENTARY = "DOCUMENTARY"
+    ANIMATION = "ANIMATION"
+    EPISODIC = "EPISODIC"
+
+
+class PremiereGoal(str, Enum):
+    WORLD_PREMIERE = "WORLD_PREMIERE"
+    INTERNATIONAL_PREMIERE = "INTERNATIONAL_PREMIERE"
+    NATIONAL_PREMIERE = "NATIONAL_PREMIERE"
+    NO_PREFERENCE = "NO_PREFERENCE"
+
+
 class SourceRecord(BaseModel):
     id: str = Field(default_factory=generate_uuid)
     url: str
@@ -143,7 +158,7 @@ class OutreachDraft(BaseModel):
 class DraftOutreachRequest(BaseModel):
     claimId: Optional[str] = None
     disputeId: Optional[str] = None
-    targetType: str = "FESTIVAL_ORGANIZER"  # FESTIVAL_ORGANIZER | VENUE_BOX_OFFICE
+    targetType: str = "FESTIVAL_ORGANIZER"
     filmmakerNote: Optional[str] = None
 
 
@@ -151,6 +166,45 @@ class ApproveOutreachRequest(BaseModel):
     draftId: str
     payloadHash: str
     userConfirmed: bool = True
+
+
+# --- Milestone M4: Opportunity Scout Models ---
+
+class FilmProfile(BaseModel):
+    title: str = "Untitled Project"
+    format: FilmFormat = FilmFormat.SHORT
+    genre: str = "Drama"
+    runtimeMinutes: int = 15
+    premiereGoal: PremiereGoal = PremiereGoal.WORLD_PREMIERE
+    targetRegions: List[str] = Field(default_factory=lambda: ["UK & Europe", "North America"])
+    budgetTier: str = "Micro / Indie (< $100k)"
+    targetDeadlineMonth: Optional[str] = None
+
+
+class FestivalOpportunity(BaseModel):
+    id: str = Field(default_factory=generate_uuid)
+    name: str
+    cityCountry: str
+    officialDomain: Optional[str] = None
+    nextDeadline: str
+    deadlineTier: str = "Regular Deadline"
+    feeEstimate: str = "£35 - £55"
+    accreditationTags: List[str] = Field(default_factory=list)  # e.g. ["BAFTA_QUALIFYING", "BIFA_QUALIFYING"]
+    strategicFitRationale: str
+    eligibilityNotes: str
+    submissionUrl: Optional[str] = None
+
+
+class ScoutRequest(BaseModel):
+    profile: FilmProfile
+
+
+class ScoutResponse(BaseModel):
+    filmTitle: str
+    opportunitiesFound: int
+    opportunities: List[FestivalOpportunity]
+    strategySummary: str
+    durationSeconds: float
 
 
 class TestPipelineRequest(BaseModel):

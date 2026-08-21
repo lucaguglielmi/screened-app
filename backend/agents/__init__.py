@@ -6,6 +6,7 @@ from .claim_extractor import ClaimExtractorAgent
 from .contradiction_analyst import ContradictionAnalystAgent, DisputeRecord
 from .report_writer import ReportWriterAgent, DossierReport
 from .outreach_drafter import OutreachDrafterAgent, compute_payload_hash
+from .opportunity_scout import OpportunityScoutAgent
 
 __all__ = [
     "DisambiguatorAgent",
@@ -23,4 +24,5 @@ __all__ = [
     "DossierReport",
     "OutreachDrafterAgent",
     "compute_payload_hash",
+    "OpportunityScoutAgent",
 ]

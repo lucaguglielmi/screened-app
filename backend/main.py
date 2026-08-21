@@ -17,6 +17,8 @@ from backend.models import (
     ApproveOutreachRequest,
     OutreachDraft,
     ResearchDomain,
+    ScoutRequest,
+    ScoutResponse,
     TestPipelineRequest,
     TestPipelineResponse,
 )
@@ -26,6 +28,7 @@ from backend.services.gemini_client import GeminiClient
 from backend.services.approval_service import approval_service
 from backend.services.export_service import export_service
 from backend.agents.outreach_drafter import OutreachDrafterAgent
+from backend.agents.opportunity_scout import OpportunityScoutAgent
 from backend.orchestrator.events import broadcaster, EventType
 from backend.orchestrator.state_machine import orchestrator
 
@@ -53,6 +56,7 @@ app.add_middleware(
 parallel_tool = ParallelSearchTool()
 gemini_client = GeminiClient()
 outreach_drafter = OutreachDrafterAgent(gemini_client)
+opportunity_scout = OpportunityScoutAgent(parallel_tool, gemini_client)
 
 
 class CreateInvestigationRequest(BaseModel):
@@ -142,6 +146,19 @@ async def stream_investigation_events(investigation_id: str):
             "X-Accel-Buffering": "no",
         },
     )
+
+
+# --- Milestone M4: Opportunity Scout Endpoint ---
+
+@app.post("/api/scout", response_model=ScoutResponse)
+async def scout_festival_opportunities(req: ScoutRequest):
+    """Discover tailored festival submission opportunities for a specific film profile."""
+    try:
+        response = await opportunity_scout.scout_opportunities(req.profile)
+        return response
+    except Exception as e:
+        logger.error(f"Opportunity scout API failed: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 # --- Milestone M3: Sandbox Outreach & Action Approval Endpoints ---
