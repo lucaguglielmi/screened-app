@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/assets/screened-logo.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Screened — Agentic Cinema Due-Diligence</title>
+    <meta name="description" content="Agentic due diligence and credibility intelligence for the cinema industry." />
+    <!-- Pre-hydration theme script to prevent flash -->
+    <script>
+      (function() {
+        try {
+          const stored = localStorage.getItem('screened_theme');
+          const isDark = stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (isDark) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class="min-h-screen bg-paper-bg text-paper-text antialiased transition-colors duration-300 dark:bg-darkroom-bg dark:text-darkroom-text">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

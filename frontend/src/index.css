@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+/* Font imports */
+@import "@fontsource/fraunces/latin.css";
+@import "@fontsource/instrument-sans/latin.css";
+@import "@fontsource/spline-sans-mono/latin.css";
+
+@theme {
+  --font-serif: "Fraunces", Georgia, serif;
+  --font-sans: "Instrument Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Spline Sans Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Ink & Light Theme Tokens */
+  --color-paper-bg: #FBFBFA;
+  --color-paper-surface: #FFFFFF;
+  --color-paper-card: #F4F3EF;
+  --color-paper-border: #E6E4DD;
+  --color-paper-text: #1C1917;
+  --color-paper-muted: #78716C;
+
+  --color-darkroom-bg: #0C0D0F;
+  --color-darkroom-surface: #141619;
+  --color-darkroom-card: #1C1E23;
+  --color-darkroom-border: #2A2D35;
+  --color-darkroom-text: #F5F5F4;
+  --color-darkroom-muted: #A8A29E;
+
+  /* Accent Indigo */
+  --color-indigo-accent: #6366F1;
+  --color-indigo-glow: rgba(99, 102, 241, 0.15);
+
+  /* Claim State Colors */
+  --color-state-corroborated: #10B981;
+  --color-state-supported: #3B82F6;
+  --color-state-disputed: #F59E0B;
+  --color-state-unverified: #6B7280;
+
+  /* Claim Kind Colors */
+  --color-kind-fact: #3B82F6;
+  --color-kind-allegation: #EF4444;
+  --color-kind-opinion: #8B5CF6;
+}
+
+:root {
+  font-family: var(--font-sans);
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: var(--font-sans);
+}
+
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(150, 150, 150, 0.2);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(150, 150, 150, 0.4);
+}

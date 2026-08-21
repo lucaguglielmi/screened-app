@@ -1,0 +1,20 @@
+# Core API framework
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+pydantic>=2.10.0
+pydantic-settings>=2.6.0
+python-dotenv>=1.0.1
+httpx>=0.28.0
+
+# Partner Track: Parallel Search Python SDK
+parallel-web>=0.1.0
+
+# Google Cloud & Gemini AI
+google-genai>=1.0.0
+google-cloud-aiplatform>=1.70.0
+google-cloud-firestore>=2.19.0
+google-cloud-secret-manager>=2.20.0
+
+# Testing & Dev
+pytest>=8.3.0
+pytest-asyncio>=0.24.0

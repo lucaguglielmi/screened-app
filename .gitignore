@@ -26,6 +26,19 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Python & Virtualenv
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
 # Environment & Local secrets
 .env
 .env*.local
@@ -33,8 +46,11 @@ pnpm-debug.log*
 .env.test.local
 .env.production.local
 
-# Dedicated research repository materials (excluded from app repo)
+# External planning & contest intelligence (strictly excluded from submission repo)
 RESEARCH/
 research/
 [Rr]esearch/
 [Rr]esearch*
+Antigravity-specs/
+contest-rules/
+
