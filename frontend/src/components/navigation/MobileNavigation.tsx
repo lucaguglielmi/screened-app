@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   Menu, 
   X, 
@@ -15,6 +16,7 @@ import {
   Keyboard,
   Check
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import { ActiveTool } from '../../types/investigation';
 import { soundEffects } from '../../utils/audio';
 
@@ -40,18 +42,25 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
   onOpenCommandPalette,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  // Close on Escape or Route change
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Lock body scroll when drawer is open
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setIsOpen(false);
     };
+
     if (isOpen) {
       document.body.style.overflow = 'hidden';
       window.addEventListener('keydown', handleKeyDown);
     } else {
       document.body.style.overflow = '';
     }
+
     return () => {
       document.body.style.overflow = '';
       window.removeEventListener('keydown', handleKeyDown);
@@ -64,32 +73,29 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
     setIsOpen(false);
   };
 
-  return (
-    <>
-      {/* Mobile Menu Trigger Button in Header (visible only on mobile: md:hidden) */}
-      <button
-        type="button"
-        onClick={() => {
-          soundEffects.playClick();
-          setIsOpen(!isOpen);
-        }}
-        aria-label="Open Navigation Menu"
-        className="md:hidden p-2 rounded-xl bg-[#0E1124] hover:bg-[#151936] border border-[#22274C] text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer transition-colors"
-      >
-        {isOpen ? <X className="size-5 text-indigo-400" /> : <Menu className="size-5 text-indigo-400" />}
-      </button>
-
-      {/* Slide-over Mobile Drawer */}
+  // Portal content for the overlay drawer
+  const drawerContent = (
+    <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 md:hidden animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[9999] md:hidden">
           {/* Backdrop */}
-          <div
-            className="fixed inset-0 bg-black/80 backdrop-blur-md transition-opacity"
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 bg-black/80 backdrop-blur-md"
             onClick={() => setIsOpen(false)}
           />
 
           {/* Drawer Panel */}
-          <div className="fixed inset-y-0 right-0 w-full max-w-sm bg-[#070913] border-l border-[#1F254E] shadow-2xl p-6 flex flex-col justify-between overflow-y-auto text-slate-200">
+          <motion.div
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', damping: 26, stiffness: 280 }}
+            className="fixed inset-y-0 right-0 w-full max-w-sm h-[100dvh] bg-[#070913] border-l border-[#1F254E] shadow-2xl p-6 flex flex-col justify-between overflow-y-auto text-slate-200"
+          >
             {/* Top Bar inside Drawer */}
             <div>
               <div className="flex items-center justify-between pb-5 border-b border-[#1B2042]">
@@ -103,8 +109,10 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                   </div>
                 </div>
                 <button
+                  type="button"
                   onClick={() => setIsOpen(false)}
                   className="p-2 rounded-xl bg-[#0E1124] border border-[#22274C] text-slate-400 hover:text-white transition-colors cursor-pointer"
+                  aria-label="Close menu"
                 >
                   <X className="size-5" />
                 </button>
@@ -113,6 +121,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
               {/* Quick Search Action */}
               <div className="mt-4">
                 <button
+                  type="button"
                   onClick={() => {
                     setIsOpen(false);
                     onOpenCommandPalette();
@@ -137,6 +146,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
 
                 {/* 1. The Desk */}
                 <button
+                  type="button"
                   onClick={() => handleSelect('CONVERSATIONAL_DESK')}
                   className={`w-full p-3.5 rounded-2xl flex items-center gap-3.5 transition-all text-left cursor-pointer ${
                     activeTool === 'CONVERSATIONAL_DESK'
@@ -158,6 +168,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
 
                 {/* 2. Due Diligence */}
                 <button
+                  type="button"
                   onClick={() => handleSelect('DUE_DILIGENCE')}
                   className={`w-full p-3.5 rounded-2xl flex items-center gap-3.5 transition-all text-left cursor-pointer ${
                     activeTool === 'DUE_DILIGENCE'
@@ -179,6 +190,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
 
                 {/* 3. Opportunity Scout */}
                 <button
+                  type="button"
                   onClick={() => handleSelect('OPPORTUNITY_SCOUT')}
                   className={`w-full p-3.5 rounded-2xl flex items-center gap-3.5 transition-all text-left cursor-pointer ${
                     activeTool === 'OPPORTUNITY_SCOUT'
@@ -200,6 +212,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
 
                 {/* 4. Why Screened Exists */}
                 <button
+                  type="button"
                   onClick={() => handleSelect('WHY_SCREENED')}
                   className={`w-full p-3.5 rounded-2xl flex items-center gap-3.5 transition-all text-left cursor-pointer ${
                     activeTool === 'WHY_SCREENED'
@@ -221,6 +234,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
 
                 {/* 5. Design Tokens & Playground */}
                 <button
+                  type="button"
                   onClick={() => handleSelect('DESIGN_PLAYGROUND')}
                   className={`w-full p-3.5 rounded-2xl flex items-center gap-3.5 transition-all text-left cursor-pointer ${
                     activeTool === 'DESIGN_PLAYGROUND'
@@ -245,6 +259,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
             {/* Bottom Utilities row */}
             <div className="pt-6 mt-6 border-t border-[#1B2042] flex items-center justify-between gap-2">
               <button
+                type="button"
                 onClick={() => {
                   soundEffects.playClick();
                   onToggleTheme();
@@ -256,6 +271,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
               </button>
 
               <button
+                type="button"
                 onClick={() => {
                   soundEffects.playClick();
                   onToggleSound();
@@ -267,6 +283,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
               </button>
 
               <button
+                type="button"
                 onClick={() => {
                   setIsOpen(false);
                   onOpenKeyboardHelp();
@@ -277,9 +294,29 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                 <Keyboard className="size-4 text-indigo-400" />
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
+    </AnimatePresence>
+  );
+
+  return (
+    <>
+      {/* Mobile Menu Trigger Button in Header (visible only on mobile: md:hidden) */}
+      <button
+        type="button"
+        onClick={() => {
+          soundEffects.playClick();
+          setIsOpen(!isOpen);
+        }}
+        aria-label="Open Navigation Menu"
+        className="md:hidden p-2 rounded-xl bg-[#0E1124] hover:bg-[#151936] border border-[#22274C] text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer transition-colors"
+      >
+        {isOpen ? <X className="size-5 text-indigo-400" /> : <Menu className="size-5 text-indigo-400" />}
+      </button>
+
+      {/* Render Mobile Drawer via Portal into document.body */}
+      {mounted && typeof document !== 'undefined' && createPortal(drawerContent, document.body)}
     </>
   );
 };
