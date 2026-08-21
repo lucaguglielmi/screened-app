@@ -25,11 +25,11 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
       if (paragraph.startsWith('- ') || paragraph.startsWith('* ') || /^\d+\.\s/.test(paragraph)) {
         const items = paragraph.split('\n');
         return (
-          <ul key={pIdx} className="my-2 space-y-1 pl-4 list-disc marker:text-amber-500/70">
+          <ul key={pIdx} className="my-2 space-y-1.5 pl-5 list-disc marker:text-amber-500/70">
             {items.map((item, iIdx) => {
               const cleaned = item.replace(/^[-*]\s+/, '').replace(/^\d+\.\s+/, '');
               return (
-                <li key={iIdx} className="text-xs leading-relaxed text-zinc-300">
+                <li key={iIdx} className="text-base leading-relaxed text-zinc-300">
                   {renderFormattedInline(cleaned)}
                 </li>
               );
@@ -39,7 +39,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
       }
 
       return (
-        <p key={pIdx} className="text-xs leading-relaxed text-zinc-200 mb-2 last:mb-0">
+        <p key={pIdx} className="text-base leading-relaxed text-zinc-200 mb-3 last:mb-0">
           {renderFormattedInline(paragraph)}
         </p>
       );
@@ -62,16 +62,16 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
   };
 
   return (
-    <div className={`flex w-full mb-4 ${isUser ? 'justify-end' : 'justify-start'} animate-fade-in`}>
-      <div className={`flex gap-3 max-w-3xl ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
+    <div className={`flex w-full mb-5 ${isUser ? 'justify-end' : 'justify-start'} animate-fade-in`}>
+      <div className={`flex gap-3.5 max-w-3xl ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
         {/* Avatar */}
         <div className="shrink-0 mt-1">
           {isUser ? (
-            <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-zinc-700 to-zinc-600 flex items-center justify-center text-xs font-bold text-white shadow-sm ring-1 ring-zinc-500">
+            <div className="h-9 w-9 rounded-full bg-gradient-to-tr from-zinc-700 to-zinc-600 flex items-center justify-center text-sm font-bold text-white shadow-sm ring-1 ring-zinc-500">
               👤
             </div>
           ) : (
-            <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-amber-500 to-amber-700 flex items-center justify-center text-sm shadow-md ring-1 ring-amber-400">
+            <div className="h-9 w-9 rounded-full bg-gradient-to-tr from-amber-500 to-amber-700 flex items-center justify-center text-base shadow-md ring-1 ring-amber-400">
               🎬
             </div>
           )}
@@ -80,18 +80,18 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
         {/* Message Content & Mini-UIs */}
         <div className="flex-1 overflow-hidden">
           {/* Header */}
-          <div className={`flex items-center gap-2 mb-1 text-[11px] ${isUser ? 'justify-end' : 'justify-start'}`}>
+          <div className={`flex items-center gap-2 mb-1.5 text-xs ${isUser ? 'justify-end' : 'justify-start'}`}>
             <span className="font-medium text-zinc-400">
               {isUser ? 'You' : 'The Producer Desk'}
             </span>
-            <span className="text-[10px] text-zinc-400">
+            <span className="text-[11px] text-zinc-500">
               {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </span>
           </div>
 
           {/* Text Bubble */}
           <div
-            className={`rounded-2xl px-4 py-3 text-xs shadow-sm ${
+            className={`rounded-2xl px-5 py-3.5 text-base shadow-sm ${
               isUser
                 ? 'bg-zinc-800 text-zinc-100 rounded-tr-none border border-zinc-700/60'
                 : 'bg-zinc-900/90 text-zinc-200 rounded-tl-none border border-zinc-800/90 backdrop-blur-md'
@@ -99,6 +99,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
           >
             {formatContent(message.content)}
           </div>
+
 
           {/* Embedded Mini-UI if tool call present */}
           {message.toolCall && (

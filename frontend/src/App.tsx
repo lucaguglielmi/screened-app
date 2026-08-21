@@ -2,17 +2,13 @@ import { useState, useEffect, useRef } from 'react';
 import { 
   Search, 
   Sparkles, 
-  Moon, 
-  Sun, 
   Cpu,
   AlertTriangle,
-  Volume2,
-  VolumeX,
-  Keyboard,
   History,
   MapPin,
   ShieldCheck
 } from 'lucide-react';
+
 
 import { 
   ActivityEvent, 
@@ -22,7 +18,7 @@ import {
   Investigation,
   OutreachDraft
 } from './types/investigation';
-import { ToolSwitcher } from './components/ToolSwitcher';
+import { LeftNavigation } from './components/navigation/LeftNavigation';
 import { EntityConfirmation } from './components/EntityConfirmation';
 import { LiveProgress } from './components/LiveProgress';
 import { EvidenceDossier } from './components/EvidenceDossier';
@@ -33,6 +29,7 @@ import { ChatContainer } from './components/chat/ChatContainer';
 import { DesignPlayground } from './components/playground/DesignPlayground';
 import { FilmProfile } from './types/investigation';
 import { isSoundMuted, setSoundMuted, playSuccessChime } from './utils/audio';
+
 
 
 const SPOTLIGHT_PRESETS = [
@@ -369,293 +366,274 @@ export default function App() {
   const currentStatus = investigation?.status || 'DRAFT';
 
   return (
-    <div className="min-h-screen flex flex-col justify-between selection:bg-indigo-500/20">
-      {/* Top Navbar */}
-      <header className="border-b border-paper-border dark:border-darkroom-border bg-paper-surface/80 dark:bg-darkroom-surface/80 backdrop-blur sticky top-0 z-30 transition-colors no-print">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-          <div 
-            onClick={handleReset}
-            className="flex items-center gap-3 cursor-pointer shrink-0"
-          >
-            <div className="size-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-serif font-bold text-lg shadow-xs">
-              S
-            </div>
-            <div>
-              <div className="font-serif text-xl font-semibold tracking-tight text-paper-text dark:text-darkroom-text">
-                Screened
+    <div className="min-h-screen flex flex-row bg-paper-bg dark:bg-darkroom-bg text-paper-text dark:text-darkroom-text selection:bg-indigo-500/20 antialiased">
+      {/* Left Vertical Navigation Rail & Expandable Flyout */}
+      <LeftNavigation
+        activeTool={activeTool}
+        onChange={setActiveTool}
+        theme={theme}
+        onToggleTheme={toggleTheme}
+        soundMuted={soundMuted}
+        onToggleSound={toggleSound}
+        onOpenKeyboardHelp={() => setIsKeyboardHelpOpen(true)}
+      />
+
+      {/* Main Scrollable Workspace Container */}
+      <div className="flex-1 flex flex-col min-w-0 min-h-screen overflow-y-auto">
+        {/* Top Header Bar */}
+        <header className="border-b border-paper-border dark:border-darkroom-border bg-paper-surface/80 dark:bg-darkroom-surface/80 backdrop-blur sticky top-0 z-30 transition-colors no-print">
+          <div className="px-4 sm:px-6 md:px-8 h-16 flex items-center justify-between gap-4">
+            <div 
+              onClick={handleReset}
+              className="flex items-center gap-3 cursor-pointer shrink-0"
+            >
+              <div className="flex items-center gap-2.5">
+                <span className="font-serif text-xl font-bold tracking-tight text-paper-text dark:text-darkroom-text">
+                  Screened
+                </span>
+                <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-500 border border-indigo-500/20">
+                  {activeTool === 'CONVERSATIONAL_DESK' && 'The Desk'}
+                  {activeTool === 'DUE_DILIGENCE' && 'Due Diligence'}
+                  {activeTool === 'OPPORTUNITY_SCOUT' && 'Opportunity Scout'}
+                  {activeTool === 'DESIGN_PLAYGROUND' && 'Playground'}
+                </span>
               </div>
-              <div className="text-[10px] font-mono tracking-widest text-paper-muted dark:text-darkroom-muted uppercase">
-                Cinema Due Diligence
-              </div>
+            </div>
+
+            <div className="flex items-center gap-3 shrink-0">
+              <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
+                <Cpu className="size-3.5" /> Vertex AI (gemini-2.5-flash)
+              </span>
             </div>
           </div>
+        </header>
 
-          {/* Tool Switcher */}
-          <ToolSwitcher activeTool={activeTool} onChange={setActiveTool} />
+        {/* Main Workspace Area */}
+        <main className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8 flex-1 w-full space-y-8">
+          {/* Error Notification */}
+          {error && (
+            <div className="max-w-3xl mx-auto p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-base flex items-center gap-3">
+              <AlertTriangle className="size-5 shrink-0" />
+              <div>{error}</div>
+            </div>
+          )}
 
-          <div className="flex items-center gap-2 shrink-0">
-            <span className="hidden lg:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
-              <Cpu className="size-3.5" /> Parallel Search + Vertex AI
-            </span>
+          {/* View 1: Conversational Producer Desk (Home) */}
+          {activeTool === 'CONVERSATIONAL_DESK' && (
+            <ChatContainer
+              onLaunchDueDiligence={handleDeepScreen}
+              onLaunchOpportunityScout={handleScoutLaunch}
+            />
+          )}
 
-            {/* Audio Toggle */}
-            <button
-              onClick={toggleSound}
-              title={soundMuted ? "Unmute audio effects (M)" : "Mute audio effects (M)"}
-              className="p-2 rounded-lg text-paper-muted dark:text-darkroom-muted hover:bg-paper-card dark:hover:bg-darkroom-card transition-colors cursor-pointer"
-              aria-label="Toggle audio effects"
-            >
-              {soundMuted ? <VolumeX className="size-4" /> : <Volume2 className="size-4 text-indigo-500" />}
-            </button>
+          {/* View 2: Design Playground */}
+          {activeTool === 'DESIGN_PLAYGROUND' && (
+            <DesignPlayground />
+          )}
 
-            {/* Keyboard Shortcuts Button */}
-            <button
-              onClick={() => setIsKeyboardHelpOpen(true)}
-              title="Keyboard shortcuts (?)"
-              className="p-2 rounded-lg text-paper-muted dark:text-darkroom-muted hover:bg-paper-card dark:hover:bg-darkroom-card transition-colors cursor-pointer"
-              aria-label="Keyboard shortcuts"
-            >
-              <Keyboard className="size-4" />
-            </button>
+          {/* View 3: Opportunity Scout */}
+          {activeTool === 'OPPORTUNITY_SCOUT' && (
+            <OpportunityScout
+              onDeepScreen={handleDeepScreen}
+              initialProfile={initialScoutProfile}
+            />
+          )}
 
-            {/* Theme Toggle */}
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-lg text-paper-muted dark:text-darkroom-muted hover:bg-paper-card dark:hover:bg-darkroom-card transition-colors cursor-pointer"
-              aria-label="Toggle theme (T)"
-              title="Toggle theme (T)"
-            >
-              {theme === 'dark' ? <Sun className="size-4 text-amber-400" /> : <Moon className="size-4 text-neutral-600" />}
-            </button>
-          </div>
-        </div>
-      </header>
+          {/* View 4: Due Diligence */}
+          {activeTool === 'DUE_DILIGENCE' && (
+            <>
+              {!investigation && (
+                <div className="space-y-12">
+                  {/* Hero */}
+                  <section className="text-center max-w-2xl mx-auto space-y-3 pt-4">
+                    <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-paper-text dark:text-darkroom-text">
+                      Investigate before you submit.
+                    </h1>
+                    <p className="text-base text-paper-muted dark:text-darkroom-muted leading-relaxed">
+                      Autonomous multi-agent research across trade registries, press archives, and participant accounts. Transparent, cited facts — no blackbox scores.
+                    </p>
+                  </section>
 
-      {/* Main Container */}
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-10 flex-1 w-full space-y-10">
-        {/* Error Notification */}
-        {error && (
-          <div className="max-w-3xl mx-auto p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-sm flex items-center gap-3">
-            <AlertTriangle className="size-5 shrink-0" />
-            <div>{error}</div>
-          </div>
-        )}
-
-        {/* View 1: Conversational Producer Desk (Home) */}
-        {activeTool === 'CONVERSATIONAL_DESK' && (
-          <ChatContainer
-            onLaunchDueDiligence={handleDeepScreen}
-            onLaunchOpportunityScout={handleScoutLaunch}
-          />
-        )}
-
-        {/* View 2: Design Playground */}
-        {activeTool === 'DESIGN_PLAYGROUND' && (
-          <DesignPlayground />
-        )}
-
-        {/* View 3: Opportunity Scout */}
-        {activeTool === 'OPPORTUNITY_SCOUT' && (
-          <OpportunityScout
-            onDeepScreen={handleDeepScreen}
-            initialProfile={initialScoutProfile}
-          />
-        )}
-
-        {/* View 4: Due Diligence */}
-        {activeTool === 'DUE_DILIGENCE' && (
-
-          <>
-            {!investigation && (
-              <div className="space-y-12">
-                {/* Hero */}
-                <section className="text-center max-w-2xl mx-auto space-y-3">
-                  <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-paper-text dark:text-darkroom-text">
-                    Investigate before you submit.
-                  </h1>
-                  <p className="text-sm sm:text-base text-paper-muted dark:text-darkroom-muted leading-relaxed">
-                    Autonomous multi-agent research across trade registries, press archives, and participant accounts. Transparent, cited facts — no blackbox scores.
-                  </p>
-                </section>
-
-                {/* Search Intake Box */}
-                <section className="max-w-2xl mx-auto space-y-4">
-                  <form 
-                    onSubmit={(e) => { e.preventDefault(); handleStartInvestigation(query); }}
-                    className="p-2 rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border shadow-xs flex flex-col sm:flex-row gap-2 transition-colors"
-                  >
-                    <div className="relative flex-1 flex items-center">
-                      <Search className="size-5 absolute left-3.5 text-paper-muted dark:text-darkroom-muted" />
-                      <input
-                        ref={searchInputRef}
-                        type="text"
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                        placeholder="Enter festival name (e.g. Raindance, Aldergate, Sundance)..."
-                        className="w-full pl-11 pr-4 py-3 bg-transparent text-sm text-paper-text dark:text-darkroom-text placeholder-paper-muted dark:placeholder-darkroom-muted focus:outline-none"
-                        disabled={loading}
-                      />
-                    </div>
-                    <button
-                      type="submit"
-                      disabled={loading || !query.trim()}
-                      className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-medium text-sm flex items-center justify-center gap-2 transition-all shadow-xs shrink-0 cursor-pointer"
+                  {/* Search Intake Box */}
+                  <section className="max-w-2xl mx-auto space-y-4">
+                    <form 
+                      onSubmit={(e) => { e.preventDefault(); handleStartInvestigation(query); }}
+                      className="p-2.5 rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border shadow-xs flex flex-col sm:flex-row gap-2.5 transition-colors"
                     >
-                      <Sparkles className="size-4" />
-                      <span>Start Due Diligence</span>
-                    </button>
-                  </form>
+                      <div className="relative flex-1 flex items-center">
+                        <Search className="size-5 absolute left-3.5 text-paper-muted dark:text-darkroom-muted" />
+                        <input
+                          ref={searchInputRef}
+                          type="text"
+                          value={query}
+                          onChange={(e) => setQuery(e.target.value)}
+                          placeholder="Enter festival name (e.g. Raindance, Aldergate, Sundance)..."
+                          className="w-full pl-11 pr-4 py-3 bg-transparent text-base text-paper-text dark:text-darkroom-text placeholder-paper-muted dark:placeholder-darkroom-muted focus:outline-none"
+                          disabled={loading}
+                        />
+                      </div>
+                      <button
+                        type="submit"
+                        disabled={loading || !query.trim()}
+                        className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-medium text-base flex items-center justify-center gap-2 transition-all shadow-xs shrink-0 cursor-pointer"
+                      >
+                        <Sparkles className="size-4.5" />
+                        <span>Start Due Diligence</span>
+                      </button>
+                    </form>
 
-                  {/* Recent Searches Pills */}
-                  {recentSearches.length > 0 && (
-                    <div className="flex items-center justify-center gap-2 text-xs text-paper-muted dark:text-darkroom-muted flex-wrap">
-                      <span className="inline-flex items-center gap-1 font-mono text-[11px]">
-                        <History className="size-3" /> Recent:
+                    {/* Recent Searches Pills */}
+                    {recentSearches.length > 0 && (
+                      <div className="flex items-center justify-center gap-2 text-sm text-paper-muted dark:text-darkroom-muted flex-wrap">
+                        <span className="inline-flex items-center gap-1 font-mono text-xs">
+                          <History className="size-3.5" /> Recent:
+                        </span>
+                        {recentSearches.map((name) => (
+                          <button
+                            key={name}
+                            type="button"
+                            onClick={() => { setQuery(name); handleStartInvestigation(name); }}
+                            className="px-3 py-1 rounded-lg bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border hover:border-indigo-500 dark:hover:border-indigo-500 transition-colors cursor-pointer text-xs"
+                          >
+                            {name}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </section>
+
+                  {/* Featured Spotlight Presets */}
+                  <section className="space-y-4 pt-4">
+                    <div className="flex items-center justify-between border-b border-paper-border dark:border-darkroom-border pb-2">
+                      <span className="font-mono text-xs uppercase tracking-wider text-paper-muted dark:text-darkroom-muted">
+                        Featured Festival Presets
                       </span>
-                      {recentSearches.map((name) => (
-                        <button
-                          key={name}
-                          type="button"
-                          onClick={() => { setQuery(name); handleStartInvestigation(name); }}
-                          className="px-2.5 py-1 rounded-lg bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border hover:border-indigo-500 dark:hover:border-indigo-500 transition-colors cursor-pointer text-[11px]"
+                      <span className="text-xs font-mono text-paper-muted dark:text-darkroom-muted">
+                        Click to analyze live
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                      {SPOTLIGHT_PRESETS.map((preset) => (
+                        <div
+                          key={preset.name}
+                          onClick={() => { setQuery(preset.name); handleStartInvestigation(preset.name); }}
+                          className="p-5 rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border hover:border-indigo-500/50 dark:hover:border-indigo-500/50 hover:shadow-md transition-all cursor-pointer space-y-3 group flex flex-col justify-between"
                         >
-                          {name}
-                        </button>
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
+                                {preset.badge}
+                              </span>
+                              <span className="text-xs font-mono text-paper-muted dark:text-darkroom-muted">
+                                Est. {preset.year}
+                              </span>
+                            </div>
+                            <h3 className="font-serif text-lg font-semibold text-paper-text dark:text-darkroom-text group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                              {preset.name}
+                            </h3>
+                            <div className="flex items-center gap-1.5 text-xs font-mono text-paper-muted dark:text-darkroom-muted">
+                              <MapPin className="size-3.5 text-indigo-500" />
+                              <span>{preset.city}</span>
+                            </div>
+                            <p className="text-sm text-paper-muted dark:text-darkroom-muted line-clamp-2 pt-1">
+                              {preset.desc}
+                            </p>
+                          </div>
+
+                          <div className="pt-3 border-t border-paper-border dark:border-darkroom-border flex items-center justify-between text-xs font-mono text-indigo-600 dark:text-indigo-400">
+                            <span>Run Due Diligence</span>
+                            <ShieldCheck className="size-4 group-hover:translate-x-1 transition-transform" />
+                          </div>
+                        </div>
                       ))}
                     </div>
-                  )}
-                </section>
+                  </section>
+                </div>
+              )}
 
-                {/* Featured Spotlight Presets */}
-                <section className="space-y-4 pt-4">
-                  <div className="flex items-center justify-between border-b border-paper-border dark:border-darkroom-border pb-2">
-                    <span className="font-mono text-xs uppercase tracking-wider text-paper-muted dark:text-darkroom-muted">
-                      Featured Festival Presets
-                    </span>
-                    <span className="text-xs font-mono text-paper-muted dark:text-darkroom-muted">
-                      Click to analyze live
-                    </span>
-                  </div>
+              {/* State 1: Disambiguation in progress or Awaiting confirmation */}
+              {investigation && currentStatus === 'DISAMBIGUATING' && (
+                <LiveProgress
+                  status={currentStatus}
+                  events={events}
+                  festivalName={investigation.query}
+                />
+              )}
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {SPOTLIGHT_PRESETS.map((preset) => (
-                      <div
-                        key={preset.name}
-                        onClick={() => { setQuery(preset.name); handleStartInvestigation(preset.name); }}
-                        className="p-4 rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border hover:border-indigo-500/50 dark:hover:border-indigo-500/50 hover:shadow-xs transition-all cursor-pointer space-y-2.5 group flex flex-col justify-between"
-                      >
-                        <div className="space-y-1.5">
-                          <div className="flex items-center justify-between">
-                            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-medium bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
-                              {preset.badge}
-                            </span>
-                            <span className="text-[11px] font-mono text-paper-muted dark:text-darkroom-muted">
-                              Est. {preset.year}
-                            </span>
-                          </div>
-                          <h3 className="font-serif text-base font-semibold text-paper-text dark:text-darkroom-text group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                            {preset.name}
-                          </h3>
-                          <div className="flex items-center gap-1 text-[11px] font-mono text-paper-muted dark:text-darkroom-muted">
-                            <MapPin className="size-3 text-indigo-500" />
-                            <span>{preset.city}</span>
-                          </div>
-                          <p className="text-xs text-paper-muted dark:text-darkroom-muted line-clamp-2 pt-1">
-                            {preset.desc}
-                          </p>
-                        </div>
+              {investigation && currentStatus === 'AWAITING_ENTITY_CONFIRMATION' && (
+                <EntityConfirmation
+                  candidates={investigation.candidates}
+                  query={investigation.query}
+                  onConfirm={handleConfirmEntity}
+                  loading={loading}
+                />
+              )}
 
-                        <div className="pt-2 border-t border-paper-border dark:border-darkroom-border flex items-center justify-between text-[11px] font-mono text-indigo-600 dark:text-indigo-400">
-                          <span>Run Due Diligence</span>
-                          <ShieldCheck className="size-3.5 group-hover:translate-x-0.5 transition-transform" />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </section>
-              </div>
-            )}
+              {/* State 2: Researching / Analyzing */}
+              {investigation && ['PLANNING', 'RESEARCHING', 'ANALYZING_CONTRADICTIONS', 'ASSEMBLING_DOSSIER'].includes(currentStatus) && (
+                <LiveProgress
+                  status={currentStatus}
+                  events={events}
+                  festivalName={investigation.confirmedEntity?.name || investigation.query}
+                />
+              )}
 
-            {/* State 1: Disambiguation in progress or Awaiting confirmation */}
-            {investigation && currentStatus === 'DISAMBIGUATING' && (
-              <LiveProgress
-                status={currentStatus}
-                events={events}
-                festivalName={investigation.query}
-              />
-            )}
+              {/* State 3: Dossier Ready */}
+              {investigation && currentStatus === 'READY' && investigation.dossier && (
+                <EvidenceDossier
+                  entity={investigation.confirmedEntity || {
+                    id: 'default',
+                    name: investigation.query,
+                    entityType: 'FESTIVAL',
+                    descriptor: '',
+                    sourceIds: [],
+                  }}
+                  dossier={investigation.dossier}
+                  claims={investigation.claims || []}
+                  sources={investigation.sources || []}
+                  disputes={investigation.disputes || []}
+                  onNewInvestigation={handleReset}
+                  onDraftOutreach={handleDraftOutreach}
+                  onExport={handleExport}
+                />
+              )}
+            </>
+          )}
+        </main>
 
-            {investigation && currentStatus === 'AWAITING_ENTITY_CONFIRMATION' && (
-              <EntityConfirmation
-                candidates={investigation.candidates}
-                query={investigation.query}
-                onConfirm={handleConfirmEntity}
-                loading={loading}
-              />
-            )}
+        {/* Outreach Sandbox Approval Modal */}
+        <OutreachModal
+          draft={outreachDraft}
+          isOpen={isOutreachOpen}
+          onClose={() => setIsOutreachOpen(false)}
+          onApprove={handleApproveOutreach}
+          loading={outreachLoading}
+        />
 
-            {/* State 2: Researching / Analyzing */}
-            {investigation && ['PLANNING', 'RESEARCHING', 'ANALYZING_CONTRADICTIONS', 'ASSEMBLING_DOSSIER'].includes(currentStatus) && (
-              <LiveProgress
-                status={currentStatus}
-                events={events}
-                festivalName={investigation.confirmedEntity?.name || investigation.query}
-              />
-            )}
+        {/* Keyboard Shortcuts Modal */}
+        <KeyboardHelpModal
+          isOpen={isKeyboardHelpOpen}
+          onClose={() => setIsKeyboardHelpOpen(false)}
+        />
 
-            {/* State 3: Dossier Ready */}
-            {investigation && currentStatus === 'READY' && investigation.dossier && (
-              <EvidenceDossier
-                entity={investigation.confirmedEntity || {
-                  id: 'default',
-                  name: investigation.query,
-                  entityType: 'FESTIVAL',
-                  descriptor: '',
-                  sourceIds: [],
-                }}
-                dossier={investigation.dossier}
-                claims={investigation.claims || []}
-                sources={investigation.sources || []}
-                disputes={investigation.disputes || []}
-                onNewInvestigation={handleReset}
-                onDraftOutreach={handleDraftOutreach}
-                onExport={handleExport}
-              />
-            )}
-          </>
-        )}
-      </main>
-
-      {/* Outreach Sandbox Approval Modal */}
-      <OutreachModal
-        draft={outreachDraft}
-        isOpen={isOutreachOpen}
-        onClose={() => setIsOutreachOpen(false)}
-        onApprove={handleApproveOutreach}
-        loading={outreachLoading}
-      />
-
-      {/* Keyboard Shortcuts Modal */}
-      <KeyboardHelpModal
-        isOpen={isKeyboardHelpOpen}
-        onClose={() => setIsKeyboardHelpOpen(false)}
-      />
-
-      {/* Footer */}
-      <footer className="border-t border-paper-border dark:border-darkroom-border py-6 text-center text-xs text-paper-muted dark:text-darkroom-muted no-print">
-        <div className="max-w-6xl mx-auto px-4 space-y-1">
-          <div className="flex items-center justify-center gap-4">
-            <span>Screened — Built natively with Google ADK & Parallel Search API</span>
-            <button
-              onClick={() => setIsKeyboardHelpOpen(true)}
-              className="underline hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
-            >
-              Shortcuts (?)
-            </button>
+        {/* Footer */}
+        <footer className="border-t border-paper-border dark:border-darkroom-border py-6 text-center text-sm text-paper-muted dark:text-darkroom-muted no-print mt-auto">
+          <div className="max-w-6xl mx-auto px-4 space-y-1">
+            <div className="flex items-center justify-center gap-4">
+              <span>Screened — Built natively with Google ADK & Parallel Search API</span>
+              <button
+                onClick={() => setIsKeyboardHelpOpen(true)}
+                className="underline hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer text-xs"
+              >
+                Shortcuts (?)
+              </button>
+            </div>
+            <div className="text-xs opacity-75">All findings are cryptographically hashed and cited to verified web excerpts.</div>
           </div>
-          <div className="text-[11px] opacity-75">All findings are cryptographically hashed and cited to verified web excerpts.</div>
-        </div>
-      </footer>
+        </footer>
+      </div>
     </div>
   );
 }
+

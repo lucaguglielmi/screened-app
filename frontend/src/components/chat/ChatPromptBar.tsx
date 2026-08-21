@@ -111,28 +111,29 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask The Producer Desk about a festival, submission strategy, or paste an email..."
-          className="w-full bg-transparent px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none"
+          className="w-full bg-transparent px-3 py-2 text-base text-zinc-100 placeholder-zinc-500 focus:outline-none"
         />
 
         {/* Submit Button */}
         <button
           type="submit"
           disabled={isLoading || (!input.trim() && !attachedFile)}
-          className="flex h-10 items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-4 text-xs font-semibold text-zinc-950 shadow-md transition-all hover:brightness-110 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shrink-0"
+          className="flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-5 text-sm font-semibold text-zinc-950 shadow-md transition-all hover:brightness-110 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shrink-0"
         >
           {isLoading ? (
-            <span className="flex items-center gap-1.5">
-              <span className="h-3 w-3 animate-spin rounded-full border-2 border-zinc-950 border-t-transparent" />
+            <span className="flex items-center gap-1.5 text-sm">
+              <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-zinc-950 border-t-transparent" />
               Thinking...
             </span>
           ) : (
             <>
-              <span>Send</span>
-              <span className="text-zinc-900 font-bold">↵</span>
+              <span className="text-sm font-semibold">Send</span>
+              <span className="text-zinc-900 font-bold text-base">↵</span>
             </>
           )}
         </button>
       </form>
     </div>
+
   );
 };
