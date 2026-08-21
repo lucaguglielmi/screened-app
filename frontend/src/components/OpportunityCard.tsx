@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FestivalOpportunity } from '../types/investigation';
 import { 
   Calendar, 
@@ -6,9 +6,11 @@ import {
   ArrowRight, 
   ExternalLink, 
   ShieldCheck,
-  AlertCircle
+  AlertCircle,
+  Download,
+  Info
 } from 'lucide-react';
-
+import { downloadFestivalIcs } from '../utils/calendar';
 
 interface Props {
   opportunity: FestivalOpportunity;
@@ -19,23 +21,95 @@ export const OpportunityCard: React.FC<Props> = ({
   opportunity,
   onDeepScreen,
 }) => {
+  const [showTooltip, setShowTooltip] = useState<string | null>(null);
+
   const getAccreditationBadge = (tag: string) => {
     switch (tag) {
       case 'BAFTA_QUALIFYING':
-        return <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 font-semibold">BAFTA Qualifying</span>;
+        return (
+          <div className="relative inline-block">
+            <span 
+              onMouseEnter={() => setShowTooltip('BAFTA')}
+              onMouseLeave={() => setShowTooltip(null)}
+              className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 font-semibold cursor-help inline-flex items-center gap-1"
+            >
+              BAFTA Qualifying <Info className="size-2.5 opacity-60" />
+            </span>
+            {showTooltip === 'BAFTA' && (
+              <div className="absolute bottom-full left-0 mb-1 z-30 p-2 w-48 rounded-lg bg-neutral-900 text-white text-[10px] font-sans shadow-lg pointer-events-none">
+                Screening here qualifies UK short films and debuts for British Academy Film Awards consideration.
+              </div>
+            )}
+          </div>
+        );
       case 'BIFA_QUALIFYING':
-        return <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20 font-semibold">BIFA Qualifying</span>;
+        return (
+          <div className="relative inline-block">
+            <span 
+              onMouseEnter={() => setShowTooltip('BIFA')}
+              onMouseLeave={() => setShowTooltip(null)}
+              className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20 font-semibold cursor-help inline-flex items-center gap-1"
+            >
+              BIFA Qualifying <Info className="size-2.5 opacity-60" />
+            </span>
+            {showTooltip === 'BIFA' && (
+              <div className="absolute bottom-full left-0 mb-1 z-30 p-2 w-48 rounded-lg bg-neutral-900 text-white text-[10px] font-sans shadow-lg pointer-events-none">
+                Recognized on the British Independent Film Awards qualifying festival list.
+              </div>
+            )}
+          </div>
+        );
       case 'ACADEMY_QUALIFYING':
-        return <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border border-yellow-500/20 font-semibold">Oscar Qualifying</span>;
+        return (
+          <div className="relative inline-block">
+            <span 
+              onMouseEnter={() => setShowTooltip('OSCAR')}
+              onMouseLeave={() => setShowTooltip(null)}
+              className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border border-yellow-500/20 font-semibold cursor-help inline-flex items-center gap-1"
+            >
+              Oscar Qualifying <Info className="size-2.5 opacity-60" />
+            </span>
+            {showTooltip === 'OSCAR' && (
+              <div className="absolute bottom-full left-0 mb-1 z-30 p-2 w-48 rounded-lg bg-neutral-900 text-white text-[10px] font-sans shadow-lg pointer-events-none">
+                Award winners in eligible categories qualify for Academy Awards nomination voting without commercial theatrical run.
+              </div>
+            )}
+          </div>
+        );
       case 'FIAPF_ACCREDITED':
-        return <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 font-semibold">FIAPF Accredited</span>;
+        return (
+          <div className="relative inline-block">
+            <span 
+              onMouseEnter={() => setShowTooltip('FIAPF')}
+              onMouseLeave={() => setShowTooltip(null)}
+              className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 font-semibold cursor-help inline-flex items-center gap-1"
+            >
+              FIAPF Accredited <Info className="size-2.5 opacity-60" />
+            </span>
+            {showTooltip === 'FIAPF' && (
+              <div className="absolute bottom-full left-0 mb-1 z-30 p-2 w-48 rounded-lg bg-neutral-900 text-white text-[10px] font-sans shadow-lg pointer-events-none">
+                Regulated by the International Federation of Film Producers Associations for global standard compliance.
+              </div>
+            )}
+          </div>
+        );
       default:
         return <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-neutral-500/10 text-neutral-600 dark:text-neutral-400 border border-neutral-500/20">Indie Circuit</span>;
     }
   };
 
+  const handleDownloadCalendar = () => {
+    downloadFestivalIcs(
+      opportunity.name,
+      opportunity.deadlineTier,
+      opportunity.nextDeadline,
+      opportunity.feeEstimate,
+      opportunity.officialDomain ? `https://${opportunity.officialDomain}` : undefined
+    );
+  };
+
   return (
-    <div className="p-5 rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border hover:border-neutral-400 dark:hover:border-neutral-600 transition-all flex flex-col justify-between gap-4 shadow-sm">
+    <div className="p-5 rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border hover:border-neutral-400 dark:hover:border-neutral-600 transition-all flex flex-col justify-between gap-4 shadow-xs">
       <div className="space-y-3">
         {/* Top Info */}
         <div className="flex items-start justify-between gap-2">
@@ -66,15 +140,24 @@ export const OpportunityCard: React.FC<Props> = ({
           ))}
         </div>
 
-        {/* Deadline Banner */}
-        <div className="p-2.5 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border flex items-center justify-between text-xs">
+        {/* Deadline Banner with Add to Calendar */}
+        <div className="p-2.5 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border flex items-center justify-between text-xs gap-2">
           <span className="font-mono text-paper-muted dark:text-darkroom-muted flex items-center gap-1.5">
             <Calendar className="size-3.5 text-indigo-500" />
             <span>{opportunity.deadlineTier}:</span>
           </span>
-          <span className="font-semibold text-paper-text dark:text-darkroom-text font-mono">
-            {opportunity.nextDeadline}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="font-semibold text-paper-text dark:text-darkroom-text font-mono">
+              {opportunity.nextDeadline}
+            </span>
+            <button
+              onClick={handleDownloadCalendar}
+              title="Add deadline to Calendar (.ics)"
+              className="p-1 rounded-md text-paper-muted dark:text-darkroom-muted hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
+            >
+              <Download className="size-3.5" />
+            </button>
+          </div>
         </div>
 
         {/* Strategic Fit Rationale */}

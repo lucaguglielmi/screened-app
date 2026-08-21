@@ -10,6 +10,8 @@ import {
 import { ContradictionPanel } from './ContradictionPanel';
 import { DetailDial } from './DetailDial';
 import { CitationPopover } from './CitationPopover';
+import { CredibilityRadar } from './CredibilityRadar';
+import { playDialClick } from '../utils/audio';
 import { 
   FileText, 
   Building2, 
@@ -27,6 +29,10 @@ import {
   MapPin,
   Calendar,
   Download,
+  Printer,
+  Copy,
+  Check,
+  Search,
   Mail
 } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -54,16 +60,37 @@ export const EvidenceDossier: React.FC<Props> = ({
 }) => {
   const [density, setDensity] = useState<DetailDensity>('STANDARD');
   const [activeDomain, setActiveDomain] = useState<string>('ALL');
+  const [searchFilter, setSearchFilter] = useState<string>('');
   const [expandedClaim, setExpandedClaim] = useState<string | null>(null);
+  const [copiedSummary, setCopiedSummary] = useState(false);
 
-  const filteredClaims = activeDomain === 'ALL'
-    ? claims
-    : claims.filter((c) => c.researchDomain === activeDomain);
+  const handleDensityChange = (newDensity: DetailDensity) => {
+    playDialClick();
+    setDensity(newDensity);
+  };
+
+  const handleCopySummary = () => {
+    const text = `# ${entity.name} — Screened Due-Diligence Summary\n\n${dossier.executiveSummary}\n\n## Action Checklist:\n${dossier.filmmakerChecklist.map((c, i) => `${i + 1}. ${c}`).join('\n')}\n\nGenerated with Screened (Agentic Cinema Due-Diligence)`;
+    navigator.clipboard.writeText(text);
+    setCopiedSummary(true);
+    setTimeout(() => setCopiedSummary(false), 2000);
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const filteredClaims = claims.filter((c) => {
+    const matchesDomain = activeDomain === 'ALL' || c.researchDomain === activeDomain;
+    const matchesSearch = !searchFilter.trim() || 
+      c.statement.toLowerCase().includes(searchFilter.toLowerCase()) ||
+      c.category.toLowerCase().includes(searchFilter.toLowerCase());
+    return matchesDomain && matchesSearch;
+  });
 
   const factsCount = claims.filter((c) => c.claimKind === 'FACT').length;
   const allegationsCount = claims.filter((c) => c.claimKind === 'ALLEGATION').length;
   const corroboratedCount = claims.filter((c) => c.status === 'CORROBORATED').length;
-
 
   const getStatusBadge = (status: AtomicClaim['status']) => {
     switch (status) {
@@ -146,18 +173,34 @@ export const EvidenceDossier: React.FC<Props> = ({
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap no-print">
+            <button
+              onClick={handleCopySummary}
+              className="px-3 py-2 rounded-xl bg-paper-card dark:bg-darkroom-card hover:bg-neutral-200 dark:hover:bg-neutral-800 text-xs font-medium text-paper-text dark:text-darkroom-text border border-paper-border dark:border-darkroom-border transition-colors flex items-center gap-1.5 cursor-pointer"
+              title="Copy executive summary to clipboard"
+            >
+              {copiedSummary ? <Check className="size-3.5 text-emerald-500" /> : <Copy className="size-3.5" />}
+              <span>{copiedSummary ? 'Copied!' : 'Copy Summary'}</span>
+            </button>
+            <button
+              onClick={handlePrint}
+              className="px-3 py-2 rounded-xl bg-paper-card dark:bg-darkroom-card hover:bg-neutral-200 dark:hover:bg-neutral-800 text-xs font-medium text-paper-text dark:text-darkroom-text border border-paper-border dark:border-darkroom-border transition-colors flex items-center gap-1.5 cursor-pointer"
+              title="Print formatted dossier or save as PDF"
+            >
+              <Printer className="size-3.5" />
+              <span>Print / PDF</span>
+            </button>
             <button
               onClick={onExport}
-              className="px-3.5 py-2 rounded-xl bg-paper-card dark:bg-darkroom-card hover:bg-neutral-200 dark:hover:bg-neutral-800 text-xs font-medium text-paper-text dark:text-darkroom-text border border-paper-border dark:border-darkroom-border transition-colors flex items-center gap-1.5 cursor-pointer"
-              title="Download archival markdown report with SHA-256 seal"
+              className="px-3 py-2 rounded-xl bg-paper-card dark:bg-darkroom-card hover:bg-neutral-200 dark:hover:bg-neutral-800 text-xs font-medium text-paper-text dark:text-darkroom-text border border-paper-border dark:border-darkroom-border transition-colors flex items-center gap-1.5 cursor-pointer"
+              title="Download signed Markdown archive with SHA-256 seal"
             >
               <Download className="size-3.5" />
               <span>Export</span>
             </button>
             <button
               onClick={onNewInvestigation}
-              className="px-3.5 py-2 rounded-xl bg-paper-card dark:bg-darkroom-card hover:bg-neutral-200 dark:hover:bg-neutral-800 text-xs font-medium text-paper-text dark:text-darkroom-text border border-paper-border dark:border-darkroom-border transition-colors cursor-pointer"
+              className="px-3 py-2 rounded-xl bg-paper-card dark:bg-darkroom-card hover:bg-neutral-200 dark:hover:bg-neutral-800 text-xs font-medium text-paper-text dark:text-darkroom-text border border-paper-border dark:border-darkroom-border transition-colors cursor-pointer"
             >
               New Search
             </button>
@@ -185,9 +228,14 @@ export const EvidenceDossier: React.FC<Props> = ({
             </div>
           </div>
 
-          <DetailDial density={density} onChange={setDensity} />
+          <div className="no-print">
+            <DetailDial density={density} onChange={handleDensityChange} />
+          </div>
         </div>
       </div>
+
+      {/* Credibility & Transparency Radar Bar */}
+      <CredibilityRadar claims={claims} disputes={disputes} />
 
       {/* Executive Overview */}
       <div className="p-6 rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border space-y-3">
@@ -246,119 +294,138 @@ export const EvidenceDossier: React.FC<Props> = ({
               <ShieldCheck className="size-5 text-indigo-500" /> Atomic Claims & Evidence Citations
             </h2>
 
-            {/* Domain Filter Pills */}
-            <div className="flex items-center gap-1.5 p-1 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-xs">
-              {['ALL', 'FESTIVAL', 'ORGANIZER', 'PARTICIPANTS'].map((d) => (
-                <button
-                  key={d}
-                  onClick={() => setActiveDomain(d)}
-                  className={`px-3 py-1 rounded-lg transition-all cursor-pointer font-mono text-[11px] ${
-                    activeDomain === d
-                      ? 'bg-indigo-600 text-white shadow-xs font-medium'
-                      : 'text-paper-muted dark:text-darkroom-muted hover:text-paper-text dark:hover:text-darkroom-text'
-                  }`}
-                >
-                  {d}
-                </button>
-              ))}
+            {/* In-Dossier Search & Domain Filters */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto no-print">
+              <div className="relative w-full sm:w-44">
+                <Search className="size-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-paper-muted dark:text-darkroom-muted" />
+                <input
+                  type="text"
+                  value={searchFilter}
+                  onChange={(e) => setSearchFilter(e.target.value)}
+                  placeholder="Filter claims..."
+                  className="w-full pl-8 pr-2.5 py-1 text-xs rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-paper-text dark:text-darkroom-text placeholder-paper-muted dark:placeholder-darkroom-muted focus:outline-none"
+                />
+              </div>
+
+              <div className="flex items-center gap-1 p-1 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-xs">
+                {['ALL', 'FESTIVAL', 'ORGANIZER', 'PARTICIPANTS'].map((d) => (
+                  <button
+                    key={d}
+                    onClick={() => setActiveDomain(d)}
+                    className={`px-2.5 py-0.5 rounded-lg transition-all cursor-pointer font-mono text-[10px] ${
+                      activeDomain === d
+                        ? 'bg-indigo-600 text-white shadow-2xs font-medium'
+                        : 'text-paper-muted dark:text-darkroom-muted hover:text-paper-text dark:hover:text-darkroom-text'
+                    }`}
+                  >
+                    {d}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
           {/* Claims List */}
           <div className="space-y-3">
-            {filteredClaims.map((claim) => {
-              const isExpanded = expandedClaim === claim.id || density === 'EVIDENCE';
-              return (
-                <div
-                  key={claim.id}
-                  className="rounded-xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border transition-colors overflow-hidden"
-                >
-                  <div className="p-4 flex flex-col sm:flex-row items-start justify-between gap-4">
-                    <div className="space-y-1.5 flex-1">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        {getKindBadge(claim.claimKind)}
-                        <span className="text-xs text-paper-muted dark:text-darkroom-muted font-mono">
-                          {claim.category}
-                        </span>
-                        {claim.editionYear && (
-                          <span className="text-xs font-mono text-paper-muted dark:text-darkroom-muted">
-                            ({claim.editionYear})
+            {filteredClaims.length === 0 ? (
+              <div className="p-8 rounded-xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border text-center text-xs text-paper-muted dark:text-darkroom-muted">
+                No claims matched your filter query "{searchFilter}".
+              </div>
+            ) : (
+              filteredClaims.map((claim) => {
+                const isExpanded = expandedClaim === claim.id || density === 'EVIDENCE';
+                return (
+                  <div
+                    key={claim.id}
+                    className="rounded-xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border transition-colors overflow-hidden"
+                  >
+                    <div className="p-4 flex flex-col sm:flex-row items-start justify-between gap-4">
+                      <div className="space-y-1.5 flex-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          {getKindBadge(claim.claimKind)}
+                          <span className="text-xs text-paper-muted dark:text-darkroom-muted font-mono">
+                            {claim.category}
                           </span>
+                          {claim.editionYear && (
+                            <span className="text-xs font-mono text-paper-muted dark:text-darkroom-muted">
+                              ({claim.editionYear})
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-sm font-medium text-paper-text dark:text-darkroom-text">
+                          {claim.statement}
+                        </div>
+
+                        {/* Inline Citations Row */}
+                        {claim.evidence && claim.evidence.length > 0 && (
+                          <div className="flex items-center gap-1.5 flex-wrap pt-1">
+                            {claim.evidence.map((ev, idx) => (
+                              <CitationPopover key={idx} evidence={ev} sourceTier={2} />
+                            ))}
+                          </div>
                         )}
                       </div>
-                      <div className="text-sm font-medium text-paper-text dark:text-darkroom-text">
-                        {claim.statement}
-                      </div>
 
-                      {/* Inline Citations Row */}
-                      {claim.evidence && claim.evidence.length > 0 && (
-                        <div className="flex items-center gap-1.5 flex-wrap pt-1">
-                          {claim.evidence.map((ev, idx) => (
-                            <CitationPopover key={idx} evidence={ev} sourceTier={2} />
-                          ))}
-                        </div>
-                      )}
-                    </div>
+                      <div className="flex items-center gap-2 shrink-0 self-end sm:self-start no-print">
+                        {getStatusBadge(claim.status)}
 
-                    <div className="flex items-center gap-2 shrink-0 self-end sm:self-start">
-                      {getStatusBadge(claim.status)}
-
-                      {/* Outreach Draft Inquiry Action */}
-                      <button
-                        onClick={() => onDraftOutreach(claim)}
-                        className="p-1.5 rounded-lg text-paper-muted dark:text-darkroom-muted hover:bg-paper-card dark:hover:bg-darkroom-card hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
-                        title="Draft Verification Inquiry for this claim"
-                      >
-                        <Mail className="size-4" />
-                      </button>
-
-                      {density === 'STANDARD' && (
+                        {/* Outreach Draft Inquiry Action */}
                         <button
-                          onClick={() => setExpandedClaim(isExpanded ? null : claim.id)}
-                          className="p-1.5 rounded-lg text-paper-muted dark:text-darkroom-muted hover:bg-paper-card dark:hover:bg-darkroom-card transition-colors cursor-pointer"
+                          onClick={() => onDraftOutreach(claim)}
+                          className="p-1.5 rounded-lg text-paper-muted dark:text-darkroom-muted hover:bg-paper-card dark:hover:bg-darkroom-card hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
+                          title="Draft Verification Inquiry for this claim"
                         >
-                          {isExpanded ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
+                          <Mail className="size-4" />
                         </button>
-                      )}
-                    </div>
-                  </div>
 
-                  {/* Evidence Drawer */}
-                  {isExpanded && (
-                    <div className="p-4 bg-paper-card dark:bg-darkroom-card border-t border-paper-border dark:border-darkroom-border space-y-3 text-xs">
-                      <div className="font-mono uppercase text-paper-muted dark:text-darkroom-muted text-[11px]">
-                        Verbatim Quoted Excerpts ({claim.evidence.length})
+                        {density === 'STANDARD' && (
+                          <button
+                            onClick={() => setExpandedClaim(isExpanded ? null : claim.id)}
+                            className="p-1.5 rounded-lg text-paper-muted dark:text-darkroom-muted hover:bg-paper-card dark:hover:bg-darkroom-card transition-colors cursor-pointer"
+                          >
+                            {isExpanded ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
+                          </button>
+                        )}
                       </div>
-                      {claim.evidence.map((ev, idx) => (
-                        <div
-                          key={idx}
-                          className="p-3 rounded-lg bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border space-y-1.5"
-                        >
-                          <div className="flex items-center justify-between gap-2">
-                            <span className="font-semibold text-paper-text dark:text-darkroom-text">
-                              {ev.sourceTitle || ev.sourceDomain}
-                            </span>
-                            {ev.sourceUrl && (
-                              <a
-                                href={ev.sourceUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center gap-1"
-                              >
-                                View Source <ExternalLink className="size-3" />
-                              </a>
-                            )}
-                          </div>
-                          <blockquote className="text-paper-muted dark:text-darkroom-muted italic border-l-2 border-indigo-500/50 pl-2">
-                            "{ev.exactExcerpt}"
-                          </blockquote>
-                        </div>
-                      ))}
                     </div>
-                  )}
-                </div>
-              );
-            })}
+
+                    {/* Evidence Drawer */}
+                    {isExpanded && (
+                      <div className="p-4 bg-paper-card dark:bg-darkroom-card border-t border-paper-border dark:border-darkroom-border space-y-3 text-xs">
+                        <div className="font-mono uppercase text-paper-muted dark:text-darkroom-muted text-[11px]">
+                          Verbatim Quoted Excerpts ({claim.evidence.length})
+                        </div>
+                        {claim.evidence.map((ev, idx) => (
+                          <div
+                            key={idx}
+                            className="p-3 rounded-lg bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border space-y-1.5"
+                          >
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="font-semibold text-paper-text dark:text-darkroom-text">
+                                {ev.sourceTitle || ev.sourceDomain}
+                              </span>
+                              {ev.sourceUrl && (
+                                <a
+                                  href={ev.sourceUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center gap-1"
+                                >
+                                  View Source <ExternalLink className="size-3" />
+                                </a>
+                              )}
+                            </div>
+                            <blockquote className="text-paper-muted dark:text-darkroom-muted italic border-l-2 border-indigo-500/50 pl-2">
+                              "{ev.exactExcerpt}"
+                            </blockquote>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })
+            )}
           </div>
         </div>
       )}
