@@ -75,6 +75,8 @@ class ConfirmEntityRequest(BaseModel):
 
 
 @app.get("/healthz")
+@app.get("/api/health")
+@app.get("/api/healthz")
 async def health_check():
     """Liveness probe returning application health, GCP status, and Parallel SDK status."""
     return {
@@ -86,6 +88,7 @@ async def health_check():
         "gcp_project": settings.google_cloud_project,
         "gcp_location": settings.google_cloud_location,
     }
+
 
 
 @app.post("/api/investigations")

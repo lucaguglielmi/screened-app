@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+PROJECT_ID="screened-hackathon"
+REGION="europe-west2"
+SERVICE_NAME="screened"
+IMAGE_TAG="europe-west2-docker.pkg.dev/${PROJECT_ID}/screened-app/screened:latest"
+
+echo "=== 🚀 Deploying Screened to Google Cloud Run (${REGION}) ==="
+
+# 1. Ensure Artifact Registry repository exists
+echo "Checking Artifact Registry repository..."
+gcloud artifacts repositories describe screened-app --project="${PROJECT_ID}" --location="${REGION}" >/dev/null 2>&1 || \
+gcloud artifacts repositories create screened-app \
+  --project="${PROJECT_ID}" \
+  --repository-format=docker \
+  --location="${REGION}" \
+  --description="Container repository for Screened app"
+
+# 2. Build image via Cloud Build
+echo "Building container image with Cloud Build..."
+gcloud builds submit --project="${PROJECT_ID}" --tag="${IMAGE_TAG}" .
+
+# 3. Deploy to Cloud Run
+echo "Deploying container to Cloud Run..."
+gcloud run deploy "${SERVICE_NAME}" \
+  --project="${PROJECT_ID}" \
+  --image="${IMAGE_TAG}" \
+  --region="${REGION}" \
+  --platform=managed \
+  --allow-unauthenticated \
+  --set-env-vars="GOOGLE_CLOUD_PROJECT=${PROJECT_ID},GOOGLE_CLOUD_LOCATION=${REGION},ENVIRONMENT=production" \
+  --set-secrets="PARALLEL_API_KEY=parallel-api-key:latest,SESSION_SIGNING_KEY=session-signing-key:latest" \
+  --memory=1Gi \
+  --cpu=1 \
+  --min-instances=0 \
+  --max-instances=5
+
+URL=$(gcloud run services describe "${SERVICE_NAME}" --project="${PROJECT_ID}" --region="${REGION}" --format="value(status.url)")
+
+echo "=== ✅ Deployed successfully! ==="
+echo "Live URL: ${URL}"
