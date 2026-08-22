@@ -122,6 +122,125 @@ body {
   background-size: 16px 16px;
 }
 
+/* =========================================================================
+   Cinema Due Diligence Title Keyframe Animations & Micro-Glitch Effects
+   ========================================================================= */
+
+@keyframes cinemaWordShift1 {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  30% {
+    transform: translateY(-2px) translateX(1px);
+  }
+  60% {
+    transform: translateY(1.5px) translateX(-0.5px);
+  }
+  85% {
+    transform: translateY(-0.5px) translateX(0.5px);
+  }
+}
+
+@keyframes cinemaWordShift2 {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  35% {
+    transform: translateY(2px) translateX(-1px);
+  }
+  65% {
+    transform: translateY(-1.5px) translateX(0.5px);
+  }
+  90% {
+    transform: translateY(0.5px) translateX(-0.5px);
+  }
+}
+
+@keyframes cinemaWordShift3 {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  25% {
+    transform: translateY(-1px) translateX(1.5px);
+  }
+  55% {
+    transform: translateY(2px) translateX(-1px);
+  }
+  80% {
+    transform: translateY(-1.5px) translateX(0.5px);
+  }
+}
+
+@keyframes cinemaGlitchEffect {
+  0%, 93%, 100% {
+    text-shadow: none;
+    transform: translate(0, 0) skew(0deg);
+  }
+  94% {
+    text-shadow: -2px 0 #00d29e, 2px 0 #f43f5e;
+    transform: translate(-1.5px, 0.5px) skew(-1.5deg);
+  }
+  95% {
+    text-shadow: 2px -1px #2018e6, -2px 1px #f43f5e;
+    transform: translate(1px, -0.5px) skew(1deg);
+  }
+  96% {
+    text-shadow: -1px 0 #00d29e, 1px 0 #2018e6;
+    transform: translate(0, 0) skew(0deg);
+  }
+  97% {
+    text-shadow: 1.5px 0.5px #f43f5e, -1.5px -0.5px #00d29e;
+    transform: translate(0.5px, 0) skew(0.5deg);
+  }
+  98% {
+    text-shadow: none;
+    transform: translate(0, 0) skew(0deg);
+  }
+}
+
+.animate-cinema-glitch {
+  animation: cinemaWordShift1 6s cubic-bezier(0.4, 0, 0.2, 1) infinite, cinemaGlitchEffect 6s ease-in-out infinite;
+  display: inline-block;
+}
+
+.animate-word-shift-2 {
+  animation: cinemaWordShift2 6s cubic-bezier(0.4, 0, 0.2, 1) infinite 0.25s;
+  display: inline-block;
+}
+
+.animate-word-shift-3 {
+  animation: cinemaWordShift3 6s cubic-bezier(0.4, 0, 0.2, 1) infinite 0.5s;
+  display: inline-block;
+}
+
+/* Icon Micro-Animation Helper Utilities */
+@keyframes softNudgeX {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(3px); }
+}
+
+@keyframes softFloatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(3px); }
+}
+
+@keyframes softTwinkle {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  50% { transform: scale(1.2) rotate(12deg); opacity: 0.9; }
+}
+
+.animate-soft-nudge {
+  animation: softNudgeX 1.8s ease-in-out infinite;
+}
+
+.animate-soft-float {
+  animation: softFloatY 2s ease-in-out infinite;
+}
+
+.animate-soft-twinkle {
+  animation: softTwinkle 2.4s ease-in-out infinite;
+}
+
 /* Print Stylesheet for Dossier Export */
 @media print {
   body {

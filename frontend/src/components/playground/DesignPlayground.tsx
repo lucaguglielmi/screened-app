@@ -12,6 +12,7 @@ import { InvitationEmailCard } from '../chat/tools/InvitationEmailCard';
 import { DeepVettingMatrix } from '../investigation/DeepVettingMatrix';
 import { DesignTokensLab } from './DesignTokensLab';
 import { AgentObservabilityLab } from './AgentObservabilityLab';
+import { UiGalleryLab } from './UiGalleryLab';
 import { soundEffects } from '../../utils/audio';
 import { 
   Workflow, 
@@ -21,7 +22,7 @@ import {
 } from 'lucide-react';
 
 export const DesignPlayground: React.FC = () => {
-  const [activeSection, setActiveSection] = useState<'TOKENS' | 'TRACES' | 'ARCHITECTURE' | 'ALL' | 'BUBBLES' | 'LOADERS' | 'TOOLS' | 'PROMPTS'>('TOOLS');
+  const [activeSection, setActiveSection] = useState<'UI' | 'TOOLS' | 'ARCHITECTURE' | 'TOKENS' | 'TRACES' | 'ALL' | 'BUBBLES' | 'LOADERS' | 'PROMPTS'>('UI');
   const [activeToolSubtab, setActiveToolSubtab] = useState<'FESTIVAL' | 'GRANT' | 'INVITATION' | 'SCOUT' | 'COMPARE' | 'VETTING' | 'PROBES'>('FESTIVAL');
 
   const [streamSimText, setStreamSimText] = useState<string>(
@@ -117,7 +118,7 @@ export const DesignPlayground: React.FC = () => {
 
       {/* Main Category Tabs */}
       <div className="flex items-center gap-1.5 p-1 rounded-xl bg-zinc-900/80 border border-zinc-800 w-fit overflow-x-auto">
-        {(['TOOLS', 'ARCHITECTURE', 'TOKENS', 'TRACES', 'ALL', 'BUBBLES', 'LOADERS', 'PROMPTS'] as const).map((sec) => (
+        {(['UI', 'TOOLS', 'ARCHITECTURE', 'TOKENS', 'TRACES', 'ALL', 'BUBBLES', 'LOADERS', 'PROMPTS'] as const).map((sec) => (
           <button
             key={sec}
             onClick={() => {
@@ -130,6 +131,7 @@ export const DesignPlayground: React.FC = () => {
                 : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/60'
             }`}
           >
+            {sec === 'UI' && '✨ UI Components & Motion'}
             {sec === 'TOOLS' && '🛠️ In-Chat Generative Tools'}
             {sec === 'ARCHITECTURE' && '📐 Agent Architecture & Intent'}
             {sec === 'TOKENS' && '🎨 Design Tokens & Motion'}
@@ -141,6 +143,11 @@ export const DesignPlayground: React.FC = () => {
           </button>
         ))}
       </div>
+
+      {/* SECTION: SHARED UI GALLERY & ICON MOTION LAB */}
+      {(activeSection === 'ALL' || activeSection === 'UI') && (
+        <UiGalleryLab />
+      )}
 
       {/* SECTION: IN-CHAT GENERATIVE TOOLS WITH SUBTABS */}
       {(activeSection === 'ALL' || activeSection === 'TOOLS') && (

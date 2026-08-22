@@ -7,7 +7,7 @@ import { AgentThinkingPill } from './AgentThinkingPill';
 import { VectorFieldBackground } from '../animations/VectorFieldBackground';
 import { CapabilitiesModal } from '../modals/CapabilitiesModal';
 import { soundEffects } from '../../utils/audio';
-import { HelpCircle } from 'lucide-react';
+import { TextLink } from '../ui/TextLink';
 
 interface ChatContainerProps {
   onLaunchDueDiligence: (festivalName: string, optionalUrl?: string) => void;
@@ -198,22 +198,30 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
         opacity={0.18}
       />
 
-      {/* Hero Header Area */}
-      <div className="relative z-10 flex flex-col items-center justify-center pt-2 pb-3 text-center">
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white font-serif mb-1">
-          Cinema Due diligence
+      {/* Hero Header Area with Larger Typography, Vertical Spacing & Micro-Glitch Shifting Animation */}
+      <div className="relative z-10 flex flex-col items-center justify-center my-4 sm:my-6 py-2 text-center select-none">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white font-serif mb-2.5 transition-all">
+          <span className="animate-cinema-glitch text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-zinc-200">
+            Cinema
+          </span>
+          <span className="animate-word-shift-2 text-zinc-100">
+            {' '}Due
+          </span>
+          <span className="animate-word-shift-3 text-zinc-300">
+            {' '}diligence
+          </span>
         </h1>
-        <button
-          type="button"
-          onClick={() => {
-            soundEffects.playClick();
-            setIsCapabilitiesModalOpen(true);
-          }}
-          className="inline-flex items-center space-x-1 text-xs text-blue-400 hover:text-blue-300 underline underline-offset-4 decoration-blue-500/40 hover:decoration-blue-400 font-mono transition-colors cursor-pointer"
+        <TextLink
+          variant="primary"
+          size="xs"
+          iconType="help"
+          animatedIconContinuous
+          asButton
+          onActionClick={() => setIsCapabilitiesModalOpen(true)}
+          className="text-xs sm:text-sm"
         >
-          <HelpCircle className="w-3.5 h-3.5" />
-          <span>what can you search?</span>
-        </button>
+          what can you search?
+        </TextLink>
       </div>
 
       {/* Scrollable Message Area */}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
@@ -10,10 +10,23 @@ import {
   Compass, 
   ShieldCheck, 
   Sparkles,
-  ArrowRight,
-  FileText
+  CheckSquare,
+  ArrowRight
 } from 'lucide-react';
 import { soundEffects } from '../../utils/audio';
+import { TextLink } from '../ui/TextLink';
+
+interface CapabilityCardData {
+  id: string;
+  title: string;
+  badge: string;
+  badgeColor: string;
+  icon: React.ComponentType<{ className?: string }>;
+  iconColor: string;
+  description: string;
+  capabilitiesList: string[];
+  searchExamples: { label: string; promptText: string }[];
+}
 
 interface CapabilitiesModalProps {
   isOpen: boolean;
@@ -26,87 +39,156 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
   onClose,
   onSelectAction,
 }) => {
+  const [expandedCards, setExpandedCards] = useState<Record<string, boolean>>({});
+
   if (typeof document === 'undefined') return null;
 
-  const capabilities = [
+  const toggleExpand = (id: string) => {
+    soundEffects.playClick();
+    setExpandedCards((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const handleRunExample = (promptText: string) => {
+    soundEffects.playSuccess();
+    onClose();
+    onSelectAction(promptText);
+  };
+
+  const capabilitiesData: CapabilityCardData[] = [
     {
       id: 'due-diligence',
-      title: 'Research a Festival in Depth',
+      title: 'Festival Due Diligence & Credibility Vetting',
       badge: 'Due Diligence',
       badgeColor: 'border-emerald-500/30 text-emerald-400 bg-emerald-500/10',
       icon: Search,
       iconColor: 'text-emerald-400',
-      description:
-        'Verify physical cinema venue leases, check Companies House legal filings, trace organizer track records, and scan trade publications for hidden fee schemes.',
-      examplePrompt: 'Is Aldergate Film Festival legitimate? Check their screening venues and fees.',
-      tags: ['Venue Leases', 'Companies House', 'Fee Audit', 'Jury Prestige'],
+      description: 'Autonomous multi-agent background checks cross-examining municipal venue leases, corporate registry filings, and hidden fee structures.',
+      capabilitiesList: [
+        'Verifies physical cinema venue leases and municipal screening license records',
+        'Cross-checks UK Companies House & national corporate registries for active entity status',
+        'Audits historical entry fee escalation and refund / withdrawal policies',
+        'Examines jury prestige and published industry credits across IMDb & festival archives',
+        'Scans trade journals, filmmaker forums, and community scam reports for red flag alerts',
+        'Verifies BAFTA, BIFA, and Academy Award qualifying accreditation status',
+        'Cross-corroborates claimed screening schedules against municipal cinema box office listings'
+      ],
+      searchExamples: [
+        { label: 'Vet Aberdeen Film Festival', promptText: 'Is Aberdeen Film Festival legitimate? Check their physical venue leases and entry fees.' },
+        { label: 'Audit Aldergate Festival', promptText: 'Is Aldergate Film Festival legitimate or a scam? Check their screening leases.' },
+        { label: 'Check Raindance credentials', promptText: 'Perform due diligence on Raindance Film Festival accreditation and venue scale.' }
+      ]
     },
     {
-      id: 'grant-scout',
-      title: 'Find a Grant or Sponsor for Your Film',
-      badge: 'Public Grants & Funds',
-      badgeColor: 'border-blue-500/30 text-blue-400 bg-blue-500/10',
-      icon: Coins,
-      iconColor: 'text-blue-400',
-      description:
-        'Discover public film funds (BFI Filmmaking Fund, Screen Scotland, Sundance Doc Fund, Eurimages), match funding criteria, and early submission grant windows.',
-      examplePrompt: 'Find £25k documentary production grants and public funding in the UK.',
-      tags: ['BFI Fund', 'Doc Grants', 'Match Funding', 'Development Money'],
-    },
-    {
-      id: 'invitation-audit',
-      title: 'Verify an Unsolicited Invitation Email',
-      badge: 'Laurel & Email Audit',
-      badgeColor: 'border-rose-500/30 text-rose-400 bg-rose-500/10',
-      icon: MailWarning,
-      iconColor: 'text-rose-400',
-      description:
-        'Paste or drop an acceptance email or waiver code to detect laurel mills, phantom online-only screenings, or high-priced trophy/statue upsells.',
-      examplePrompt: 'Analyze this festival invitation email offering a 50% waiver code for red flags.',
-      tags: ['Fee Waiver Scams', 'Phantom Laurels', 'Trophy Upsells', 'Domain Audit'],
-    },
-    {
-      id: 'compare-festivals',
-      title: 'Compare Two Festivals Head-to-Head',
-      badge: 'Comparison Arena',
-      badgeColor: 'border-purple-500/30 text-purple-400 bg-purple-500/10',
-      icon: GitCompare,
-      iconColor: 'text-purple-400',
-      description:
-        'Evaluate acceptance rates, audience attendance, press presence, and accreditation value (BAFTA, BIFA, Oscars, FIAPF) between two target festivals.',
-      examplePrompt: 'Compare Raindance vs Leeds International Film Festival.',
-      tags: ['BAFTA vs BIFA', 'Submission ROI', 'Audience Scale', 'Press Reach'],
-    },
-    {
-      id: 'slate-strategy',
-      title: 'Map a Qualifying Submission Roadmap',
+      id: 'opportunity-scout',
+      title: 'Opportunity Scout & Qualifying Strategy',
       badge: 'Opportunity Scout',
       badgeColor: 'border-rose-500/30 text-rose-400 bg-rose-500/10',
       icon: Compass,
       iconColor: 'text-rose-400',
-      description:
-        'Input your project format, genre, runtime, and budget to receive an optimal calendar timeline with Early Bird discounts and exportable .ics deadlines.',
-      examplePrompt: 'I have a 15-min sci-fi short looking for a UK premiere on a £200 budget.',
-      tags: ['.ics Calendar', 'Early Bird', 'Premiere Protection', 'Oscar Qualifiers'],
+      description: 'Autonomous submission calendar and strategy tailored to your film’s format, genre, runtime, budget tier, and premiere goals.',
+      capabilitiesList: [
+        'Matches optimal submission circuits based on genre, runtime, and budget tier',
+        'Flags Early Bird submission discount deadlines to minimize festival expenditure',
+        'Protects World, International, and Regional Premiere status eligibility',
+        'Filters Tier-1 Academy Award and BAFTA-qualifying shorts and features festivals',
+        'Generates downloadable .ics calendar deadlines for production coordination',
+        'Recommends bespoke European & North American rollout roadmaps'
+      ],
+      searchExamples: [
+        { label: 'Sci-Fi Short Strategy', promptText: 'Where should I submit my 15-minute sci-fi short film looking for a UK premiere on a £300 budget?' },
+        { label: 'Feature Doc Rollout', promptText: 'Recommend a festival premiere strategy for an 80-minute independent documentary.' },
+        { label: 'Early Bird Deadlines', promptText: 'Find upcoming Early Bird submission deadlines under £40 for indie shorts.' }
+      ]
     },
     {
-      id: 'script-treatment',
-      title: 'Drop a Treatment, Synopsis or Pitch Deck',
-      badge: 'Multimodal Intake',
-      badgeColor: 'border-amber-500/30 text-amber-400 bg-amber-500/10',
-      icon: FileText,
-      iconColor: 'text-amber-400',
-      description:
-        'Drop a 1-page synopsis, PDF treatment, or script draft directly into the desk. The agent autonomously extracts parameters and customizes your festival strategy.',
-      examplePrompt: 'Extract genre and runtime from my treatment PDF and recommend qualifying circuits.',
-      tags: ['PDF Drop', 'Synopsis Extraction', 'Automatic Targeting'],
+      id: 'grant-scout',
+      title: 'Film Grants, Match Funding & Public Schemes',
+      badge: 'Public Grants & Funds',
+      badgeColor: 'border-blue-500/30 text-blue-400 bg-blue-500/10',
+      icon: Coins,
+      iconColor: 'text-blue-400',
+      description: 'Scouts public film funding opportunities, development grants, and regional match funding with eligibility criteria.',
+      capabilitiesList: [
+        'Matches BFI Filmmaking Fund, Screen Scotland, and regional UK lottery grant windows',
+        'Identifies European co-production and Eurimages match funding criteria',
+        'Screens early-stage script development grants and documentary production funds',
+        'Checks submission deadlines, co-funding ratios, and producer eligibility rules',
+        'Extracts funding caps, match percentages, and non-dilutive grant awards'
+      ],
+      searchExamples: [
+        { label: 'UK Doc Production Grants', promptText: 'Find £25k documentary production grants and public funding schemes in the UK.' },
+        { label: 'Script Development Funds', promptText: 'Show active early-stage development grants and script development funds for indie filmmakers.' },
+        { label: 'BFI Filmmaking Fund', promptText: 'What are the upcoming deadlines and criteria for the BFI Filmmaking Fund?' }
+      ]
     },
+    {
+      id: 'invitation-audit',
+      title: 'Invitation Email & Laurel Mill Verification',
+      badge: 'Email & Laurel Audit',
+      badgeColor: 'border-amber-500/30 text-amber-400 bg-amber-500/10',
+      icon: MailWarning,
+      iconColor: 'text-amber-400',
+      description: 'Analyzes unsolicited festival invitations, 50% waiver codes, and award notices to protect filmmakers from laurel mills and trophy fees.',
+      capabilitiesList: [
+        'Analyzes email provenance, sender domain age, and SPF/DKIM authentication',
+        'Detects laurel mill boilerplates and unsolicited bulk filmmaker outreach templates',
+        'Flags hidden trophy, statue, certificate, and gala ticket fees',
+        'Verifies whether the festival actually screens films in public cinema theaters',
+        'Identifies phantom online-only award schemes designed exclusively to extract fees'
+      ],
+      searchExamples: [
+        { label: 'Analyze Waiver Email', promptText: 'Analyze this festival invitation email offering a 50% waiver code for red flags.' },
+        { label: 'Verify Trophy Fees', promptText: 'Is it standard practice for a film festival to charge £120 for a physical trophy and laurel?' },
+        { label: 'Check Sender Domain', promptText: 'Perform forensic domain checks on submissions-indie-cinema.net.' }
+      ]
+    },
+    {
+      id: 'compare-arena',
+      title: 'Head-to-Head Festival Comparison Arena',
+      badge: 'Comparison Arena',
+      badgeColor: 'border-purple-500/30 text-purple-400 bg-purple-500/10',
+      icon: GitCompare,
+      iconColor: 'text-purple-400',
+      description: 'Direct side-by-side assessment of two candidate festivals across prestige, submission cost ROI, and industry visibility.',
+      capabilitiesList: [
+        'Compares BAFTA / BIFA / Oscar accreditation prestige between two circuits',
+        'Evaluates screening venue capacity (West End cinema vs local community hall)',
+        'Analyzes acceptance rate competitiveness and press / buyer attendance density',
+        'Calculates fee-to-prestige ROI score for targeted budget allocation'
+      ],
+      searchExamples: [
+        { label: 'Raindance vs LIFF', promptText: 'Compare Raindance vs London Independent Film Festival across accreditation and ROI.' },
+        { label: 'Edinburgh vs Leeds', promptText: 'Compare Edinburgh International Film Festival vs Leeds International Film Festival.' }
+      ]
+    },
+    {
+      id: 'deep-vetting-matrix',
+      title: '360° Forensic Deep Vetting Matrix',
+      badge: '7-Dimension Forensic Matrix',
+      badgeColor: 'border-emerald-500/30 text-emerald-400 bg-emerald-500/10',
+      icon: ShieldCheck,
+      iconColor: 'text-emerald-400',
+      description: 'Comprehensive 7-dimension forensic audit investigating corporate registry, WHOIS age, plagiarism, jury dossier, venue, alumni footprint, and image authenticity.',
+      capabilitiesList: [
+        'Corporate Registry: Companies House status, incorporation date, active officer disclosures',
+        'Domain Provenance: WHOIS registrar, domain creation age, DNS authenticity',
+        'Boilerplate Plagiarism: Text fingerprinting against known laurel mill rules and terms',
+        'Key Personnel Dossier: Objective IMDb credits, trade press mentions, and industry track records',
+        'Venue Corroboration: Physical cinema lease manifests, box office schedules, municipal licenses',
+        'Alumni Footprint: Past selected filmmakers, verified premiere histories, distributor acquisitions',
+        'Image Provenance: Real venue photography verification vs stock image reverse matches'
+      ],
+      searchExamples: [
+        { label: '360° Audit on Raindance', promptText: 'Perform full 360° forensic matrix audit on Raindance Film Festival across all 7 dimensions.' },
+        { label: 'Deep Vetting on Unknown Festival', promptText: 'Run deep vetting investigation on a newly registered international indie festival.' }
+      ]
+    }
   ];
 
   return createPortal(
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -125,17 +207,19 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="relative w-full max-w-4xl bg-void border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden z-10 my-8"
+            className="relative w-full max-w-4xl bg-void border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden z-10 my-6 max-h-[88vh] flex flex-col"
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-5 border-b border-zinc-800 bg-midnight/80">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-zinc-800 bg-midnight/90 shrink-0">
               <div className="flex items-center space-x-3">
-                <div className="w-9 h-9 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400">
-                  <Sparkles className="w-5 h-5" />
+                <div className="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400">
+                  <Sparkles className="w-5 h-5 animate-soft-twinkle" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-white font-serif">What Can You Search?</h2>
-                  <p className="text-sm text-zinc-400">Goal-oriented cinema intelligence and autonomous due diligence</p>
+                  <h2 className="text-xl font-bold text-white font-serif tracking-tight">What Can You Search?</h2>
+                  <p className="text-xs text-zinc-400 mt-0.5">
+                    Autonomous cinema due diligence, opportunity scouting, and grant discovery capabilities.
+                  </p>
                 </div>
               </div>
               <button
@@ -143,74 +227,113 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
                   soundEffects.playClick();
                   onClose();
                 }}
-                className="p-2 text-zinc-400 hover:text-white rounded-lg hover:bg-zinc-800/60 transition-colors"
+                className="p-2 text-zinc-400 hover:text-white rounded-xl hover:bg-zinc-800/60 transition-colors cursor-pointer"
                 aria-label="Close dialog"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Content Grid */}
-            <div className="p-6 max-h-[70vh] overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-4">
-              {capabilities.map((cap) => {
-                const IconComponent = cap.icon;
+            {/* Stacked Cards Body */}
+            <div className="p-4 sm:p-6 overflow-y-auto space-y-4 flex-1">
+              {capabilitiesData.map((card) => {
+                const IconComponent = card.icon;
+                const isExpanded = !!expandedCards[card.id];
+                const visibleCapabilities = isExpanded 
+                  ? card.capabilitiesList 
+                  : card.capabilitiesList.slice(0, 3);
+                const hasMore = card.capabilitiesList.length > 3;
+
                 return (
                   <div
-                    key={cap.id}
-                    className="flex flex-col justify-between p-5 rounded-xl bg-card border border-zinc-800/80 hover:border-blue-500/40 hover:bg-surface/90 transition-all group"
+                    key={card.id}
+                    className="p-5 rounded-2xl bg-card/80 border border-zinc-800/90 hover:border-zinc-700/80 transition-all shadow-sm space-y-4"
                   >
-                    <div>
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center space-x-2">
-                          <IconComponent className={`w-5 h-5 ${cap.iconColor}`} />
-                          <span className="font-semibold text-white text-base font-sans">{cap.title}</span>
+                    {/* Card Top Title & Badge */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div className="flex items-center gap-3">
+                        <div className={`p-2 rounded-xl bg-zinc-900 border border-zinc-800 ${card.iconColor}`}>
+                          <IconComponent className="w-5 h-5" />
                         </div>
-                        <span className={`text-xs px-2 py-0.5 rounded-full border font-mono ${cap.badgeColor}`}>
-                          {cap.badge}
-                        </span>
+                        <div>
+                          <h3 className="text-base font-bold text-zinc-100 font-serif">{card.title}</h3>
+                          <p className="text-xs text-zinc-400 mt-0.5">{card.description}</p>
+                        </div>
                       </div>
-                      <p className="text-sm text-zinc-300 leading-relaxed mb-4">{cap.description}</p>
-                      
-                      {/* Tags */}
-                      <div className="flex flex-wrap gap-1.5 mb-4">
-                        {cap.tags.map((t) => (
-                          <span key={t} className="text-xs bg-midnight/90 text-zinc-400 px-2 py-0.5 rounded border border-zinc-800">
-                            {t}
-                          </span>
+                      <span className={`self-start sm:self-center px-2.5 py-1 rounded-lg text-[11px] font-mono font-medium border ${card.badgeColor}`}>
+                        {card.badge}
+                      </span>
+                    </div>
+
+                    {/* Capabilities Checklist */}
+                    <div className="pt-2 border-t border-zinc-850/80 space-y-2">
+                      <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-500 font-semibold">
+                        Actions & Investigations Performed:
+                      </div>
+                      <div className="grid grid-cols-1 gap-2">
+                        {visibleCapabilities.map((capItem, idx) => (
+                          <div key={idx} className="flex items-start gap-2 text-xs text-zinc-300">
+                            <CheckSquare className="w-3.5 h-3.5 text-emerald-400 mt-0.5 shrink-0" />
+                            <span className="leading-relaxed">{capItem}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* View More / View Less Toggle */}
+                      {hasMore && (
+                        <div className="pt-1">
+                          <TextLink
+                            variant="muted"
+                            size="xs"
+                            iconType="chevron-down"
+                            animatedIconContinuous
+                            asButton
+                            onActionClick={() => toggleExpand(card.id)}
+                          >
+                            {isExpanded 
+                              ? 'View less' 
+                              : `View more (+${card.capabilitiesList.length - 3} actions)`}
+                          </TextLink>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* 1-Click Search Examples */}
+                    <div className="pt-2 border-t border-zinc-850/80 space-y-2">
+                      <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-500 font-semibold flex items-center gap-1.5">
+                        <Sparkles className="w-3 h-3 text-amber-400" />
+                        <span>Search Examples (Click to Run):</span>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {card.searchExamples.map((ex, exIdx) => (
+                          <button
+                            key={exIdx}
+                            type="button"
+                            onClick={() => handleRunExample(ex.promptText)}
+                            className="group inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-midnight/90 hover:bg-[#2018E6] border border-zinc-800 hover:border-indigo-400 text-xs font-medium text-zinc-300 hover:text-white transition-all cursor-pointer shadow-sm active:scale-95"
+                          >
+                            <span>{ex.label}</span>
+                            <ArrowRight className="w-3 h-3 text-zinc-500 group-hover:text-white transition-transform group-hover:translate-x-1" />
+                          </button>
                         ))}
                       </div>
                     </div>
-
-                    <button
-                      onClick={() => {
-                        soundEffects.playClick();
-                        onSelectAction(cap.examplePrompt);
-                        onClose();
-                      }}
-                      className="w-full flex items-center justify-between px-3.5 py-2 rounded-lg bg-midnight border border-zinc-700/60 text-xs text-blue-400 hover:text-white hover:bg-blue-600/20 hover:border-blue-500/50 transition-all font-mono"
-                    >
-                      <span className="truncate pr-2">Try: "{cap.examplePrompt}"</span>
-                      <ArrowRight className="w-3.5 h-3.5 shrink-0 group-hover:translate-x-0.5 transition-transform" />
-                    </button>
                   </div>
                 );
               })}
             </div>
 
-            {/* Footer */}
-            <div className="px-6 py-4 border-t border-zinc-800 bg-midnight/60 flex items-center justify-between text-xs text-zinc-400">
-              <div className="flex items-center space-x-2">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                <span>All queries run against verified registry, trade press, and official festival archives.</span>
-              </div>
+            {/* Footer Note */}
+            <div className="px-6 py-3.5 border-t border-zinc-800 bg-midnight/90 text-xs text-zinc-400 flex items-center justify-between shrink-0 font-mono">
+              <span>Tip: Drop any script PDF or invitation email directly into The Desk.</span>
               <button
                 onClick={() => {
                   soundEffects.playClick();
                   onClose();
                 }}
-                className="px-4 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-medium transition-colors"
+                className="px-3 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs transition-colors cursor-pointer"
               >
-                Close
+                Close (ESC)
               </button>
             </div>
           </motion.div>
