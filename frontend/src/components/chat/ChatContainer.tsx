@@ -9,12 +9,13 @@ import { AboutScreenedModal } from '../modals/AboutScreenedModal';
 import { FeedbackModal } from '../modals/FeedbackModal';
 import { soundEffects } from '../../utils/audio';
 import { TextLink } from '../ui/TextLink';
-import { MessageSquare } from 'lucide-react';
+import { MessageSquare, Keyboard } from 'lucide-react';
 
 interface ChatContainerProps {
   onLaunchDueDiligence: (festivalName: string, optionalUrl?: string) => void;
   onLaunchOpportunityScout: (profile: FilmProfile) => void;
   onNavigateToPlaygroundFeedback?: () => void;
+  onOpenKeyboardHelp?: () => void;
 }
 
 const INITIAL_HARDCODED_MESSAGE: ChatMessage = {
@@ -28,6 +29,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
   onLaunchDueDiligence,
   onLaunchOpportunityScout,
   onNavigateToPlaygroundFeedback,
+  onOpenKeyboardHelp,
 }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([INITIAL_HARDCODED_MESSAGE]);
   const [isLoading, setIsLoading] = useState(false);
@@ -248,9 +250,29 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
           isLoading={isLoading}
         />
         
-        {/* Subtle Footer Link: Leave Feedback */}
+        {/* Subtle Footer Link: Keyboard Shortcuts Guide & Leave Feedback */}
         <div className="flex items-center justify-between text-[11px] font-mono text-slate-500 pt-1.5 px-2 select-none">
-          <span className="text-slate-400">Mission Control</span>
+          <div className="flex items-center gap-2.5">
+            <span className="text-slate-400">Mission Control</span>
+            <span className="text-slate-700">•</span>
+            {onOpenKeyboardHelp && (
+              <button
+                type="button"
+                onClick={() => {
+                  soundEffects.playClick();
+                  onOpenKeyboardHelp();
+                }}
+                className="inline-flex items-center gap-1.5 text-slate-400 hover:text-indigo-300 transition-colors cursor-pointer group"
+                title="View all keyboard shortcuts (?)"
+              >
+                <Keyboard className="size-3 text-indigo-400 group-hover:scale-110 transition-transform" />
+                <span>Shortcuts</span>
+                <kbd className="px-1.5 py-0.2 rounded bg-[#181E44] border border-[#2B346E] text-indigo-300 text-[10px] font-mono font-semibold">
+                  ?
+                </kbd>
+              </button>
+            )}
+          </div>
           <button
             type="button"
             onClick={() => {

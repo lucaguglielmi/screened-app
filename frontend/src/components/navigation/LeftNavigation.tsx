@@ -5,15 +5,9 @@ import {
   Compass, 
   Palette, 
   Layers, 
-  Moon, 
-  Sun, 
-  Volume2, 
-  VolumeX, 
-  Keyboard, 
   GripVertical, 
   Check, 
-  Scale, 
-  Command
+  Scale
 } from 'lucide-react';
 import { ActiveTool } from '../../types/investigation';
 import { soundEffects } from '../../utils/audio';
@@ -21,25 +15,18 @@ import { soundEffects } from '../../utils/audio';
 interface Props {
   activeTool: ActiveTool;
   onChange: (tool: ActiveTool) => void;
-  theme: 'dark' | 'light';
-  onToggleTheme: () => void;
-  soundMuted: boolean;
-  onToggleSound: () => void;
-  onOpenKeyboardHelp: () => void;
+  theme?: 'dark' | 'light';
+  onToggleTheme?: () => void;
+  soundMuted?: boolean;
+  onToggleSound?: () => void;
+  onOpenKeyboardHelp?: () => void;
   onOpenCommandPalette?: () => void;
 }
 
 export const LeftNavigation: React.FC<Props> = ({
   activeTool,
   onChange,
-  theme,
-  onToggleTheme,
-  soundMuted,
-  onToggleSound,
-  onOpenKeyboardHelp,
-  onOpenCommandPalette,
 }) => {
-
   const [isProductMenuOpen, setIsProductMenuOpen] = useState(false);
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
   const flyoutRef = useRef<HTMLDivElement>(null);
@@ -151,19 +138,8 @@ export const LeftNavigation: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Bottom Section: Utility Controls */}
+      {/* Bottom Section: Utility Controls (Playground only) */}
       <div className="flex flex-col items-center gap-3 w-full pt-2">
-        {/* Command Palette Trigger */}
-        {onOpenCommandPalette && (
-          <button
-            onClick={onOpenCommandPalette}
-            className="p-2.5 rounded-xl hover:bg-[#121633] text-slate-400 hover:text-indigo-400 transition-colors cursor-pointer"
-            title="Command Palette (⌘K)"
-          >
-            <Command className="size-4.5" />
-          </button>
-        )}
-
         {/* Component Design Playground */}
         <div className="relative">
           <button
@@ -185,33 +161,6 @@ export const LeftNavigation: React.FC<Props> = ({
             </div>
           )}
         </div>
-
-        {/* Audio Mute Toggle */}
-        <button
-          onClick={onToggleSound}
-          className="p-2.5 rounded-xl hover:bg-[#121633] text-slate-400 hover:text-slate-200 transition-colors cursor-pointer"
-          title={soundMuted ? 'Unmute Audio (M)' : 'Mute Audio (M)'}
-        >
-          {soundMuted ? <VolumeX className="size-4.5 text-rose-400" /> : <Volume2 className="size-4.5" />}
-        </button>
-
-        {/* Dark / Light Theme Toggle */}
-        <button
-          onClick={onToggleTheme}
-          className="p-2.5 rounded-xl hover:bg-[#121633] text-slate-400 hover:text-amber-400 transition-colors cursor-pointer"
-          title="Toggle Theme (T)"
-        >
-          {theme === 'dark' ? <Sun className="size-4.5" /> : <Moon className="size-4.5" />}
-        </button>
-
-        {/* Keyboard Shortcuts */}
-        <button
-          onClick={onOpenKeyboardHelp}
-          className="p-2.5 rounded-xl hover:bg-[#121633] text-slate-400 hover:text-indigo-400 transition-colors cursor-pointer"
-          title="Keyboard Shortcuts (?)"
-        >
-          <Keyboard className="size-4.5" />
-        </button>
       </div>
 
       {/* ========================================================================= */}

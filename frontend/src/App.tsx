@@ -6,7 +6,11 @@ import {
   MapPin,
   ShieldCheck,
   Command as CommandIcon,
-  Scale
+  Scale,
+  Volume2,
+  VolumeX,
+  Sun,
+  Moon
 } from 'lucide-react';
 
 import { 
@@ -419,12 +423,6 @@ export default function App() {
       <LeftNavigation
         activeTool={activeTool}
         onChange={setActiveTool}
-        theme={theme}
-        onToggleTheme={toggleTheme}
-        soundMuted={soundMuted}
-        onToggleSound={toggleSound}
-        onOpenKeyboardHelp={() => setIsKeyboardHelpOpen(true)}
-        onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
       />
 
       {/* Main Scrollable Workspace Container */}
@@ -468,17 +466,70 @@ export default function App() {
               </div>
             </div>
 
-            {/* Header Right: Command Palette Quick Trigger & Mobile Navigation */}
-            <div className="flex items-center gap-3">
+            {/* Header Right: Command Palette, Sound Toggle, Theme Toggle, Shortcuts Hint & Mobile Navigation */}
+            <div className="flex items-center gap-2 sm:gap-2.5">
+              {/* Quick Search / Command Palette (⌘K) */}
               <button
                 onClick={() => setIsCommandPaletteOpen(true)}
                 className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#0E1124] hover:bg-[#151936] text-slate-400 hover:text-slate-200 border border-[#22274C] transition-colors cursor-pointer text-xs font-mono"
+                title="Command Palette (⌘K)"
               >
                 <Search className="size-3.5 text-indigo-400" />
                 <span>Search or jump to...</span>
                 <span className="flex items-center gap-0.5 text-[10px] bg-[#1A1F45] text-slate-400 px-1.5 py-0.5 rounded border border-[#262D5F]">
                   <CommandIcon className="size-2.5" /> K
                 </span>
+              </button>
+
+              {/* Sound Effect Toggle Button (M) */}
+              <button
+                onClick={toggleSound}
+                className={`p-2 rounded-xl border transition-all cursor-pointer text-xs font-mono flex items-center gap-1.5 ${
+                  soundMuted 
+                    ? 'bg-[#0E1124] border-[#22274C] text-slate-400 hover:text-slate-200' 
+                    : 'bg-[#121838] border-indigo-500/40 text-indigo-300 hover:border-indigo-400 shadow-sm'
+                }`}
+                title={soundMuted ? 'Unmute Audio (Press M)' : 'Mute Audio (Press M)'}
+              >
+                {soundMuted ? (
+                  <VolumeX className="size-4 text-rose-400" />
+                ) : (
+                  <Volume2 className="size-4 text-indigo-400" />
+                )}
+                <span className="hidden lg:inline text-[11px]">
+                  {soundMuted ? 'Muted' : 'Sound'}
+                </span>
+                <span className="hidden xl:inline text-[9px] px-1 py-0.5 rounded bg-[#1A1F45] text-slate-400 border border-[#262D5F]">
+                  M
+                </span>
+              </button>
+
+              {/* Light / Dark Mode Toggle Button (T) */}
+              <button
+                onClick={toggleTheme}
+                className="p-2 rounded-xl bg-[#0E1124] hover:bg-[#151936] text-slate-400 hover:text-amber-300 border border-[#22274C] hover:border-amber-400/40 transition-colors cursor-pointer text-xs font-mono flex items-center gap-1.5"
+                title={theme === 'dark' ? 'Switch to Light Mode (Press T)' : 'Switch to Dark Mode (Press T)'}
+              >
+                {theme === 'dark' ? (
+                  <Sun className="size-4 text-amber-400" />
+                ) : (
+                  <Moon className="size-4 text-indigo-400" />
+                )}
+                <span className="hidden xl:inline text-[9px] px-1 py-0.5 rounded bg-[#1A1F45] text-slate-400 border border-[#262D5F]">
+                  T
+                </span>
+              </button>
+
+              {/* Keyboard Shortcuts Quick Helper Hint */}
+              <button
+                onClick={() => setIsKeyboardHelpOpen(true)}
+                className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-[#0E1124] hover:bg-[#151936] text-slate-400 hover:text-indigo-300 border border-[#22274C] hover:border-indigo-500/40 transition-all cursor-pointer text-xs font-mono"
+                title="Keyboard Shortcuts Cheat Sheet (Press ?)"
+              >
+                <span>Shortcuts</span>
+                <kbd className="px-1.5 py-0.5 rounded bg-[#1A1F45] text-indigo-300 border border-[#262D5F] text-[10px] font-bold font-mono">
+                  ?
+                </kbd>
               </button>
 
               {/* Mobile Menu Drawer Button */}
@@ -514,6 +565,7 @@ export default function App() {
               onLaunchDueDiligence={handleDeepScreen}
               onLaunchOpportunityScout={handleScoutLaunch}
               onNavigateToPlaygroundFeedback={() => setActiveTool('DESIGN_PLAYGROUND')}
+              onOpenKeyboardHelp={() => setIsKeyboardHelpOpen(true)}
             />
           )}
 
