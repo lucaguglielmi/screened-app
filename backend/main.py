@@ -404,8 +404,8 @@ async def get_investigation_deep_vetting(investigation_id: str):
     return report
 
 
-# In-memory store for filmmaker feedback with seed data
-FEEDBACK_STORE: list[FeedbackItem] = [
+# Seed data for filmmaker feedback
+SEED_FEEDBACK = [
     FeedbackItem(
         id="fb-seed-001",
         rating=5,
@@ -439,10 +439,20 @@ FEEDBACK_STORE: list[FeedbackItem] = [
 ]
 
 
+@app.on_event("startup")
+async def startup_event():
+    # Seed feedback if empty
+    existing = await db.get_all_feedback_items()
+    if not existing:
+        for item in SEED_FEEDBACK:
+            await db.save_feedback_item(item)
+
+
 @app.get("/api/feedback", response_model=list[FeedbackItem])
 async def get_all_feedback():
     """Retrieve all submitted filmmaker feedback items."""
-    return FEEDBACK_STORE
+    items = await db.get_all_feedback_items()
+    return items
 
 
 @app.post("/api/feedback", response_model=FeedbackItem)
@@ -455,7 +465,7 @@ async def submit_feedback(request: FeedbackCreateRequest):
         authorName=request.authorName or "Anonymous Filmmaker",
         authorEmail=request.authorEmail,
     )
-    FEEDBACK_STORE.insert(0, item)
+    await db.save_feedback_item(item)
     logger.info(f"New filmmaker feedback received: rating={item.rating}, cat={item.category}")
     return item
 

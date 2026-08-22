@@ -24,6 +24,7 @@ class Database:
             "sources": {},
             "claims": {},
             "events": {},
+            "feedback": {},
         }
 
         try:
@@ -141,6 +142,32 @@ class Database:
         except Exception as e:
             logger.error(f"Firestore get_events failed: {e}", exc_info=True)
             return self._memory_store["events"].get(investigation_id, [])
+
+    async def save_feedback_item(self, feedback: Any) -> None:
+        data = feedback.model_dump() if hasattr(feedback, "model_dump") else feedback
+        feedback_id = data.get("id")
+        
+        if self.use_memory or not self.client:
+            self._memory_store["feedback"][feedback_id] = data
+            return
+        try:
+            self.client.collection("feedback").document(feedback_id).set(data)
+        except Exception as e:
+            logger.error(f"Firestore save_feedback_item failed: {e}", exc_info=True)
+            self._memory_store["feedback"][feedback_id] = data
+
+    async def get_all_feedback_items(self) -> List[Dict[str, Any]]:
+        if self.use_memory or not self.client:
+            return sorted(list(self._memory_store["feedback"].values()), key=lambda x: x.get("timestamp", ""), reverse=True)
+        try:
+            docs = self.client.collection("feedback").stream()
+            res = [d.to_dict() for d in docs]
+            if not res:
+                return sorted(list(self._memory_store["feedback"].values()), key=lambda x: x.get("timestamp", ""), reverse=True)
+            return sorted(res, key=lambda x: x.get("timestamp", ""), reverse=True)
+        except Exception as e:
+            logger.error(f"Firestore get_all_feedback_items failed: {e}", exc_info=True)
+            return sorted(list(self._memory_store["feedback"].values()), key=lambda x: x.get("timestamp", ""), reverse=True)
 
 
 db = Database()
