@@ -57,7 +57,7 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
       id: 'due-diligence',
       title: 'Festival Due Diligence',
       badge: 'Core Investigation',
-      badgeColor: 'border-emerald-500/30 text-emerald-400 bg-emerald-500/10',
+      badgeColor: 'text-emerald-400 bg-emerald-500/10',
       icon: Search,
       iconColor: 'text-emerald-400',
       summary: 'Autonomous background checks cross-examining cinema leases, registry filings, and entry fees.',
@@ -79,7 +79,7 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
       id: 'opportunity-scout',
       title: 'Opportunity Scout & Circuit Strategy',
       badge: 'Distribution Match',
-      badgeColor: 'border-rose-500/30 text-rose-400 bg-rose-500/10',
+      badgeColor: 'text-rose-400 bg-rose-500/10',
       icon: Compass,
       iconColor: 'text-rose-400',
       summary: 'Custom submission calendar tailored to your film’s format, genre, runtime, and premiere goals.',
@@ -100,7 +100,7 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
       id: 'grants-funding',
       title: 'Film Grants & Public Schemes',
       badge: 'Public Funding',
-      badgeColor: 'border-blue-500/30 text-blue-400 bg-blue-500/10',
+      badgeColor: 'text-blue-400 bg-blue-500/10',
       icon: Coins,
       iconColor: 'text-blue-400',
       summary: 'Scouts public film funds, development schemes, and regional non-dilutive awards.',
@@ -119,7 +119,7 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
       id: 'script-intake',
       title: 'Script & Invitation Document Intake',
       badge: 'Multimodal OCR',
-      badgeColor: 'border-purple-500/30 text-purple-400 bg-purple-500/10',
+      badgeColor: 'text-purple-400 bg-purple-500/10',
       icon: FileText,
       iconColor: 'text-purple-400',
       summary: 'Drag and drop PDF scripts, treatments, or invitation emails for instant autonomous extraction.',
@@ -137,7 +137,7 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
       id: 'deep-vetting',
       title: 'Deep Multi-Year Vetting',
       badge: 'Multi-Edition Forensic',
-      badgeColor: 'border-amber-500/30 text-amber-400 bg-amber-500/10',
+      badgeColor: 'text-amber-400 bg-amber-500/10',
       icon: ShieldCheck,
       iconColor: 'text-amber-400',
       summary: '7-dimension multi-year forensic examination evaluating domain longevity, boilerplate rules, and alumni.',
@@ -210,19 +210,19 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
                 return (
                   <div
                     key={domain.id}
-                    className="p-4 sm:p-5 rounded-2xl bg-[#0E122A]/90 border border-[#1C234E] hover:border-[#2C3775] transition-all space-y-3.5"
+                    className="p-4 sm:p-5 rounded-2xl bg-[#03050B] transition-all space-y-3.5"
                   >
                     {/* Domain Header */}
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                       <div className="flex items-center gap-2.5">
-                        <div className={`p-2 rounded-xl bg-midnight/80 border border-zinc-800 ${domain.iconColor}`}>
+                        <div className={`p-2 rounded-xl bg-white/[0.04] ${domain.iconColor}`}>
                           <DomainIcon className="size-4.5" />
                         </div>
                         <h3 className="text-base sm:text-lg font-bold text-white">
                           {domain.title}
                         </h3>
                       </div>
-                      <span className={`px-2.5 py-0.5 rounded-full text-xs font-mono border ${domain.badgeColor} w-fit`}>
+                      <span className={`px-2.5 py-0.5 rounded-full text-xs font-mono ${domain.badgeColor} w-fit`}>
                         {domain.badge}
                       </span>
                     </div>
@@ -252,7 +252,7 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
                             >
                               <button
                                 type="button"
-                                className="px-3 py-1.5 rounded-xl bg-[#141A3B] hover:bg-[#1C2554] border border-[#242E68] text-sm text-slate-200 hover:text-white transition-all flex items-center gap-1.5 cursor-help"
+                                className="px-3 py-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-sm text-slate-200 hover:text-white transition-all flex items-center gap-1.5 cursor-help"
                               >
                                 <span>{tag.label}</span>
                                 <Info className="size-3 text-slate-400 shrink-0" />
@@ -282,14 +282,14 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
                     </div>
 
                     {/* 1-Click Search Examples */}
-                    <div className="pt-2 border-t border-[#181F48]/80 flex flex-wrap items-center gap-2">
+                    <div className="pt-2 border-t border-white/[0.04] flex flex-wrap items-center gap-2">
                       <span className="text-xs font-mono text-slate-400">Try query:</span>
                       {domain.searchExamples.map((ex, idx) => (
                         <button
                           key={idx}
                           type="button"
                           onClick={() => handleRunExample(ex.promptText)}
-                          className="px-3 py-1 rounded-full bg-[#111736] hover:bg-[#1C2556] border border-zinc-700/80 hover:border-indigo-500/60 text-xs text-indigo-300 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer font-mono"
+                          className="px-3 py-1 rounded-full bg-indigo-950/40 hover:bg-indigo-900/60 text-xs text-indigo-300 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer font-mono"
                         >
                           <span>{ex.label}</span>
                           <ArrowRight className="size-3 text-indigo-400" />

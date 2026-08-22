@@ -44,7 +44,7 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
             {/* Split Comparison Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Claim A */}
-              <div className="p-3.5 rounded-lg bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border space-y-2">
+              <div className="p-3.5 rounded-lg bg-neutral-100 dark:bg-black/40 space-y-2">
                 <div className="text-[11px] font-mono uppercase text-blue-600 dark:text-blue-400 font-semibold flex items-center gap-1.5">
                   <span>Position A</span>
                 </div>
@@ -74,7 +74,7 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
               </div>
 
               {/* Claim B */}
-              <div className="p-3.5 rounded-lg bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border space-y-2">
+              <div className="p-3.5 rounded-lg bg-neutral-100 dark:bg-black/40 space-y-2">
                 <div className="text-[11px] font-mono uppercase text-rose-600 dark:text-rose-400 font-semibold flex items-center gap-1.5">
                   <span>Position B (Opposing)</span>
                 </div>
@@ -105,7 +105,7 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
             </div>
 
             {/* Guidance for Filmmaker */}
-            <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-xs text-amber-800 dark:text-amber-200 flex items-start gap-2">
+            <div className="p-3 rounded-lg bg-amber-500/10 text-xs text-amber-800 dark:text-amber-200 flex items-start gap-2">
               <AlertTriangle className="size-4 shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
               <div>
                 <span className="font-semibold font-mono uppercase text-[10px]">Filmmaker Recommendation: </span>

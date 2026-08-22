@@ -193,10 +193,10 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
               <button
                 type="button"
                 onClick={() => setTalkedToSomeone(!talkedToSomeone)}
-                className={`flex items-center space-x-2 p-2 rounded-lg border text-left transition-all ${
+                className={`flex items-center space-x-2 p-2 rounded-lg text-left transition-all cursor-pointer ${
                   talkedToSomeone
-                    ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-300'
-                    : 'bg-midnight/60 border-zinc-800 text-zinc-300 hover:border-zinc-700'
+                    ? 'bg-emerald-500/20 text-emerald-300 font-medium'
+                    : 'bg-black/40 text-zinc-300 hover:bg-black/70'
                 }`}
               >
                 {talkedToSomeone ? <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" /> : <Square className="w-4 h-4 text-zinc-500 shrink-0" />}
@@ -206,10 +206,10 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
               <button
                 type="button"
                 onClick={() => setWasInvited(!wasInvited)}
-                className={`flex items-center space-x-2 p-2 rounded-lg border text-left transition-all ${
+                className={`flex items-center space-x-2 p-2 rounded-lg text-left transition-all cursor-pointer ${
                   wasInvited
-                    ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-300'
-                    : 'bg-midnight/60 border-zinc-800 text-zinc-300 hover:border-zinc-700'
+                    ? 'bg-emerald-500/20 text-emerald-300 font-medium'
+                    : 'bg-black/40 text-zinc-300 hover:bg-black/70'
                 }`}
               >
                 {wasInvited ? <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" /> : <Square className="w-4 h-4 text-zinc-500 shrink-0" />}
@@ -219,10 +219,10 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
               <button
                 type="button"
                 onClick={() => setReceivedEmail(!receivedEmail)}
-                className={`flex items-center space-x-2 p-2 rounded-lg border text-left transition-all ${
+                className={`flex items-center space-x-2 p-2 rounded-lg text-left transition-all cursor-pointer ${
                   receivedEmail
-                    ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-300'
-                    : 'bg-midnight/60 border-zinc-800 text-zinc-300 hover:border-zinc-700'
+                    ? 'bg-emerald-500/20 text-emerald-300 font-medium'
+                    : 'bg-black/40 text-zinc-300 hover:bg-black/70'
                 }`}
               >
                 {receivedEmail ? <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" /> : <Square className="w-4 h-4 text-zinc-500 shrink-0" />}
@@ -232,10 +232,10 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
               <button
                 type="button"
                 onClick={() => setWaiverOffered(!waiverOffered)}
-                className={`flex items-center space-x-2 p-2 rounded-lg border text-left transition-all ${
+                className={`flex items-center space-x-2 p-2 rounded-lg text-left transition-all cursor-pointer ${
                   waiverOffered
-                    ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-300'
-                    : 'bg-midnight/60 border-zinc-800 text-zinc-300 hover:border-zinc-700'
+                    ? 'bg-emerald-500/20 text-emerald-300 font-medium'
+                    : 'bg-black/40 text-zinc-300 hover:bg-black/70'
                 }`}
               >
                 {waiverOffered ? <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" /> : <Square className="w-4 h-4 text-zinc-500 shrink-0" />}
@@ -245,10 +245,10 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
               <button
                 type="button"
                 onClick={() => setAlreadyPaid(!alreadyPaid)}
-                className={`flex items-center space-x-2 p-2 rounded-lg border text-left transition-all ${
+                className={`flex items-center space-x-2 p-2 rounded-lg text-left transition-all cursor-pointer ${
                   alreadyPaid
-                    ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-300'
-                    : 'bg-midnight/60 border-zinc-800 text-zinc-300 hover:border-zinc-700'
+                    ? 'bg-emerald-500/20 text-emerald-300 font-medium'
+                    : 'bg-black/40 text-zinc-300 hover:bg-black/70'
                 }`}
               >
                 {alreadyPaid ? <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" /> : <Square className="w-4 h-4 text-zinc-500 shrink-0" />}
@@ -258,10 +258,10 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
               <button
                 type="button"
                 onClick={() => setAdvertisedCinemaVenue(!advertisedCinemaVenue)}
-                className={`flex items-center space-x-2 p-2 rounded-lg border text-left transition-all ${
+                className={`flex items-center space-x-2 p-2 rounded-lg text-left transition-all cursor-pointer ${
                   advertisedCinemaVenue
-                    ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-300'
-                    : 'bg-midnight/60 border-zinc-800 text-zinc-300 hover:border-zinc-700'
+                    ? 'bg-emerald-500/20 text-emerald-300 font-medium'
+                    : 'bg-black/40 text-zinc-300 hover:bg-black/70'
                 }`}
               >
                 {advertisedCinemaVenue ? <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" /> : <Square className="w-4 h-4 text-zinc-500 shrink-0" />}

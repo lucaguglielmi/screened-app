@@ -68,7 +68,7 @@ export const MiniScoutCard: React.FC<MiniScoutCardProps> = ({ args, onLaunch }) 
                 type="text"
                 value={filmTitle}
                 onChange={(e) => setFilmTitle(e.target.value)}
-                className="w-full rounded-xl border border-[#22274C] bg-[#070913] px-3.5 py-2 text-white font-medium focus:border-[#F43F5E] focus:outline-none text-base"
+                className="w-full rounded-xl bg-[#04060E] border border-transparent focus:border-[#F43F5E] px-3.5 py-2 text-white font-medium focus:outline-none text-base"
               />
             </div>
             <div>
@@ -77,7 +77,7 @@ export const MiniScoutCard: React.FC<MiniScoutCardProps> = ({ args, onLaunch }) 
                 <select
                   value={format}
                   onChange={(e) => setFormat(e.target.value as FilmFormat)}
-                  className="w-1/2 rounded-xl border border-[#22274C] bg-[#070913] px-3 py-2 text-white text-base cursor-pointer"
+                  className="w-1/2 rounded-xl bg-[#04060E] border border-transparent focus:border-[#F43F5E] px-3 py-2 text-white text-base cursor-pointer"
                 >
                   <option value="SHORT">Short</option>
                   <option value="FEATURE">Feature</option>
@@ -88,14 +88,14 @@ export const MiniScoutCard: React.FC<MiniScoutCardProps> = ({ args, onLaunch }) 
                   type="text"
                   value={genre}
                   onChange={(e) => setGenre(e.target.value)}
-                  className="w-1/2 rounded-xl border border-[#22274C] bg-[#070913] px-3 py-2 text-white text-base"
+                  className="w-1/2 rounded-xl bg-[#04060E] border border-transparent focus:border-[#F43F5E] px-3 py-2 text-white text-base"
                 />
               </div>
             </div>
           </div>
 
           {args.strategy_rationale && (
-            <div className="rounded-xl bg-[#141731] p-3 border border-[#22274C] text-slate-200 text-sm leading-relaxed">
+            <div className="rounded-xl bg-[#04060E] p-3 text-slate-200 text-sm leading-relaxed">
               <span className="font-bold text-[#F43F5E]">Positioning Angle: </span>
               {args.strategy_rationale}
             </div>
@@ -110,7 +110,7 @@ export const MiniScoutCard: React.FC<MiniScoutCardProps> = ({ args, onLaunch }) 
                 max={240}
                 value={runtime}
                 onChange={(e) => setRuntime(parseInt(e.target.value) || 15)}
-                className="w-full rounded-xl border border-[#22274C] bg-[#070913] px-3.5 py-2 text-white text-base"
+                className="w-full rounded-xl bg-[#04060E] border border-transparent focus:border-[#F43F5E] px-3.5 py-2 text-white text-base"
               />
             </div>
             <div>
@@ -118,7 +118,7 @@ export const MiniScoutCard: React.FC<MiniScoutCardProps> = ({ args, onLaunch }) 
               <select
                 value={budgetTier}
                 onChange={(e) => setBudgetTier(e.target.value)}
-                className="w-full rounded-xl border border-[#22274C] bg-[#070913] px-3.5 py-2 text-white text-base cursor-pointer"
+                className="w-full rounded-xl bg-[#04060E] border border-transparent focus:border-[#F43F5E] px-3.5 py-2 text-white text-base cursor-pointer"
               >
                 <option value="Micro (< £50k)">Micro (&lt; £50k)</option>
                 <option value="Low (< £250k)">Low (&lt; £250k)</option>
@@ -144,8 +144,8 @@ export const MiniScoutCard: React.FC<MiniScoutCardProps> = ({ args, onLaunch }) 
       {/* STAGE 2: REVIEW & LAUNCH CONFIRMATION UI (Redirects to Opportunity Scout Workspace) */}
       {step === 'REVIEW' && (
         <div className="space-y-4">
-          <div className="p-4 rounded-xl bg-[#F43F5E]/10 border border-[#F43F5E]/30 space-y-2.5 text-xs">
-            <div className="flex items-center justify-between border-b border-[#F43F5E]/20 pb-2">
+          <div className="p-4 rounded-xl bg-[#04060E] space-y-2.5 text-xs">
+            <div className="flex items-center justify-between border-b border-white/[0.06] pb-2">
               <span className="font-mono font-bold text-[#F43F5E] uppercase tracking-wider">
                 Stage 2: Slate Strategy Parameters Ready
               </span>
@@ -173,16 +173,16 @@ export const MiniScoutCard: React.FC<MiniScoutCardProps> = ({ args, onLaunch }) 
               </div>
             </div>
 
-            <div className="pt-2 border-t border-[#F43F5E]/20">
+            <div className="pt-2 border-t border-white/[0.06]">
               <span className="text-slate-400 font-mono block mb-1">Active Optimization Passes:</span>
               <div className="flex flex-wrap gap-1.5">
-                <span className="px-2 py-0.5 rounded bg-midnight border border-zinc-700 text-zinc-200 text-[11px]">
+                <span className="px-2 py-0.5 rounded bg-white/[0.04] text-zinc-200 text-[11px]">
                   ✓ BAFTA / Oscar Accreditation Filter
                 </span>
-                <span className="px-2 py-0.5 rounded bg-midnight border border-zinc-700 text-zinc-200 text-[11px]">
+                <span className="px-2 py-0.5 rounded bg-white/[0.04] text-zinc-200 text-[11px]">
                   ✓ Early Bird Deadline Tracker
                 </span>
-                <span className="px-2 py-0.5 rounded bg-midnight border border-zinc-700 text-zinc-200 text-[11px]">
+                <span className="px-2 py-0.5 rounded bg-white/[0.04] text-zinc-200 text-[11px]">
                   ✓ Premiere Priority Protection
                 </span>
               </div>

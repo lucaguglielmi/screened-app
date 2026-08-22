@@ -141,7 +141,7 @@ export const OpportunityCard: React.FC<Props> = ({
         </div>
 
         {/* Deadline Banner with Add to Calendar */}
-        <div className="p-3 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border flex items-center justify-between text-sm gap-2">
+        <div className="p-3 rounded-xl bg-neutral-100 dark:bg-black/40 flex items-center justify-between text-sm gap-2">
           <span className="font-mono text-paper-muted dark:text-darkroom-muted flex items-center gap-1.5">
             <Calendar className="size-4 text-[#F43F5E]" />
             <span>{opportunity.deadlineTier}:</span>

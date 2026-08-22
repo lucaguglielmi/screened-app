@@ -253,7 +253,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({
           </div>
 
           {/* Authenticity Score Card */}
-          <div className="flex items-center gap-4 bg-midnight/80 p-4 rounded-2xl border border-zinc-800 shrink-0">
+          <div className="flex items-center gap-4 bg-black/40 p-4 rounded-2xl shrink-0">
             <div className="text-center">
               <div className="text-2xl font-black font-mono text-emerald-400">
                 {activeReport.overallAuthenticityScore}%
@@ -282,7 +282,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({
             <button
               onClick={() => { soundEffects.playClick(); setFilter('ALL'); }}
               className={`px-3 py-1 rounded-lg text-xs font-mono transition-colors ${
-                filter === 'ALL' ? 'bg-indigo-600 text-white font-bold' : 'bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800'
+                filter === 'ALL' ? 'bg-indigo-600 text-white font-bold' : 'bg-black/30 text-zinc-400 hover:text-white'
               }`}
             >
               All Dimensions ({activeReport.dimensions.length})
@@ -290,7 +290,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({
             <button
               onClick={() => { soundEffects.playClick(); setFilter('VERIFIED'); }}
               className={`px-3 py-1 rounded-lg text-xs font-mono transition-colors ${
-                filter === 'VERIFIED' ? 'bg-emerald-600 text-white font-bold' : 'bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800'
+                filter === 'VERIFIED' ? 'bg-emerald-600 text-white font-bold' : 'bg-black/30 text-zinc-400 hover:text-white'
               }`}
             >
               Verified Authentic ({activeReport.dimensions.filter(d => d.status === 'VERIFIED_AUTHENTIC').length})
@@ -298,7 +298,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({
             <button
               onClick={() => { soundEffects.playClick(); setFilter('ALERTS'); }}
               className={`px-3 py-1 rounded-lg text-xs font-mono transition-colors ${
-                filter === 'ALERTS' ? 'bg-rose-600 text-white font-bold' : 'bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800'
+                filter === 'ALERTS' ? 'bg-rose-600 text-white font-bold' : 'bg-black/30 text-zinc-400 hover:text-white'
               }`}
             >
               Risk Alerts ({activeReport.dimensions.filter(d => d.status === 'AMBER_WARNING' || d.status === 'RED_FLAG').length})
@@ -306,7 +306,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({
             <button
               onClick={() => { soundEffects.playClick(); setFilter('INFO'); }}
               className={`px-3 py-1 rounded-lg text-xs font-mono transition-colors ${
-                filter === 'INFO' ? 'bg-blue-600 text-white font-bold' : 'bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800'
+                filter === 'INFO' ? 'bg-blue-600 text-white font-bold' : 'bg-black/30 text-zinc-400 hover:text-white'
               }`}
             >
               Informational ({activeReport.dimensions.filter(d => d.status === 'INFORMATIONAL').length})
@@ -342,7 +342,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({
                 className="p-4 sm:p-5 flex items-center justify-between cursor-pointer select-none"
               >
                 <div className="flex items-center space-x-3.5 min-w-0">
-                  <div className="p-2.5 rounded-xl bg-midnight border border-zinc-800 shrink-0">
+                  <div className="p-2.5 rounded-xl bg-white/[0.04] shrink-0">
                     {getDimensionIcon(dim.dimensionKey)}
                   </div>
                   <div className="min-w-0">
@@ -371,7 +371,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({
                   <button
                     type="button"
                     aria-label={isExpanded ? 'Collapse dimension' : 'Expand dimension'}
-                    className="p-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white"
+                    className="p-1.5 rounded-lg bg-white/[0.04] text-zinc-400 hover:text-white"
                   >
                     {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </button>
@@ -389,7 +389,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({
                     className="border-t border-zinc-800/80 p-5 space-y-4 text-xs overflow-hidden"
                   >
                     {/* Full Summary */}
-                    <div className="p-3.5 rounded-xl bg-midnight/90 border border-zinc-800">
+                    <div className="p-3.5 rounded-xl bg-black/40">
                       <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-indigo-400 block mb-1">
                         Executive Forensic Summary
                       </span>
@@ -408,7 +408,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({
                           {dim.signalsFound.map((sig, sIdx) => (
                             <div 
                               key={sIdx}
-                              className="p-2.5 rounded-xl bg-card border border-zinc-800 flex items-start space-x-2"
+                              className="p-2.5 rounded-xl bg-black/40 flex items-start space-x-2"
                             >
                               <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                               <span className="text-zinc-300">{sig}</span>

@@ -46,7 +46,7 @@ export const MiniDueDiligence: React.FC<MiniDueDiligenceProps> = ({ args, onLaun
               type="text"
               value={festivalName}
               onChange={(e) => setFestivalName(e.target.value)}
-              className="w-full rounded-xl border border-[#22274C] bg-[#070913] px-3.5 py-2.5 text-white font-medium focus:border-[#00D29E] focus:outline-none text-base"
+              className="w-full rounded-xl bg-[#04060E] border border-transparent focus:border-[#00D29E] px-3.5 py-2.5 text-white font-medium focus:outline-none text-base"
               placeholder="e.g. Raindance Film Festival"
             />
           </div>
@@ -56,14 +56,14 @@ export const MiniDueDiligence: React.FC<MiniDueDiligenceProps> = ({ args, onLaun
               type="text"
               value={optionalUrl}
               onChange={(e) => setOptionalUrl(e.target.value)}
-              className="w-full rounded-xl border border-[#22274C] bg-[#070913] px-3.5 py-2.5 text-white font-medium focus:border-[#00D29E] focus:outline-none text-base"
+              className="w-full rounded-xl bg-[#04060E] border border-transparent focus:border-[#00D29E] px-3.5 py-2.5 text-white font-medium focus:outline-none text-base"
               placeholder="e.g. https://festival.org"
             />
           </div>
         </div>
 
         {args.preflight_summary && (
-          <div className="rounded-xl bg-[#141731] p-3.5 border border-[#22274C] text-slate-200 text-base leading-relaxed">
+          <div className="rounded-xl bg-[#04060E] p-3.5 text-slate-200 text-base leading-relaxed">
             <span className="font-bold text-[#00D29E]">Agent Rationale: </span>
             {args.preflight_summary}
           </div>

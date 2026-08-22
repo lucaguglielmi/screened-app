@@ -216,19 +216,19 @@ export const EvidenceDossier: React.FC<Props> = ({
         {/* Detail Dial & Count Strip */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-2">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center flex-1 w-full sm:w-auto">
-            <div className="p-2.5 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border">
+            <div className="p-2.5 rounded-xl bg-neutral-100 dark:bg-black/30">
               <div className="text-[10px] font-mono uppercase text-paper-muted dark:text-darkroom-muted">Facts</div>
               <div className="text-base font-semibold text-blue-600 dark:text-blue-400">{factsCount}</div>
             </div>
-            <div className="p-2.5 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border">
+            <div className="p-2.5 rounded-xl bg-neutral-100 dark:bg-black/30">
               <div className="text-[10px] font-mono uppercase text-paper-muted dark:text-darkroom-muted">Allegations</div>
               <div className="text-base font-semibold text-rose-600 dark:text-rose-400">{allegationsCount}</div>
             </div>
-            <div className="p-2.5 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border">
+            <div className="p-2.5 rounded-xl bg-neutral-100 dark:bg-black/30">
               <div className="text-[10px] font-mono uppercase text-paper-muted dark:text-darkroom-muted">Corroborated</div>
               <div className="text-base font-semibold text-emerald-600 dark:text-emerald-400">{corroboratedCount}</div>
             </div>
-            <div className="p-2.5 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border">
+            <div className="p-2.5 rounded-xl bg-neutral-100 dark:bg-black/30">
               <div className="text-[10px] font-mono uppercase text-paper-muted dark:text-darkroom-muted">Disputes</div>
               <div className="text-base font-semibold text-amber-600 dark:text-amber-400">{disputes.length}</div>
             </div>
@@ -241,7 +241,7 @@ export const EvidenceDossier: React.FC<Props> = ({
 
         {/* View Mode Switcher: Dossier vs 360° Forensic Matrix */}
         <div className="pt-3 border-t border-paper-border dark:border-darkroom-border flex items-center justify-between flex-wrap gap-3 no-print">
-          <div className="flex items-center gap-2 p-1 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border">
+          <div className="flex items-center gap-2 p-1 rounded-xl bg-neutral-100 dark:bg-black/30">
             <button
               onClick={() => { playDialClick(); setActiveTab('DOSSIER'); }}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
@@ -352,7 +352,7 @@ export const EvidenceDossier: React.FC<Props> = ({
                 />
               </div>
 
-              <div className="flex items-center gap-1 p-1 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-xs">
+              <div className="flex items-center gap-1 p-1 rounded-xl bg-neutral-100 dark:bg-black/30 text-xs">
                 {['ALL', 'FESTIVAL', 'ORGANIZER', 'PARTICIPANTS'].map((d) => (
                   <button
                     key={d}
@@ -443,7 +443,7 @@ export const EvidenceDossier: React.FC<Props> = ({
                         {claim.evidence.map((ev, idx) => (
                           <div
                             key={idx}
-                            className="p-3 rounded-lg bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border space-y-1.5"
+                            className="p-3 rounded-lg bg-neutral-100 dark:bg-black/30 space-y-1.5"
                           >
                             <div className="flex items-center justify-between gap-2">
                               <span className="font-semibold text-paper-text dark:text-darkroom-text">

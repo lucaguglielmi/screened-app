@@ -242,10 +242,10 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                       soundEffects.playClick();
                       setCategory(cat.id);
                     }}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-mono transition-all flex items-center gap-1.5 cursor-pointer border ${
+                    className={`px-3.5 py-1.5 rounded-xl text-xs font-mono transition-all flex items-center gap-1.5 cursor-pointer ${
                       category === cat.id
-                        ? 'bg-[#2018E6] text-white border-indigo-400 shadow-md shadow-indigo-950'
-                        : 'bg-[#0E1228] text-slate-300 border-[#222852] hover:border-[#3A458C]'
+                        ? 'bg-[#2018E6] text-white shadow-md shadow-indigo-950'
+                        : 'bg-[#04060E] text-slate-300 hover:bg-[#0E132A] hover:text-white'
                     }`}
                   >
                     <span>{cat.emoji}</span>
@@ -266,7 +266,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                 onChange={(e) => setComment(e.target.value)}
                 placeholder="Share your thoughts, missing film grants, accuracy feedback, or feature ideas..."
                 rows={4}
-                className="w-full px-4 py-3 rounded-2xl bg-[#0B0F24] border border-[#222852] text-slate-100 placeholder-slate-400 text-sm focus:outline-none focus:border-indigo-500 transition-colors resize-none leading-relaxed"
+                className="w-full px-4 py-3 rounded-2xl bg-[#04060E] border border-transparent focus:border-indigo-500 text-slate-100 placeholder-slate-500 text-sm focus:outline-none transition-colors resize-none leading-relaxed"
                 required
               />
             </div>
@@ -280,7 +280,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                   value={authorName}
                   onChange={(e) => setAuthorName(e.target.value)}
                   placeholder="e.g. Maya Lin (Director)"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#0B0F24] border border-[#222852] text-slate-100 placeholder-slate-400 text-xs focus:outline-none focus:border-indigo-500 transition-colors"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#04060E] border border-transparent focus:border-indigo-500 text-slate-100 placeholder-slate-500 text-xs focus:outline-none transition-colors"
                 />
               </div>
               <div className="space-y-1">
@@ -290,7 +290,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                   value={authorEmail}
                   onChange={(e) => setAuthorEmail(e.target.value)}
                   placeholder="director@indiefilm.org"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#0B0F24] border border-[#222852] text-slate-100 placeholder-slate-400 text-xs focus:outline-none focus:border-indigo-500 transition-colors"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#04060E] border border-transparent focus:border-indigo-500 text-slate-100 placeholder-slate-500 text-xs focus:outline-none transition-colors"
                 />
               </div>
             </div>

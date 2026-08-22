@@ -160,10 +160,10 @@ export const QuestionsCategoryModal: React.FC<QuestionsCategoryModalProps> = ({
                         soundEffects.playClick();
                         setActiveCategory(cat.id);
                       }}
-                      className={`flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-medium transition-all ${
+                      className={`flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-medium transition-all cursor-pointer ${
                         isActive
                           ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20'
-                          : 'bg-card text-zinc-300 hover:bg-surface border border-zinc-800'
+                          : 'bg-black/40 text-zinc-300 hover:bg-black/70 hover:text-white'
                       }`}
                     >
                       <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : cat.color}`} />
@@ -191,7 +191,7 @@ export const QuestionsCategoryModal: React.FC<QuestionsCategoryModalProps> = ({
                         onSelectQuestion(q);
                         onClose();
                       }}
-                      className="w-full flex items-center justify-between p-3.5 rounded-xl bg-card border border-zinc-800/80 hover:border-blue-500/50 hover:bg-surface text-left group transition-all"
+                      className="w-full flex items-center justify-between p-3.5 rounded-xl bg-black/40 hover:bg-black/70 text-left group transition-all cursor-pointer"
                     >
                       <div className="flex items-start space-x-3 pr-2">
                         <CheckCircle2 className="w-4 h-4 text-zinc-500 group-hover:text-blue-400 mt-0.5 shrink-0 transition-colors" />

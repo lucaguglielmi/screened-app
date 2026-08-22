@@ -83,7 +83,7 @@ export const AboutScreenedModal: React.FC<AboutScreenedModalProps> = ({
         <div className="p-6 sm:p-8 overflow-y-auto space-y-6 text-base leading-relaxed text-slate-200">
           
           {/* Mission Hero Banner */}
-          <div className="p-5 rounded-2xl bg-gradient-to-br from-[#2018E6]/20 via-[#1A1F45]/30 to-[#00D29E]/10 border border-[#2B3369] space-y-2">
+          <div className="p-5 rounded-2xl bg-[#04060E] space-y-2">
             <div className="flex items-center gap-2 text-xs font-mono text-indigo-300 uppercase tracking-wider font-semibold">
               <ShieldCheck className="size-4 text-[#00D29E]" />
               Forensic Protection for Indie Cinema
@@ -100,8 +100,8 @@ export const AboutScreenedModal: React.FC<AboutScreenedModalProps> = ({
             </h3>
 
             {/* Pillar 1: Parallel Web Crawling */}
-            <div className="p-4 rounded-2xl bg-[#0E1228] border border-[#1F254E] flex gap-4 items-start">
-              <div className="p-2.5 rounded-xl bg-indigo-500/20 text-indigo-400 shrink-0 mt-0.5 border border-indigo-500/30">
+            <div className="p-4 rounded-2xl bg-[#04060E] flex gap-4 items-start">
+              <div className="p-2.5 rounded-xl bg-indigo-500/20 text-indigo-400 shrink-0 mt-0.5">
                 <Search className="size-5" />
               </div>
               <div className="space-y-1">
@@ -115,8 +115,8 @@ export const AboutScreenedModal: React.FC<AboutScreenedModalProps> = ({
             </div>
 
             {/* Pillar 2: Deterministic Corroboration */}
-            <div className="p-4 rounded-2xl bg-[#0E1228] border border-[#1F254E] flex gap-4 items-start">
-              <div className="p-2.5 rounded-xl bg-[#00D29E]/20 text-[#00D29E] shrink-0 mt-0.5 border border-[#00D29E]/30">
+            <div className="p-4 rounded-2xl bg-[#04060E] flex gap-4 items-start">
+              <div className="p-2.5 rounded-xl bg-[#00D29E]/20 text-[#00D29E] shrink-0 mt-0.5">
                 <Scale className="size-5" />
               </div>
               <div className="space-y-1">
@@ -130,8 +130,8 @@ export const AboutScreenedModal: React.FC<AboutScreenedModalProps> = ({
             </div>
 
             {/* Pillar 3: Non-Dilutive Grant Roadmaps */}
-            <div className="p-4 rounded-2xl bg-[#0E1228] border border-[#1F254E] flex gap-4 items-start">
-              <div className="p-2.5 rounded-xl bg-rose-500/20 text-rose-400 shrink-0 mt-0.5 border border-rose-500/30">
+            <div className="p-4 rounded-2xl bg-[#04060E] flex gap-4 items-start">
+              <div className="p-2.5 rounded-xl bg-rose-500/20 text-rose-400 shrink-0 mt-0.5">
                 <Sparkles className="size-5" />
               </div>
               <div className="space-y-1">
@@ -146,7 +146,7 @@ export const AboutScreenedModal: React.FC<AboutScreenedModalProps> = ({
           </div>
 
           {/* Quick Summary Highlights */}
-          <div className="p-4 rounded-2xl bg-[#0B0F22] border border-[#1B2144] grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs font-mono text-slate-300">
+          <div className="p-4 rounded-2xl bg-[#04060E] grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs font-mono text-slate-300">
             <div className="flex items-center gap-2">
               <CheckCircle2 className="size-4 text-[#00D29E]" />
               <span>Zero Blackbox Scores</span>

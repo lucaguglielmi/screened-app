@@ -123,7 +123,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
           {/* Budget & Funding Needed Sliders */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             {/* Total Budget Slider */}
-            <div className="space-y-1.5 bg-midnight/60 p-3 rounded-xl border border-zinc-800">
+            <div className="space-y-1.5 bg-black/40 p-3 rounded-xl">
               <div className="flex justify-between items-center">
                 <span className="text-zinc-400 font-mono">Total Estimated Budget</span>
                 <span className="font-bold text-blue-400 font-mono">£{budgetTier.toLocaleString()}</span>
@@ -144,7 +144,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
             </div>
 
             {/* Funding Gap Needed Slider */}
-            <div className="space-y-1.5 bg-midnight/60 p-3 rounded-xl border border-zinc-800">
+            <div className="space-y-1.5 bg-black/40 p-3 rounded-xl">
               <div className="flex justify-between items-center">
                 <span className="text-zinc-400 font-mono">Grant Funding Needed</span>
                 <span className="font-bold text-emerald-400 font-mono">£{fundingNeeded.toLocaleString()}</span>

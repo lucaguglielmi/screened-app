@@ -84,13 +84,13 @@ export const KeyboardHelpModal: React.FC<Props> = ({ isOpen, onClose }) => {
                   return (
                     <div
                       key={idx}
-                      className="flex items-center justify-between py-2 px-3 rounded-2xl bg-[#10142D] hover:bg-[#151A3C] border border-[#1A2045] transition-colors text-xs"
+                      className="flex items-center justify-between py-2 px-3.5 rounded-2xl bg-[#050713] hover:bg-[#0C1022] transition-colors text-xs"
                     >
                       <div className="flex items-center gap-2.5 text-slate-300">
                         {Icon && <Icon className="size-3.5 text-slate-400 shrink-0" />}
                         <span>{sc.description}</span>
                       </div>
-                      <kbd className="px-2.5 py-1 rounded-lg bg-[#181E44] border border-[#2B346E] font-mono text-[11px] font-semibold text-indigo-200 shadow-sm whitespace-nowrap">
+                      <kbd className="px-2.5 py-1 rounded-lg bg-[#0E122A] font-mono text-[11px] font-semibold text-indigo-200 shadow-sm whitespace-nowrap">
                         {sc.key}
                       </kbd>
                     </div>
@@ -105,7 +105,7 @@ export const KeyboardHelpModal: React.FC<Props> = ({ isOpen, onClose }) => {
         <div className="pt-2 border-t border-[#1C2145] flex items-center justify-between text-xs font-mono text-slate-400">
           <span>Tips show contextually across the UI</span>
           <span className="text-[11px]">
-            Press <kbd className="px-1.5 py-0.5 rounded bg-[#181E44] border border-[#2B346E] text-slate-300">Esc</kbd> to close
+            Press <kbd className="px-1.5 py-0.5 rounded bg-[#0E122A] text-slate-300">Esc</kbd> to close
           </span>
         </div>
       </div>

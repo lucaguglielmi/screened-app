@@ -220,7 +220,7 @@ export const WhyScreened: React.FC<Props> = ({
                 {item.description}
               </p>
 
-              <div className="p-4 rounded-2xl bg-[#070913] border border-[#1B2042] space-y-2">
+              <div className="p-4 rounded-2xl bg-[#04060E] space-y-2">
                 <div className="flex items-start gap-3">
                   <Quote className="size-4 text-indigo-400 shrink-0 mt-0.5" />
                   <p className="text-sm text-slate-200 italic leading-relaxed">
