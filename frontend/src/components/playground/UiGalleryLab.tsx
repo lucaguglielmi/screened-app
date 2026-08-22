@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, ButtonVariant, ButtonSize, IconAnimationType } from '../ui/Button';
 import { TextLink } from '../ui/TextLink';
+import { AgentAvatar } from '../chat/AgentAvatar';
 import { soundEffects } from '../../utils/audio';
 
 export const UiGalleryLab: React.FC = () => {
@@ -342,6 +343,53 @@ export const UiGalleryLab: React.FC = () => {
               Add Comparison Festival
             </TextLink>
             <p className="text-xs text-zinc-400">Rotates 180° on hover with clean white underline.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 3: SHERLOCK CINEMA DETECTIVE AVATAR & MOTION PHYSICS */}
+      <section className="p-6 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 shadow-md backdrop-blur-sm space-y-6">
+        <div className="border-b border-zinc-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider font-mono flex items-center gap-2">
+              <span>🕵️‍♂️ Sherlock Cinema Detective Avatar Suite</span>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                Interactive Micro-Motion
+              </span>
+            </h3>
+            <p className="text-xs text-zinc-400">
+              Custom deerstalker hat + cinema search loupe emblem with counter-rotating orbit rings, hover wave ripples, and click modal dispatch.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Size Small */}
+          <div className="p-4 rounded-xl bg-midnight/90 border border-zinc-800 flex flex-col items-center justify-center text-center space-y-3">
+            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">Small (`sm`) - Chat Feed</span>
+            <AgentAvatar size="sm" onClick={() => logAction('Clicked Small Avatar')} />
+            <p className="text-[11px] text-zinc-400">Used in compact thinking states and dense chat feeds.</p>
+          </div>
+
+          {/* Size Medium */}
+          <div className="p-4 rounded-xl bg-midnight/90 border border-zinc-800 flex flex-col items-center justify-center text-center space-y-3">
+            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">Medium (`md`) - Message Bubble</span>
+            <AgentAvatar size="md" onClick={() => logAction('Clicked Medium Avatar')} />
+            <p className="text-[11px] text-zinc-400">Default avatar for all Mission Control agent message bubbles.</p>
+          </div>
+
+          {/* Size Large */}
+          <div className="p-4 rounded-xl bg-midnight/90 border border-zinc-800 flex flex-col items-center justify-center text-center space-y-3">
+            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">Large (`lg`) - Header Hero</span>
+            <AgentAvatar size="lg" onClick={() => logAction('Clicked Large Avatar')} />
+            <p className="text-[11px] text-zinc-400">Expanded display with prominent holographic sweeps.</p>
+          </div>
+
+          {/* Thinking State */}
+          <div className="p-4 rounded-xl bg-midnight/90 border border-zinc-800 flex flex-col items-center justify-center text-center space-y-3">
+            <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-wider font-semibold">Active Thinking Mode</span>
+            <AgentAvatar size="md" isThinking={true} onClick={() => logAction('Clicked Thinking Avatar')} />
+            <p className="text-[11px] text-zinc-400">High-speed dual-axis orbital spins and pulsating shockwaves.</p>
           </div>
         </div>
       </section>

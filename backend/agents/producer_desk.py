@@ -261,8 +261,16 @@ Return a strict JSON object with:
 
         if is_email:
             # Extract festival name
-            fest_match = re.search(r"(?:welcome to|selection at|invited to|selection for)\s+([A-Z][A-Za-z0-9\s]+(?:Festival|Awards|Fest|Cinema))", text)
-            festival_claimed = fest_match.group(1).strip() if fest_match else "Claimed Festival"
+            fest_match = re.search(
+                r"(?:welcome to|selection at|invited to|selection for|at the|for the)\s+([A-Za-z0-9\s\-]+(?:Festival|Awards|Fest|Cinema|Showcase)[A-Za-z0-9\s]*)",
+                text,
+                re.IGNORECASE,
+            )
+            festival_claimed = (
+                fest_match.group(1).strip()
+                if fest_match
+                else file_name.rsplit(".", 1)[0].replace("-", " ").replace("_", " ").title()
+            )
             fee_waiver = "waiver" in lower_text or "free entry" in lower_text or "discount" in lower_text
             trophy_fee = "trophy" in lower_text or "certificate fee" in lower_text or "vip badge" in lower_text
 

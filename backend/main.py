@@ -26,6 +26,8 @@ from backend.models import (
     DeepVettingReport,
     DocumentAnalysisRequest,
     DocumentAnalysisResult,
+    FeedbackItem,
+    FeedbackCreateRequest,
 )
 from backend.db.firestore import db
 from backend.tools.parallel_search import ParallelSearchTool
@@ -387,6 +389,62 @@ async def get_investigation_deep_vetting(investigation_id: str):
     inv["deepVetting"] = report.model_dump()
     await db.save_investigation(investigation_id, inv)
     return report
+
+
+# In-memory store for filmmaker feedback with seed data
+FEEDBACK_STORE: list[FeedbackItem] = [
+    FeedbackItem(
+        id="fb-seed-001",
+        rating=5,
+        category="ACCURACY",
+        comment="Saved me £85 in scam submission fees for a fake European festival. The venue cross-check confirmed no cinema was ever booked!",
+        authorName="Sarah Jenkins",
+        authorEmail="sarah.j.films@gmail.com",
+        timestamp="2026-08-21T14:22:00Z",
+        status="REVIEWED",
+    ),
+    FeedbackItem(
+        id="fb-seed-002",
+        rating=5,
+        category="FEATURE_REQUEST",
+        comment="Love the Opportunity Scout slate generator! Would love to see more European micro-budget documentary grants included.",
+        authorName="Marcus Thorne",
+        authorEmail="marcus@thorne-doc.co.uk",
+        timestamp="2026-08-21T18:45:00Z",
+        status="PLANNED",
+    ),
+    FeedbackItem(
+        id="fb-seed-003",
+        rating=4,
+        category="UI_DESIGN",
+        comment="The Mission Control 2-stage tool launch is fantastic. Extremely clean and fast.",
+        authorName="Elena Rostova",
+        authorEmail="elena.r@indiefilm.fr",
+        timestamp="2026-08-22T06:10:00Z",
+        status="RECEIVED",
+    ),
+]
+
+
+@app.get("/api/feedback", response_model=list[FeedbackItem])
+async def get_all_feedback():
+    """Retrieve all submitted filmmaker feedback items."""
+    return FEEDBACK_STORE
+
+
+@app.post("/api/feedback", response_model=FeedbackItem)
+async def submit_feedback(request: FeedbackCreateRequest):
+    """Submit new filmmaker user feedback."""
+    item = FeedbackItem(
+        rating=request.rating,
+        category=request.category,
+        comment=request.comment,
+        authorName=request.authorName or "Anonymous Filmmaker",
+        authorEmail=request.authorEmail,
+    )
+    FEEDBACK_STORE.insert(0, item)
+    logger.info(f"New filmmaker feedback received: rating={item.rating}, cat={item.category}")
+    return item
 
 
 # Mount Frontend static files if built

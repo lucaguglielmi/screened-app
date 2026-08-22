@@ -513,6 +513,7 @@ export default function App() {
             <ChatContainer
               onLaunchDueDiligence={handleDeepScreen}
               onLaunchOpportunityScout={handleScoutLaunch}
+              onNavigateToPlaygroundFeedback={() => setActiveTool('DESIGN_PLAYGROUND')}
             />
           )}
 

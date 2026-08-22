@@ -13,6 +13,7 @@ interface ChatBubbleProps {
   onLaunchDueDiligence: (festivalName: string, optionalUrl?: string) => void;
   onLaunchOpportunityScout: (profile: FilmProfile) => void;
   onLaunchCustomPrompt?: (promptText: string) => void;
+  onAvatarClick?: () => void;
 }
 
 export const ChatBubble: React.FC<ChatBubbleProps> = ({
@@ -20,6 +21,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
   onLaunchDueDiligence,
   onLaunchOpportunityScout,
   onLaunchCustomPrompt,
+  onAvatarClick,
 }) => {
   const isUser = message.role === 'user';
 
@@ -76,7 +78,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
               👤
             </div>
           ) : (
-            <AgentAvatar size="md" />
+            <AgentAvatar size="md" onClick={onAvatarClick} />
           )}
         </div>
 

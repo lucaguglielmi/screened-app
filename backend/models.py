@@ -386,3 +386,32 @@ class ChatRequest(BaseModel):
     attachedFileBase64: Optional[str] = None
     attachedFileMimeType: Optional[str] = None
 
+
+class FeedbackCategory(str, Enum):
+    ACCURACY = "ACCURACY"
+    RECOMMENDATIONS = "RECOMMENDATIONS"
+    CHAT_INTELLIGENCE = "CHAT_INTELLIGENCE"
+    UI_DESIGN = "UI_DESIGN"
+    FEATURE_REQUEST = "FEATURE_REQUEST"
+    GENERAL = "GENERAL"
+
+
+class FeedbackItem(BaseModel):
+    id: str = Field(default_factory=generate_uuid)
+    rating: int = Field(ge=1, le=5)
+    category: str = "GENERAL"
+    comment: str
+    authorName: Optional[str] = None
+    authorEmail: Optional[str] = None
+    timestamp: str = Field(default_factory=get_current_iso)
+    status: str = "RECEIVED"
+
+
+class FeedbackCreateRequest(BaseModel):
+    rating: int = Field(ge=1, le=5)
+    category: str = "GENERAL"
+    comment: str
+    authorName: Optional[str] = None
+    authorEmail: Optional[str] = None
+
+

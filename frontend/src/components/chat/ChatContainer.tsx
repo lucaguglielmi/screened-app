@@ -5,12 +5,16 @@ import { ChatBubble } from './ChatBubble';
 import { ChatPromptBar } from './ChatPromptBar';
 import { AgentThinkingPill } from './AgentThinkingPill';
 import { CapabilitiesModal } from '../modals/CapabilitiesModal';
+import { AboutScreenedModal } from '../modals/AboutScreenedModal';
+import { FeedbackModal } from '../modals/FeedbackModal';
 import { soundEffects } from '../../utils/audio';
 import { TextLink } from '../ui/TextLink';
+import { MessageSquare } from 'lucide-react';
 
 interface ChatContainerProps {
   onLaunchDueDiligence: (festivalName: string, optionalUrl?: string) => void;
   onLaunchOpportunityScout: (profile: FilmProfile) => void;
+  onNavigateToPlaygroundFeedback?: () => void;
 }
 
 const INITIAL_HARDCODED_MESSAGE: ChatMessage = {
@@ -23,11 +27,14 @@ const INITIAL_HARDCODED_MESSAGE: ChatMessage = {
 export const ChatContainer: React.FC<ChatContainerProps> = ({
   onLaunchDueDiligence,
   onLaunchOpportunityScout,
+  onNavigateToPlaygroundFeedback,
 }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([INITIAL_HARDCODED_MESSAGE]);
   const [isLoading, setIsLoading] = useState(false);
   const [thinkingMessage, setThinkingMessage] = useState<string | null>(null);
   const [isCapabilitiesModalOpen, setIsCapabilitiesModalOpen] = useState(false);
+  const [isAboutModalOpen, setIsAboutModalOpen] = useState(false);
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -223,6 +230,10 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
               onLaunchDueDiligence={onLaunchDueDiligence}
               onLaunchOpportunityScout={onLaunchOpportunityScout}
               onLaunchCustomPrompt={handleSendMessage}
+              onAvatarClick={() => {
+                soundEffects.playClick();
+                setIsAboutModalOpen(true);
+              }}
             />
           ))}
           {thinkingMessage && <AgentThinkingPill label={thinkingMessage} />}
@@ -231,18 +242,48 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
       </div>
 
       {/* Persistent Bottom Prompt Bar with Action Pills */}
-      <div className="relative z-10 pt-2 pb-2 border-t border-zinc-800/80 mt-1">
+      <div className="relative z-10 pt-2 pb-1 border-t border-zinc-800/80 mt-1">
         <ChatPromptBar
           onSendMessage={handleSendMessage}
           isLoading={isLoading}
         />
+        
+        {/* Subtle Footer Link: Leave Feedback */}
+        <div className="flex items-center justify-between text-[11px] font-mono text-slate-500 pt-1.5 px-2 select-none">
+          <span className="text-slate-400">Mission Control</span>
+          <button
+            type="button"
+            onClick={() => {
+              soundEffects.playClick();
+              setIsFeedbackModalOpen(true);
+            }}
+            className="inline-flex items-center gap-1.5 text-slate-400 hover:text-indigo-300 transition-colors cursor-pointer hover:underline"
+          >
+            <MessageSquare className="size-3 text-indigo-400" />
+            <span>leave feedback</span>
+          </button>
+        </div>
       </div>
 
-      {/* Fullscreen / Immersive Capabilities Modal */}
+      {/* Capabilities Modal ("What does it do?") */}
       <CapabilitiesModal
         isOpen={isCapabilitiesModalOpen}
         onClose={() => setIsCapabilitiesModalOpen(false)}
         onSelectAction={(prompt) => handleSendMessage(prompt)}
+      />
+
+      {/* About Screened Modal (Triggered by Avatar Click) */}
+      <AboutScreenedModal
+        isOpen={isAboutModalOpen}
+        onClose={() => setIsAboutModalOpen(false)}
+        onNavigateToDiligence={() => onLaunchDueDiligence('Aldergate Film Festival')}
+      />
+
+      {/* Filmmaker Feedback Modal */}
+      <FeedbackModal
+        isOpen={isFeedbackModalOpen}
+        onClose={() => setIsFeedbackModalOpen(false)}
+        onViewFeedbackLog={onNavigateToPlaygroundFeedback}
       />
     </div>
   );

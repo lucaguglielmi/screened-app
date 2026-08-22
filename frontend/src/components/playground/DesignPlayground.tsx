@@ -13,6 +13,8 @@ import { DeepVettingMatrix } from '../investigation/DeepVettingMatrix';
 import { DesignTokensLab } from './DesignTokensLab';
 import { AgentObservabilityLab } from './AgentObservabilityLab';
 import { UiGalleryLab } from './UiGalleryLab';
+import { FeedbackLogTab } from './FeedbackLogTab';
+import { FeedbackModal } from '../modals/FeedbackModal';
 import { soundEffects } from '../../utils/audio';
 import { 
   Workflow, 
@@ -22,8 +24,9 @@ import {
 } from 'lucide-react';
 
 export const DesignPlayground: React.FC = () => {
-  const [activeSection, setActiveSection] = useState<'UI' | 'TOOLS' | 'ARCHITECTURE' | 'TOKENS' | 'TRACES' | 'ALL' | 'BUBBLES' | 'LOADERS' | 'PROMPTS'>('UI');
+  const [activeSection, setActiveSection] = useState<'UI' | 'TOOLS' | 'FEEDBACK' | 'ARCHITECTURE' | 'TOKENS' | 'TRACES' | 'ALL' | 'BUBBLES' | 'LOADERS' | 'PROMPTS'>('UI');
   const [activeToolSubtab, setActiveToolSubtab] = useState<'FESTIVAL' | 'GRANT' | 'INVITATION' | 'SCOUT' | 'COMPARE' | 'VETTING' | 'PROBES'>('FESTIVAL');
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
 
   const [streamSimText, setStreamSimText] = useState<string>(
     'I have conducted an initial background check on the festival. Screening records indicate physical cinema leases at Curzon Soho.'
@@ -118,7 +121,7 @@ export const DesignPlayground: React.FC = () => {
 
       {/* Main Category Tabs */}
       <div className="flex items-center gap-1.5 p-1 rounded-xl bg-zinc-900/80 border border-zinc-800 w-fit overflow-x-auto">
-        {(['UI', 'TOOLS', 'ARCHITECTURE', 'TOKENS', 'TRACES', 'ALL', 'BUBBLES', 'LOADERS', 'PROMPTS'] as const).map((sec) => (
+        {(['UI', 'TOOLS', 'FEEDBACK', 'ARCHITECTURE', 'TOKENS', 'TRACES', 'ALL', 'BUBBLES', 'LOADERS', 'PROMPTS'] as const).map((sec) => (
           <button
             key={sec}
             onClick={() => {
@@ -133,6 +136,7 @@ export const DesignPlayground: React.FC = () => {
           >
             {sec === 'UI' && '✨ UI Components & Motion'}
             {sec === 'TOOLS' && '🛠️ In-Chat Generative Tools'}
+            {sec === 'FEEDBACK' && '💬 Filmmaker Feedback Logs'}
             {sec === 'ARCHITECTURE' && '📐 Agent Architecture & Intent'}
             {sec === 'TOKENS' && '🎨 Design Tokens & Motion'}
             {sec === 'TRACES' && '⚡ Agent Traces & Telemetry'}
@@ -147,6 +151,11 @@ export const DesignPlayground: React.FC = () => {
       {/* SECTION: SHARED UI GALLERY & ICON MOTION LAB */}
       {(activeSection === 'ALL' || activeSection === 'UI') && (
         <UiGalleryLab />
+      )}
+
+      {/* SECTION: FILMMAKER FEEDBACK & LOGS */}
+      {(activeSection === 'ALL' || activeSection === 'FEEDBACK') && (
+        <FeedbackLogTab onOpenFeedbackModal={() => setIsFeedbackModalOpen(true)} />
       )}
 
       {/* SECTION: IN-CHAT GENERATIVE TOOLS WITH SUBTABS */}
@@ -579,6 +588,12 @@ export const DesignPlayground: React.FC = () => {
           ))}
         </div>
       </div>
+
+      {/* Filmmaker Feedback Modal inside Playground */}
+      <FeedbackModal
+        isOpen={isFeedbackModalOpen}
+        onClose={() => setIsFeedbackModalOpen(false)}
+      />
     </div>
   );
 };

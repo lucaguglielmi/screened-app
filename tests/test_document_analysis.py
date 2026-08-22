@@ -36,8 +36,8 @@ async def test_invitation_email_extraction_fallback():
     email_text = """
 Dear Filmmaker,
 Congratulations! We are delighted to inform you of the official selection for Apex Global Cinema Awards 2026.
+We are pleased to grant you a 100% submission entry fee waiver code: APEXFREE100.
 To receive your official laurel and physical engraved trophy, please submit your certificate fee of $180 via the link below.
-Use waiver code DISCEARLY for 10% off the screening gala ticket.
     """
     req = DocumentAnalysisRequest(
         fileName="apex-awards-invitation.txt",
