@@ -14,6 +14,7 @@ import { DesignTokensLab } from './DesignTokensLab';
 import { AgentObservabilityLab } from './AgentObservabilityLab';
 import { UiGalleryLab } from './UiGalleryLab';
 import { FeedbackLogTab } from './FeedbackLogTab';
+import { ArchitecturePage } from './ArchitecturePage';
 import { FeedbackModal } from '../modals/FeedbackModal';
 import { soundEffects } from '../../utils/audio';
 import { 
@@ -410,52 +411,55 @@ export const DesignPlayground: React.FC = () => {
 
       {/* SECTION: AGENT ARCHITECTURE & INTENT DIAGRAMS */}
       {(activeSection === 'ALL' || activeSection === 'ARCHITECTURE') && (
-        <section className="space-y-4 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 p-6 shadow-md backdrop-blur-sm">
-          <div className="border-b border-zinc-800 pb-3 flex items-center justify-between">
-            <div>
-              <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider font-mono flex items-center space-x-2">
-                <Workflow className="w-4 h-4 text-blue-400" />
-                <span>Agent Architecture & Multi-Agent Intent Lifecycle</span>
-              </h3>
-              <p className="text-xs text-zinc-400">How user inputs flow through Gemini 2.5 Pro Function Calling to Parallel Search.</p>
-            </div>
-            <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400">
-              Vertex AI + Parallel Search
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-            <div className="p-4 rounded-xl bg-card border border-emerald-500/20 space-y-2">
-              <div className="flex items-center space-x-2 text-emerald-400 font-bold font-mono">
-                <ShieldCheck className="w-4 h-4" />
-                <span>1. Festival Vetting Path</span>
+        <div className="space-y-4">
+          <ArchitecturePage />
+          <section className="space-y-4 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 p-6 shadow-md backdrop-blur-sm">
+            <div className="border-b border-zinc-800 pb-3 flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider font-mono flex items-center space-x-2">
+                  <Workflow className="w-4 h-4 text-blue-400" />
+                  <span>Agent Architecture & Multi-Agent Intent Lifecycle</span>
+                </h3>
+                <p className="text-xs text-zinc-400">How user inputs flow through Gemini 2.5 Pro Function Calling to Parallel Search.</p>
               </div>
-              <p className="text-zinc-300">
-                Triggered on queries about festival legitimacy, fees, venues, or scam checks. Mounts <code className="text-emerald-300">FestivalIntakeCard</code>, collects city and interaction context, then launches parallel research across 3 domains.
-              </p>
+              <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400">
+                Vertex AI + Parallel Search
+              </span>
             </div>
 
-            <div className="p-4 rounded-xl bg-card border border-blue-500/20 space-y-2">
-              <div className="flex items-center space-x-2 text-blue-400 font-bold font-mono">
-                <Coins className="w-4 h-4" />
-                <span>2. Grant & Funding Path</span>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+              <div className="p-4 rounded-xl bg-card border border-emerald-500/20 space-y-2">
+                <div className="flex items-center space-x-2 text-emerald-400 font-bold font-mono">
+                  <ShieldCheck className="w-4 h-4" />
+                  <span>1. Festival Vetting Path</span>
+                </div>
+                <p className="text-zinc-300">
+                  Triggered on queries about festival legitimacy, fees, venues, or scam checks. Mounts <code className="text-emerald-300">FestivalIntakeCard</code>, collects city and interaction context, then launches parallel research across 3 domains.
+                </p>
               </div>
-              <p className="text-zinc-300">
-                Triggered on grants, funding, or subsidies. Mounts <code className="text-blue-300">GrantIntakeCard</code> with budget and funding sliders, stage selectors, and PDF deck drop zone to match BFI and international public funds.
-              </p>
-            </div>
 
-            <div className="p-4 rounded-xl bg-card border border-rose-500/20 space-y-2">
-              <div className="flex items-center space-x-2 text-rose-400 font-bold font-mono">
-                <MailWarning className="w-4 h-4" />
-                <span>3. Email & Laurel Audit</span>
+              <div className="p-4 rounded-xl bg-card border border-blue-500/20 space-y-2">
+                <div className="flex items-center space-x-2 text-blue-400 font-bold font-mono">
+                  <Coins className="w-4 h-4" />
+                  <span>2. Grant & Funding Path</span>
+                </div>
+                <p className="text-zinc-300">
+                  Triggered on grants, funding, or subsidies. Mounts <code className="text-blue-300">GrantIntakeCard</code> with budget and funding sliders, stage selectors, and PDF deck drop zone to match BFI and international public funds.
+                </p>
               </div>
-              <p className="text-zinc-300">
-                Triggered when user pastes an email or mentions unsolicited invites. Mounts <code className="text-rose-300">InvitationEmailCard</code> to scan sender domains, waiver traps, and trophy upsells.
-              </p>
+
+              <div className="p-4 rounded-xl bg-card border border-rose-500/20 space-y-2">
+                <div className="flex items-center space-x-2 text-rose-400 font-bold font-mono">
+                  <MailWarning className="w-4 h-4" />
+                  <span>3. Email & Laurel Audit</span>
+                </div>
+                <p className="text-zinc-300">
+                  Triggered when user pastes an email or mentions unsolicited invites. Mounts <code className="text-rose-300">InvitationEmailCard</code> to scan sender domains, waiver traps, and trophy upsells.
+                </p>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </div>
       )}
 
       {/* SECTION: DESIGN TOKENS & MOTION LAB */}

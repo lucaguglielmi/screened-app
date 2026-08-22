@@ -21,3 +21,12 @@ Whenever the user asks *"what's next?"* or *"what should we work on?"*, the assi
 1. When an item is resolved by the human, mark it `COMPLETED [YYYY-MM-DD]`.
 2. If new human tasks emerge during implementation (e.g. verifying external accounts, providing custom logos), add them here immediately.
 3. On every *"what's next?"* query, check if any completed items can be archived and summarize the remaining ones.
+
+---
+
+## 🏗️ Architecture Tracking (Steering Section)
+This section serves as a high-level live tracker for our application architecture. Whenever significant architectural changes occur (new agents, modified pipelines, database migrations), they should be documented here and reflected in the UI Playground's Architecture Page.
+
+- **Current State:** ADK-based orchestration with Parallel Search & Gemini clients.
+- **Recent Changes:** Implemented parallel API concurrency limits, firestore persistence for feedback, and resume investigation capabilities.
+- **Next Steps:** Maintain parity between this section and the interactive Architecture UI component.
