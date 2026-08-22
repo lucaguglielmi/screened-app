@@ -4,6 +4,7 @@ import logging
 from typing import List, Optional
 from urllib.parse import urlparse
 
+import asyncio
 from parallel import Parallel, AsyncParallel
 from backend.config import settings
 from backend.models import SourceRecord
@@ -58,6 +59,7 @@ class ParallelSearchTool:
             logger.warning("ParallelSearchTool initialized without PARALLEL_API_KEY")
         self.client = Parallel(api_key=self.api_key)
         self.async_client = AsyncParallel(api_key=self.api_key)
+        self._semaphore = asyncio.Semaphore(3)
 
     async def search(
         self,
@@ -72,11 +74,12 @@ class ParallelSearchTool:
 
         logger.info(f"Executing Parallel Search for objective: {objective} with queries: {queries}")
         try:
-            response = await self.async_client.search(
-                search_queries=queries,
-                objective=objective,
-                mode=mode,  # turbo, fast, basic, advanced
-            )
+            async with self._semaphore:
+                response = await self.async_client.search(
+                    search_queries=queries,
+                    objective=objective,
+                    mode=mode,  # turbo, fast, basic, advanced
+                )
             raw_results = getattr(response, "results", []) or []
             source_records: List[SourceRecord] = []
 

@@ -2,6 +2,7 @@
 import json
 import logging
 from typing import List, Optional
+import asyncio
 from google import genai
 from google.genai import types
 
@@ -47,6 +48,7 @@ class GeminiClient:
         except Exception as e:
             logger.warning(f"Could not initialize Vertex AI client with ambient credentials: {e}. Falling back to default client.")
             self.client = genai.Client()
+        self._semaphore = asyncio.Semaphore(3)
 
     async def extract_claims_from_sources(
         self,
@@ -111,15 +113,16 @@ Extract all relevant atomic claims in JSON format according to this schema:
 """
 
         try:
-            response = self.client.models.generate_content(
-                model=model,
-                contents=prompt,
-                config=types.GenerateContentConfig(
-                    system_instruction=system_instruction,
-                    response_mime_type="application/json",
-                    temperature=0.1,
-                ),
-            )
+            async with self._semaphore:
+                response = await self.client.aio.models.generate_content(
+                    model=model,
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        system_instruction=system_instruction,
+                        response_mime_type="application/json",
+                        temperature=0.1,
+                    ),
+                )
 
             raw_text = response.text or "[]"
             parsed_data = json.loads(raw_text)
@@ -242,11 +245,12 @@ Requirements:
 4. Keep the summary under 180 words.
 """
         try:
-            response = self.client.models.generate_content(
-                model=model,
-                contents=prompt,
-                config=types.GenerateContentConfig(temperature=0.2),
-            )
+            async with self._semaphore:
+                response = await self.client.aio.models.generate_content(
+                    model=model,
+                    contents=prompt,
+                    config=types.GenerateContentConfig(temperature=0.2),
+                )
             return response.text or ""
         except Exception as e:
             logger.error(f"Gemini summary generation failed: {e}", exc_info=True)
