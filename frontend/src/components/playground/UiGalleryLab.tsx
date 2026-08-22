@@ -31,6 +31,9 @@ export const UiGalleryLab: React.FC = () => {
     { type: 'mail', label: 'Mail Warning', desc: 'Gentle float and tilt with rose accent' },
     { type: 'help', label: 'Help / Question', desc: 'Curiosity tilt and scale pulse' },
     { type: 'doc', label: 'Doc Treatment', desc: 'Document scale lift with indigo accent' },
+    { type: 'send', label: 'Send Airplane (✈)', desc: 'Paper airplane diagonal flight (group-hover:translate-x-1 -translate-y-1 rotate-12)' },
+    { type: 'film', label: 'Cinema Reel (🎞)', desc: '45-degree cinematic spin (group-hover:rotate-45 scale-115)' },
+    { type: 'clapper', label: 'Clapperboard (🎬)', desc: 'Clapper snap scale & tilt (group-hover:scale-115 -rotate-6)' },
   ];
 
   return (
@@ -343,6 +346,52 @@ export const UiGalleryLab: React.FC = () => {
               Add Comparison Festival
             </TextLink>
             <p className="text-xs text-zinc-400">Rotates 180° on hover with clean white underline.</p>
+          </div>
+
+          {/* Paper Airplane Send Link */}
+          <div className="p-4 rounded-xl bg-midnight/90 border border-zinc-800 space-y-2">
+            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Airplane Send Link</span>
+            <TextLink
+              variant="primary"
+              size="sm"
+              iconType="send"
+              iconPosition="right"
+              asButton
+              onActionClick={() => logAction('Clicked Airplane Send TextLink')}
+            >
+              Submit Due Diligence Query
+            </TextLink>
+            <p className="text-xs text-zinc-400">Paper airplane diagonal takeoff flight on hover.</p>
+          </div>
+
+          {/* Cinema Reel Link */}
+          <div className="p-4 rounded-xl bg-midnight/90 border border-zinc-800 space-y-2">
+            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Cinema Reel Link</span>
+            <TextLink
+              variant="purple"
+              size="sm"
+              iconType="film"
+              asButton
+              onActionClick={() => logAction('Clicked Cinema Reel TextLink')}
+            >
+              Analyze Screenplay & Reel
+            </TextLink>
+            <p className="text-xs text-zinc-400">45-degree cinematic reel spin with purple accent.</p>
+          </div>
+
+          {/* Clapperboard Link */}
+          <div className="p-4 rounded-xl bg-midnight/90 border border-zinc-800 space-y-2">
+            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Clapperboard Link</span>
+            <TextLink
+              variant="white"
+              size="sm"
+              iconType="clapper"
+              asButton
+              onActionClick={() => logAction('Clicked Clapperboard TextLink')}
+            >
+              Film Festival Slate Review
+            </TextLink>
+            <p className="text-xs text-zinc-400">Clapper snap scale & tilt with white underline.</p>
           </div>
         </div>
       </section>

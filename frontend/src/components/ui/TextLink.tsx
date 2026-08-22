@@ -12,6 +12,9 @@ import {
   HelpCircle,
   Mail,
   FileText,
+  Send,
+  Film,
+  Clapperboard,
   LucideIcon
 } from 'lucide-react';
 import { soundEffects } from '../../utils/audio';
@@ -197,6 +200,24 @@ export const TextLink: React.FC<TextLinkProps> = ({
         return (
           <FileText
             className={`${iconSizeMap[size]} ${selected.iconColor} transition-transform duration-300 ease-out group-hover:scale-110`}
+          />
+        );
+      case 'send':
+        return (
+          <Send
+            className={`${iconSizeMap[size]} ${selected.iconColor} transition-transform duration-300 ease-out group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:rotate-12`}
+          />
+        );
+      case 'film':
+        return (
+          <Film
+            className={`${iconSizeMap[size]} ${selected.iconColor} transition-transform duration-500 ease-in-out group-hover:rotate-45 group-hover:scale-115`}
+          />
+        );
+      case 'clapper':
+        return (
+          <Clapperboard
+            className={`${iconSizeMap[size]} ${selected.iconColor} transition-transform duration-300 ease-out group-hover:scale-115 group-hover:-rotate-6`}
           />
         );
       default:

@@ -12,6 +12,9 @@ import {
   HelpCircle,
   Mail,
   FileText,
+  Send,
+  Film,
+  Clapperboard,
   LucideIcon
 } from 'lucide-react';
 import { soundEffects } from '../../utils/audio';
@@ -31,6 +34,9 @@ export type IconAnimationType =
   | 'help'
   | 'mail'
   | 'doc'
+  | 'send'
+  | 'film'
+  | 'clapper'
   | 'custom';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -181,6 +187,24 @@ export const Button: React.FC<ButtonProps> = ({
         return (
           <FileText 
             className={`${iconSizeMap[size]} transition-transform duration-300 ease-out group-hover:scale-110 text-indigo-400`} 
+          />
+        );
+      case 'send':
+        return (
+          <Send 
+            className={`${iconSizeMap[size]} transition-transform duration-300 ease-out group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:rotate-12 text-sky-400`} 
+          />
+        );
+      case 'film':
+        return (
+          <Film 
+            className={`${iconSizeMap[size]} transition-transform duration-500 ease-in-out group-hover:rotate-45 group-hover:scale-115 text-indigo-300`} 
+          />
+        );
+      case 'clapper':
+        return (
+          <Clapperboard 
+            className={`${iconSizeMap[size]} transition-transform duration-300 ease-out group-hover:scale-115 group-hover:-rotate-6 text-white`} 
           />
         );
       default:
