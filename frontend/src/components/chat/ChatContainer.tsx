@@ -81,6 +81,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
 
       let assistantContent = '';
       let detectedToolCall: ChatToolCall | undefined = undefined;
+      let detectedFollowUpProbe: any = undefined;
       const assistantMsgId = String(Date.now() + 1);
 
       // Create placeholder assistant message
@@ -115,7 +116,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
                 setMessages((prev) =>
                   prev.map((msg) =>
                     msg.id === assistantMsgId
-                      ? { ...msg, content: assistantContent, toolCall: detectedToolCall }
+                      ? { ...msg, content: assistantContent, toolCall: detectedToolCall, followUpProbe: detectedFollowUpProbe }
                       : msg
                   )
                 );
@@ -124,11 +125,20 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
                 setMessages((prev) =>
                   prev.map((msg) =>
                     msg.id === assistantMsgId
-                      ? { ...msg, content: assistantContent, toolCall: detectedToolCall }
+                      ? { ...msg, content: assistantContent, toolCall: detectedToolCall, followUpProbe: detectedFollowUpProbe }
                       : msg
                   )
                 );
                 soundEffects.playSuccess();
+              } else if (event.type === 'FOLLOW_UP_PROBE' && event.followUpProbe) {
+                detectedFollowUpProbe = event.followUpProbe;
+                setMessages((prev) =>
+                  prev.map((msg) =>
+                    msg.id === assistantMsgId
+                      ? { ...msg, content: assistantContent, toolCall: detectedToolCall, followUpProbe: detectedFollowUpProbe }
+                      : msg
+                  )
+                );
               } else if (event.type === 'THINKING' && event.message) {
                 setThinkingMessage(event.message);
               }

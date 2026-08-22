@@ -10,6 +10,10 @@ from backend.models import (
     DueDiligenceToolArgs,
     OpportunityScoutToolArgs,
     CompareFestivalsToolArgs,
+    GrantScoutToolArgs,
+    InvitationEmailToolArgs,
+    FollowUpOption,
+    InteractiveFollowUpProbe,
 )
 from backend.services.gemini_client import GeminiClient
 
@@ -205,6 +209,7 @@ class ProducerDeskAgent:
 
             # Check if response contains tool invocation or formulate one
             tool_call = self._extract_or_infer_tool_call(user_message, response_text)
+            follow_up_probe = self._generate_follow_up_probe(user_message, tool_call)
 
             # Stream response in chunks
             words = cleaned_text.split(" ")
@@ -216,6 +221,12 @@ class ProducerDeskAgent:
                 yield {
                     "type": "TOOL_CALL",
                     "toolCall": tool_call.model_dump()
+                }
+
+            if follow_up_probe:
+                yield {
+                    "type": "FOLLOW_UP_PROBE",
+                    "followUpProbe": follow_up_probe.model_dump()
                 }
 
             yield {"type": "DONE"}
@@ -348,9 +359,101 @@ class ProducerDeskAgent:
 
         return None
 
+    def _generate_follow_up_probe(self, user_msg: str, tool_call: Optional[ChatToolCall]) -> Optional[InteractiveFollowUpProbe]:
+        """Generates contextual multi-step follow-up dialogue options to probe filmmaker interactions."""
+        msg_lower = user_msg.lower()
+
+        if tool_call and tool_call.toolName == ToolCallType.CONFIGURE_DUE_DILIGENCE:
+            fest_name = tool_call.args.get("festival_name", "this festival")
+            return InteractiveFollowUpProbe(
+                question=f"Key follow-up probes for {fest_name}:",
+                options=[
+                    FollowUpOption(
+                        label="Received unsolicited email invite",
+                        promptText=f"I received an unsolicited invitation email from {fest_name} promising an award. Can you check its domain?",
+                        badge="Phishing / Scam Check"
+                    ),
+                    FollowUpOption(
+                        label="Checking physical cinema venue",
+                        promptText=f"Did {fest_name} lease a verified physical cinema or is it an online-only screening?",
+                        badge="Venue Corroboration"
+                    ),
+                    FollowUpOption(
+                        label="Review entry fee tiers",
+                        promptText=f"Are the entry fees for {fest_name} reasonable compared to BAFTA-qualifying circuits?",
+                        badge="Fee Transparency"
+                    )
+                ]
+            )
+
+        if tool_call and tool_call.toolName == ToolCallType.CONFIGURE_OPPORTUNITY_SCOUT:
+            film_title = tool_call.args.get("film_title", "your film")
+            return InteractiveFollowUpProbe(
+                question=f"Refine festival scouting strategy for '{film_title}':",
+                options=[
+                    FollowUpOption(
+                        label="Target BAFTA / Oscar qualifiers only",
+                        promptText=f"Filter only BAFTA and Academy Award qualifying festivals for {film_title}.",
+                        badge="Accreditation Filter"
+                    ),
+                    FollowUpOption(
+                        label="Early Bird budget optimization",
+                        promptText=f"What are the upcoming Early Bird submission deadlines under £40 for {film_title}?",
+                        badge="Budget Tier"
+                    ),
+                    FollowUpOption(
+                        label="UK & European premiere strategy",
+                        promptText=f"Recommend a UK & European premiere rollout strategy for {film_title}.",
+                        badge="Premiere Strategy"
+                    )
+                ]
+            )
+
+        if tool_call and tool_call.toolName == ToolCallType.CONFIGURE_GRANT_SCOUT:
+            return InteractiveFollowUpProbe(
+                question="Narrow film grant matching criteria:",
+                options=[
+                    FollowUpOption(
+                        label="Development & Script Grants",
+                        promptText="Show active early-stage development grants and script development funds.",
+                        badge="Development Stage"
+                    ),
+                    FollowUpOption(
+                        label="Production Match Funding",
+                        promptText="Find regional match funding and production grants in the UK/Europe.",
+                        badge="Production Stage"
+                    ),
+                    FollowUpOption(
+                        label="BFI & National Lottery Funds",
+                        promptText="What are the upcoming deadlines for the BFI Filmmaking Fund?",
+                        badge="Institutional Fund"
+                    )
+                ]
+            )
+
+        if tool_call and tool_call.toolName == ToolCallType.ANALYZE_INVITATION_EMAIL:
+            return InteractiveFollowUpProbe(
+                question="Investigate invitation authenticity:",
+                options=[
+                    FollowUpOption(
+                        label="Check sender domain WHOIS",
+                        promptText="Check if the sender domain was registered recently or associated with scam alerts.",
+                        badge="Domain Forensics"
+                    ),
+                    FollowUpOption(
+                        label="Verify laurel licensing fees",
+                        promptText="Is it standard practice for festivals to charge for physical trophies and laurels?",
+                        badge="Trophy Fee Scrutiny"
+                    )
+                ]
+            )
+
+        return None
+
     async def _generate_fallback_response(self, user_msg: str) -> AsyncGenerator[Dict[str, Any], None]:
         """Offline simulation yielding concise, straight-to-the-point intelligence."""
         tool_call = self._extract_or_infer_tool_call(user_msg, "")
+        follow_up_probe = self._generate_follow_up_probe(user_msg, tool_call)
 
         if tool_call and tool_call.toolName == ToolCallType.CONFIGURE_DUE_DILIGENCE:
             fest_name = tool_call.args.get("festival_name", "Target Festival")
@@ -377,6 +480,12 @@ class ProducerDeskAgent:
             yield {
                 "type": "TOOL_CALL",
                 "toolCall": tool_call.model_dump()
+            }
+
+        if follow_up_probe:
+            yield {
+                "type": "FOLLOW_UP_PROBE",
+                "followUpProbe": follow_up_probe.model_dump()
             }
 
         yield {"type": "DONE"}
