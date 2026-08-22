@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://screened-786241671474.europe-west2.run.app">
+  <a href="https://screened-pludf2u7yq-nw.a.run.app">
     <img src="frontend/public/assets/screened-logo.svg" alt="Screened — Agentic Cinema Due Diligence" width="96" height="96" />
   </a>
 </p>
@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <a href="https://screened-786241671474.europe-west2.run.app">
+  <a href="https://screened-pludf2u7yq-nw.a.run.app">
     <img src="https://img.shields.io/badge/Live_Demo-Cloud_Run_(London)-6366F1?style=for-the-badge&logo=googlecloud&logoColor=white" alt="Live Demo" />
   </a>
   <a href="https://github.com/lucaguglielmi/screened-app">
@@ -39,8 +39,9 @@ Every year, independent filmmakers spend thousands of pounds on festival submiss
 
 ## ⚡ Live Demo & Quick Links
 
-- **🌐 Live Cloud Run Application**: [https://screened-786241671474.europe-west2.run.app](https://screened-786241671474.europe-west2.run.app)
-- **🎨 Interactive Design Playground**: [https://screened-786241671474.europe-west2.run.app/playground](https://screened-786241671474.europe-west2.run.app) (Click "Playground" in Navbar)
+- **🌐 Live Cloud Run Application**: [https://screened-pludf2u7yq-nw.a.run.app](https://screened-pludf2u7yq-nw.a.run.app)
+- **⚖️ Why Screened (Impact & Baseline Matrix)**: [https://screened-pludf2u7yq-nw.a.run.app](https://screened-pludf2u7yq-nw.a.run.app) (Click "Why Screened" in Left Nav)
+- **🎨 Interactive Design Playground & OTel Tracing Lab**: [https://screened-pludf2u7yq-nw.a.run.app](https://screened-pludf2u7yq-nw.a.run.app) (Click "Design Lab" in Nav)
 - **📦 GitHub Repository**: [https://github.com/lucaguglielmi/screened-app](https://github.com/lucaguglielmi/screened-app)
 - **🏢 Google Cloud Project**: `screened-hackathon` (`europe-west2` — London)
 
@@ -127,8 +128,8 @@ Screened operates an orchestrated pipeline of specialized autonomous agents usin
 ### 1. The Producer Desk & Generative Mini-UIs
 - Autonomous conversational entry point powered by **Gemini 2.5 Pro Function Calling**.
 - Embeds interactive **Generative Mini-App cards** inside chat bubbles:
-  - **`MiniDueDiligence`**: Pre-flight probe with target resolution and concern tracks.
-  - **`MiniScoutCard`**: Film profile matrix with interactive runtime and budget sliders.
+  - **`MiniDueDiligence`**: Pre-flight probe with target resolution and concern tracks (`#00D29E`).
+  - **`MiniScoutCard`**: Film profile matrix with interactive runtime and budget sliders (`#F43F5E`).
   - **`MiniCompareArena`**: Side-by-side head-to-head match-up card (e.g., *Raindance vs LIFF*).
 - **1-Click Workspace Transition**: Seamlessly launches full research pipelines with pre-populated parameters.
 
@@ -155,8 +156,15 @@ Screened operates an orchestrated pipeline of specialized autonomous agents usin
 - Screened discovers open call-for-entries, deadline schedules, and qualification badges (*BAFTA*, *BIFA*, *Oscars*, *FIAPF*).
 - **`.ics` Calendar Generator**: 1-click export of deadlines with automatic reminders into Google Calendar / Apple Calendar.
 
-### 6. Interactive Design Playground (`/playground`)
-- A dedicated visual component studio to review, test, state-cycle, and modify all chat bubbles, loaders, and mini-app cards with a live **Token Stream Simulator**.
+### 6. Why Screened: Measured Baseline Matrix & Empirical Research
+- Direct comparison matrix of **Manual Due Diligence (3–5 Hours, £0–£180 in lost fees, zero cryptographic audit)** vs **Screened Autonomous Pipeline (< 45 Seconds, 100% quoted substring audit, zero fees at risk)**.
+- Features 4 documented empirical fraud themes from independent UK filmmakers (*Fee Without Screening*, *Laurel Mills*, *Phantom Venues*, *Ghost Organizers*).
+
+### 7. Global Command Palette (`⌘K` / `Ctrl+K`)
+- Instant keyboard-driven workspace teleportation, festival candidate jump-searches, theme toggles, audio controls, and export triggers accessible from anywhere.
+
+### 8. Interactive Design Playground & Agent Observability Lab
+- A dedicated visual component studio to review, test, state-cycle, and modify all chat bubbles, loaders, and mini-app cards with a live **Token Stream Simulator** and **OpenTelemetry Agent Span Visualizer**.
 
 ---
 
@@ -171,6 +179,7 @@ Screened operates an orchestrated pipeline of specialized autonomous agents usin
 | **Secrets & Keys** | Google Cloud Secret Manager | Secure runtime injection of `parallel-api-key` and `session-signing-key` |
 | **Cloud Hosting** | Google Cloud Run | Serverless, auto-scaling container deployment in `europe-west2` (London) |
 | **Frontend UI** | React 19 + Vite + TypeScript | High-performance modern SPA with dark/light mode toggle |
+| **Navigation & Portals** | React Portals (`createPortal`) | Viewport-safe mobile slide-over drawer and modal stacking contexts |
 | **Audio Engine** | Web Audio API Oscillator Synthesis | Zero-latency synthesized dial clicks, chimes, and instant mute |
 | **Design System** | Tailwind CSS v4 (`@theme`) + Lucide Icons | Editorial theme (`Fraunces` serif, `Instrument Sans`, `Spline Sans Mono`) |
 
