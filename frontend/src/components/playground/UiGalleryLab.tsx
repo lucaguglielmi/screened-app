@@ -347,18 +347,18 @@ export const UiGalleryLab: React.FC = () => {
         </div>
       </section>
 
-      {/* SECTION 3: SHERLOCK CINEMA DETECTIVE AVATAR & MOTION PHYSICS */}
+      {/* SECTION 3: CINEMA CLAPPERBOARD AVATAR & MOTION PHYSICS */}
       <section className="p-6 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 shadow-md backdrop-blur-sm space-y-6">
         <div className="border-b border-zinc-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
             <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider font-mono flex items-center gap-2">
-              <span>🕵️‍♂️ Sherlock Cinema Detective Avatar Suite</span>
+              <span>🎬 Cinema Clapperboard Avatar Suite</span>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
                 Interactive Micro-Motion
               </span>
             </h3>
             <p className="text-xs text-zinc-400">
-              Custom deerstalker hat + cinema search loupe emblem with counter-rotating orbit rings, hover wave ripples, and click modal dispatch.
+              Bright dual-color gradient with clean all-white cinema clapperboard emblem, counter-rotating orbit rings, hover wave ripples, and click modal dispatch.
             </p>
           </div>
         </div>
