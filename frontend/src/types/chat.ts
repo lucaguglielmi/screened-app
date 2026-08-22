@@ -88,19 +88,34 @@ export interface AttachedFileMeta {
   size?: number;
 }
 
+export interface FollowUpOption {
+  id: string;
+  label: string;
+  promptText: string;
+  badge?: string;
+}
+
+export interface InteractiveFollowUpProbe {
+  id: string;
+  question: string;
+  options: FollowUpOption[];
+}
+
 export interface ChatMessage {
   id: string;
   role: ChatRole;
   content: string;
   toolCall?: ChatToolCall;
   attachedFile?: AttachedFileMeta;
+  followUpProbe?: InteractiveFollowUpProbe;
   timestamp: string;
 }
 
 export interface ChatStreamEvent {
-  type: 'TOKEN' | 'THINKING' | 'TOOL_CALL' | 'DONE' | 'ERROR';
+  type: 'TOKEN' | 'THINKING' | 'TOOL_CALL' | 'FOLLOW_UP_PROBE' | 'DONE' | 'ERROR';
   token?: string;
   message?: string;
   toolCall?: ChatToolCall;
+  followUpProbe?: InteractiveFollowUpProbe;
   error?: string;
 }

@@ -321,11 +321,26 @@ class ChatToolCall(BaseModel):
     args: Dict[str, Any] = Field(default_factory=dict)
 
 
+class FollowUpOption(BaseModel):
+    id: str = Field(default_factory=generate_uuid)
+    label: str
+    promptText: str
+    badge: Optional[str] = None
+
+
+class InteractiveFollowUpProbe(BaseModel):
+    id: str = Field(default_factory=generate_uuid)
+    question: str
+    options: List[FollowUpOption] = Field(default_factory=list)
+
+
 class ChatMessage(BaseModel):
     id: str = Field(default_factory=generate_uuid)
     role: str  # "user" | "assistant" | "system"
     content: str
     toolCall: Optional[ChatToolCall] = None
+    suggestedReplies: List[str] = Field(default_factory=list)
+    followUpProbe: Optional[InteractiveFollowUpProbe] = None
     timestamp: str = Field(default_factory=get_current_iso)
 
 

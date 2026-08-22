@@ -112,6 +112,38 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
             {formatContent(message.content)}
           </div>
 
+          {/* Interactive Follow-Up Probes */}
+          {message.followUpProbe && message.followUpProbe.options.length > 0 && (
+            <div className="mt-3 p-3.5 rounded-xl bg-[#141838]/90 border border-[#252C5E] space-y-2.5 shadow-sm">
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-indigo-300">
+                <span>✦</span>
+                <span>{message.followUpProbe.question}</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {message.followUpProbe.options.map((opt) => (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    onClick={() => {
+                      if (onLaunchCustomPrompt) {
+                        onLaunchCustomPrompt(opt.promptText);
+                      }
+                    }}
+                    className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1D2352] hover:bg-[#2018E6] border border-[#2E387A] hover:border-[#4B58C9] text-xs font-medium text-slate-200 hover:text-white transition-all shadow-sm cursor-pointer hover:shadow-indigo-500/20 text-left"
+                  >
+                    {opt.badge && (
+                      <span className="px-1.5 py-0.5 rounded bg-indigo-500/20 group-hover:bg-white/20 text-[10px] font-mono text-indigo-300 group-hover:text-white">
+                        {opt.badge}
+                      </span>
+                    )}
+                    <span>{opt.label}</span>
+                    <span className="text-slate-400 group-hover:text-white ml-0.5 font-mono text-xs">→</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Embedded Mini-UI if tool call present */}
           {message.toolCall && (
             <div className="mt-3">
