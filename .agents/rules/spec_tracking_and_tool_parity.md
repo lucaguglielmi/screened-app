@@ -22,9 +22,21 @@ You **MUST ALWAYS**:
 
 ---
 
-## 3. Capabilities Catalog ('What Can You Search?') Maintenance Protocol
+## 3. Capabilities Catalog ('What does it do?') Maintenance Protocol
 - Whenever a new feature, agent tool, search mode, or diagnostic capability is added or expanded in Screened (e.g. Due Diligence checks, Grant funds, Opportunity Scout parameters, Laurel audits, Deep Vetting dimensions):
-  1. You **MUST** update `frontend/src/components/modals/CapabilitiesModal.tsx` to add the new capability under its corresponding domain card in `capabilitiesList`.
-  2. Provide real-world, 1-click executable `searchExamples` queries for that new capability.
-  3. Ensure the list maintains the collapsible truncation threshold (cropped after 3 to 5 items under "View more (+X actions)").
+  1. You **MUST** update `frontend/src/components/modals/CapabilitiesModal.tsx` to add the new capability under its corresponding domain card.
+  2. Provide real-world, 1-click executable `searchExamples` queries for that new capability with 16px readable font and minimal interactive tag chips.
+
+---
+
+## 4. Standard 2-Stage In-Chat Tool Pattern Mandate
+The main AI interface is **Mission Control**. Individual tools each possess their own page/workspace, but can also be invoked directly inside Mission Control via this mandatory 2-stage interaction pattern:
+
+1. **User Inquiry**: User asks something in Mission Control chat.
+2. **Agent Tool Selection**: Agent decides which tool is required and mounts the tool card.
+3. **Stage 1 (Requirements Gathering UI)**: The mounted card displays inputs, sliders, file dropzone, and investigative checkboxes.
+4. **Stage 2 (Review / Launch Confirmation UI)**: Once parameters are confirmed, the card switches to a concise summary card displaying parsed parameters, investigative directives, and the destination page.
+5. **Launch & Workspace Redirection**: The user clicks `[ Launch & Open [Tool] → ]` which executes the action and redirects the user directly into that tool's dedicated full page/workspace.
+
+**All new tools, widgets, and mini-apps MUST follow this 2-stage pattern without exception.**
 

@@ -198,17 +198,17 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
         opacity={0.18}
       />
 
-      {/* Hero Header Area with Larger Typography, Vertical Spacing & Micro-Glitch Shifting Animation */}
-      <div className="relative z-10 flex flex-col items-center justify-center my-4 sm:my-6 py-2 text-center select-none">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white font-serif mb-2.5 transition-all">
-          <span className="animate-cinema-glitch text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-zinc-200">
+      {/* Hero Header Area with Dirty Film Celluloid Glitch, Spacing & What Does It Do Link */}
+      <div className="relative z-10 flex flex-col items-center justify-center my-5 sm:my-7 py-2 text-center select-none">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white font-serif mb-3 transition-all flex flex-wrap items-center justify-center gap-x-3 sm:gap-x-4">
+          <span className="animate-cinema-glitch text-transparent bg-clip-text bg-gradient-to-r from-zinc-100 via-stone-200 to-zinc-300">
             Cinema
           </span>
           <span className="animate-word-shift-2 text-zinc-100">
-            {' '}Due
+            Due
           </span>
           <span className="animate-word-shift-3 text-zinc-300">
-            {' '}diligence
+            diligence
           </span>
         </h1>
         <TextLink
@@ -218,9 +218,9 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
           animatedIconContinuous
           asButton
           onActionClick={() => setIsCapabilitiesModalOpen(true)}
-          className="text-xs sm:text-sm"
+          className="text-xs sm:text-sm tracking-wide"
         >
-          what can you search?
+          What does it do?
         </TextLink>
       </div>
 

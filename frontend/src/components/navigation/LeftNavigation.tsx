@@ -117,11 +117,11 @@ export const LeftNavigation: React.FC<Props> = ({
 
       {/* Center Section: Navigation Rail Icons */}
       <div className="flex flex-col items-center gap-3 w-full my-auto">
-        {/* 1. The Desk (Conversational AI Home - Royal Desk Blue) */}
+        {/* 1. Mission Control (Central Autonomous AI Command Desk - Royal Blue) */}
         <div className="relative">
           <button
             onClick={() => handleSelectTool('CONVERSATIONAL_DESK')}
-            onMouseEnter={() => setActiveTooltip('The Desk')}
+            onMouseEnter={() => setActiveTooltip('Mission Control')}
             onMouseLeave={() => setActiveTooltip(null)}
             className={`relative p-3 rounded-2xl transition-all cursor-pointer ${
               activeTool === 'CONVERSATIONAL_DESK'
@@ -134,9 +134,9 @@ export const LeftNavigation: React.FC<Props> = ({
               <span className="absolute -right-1 -top-1 size-2.5 rounded-full bg-amber-400 ring-2 ring-[#070913]" />
             )}
           </button>
-          {activeTooltip === 'The Desk' && (
+          {activeTooltip === 'Mission Control' && (
             <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-[#0E1124] text-slate-100 text-sm font-medium whitespace-nowrap shadow-xl border border-[#22274C] z-50 pointer-events-none">
-              The Desk (AI Executive)
+              Mission Control (Main AI Interface)
             </div>
           )}
         </div>
@@ -398,7 +398,7 @@ export const LeftNavigation: React.FC<Props> = ({
             </button>
           </div>
 
-          {/* Quick Hub Option: The Desk */}
+          {/* Quick Hub Option: Mission Control */}
           <div className="pt-1.5 border-t border-[#1B2042]">
             <button
               onClick={() => handleSelectTool('CONVERSATIONAL_DESK')}
@@ -406,7 +406,7 @@ export const LeftNavigation: React.FC<Props> = ({
             >
               <div className="flex items-center gap-2">
                 <Sparkles className="size-3.5 text-indigo-400" />
-                <span>Return to The Desk (AI Home)</span>
+                <span>Return to Mission Control (Main Interface)</span>
               </div>
               <span className="text-[10px] text-slate-500">Esc to close</span>
             </button>

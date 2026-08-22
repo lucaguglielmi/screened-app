@@ -157,11 +157,46 @@ export const DesignPlayground: React.FC = () => {
               <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider font-mono">
                 Active Generative In-Chat Tools (AI Tool Parity Mirror)
               </h3>
-              <p className="text-xs text-zinc-400">Interactive sandboxes for all dynamic cards mounted in the conversational stream.</p>
+              <p className="text-xs text-zinc-400">Standard 2-stage interaction pattern required for all current and future generative tools.</p>
             </div>
+          </div>
 
-            {/* Subtabs for Tools */}
-            <div className="flex items-center gap-1 bg-midnight p-1 rounded-xl border border-zinc-800">
+          {/* 2-STAGE TOOL PATTERN ARCHITECTURAL BLUEPRINT */}
+          <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-950/30 via-midnight to-blue-950/30 border border-zinc-700/80 space-y-2">
+            <div className="flex items-center space-x-2 text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">
+              <span>Standard 2-Stage Generative Tool Lifecycle Architecture</span>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-2 text-xs text-zinc-300">
+              <div className="p-2.5 rounded-lg bg-surface/80 border border-zinc-800 space-y-1">
+                <span className="text-[10px] font-mono text-zinc-500 block">STEP 1</span>
+                <span className="font-bold text-white block">User Inquiry</span>
+                <p className="text-[11px] text-zinc-400">User prompts Mission Control chat.</p>
+              </div>
+              <div className="p-2.5 rounded-lg bg-surface/80 border border-zinc-800 space-y-1">
+                <span className="text-[10px] font-mono text-zinc-500 block">STEP 2</span>
+                <span className="font-bold text-emerald-400 block">Agent Tool Call</span>
+                <p className="text-[11px] text-zinc-400">Agent selects tool & mounts card.</p>
+              </div>
+              <div className="p-2.5 rounded-lg bg-emerald-950/40 border border-emerald-500/40 space-y-1">
+                <span className="text-[10px] font-mono text-emerald-400 block">STAGE 1 UI</span>
+                <span className="font-bold text-emerald-300 block">Requirements Intake</span>
+                <p className="text-[11px] text-zinc-300">Gathers parameters, doc uploads, sliders.</p>
+              </div>
+              <div className="p-2.5 rounded-lg bg-blue-950/40 border border-blue-500/40 space-y-1">
+                <span className="text-[10px] font-mono text-blue-400 block">STAGE 2 UI</span>
+                <span className="font-bold text-blue-300 block">Review & Launch</span>
+                <p className="text-[11px] text-zinc-300">Summary card with edit & launch trigger.</p>
+              </div>
+              <div className="p-2.5 rounded-lg bg-purple-950/40 border border-purple-500/40 space-y-1">
+                <span className="text-[10px] font-mono text-purple-400 block">DESTINATION</span>
+                <span className="font-bold text-purple-300 block">Redirect to Page</span>
+                <p className="text-[11px] text-zinc-300">Opens dedicated full workspace.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Subtabs for Tools */}
+          <div className="flex items-center gap-1 bg-midnight p-1 rounded-xl border border-zinc-800 overflow-x-auto">
               <button
                 onClick={() => { soundEffects.playClick(); setActiveToolSubtab('FESTIVAL'); }}
                 className={`px-2.5 py-1 rounded-lg text-xs font-mono transition-colors ${
@@ -219,7 +254,6 @@ export const DesignPlayground: React.FC = () => {
                 7. Follow-Up Probes & Intake
               </button>
             </div>
-          </div>
 
           <div className="p-4 rounded-xl bg-zinc-900/40 border border-zinc-850 flex justify-center">
             {activeToolSubtab === 'FESTIVAL' && (

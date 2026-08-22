@@ -10,7 +10,8 @@ import {
   Coins,
   MailWarning,
   GitCompare,
-  Compass
+  Compass,
+  FileUp
 } from 'lucide-react';
 import { soundEffects } from '../../utils/audio';
 import { QuestionsCategoryModal } from '../modals/QuestionsCategoryModal';
@@ -194,15 +195,17 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
           }}
         />
 
-        <div className="flex items-center flex-1 min-w-0">
-          {/* Attachment Button */}
+        <div className="flex items-center flex-1 min-w-0 gap-1.5 pl-1">
+          {/* Prominent Document Upload Button */}
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            title="Attach script synopsis, treatment, or festival email"
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-slate-400 hover:bg-[#151936] hover:text-indigo-400 transition-colors cursor-pointer"
+            title="Upload script synopsis, treatment PDF, or invitation email"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#141A3B] hover:bg-[#1D2554] border border-[#27326B] hover:border-indigo-500/60 text-xs font-mono text-indigo-300 hover:text-white transition-all group cursor-pointer shrink-0 shadow-sm"
           >
-            <Paperclip className="size-5" />
+            <FileUp className="size-4 text-indigo-400 group-hover:-translate-y-0.5 transition-transform" />
+            <span className="hidden sm:inline font-semibold">Attach Doc</span>
+            <span className="sm:hidden font-semibold">Attach</span>
           </button>
 
           {/* Text Input */}
@@ -210,7 +213,7 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask about a festival, grant search, or paste an email..."
+            placeholder="Ask Mission Control, research a festival, or drop a script/treatment PDF..."
             className="w-full bg-transparent px-2.5 py-2 text-base text-slate-100 placeholder-slate-400 focus:outline-none"
           />
         </div>

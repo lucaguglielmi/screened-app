@@ -145,7 +145,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                   Primary Workspaces
                 </span>
 
-                {/* 1. The Desk */}
+                {/* 1. Mission Control */}
                 <button
                   type="button"
                   onClick={() => handleSelect('CONVERSATIONAL_DESK')}
@@ -160,10 +160,10 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <h4 className="text-base font-bold text-white">The Producer Desk</h4>
+                      <h4 className="text-base font-bold text-white">Mission Control</h4>
                       {activeTool === 'CONVERSATIONAL_DESK' && <Check className="size-4 text-indigo-400" />}
                     </div>
-                    <p className="text-xs text-slate-400 line-clamp-1">Conversational AI Executive</p>
+                    <p className="text-xs text-slate-400 line-clamp-1">Main AI Command Interface</p>
                   </div>
                 </button>
 

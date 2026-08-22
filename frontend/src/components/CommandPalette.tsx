@@ -53,7 +53,7 @@ export const CommandPalette: React.FC<Props> = ({
   const navItems = [
     {
       id: 'desk',
-      label: 'The Producer Desk (AI Executive)',
+      label: 'Mission Control (Main AI Interface)',
       category: 'Workspaces',
       icon: Sparkles,
       iconColor: 'text-indigo-400',
