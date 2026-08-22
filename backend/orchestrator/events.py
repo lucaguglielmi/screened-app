@@ -7,6 +7,7 @@ from enum import Enum
 from typing import AsyncGenerator, Dict, List, Optional
 from pydantic import BaseModel, Field
 import uuid
+from backend.db.firestore import db
 
 logger = logging.getLogger("screened.orchestrator.events")
 
@@ -49,16 +50,20 @@ class EventBroadcaster:
         self._listeners: Dict[str, List[asyncio.Queue]] = {}
         self._history: Dict[str, List[ActivityEvent]] = {}
 
-    def subscribe(self, investigation_id: str) -> asyncio.Queue:
+    async def subscribe(self, investigation_id: str) -> asyncio.Queue:
         if investigation_id not in self._listeners:
             self._listeners[investigation_id] = []
         queue: asyncio.Queue = asyncio.Queue()
         self._listeners[investigation_id].append(queue)
         
         # Replay past events to new subscriber
-        past_events = self._history.get(investigation_id, [])
-        for evt in past_events:
-            queue.put_nowait(evt)
+        past_events = await db.get_events(investigation_id)
+        for evt_data in past_events:
+            try:
+                evt = ActivityEvent(**evt_data)
+                queue.put_nowait(evt)
+            except Exception as e:
+                logger.error(f"Failed to replay event: {e}", exc_info=True)
 
         return queue
 
@@ -87,9 +92,7 @@ class EventBroadcaster:
             details=details,
         )
 
-        if investigation_id not in self._history:
-            self._history[investigation_id] = []
-        self._history[investigation_id].append(event)
+        await db.save_event(investigation_id, event.model_dump())
 
         logger.info(f"[{investigation_id}] [{agent_name}] {event_type.value}: {message}")
 
@@ -100,7 +103,7 @@ class EventBroadcaster:
         return event
 
     async def event_generator(self, investigation_id: str) -> AsyncGenerator[str, None]:
-        queue = self.subscribe(investigation_id)
+        queue = await self.subscribe(investigation_id)
         try:
             while True:
                 event: ActivityEvent = await queue.get()

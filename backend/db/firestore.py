@@ -114,5 +114,33 @@ class Database:
             logger.error(f"Firestore get_sources failed: {e}", exc_info=True)
             return self._memory_store["sources"].get(investigation_id, [])
 
+    async def save_event(self, investigation_id: str, event_data: Dict[str, Any]) -> None:
+        if self.use_memory or not self.client:
+            if investigation_id not in self._memory_store["events"]:
+                self._memory_store["events"][investigation_id] = []
+            self._memory_store["events"][investigation_id].append(event_data)
+            return
+        try:
+            doc_ref = self.client.collection("events").document(event_data["id"])
+            self.client.batch().set(doc_ref, event_data).commit()
+        except Exception as e:
+            logger.error(f"Firestore save_event failed: {e}", exc_info=True)
+            if investigation_id not in self._memory_store["events"]:
+                self._memory_store["events"][investigation_id] = []
+            self._memory_store["events"][investigation_id].append(event_data)
+
+    async def get_events(self, investigation_id: str) -> List[Dict[str, Any]]:
+        if self.use_memory or not self.client:
+            return self._memory_store["events"].get(investigation_id, [])
+        try:
+            docs = self.client.collection("events").where("investigationId", "==", investigation_id).stream()
+            res = [d.to_dict() for d in docs]
+            if not res:
+                return self._memory_store["events"].get(investigation_id, [])
+            return sorted(res, key=lambda x: x.get("timestamp", ""))
+        except Exception as e:
+            logger.error(f"Firestore get_events failed: {e}", exc_info=True)
+            return self._memory_store["events"].get(investigation_id, [])
+
 
 db = Database()
