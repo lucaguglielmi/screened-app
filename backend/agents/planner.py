@@ -41,10 +41,10 @@ Location: {entity.cityCountry or 'Unknown'}
 Official Website: {entity.officialDomain or 'Unknown'}
 Filmmaker Intent: {intent}
 
-Generate specific Parallel Search queries and questions for:
-1. FESTIVAL domain (physical venues, screening history, submission fee tier deadlines, awards, rules & eligibility)
-2. ORGANIZER domain (operating legal entity name, Companies House or registry filing status, founders, directors, history of cancellation)
-3. PARTICIPANTS domain (filmmaker forum discussions, Reddit/Filmmakers threads, attendee reviews, fee dispute complaints, selection rates)
+Generate specific Parallel Search queries and questions covering 360° forensic vetting:
+1. FESTIVAL domain (physical cinema screening venues, municipal manifests, submission fee tiers, original rules vs boilerplate text, awards)
+2. ORGANIZER domain (operating legal entity name, Companies House or registry filing status, domain WHOIS age, founders, festival director IMDb credentials)
+3. PARTICIPANTS domain (filmmaker alumni confirmations, Letterboxd/Reddit threads, attendee reviews, fee dispute complaints, selection rates)
 
 Return a JSON object matching this schema:
 {{
@@ -56,7 +56,7 @@ Return a JSON object matching this schema:
     }},
     "ORGANIZER": {{
       "objective": "string",
-      "searchQueries": ["string query 1", "string query 2"],
+      "searchQueries": ["string query 1", "string query 2", "string query 3"],
       "keyQuestions": ["question 1", "question 2"]
     }},
     "PARTICIPANTS": {{

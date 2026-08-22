@@ -9,6 +9,7 @@ import { MiniCompareArena } from '../chat/mini_apps/MiniCompareArena';
 import { FestivalIntakeCard } from '../chat/tools/FestivalIntakeCard';
 import { GrantIntakeCard } from '../chat/tools/GrantIntakeCard';
 import { InvitationEmailCard } from '../chat/tools/InvitationEmailCard';
+import { DeepVettingMatrix } from '../investigation/DeepVettingMatrix';
 import { DesignTokensLab } from './DesignTokensLab';
 import { AgentObservabilityLab } from './AgentObservabilityLab';
 import { soundEffects } from '../../utils/audio';
@@ -16,12 +17,12 @@ import {
   Workflow, 
   Coins, 
   MailWarning, 
-  ShieldCheck
+  ShieldCheck 
 } from 'lucide-react';
 
 export const DesignPlayground: React.FC = () => {
   const [activeSection, setActiveSection] = useState<'TOKENS' | 'TRACES' | 'ARCHITECTURE' | 'ALL' | 'BUBBLES' | 'LOADERS' | 'TOOLS' | 'PROMPTS'>('TOOLS');
-  const [activeToolSubtab, setActiveToolSubtab] = useState<'FESTIVAL' | 'GRANT' | 'INVITATION' | 'SCOUT' | 'COMPARE'>('FESTIVAL');
+  const [activeToolSubtab, setActiveToolSubtab] = useState<'FESTIVAL' | 'GRANT' | 'INVITATION' | 'SCOUT' | 'COMPARE' | 'VETTING'>('FESTIVAL');
 
   const [streamSimText, setStreamSimText] = useState<string>(
     'I have conducted an initial background check on the festival. Screening records indicate physical cinema leases at Curzon Soho.'
@@ -194,6 +195,14 @@ export const DesignPlayground: React.FC = () => {
               >
                 5. Compare Arena
               </button>
+              <button
+                onClick={() => { soundEffects.playClick(); setActiveToolSubtab('VETTING'); }}
+                className={`px-2.5 py-1 rounded-lg text-xs font-mono transition-colors ${
+                  activeToolSubtab === 'VETTING' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'text-zinc-400 hover:text-white'
+                }`}
+              >
+                6. 360° Forensic Matrix (Spec 14)
+              </button>
             </div>
           </div>
 
@@ -291,6 +300,15 @@ export const DesignPlayground: React.FC = () => {
                   }}
                   onSelectFestival={(name) => addLog(`[Action] Selected matchup candidate: '${name}'`)}
                 />
+              </div>
+            )}
+
+            {activeToolSubtab === 'VETTING' && (
+              <div className="w-full">
+                <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-wider block mb-2">
+                  Tool: DeepVettingMatrix.tsx (360° Forensic Audit with 7 Dimension Vectors)
+                </span>
+                <DeepVettingMatrix festivalName="Raindance Film Festival" />
               </div>
             )}
           </div>

@@ -158,6 +158,29 @@ export interface ActivityEvent {
   details?: any;
 }
 
+export type VettingSignalStatus = 'VERIFIED_AUTHENTIC' | 'INFORMATIONAL' | 'AMBER_WARNING' | 'RED_FLAG' | 'INCONCLUSIVE';
+
+export interface DeepVettingDimension {
+  id: string;
+  dimensionKey: string;
+  title: string;
+  category: string;
+  status: VettingSignalStatus;
+  confidenceScore: number;
+  summary: string;
+  signalsFound: string[];
+  corroboratingSources: string[];
+  riskWeight: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+}
+
+export interface DeepVettingReport {
+  festivalName: string;
+  overallAuthenticityScore: number;
+  totalFlags: number;
+  dimensions: DeepVettingDimension[];
+  generatedAt: string;
+}
+
 export interface Investigation {
   id: string;
   status: InvestigationStatus;
@@ -175,4 +198,5 @@ export interface Investigation {
   claims?: AtomicClaim[];
   sources?: SourceRecord[];
   outreachDrafts?: OutreachDraft[];
+  deepVetting?: DeepVettingReport;
 }

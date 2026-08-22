@@ -5,8 +5,8 @@ from .domain_agents import FestivalAgent, OrganizerAgent, ParticipantsAgent, run
 from .claim_extractor import ClaimExtractorAgent
 from .contradiction_analyst import ContradictionAnalystAgent, DisputeRecord
 from .report_writer import ReportWriterAgent, DossierReport
-from .outreach_drafter import OutreachDrafterAgent, compute_payload_hash
 from .opportunity_scout import OpportunityScoutAgent
+from .deep_vetting import DeepVettingAgent
 from .producer_desk import ProducerDeskAgent, producer_desk_agent
 
 __all__ = [
@@ -26,6 +26,7 @@ __all__ = [
     "OutreachDrafterAgent",
     "compute_payload_hash",
     "OpportunityScoutAgent",
+    "DeepVettingAgent",
     "ProducerDeskAgent",
     "producer_desk_agent",
 ]

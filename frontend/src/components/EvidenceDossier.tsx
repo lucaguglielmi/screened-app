@@ -5,12 +5,14 @@ import {
   DossierReport, 
   DisputeRecord, 
   DetailDensity,
-  SourceRecord 
+  SourceRecord,
+  DeepVettingReport
 } from '../types/investigation';
 import { ContradictionPanel } from './ContradictionPanel';
 import { DetailDial } from './DetailDial';
 import { CitationPopover } from './CitationPopover';
 import { CredibilityRadar } from './CredibilityRadar';
+import { DeepVettingMatrix } from './investigation/DeepVettingMatrix';
 import { playDialClick } from '../utils/audio';
 import { 
   FileText, 
@@ -33,7 +35,8 @@ import {
   Copy,
   Check,
   Search,
-  Mail
+  Mail,
+  Fingerprint
 } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -43,6 +46,7 @@ interface Props {
   claims: AtomicClaim[];
   sources: SourceRecord[];
   disputes: DisputeRecord[];
+  deepVetting?: DeepVettingReport;
   onNewInvestigation: () => void;
   onDraftOutreach: (claim?: AtomicClaim) => void;
   onExport: () => void;
@@ -54,10 +58,12 @@ export const EvidenceDossier: React.FC<Props> = ({
   claims,
   sources,
   disputes,
+  deepVetting,
   onNewInvestigation,
   onDraftOutreach,
   onExport,
 }) => {
+  const [activeTab, setActiveTab] = useState<'DOSSIER' | 'FORENSIC_VETTING'>('DOSSIER');
   const [density, setDensity] = useState<DetailDensity>('STANDARD');
   const [activeDomain, setActiveDomain] = useState<string>('ALL');
   const [searchFilter, setSearchFilter] = useState<string>('');
@@ -232,20 +238,59 @@ export const EvidenceDossier: React.FC<Props> = ({
             <DetailDial density={density} onChange={handleDensityChange} />
           </div>
         </div>
-      </div>
 
-      {/* Credibility & Transparency Radar Bar */}
-      <CredibilityRadar claims={claims} disputes={disputes} />
+        {/* View Mode Switcher: Dossier vs 360° Forensic Matrix */}
+        <div className="pt-3 border-t border-paper-border dark:border-darkroom-border flex items-center justify-between flex-wrap gap-3 no-print">
+          <div className="flex items-center gap-2 p-1 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border">
+            <button
+              onClick={() => { playDialClick(); setActiveTab('DOSSIER'); }}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
+                activeTab === 'DOSSIER'
+                  ? 'bg-indigo-600 text-white shadow-2xs font-bold'
+                  : 'text-paper-muted dark:text-darkroom-muted hover:text-paper-text dark:hover:text-darkroom-text'
+              }`}
+            >
+              <FileText className="size-3.5" />
+              <span>Full Due Diligence Dossier</span>
+            </button>
+            <button
+              onClick={() => { playDialClick(); setActiveTab('FORENSIC_VETTING'); }}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
+                activeTab === 'FORENSIC_VETTING'
+                  ? 'bg-emerald-600 text-white shadow-2xs font-bold'
+                  : 'text-paper-muted dark:text-darkroom-muted hover:text-paper-text dark:hover:text-darkroom-text'
+              }`}
+            >
+              <Fingerprint className="size-3.5" />
+              <span>360° Forensic Matrix (7 Vectors)</span>
+              <span className="px-1.5 py-0.2 rounded bg-white/20 text-[10px] uppercase tracking-wider">
+                Spec 14
+              </span>
+            </button>
+          </div>
 
-      {/* Executive Overview */}
-      <div className="p-6 rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border space-y-3">
-        <div className="text-xs font-mono uppercase tracking-wider text-paper-muted dark:text-darkroom-muted">
-          Executive Overview
+          <span className="text-xs text-paper-muted dark:text-darkroom-muted font-mono">
+            {activeTab === 'DOSSIER' ? `${claims.length} Claims • ${disputes.length} Disputes` : `7 Forensic Inspection Vectors`}
+          </span>
         </div>
-        <p className="font-serif text-base sm:text-lg text-paper-text dark:text-darkroom-text leading-relaxed whitespace-pre-line">
-          {dossier.executiveSummary}
-        </p>
       </div>
+
+      {activeTab === 'FORENSIC_VETTING' ? (
+        <DeepVettingMatrix report={deepVetting} festivalName={entity.name} />
+      ) : (
+        <>
+          {/* Credibility & Transparency Radar Bar */}
+          <CredibilityRadar claims={claims} disputes={disputes} />
+
+          {/* Executive Overview */}
+          <div className="p-6 rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border space-y-3">
+            <div className="text-xs font-mono uppercase tracking-wider text-paper-muted dark:text-darkroom-muted">
+              Executive Overview
+            </div>
+            <p className="font-serif text-base sm:text-lg text-paper-text dark:text-darkroom-text leading-relaxed whitespace-pre-line">
+              {dossier.executiveSummary}
+            </p>
+          </div>
 
       {/* Side-by-Side Contradictions Panel */}
       <ContradictionPanel disputes={disputes} />
@@ -498,6 +543,8 @@ export const EvidenceDossier: React.FC<Props> = ({
           ))}
         </div>
       </div>
-    </motion.div>
-  );
+    </>
+  )}
+</motion.div>
+);
 };

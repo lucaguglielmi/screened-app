@@ -28,6 +28,7 @@ from backend.agents import (
     DisputeRecord,
     ReportWriterAgent,
     DossierReport,
+    DeepVettingAgent,
 )
 
 logger = logging.getLogger("screened.orchestrator.state_machine")
@@ -48,6 +49,7 @@ class Orchestrator:
         self.participants_agent = ParticipantsAgent(self.parallel_tool)
         self.claim_extractor = ClaimExtractorAgent(self.gemini)
         self.contradiction_analyst = ContradictionAnalystAgent(self.gemini)
+        self.deep_vetting = DeepVettingAgent(self.gemini)
         self.report_writer = ReportWriterAgent(self.gemini)
 
     async def start_investigation(
@@ -266,7 +268,30 @@ class Orchestrator:
                     details={"disputes": [d.model_dump() for d in disputes]},
                 )
 
-            # 5. Dossier Synthesis & Narrative Generation
+            # 5. Deep 360° Forensic Vetting Phase (Spec 14)
+            await broadcaster.emit(
+                investigation_id=investigation_id,
+                event_type=EventType.DEEP_VETTING_ANALYZING,
+                agent_name="DeepVettingAgent",
+                message="Executing 360° forensic analysis across Companies House, WHOIS, rules plagiarism, and jury dossiers...",
+            )
+
+            deep_vetting_report = await self.deep_vetting.analyze(
+                festival_name=entity.name,
+                sources=all_sources,
+                optional_url=entity.officialDomain,
+                city_country=entity.cityCountry,
+            )
+
+            await broadcaster.emit(
+                investigation_id=investigation_id,
+                event_type=EventType.DEEP_VETTING_COMPLETED,
+                agent_name="DeepVettingAgent",
+                message=f"Deep vetting complete. Authenticity score: {deep_vetting_report.overallAuthenticityScore}% with {deep_vetting_report.totalFlags} risk signals.",
+                details={"overallAuthenticityScore": deep_vetting_report.overallAuthenticityScore, "totalFlags": deep_vetting_report.totalFlags},
+            )
+
+            # 6. Dossier Synthesis & Narrative Generation
             inv_data["status"] = InvestigationStatus.ASSEMBLING_DOSSIER.value
             await db.save_investigation(investigation_id, inv_data)
 
@@ -288,6 +313,7 @@ class Orchestrator:
             inv_data["status"] = InvestigationStatus.READY.value
             inv_data["dossier"] = dossier.model_dump()
             inv_data["disputes"] = [d.model_dump() for d in disputes]
+            inv_data["deepVetting"] = deep_vetting_report.model_dump()
             inv_data["sourcesCount"] = len(all_sources)
             inv_data["claimsCount"] = len(claims)
             inv_data["updatedAt"] = datetime.now(timezone.utc).isoformat()
@@ -303,6 +329,7 @@ class Orchestrator:
                     "claimsCount": len(claims),
                     "sourcesCount": len(all_sources),
                     "disputesCount": len(disputes),
+                    "authenticityScore": deep_vetting_report.overallAuthenticityScore,
                 },
             )
 

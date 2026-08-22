@@ -23,6 +23,7 @@ from backend.models import (
     TestPipelineRequest,
     TestPipelineResponse,
     ChatRequest,
+    DeepVettingReport,
 )
 from backend.db.firestore import db
 from backend.tools.parallel_search import ParallelSearchTool
@@ -31,6 +32,7 @@ from backend.services.approval_service import approval_service
 from backend.services.export_service import export_service
 from backend.agents.outreach_drafter import OutreachDrafterAgent
 from backend.agents.opportunity_scout import OpportunityScoutAgent
+from backend.agents.deep_vetting import DeepVettingAgent
 from backend.agents.producer_desk import producer_desk_agent
 from backend.orchestrator.events import broadcaster, EventType
 from backend.orchestrator.state_machine import orchestrator
@@ -61,6 +63,7 @@ parallel_tool = ParallelSearchTool()
 gemini_client = GeminiClient()
 outreach_drafter = OutreachDrafterAgent(gemini_client)
 opportunity_scout = OpportunityScoutAgent(parallel_tool, gemini_client)
+deep_vetting_agent = DeepVettingAgent(gemini_client)
 
 
 class CreateInvestigationRequest(BaseModel):
@@ -324,12 +327,19 @@ async def test_walking_skeleton_pipeline(request: TestPipelineRequest):
             claims=claims,
         )
 
+        deep_vetting = await deep_vetting_agent.analyze(
+            festival_name=subject,
+            sources=sources,
+            optional_url=request.optionalUrl,
+        )
+
         duration = round(time.time() - start_time, 2)
         return TestPipelineResponse(
             festivalName=subject,
             sourcesFound=len(sources),
             sources=sources,
             extractedClaims=claims,
+            deepVetting=deep_vetting,
             summaryNarrative=summary,
             durationSeconds=duration,
         )
@@ -337,6 +347,34 @@ async def test_walking_skeleton_pipeline(request: TestPipelineRequest):
     except Exception as e:
         logger.error(f"Walking skeleton pipeline failed: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/investigations/{investigation_id}/deep-vetting", response_model=DeepVettingReport)
+async def get_investigation_deep_vetting(investigation_id: str):
+    """Retrieve the 360° forensic vetting dimensions report for an active or completed investigation."""
+    inv = await db.get_investigation(investigation_id)
+    if not inv:
+        raise HTTPException(status_code=404, detail="Investigation not found")
+
+    deep_vetting_data = inv.get("deepVetting")
+    if deep_vetting_data:
+        return DeepVettingReport(**deep_vetting_data)
+
+    # If not yet generated, synthesize on-the-fly from saved sources
+    entity_data = inv.get("confirmedEntity") or {"name": inv.get("query", "Unknown")}
+    sources_data = await db.get_sources(investigation_id)
+    sources = [SourceRecord(**s) for s in sources_data]
+
+    report = await deep_vetting_agent.analyze(
+        festival_name=entity_data.get("name", "Unknown"),
+        sources=sources,
+        optional_url=entity_data.get("officialDomain"),
+        city_country=entity_data.get("cityCountry"),
+    )
+
+    inv["deepVetting"] = report.model_dump()
+    await db.save_investigation(investigation_id, inv)
+    return report
 
 
 # Mount Frontend static files if built

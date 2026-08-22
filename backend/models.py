@@ -29,6 +29,21 @@ class QuestionCategory(str, Enum):
     EXPERIENCE_FEEDBACK = "EXPERIENCE_FEEDBACK"
     ORGANIZER_TRACK_RECORD = "ORGANIZER_TRACK_RECORD"
     SELECTION_PROFILE = "SELECTION_PROFILE"
+    CORPORATE_REGISTRY = "CORPORATE_REGISTRY"
+    PERSONNEL_DOSSIER = "PERSONNEL_DOSSIER"
+    BOILERPLATE_PLAGIARISM = "BOILERPLATE_PLAGIARISM"
+    DOMAIN_PROVENANCE = "DOMAIN_PROVENANCE"
+    VENUE_CORROBORATION = "VENUE_CORROBORATION"
+    ALUMNI_FOOTPRINT = "ALUMNI_FOOTPRINT"
+    IMAGE_PROVENANCE = "IMAGE_PROVENANCE"
+
+
+class VettingSignalStatus(str, Enum):
+    VERIFIED_AUTHENTIC = "VERIFIED_AUTHENTIC"
+    INFORMATIONAL = "INFORMATIONAL"
+    AMBER_WARNING = "AMBER_WARNING"
+    RED_FLAG = "RED_FLAG"
+    INCONCLUSIVE = "INCONCLUSIVE"
 
 
 class ClaimKind(str, Enum):
@@ -140,6 +155,27 @@ class CandidateEntity(BaseModel):
     sourceIds: List[str] = Field(default_factory=list)
 
 
+class DeepVettingDimension(BaseModel):
+    id: str = Field(default_factory=generate_uuid)
+    dimensionKey: str  # e.g., "CORPORATE_REGISTRY", "DOMAIN_PROVENANCE", "BOILERPLATE_PLAGIARISM", "PERSONNEL_DOSSIER", "VENUE_CORROBORATION", "ALUMNI_FOOTPRINT", "IMAGE_PROVENANCE"
+    title: str
+    category: QuestionCategory
+    status: VettingSignalStatus
+    confidenceScore: int = Field(default=85, ge=0, le=100)
+    summary: str
+    signalsFound: List[str] = Field(default_factory=list)
+    corroboratingSources: List[str] = Field(default_factory=list)
+    riskWeight: str = "MEDIUM"  # "LOW", "MEDIUM", "HIGH", "CRITICAL"
+
+
+class DeepVettingReport(BaseModel):
+    festivalName: str
+    overallAuthenticityScore: int = Field(default=80, ge=0, le=100)
+    totalFlags: int = 0
+    dimensions: List[DeepVettingDimension] = Field(default_factory=list)
+    generatedAt: str = Field(default_factory=get_current_iso)
+
+
 class OutreachDraft(BaseModel):
     id: str = Field(default_factory=generate_uuid)
     investigationId: str
@@ -218,6 +254,7 @@ class TestPipelineResponse(BaseModel):
     sourcesFound: int
     sources: List[SourceRecord]
     extractedClaims: List[AtomicClaim]
+    deepVetting: Optional[DeepVettingReport] = None
     summaryNarrative: str
     durationSeconds: float
 
