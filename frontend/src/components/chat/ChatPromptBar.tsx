@@ -1,17 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { 
   Paperclip, 
-  ArrowUp, 
+  Send, 
   Loader2, 
   Sparkles, 
   HelpCircle, 
   AlertTriangle,
-  Search,
-  Coins,
-  MailWarning,
-  GitCompare,
-  Compass,
-  FileUp
+  FileUp,
+  Mic
 } from 'lucide-react';
 import { soundEffects } from '../../utils/audio';
 import { QuestionsCategoryModal } from '../modals/QuestionsCategoryModal';
@@ -42,7 +38,10 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
   const [isDragging, setIsDragging] = useState(false);
   const [videoGuardWarning, setVideoGuardWarning] = useState<string | null>(null);
   const [isQuestionsModalOpen, setIsQuestionsModalOpen] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const recognitionRef = useRef<any>(null);
+  const latestTranscriptRef = useRef<string>('');
 
   const handleSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -61,11 +60,94 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
     setInput('');
     setAttachedFile(null);
     setVideoGuardWarning(null);
+    latestTranscriptRef.current = '';
   };
 
-  const handleActionPillClick = (pillQuery: string) => {
-    soundEffects.playClick();
-    onSendMessage(pillQuery);
+  const startRecording = () => {
+    const SpeechRecognitionClass = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognitionClass) {
+      soundEffects.playCaution();
+      setVideoGuardWarning('Voice dictation is supported in modern browsers (Chrome, Edge, Safari, Brave).');
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRecognitionClass();
+      recognition.lang = 'en-US';
+      recognition.interimResults = true;
+      recognition.continuous = false;
+
+      latestTranscriptRef.current = '';
+
+      recognition.onstart = () => {
+        setIsRecording(true);
+        soundEffects.playClick();
+      };
+
+      recognition.onresult = (event: any) => {
+        let currentTranscript = '';
+        for (let i = 0; i < event.results.length; i++) {
+          currentTranscript += event.results[i][0].transcript;
+        }
+        if (currentTranscript) {
+          setInput(currentTranscript);
+          latestTranscriptRef.current = currentTranscript;
+        }
+      };
+
+      recognition.onerror = (event: any) => {
+        console.warn('Speech recognition error:', event.error);
+        setIsRecording(false);
+        if (event.error === 'not-allowed') {
+          soundEffects.playCaution();
+          setVideoGuardWarning('Microphone access was denied. Please allow microphone permissions in your browser.');
+        }
+      };
+
+      recognition.onend = () => {
+        setIsRecording(false);
+        const textToSend = latestTranscriptRef.current.trim();
+        if (textToSend) {
+          soundEffects.playClick();
+          onSendMessage(
+            textToSend,
+            attachedFile?.name,
+            attachedFile?.content,
+            attachedFile?.base64,
+            attachedFile?.mimeType,
+            attachedFile?.size
+          );
+          setInput('');
+          setAttachedFile(null);
+          latestTranscriptRef.current = '';
+        }
+      };
+
+      recognitionRef.current = recognition;
+      recognition.start();
+    } catch (err) {
+      console.error('Failed to start speech recognition:', err);
+      setIsRecording(false);
+    }
+  };
+
+  const stopRecording = () => {
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+      } catch (err) {
+        console.warn('Error stopping recognition:', err);
+      }
+      setIsRecording(false);
+    }
+  };
+
+  const toggleRecording = () => {
+    if (isRecording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
   };
 
   const processFile = (file: File) => {
@@ -120,16 +202,8 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
     }
   };
 
-  const actionPills = [
-    { label: 'Research a festival', icon: Search, query: 'Is Aldergate Film Festival legitimate?' },
-    { label: 'Find a grant', icon: Coins, query: 'Find £25k documentary production grants in the UK' },
-    { label: 'Analyze an invitation', icon: MailWarning, query: 'Analyze this festival invitation email offering a 50% waiver' },
-    { label: 'Compare festivals', icon: GitCompare, query: 'Compare Raindance vs Leeds International Film Festival' },
-    { label: 'Scout strategy', icon: Compass, query: 'I have a 15-min sci-fi short looking for a UK premiere on a £200 budget' },
-  ];
-
   return (
-    <div className="w-full max-w-4xl mx-auto relative space-y-2.5">
+    <div className="w-full max-w-4xl mx-auto relative space-y-2">
       {/* Drag & Drop overlay */}
       {isDragging && (
         <div className="absolute inset-0 z-30 flex items-center justify-center rounded-2xl border-2 border-dashed border-[#2018E6] bg-[#070913]/95 backdrop-blur-md">
@@ -150,7 +224,7 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
           <button
             type="button"
             onClick={() => setVideoGuardWarning(null)}
-            className="text-amber-400 hover:text-white ml-2"
+            className="text-amber-400 hover:text-white ml-2 cursor-pointer"
           >
             ✕
           </button>
@@ -213,8 +287,10 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask Mission Control, research a festival, or drop a script/treatment PDF..."
-            className="w-full bg-transparent px-2.5 py-2 text-base text-slate-100 placeholder-slate-400 focus:outline-none"
+            placeholder={isRecording ? "Listening... Speak now..." : "Ask Mission Control, research a festival, or drop a script/treatment PDF..."}
+            className={`w-full bg-transparent px-2.5 py-2 text-base text-slate-100 placeholder-slate-400 focus:outline-none ${
+              isRecording ? 'placeholder-rose-300 animate-pulse' : ''
+            }`}
           />
         </div>
 
@@ -226,50 +302,54 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
               soundEffects.playClick();
               setIsQuestionsModalOpen(true);
             }}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-zinc-700 bg-midnight/80 hover:bg-surface text-xs font-mono text-zinc-300 hover:text-white hover:border-blue-500/50 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-zinc-700 bg-midnight/80 hover:bg-surface text-xs font-mono text-zinc-300 hover:text-white hover:border-blue-500/50 transition-colors cursor-pointer"
           >
             <HelpCircle className="size-3.5 text-blue-400" />
-            <span>what can I ask</span>
+            <span className="hidden sm:inline">what can I ask</span>
+            <span className="sm:hidden">help</span>
           </button>
 
-          {/* Submit Button */}
+          {/* Microphone Dictate & Auto-Send Button */}
+          <button
+            type="button"
+            onClick={toggleRecording}
+            title={isRecording ? "Listening... Click to stop & send" : "Click to speak & auto-send"}
+            aria-label={isRecording ? "Stop voice recording" : "Start voice recording"}
+            className={`flex h-10 items-center justify-center rounded-xl transition-all cursor-pointer shrink-0 ${
+              isRecording
+                ? 'px-3 gap-1.5 bg-rose-500/20 border border-rose-500/60 text-rose-300 shadow-md shadow-rose-950 animate-pulse'
+                : 'w-10 bg-midnight/80 hover:bg-[#141A3B] border border-zinc-700 hover:border-indigo-500/50 text-zinc-300 hover:text-white'
+            }`}
+          >
+            {isRecording ? (
+              <>
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+                </span>
+                <Mic className="size-4 text-rose-400" />
+              </>
+            ) : (
+              <Mic className="size-4 text-zinc-400 hover:text-indigo-300" />
+            )}
+          </button>
+
+          {/* Airplane Send Button */}
           <button
             type="submit"
             disabled={isLoading || (!input.trim() && !attachedFile)}
-            className="flex h-10 items-center gap-2 rounded-xl bg-[#2018E6] hover:bg-[#1A13C7] px-4 text-sm font-semibold text-white shadow-md shadow-[#2018E6]/30 transition-all hover:brightness-110 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shrink-0"
+            className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#2018E6] hover:bg-[#1A13C7] text-white shadow-md shadow-[#2018E6]/30 transition-all hover:brightness-110 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shrink-0"
+            title="Send message"
+            aria-label="Send message"
           >
             {isLoading ? (
-              <span className="flex items-center gap-1.5 text-xs">
-                <Loader2 className="size-3.5 animate-spin text-white" />
-                <span>Thinking...</span>
-              </span>
+              <Loader2 className="size-4 animate-spin text-white" />
             ) : (
-              <>
-                <span className="text-xs font-semibold">Send</span>
-                <ArrowUp className="size-3.5 text-white" />
-              </>
+              <Send className="size-4 text-white -translate-x-0.5" />
             )}
           </button>
         </div>
       </form>
-
-      {/* Small Action Pills Beneath the Search Bar */}
-      <div className="flex flex-wrap items-center justify-center gap-2 pt-0.5">
-        {actionPills.map((pill, idx) => {
-          const Icon = pill.icon;
-          return (
-            <button
-              key={idx}
-              type="button"
-              onClick={() => handleActionPillClick(pill.query)}
-              className="flex items-center space-x-1.5 px-3 py-1 rounded-full bg-[#0E1124]/80 border border-zinc-800 hover:border-blue-500/50 hover:bg-[#141731] text-xs text-zinc-300 hover:text-white transition-all font-mono"
-            >
-              <Icon className="size-3 text-blue-400 shrink-0" />
-              <span>{pill.label}</span>
-            </button>
-          );
-        })}
-      </div>
 
       {/* What Can I Ask Modal */}
       <QuestionsCategoryModal

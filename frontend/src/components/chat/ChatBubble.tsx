@@ -1,4 +1,11 @@
 import React from 'react';
+import { 
+  Search, 
+  Coins, 
+  MailWarning, 
+  GitCompare, 
+  Compass 
+} from 'lucide-react';
 import { ChatMessage } from '../../types/chat';
 import { FilmProfile } from '../../types/investigation';
 import { MiniScoutCard } from './mini_apps/MiniScoutCard';
@@ -7,6 +14,15 @@ import { FestivalIntakeCard } from './tools/FestivalIntakeCard';
 import { GrantIntakeCard } from './tools/GrantIntakeCard';
 import { InvitationEmailCard } from './tools/InvitationEmailCard';
 import { AgentAvatar } from './AgentAvatar';
+import { soundEffects } from '../../utils/audio';
+
+const ACTION_TABS = [
+  { label: 'Research a festival', icon: Search, query: 'Is Aldergate Film Festival legitimate?' },
+  { label: 'Find a grant', icon: Coins, query: 'Find £25k documentary production grants in the UK' },
+  { label: 'Analyze an invitation', icon: MailWarning, query: 'Analyze this festival invitation email offering a 50% waiver' },
+  { label: 'Compare festivals', icon: GitCompare, query: 'Compare Raindance vs Leeds International Film Festival' },
+  { label: 'Scout strategy', icon: Compass, query: 'I have a 15-min sci-fi short looking for a UK premiere on a £200 budget' },
+];
 
 interface ChatBubbleProps {
   message: ChatMessage;
@@ -112,6 +128,36 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
               </div>
             )}
             {formatContent(message.content)}
+
+            {/* Quick Action Tabs (Under First Greeting Bubble) */}
+            {message.id === 'initial-greeting-01' && (
+              <div className="mt-4 pt-3.5 border-t border-white/[0.08] space-y-2">
+                <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider block">
+                  Quick Actions:
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {ACTION_TABS.map((tab, idx) => {
+                    const Icon = tab.icon;
+                    return (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => {
+                          soundEffects.playClick();
+                          if (onLaunchCustomPrompt) {
+                            onLaunchCustomPrompt(tab.query);
+                          }
+                        }}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/40 hover:bg-[#2018E6] text-slate-300 hover:text-white transition-all text-xs font-mono cursor-pointer shadow-sm active:scale-95"
+                      >
+                        <Icon className="size-3.5 text-indigo-400 group-hover:text-white shrink-0" />
+                        <span>{tab.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Interactive Follow-Up Probes */}
