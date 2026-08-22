@@ -59,11 +59,41 @@ export interface ChatToolCall {
   args: Record<string, any>;
 }
 
+export interface DocumentAnalysisResult {
+  detectedKind: 'SCRIPT_TREATMENT' | 'INVITATION_EMAIL' | 'GENERAL_DOCUMENT';
+  fileName: string;
+  fileSizeBytes?: number;
+  extractedSummary: string;
+  filmTitle?: string;
+  format?: 'SHORT' | 'FEATURE' | 'DOCUMENTARY' | 'ANIMATION' | 'EPISODIC';
+  genre?: string;
+  runtimeMinutes?: number;
+  logline?: string;
+  budgetTier?: string;
+  suggestedPremiereGoal?: 'WORLD_PREMIERE' | 'INTERNATIONAL_PREMIERE' | 'NATIONAL_PREMIERE' | 'NO_PREFERENCE';
+  keyThemes?: string[];
+  festivalClaimed?: string;
+  senderDomain?: string;
+  feeWaiverOffered?: boolean;
+  trophyFeeRequested?: boolean;
+  redFlagSignals?: string[];
+  recommendedAction?: string;
+}
+
+export interface AttachedFileMeta {
+  name: string;
+  content?: string;
+  base64?: string;
+  mimeType?: string;
+  size?: number;
+}
+
 export interface ChatMessage {
   id: string;
   role: ChatRole;
   content: string;
   toolCall?: ChatToolCall;
+  attachedFile?: AttachedFileMeta;
   timestamp: string;
 }
 

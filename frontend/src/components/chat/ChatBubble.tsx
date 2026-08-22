@@ -100,6 +100,15 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
                 : 'bg-[#0E1124]/95 text-slate-200 rounded-tl-none border border-[#22274C] backdrop-blur-md'
             }`}
           >
+            {message.attachedFile && (
+              <div className="mb-3 flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-xs font-mono w-fit">
+                <span>📎</span>
+                <span className="font-semibold">{message.attachedFile.name}</span>
+                {message.attachedFile.size && (
+                  <span className="text-slate-400">({Math.round(message.attachedFile.size / 1024)} KB)</span>
+                )}
+              </div>
+            )}
             {formatContent(message.content)}
           </div>
 

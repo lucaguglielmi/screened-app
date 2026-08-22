@@ -329,9 +329,45 @@ class ChatMessage(BaseModel):
     timestamp: str = Field(default_factory=get_current_iso)
 
 
+class DocumentAnalysisKind(str, Enum):
+    SCRIPT_TREATMENT = "SCRIPT_TREATMENT"
+    INVITATION_EMAIL = "INVITATION_EMAIL"
+    GENERAL_DOCUMENT = "GENERAL_DOCUMENT"
+
+
+class DocumentAnalysisResult(BaseModel):
+    detectedKind: DocumentAnalysisKind
+    fileName: str
+    fileSizeBytes: int = 0
+    extractedSummary: str
+    filmTitle: Optional[str] = None
+    format: Optional[FilmFormat] = None
+    genre: Optional[str] = None
+    runtimeMinutes: Optional[int] = None
+    logline: Optional[str] = None
+    budgetTier: Optional[str] = None
+    suggestedPremiereGoal: Optional[PremiereGoal] = None
+    keyThemes: List[str] = Field(default_factory=list)
+    festivalClaimed: Optional[str] = None
+    senderDomain: Optional[str] = None
+    feeWaiverOffered: Optional[bool] = None
+    trophyFeeRequested: Optional[bool] = None
+    redFlagSignals: List[str] = Field(default_factory=list)
+    recommendedAction: Optional[str] = None
+
+
+class DocumentAnalysisRequest(BaseModel):
+    fileName: str
+    fileContent: Optional[str] = None
+    fileBase64: Optional[str] = None
+    mimeType: Optional[str] = None
+
+
 class ChatRequest(BaseModel):
     message: str
     conversationHistory: List[ChatMessage] = Field(default_factory=list)
     attachedFileName: Optional[str] = None
     attachedFileContent: Optional[str] = None
+    attachedFileBase64: Optional[str] = None
+    attachedFileMimeType: Optional[str] = None
 

@@ -42,19 +42,35 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
   const handleSendMessage = async (
     userText: string,
     attachedFileName?: string,
-    attachedFileContent?: string
+    attachedFileContent?: string,
+    attachedFileBase64?: string,
+    attachedFileMimeType?: string,
+    attachedFileSize?: number
   ) => {
     const userMsg: ChatMessage = {
       id: String(Date.now()),
       role: 'user',
       content: userText,
+      attachedFile: attachedFileName
+        ? {
+            name: attachedFileName,
+            content: attachedFileContent,
+            base64: attachedFileBase64,
+            mimeType: attachedFileMimeType,
+            size: attachedFileSize,
+          }
+        : undefined,
       timestamp: new Date().toISOString(),
     };
 
     const newHistory = [...messages, userMsg];
     setMessages(newHistory);
     setIsLoading(true);
-    setThinkingMessage('Cinema Due Diligence Desk is evaluating your request...');
+    setThinkingMessage(
+      attachedFileName
+        ? `Cinema Due Diligence Desk is analyzing attached file '${attachedFileName}'...`
+        : 'Cinema Due Diligence Desk is evaluating your request...'
+    );
 
     try {
       const response = await fetch('/api/chat', {
@@ -65,6 +81,8 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
           conversationHistory: messages,
           attachedFileName,
           attachedFileContent,
+          attachedFileBase64,
+          attachedFileMimeType,
         }),
       });
 

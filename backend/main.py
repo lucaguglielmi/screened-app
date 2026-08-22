@@ -24,6 +24,8 @@ from backend.models import (
     TestPipelineResponse,
     ChatRequest,
     DeepVettingReport,
+    DocumentAnalysisRequest,
+    DocumentAnalysisResult,
 )
 from backend.db.firestore import db
 from backend.tools.parallel_search import ParallelSearchTool
@@ -180,6 +182,16 @@ async def chat_with_producer_desk(req: ChatRequest):
             "X-Accel-Buffering": "no",
         },
     )
+
+
+@app.post("/api/chat/analyze-doc", response_model=DocumentAnalysisResult)
+async def analyze_document_endpoint(req: DocumentAnalysisRequest):
+    """Analyzes an uploaded script, synopsis, treatment, or invitation email."""
+    try:
+        return await producer_desk_agent.analyze_document(req)
+    except Exception as e:
+        logger.error(f"Document analysis endpoint failed: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 # --- Milestone M4: Opportunity Scout Endpoint ---

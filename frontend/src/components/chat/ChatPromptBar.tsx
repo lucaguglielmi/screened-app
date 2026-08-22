@@ -15,14 +15,29 @@ import {
 import { soundEffects } from '../../utils/audio';
 import { QuestionsCategoryModal } from '../modals/QuestionsCategoryModal';
 
+interface AttachedFileState {
+  name: string;
+  content?: string;
+  base64?: string;
+  mimeType: string;
+  size: number;
+}
+
 interface ChatPromptBarProps {
-  onSendMessage: (message: string, attachedFileName?: string, attachedFileContent?: string) => void;
+  onSendMessage: (
+    message: string,
+    attachedFileName?: string,
+    attachedFileContent?: string,
+    attachedFileBase64?: string,
+    attachedFileMimeType?: string,
+    attachedFileSize?: number
+  ) => void;
   isLoading: boolean;
 }
 
 export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isLoading }) => {
   const [input, setInput] = useState('');
-  const [attachedFile, setAttachedFile] = useState<{ name: string; content: string } | null>(null);
+  const [attachedFile, setAttachedFile] = useState<AttachedFileState | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [videoGuardWarning, setVideoGuardWarning] = useState<string | null>(null);
   const [isQuestionsModalOpen, setIsQuestionsModalOpen] = useState(false);
@@ -37,7 +52,10 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
     onSendMessage(
       trimmed || `Please review the attached document: ${attachedFile?.name}`,
       attachedFile?.name,
-      attachedFile?.content
+      attachedFile?.content,
+      attachedFile?.base64,
+      attachedFile?.mimeType,
+      attachedFile?.size
     );
     setInput('');
     setAttachedFile(null);
@@ -61,16 +79,36 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const content = e.target?.result as string;
-      setAttachedFile({
-        name: file.name,
-        content: content || `[Extracted text from ${file.name}]`,
-      });
-      soundEffects.playClick();
-    };
-    reader.readAsText(file);
+    const mimeType = file.type || (fileNameLower.endsWith('.pdf') ? 'application/pdf' : 'text/plain');
+
+    if (mimeType.startsWith('application/pdf') || mimeType.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        const base64Data = result.split(',')[1] || result;
+        setAttachedFile({
+          name: file.name,
+          base64: base64Data,
+          mimeType,
+          size: file.size,
+        });
+        soundEffects.playClick();
+      };
+      reader.readAsDataURL(file);
+    } else {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = e.target?.result as string;
+        setAttachedFile({
+          name: file.name,
+          content: content || `[Extracted text from ${file.name}]`,
+          mimeType,
+          size: file.size,
+        });
+        soundEffects.playClick();
+      };
+      reader.readAsText(file);
+    }
   };
 
   const handleDrop = (e: React.DragEvent) => {

@@ -10,6 +10,13 @@ from backend.models import (
     DueDiligenceToolArgs,
     OpportunityScoutToolArgs,
     CompareFestivalsToolArgs,
+    GrantScoutToolArgs,
+    InvitationEmailToolArgs,
+    DocumentAnalysisRequest,
+    DocumentAnalysisResult,
+    DocumentAnalysisKind,
+    FilmFormat,
+    PremiereGoal,
 )
 from backend.services.gemini_client import GeminiClient
 
@@ -162,10 +169,194 @@ class ProducerDeskAgent:
     def __init__(self, gemini: Optional[GeminiClient] = None):
         self.gemini = gemini or GeminiClient()
 
+    async def analyze_document(self, req: DocumentAnalysisRequest) -> DocumentAnalysisResult:
+        """Analyzes an uploaded script, treatment, synopsis, or invitation email."""
+        file_name = req.fileName
+        raw_text = req.fileContent or ""
+        mime_type = req.mimeType or "text/plain"
+
+        # If we have Gemini client and multimodal/text content
+        if self.gemini.client and (raw_text or req.fileBase64):
+            try:
+                import base64
+                from google.genai import types
+
+                prompt = f"""You are a cinema document analysis engine. Inspect this document and extract its structural metadata.
+File name: {file_name}
+
+Detect whether this is:
+1) A Script / Treatment / Synopsis / Pitch Deck (kind: "SCRIPT_TREATMENT")
+2) A Festival Acceptance / Laurels / Invitation Email (kind: "INVITATION_EMAIL")
+3) A General Document (kind: "GENERAL_DOCUMENT")
+
+Return a strict JSON object with:
+{{
+  "detectedKind": "SCRIPT_TREATMENT" | "INVITATION_EMAIL" | "GENERAL_DOCUMENT",
+  "fileName": "{file_name}",
+  "fileSizeBytes": 0,
+  "extractedSummary": "1-2 sentence executive summary of the document",
+  "filmTitle": "string or null",
+  "format": "SHORT" | "FEATURE" | "DOCUMENTARY" | "ANIMATION" | "EPISODIC" | null,
+  "genre": "string or null",
+  "runtimeMinutes": number or null,
+  "logline": "string or null",
+  "budgetTier": "string or null",
+  "suggestedPremiereGoal": "WORLD_PREMIERE" | "INTERNATIONAL_PREMIERE" | "NATIONAL_PREMIERE" | "NO_PREFERENCE" | null,
+  "keyThemes": ["theme1", "theme2"],
+  "festivalClaimed": "string or null",
+  "senderDomain": "string or null",
+  "feeWaiverOffered": boolean or null,
+  "trophyFeeRequested": boolean or null,
+  "redFlagSignals": ["signal1", "signal2"],
+  "recommendedAction": "string or null"
+}}"""
+
+                contents = []
+                if req.fileBase64 and mime_type.startswith(("application/pdf", "image/")):
+                    try:
+                        part = types.Part.from_bytes(data=base64.b64decode(req.fileBase64), mime_type=mime_type)
+                        contents.append(part)
+                    except Exception as e:
+                        logger.warning(f"Failed to decode base64 attachment: {e}")
+                if raw_text:
+                    contents.append(raw_text[:8000])
+                contents.append(prompt)
+
+                response = self.gemini.client.models.generate_content(
+                    model="gemini-2.5-flash",
+                    contents=contents,
+                    config=types.GenerateContentConfig(
+                        response_mime_type="application/json",
+                        temperature=0.1
+                    )
+                )
+
+                response_text = response.text if hasattr(response, "text") and response.text else str(response)
+                # Clean markdown wrapper if any
+                clean_json = response_text.strip()
+                if clean_json.startswith("```"):
+                    clean_json = clean_json.split("\n", 1)[-1].rsplit("```", 1)[0].strip()
+                data = json.loads(clean_json)
+                data["fileName"] = file_name
+                return DocumentAnalysisResult(**data)
+            except Exception as e:
+                logger.warning(f"Gemini document analysis error: {e}")
+
+        # Intelligent deterministic fallback extraction
+        return self._deterministic_document_fallback(file_name, raw_text)
+
+    def _deterministic_document_fallback(self, file_name: str, text: str) -> DocumentAnalysisResult:
+        """Fallback document extractor using pattern matching."""
+        import re
+        lower_text = text.lower()
+        lower_name = file_name.lower()
+
+        # Check for Email / Invitation / Laurel signals
+        is_email = any(k in lower_text or k in lower_name for k in [
+            "dear filmmaker", "congratulations", "official selection", "invitation", "laurel",
+            "submission waiver", "discount code", "award winner", "screening fee", "trophy fee"
+        ])
+
+        if is_email:
+            # Extract festival name
+            fest_match = re.search(r"(?:welcome to|selection at|invited to|selection for)\s+([A-Z][A-Za-z0-9\s]+(?:Festival|Awards|Fest|Cinema))", text)
+            festival_claimed = fest_match.group(1).strip() if fest_match else "Claimed Festival"
+            fee_waiver = "waiver" in lower_text or "free entry" in lower_text or "discount" in lower_text
+            trophy_fee = "trophy" in lower_text or "certificate fee" in lower_text or "vip badge" in lower_text
+
+            red_flags = []
+            if "trophy" in lower_text or "certificate" in lower_text:
+                red_flags.append("Paid physical trophy or certificate required")
+            if "unsolicited" in lower_text or "discovered your film" in lower_text:
+                red_flags.append("Unsolicited bulk outreach pattern")
+            if not fee_waiver and "submit here" in lower_text:
+                red_flags.append("Invitation requiring regular submission fee payment")
+
+            return DocumentAnalysisResult(
+                detectedKind=DocumentAnalysisKind.INVITATION_EMAIL,
+                fileName=file_name,
+                fileSizeBytes=len(text.encode("utf-8")),
+                extractedSummary=f"Invitation or notification email claiming affiliation with {festival_claimed}.",
+                festivalClaimed=festival_claimed,
+                senderDomain="festival-communications.org",
+                feeWaiverOffered=fee_waiver,
+                trophyFeeRequested=trophy_fee,
+                redFlagSignals=red_flags if red_flags else ["Standard festival correspondence template"],
+                recommendedAction="Verify official domain and physical cinema venue before proceeding with any payment."
+            )
+
+        # Otherwise treat as Script / Treatment / Synopsis
+        title_match = re.search(r"^(?:TITLE:|PROJECT:)?\s*([A-Z0-9\s\-:]{3,40})$", text, re.MULTILINE)
+        film_title = title_match.group(1).strip() if title_match else file_name.rsplit(".", 1)[0].replace("-", " ").replace("_", " ").title()
+
+        # Format
+        format_type = FilmFormat.SHORT
+        if any(w in lower_text for w in ["feature film", "feature screenplay", "feature length", "90 pages", "100 pages", "120 pages"]):
+            format_type = FilmFormat.FEATURE
+        elif "documentary" in lower_text:
+            format_type = FilmFormat.DOCUMENTARY
+        elif "animation" in lower_text:
+            format_type = FilmFormat.ANIMATION
+        elif "pilot" in lower_text or "episode" in lower_text:
+            format_type = FilmFormat.EPISODIC
+
+        # Genre
+        genre = "Drama"
+        for g in ["Sci-Fi", "Thriller", "Horror", "Comedy", "Documentary", "Animation", "Romance", "Experimental", "Action"]:
+            if g.lower() in lower_text:
+                genre = g
+                break
+
+        # Runtime
+        runtime = 15 if format_type == FilmFormat.SHORT else 95
+        rt_match = re.search(r"(\d+)\s*(?:min|minute|pages)", lower_text)
+        if rt_match:
+            try:
+                runtime = int(rt_match.group(1))
+            except Exception:
+                pass
+
+        # Logline
+        logline_match = re.search(r"(?:LOGLINE|SYNOPSIS|SUMMARY):\s*(.+?)(?:\n\n|\n[A-Z]+:|$)", text, re.DOTALL | re.IGNORECASE)
+        logline = logline_match.group(1).strip().replace("\n", " ") if logline_match else f"An independent {genre.lower()} {format_type.value.lower()} exploring identity and tension."
+
+        return DocumentAnalysisResult(
+            detectedKind=DocumentAnalysisKind.SCRIPT_TREATMENT,
+            fileName=file_name,
+            fileSizeBytes=len(text.encode("utf-8")),
+            extractedSummary=f"{format_type.value.title()} project titled '{film_title}' ({genre}, {runtime} min).",
+            filmTitle=film_title,
+            format=format_type,
+            genre=genre,
+            runtimeMinutes=runtime,
+            logline=logline[:280],
+            budgetTier="Micro (< £50k)" if format_type == FilmFormat.SHORT else "Low (< £250k)",
+            suggestedPremiereGoal=PremiereGoal.WORLD_PREMIERE,
+            keyThemes=[genre, "Independent Cinema", "Festival Circuit"]
+        )
+
     async def process_chat(self, req: ChatRequest) -> AsyncGenerator[Dict[str, Any], None]:
         """Processes a chat turn, yielding text tokens and tool call events."""
         user_message = req.message
-        if req.attachedFileName and req.attachedFileContent:
+
+        # If a document is attached, perform document extraction
+        doc_result: Optional[DocumentAnalysisResult] = None
+        if req.attachedFileName and (req.attachedFileContent or req.attachedFileBase64):
+            doc_result = await self.analyze_document(DocumentAnalysisRequest(
+                fileName=req.attachedFileName,
+                fileContent=req.attachedFileContent,
+                fileBase64=req.attachedFileBase64,
+                mimeType=req.attachedFileMimeType
+            ))
+
+        if doc_result:
+            if doc_result.detectedKind == DocumentAnalysisKind.INVITATION_EMAIL:
+                user_message += f"\n\n[Extracted Invitation Email Analysis for '{doc_result.fileName}']:\nClaimed Festival: {doc_result.festivalClaimed}\nFee Waiver: {doc_result.feeWaiverOffered}\nRed Flags: {', '.join(doc_result.redFlagSignals)}\nSummary: {doc_result.extractedSummary}"
+            elif doc_result.detectedKind == DocumentAnalysisKind.SCRIPT_TREATMENT:
+                user_message += f"\n\n[Extracted Script Analysis for '{doc_result.fileName}']:\nTitle: {doc_result.filmTitle}\nFormat: {doc_result.format}\nGenre: {doc_result.genre}\nRuntime: {doc_result.runtimeMinutes} min\nLogline: {doc_result.logline}\nSummary: {doc_result.extractedSummary}"
+            else:
+                user_message += f"\n\n[Attached File Summary for '{doc_result.fileName}']:\n{doc_result.extractedSummary}"
+        elif req.attachedFileName and req.attachedFileContent:
             user_message += f"\n\n[Attached File: {req.attachedFileName}]\n{req.attachedFileContent[:2500]}"
 
         # Check intent with rule-based heuristics or Gemini LLM
@@ -173,7 +364,7 @@ class ProducerDeskAgent:
 
         if not self.gemini.client:
             # High-fidelity offline / simulated response with smart tool dispatch
-            async for event in self._generate_fallback_response(user_message):
+            async for event in self._generate_fallback_response(user_message, doc_result):
                 yield event
             return
 
@@ -204,7 +395,7 @@ class ProducerDeskAgent:
                 cleaned_text = " ".join(sentences[:2])
 
             # Check if response contains tool invocation or formulate one
-            tool_call = self._extract_or_infer_tool_call(user_message, response_text)
+            tool_call = self._extract_or_infer_tool_call(user_message, response_text, doc_result)
 
             # Stream response in chunks
             words = cleaned_text.split(" ")
@@ -222,13 +413,41 @@ class ProducerDeskAgent:
 
         except Exception as e:
             logger.warning(f"Gemini API chat fallback triggered: {e}")
-            async for event in self._generate_fallback_response(user_message):
+            async for event in self._generate_fallback_response(user_message, doc_result):
                 yield event
 
-    def _extract_or_infer_tool_call(self, user_msg: str, agent_response: str) -> Optional[ChatToolCall]:
+    def _extract_or_infer_tool_call(self, user_msg: str, agent_response: str, doc_result: Optional[DocumentAnalysisResult] = None) -> Optional[ChatToolCall]:
         """Infers structured tool invocation if the model discusses a specific festival or film slate."""
         import re
         msg_lower = user_msg.lower()
+
+        # If a document was analyzed, prioritize exact extracted document profile
+        if doc_result:
+            if doc_result.detectedKind == DocumentAnalysisKind.INVITATION_EMAIL:
+                return ChatToolCall(
+                    toolName=ToolCallType.ANALYZE_INVITATION_EMAIL,
+                    args=InvitationEmailToolArgs(
+                        festival_claimed=doc_result.festivalClaimed or "Claimed Festival",
+                        sender_domain=doc_result.senderDomain or "festival-communications.org",
+                        fee_waiver_offered=bool(doc_result.feeWaiverOffered),
+                        red_flag_signals=doc_result.redFlagSignals or ["Requires fee before physical venue verification"],
+                        initial_verdict=doc_result.recommendedAction or doc_result.extractedSummary
+                    ).model_dump()
+                )
+            elif doc_result.detectedKind == DocumentAnalysisKind.SCRIPT_TREATMENT:
+                return ChatToolCall(
+                    toolName=ToolCallType.CONFIGURE_OPPORTUNITY_SCOUT,
+                    args=OpportunityScoutToolArgs(
+                        film_title=doc_result.filmTitle or "Untitled Project",
+                        format=doc_result.format or FilmFormat.SHORT,
+                        genre=doc_result.genre or "Drama",
+                        runtime_minutes=doc_result.runtimeMinutes or 15,
+                        premiere_goal=doc_result.suggestedPremiereGoal or PremiereGoal.WORLD_PREMIERE,
+                        budget_tier=doc_result.budgetTier or "Micro (< £50k)",
+                        target_regions=["UK & Europe", "North America"],
+                        strategy_rationale=f"Tailored roadmap generated from '{doc_result.filmTitle}' ({doc_result.genre}, {doc_result.runtimeMinutes} min). Targeting qualifying festivals matching this tone."
+                    ).model_dump()
+                )
 
         # Check for Grant & Funding intent
         if any(w in msg_lower for w in ["grant", "funding", "sponsor", "bfi film fund", "screen scotland", "match funding", "fellowship", "subsidies"]):
@@ -348,11 +567,15 @@ class ProducerDeskAgent:
 
         return None
 
-    async def _generate_fallback_response(self, user_msg: str) -> AsyncGenerator[Dict[str, Any], None]:
+    async def _generate_fallback_response(self, user_msg: str, doc_result: Optional[DocumentAnalysisResult] = None) -> AsyncGenerator[Dict[str, Any], None]:
         """Offline simulation yielding concise, straight-to-the-point intelligence."""
-        tool_call = self._extract_or_infer_tool_call(user_msg, "")
+        tool_call = self._extract_or_infer_tool_call(user_msg, "", doc_result)
 
-        if tool_call and tool_call.toolName == ToolCallType.CONFIGURE_DUE_DILIGENCE:
+        if doc_result and doc_result.detectedKind == DocumentAnalysisKind.INVITATION_EMAIL:
+            text = f"Analyzed email '{doc_result.fileName}'. Claimed festival: **{doc_result.festivalClaimed}**. Verification module prepared below."
+        elif doc_result and doc_result.detectedKind == DocumentAnalysisKind.SCRIPT_TREATMENT:
+            text = f"Parsed '{doc_result.fileName}' ({doc_result.genre} {doc_result.format.value.lower()}, ~{doc_result.runtimeMinutes} min). Opportunity Scout roadmap configured below."
+        elif tool_call and tool_call.toolName == ToolCallType.CONFIGURE_DUE_DILIGENCE:
             fest_name = tool_call.args.get("festival_name", "Target Festival")
             text = f"Initiating due diligence pre-flight for **{fest_name}**. Confirm entity location and your interaction history below to launch."
         elif tool_call and tool_call.toolName == ToolCallType.CONFIGURE_OPPORTUNITY_SCOUT:
