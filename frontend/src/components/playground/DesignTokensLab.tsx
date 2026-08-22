@@ -59,12 +59,13 @@ export const DesignTokensLab: React.FC = () => {
   const [copiedHex, setCopiedHex] = useState<string | null>(null);
   
   // Vector field interactive state
-  const [vfColor, setVfColor] = useState('#FF2A55');
-  const [vfSpeed, setVfSpeed] = useState(0.8);
-  const [vfAmplitude, setVfAmplitude] = useState(0.25);
-  const [vfSpacing, setVfSpacing] = useState(38);
-  const [vfLength, setVfLength] = useState(22);
-  const [vfOpacity, setVfOpacity] = useState(0.65);
+  const [vfColor, setVfColor] = useState('#E11D48');
+  const [vfSpeed, setVfSpeed] = useState(0.6);
+  const [vfAmplitude, setVfAmplitude] = useState(0.24);
+  const [vfSpacing, setVfSpacing] = useState(28);
+  const [vfLength, setVfLength] = useState(7);
+  const [vfOpacity, setVfOpacity] = useState(0.70);
+  const [vfBlobCoverage, setVfBlobCoverage] = useState(0.75);
 
   // Loader interactive state
   const [progressVal, setProgressVal] = useState(68);
@@ -221,13 +222,13 @@ export const DesignTokensLab: React.FC = () => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h3 className="text-xl font-bold text-white flex items-center gap-2">
-              <span>🌊 Animated Droplet Vector Field</span>
+              <span>🧲 Organic Magnetic Vector Field</span>
               <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
-                Interactive Background
+                Interactive Ferrofluid Mask
               </span>
             </h3>
             <p className="text-sm text-slate-400 mt-1">
-              Synchronous harmonic undulation with gradual spatial orientation gradient and real-time mouse repulsion/orientation.
+              Sharp micro-needles aligning to subterranean moving magnetic poles (attractor, vortex, and cursor dipole) masked within an independently morphing 70% organic fluid blob.
             </p>
           </div>
         </div>
@@ -240,12 +241,13 @@ export const DesignTokensLab: React.FC = () => {
             amplitude={vfAmplitude}
             gridSpacing={vfSpacing}
             dropletLength={vfLength}
+            blobCoverage={vfBlobCoverage}
             opacity={vfOpacity}
           />
           <div className="relative z-10 text-center space-y-2 p-6 rounded-2xl bg-[#070913]/85 backdrop-blur-md border border-[#22274C] max-w-md shadow-2xl">
-            <h4 className="font-serif text-lg font-bold text-white">Interactive Vector Flow</h4>
+            <h4 className="font-serif text-lg font-bold text-white">Subterranean Magnet Simulation</h4>
             <p className="text-xs text-slate-300">
-              Move your mouse across this window to observe subtle vector deflection. The underlying wave undulates synchronously across the field.
+              Move your mouse across this area to see the interactive magnetic dipole distort the ferrofluid field lines in real-time.
             </p>
           </div>
         </div>
@@ -254,9 +256,9 @@ export const DesignTokensLab: React.FC = () => {
         <div className="p-6 rounded-3xl bg-[#0E1124] border border-[#22274C] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Color Selector */}
           <div className="space-y-2">
-            <label className="text-xs font-mono text-slate-400 uppercase">Droplet Glow Color</label>
+            <label className="text-xs font-mono text-slate-400 uppercase">Needle Glow Color</label>
             <div className="flex items-center gap-2">
-              {['#FF2A55', '#2018E6', '#00D29E', '#0E86B3', '#A855F7'].map((c) => (
+              {['#E11D48', '#FF2A55', '#2018E6', '#00D29E', '#A855F7'].map((c) => (
                 <button
                   key={c}
                   onClick={() => setVfColor(c)}
@@ -272,7 +274,7 @@ export const DesignTokensLab: React.FC = () => {
           {/* Speed */}
           <div className="space-y-2">
             <div className="flex justify-between text-xs font-mono text-slate-400">
-              <span>Oscillation Speed</span>
+              <span>Magnet Transit Speed</span>
               <span>{vfSpeed.toFixed(1)}x</span>
             </div>
             <input
@@ -303,16 +305,33 @@ export const DesignTokensLab: React.FC = () => {
             />
           </div>
 
+          {/* Blob Coverage */}
+          <div className="space-y-2">
+            <div className="flex justify-between text-xs font-mono text-slate-400">
+              <span>Organic Blob Span</span>
+              <span>{(vfBlobCoverage * 100).toFixed(0)}%</span>
+            </div>
+            <input
+              type="range"
+              min={0.3}
+              max={1.0}
+              step={0.05}
+              value={vfBlobCoverage}
+              onChange={(e) => setVfBlobCoverage(parseFloat(e.target.value))}
+              className="w-full accent-rose-500 cursor-pointer"
+            />
+          </div>
+
           {/* Grid Spacing */}
           <div className="space-y-2">
             <div className="flex justify-between text-xs font-mono text-slate-400">
-              <span>Grid Density</span>
+              <span>Grid Density (Sharp)</span>
               <span>{vfSpacing}px</span>
             </div>
             <input
               type="range"
-              min={24}
-              max={60}
+              min={20}
+              max={50}
               step={2}
               value={vfSpacing}
               onChange={(e) => setVfSpacing(parseInt(e.target.value))}
@@ -323,14 +342,14 @@ export const DesignTokensLab: React.FC = () => {
           {/* Needle Length */}
           <div className="space-y-2">
             <div className="flex justify-between text-xs font-mono text-slate-400">
-              <span>Droplet Length</span>
+              <span>Needle Length (Micro)</span>
               <span>{vfLength}px</span>
             </div>
             <input
               type="range"
-              min={10}
-              max={44}
-              step={2}
+              min={4}
+              max={24}
+              step={1}
               value={vfLength}
               onChange={(e) => setVfLength(parseInt(e.target.value))}
               className="w-full accent-rose-500 cursor-pointer"

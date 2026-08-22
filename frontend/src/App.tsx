@@ -30,6 +30,7 @@ import { ChatContainer } from './components/chat/ChatContainer';
 import { DesignPlayground } from './components/playground/DesignPlayground';
 import { WhyScreened } from './components/WhyScreened';
 import { CommandPalette } from './components/CommandPalette';
+import { VectorFieldBackground } from './components/animations/VectorFieldBackground';
 import { isSoundMuted, setSoundMuted, playSuccessChime } from './utils/audio';
 
 
@@ -401,7 +402,19 @@ export default function App() {
   const currentStatus = investigation?.status || 'DRAFT';
 
   return (
-    <div className="min-h-screen flex flex-row bg-paper-bg dark:bg-darkroom-bg text-paper-text dark:text-darkroom-text selection:bg-indigo-500/20 antialiased">
+    <div className="relative min-h-screen flex flex-row bg-paper-bg dark:bg-darkroom-bg text-paper-text dark:text-darkroom-text selection:bg-indigo-500/20 antialiased overflow-x-hidden">
+      {/* Global Organic Morphing Magnetic Vector Field Background (~70% Screen Blob) */}
+      <VectorFieldBackground
+        color="#E11D48"
+        speed={0.55}
+        amplitude={0.24}
+        gridSpacing={28}
+        dropletLength={7}
+        blobCoverage={0.72}
+        opacity={0.26}
+        className="fixed inset-0 pointer-events-none z-0"
+      />
+
       {/* Left Vertical Navigation Rail & Expandable Flyout */}
       <LeftNavigation
         activeTool={activeTool}

@@ -4,7 +4,6 @@ import { FilmProfile } from '../../types/investigation';
 import { ChatBubble } from './ChatBubble';
 import { ChatPromptBar } from './ChatPromptBar';
 import { AgentThinkingPill } from './AgentThinkingPill';
-import { VectorFieldBackground } from '../animations/VectorFieldBackground';
 import { CapabilitiesModal } from '../modals/CapabilitiesModal';
 import { soundEffects } from '../../utils/audio';
 import { TextLink } from '../ui/TextLink';
@@ -188,16 +187,6 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
 
   return (
     <div className="relative flex flex-col h-[calc(100vh-5.5rem)] max-w-5xl mx-auto px-4 py-2 overflow-hidden">
-      {/* Animated Subtle Droplet Vector Field Background */}
-      <VectorFieldBackground
-        color="#E11D48"
-        speed={0.45}
-        amplitude={0.16}
-        gridSpacing={34}
-        dropletLength={9}
-        opacity={0.18}
-      />
-
       {/* Hero Header Area with Dirty Film Celluloid Glitch, Spacing & What Does It Do Link */}
       <div className="relative z-10 flex flex-col items-center justify-center my-5 sm:my-7 py-2 text-center select-none">
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white font-serif mb-3 transition-all flex flex-wrap items-center justify-center gap-x-3 sm:gap-x-4">
