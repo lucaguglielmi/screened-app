@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   Sparkles, 
-
   ShieldCheck, 
   Compass, 
   Palette, 
@@ -12,9 +11,8 @@ import {
   VolumeX, 
   Keyboard, 
   GripVertical, 
-  ChevronsUpDown,
-  Check,
-  Scale,
+  Check, 
+  Scale, 
   Command
 } from 'lucide-react';
 import { ActiveTool } from '../../types/investigation';
@@ -83,10 +81,9 @@ export const LeftNavigation: React.FC<Props> = ({
   };
 
   return (
-    <aside className="relative hidden md:flex flex-col items-center justify-between w-16 sm:w-20 min-h-screen py-4 sm:py-6 bg-[#070913] border-r border-[#1B2040] select-none z-40 shrink-0 text-slate-300">
-      {/* Top Section: Logo & Workspace Selector */}
+    <aside className="sticky top-0 h-screen hidden md:flex flex-col items-center justify-between w-16 sm:w-20 py-5 sm:py-6 bg-[#070913] border-r border-[#1B2040] select-none z-40 shrink-0 text-slate-300">
+      {/* Top Section: App Logo */}
       <div className="flex flex-col items-center gap-4 w-full">
-        {/* App Logo */}
         <button
           onClick={() => handleSelectTool('CONVERSATIONAL_DESK')}
           className="relative group p-2.5 rounded-2xl bg-gradient-to-b from-[#2018E6]/25 to-[#1E124A]/20 border border-[#2018E6]/40 hover:border-[#2018E6]/80 shadow-lg shadow-[#2018E6]/20 transition-all cursor-pointer"
@@ -97,27 +94,11 @@ export const LeftNavigation: React.FC<Props> = ({
           </div>
           <span className="sr-only">Screened</span>
         </button>
-
-        {/* Workspace Quick Switcher Trigger */}
-        <button
-          onClick={() => {
-            soundEffects.playClick();
-            setIsProductMenuOpen(!isProductMenuOpen);
-          }}
-          className={`p-2 rounded-xl border transition-all cursor-pointer ${
-            isProductMenuOpen
-              ? 'bg-[#151936] border-[#2018E6]/60 text-indigo-300'
-              : 'bg-[#0E122B] border-[#1F254E] hover:border-[#2D3670] text-slate-400 hover:text-slate-200'
-          }`}
-          title="Switch Product Workspace"
-        >
-          <ChevronsUpDown className="size-4" />
-        </button>
       </div>
 
-      {/* Center Section: Navigation Rail Icons */}
-      <div className="flex flex-col items-center gap-3 w-full my-auto">
-        {/* 1. Mission Control (Central Autonomous AI Command Desk - Royal Blue) */}
+      {/* Center Section: Navigation Rail Icons (Only First and Last Icon Stacked) */}
+      <div className="flex flex-col items-center gap-3.5 w-full my-auto">
+        {/* 1. First Icon: Mission Control (Sparkles - Royal Blue) */}
         <div className="relative">
           <button
             onClick={() => handleSelectTool('CONVERSATIONAL_DESK')}
@@ -125,9 +106,10 @@ export const LeftNavigation: React.FC<Props> = ({
             onMouseLeave={() => setActiveTooltip(null)}
             className={`relative p-3 rounded-2xl transition-all cursor-pointer ${
               activeTool === 'CONVERSATIONAL_DESK'
-                ? 'bg-[#2018E6] text-white shadow-lg shadow-[#2018E6]/40'
+                ? 'bg-[#2018E6] text-white shadow-lg shadow-[#2018E6]/40 ring-1 ring-indigo-400/40'
                 : 'hover:bg-[#121633] text-slate-400 hover:text-slate-100'
             }`}
+            title="Mission Control"
           >
             <Sparkles className="size-5" />
             {activeTool === 'CONVERSATIONAL_DESK' && (
@@ -141,73 +123,7 @@ export const LeftNavigation: React.FC<Props> = ({
           )}
         </div>
 
-        {/* 2. Due Diligence Workspace (Mint / Emerald Teal - #00D29E) */}
-        <div className="relative">
-          <button
-            onClick={() => handleSelectTool('DUE_DILIGENCE')}
-            onMouseEnter={() => setActiveTooltip('Due Diligence')}
-            onMouseLeave={() => setActiveTooltip(null)}
-            className={`relative p-3 rounded-2xl transition-all cursor-pointer ${
-              activeTool === 'DUE_DILIGENCE'
-                ? 'bg-[#00D29E] text-slate-950 shadow-lg shadow-[#00D29E]/30 font-bold'
-                : 'hover:bg-[#121633] text-slate-400 hover:text-[#00D29E]'
-            }`}
-          >
-            <ShieldCheck className="size-5" />
-          </button>
-          {activeTooltip === 'Due Diligence' && (
-            <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-[#0E1124] text-[#00D29E] text-sm font-medium whitespace-nowrap shadow-xl border border-[#00D29E]/30 z-50 pointer-events-none">
-              Due Diligence
-            </div>
-          )}
-        </div>
-
-        {/* 3. Opportunity Scout Workspace (Coral Rose - #F43F5E) */}
-        <div className="relative">
-          <button
-            onClick={() => handleSelectTool('OPPORTUNITY_SCOUT')}
-            onMouseEnter={() => setActiveTooltip('Opportunity Scout')}
-            onMouseLeave={() => setActiveTooltip(null)}
-            className={`relative p-3 rounded-2xl transition-all cursor-pointer ${
-              activeTool === 'OPPORTUNITY_SCOUT'
-                ? 'bg-[#F43F5E] text-white shadow-lg shadow-[#F43F5E]/30'
-                : 'hover:bg-[#121633] text-slate-400 hover:text-[#F43F5E]'
-            }`}
-          >
-            <Compass className="size-5" />
-          </button>
-          {activeTooltip === 'Opportunity Scout' && (
-            <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-[#0E1124] text-[#F43F5E] text-sm font-medium whitespace-nowrap shadow-xl border border-[#F43F5E]/30 z-50 pointer-events-none">
-              Opportunity Scout
-            </div>
-          )}
-        </div>
-
-        {/* 4. Why Screened (Impact & Research) */}
-        <div className="relative">
-          <button
-            onClick={() => handleSelectTool('WHY_SCREENED')}
-            onMouseEnter={() => setActiveTooltip('Why Screened')}
-            onMouseLeave={() => setActiveTooltip(null)}
-            className={`relative p-3 rounded-2xl transition-all cursor-pointer ${
-              activeTool === 'WHY_SCREENED'
-                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
-                : 'hover:bg-[#121633] text-slate-400 hover:text-indigo-300'
-            }`}
-          >
-            <Scale className="size-5" />
-          </button>
-          {activeTooltip === 'Why Screened' && (
-            <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-[#0E1124] text-indigo-300 text-sm font-medium whitespace-nowrap shadow-xl border border-indigo-500/30 z-50 pointer-events-none">
-              Why Screened Exists
-            </div>
-          )}
-        </div>
-
-        {/* Separator Line */}
-        <div className="w-8 h-px bg-[#1D234A] my-1" />
-
-        {/* 5. Products & Workspaces Flyout Trigger */}
+        {/* 2. Last Icon: Products & Workspaces Flyout Trigger (Layers) */}
         <div className="relative">
           <button
             ref={triggerRef}
@@ -218,17 +134,18 @@ export const LeftNavigation: React.FC<Props> = ({
             onMouseEnter={() => setActiveTooltip('Products')}
             onMouseLeave={() => setActiveTooltip(null)}
             className={`relative p-3 rounded-2xl transition-all cursor-pointer ${
-              isProductMenuOpen
-                ? 'bg-[#181D40] text-white border border-[#2018E6]/60 shadow-md'
+              isProductMenuOpen || activeTool !== 'CONVERSATIONAL_DESK'
+                ? 'bg-[#181D40] text-indigo-300 border border-[#2018E6]/60 shadow-md ring-1 ring-[#2018E6]/40'
                 : 'hover:bg-[#121633] text-slate-400 hover:text-slate-100'
             }`}
+            title="Products & Workspaces"
           >
             <Layers className="size-5" />
-            <span className="absolute top-2 right-2 size-2 rounded-full bg-[#00D29E] ring-2 ring-[#070913]" />
+            <span className="absolute -right-0.5 -top-0.5 size-2.5 rounded-full bg-[#00D29E] ring-2 ring-[#070913]" />
           </button>
           {activeTooltip === 'Products' && !isProductMenuOpen && (
             <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-[#0E1124] text-slate-100 text-sm font-medium whitespace-nowrap shadow-xl border border-[#22274C] z-50 pointer-events-none">
-              Product Switcher
+              Products & Workspaces
             </div>
           )}
         </div>
