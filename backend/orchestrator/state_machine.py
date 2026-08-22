@@ -155,6 +155,34 @@ class Orchestrator:
 
         return inv_data
 
+    async def resume_investigation(self, investigation_id: str) -> Dict[str, Any]:
+        """Resume a failed or interrupted investigation from the last checkpoint."""
+        inv_data = await db.get_investigation(investigation_id)
+        if not inv_data:
+            raise ValueError(f"Investigation {investigation_id} not found")
+
+        status = inv_data.get("status")
+        if status == InvestigationStatus.READY.value:
+            raise ValueError("Investigation is already completed")
+
+        await broadcaster.emit(
+            investigation_id=investigation_id,
+            event_type=EventType.INVESTIGATION_STARTED,
+            agent_name="Orchestrator",
+            message=f"Resuming investigation from status: {status}",
+        )
+
+        if inv_data.get("confirmedEntity"):
+            entity = CandidateEntity(**inv_data["confirmedEntity"])
+            intent = inv_data.get("intent", "Vet before submitting")
+            asyncio.create_task(self._execute_full_research_pipeline(investigation_id, entity, intent))
+        else:
+            query = inv_data.get("query", "")
+            optional_url = inv_data.get("optionalUrl")
+            asyncio.create_task(self._run_disambiguation(investigation_id, query, optional_url))
+
+        return inv_data
+
     async def _execute_full_research_pipeline(
         self,
         investigation_id: str,

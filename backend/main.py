@@ -132,6 +132,19 @@ async def get_investigation(investigation_id: str):
     return inv
 
 
+@app.post("/api/investigations/{investigation_id}/resume")
+async def resume_investigation(investigation_id: str):
+    """Resume a failed or interrupted investigation."""
+    try:
+        inv = await orchestrator.resume_investigation(investigation_id)
+        return inv
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"Failed to resume investigation: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @app.post("/api/investigations/{investigation_id}/confirm-entity")
 async def confirm_entity(investigation_id: str, req: ConfirmEntityRequest):
     """Confirm disambiguated entity and launch parallel 3-domain research core."""
