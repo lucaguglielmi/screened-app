@@ -22,7 +22,7 @@ import {
 
 export const DesignPlayground: React.FC = () => {
   const [activeSection, setActiveSection] = useState<'TOKENS' | 'TRACES' | 'ARCHITECTURE' | 'ALL' | 'BUBBLES' | 'LOADERS' | 'TOOLS' | 'PROMPTS'>('TOOLS');
-  const [activeToolSubtab, setActiveToolSubtab] = useState<'FESTIVAL' | 'GRANT' | 'INVITATION' | 'SCOUT' | 'COMPARE' | 'VETTING'>('FESTIVAL');
+  const [activeToolSubtab, setActiveToolSubtab] = useState<'FESTIVAL' | 'GRANT' | 'INVITATION' | 'SCOUT' | 'COMPARE' | 'VETTING' | 'PROBES'>('FESTIVAL');
 
   const [streamSimText, setStreamSimText] = useState<string>(
     'I have conducted an initial background check on the festival. Screening records indicate physical cinema leases at Curzon Soho.'
@@ -203,6 +203,14 @@ export const DesignPlayground: React.FC = () => {
               >
                 6. 360° Forensic Matrix (Spec 14)
               </button>
+              <button
+                onClick={() => { soundEffects.playClick(); setActiveToolSubtab('PROBES'); }}
+                className={`px-2.5 py-1 rounded-lg text-xs font-mono transition-colors ${
+                  activeToolSubtab === 'PROBES' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40' : 'text-zinc-400 hover:text-white'
+                }`}
+              >
+                7. Follow-Up Probes & Intake
+              </button>
             </div>
           </div>
 
@@ -309,6 +317,41 @@ export const DesignPlayground: React.FC = () => {
                   Tool: DeepVettingMatrix.tsx (360° Forensic Audit with 7 Dimension Vectors)
                 </span>
                 <DeepVettingMatrix festivalName="Raindance Film Festival" />
+              </div>
+            )}
+
+            {activeToolSubtab === 'PROBES' && (
+              <div className="w-full max-w-2xl space-y-4">
+                <span className="text-[11px] font-mono text-amber-400 uppercase tracking-wider block">
+                  Feature: Interactive Multi-Step Follow-Up Probes & Document Intake (Branch A + B)
+                </span>
+                <div className="p-4 rounded-xl bg-[#141838]/90 border border-[#252C5E] space-y-3">
+                  <div className="flex items-center gap-2 text-xs font-semibold text-indigo-300">
+                    <span className="text-amber-400 text-sm">✦</span>
+                    <span>Interactive Follow-Up Probes (1-Click Filmmaker Action Chips)</span>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      { id: '1', label: 'Check sender domain WHOIS', promptText: 'Check sender domain', badge: 'Domain Forensics' },
+                      { id: '2', label: 'Verify physical cinema lease', promptText: 'Verify physical cinema', badge: 'Venue Corroboration' },
+                      { id: '3', label: 'Scrutinize trophy & award fees', promptText: 'Scrutinize trophy fees', badge: 'Fee Transparency' },
+                      { id: '4', label: 'Filter BAFTA / Oscar qualifiers', promptText: 'Filter BAFTA qualifiers', badge: 'Accreditation' },
+                    ].map((opt) => (
+                      <button
+                        key={opt.id}
+                        type="button"
+                        onClick={() => { soundEffects.playClick(); addLog(`[Probe Click] Prompt: "${opt.promptText}" (${opt.badge})`); }}
+                        className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1D2352] hover:bg-[#2018E6] border border-[#2E387A] hover:border-[#4B58C9] text-xs font-medium text-slate-200 hover:text-white transition-all shadow-sm cursor-pointer"
+                      >
+                        <span className="px-1.5 py-0.5 rounded bg-indigo-500/20 group-hover:bg-white/20 text-[10px] font-mono text-indigo-300 group-hover:text-white">
+                          {opt.badge}
+                        </span>
+                        <span>{opt.label}</span>
+                        <span className="text-slate-400 group-hover:text-white font-mono text-xs">→</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
           </div>
