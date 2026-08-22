@@ -14,7 +14,8 @@ import {
   Search, 
   Scale, 
   Keyboard,
-  Check
+  Check,
+  ExternalLink
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ActiveTool } from '../../types/investigation';
@@ -77,7 +78,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
   const drawerContent = (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[9999] md:hidden">
+        <div className="fixed inset-0 z-[99999] md:hidden">
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -138,10 +139,10 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                 </button>
               </div>
 
-              {/* Workspace Navigation Cards */}
-              <div className="mt-6 space-y-3">
+              {/* Primary Workspace Navigation Cards */}
+              <div className="mt-6 space-y-2.5">
                 <span className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-400 px-1">
-                  Workspaces
+                  Primary Workspaces
                 </span>
 
                 {/* 1. The Desk */}
@@ -162,7 +163,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                       <h4 className="text-base font-bold text-white">The Producer Desk</h4>
                       {activeTool === 'CONVERSATIONAL_DESK' && <Check className="size-4 text-indigo-400" />}
                     </div>
-                    <p className="text-sm text-slate-400 line-clamp-1">Conversational AI Executive</p>
+                    <p className="text-xs text-slate-400 line-clamp-1">Conversational AI Executive</p>
                   </div>
                 </button>
 
@@ -184,7 +185,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                       <h4 className="text-base font-bold text-white">Due Diligence</h4>
                       {activeTool === 'DUE_DILIGENCE' && <Check className="size-4 text-[#00D29E]" />}
                     </div>
-                    <p className="text-sm text-slate-400 line-clamp-1">Festival Dossier & Fact Vetting</p>
+                    <p className="text-xs text-slate-400 line-clamp-1">Festival Dossier & Fact Vetting</p>
                   </div>
                 </button>
 
@@ -206,82 +207,84 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                       <h4 className="text-base font-bold text-white">Opportunity Scout</h4>
                       {activeTool === 'OPPORTUNITY_SCOUT' && <Check className="size-4 text-[#F43F5E]" />}
                     </div>
-                    <p className="text-sm text-slate-400 line-clamp-1">Slate Strategy & Circuit Match</p>
+                    <p className="text-xs text-slate-400 line-clamp-1">Slate Strategy & Circuit Match</p>
                   </div>
                 </button>
+              </div>
 
-                {/* 4. Why Screened Exists */}
+              {/* Subtle Secondary Links (Why Screened & Design Playground) */}
+              <div className="mt-6 pt-4 border-t border-zinc-800/80 space-y-2">
+                <span className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-500 px-1 block">
+                  Reference & Design
+                </span>
+
                 <button
                   type="button"
                   onClick={() => handleSelect('WHY_SCREENED')}
-                  className={`w-full p-3.5 rounded-2xl flex items-center gap-3.5 transition-all text-left cursor-pointer ${
+                  className={`w-full px-3 py-2 rounded-xl flex items-center justify-between text-xs font-medium transition-colors ${
                     activeTool === 'WHY_SCREENED'
-                      ? 'bg-[#151936] border border-indigo-500/80 text-white shadow-lg'
-                      : 'bg-[#0E1124] hover:bg-[#141838] border border-[#1F254E] text-slate-300'
+                      ? 'text-indigo-400 bg-indigo-500/10 font-semibold'
+                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
                   }`}
                 >
-                  <div className="size-10 rounded-xl bg-[#2018E6]/20 text-indigo-400 flex items-center justify-center border border-[#2018E6]/40 shrink-0">
-                    <Scale className="size-5" />
+                  <div className="flex items-center space-x-2">
+                    <Scale className="w-4 h-4 text-zinc-500" />
+                    <span>Why Screened (Problem & Empirical Matrix)</span>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-base font-bold text-white">Why Screened</h4>
-                      {activeTool === 'WHY_SCREENED' && <Check className="size-4 text-indigo-400" />}
-                    </div>
-                    <p className="text-sm text-slate-400 line-clamp-1">Problem Validation & Impact</p>
-                  </div>
+                  <ExternalLink className="w-3.5 h-3.5 opacity-60" />
                 </button>
 
-                {/* 5. Design Tokens & Playground */}
                 <button
                   type="button"
                   onClick={() => handleSelect('DESIGN_PLAYGROUND')}
-                  className={`w-full p-3.5 rounded-2xl flex items-center gap-3.5 transition-all text-left cursor-pointer ${
+                  className={`w-full px-3 py-2 rounded-xl flex items-center justify-between text-xs font-medium transition-colors ${
                     activeTool === 'DESIGN_PLAYGROUND'
-                      ? 'bg-[#151936] border border-purple-500/80 text-white shadow-lg'
-                      : 'bg-[#0E1124] hover:bg-[#141838] border border-[#1F254E] text-slate-300'
+                      ? 'text-purple-400 bg-purple-500/10 font-semibold'
+                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
                   }`}
                 >
-                  <div className="size-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center border border-purple-500/40 shrink-0">
-                    <Palette className="size-5" />
+                  <div className="flex items-center space-x-2">
+                    <Palette className="w-4 h-4 text-zinc-500" />
+                    <span>Design Playground & Tracing Lab</span>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-base font-bold text-white">Design Lab & Traces</h4>
-                      {activeTool === 'DESIGN_PLAYGROUND' && <Check className="size-4 text-purple-400" />}
-                    </div>
-                    <p className="text-sm text-slate-400 line-clamp-1">Tokens, Loaders & OTel Traces</p>
-                  </div>
+                  <ExternalLink className="w-3.5 h-3.5 opacity-60" />
                 </button>
               </div>
             </div>
 
-            {/* Bottom Utilities row */}
-            <div className="pt-6 mt-6 border-t border-[#1B2042] flex items-center justify-between gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  soundEffects.playClick();
-                  onToggleTheme();
-                }}
-                className="flex-1 py-2.5 px-3 rounded-xl bg-[#0E1124] hover:bg-[#151936] border border-[#22274C] flex items-center justify-center gap-2 text-sm text-slate-300 transition-colors cursor-pointer"
-              >
-                {theme === 'dark' ? <Sun className="size-4 text-amber-400" /> : <Moon className="size-4 text-indigo-400" />}
-                <span>{theme === 'dark' ? 'Light' : 'Dark'}</span>
-              </button>
+            {/* Bottom Utilities Row (Theme & Sound as Icons) */}
+            <div className="pt-4 mt-6 border-t border-[#1B2042] flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                {/* Theme Icon Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundEffects.playClick();
+                    onToggleTheme();
+                  }}
+                  className="p-2.5 rounded-xl bg-[#0E1124] hover:bg-[#151936] border border-[#22274C] text-slate-300 hover:text-white transition-colors cursor-pointer"
+                  title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+                  aria-label="Toggle theme"
+                >
+                  {theme === 'dark' ? <Sun className="size-4 text-amber-400" /> : <Moon className="size-4 text-indigo-400" />}
+                </button>
 
-              <button
-                type="button"
-                onClick={() => {
-                  soundEffects.playClick();
-                  onToggleSound();
-                }}
-                className="flex-1 py-2.5 px-3 rounded-xl bg-[#0E1124] hover:bg-[#151936] border border-[#22274C] flex items-center justify-center gap-2 text-sm text-slate-300 transition-colors cursor-pointer"
-              >
-                {soundMuted ? <VolumeX className="size-4 text-rose-400" /> : <Volume2 className="size-4 text-indigo-400" />}
-                <span>{soundMuted ? 'Muted' : 'Sound On'}</span>
-              </button>
+                {/* Sound Icon Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundEffects.playClick();
+                    onToggleSound();
+                  }}
+                  className="p-2.5 rounded-xl bg-[#0E1124] hover:bg-[#151936] border border-[#22274C] text-slate-300 hover:text-white transition-colors cursor-pointer"
+                  title={soundMuted ? 'Unmute Sound Effects' : 'Mute Sound Effects'}
+                  aria-label="Toggle sound"
+                >
+                  {soundMuted ? <VolumeX className="size-4 text-rose-400" /> : <Volume2 className="size-4 text-indigo-400" />}
+                </button>
+              </div>
 
+              {/* Keyboard Shortcuts Icon Button */}
               <button
                 type="button"
                 onClick={() => {
@@ -289,7 +292,8 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                   onOpenKeyboardHelp();
                 }}
                 className="p-2.5 rounded-xl bg-[#0E1124] hover:bg-[#151936] border border-[#22274C] text-slate-300 hover:text-white transition-colors cursor-pointer"
-                title="Keyboard Shortcuts"
+                title="Keyboard Shortcuts (?)"
+                aria-label="Keyboard Shortcuts"
               >
                 <Keyboard className="size-4 text-indigo-400" />
               </button>

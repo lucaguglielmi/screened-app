@@ -228,12 +228,16 @@ class ToolCallType(str, Enum):
     CONFIGURE_DUE_DILIGENCE = "configure_due_diligence"
     CONFIGURE_OPPORTUNITY_SCOUT = "configure_opportunity_scout"
     COMPARE_FESTIVALS_ARENA = "compare_festivals_arena"
+    CONFIGURE_GRANT_SCOUT = "configure_grant_scout"
+    ANALYZE_INVITATION_EMAIL = "analyze_invitation_email"
 
 
 class DueDiligenceToolArgs(BaseModel):
     festival_name: str
     optional_url: Optional[str] = None
+    city_country: Optional[str] = None
     suspected_concerns: List[str] = Field(default_factory=list)
+    user_context: List[str] = Field(default_factory=list)
     preflight_summary: str
 
 
@@ -253,6 +257,25 @@ class CompareFestivalsToolArgs(BaseModel):
     festival_b: str
     key_comparison_vectors: List[str] = Field(default_factory=list)
     verdict_summary: str
+
+
+class GrantScoutToolArgs(BaseModel):
+    project_title: str = "Untitled Project"
+    grant_category: str = "DEVELOPMENT_AND_PRODUCTION"
+    target_amount: str = "£25,000"
+    production_stage: str = "Production"
+    filmmaker_region: str = "UK & Europe"
+    recommended_grants: List[str] = Field(default_factory=lambda: ["BFI Filmmaking Fund", "Screen Scotland", "Sundance Doc Fund"])
+    grant_strategy_summary: str
+
+
+class InvitationEmailToolArgs(BaseModel):
+    festival_claimed: str
+    sender_domain: str
+    fee_waiver_offered: bool = False
+    upfront_payment_requested: Optional[str] = None
+    red_flag_signals: List[str] = Field(default_factory=list)
+    initial_verdict: str
 
 
 class ChatToolCall(BaseModel):

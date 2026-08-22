@@ -16,16 +16,14 @@ from backend.services.gemini_client import GeminiClient
 logger = logging.getLogger("screened.agents.producer_desk")
 
 
-PRODUCER_DESK_SYSTEM_PROMPT = """You are the Screened Producer & Chief Intelligence Executive — an expert cinema festival strategist, former indie film producer, and due-diligence investigator.
+PRODUCER_DESK_SYSTEM_PROMPT = """You are Screened — an autonomous cinema due diligence and intelligence engine.
 
-Your role:
-1. Advise filmmakers, producers, and festival participants with sharp, protective, realistic, and highly encouraging industry intelligence.
-2. If the user mentions a specific festival they want to vet, investigate, or check legitimacy/scam warnings (e.g. "Is Aldergate Film Festival legit?", "Check Raindance fees", "Tell me about Sundance"), explain what our due diligence pipeline can verify (venues, fees, organizer background, community reviews).
-3. If the user asks for festival recommendations, submission strategies, or has a film they want to submit (e.g. "I have a 15-min sci-fi short looking for a UK premiere", "Where should I submit on a £200 budget?"), outline strategic steps (early bird deadlines, premiere protection, qualification circuits).
-4. If the user wants to compare two festivals (e.g. "Should I submit to Sundance or Tribeca?", "Raindance vs Leeds"), provide a sharp, comparative analysis highlighting prestige, audience, and qualification perks.
-5. If the user attaches an acceptance letter, script synopsis, or invoice, evaluate the document with executive rigor.
-6. Provide concise, high-value, cinematic prose directly in your message. Always format lists cleanly with markdown.
-IMPORTANT: Write your advice in clean, natural prose. Do NOT output Python code snippets, JSON function calls, or internal API code in your conversational response.
+Your tone of voice MUST be:
+- Straight to the point, authoritative, and concise.
+- Short messages (1-3 sentences maximum).
+- Never use fluff, conversational filler, or verbose preambles.
+- Directly address the user's intent (festival due diligence, grant/funding intake, invitation email verification, or film strategy).
+- Always pair your response with the appropriate diagnostic tool call when applicable.
 """
 
 
@@ -44,10 +42,19 @@ TOOL_DECLARATIONS = [
                     "type": "STRING",
                     "description": "Official website or submission portal URL if mentioned."
                 },
+                "city_country": {
+                    "type": "STRING",
+                    "description": "City or country of the festival if specified."
+                },
                 "suspected_concerns": {
                     "type": "ARRAY",
                     "items": {"type": "STRING"},
                     "description": "Specific areas to scrutinize: ['VENUE_LEGITIMACY', 'FEE_TRANSPARENCY', 'PREDATORY_AWARDS', 'ORGANIZER_TRACK_RECORD']."
+                },
+                "user_context": {
+                    "type": "ARRAY",
+                    "items": {"type": "STRING"},
+                    "description": "User background facts: ['INVITED', 'RECEIVED_EMAIL', 'TALKED_TO_ORGANIZER', 'ALREADY_PAID']."
                 },
                 "preflight_summary": {
                     "type": "STRING",
@@ -115,6 +122,36 @@ TOOL_DECLARATIONS = [
             },
             "required": ["festival_a", "festival_b", "verdict_summary"]
         }
+    },
+    {
+        "name": "configure_grant_scout",
+        "description": "Configures public grant and film funding match search for a project.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "project_title": { "type": "STRING" },
+                "grant_category": { "type": "STRING" },
+                "target_amount": { "type": "STRING" },
+                "production_stage": { "type": "STRING" },
+                "filmmaker_region": { "type": "STRING" },
+                "grant_strategy_summary": { "type": "STRING" }
+            },
+            "required": ["project_title", "grant_strategy_summary"]
+        }
+    },
+    {
+        "name": "analyze_invitation_email",
+        "description": "Analyzes an unsolicited festival invitation or laurel email for predatory signals.",
+        "parameters": {
+            "type": "OBJECT",
+            "properties": {
+                "festival_claimed": { "type": "STRING" },
+                "sender_domain": { "type": "STRING" },
+                "fee_waiver_offered": { "type": "BOOLEAN" },
+                "initial_verdict": { "type": "STRING" }
+            },
+            "required": ["festival_claimed", "initial_verdict"]
+        }
     }
 ]
 
@@ -132,7 +169,7 @@ class ProducerDeskAgent:
             user_message += f"\n\n[Attached File: {req.attachedFileName}]\n{req.attachedFileContent[:2500]}"
 
         # Check intent with rule-based heuristics or Gemini LLM
-        prompt = f"{PRODUCER_DESK_SYSTEM_PROMPT}\n\nUser Message: {user_message}\n\nRespond to the filmmaker and invoke the appropriate tool if applicable."
+        prompt = f"{PRODUCER_DESK_SYSTEM_PROMPT}\n\nUser Message: {user_message}\n\nProvide a concise 1-2 sentence response and specify the tool parameters."
 
         if not self.gemini.client:
             # High-fidelity offline / simulated response with smart tool dispatch
@@ -147,7 +184,6 @@ class ProducerDeskAgent:
                 contents=prompt,
             )
 
-
             response_text = response.text if hasattr(response, "text") and response.text else str(response)
 
             # Scrub any raw Python/JSON code blocks if Gemini accidentally included them
@@ -161,6 +197,11 @@ class ProducerDeskAgent:
 
             if not cleaned_text:
                 cleaned_text = response_text
+
+            # Enforce conciseness: keep first 2 sentences if response is overly long
+            sentences = [s.strip() for s in re.split(r'(?<=[.!?])\s+', cleaned_text) if s.strip()]
+            if len(sentences) > 3:
+                cleaned_text = " ".join(sentences[:2])
 
             # Check if response contains tool invocation or formulate one
             tool_call = self._extract_or_infer_tool_call(user_message, response_text)
@@ -189,7 +230,35 @@ class ProducerDeskAgent:
         import re
         msg_lower = user_msg.lower()
 
-        # Check for Comparison
+        # Check for Grant & Funding intent
+        if any(w in msg_lower for w in ["grant", "funding", "sponsor", "bfi film fund", "screen scotland", "match funding", "fellowship", "subsidies"]):
+            return ChatToolCall(
+                toolName=ToolCallType.CONFIGURE_GRANT_SCOUT,
+                args=GrantScoutToolArgs(
+                    project_title="Independent Production",
+                    grant_category="DEVELOPMENT_AND_PRODUCTION",
+                    target_amount="£25,000",
+                    production_stage="Production",
+                    filmmaker_region="UK & Europe",
+                    recommended_grants=["BFI Filmmaking Fund", "Screen Scotland", "Sundance Doc Fund"],
+                    grant_strategy_summary="Target institutional public funding and regional film agency grants matching your production stage."
+                ).model_dump()
+            )
+
+        # Check for Email / Invitation analysis intent
+        if any(w in msg_lower for w in ["email", "invitation", "invited", "laurel", "waiver offer", "selected", "letter", "acceptance"]):
+            return ChatToolCall(
+                toolName=ToolCallType.ANALYZE_INVITATION_EMAIL,
+                args=InvitationEmailToolArgs(
+                    festival_claimed="Festival Organizers",
+                    sender_domain="festival-submissions.com",
+                    fee_waiver_offered="waiver" in msg_lower or "discount" in msg_lower,
+                    red_flag_signals=["Unsolicited bulk invitation", "High paid award upgrade cost"],
+                    initial_verdict="Verify whether this invitation originated from an official domain before submitting or paying fees."
+                ).model_dump()
+            )
+
+        # Check for Comparison intent
         if " vs " in msg_lower or " vs. " in msg_lower or ("compare" in msg_lower and (" and " in msg_lower or " to " in msg_lower)):
             clean_q = re.sub(r"(what are the advantages of premiering at|should i submit to|compare|between)", "", user_msg, flags=re.IGNORECASE)
             parts = re.split(r"\s+(?:vs\.?|or|and|to)\s+", clean_q.strip(), flags=re.IGNORECASE)
@@ -206,7 +275,7 @@ class ProducerDeskAgent:
             )
 
         # Check for Due Diligence intent
-        if any(w in msg_lower for w in ["vet", "legit", "scam", "aldergate", "raindance", "sundance", "aesthetica", "cannes", "venice", "berlinale", "sxsw", "tribeca", "toronto", "check festival", "is it real", "is this real", "check fees", "tell me about"]):
+        if any(w in msg_lower for w in ["vet", "legit", "scam", "aldergate", "raindance", "sundance", "aesthetica", "cannes", "venice", "berlinale", "sxsw", "tribeca", "toronto", "check festival", "is it real", "is this real", "check fees", "tell me about", "research"]):
             # Extract festival name
             festival_name = "Raindance Film Festival"
             if "aldergate" in msg_lower:
@@ -228,8 +297,7 @@ class ProducerDeskAgent:
             elif "toronto" in msg_lower or "tiff" in msg_lower:
                 festival_name = "Toronto International Film Festival"
             else:
-                # Use query snippet
-                cleaned = re.sub(r"(tell me about|is|a|the|legit|scam|real|check|fees|for|\?)", "", user_msg, flags=re.IGNORECASE).strip()
+                cleaned = re.sub(r"(tell me about|is|a|the|legit|scam|real|check|fees|for|\?|research)", "", user_msg, flags=re.IGNORECASE).strip()
                 if cleaned and len(cleaned) > 2:
                     festival_name = cleaned.title()
 
@@ -251,7 +319,6 @@ class ProducerDeskAgent:
                     genre = g
                     break
 
-            # Parse runtime
             runtime = 14 if format_type == "SHORT" else 90
             rt_match = re.search(r"(\d+)\s*(?:min|minute)", msg_lower)
             if rt_match:
@@ -260,7 +327,6 @@ class ProducerDeskAgent:
                 except Exception:
                     pass
 
-            # Parse budget
             budget = "Micro (< £50k)"
             b_match = re.search(r"([£$€]\s*\d+(?:[kK]|,\d+|\s*budget)?)", user_msg)
             if b_match:
@@ -280,52 +346,27 @@ class ProducerDeskAgent:
                 ).model_dump()
             )
 
-
-
         return None
 
     async def _generate_fallback_response(self, user_msg: str) -> AsyncGenerator[Dict[str, Any], None]:
-        """Offline simulation yielding cinematic intelligence."""
+        """Offline simulation yielding concise, straight-to-the-point intelligence."""
         tool_call = self._extract_or_infer_tool_call(user_msg, "")
 
         if tool_call and tool_call.toolName == ToolCallType.CONFIGURE_DUE_DILIGENCE:
             fest_name = tool_call.args.get("festival_name", "Target Festival")
-            text = (
-                f"I've configured a pre-flight due diligence probe for **{fest_name}**.\n\n"
-                f"Before spending your submission budget, our multi-agent research core will cross-examine:\n"
-                f"- **Physical Screening Venues**: Verifying actual theatrical cinema leases versus unlisted streaming links.\n"
-                f"- **Organizer Track Record**: Checking corporate filings, dissolution notices, and prior editions.\n"
-                f"- **Community Accounts**: Scanning trade publications and filmmaker complaints for fee discrepancies.\n\n"
-                f"Review the pre-flight parameters below and click **Launch Deep Screen** to start live multi-track research."
-            )
+            text = f"Initiating due diligence pre-flight for **{fest_name}**. Confirm entity location and your interaction history below to launch."
         elif tool_call and tool_call.toolName == ToolCallType.CONFIGURE_OPPORTUNITY_SCOUT:
-            text = (
-                f"I've mapped out a strategic festival submission roadmap for your project.\n\n"
-                f"Here is how we should position this run:\n"
-                f"1. **Early Bird Windows**: Submit to Tier-1 BAFTA and Oscar qualifying festivals while entry fees are discounted.\n"
-                f"2. **Premiere Preservation**: Protect your World and International premiere eligibility before locking regional runs.\n"
-                f"3. **Budget Runway**: Allocate submission spend across top-tier and high-acceptance genre circuits.\n\n"
-                f"Inspect the film profile card below and click **Scout All Opportunities** to scan live deadlines."
-            )
+            text = "Scouting qualifying submission windows. Configure your film profile below to discover deadlines and accreditation roadmaps."
         elif tool_call and tool_call.toolName == ToolCallType.COMPARE_FESTIVALS_ARENA:
             fest_a = tool_call.args.get("festival_a", "Festival A")
             fest_b = tool_call.args.get("festival_b", "Festival B")
-            text = (
-                f"Here is an executive head-to-head breakdown between **{fest_a}** and **{fest_b}**.\n\n"
-                f"Key strategic considerations:\n"
-                f"- **Accreditation**: Ensure their awards meet your target qualification criteria (BAFTA, BIFA, Oscars).\n"
-                f"- **Screening Format**: Verify physical projection capabilities and press delegate attendance.\n"
-                f"- **Fee Value**: Balance entry fee costs against guaranteed networking and distribution exposure."
-            )
+            text = f"Comparing **{fest_a}** vs **{fest_b}** across accreditation, physical venue leases, and ROI."
+        elif tool_call and tool_call.toolName == ToolCallType.CONFIGURE_GRANT_SCOUT:
+            text = "Configuring film grant discovery. Adjust your budget tier and production stage below to match active funds."
+        elif tool_call and tool_call.toolName == ToolCallType.ANALYZE_INVITATION_EMAIL:
+            text = "Analyzing invitation provenance. Review the sender signals below to verify legitimacy before paying any fee."
         else:
-            text = (
-                "Welcome to **The Producer Desk** at Screened.\n\n"
-                "I am your autonomous cinema intelligence executive. Tell me about:\n"
-                "- A film festival you want to **vet or investigate** for legitimacy, physical venues, or fee transparency.\n"
-                "- Your film project's format, genre, and budget to **scout open submission deadlines** and qualifying roadmaps.\n"
-                "- Any festival acceptance email or submission invoice you'd like me to analyze for red flags.\n\n"
-                "How can I assist your festival run today?"
-            )
+            text = "Cinema Due Diligence Desk active. Enter a festival to vet, request a grant search, or drop an invitation email."
 
         words = text.split(" ")
         for i in range(0, len(words), 3):
@@ -337,7 +378,6 @@ class ProducerDeskAgent:
                 "type": "TOOL_CALL",
                 "toolCall": tool_call.model_dump()
             }
-
 
         yield {"type": "DONE"}
 

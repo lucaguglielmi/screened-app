@@ -1,21 +1,25 @@
 import React from 'react';
 import { ChatMessage } from '../../types/chat';
 import { FilmProfile } from '../../types/investigation';
-import { MiniDueDiligence } from './mini_apps/MiniDueDiligence';
 import { MiniScoutCard } from './mini_apps/MiniScoutCard';
 import { MiniCompareArena } from './mini_apps/MiniCompareArena';
+import { FestivalIntakeCard } from './tools/FestivalIntakeCard';
+import { GrantIntakeCard } from './tools/GrantIntakeCard';
+import { InvitationEmailCard } from './tools/InvitationEmailCard';
 import { AgentAvatar } from './AgentAvatar';
 
 interface ChatBubbleProps {
   message: ChatMessage;
   onLaunchDueDiligence: (festivalName: string, optionalUrl?: string) => void;
   onLaunchOpportunityScout: (profile: FilmProfile) => void;
+  onLaunchCustomPrompt?: (promptText: string) => void;
 }
 
 export const ChatBubble: React.FC<ChatBubbleProps> = ({
   message,
   onLaunchDueDiligence,
   onLaunchOpportunityScout,
+  onLaunchCustomPrompt,
 }) => {
   const isUser = message.role === 'user';
 
@@ -103,7 +107,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
           {message.toolCall && (
             <div className="mt-3">
               {message.toolCall.toolName === 'configure_due_diligence' && (
-                <MiniDueDiligence
+                <FestivalIntakeCard
                   args={message.toolCall.args as any}
                   onLaunch={onLaunchDueDiligence}
                 />
@@ -120,6 +124,26 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
                 <MiniCompareArena
                   args={message.toolCall.args as any}
                   onSelectFestival={(name) => onLaunchDueDiligence(name)}
+                />
+              )}
+
+              {message.toolCall.toolName === 'configure_grant_scout' && (
+                <GrantIntakeCard
+                  args={message.toolCall.args as any}
+                  onLaunchSearch={(query) => {
+                    if (onLaunchCustomPrompt) {
+                      onLaunchCustomPrompt(query);
+                    } else {
+                      onLaunchDueDiligence(query);
+                    }
+                  }}
+                />
+              )}
+
+              {message.toolCall.toolName === 'analyze_invitation_email' && (
+                <InvitationEmailCard
+                  args={message.toolCall.args as any}
+                  onLaunchInvestigation={(name) => onLaunchDueDiligence(name)}
                 />
               )}
             </div>

@@ -3,24 +3,32 @@ import { ChatMessage, ChatStreamEvent, ChatToolCall } from '../../types/chat';
 import { FilmProfile } from '../../types/investigation';
 import { ChatBubble } from './ChatBubble';
 import { ChatPromptBar } from './ChatPromptBar';
-import { StarterPromptChips } from './StarterPromptChips';
 import { AgentThinkingPill } from './AgentThinkingPill';
-import { AgentAvatar } from './AgentAvatar';
 import { VectorFieldBackground } from '../animations/VectorFieldBackground';
+import { CapabilitiesModal } from '../modals/CapabilitiesModal';
 import { soundEffects } from '../../utils/audio';
+import { HelpCircle } from 'lucide-react';
 
 interface ChatContainerProps {
   onLaunchDueDiligence: (festivalName: string, optionalUrl?: string) => void;
   onLaunchOpportunityScout: (profile: FilmProfile) => void;
 }
 
+const INITIAL_HARDCODED_MESSAGE: ChatMessage = {
+  id: 'initial-greeting-01',
+  role: 'assistant',
+  content: 'Cinema Due Diligence Desk online. Enter a festival name to investigate, request a grant/funding scan, or drop an invitation email.',
+  timestamp: new Date().toISOString(),
+};
+
 export const ChatContainer: React.FC<ChatContainerProps> = ({
   onLaunchDueDiligence,
   onLaunchOpportunityScout,
 }) => {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([INITIAL_HARDCODED_MESSAGE]);
   const [isLoading, setIsLoading] = useState(false);
   const [thinkingMessage, setThinkingMessage] = useState<string | null>(null);
+  const [isCapabilitiesModalOpen, setIsCapabilitiesModalOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -46,7 +54,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
     const newHistory = [...messages, userMsg];
     setMessages(newHistory);
     setIsLoading(true);
-    setThinkingMessage('The Producer Desk is evaluating your request...');
+    setThinkingMessage('Cinema Due Diligence Desk is evaluating your request...');
 
     try {
       const response = await fetch('/api/chat', {
@@ -140,7 +148,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
           id: String(Date.now() + 2),
           role: 'assistant',
           content:
-            '⚠️ An error occurred while communicating with The Producer Desk. Please ensure your backend is active.',
+            '⚠️ An error occurred while communicating with the Cinema Due Diligence Desk. Please ensure your backend is active.',
           timestamp: new Date().toISOString(),
         },
       ]);
@@ -162,54 +170,55 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
         opacity={0.18}
       />
 
-      {/* Scrollable Message Area */}
-      <div className="relative z-10 flex-1 overflow-y-auto pr-2 space-y-4">
-        {messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center min-h-[60vh] text-center pt-8">
-            <div className="mb-4 animate-fade-in">
-              <AgentAvatar size="xl" isThinking={isLoading} />
-            </div>
-            <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl mb-3 font-serif">
-              The Producer Desk
-            </h1>
-            <p className="max-w-xl text-base text-slate-300 leading-relaxed mb-6 font-sans">
-              Your autonomous cinema intelligence executive. Ask for due diligence vetting on any film festival,
-              map out qualifying festival submission strategies for your slate, or drop an acceptance email for instant analysis.
-            </p>
-
-            <div className="w-full">
-              <ChatPromptBar
-                onSendMessage={handleSendMessage}
-                isLoading={isLoading}
-              />
-              <StarterPromptChips onSelectPrompt={(prompt) => handleSendMessage(prompt)} />
-            </div>
-          </div>
-        ) : (
-          <div className="pt-2">
-            {messages.map((msg) => (
-              <ChatBubble
-                key={msg.id}
-                message={msg}
-                onLaunchDueDiligence={onLaunchDueDiligence}
-                onLaunchOpportunityScout={onLaunchOpportunityScout}
-              />
-            ))}
-            {thinkingMessage && <AgentThinkingPill label={thinkingMessage} />}
-            <div ref={messagesEndRef} />
-          </div>
-        )}
+      {/* Hero Header Area */}
+      <div className="relative z-10 flex flex-col items-center justify-center pt-2 pb-3 text-center">
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white font-serif mb-1">
+          Cinema Due diligence
+        </h1>
+        <button
+          type="button"
+          onClick={() => {
+            soundEffects.playClick();
+            setIsCapabilitiesModalOpen(true);
+          }}
+          className="inline-flex items-center space-x-1 text-xs text-blue-400 hover:text-blue-300 underline underline-offset-4 decoration-blue-500/40 hover:decoration-blue-400 font-mono transition-colors cursor-pointer"
+        >
+          <HelpCircle className="w-3.5 h-3.5" />
+          <span>what can you search?</span>
+        </button>
       </div>
 
-      {/* Persistent Bottom Prompt Bar when messages exist */}
-      {messages.length > 0 && (
-        <div className="pt-3 pb-2 border-t border-zinc-800/80 mt-2">
-          <ChatPromptBar
-            onSendMessage={handleSendMessage}
-            isLoading={isLoading}
-          />
+      {/* Scrollable Message Area */}
+      <div className="relative z-10 flex-1 overflow-y-auto pr-2 space-y-4">
+        <div className="pt-1">
+          {messages.map((msg) => (
+            <ChatBubble
+              key={msg.id}
+              message={msg}
+              onLaunchDueDiligence={onLaunchDueDiligence}
+              onLaunchOpportunityScout={onLaunchOpportunityScout}
+              onLaunchCustomPrompt={handleSendMessage}
+            />
+          ))}
+          {thinkingMessage && <AgentThinkingPill label={thinkingMessage} />}
+          <div ref={messagesEndRef} />
         </div>
-      )}
+      </div>
+
+      {/* Persistent Bottom Prompt Bar with Action Pills */}
+      <div className="relative z-10 pt-2 pb-2 border-t border-zinc-800/80 mt-1">
+        <ChatPromptBar
+          onSendMessage={handleSendMessage}
+          isLoading={isLoading}
+        />
+      </div>
+
+      {/* Fullscreen / Immersive Capabilities Modal */}
+      <CapabilitiesModal
+        isOpen={isCapabilitiesModalOpen}
+        onClose={() => setIsCapabilitiesModalOpen(false)}
+        onSelectAction={(prompt) => handleSendMessage(prompt)}
+      />
     </div>
   );
 };
