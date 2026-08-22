@@ -27,6 +27,10 @@ Whenever the user asks *"what's next?"* or *"what should we work on?"*, the assi
 ## 🏗️ Architecture Tracking (Steering Section)
 This section serves as a high-level live tracker for our application architecture. Whenever significant architectural changes occur (new agents, modified pipelines, database migrations), they should be documented here and reflected in the UI Playground's Architecture Page.
 
-- **Current State:** ADK-based orchestration with Parallel Search & Gemini clients.
-- **Recent Changes:** Implemented parallel API concurrency limits, firestore persistence for feedback, and resume investigation capabilities.
+- **Current State:** ADK-based orchestration with Parallel Search & Gemini clients, using Firestore for state management.
+- **Recent Changes (2026-08-22):** 
+  - **Resumption Endpoint**: Added `POST /api/investigations/{id}/resume` to restart failed/interrupted pipelines.
+  - **SSE Event Log Replay**: Integrated Firestore event persistence so refreshed tabs catch up on past pipeline steps immediately.
+  - **Feedback Store Persistence**: Transitioned filmmaker feedback store from in-memory array to persistent Firestore collection.
+  - **Concurrency Limits**: Implemented `asyncio.Semaphore(3)` bounds on Parallel Search and Gemini API calls to prevent rate-limiting.
 - **Next Steps:** Maintain parity between this section and the interactive Architecture UI component.

@@ -37,7 +37,7 @@ export const MiniScoutCard: React.FC<MiniScoutCardProps> = ({ args, onLaunch }) 
   };
 
   return (
-    <div className="my-3 p-5 rounded-2xl border border-[#F43F5E]/30 bg-gradient-to-br from-[#F43F5E]/10 via-[#0E1124] to-[#070913] shadow-xl backdrop-blur-md transition-all hover:border-[#F43F5E]/60 text-slate-100">
+    <div className="my-3 p-5 rounded-2xl border border-[#3E1C2A] bg-[#0B0F19] shadow-xl transition-all hover:border-[#F43F5E]/60 text-slate-100">
       {/* Header */}
       <div className="flex items-center justify-between gap-2 border-b border-[#F43F5E]/20 pb-3 mb-4">
         <div className="flex items-center gap-3">
@@ -144,8 +144,8 @@ export const MiniScoutCard: React.FC<MiniScoutCardProps> = ({ args, onLaunch }) 
       {/* STAGE 2: REVIEW & LAUNCH CONFIRMATION UI (Redirects to Opportunity Scout Workspace) */}
       {step === 'REVIEW' && (
         <div className="space-y-4">
-          <div className="p-4 rounded-xl bg-[#04060E] space-y-2.5 text-xs">
-            <div className="flex items-center justify-between border-b border-white/[0.06] pb-2">
+          <div className="p-4 rounded-xl bg-[#151219] border border-[#3E1C2A] space-y-2.5 text-xs">
+            <div className="flex items-center justify-between border-b border-[#3E1C2A] pb-2">
               <span className="font-mono font-bold text-[#F43F5E] uppercase tracking-wider">
                 Stage 2: Slate Strategy Parameters Ready
               </span>

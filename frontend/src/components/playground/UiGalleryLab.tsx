@@ -39,7 +39,7 @@ export const UiGalleryLab: React.FC = () => {
   return (
     <div className="space-y-8 animate-fade-in text-zinc-100">
       {/* Header Banner */}
-      <div className="p-6 rounded-2xl border border-blue-500/30 bg-gradient-to-r from-zinc-900/90 via-[#0A0D1E] to-zinc-900/90 shadow-xl backdrop-blur-md">
+      <div className="p-6 rounded-2xl border border-[#22274C] bg-[#0E1124] shadow-xl">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
@@ -61,7 +61,7 @@ export const UiGalleryLab: React.FC = () => {
       </div>
 
       {/* SECTION 1: INTERACTIVE BUTTON BUILDER & MOTION PLAYGROUND */}
-      <section className="p-6 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 shadow-md backdrop-blur-sm space-y-6">
+      <section className="p-6 rounded-2xl border border-[#22274C] bg-[#0E1124] shadow-md space-y-6">
         <div className="border-b border-zinc-800 pb-3 flex items-center justify-between">
           <div>
             <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider font-mono">
@@ -200,7 +200,7 @@ export const UiGalleryLab: React.FC = () => {
       </section>
 
       {/* SECTION 2: ICON-SPECIFIC MOTION SHOWCASE */}
-      <section className="p-6 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 shadow-md backdrop-blur-sm space-y-4">
+      <section className="p-6 rounded-2xl border border-[#22274C] bg-[#0E1124] shadow-md space-y-4">
         <div className="border-b border-zinc-800 pb-3">
           <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider font-mono">
             2. Icon-Specific Micro-Animation Matrix
@@ -244,7 +244,7 @@ export const UiGalleryLab: React.FC = () => {
       </section>
 
       {/* SECTION 3: REUSABLE TEXT LINKS GALLERY */}
-      <section className="p-6 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 shadow-md backdrop-blur-sm space-y-4">
+      <section className="p-6 rounded-2xl border border-[#22274C] bg-[#0E1124] shadow-md space-y-4">
         <div className="border-b border-zinc-800 pb-3">
           <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider font-mono">
             3. Animated Text Links with Icon Motion
@@ -397,7 +397,7 @@ export const UiGalleryLab: React.FC = () => {
       </section>
 
       {/* SECTION 3: CINEMA CLAPPERBOARD AVATAR & MOTION PHYSICS */}
-      <section className="p-6 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 shadow-md backdrop-blur-sm space-y-6">
+      <section className="p-6 rounded-2xl border border-[#22274C] bg-[#0E1124] shadow-md space-y-6">
         <div className="border-b border-zinc-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
             <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider font-mono flex items-center gap-2">

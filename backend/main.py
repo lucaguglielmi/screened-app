@@ -4,11 +4,15 @@ import logging
 import time
 from pathlib import Path
 from typing import Any, Dict, Optional
-from fastapi import FastAPI, HTTPException, Response
+from fastapi import FastAPI, HTTPException, Response, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, StreamingResponse, PlainTextResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
 
 from backend.config import settings
 from backend.models import (
@@ -63,6 +67,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_middleware(SlowAPIMiddleware)
+
 parallel_tool = ParallelSearchTool()
 gemini_client = GeminiClient()
 outreach_drafter = OutreachDrafterAgent(gemini_client)
@@ -71,18 +80,18 @@ deep_vetting_agent = DeepVettingAgent(gemini_client)
 
 
 class CreateInvestigationRequest(BaseModel):
-    query: str
-    optionalUrl: Optional[str] = None
-    intent: str = "Vet before submitting"
+    query: str = Field(..., max_length=200)
+    optionalUrl: Optional[str] = Field(None, max_length=500)
+    intent: str = Field("Vet before submitting", max_length=100)
 
 
 class ConfirmEntityRequest(BaseModel):
-    name: str
-    entityType: str = "FESTIVAL"
-    officialDomain: Optional[str] = None
-    cityCountry: Optional[str] = None
+    name: str = Field(..., max_length=200)
+    entityType: str = Field("FESTIVAL", max_length=50)
+    officialDomain: Optional[str] = Field(None, max_length=500)
+    cityCountry: Optional[str] = Field(None, max_length=200)
     foundedYear: Optional[int] = None
-    descriptor: str = ""
+    descriptor: str = Field("", max_length=1000)
 
 
 @app.get("/healthz")
@@ -103,7 +112,8 @@ async def health_check():
 
 
 @app.post("/api/investigations")
-async def create_investigation(req: CreateInvestigationRequest):
+@limiter.limit("10/minute")
+async def create_investigation(req: CreateInvestigationRequest, request: Request):
     """Start a new festival investigation and trigger disambiguation."""
     query = req.query.strip()
     if not query:
@@ -130,6 +140,20 @@ async def get_investigation(investigation_id: str):
     inv["claims"] = claims
     inv["sources"] = sources
     return inv
+
+@app.post("/api/investigations/batch")
+async def get_investigation_batch(investigation_ids: list[str]):
+    """Retrieve summaries for multiple investigations (e.g. for History sidebar)."""
+    results = []
+    for inv_id in investigation_ids:
+        try:
+            inv = await db.get_investigation(inv_id)
+            if inv:
+                # Omit large collections like claims and sources for the summary view
+                results.append(inv)
+        except Exception as e:
+            logger.error(f"Failed to fetch investigation {inv_id} for batch: {e}")
+    return results
 
 
 @app.post("/api/investigations/{investigation_id}/resume")
@@ -178,7 +202,8 @@ async def stream_investigation_events(investigation_id: str):
 # --- Conversational Producer Desk Streaming Chat Endpoint ---
 
 @app.post("/api/chat")
-async def chat_with_producer_desk(req: ChatRequest):
+@limiter.limit("20/minute")
+async def chat_with_producer_desk(req: ChatRequest, request: Request):
     """Conversational endpoint streaming agent reasoning and embedded Function Calling tools."""
     async def event_generator():
         try:
@@ -213,7 +238,8 @@ async def analyze_document_endpoint(req: DocumentAnalysisRequest):
 
 
 @app.post("/api/scout", response_model=ScoutResponse)
-async def scout_festival_opportunities(req: ScoutRequest):
+@limiter.limit("10/minute")
+async def scout_festival_opportunities(req: ScoutRequest, request: Request):
     """Discover tailored festival submission opportunities for a specific film profile."""
     try:
         response = await opportunity_scout.scout_opportunities(req.profile)

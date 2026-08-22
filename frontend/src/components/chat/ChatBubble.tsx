@@ -115,7 +115,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
             className={`rounded-2xl px-5 py-4 text-base leading-relaxed shadow-md ${
               isUser
                 ? 'bg-[#1A1F45] text-slate-100 rounded-tr-none border border-[#2B346E]'
-                : 'bg-[#0E1124]/95 text-slate-200 rounded-tl-none border border-[#22274C] backdrop-blur-md'
+                : 'bg-[#0E1124] text-slate-200 rounded-tl-none border border-[#22274C]'
             }`}
           >
             {message.attachedFile && (
@@ -148,7 +148,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
                             onLaunchCustomPrompt(tab.query);
                           }
                         }}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/40 hover:bg-[#2018E6] text-slate-300 hover:text-white transition-all text-xs font-mono cursor-pointer shadow-sm active:scale-95"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#131730] hover:bg-[#2018E6] text-slate-300 hover:text-white transition-all text-xs font-mono cursor-pointer shadow-sm active:scale-95"
                       >
                         <Icon className="size-3.5 text-indigo-400 group-hover:text-white shrink-0" />
                         <span>{tab.label}</span>
@@ -162,7 +162,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
 
           {/* Interactive Follow-Up Probes */}
           {message.followUpProbe && message.followUpProbe.options.length > 0 && (
-            <div className="mt-3 p-3.5 rounded-xl bg-[#141838]/90 border border-[#252C5E] space-y-2.5 shadow-sm">
+            <div className="mt-3 p-3.5 rounded-xl bg-[#141838] border border-[#252C5E] space-y-2.5 shadow-sm">
               <div className="flex items-center gap-1.5 text-xs font-semibold text-indigo-300">
                 <span>✦</span>
                 <span>{message.followUpProbe.question}</span>

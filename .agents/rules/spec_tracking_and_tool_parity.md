@@ -40,3 +40,8 @@ The main AI interface is **Mission Control**. Individual tools each possess thei
 
 **All new tools, widgets, and mini-apps MUST follow this 2-stage pattern without exception.**
 
+---
+
+## 5. Architecture Page Upkeep
+- The **Design Playground** includes an `ArchitecturePage.tsx` component which tracks the system's live architecture (e.g. backend states, databases, AI pipelines).
+- Whenever you make architectural changes, add new databases, implement new caching layers, or change deployment patterns, you **MUST** update `frontend/src/components/playground/ArchitecturePage.tsx` to reflect the new architecture.

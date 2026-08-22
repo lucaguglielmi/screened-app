@@ -7,7 +7,9 @@ import {
   HelpCircle, 
   AlertTriangle,
   FileUp,
-  Mic
+  Mic,
+  Clipboard,
+  Camera
 } from 'lucide-react';
 import { soundEffects } from '../../utils/audio';
 import { QuestionsCategoryModal } from '../modals/QuestionsCategoryModal';
@@ -39,7 +41,9 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
   const [videoGuardWarning, setVideoGuardWarning] = useState<string | null>(null);
   const [isQuestionsModalOpen, setIsQuestionsModalOpen] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const [isAttachmentMenuOpen, setIsAttachmentMenuOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
   const recognitionRef = useRef<any>(null);
   const latestTranscriptRef = useRef<string>('');
 
@@ -152,8 +156,17 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
 
   const processFile = (file: File) => {
     setVideoGuardWarning(null);
-    const videoExtensions = ['.mp4', '.mov', '.avi', '.mkv', '.webm', '.m4v', '.wmv'];
     const fileNameLower = file.name.toLowerCase();
+    
+    // Security check: block executables, scripts, and potentially malicious files
+    const dangerousExtensions = ['.exe', '.bat', '.sh', '.js', '.vbs', '.cmd', '.scr', '.msi', '.pif', '.application', '.ps1'];
+    if (dangerousExtensions.some(ext => fileNameLower.endsWith(ext))) {
+      soundEffects.playCaution();
+      setVideoGuardWarning('Security Alert: This file type is not allowed.');
+      return;
+    }
+
+    const videoExtensions = ['.mp4', '.mov', '.avi', '.mkv', '.webm', '.m4v', '.wmv'];
 
     // Check for video file attempt
     if (videoExtensions.some((ext) => fileNameLower.endsWith(ext)) || file.type.startsWith('video/')) {
@@ -164,7 +177,47 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
 
     const mimeType = file.type || (fileNameLower.endsWith('.pdf') ? 'application/pdf' : 'text/plain');
 
-    if (mimeType.startsWith('application/pdf') || mimeType.startsWith('image/')) {
+    if (mimeType.startsWith('image/')) {
+      // Image cropping/resizing via Canvas
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        const img = new Image();
+        img.onload = () => {
+          const MAX_DIMENSION = 1024;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height && width > MAX_DIMENSION) {
+            height *= MAX_DIMENSION / width;
+            width = MAX_DIMENSION;
+          } else if (height > MAX_DIMENSION) {
+            width *= MAX_DIMENSION / height;
+            height = MAX_DIMENSION;
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, width, height);
+            const dataUrl = canvas.toDataURL(mimeType, 0.8);
+            const base64Data = dataUrl.split(',')[1];
+            setAttachedFile({
+              name: file.name,
+              base64: base64Data,
+              mimeType,
+              size: file.size,
+            });
+            soundEffects.playClick();
+          }
+        };
+        img.src = result;
+      };
+      reader.readAsDataURL(file);
+    } else if (mimeType.startsWith('application/pdf')) {
       const reader = new FileReader();
       reader.onload = (e) => {
         const result = e.target?.result as string;
@@ -265,22 +318,63 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
           onChange={(e) => {
             if (e.target.files && e.target.files.length > 0) {
               processFile(e.target.files[0]);
+              e.target.value = ''; // reset
+            }
+          }}
+        />
+        
+        <input
+          type="file"
+          ref={imageInputRef}
+          className="hidden"
+          accept="image/*"
+          capture="environment"
+          onChange={(e) => {
+            if (e.target.files && e.target.files.length > 0) {
+              processFile(e.target.files[0]);
+              e.target.value = ''; // reset
             }
           }}
         />
 
         <div className="flex items-center flex-1 min-w-0 gap-1.5 pl-1">
-          {/* Prominent Document Upload Button */}
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            title="Upload script synopsis, treatment PDF, or invitation email"
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#141A3B] hover:bg-[#1D2554] border border-[#27326B] hover:border-indigo-500/60 text-xs font-mono text-indigo-300 hover:text-white transition-all group cursor-pointer shrink-0 shadow-sm"
+          {/* Prominent Document Upload Button / Clipboard Hover Menu */}
+          <div 
+            className="relative" 
+            onMouseEnter={() => setIsAttachmentMenuOpen(true)}
+            onMouseLeave={() => setIsAttachmentMenuOpen(false)}
           >
-            <FileUp className="size-4 text-indigo-400 group-hover:-translate-y-0.5 transition-transform" />
-            <span className="hidden sm:inline font-semibold">Attach Doc</span>
-            <span className="sm:hidden font-semibold">Attach</span>
-          </button>
+            <button
+              type="button"
+              title="Attach a file or photo"
+              className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#141A3B] hover:bg-[#1D2554] border border-[#27326B] hover:border-indigo-500/60 text-indigo-300 hover:text-white transition-all cursor-pointer shadow-sm"
+            >
+              <Clipboard className="size-4" />
+            </button>
+            
+            {/* Hover Menu */}
+            {isAttachmentMenuOpen && (
+              <div className="absolute bottom-full left-0 mb-2 w-48 bg-[#0E1124] border border-[#22274C] rounded-xl shadow-2xl overflow-hidden z-40 animate-in fade-in slide-in-from-bottom-2 duration-200">
+                <button
+                  type="button"
+                  onClick={() => imageInputRef.current?.click()}
+                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#1A1F3D] text-left text-sm text-indigo-100 transition-colors"
+                >
+                  <Camera className="size-4 text-indigo-400" />
+                  Take a photo
+                </button>
+                <div className="h-px bg-[#22274C] w-full" />
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#1A1F3D] text-left text-sm text-indigo-100 transition-colors"
+                >
+                  <FileUp className="size-4 text-indigo-400" />
+                  Upload a document
+                </button>
+              </div>
+            )}
+          </div>
 
           {/* Text Input */}
           <input

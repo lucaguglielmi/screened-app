@@ -87,7 +87,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full max-w-2xl bg-card border border-emerald-500/30 rounded-2xl p-5 shadow-xl shadow-black/40 space-y-4 my-2 text-zinc-100"
+      className="w-full max-w-2xl bg-[#0B0F19] border border-[#1E2545] rounded-2xl p-5 shadow-xl space-y-4 my-2 text-zinc-100"
     >
       {/* Header Badge */}
       <div className="flex items-center justify-between border-b border-zinc-800/80 pb-3">
@@ -195,8 +195,8 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
                 onClick={() => setTalkedToSomeone(!talkedToSomeone)}
                 className={`flex items-center space-x-2 p-2 rounded-lg text-left transition-all cursor-pointer ${
                   talkedToSomeone
-                    ? 'bg-emerald-500/20 text-emerald-300 font-medium'
-                    : 'bg-black/40 text-zinc-300 hover:bg-black/70'
+                    ? 'bg-[#0E2822] border border-emerald-900 text-emerald-300 font-medium'
+                    : 'bg-[#151B2E] border border-[#1E2545] text-zinc-300 hover:bg-[#1E2545]'
                 }`}
               >
                 {talkedToSomeone ? <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" /> : <Square className="w-4 h-4 text-zinc-500 shrink-0" />}
@@ -208,8 +208,8 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
                 onClick={() => setWasInvited(!wasInvited)}
                 className={`flex items-center space-x-2 p-2 rounded-lg text-left transition-all cursor-pointer ${
                   wasInvited
-                    ? 'bg-emerald-500/20 text-emerald-300 font-medium'
-                    : 'bg-black/40 text-zinc-300 hover:bg-black/70'
+                    ? 'bg-[#0E2822] border border-emerald-900 text-emerald-300 font-medium'
+                    : 'bg-[#151B2E] border border-[#1E2545] text-zinc-300 hover:bg-[#1E2545]'
                 }`}
               >
                 {wasInvited ? <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" /> : <Square className="w-4 h-4 text-zinc-500 shrink-0" />}
@@ -221,8 +221,8 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
                 onClick={() => setReceivedEmail(!receivedEmail)}
                 className={`flex items-center space-x-2 p-2 rounded-lg text-left transition-all cursor-pointer ${
                   receivedEmail
-                    ? 'bg-emerald-500/20 text-emerald-300 font-medium'
-                    : 'bg-black/40 text-zinc-300 hover:bg-black/70'
+                    ? 'bg-[#0E2822] border border-emerald-900 text-emerald-300 font-medium'
+                    : 'bg-[#151B2E] border border-[#1E2545] text-zinc-300 hover:bg-[#1E2545]'
                 }`}
               >
                 {receivedEmail ? <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" /> : <Square className="w-4 h-4 text-zinc-500 shrink-0" />}
@@ -234,8 +234,8 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
                 onClick={() => setWaiverOffered(!waiverOffered)}
                 className={`flex items-center space-x-2 p-2 rounded-lg text-left transition-all cursor-pointer ${
                   waiverOffered
-                    ? 'bg-emerald-500/20 text-emerald-300 font-medium'
-                    : 'bg-black/40 text-zinc-300 hover:bg-black/70'
+                    ? 'bg-[#0E2822] border border-emerald-900 text-emerald-300 font-medium'
+                    : 'bg-[#151B2E] border border-[#1E2545] text-zinc-300 hover:bg-[#1E2545]'
                 }`}
               >
                 {waiverOffered ? <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" /> : <Square className="w-4 h-4 text-zinc-500 shrink-0" />}
@@ -247,8 +247,8 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
                 onClick={() => setAlreadyPaid(!alreadyPaid)}
                 className={`flex items-center space-x-2 p-2 rounded-lg text-left transition-all cursor-pointer ${
                   alreadyPaid
-                    ? 'bg-emerald-500/20 text-emerald-300 font-medium'
-                    : 'bg-black/40 text-zinc-300 hover:bg-black/70'
+                    ? 'bg-[#0E2822] border border-emerald-900 text-emerald-300 font-medium'
+                    : 'bg-[#151B2E] border border-[#1E2545] text-zinc-300 hover:bg-[#1E2545]'
                 }`}
               >
                 {alreadyPaid ? <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" /> : <Square className="w-4 h-4 text-zinc-500 shrink-0" />}
@@ -260,8 +260,8 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
                 onClick={() => setAdvertisedCinemaVenue(!advertisedCinemaVenue)}
                 className={`flex items-center space-x-2 p-2 rounded-lg text-left transition-all cursor-pointer ${
                   advertisedCinemaVenue
-                    ? 'bg-emerald-500/20 text-emerald-300 font-medium'
-                    : 'bg-black/40 text-zinc-300 hover:bg-black/70'
+                    ? 'bg-[#0E2822] border border-emerald-900 text-emerald-300 font-medium'
+                    : 'bg-[#151B2E] border border-[#1E2545] text-zinc-300 hover:bg-[#1E2545]'
                 }`}
               >
                 {advertisedCinemaVenue ? <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" /> : <Square className="w-4 h-4 text-zinc-500 shrink-0" />}
@@ -277,7 +277,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                className="p-3.5 rounded-xl bg-midnight/90 border border-emerald-500/20 space-y-2.5 overflow-hidden text-xs"
+                className="p-3.5 rounded-xl bg-[#151B2E] border border-emerald-900 space-y-2.5 overflow-hidden text-xs"
               >
                 <div className="flex items-center space-x-2 text-emerald-400 font-mono text-[11px]">
                   <AlertCircle className="w-3.5 h-3.5" />
@@ -352,8 +352,8 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
           animate={{ opacity: 1, scale: 1 }}
           className="space-y-4"
         >
-          <div className="p-4 rounded-xl bg-emerald-950/30 border border-emerald-500/40 space-y-2.5 text-xs">
-            <div className="flex items-center justify-between border-b border-emerald-500/20 pb-2">
+          <div className="p-4 rounded-xl bg-[#0E2822] border border-emerald-900 space-y-2.5 text-xs">
+            <div className="flex items-center justify-between border-b border-emerald-800 pb-2">
               <span className="font-mono font-bold text-emerald-400 uppercase tracking-wider">
                 Stage 2: Investigation Parameters Ready
               </span>

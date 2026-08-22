@@ -84,69 +84,72 @@ export const DesignPlayground: React.FC = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 space-y-8 animate-fade-in text-zinc-100">
-      {/* Playground Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 rounded-2xl border border-amber-500/30 bg-gradient-to-r from-zinc-900/90 via-zinc-950 to-zinc-900/90 shadow-xl backdrop-blur-md">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/20 text-amber-400 text-base font-bold ring-1 ring-amber-500/40">
-              🎨
-            </span>
-            <h1 className="text-xl font-bold text-zinc-100 tracking-tight font-serif">
-              Design Playground & Component Studio
-            </h1>
+      {/* Playground Header & Nav Bar */}
+      <div className="rounded-2xl border border-purple-900/50 shadow-xl overflow-hidden mb-8">
+        {/* Header Top Section */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 bg-[#1A0B2E]">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-500/20 text-purple-400 text-base font-bold ring-1 ring-purple-500/40">
+                🎨
+              </span>
+              <h1 className="text-xl font-bold text-zinc-100 tracking-tight font-serif">
+                Review Playground
+              </h1>
+            </div>
+            <p className="text-xs text-purple-200/70 mt-1">
+              Visual workbench to review and test all components, tools, and UI states independently.
+            </p>
           </div>
-          <p className="text-xs text-zinc-400 mt-1">
-            Visual workbench with strict <strong>AI Tool Parity</strong> for inspecting, modifying, and testing all chat tools, mini-apps, and lifecycle traces.
-          </p>
+
+          <div className="flex items-center gap-2 flex-wrap">
+            <button
+              onClick={handleSimulateStream}
+              disabled={isSimulating}
+              className="inline-flex items-center gap-2 rounded-xl bg-purple-600 px-3.5 py-2 text-xs font-semibold text-white shadow-md transition-all hover:bg-purple-500 active:scale-95 disabled:opacity-50 cursor-pointer"
+            >
+              <span>{isSimulating ? '⏳ Streaming...' : '▶ Token Stream'}</span>
+            </button>
+            <button
+              onClick={() => {
+                soundEffects.playSuccess();
+                addLog('Sound effects chime triggered.');
+              }}
+              className="rounded-xl border border-purple-700/50 bg-purple-900/40 px-3 py-2 text-xs font-medium text-purple-200 hover:bg-purple-800/60 transition-colors cursor-pointer"
+            >
+              🔊 Audio
+            </button>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2 flex-wrap">
-          <button
-            onClick={handleSimulateStream}
-            disabled={isSimulating}
-            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-3.5 py-2 text-xs font-semibold text-zinc-950 shadow-md transition-all hover:brightness-110 active:scale-95 disabled:opacity-50 cursor-pointer"
-          >
-            <span>{isSimulating ? '⏳ Streaming...' : '▶ Simulate Token Stream'}</span>
-          </button>
-          <button
-            onClick={() => {
-              soundEffects.playSuccess();
-              addLog('Sound effects chime triggered.');
-            }}
-            className="rounded-xl border border-zinc-700 bg-zinc-800/80 px-3 py-2 text-xs font-medium text-zinc-200 hover:bg-zinc-750 transition-colors cursor-pointer"
-          >
-            🔊 Test Audio
-          </button>
+        {/* Full-width Navigation Bar */}
+        <div className="flex items-center gap-2 p-3 bg-[#11071F] border-t border-purple-900/50 overflow-x-auto w-full">
+          {(['UI', 'TOOLS', 'FEEDBACK', 'ARCHITECTURE', 'TOKENS', 'TRACES', 'ALL', 'BUBBLES', 'LOADERS', 'PROMPTS'] as const).map((sec) => (
+            <button
+              key={sec}
+              onClick={() => {
+                soundEffects.playClick();
+                setActiveSection(sec);
+              }}
+              className={`px-4 py-1.5 rounded-lg text-xs font-bold tracking-wide transition-all cursor-pointer whitespace-nowrap ${
+                activeSection === sec
+                  ? 'bg-purple-500 text-white shadow-sm'
+                  : 'text-purple-300/70 hover:text-purple-100 hover:bg-purple-900/40'
+              }`}
+            >
+              {sec === 'UI' && 'UI'}
+              {sec === 'TOOLS' && 'Tools'}
+              {sec === 'FEEDBACK' && 'Feedback'}
+              {sec === 'ARCHITECTURE' && 'Architecture'}
+              {sec === 'TOKENS' && 'Tokens'}
+              {sec === 'TRACES' && 'Traces'}
+              {sec === 'ALL' && 'All'}
+              {sec === 'BUBBLES' && 'Bubbles'}
+              {sec === 'LOADERS' && 'Loaders'}
+              {sec === 'PROMPTS' && 'Prompts'}
+            </button>
+          ))}
         </div>
-      </div>
-
-      {/* Main Category Tabs */}
-      <div className="flex items-center gap-1.5 p-1 rounded-xl bg-zinc-900/80 border border-zinc-800 w-fit overflow-x-auto">
-        {(['UI', 'TOOLS', 'FEEDBACK', 'ARCHITECTURE', 'TOKENS', 'TRACES', 'ALL', 'BUBBLES', 'LOADERS', 'PROMPTS'] as const).map((sec) => (
-          <button
-            key={sec}
-            onClick={() => {
-              soundEffects.playClick();
-              setActiveSection(sec);
-            }}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
-              activeSection === sec
-                ? 'bg-blue-600 text-white font-semibold shadow-sm'
-                : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/60'
-            }`}
-          >
-            {sec === 'UI' && '✨ UI Components & Motion'}
-            {sec === 'TOOLS' && '🛠️ In-Chat Generative Tools'}
-            {sec === 'FEEDBACK' && '💬 Filmmaker Feedback Logs'}
-            {sec === 'ARCHITECTURE' && '📐 Agent Architecture & Intent'}
-            {sec === 'TOKENS' && '🎨 Design Tokens & Motion'}
-            {sec === 'TRACES' && '⚡ Agent Traces & Telemetry'}
-            {sec === 'ALL' && 'All Components'}
-            {sec === 'BUBBLES' && 'Chat Bubbles'}
-            {sec === 'LOADERS' && 'Loaders & Thinking'}
-            {sec === 'PROMPTS' && 'Prompt Bars & Pills'}
-          </button>
-        ))}
       </div>
 
       {/* SECTION: SHARED UI GALLERY & ICON MOTION LAB */}
@@ -161,7 +164,7 @@ export const DesignPlayground: React.FC = () => {
 
       {/* SECTION: IN-CHAT GENERATIVE TOOLS WITH SUBTABS */}
       {(activeSection === 'ALL' || activeSection === 'TOOLS') && (
-        <section className="space-y-4 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 p-6 shadow-md backdrop-blur-sm">
+        <section className="space-y-4 rounded-2xl border border-[#22274C] bg-[#0E1124] p-6 shadow-md">
           <div className="border-b border-zinc-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
               <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider font-mono">
@@ -172,7 +175,7 @@ export const DesignPlayground: React.FC = () => {
           </div>
 
           {/* 2-STAGE TOOL PATTERN ARCHITECTURAL BLUEPRINT */}
-          <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-950/30 via-midnight to-blue-950/30 border border-zinc-700/80 space-y-2">
+          <div className="p-4 rounded-xl bg-[#151B2E] border border-blue-900/30 space-y-2">
             <div className="flex items-center space-x-2 text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">
               <span>Standard 2-Stage Generative Tool Lifecycle Architecture</span>
             </div>
@@ -265,7 +268,7 @@ export const DesignPlayground: React.FC = () => {
               </button>
             </div>
 
-          <div className="p-4 rounded-xl bg-zinc-900/40 border border-zinc-850 flex justify-center">
+          <div className="p-4 rounded-xl bg-[#0B1021] border border-[#22274C] flex justify-center">
             {activeToolSubtab === 'FESTIVAL' && (
               <div className="w-full max-w-2xl">
                 <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-wider block mb-2">
@@ -413,7 +416,7 @@ export const DesignPlayground: React.FC = () => {
       {(activeSection === 'ALL' || activeSection === 'ARCHITECTURE') && (
         <div className="space-y-4">
           <ArchitecturePage />
-          <section className="space-y-4 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 p-6 shadow-md backdrop-blur-sm">
+          <section className="space-y-4 rounded-2xl border border-[#22274C] bg-[#0E1124] p-6 shadow-md">
             <div className="border-b border-zinc-800 pb-3 flex items-center justify-between">
               <div>
                 <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider font-mono flex items-center space-x-2">
@@ -470,7 +473,7 @@ export const DesignPlayground: React.FC = () => {
 
       {/* SECTION: CHAT BUBBLES */}
       {(activeSection === 'ALL' || activeSection === 'BUBBLES') && (
-        <section className="space-y-4 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 p-6 shadow-md backdrop-blur-sm">
+        <section className="space-y-4 rounded-2xl border border-[#22274C] bg-[#0E1124] p-6 shadow-md">
           <div className="border-b border-zinc-800 pb-3 flex items-center justify-between">
             <div>
               <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider font-mono">
@@ -517,7 +520,7 @@ export const DesignPlayground: React.FC = () => {
 
       {/* SECTION: LOADERS & THINKING PILLS */}
       {(activeSection === 'ALL' || activeSection === 'LOADERS') && (
-        <section className="space-y-4 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 p-6 shadow-md backdrop-blur-sm">
+        <section className="space-y-4 rounded-2xl border border-[#22274C] bg-[#0E1124] p-6 shadow-md">
           <div className="border-b border-zinc-800 pb-3 flex items-center justify-between">
             <div>
               <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider font-mono">
@@ -545,7 +548,7 @@ export const DesignPlayground: React.FC = () => {
 
       {/* SECTION: PROMPT BARS & STARTERS */}
       {(activeSection === 'ALL' || activeSection === 'PROMPTS') && (
-        <section className="space-y-4 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 p-6 shadow-md backdrop-blur-sm">
+        <section className="space-y-4 rounded-2xl border border-[#22274C] bg-[#0E1124] p-6 shadow-md">
           <div className="border-b border-zinc-800 pb-3 flex items-center justify-between">
             <div>
               <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider font-mono">
@@ -571,7 +574,7 @@ export const DesignPlayground: React.FC = () => {
       )}
 
       {/* Interactive Activity & Event Log Drawer */}
-      <div className="p-4 rounded-2xl border border-zinc-800 bg-zinc-950/90 text-xs font-mono text-zinc-300">
+      <div className="p-4 rounded-2xl border border-[#22274C] bg-[#0E1124] text-xs font-mono text-zinc-300">
         <div className="flex items-center justify-between pb-2 border-b border-zinc-800 mb-2">
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />

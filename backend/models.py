@@ -372,19 +372,19 @@ class DocumentAnalysisResult(BaseModel):
 
 
 class DocumentAnalysisRequest(BaseModel):
-    fileName: str
-    fileContent: Optional[str] = None
+    fileName: str = Field(..., max_length=500)
+    fileContent: Optional[str] = Field(None, max_length=500000)
     fileBase64: Optional[str] = None
-    mimeType: Optional[str] = None
+    mimeType: Optional[str] = Field(None, max_length=100)
 
 
 class ChatRequest(BaseModel):
-    message: str
+    message: str = Field(..., max_length=3000)
     conversationHistory: List[ChatMessage] = Field(default_factory=list)
-    attachedFileName: Optional[str] = None
-    attachedFileContent: Optional[str] = None
+    attachedFileName: Optional[str] = Field(None, max_length=500)
+    attachedFileContent: Optional[str] = Field(None, max_length=500000)
     attachedFileBase64: Optional[str] = None
-    attachedFileMimeType: Optional[str] = None
+    attachedFileMimeType: Optional[str] = Field(None, max_length=100)
 
 
 class FeedbackCategory(str, Enum):
@@ -409,9 +409,9 @@ class FeedbackItem(BaseModel):
 
 class FeedbackCreateRequest(BaseModel):
     rating: int = Field(ge=1, le=5)
-    category: str = "GENERAL"
-    comment: str
-    authorName: Optional[str] = None
-    authorEmail: Optional[str] = None
+    category: str = Field("GENERAL", max_length=50)
+    comment: str = Field(..., max_length=2000)
+    authorName: Optional[str] = Field(None, max_length=100)
+    authorEmail: Optional[str] = Field(None, max_length=150)
 
 

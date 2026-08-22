@@ -27,7 +27,7 @@ export const InvitationEmailCard: React.FC<InvitationEmailCardProps> = ({
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full max-w-2xl bg-card border border-rose-500/30 rounded-2xl p-5 shadow-xl shadow-black/40 space-y-4 my-2 text-zinc-100"
+      className="w-full max-w-2xl bg-[#0B0F19] border border-[#1E2545] rounded-2xl p-5 shadow-xl space-y-4 my-2 text-zinc-100"
     >
       {/* Header */}
       <div className="flex items-center justify-between border-b border-zinc-800/80 pb-3">
@@ -53,7 +53,7 @@ export const InvitationEmailCard: React.FC<InvitationEmailCardProps> = ({
       </div>
 
       {/* Verdict & Signal Warning */}
-      <div className="p-3 rounded-xl bg-midnight/90 border border-rose-500/20 space-y-2 text-xs">
+      <div className="p-3 rounded-xl bg-[#151B2E] border border-rose-900 space-y-2 text-xs">
         <div className="flex items-start space-x-2 text-rose-300">
           <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
           <p className="leading-relaxed">{args.initial_verdict}</p>
@@ -83,7 +83,7 @@ export const InvitationEmailCard: React.FC<InvitationEmailCardProps> = ({
             'Offers free entry but charges £100+ for winner laurel certification',
             'No confirmed theatrical screening venue listed on domain',
           ]).map((signal, idx) => (
-            <div key={idx} className="flex items-start space-x-2 text-zinc-300 bg-midnight/40 p-2 rounded-lg border border-zinc-800/80">
+            <div key={idx} className="flex items-start space-x-2 text-zinc-300 bg-[#151B2E] p-2 rounded-lg border border-zinc-800">
               <ShieldAlert className="w-3.5 h-3.5 text-rose-400 shrink-0 mt-0.5" />
               <span className="text-[11px]">{signal}</span>
             </div>

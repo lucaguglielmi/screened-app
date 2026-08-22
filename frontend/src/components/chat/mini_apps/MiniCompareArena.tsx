@@ -12,7 +12,7 @@ export const MiniCompareArena: React.FC<MiniCompareArenaProps> = ({ args, onSele
   const festB = args.festival_b || 'London Independent Film Festival';
 
   return (
-    <div className="my-3 p-4 rounded-xl border border-purple-500/30 bg-gradient-to-br from-purple-950/20 via-zinc-900/60 to-black/80 shadow-lg backdrop-blur-md transition-all hover:border-purple-500/50">
+    <div className="my-3 p-4 rounded-xl border border-purple-900 bg-[#0B0F19] shadow-lg transition-all hover:border-purple-500/50">
       <div className="flex items-center justify-between gap-2 border-b border-purple-500/20 pb-2.5 mb-3">
         <div className="flex items-center gap-2.5">
           <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-purple-500/20 text-purple-400 text-sm font-bold ring-1 ring-purple-500/40">
@@ -32,7 +32,7 @@ export const MiniCompareArena: React.FC<MiniCompareArenaProps> = ({ args, onSele
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-sm">
         {/* Festival A */}
-        <div className="rounded-2xl bg-zinc-950/70 p-4 border border-zinc-800 flex flex-col justify-between">
+        <div className="rounded-2xl bg-[#151B2E] p-4 border border-zinc-800 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-xs font-bold uppercase tracking-wider text-purple-400">Option A</span>
@@ -57,7 +57,7 @@ export const MiniCompareArena: React.FC<MiniCompareArenaProps> = ({ args, onSele
         </div>
 
         {/* Festival B */}
-        <div className="rounded-2xl bg-zinc-950/70 p-4 border border-zinc-800 flex flex-col justify-between">
+        <div className="rounded-2xl bg-[#151B2E] p-4 border border-zinc-800 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-xs font-bold uppercase tracking-wider text-amber-400">Option B</span>
@@ -83,7 +83,7 @@ export const MiniCompareArena: React.FC<MiniCompareArenaProps> = ({ args, onSele
       </div>
 
       {args.verdict_summary && (
-        <div className="mt-3.5 rounded-xl bg-zinc-900/90 p-3 border border-zinc-800 text-sm text-zinc-300 leading-relaxed">
+        <div className="mt-3.5 rounded-xl bg-[#151B2E] p-3 border border-zinc-800 text-sm text-zinc-300 leading-relaxed">
           <strong className="text-purple-400">Producer Advice: </strong> {args.verdict_summary}
         </div>
       )}

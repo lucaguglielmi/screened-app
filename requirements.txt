@@ -8,6 +8,7 @@ httpx>=0.28.0
 
 # Partner Track: Parallel Search Python SDK
 parallel-web>=0.1.0
+slowapi>=0.1.9
 
 # Google Cloud & Gemini AI
 google-genai>=1.0.0

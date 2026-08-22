@@ -80,7 +80,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full max-w-2xl bg-card border border-blue-500/30 rounded-2xl p-5 shadow-xl shadow-black/40 space-y-4 my-2 text-zinc-100"
+      className="w-full max-w-2xl bg-[#0B0F19] border border-[#1E2545] rounded-2xl p-5 shadow-xl space-y-4 my-2 text-zinc-100"
     >
       {/* Header */}
       <div className="flex items-center justify-between border-b border-zinc-800/80 pb-3">
@@ -123,7 +123,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
           {/* Budget & Funding Needed Sliders */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             {/* Total Budget Slider */}
-            <div className="space-y-1.5 bg-black/40 p-3 rounded-xl">
+            <div className="space-y-1.5 bg-[#151B2E] p-3 rounded-xl">
               <div className="flex justify-between items-center">
                 <span className="text-zinc-400 font-mono">Total Estimated Budget</span>
                 <span className="font-bold text-blue-400 font-mono">£{budgetTier.toLocaleString()}</span>
@@ -144,7 +144,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
             </div>
 
             {/* Funding Gap Needed Slider */}
-            <div className="space-y-1.5 bg-black/40 p-3 rounded-xl">
+            <div className="space-y-1.5 bg-[#151B2E] p-3 rounded-xl">
               <div className="flex justify-between items-center">
                 <span className="text-zinc-400 font-mono">Grant Funding Needed</span>
                 <span className="font-bold text-emerald-400 font-mono">£{fundingNeeded.toLocaleString()}</span>
@@ -206,7 +206,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
               onDragOver={(e) => e.preventDefault()}
               onDrop={handleFileDrop}
               onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-zinc-700/80 hover:border-blue-500/50 bg-midnight/50 hover:bg-surface/80 rounded-xl p-3 text-center cursor-pointer transition-all flex flex-col items-center justify-center space-y-1"
+              className="border-2 border-dashed border-zinc-700/80 hover:border-blue-500/50 bg-[#151B2E] hover:bg-[#1E2545] rounded-xl p-3 text-center cursor-pointer transition-all flex flex-col items-center justify-center space-y-1"
             >
               <input
                 ref={fileInputRef}
@@ -272,8 +272,8 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
           animate={{ opacity: 1, scale: 1 }}
           className="space-y-4"
         >
-          <div className="p-4 rounded-xl bg-blue-950/30 border border-blue-500/40 space-y-2.5 text-xs">
-            <div className="flex items-center justify-between border-b border-blue-500/20 pb-2">
+          <div className="p-4 rounded-xl bg-[#0F1D35] border border-blue-900 space-y-2.5 text-xs">
+            <div className="flex items-center justify-between border-b border-blue-800 pb-2">
               <span className="font-mono font-bold text-blue-400 uppercase tracking-wider">
                 Stage 2: Funding Search Strategy Ready
               </span>

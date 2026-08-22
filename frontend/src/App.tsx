@@ -34,6 +34,7 @@ import { ChatContainer } from './components/chat/ChatContainer';
 import { DesignPlayground } from './components/playground/DesignPlayground';
 import { WhyScreened } from './components/WhyScreened';
 import { CommandPalette } from './components/CommandPalette';
+import { HistorySidebar } from './components/HistorySidebar';
 import { VectorFieldBackground } from './components/animations/VectorFieldBackground';
 import { isSoundMuted, setSoundMuted, playSuccessChime } from './utils/audio';
 
@@ -107,6 +108,7 @@ export default function App() {
   const [outreachLoading, setOutreachLoading] = useState(false);
   // Command Palette & Keyboard state
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
 
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -134,6 +136,10 @@ export default function App() {
 
   // Global Page-Level Paste Intake
   useEffect(() => {
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+
     const handlePaste = (e: ClipboardEvent) => {
       const activeEl = document.activeElement as HTMLElement;
       if (['INPUT', 'TEXTAREA'].includes(activeEl?.tagName)) {
@@ -205,6 +211,19 @@ export default function App() {
     });
   };
 
+  const saveRecentInvestigation = (id: string) => {
+    try {
+      const saved = localStorage.getItem('screened_investigation_ids');
+      const prevIds: string[] = saved ? JSON.parse(saved) : [];
+      if (!prevIds.includes(id)) {
+        const updated = [id, ...prevIds].slice(0, 20);
+        localStorage.setItem('screened_investigation_ids', JSON.stringify(updated));
+      }
+    } catch {
+      // ignore
+    }
+  };
+
   // SSE Subscription
   useEffect(() => {
     if (!investigation?.id) return;
@@ -225,6 +244,12 @@ export default function App() {
         } else if (activityEvent.eventType === 'DOSSIER_READY') {
           playSuccessChime();
           fetchInvestigation(investigation.id);
+          if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification('Screened', {
+              body: `Investigation for ${investigation.query} is complete.`,
+              icon: '/icon.svg'
+            });
+          }
         } else if (activityEvent.eventType === 'PLANNING_STARTED') {
           setInvestigation((prev) => prev ? { ...prev, status: 'PLANNING' } : null);
         } else if (activityEvent.eventType === 'DOMAIN_SEARCH_STARTED') {
@@ -254,6 +279,7 @@ export default function App() {
       if (res.ok) {
         const data: Investigation = await res.json();
         setInvestigation(data);
+        saveRecentInvestigation(data.id);
         if (data.confirmedEntity?.name) {
           saveRecentSearch(data.confirmedEntity.name);
         }
@@ -287,6 +313,7 @@ export default function App() {
 
       const inv: Investigation = await res.json();
       setInvestigation(inv);
+      saveRecentInvestigation(inv.id);
     } catch (err: any) {
       setError(err.message || 'Failed to initiate investigation.');
     } finally {
@@ -406,9 +433,10 @@ export default function App() {
   const currentStatus = investigation?.status || 'DRAFT';
 
   return (
-    <div className="relative min-h-screen flex flex-row bg-paper-bg dark:bg-darkroom-bg text-paper-text dark:text-darkroom-text selection:bg-indigo-500/20 antialiased overflow-x-hidden">
+    <div className={`relative min-h-screen flex flex-row ${activeTool === 'DESIGN_PLAYGROUND' ? 'bg-[#0B1021]' : 'bg-paper-bg dark:bg-darkroom-bg'} text-paper-text dark:text-darkroom-text selection:bg-indigo-500/20 antialiased overflow-x-hidden`}>
       {/* Global Organic Morphing Magnetic Vector Field Background (~70% Screen Blob) */}
-      <VectorFieldBackground
+      {activeTool !== 'DESIGN_PLAYGROUND' && (
+        <VectorFieldBackground
         color="#E11D48"
         speed={0.55}
         amplitude={0.24}
@@ -418,6 +446,7 @@ export default function App() {
         opacity={0.26}
         className="fixed inset-0 pointer-events-none z-0"
       />
+      )}
 
       {/* Left Vertical Navigation Rail & Expandable Flyout */}
       <LeftNavigation
@@ -428,7 +457,7 @@ export default function App() {
       {/* Main Scrollable Workspace Container */}
       <div className="flex-1 flex flex-col min-w-0 min-h-screen overflow-y-auto">
         {/* Top Header Bar */}
-        <header className="border-b border-paper-border dark:border-darkroom-border bg-paper-surface/80 dark:bg-darkroom-surface/80 backdrop-blur sticky top-0 z-30 transition-colors no-print">
+        <header className={`border-b border-paper-border dark:border-darkroom-border ${activeTool === 'DESIGN_PLAYGROUND' ? 'bg-[#0B1021]' : 'bg-paper-surface/80 dark:bg-darkroom-surface/80 backdrop-blur'} sticky top-0 z-30 transition-colors no-print`}>
           <div className="px-4 sm:px-6 md:px-8 h-16 flex items-center justify-between gap-4">
             <div 
               onClick={handleReset}
@@ -479,6 +508,16 @@ export default function App() {
                 <span className="flex items-center gap-0.5 text-[10px] bg-[#1A1F45] text-slate-400 px-1.5 py-0.5 rounded border border-[#262D5F]">
                   <CommandIcon className="size-2.5" /> K
                 </span>
+              </button>
+
+              {/* History Button */}
+              <button
+                onClick={() => setIsHistoryOpen(true)}
+                className="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-[#0E1124] hover:bg-[#151936] text-slate-400 hover:text-indigo-300 border border-[#22274C] hover:border-indigo-500/40 transition-colors cursor-pointer text-xs font-mono flex items-center gap-1.5"
+                title="View Past Searches"
+              >
+                <History className="size-4 text-indigo-400" />
+                <span className="hidden sm:inline">History</span>
               </button>
 
               {/* Sound Effect Toggle Button (M) */}
@@ -781,6 +820,16 @@ export default function App() {
         <KeyboardHelpModal
           isOpen={isKeyboardHelpOpen}
           onClose={() => setIsKeyboardHelpOpen(false)}
+        />
+
+        {/* History Sidebar */}
+        <HistorySidebar
+          isOpen={isHistoryOpen}
+          onClose={() => setIsHistoryOpen(false)}
+          onSelectInvestigation={(id) => {
+            fetchInvestigation(id);
+            setActiveTool('DUE_DILIGENCE');
+          }}
         />
 
         {/* Footer */}
