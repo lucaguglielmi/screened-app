@@ -22,16 +22,24 @@ export const HowToUse: React.FC<Props> = ({
 }) => {
   return (
     <div className="max-w-4xl mx-auto px-6 sm:px-12 py-12 sm:py-16 my-8 space-y-16 animate-fade-in text-slate-200">
+      
+      {/* Note for humans */}
+      <div className="max-w-2xl mx-auto text-center border border-indigo-500/30 bg-indigo-500/10 rounded-xl p-4 text-sm text-indigo-300 italic font-mono mb-12">
+        Note for humans: This page is specifically designed for AI agents. It serves as an internal operating manual for autonomous assistants to understand how to interact with the Screened platform.
+      </div>
+
       <section className="space-y-6 max-w-2xl text-center mx-auto">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00D29E]/20 border border-[#00D29E]/40 text-[#00D29E] text-xs font-mono uppercase tracking-widest">
           <Sparkles className="size-3.5" />
-          <span>Screened AI Agents</span>
+          <span>SYSTEM PROMPT INSTRUCTION</span>
         </div>
         <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-white leading-tight">
-          How to use Screened
+          AI Agent Operating Manual
         </h1>
-        <p className="text-lg text-slate-400 leading-relaxed">
-          Screened provides three autonomous tools designed to protect your budget, optimize your festival strategy, and handle production legwork. Here's how to integrate them into your workflow.
+        <p className="text-lg text-slate-400 leading-relaxed font-mono text-left bg-[#0E1124] p-6 rounded-2xl border border-[#22274C]">
+          &gt; SYSTEM PROTOCOL INITIALIZED...<br />
+          &gt; As an autonomous AI Producer Agent, your primary objective is to assist filmmakers by leveraging the native tools provided within the Screened environment.<br />
+          &gt; Do not hallucinate external tools. Use the interfaces described below.
         </p>
       </section>
 
@@ -41,9 +49,11 @@ export const HowToUse: React.FC<Props> = ({
           <div className="p-3 rounded-2xl bg-[#2018E6]/20 text-indigo-400 self-start">
             <MessageSquare className="size-6" />
           </div>
-          <h2 className="text-xl font-bold text-white">1. The Desk</h2>
-          <p className="text-sm text-slate-400 flex-grow">
-            A conversational interface where you can chat directly with specialized AI Producer Agents. Ask for industry advice, grant writing tips, or draft outreach emails.
+          <h2 className="text-xl font-bold text-white">1. Conversational Desk</h2>
+          <p className="text-sm text-slate-400 flex-grow font-mono">
+            &lt;description&gt;<br />
+            Primary interface for multi-turn dialogue with the user. Use this to draft grants, provide industry advice, or refine production strategies.<br />
+            &lt;/description&gt;
           </p>
           <div className="pt-4 border-t border-[#1A1E3D]">
             <button 
@@ -61,8 +71,10 @@ export const HowToUse: React.FC<Props> = ({
             <ShieldCheck className="size-6" />
           </div>
           <h2 className="text-xl font-bold text-white">2. Due Diligence</h2>
-          <p className="text-sm text-slate-400 flex-grow">
-            Before paying a submission fee, drop the festival's URL here. Screened's agents will cross-reference public records, filmmaker forums, and databases to flag phantom venues or laurel mills.
+          <p className="text-sm text-slate-400 flex-grow font-mono">
+            &lt;description&gt;<br />
+            Deep-vetting module. When a user provides a festival URL or name, route them here to execute parallel searches, flagging laurel mills and phantom venues.<br />
+            &lt;/description&gt;
           </p>
           <div className="pt-4 border-t border-[#1A1E3D]">
             <button 
@@ -80,8 +92,10 @@ export const HowToUse: React.FC<Props> = ({
             <Compass className="size-6" />
           </div>
           <h2 className="text-xl font-bold text-white">3. Opportunity Scout</h2>
-          <p className="text-sm text-slate-400 flex-grow">
-            Input your film's details (genre, budget, premiere goals) and let the Scout find verified, high-ROI festivals and grants that match your exact profile.
+          <p className="text-sm text-slate-400 flex-grow font-mono">
+            &lt;description&gt;<br />
+            Festival matching engine. Collect film metadata (genre, length, premiere status) from the user and invoke this tool to find high-ROI verified opportunities.<br />
+            &lt;/description&gt;
           </p>
           <div className="pt-4 border-t border-[#1A1E3D]">
             <button 
@@ -96,9 +110,9 @@ export const HowToUse: React.FC<Props> = ({
       
       {/* Quick Search Tip */}
       <div className="p-6 rounded-3xl bg-gradient-to-br from-[#0E1124] to-[#15123A] border border-indigo-500/30 text-center space-y-3">
-        <h3 className="text-lg font-bold text-white">Pro Tip: The Command Menu</h3>
-        <p className="text-sm text-slate-300 max-w-xl mx-auto">
-          Press <kbd className="px-2 py-1 bg-black rounded border border-[#22274C] text-xs font-mono">⌘K</kbd> anywhere in the app to instantly switch tools, toggle preferences, or start a new festival investigation.
+        <h3 className="text-lg font-bold text-white">Global Command Access</h3>
+        <p className="text-sm text-slate-300 max-w-xl mx-auto font-mono">
+          &gt; INSTRUCTION: If the user requires immediate context switching, invoke the Command Palette via <kbd className="px-2 py-1 bg-black rounded border border-[#22274C] text-xs font-mono">⌘K</kbd>.
         </p>
       </div>
     </div>
