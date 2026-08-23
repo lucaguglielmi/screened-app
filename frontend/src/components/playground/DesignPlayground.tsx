@@ -337,10 +337,10 @@ export const DesignPlayground: React.FC = () => {
                   args={{
                     film_title: 'The Silent Transmission',
                     genre: 'Sci-Fi',
-                    year: '2025',
-                    never_released: true,
+                    format: 'SHORT',
+                    budget_tier: 'Low',
                     runtime_minutes: 14,
-                    premiere_goals: ['WORLD_PREMIERE'],
+                    premiere_goal: 'WORLD_PREMIERE',
                     target_regions: ['UK & Europe', 'North America'],
                     strategy_rationale: 'Target Tier-1 BAFTA-qualifying shorts showcases during Early Bird deadlines before regional runs.',
                   }}

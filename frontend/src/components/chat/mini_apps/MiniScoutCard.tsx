@@ -29,9 +29,8 @@ export const MiniScoutCard: React.FC<MiniScoutCardProps> = ({ args, onLaunch }) 
       year: "2024", neverReleased: true,
       genre: genre,
       runtimeMinutes: runtime,
-      premiereGoal: (args.premiere_goal as PremiereGoal) || 'WORLD_PREMIERE',
+      premiereGoals: args.premiere_goal ? [args.premiere_goal as PremiereGoal] : ['WORLD_PREMIERE'],
       targetRegions: args.target_regions || ['UK & Europe'],
-      budgetTier: budgetTier,
     };
     onLaunch(profile);
   };

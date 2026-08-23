@@ -6,7 +6,7 @@ export type VerificationStatus = 'CORROBORATED' | 'SUPPORTED' | 'DISPUTED' | 'UN
 
 export type Stance = 'SUPPORTS' | 'CONTRADICTS' | 'MENTIONS';
 
-export type DetailDensity = 'BASIC' | 'STANDARD' | 'DEEP_DIVE' | 'AI_MODE';
+export type DetailDensity = 'SUMMARY' | 'STANDARD' | 'EVIDENCE';
 
 export type ApprovalStatus = 'PENDING_APPROVAL' | 'APPROVED' | 'REJECTED' | 'EXECUTED_SANDBOX';
 

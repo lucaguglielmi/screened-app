@@ -35,7 +35,7 @@ import { WhyScreened } from './components/WhyScreened';
 import { HowToUse } from './components/HowToUse';
 import { CommandPalette } from './components/CommandPalette';
 import { HistorySidebar } from './components/HistorySidebar';
-import { MeshGradientBackground } from './components/animations/MeshGradientBackground';
+import { VectorFieldBackground } from './components/animations/VectorFieldBackground';
 import { AnimatedEE } from './components/animations/AnimatedEE';
 import { isSoundMuted, setSoundMuted, playSuccessChime } from './utils/audio';
 
@@ -410,7 +410,7 @@ export default function App() {
     <div className={`relative min-h-screen flex flex-row ${activeTool === 'DESIGN_PLAYGROUND' ? 'bg-[#0B1021]' : 'bg-paper-bg dark:bg-darkroom-bg'} text-paper-text dark:text-darkroom-text selection:bg-indigo-500/20 antialiased overflow-x-hidden`}>
       {/* Global Organic Morphing Mesh Gradient Background */}
       {activeTool !== 'DESIGN_PLAYGROUND' && (
-        <MeshGradientBackground className="fixed inset-0 pointer-events-none z-0" />
+        <VectorFieldBackground className="fixed inset-0 pointer-events-none z-0" />
       )}
 
       {/* Left Vertical Navigation Rail & Expandable Flyout */}
