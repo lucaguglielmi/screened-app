@@ -64,7 +64,7 @@ export default function App() {
 
   const [activeTool, setActiveTool] = useState<ActiveTool>('CONVERSATIONAL_DESK');
   const [initialScoutProfile, setInitialScoutProfile] = useState<FilmProfile | undefined>(undefined);
-  const [query, setQuery] = useState('Aldergate Film Festival');
+  const [query, setQuery] = useState('');
 
   const [optionalUrl] = useState('');
   const [loading, setLoading] = useState(false);

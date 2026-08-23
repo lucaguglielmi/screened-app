@@ -17,11 +17,11 @@ import { AgentAvatar } from './AgentAvatar';
 import { soundEffects } from '../../utils/audio';
 
 const ACTION_TABS = [
-  { label: 'Research a festival', icon: Search, query: 'Is Aldergate Film Festival legitimate?' },
-  { label: 'Find a grant', icon: Coins, query: 'Find £25k documentary production grants in the UK' },
-  { label: 'Analyze an invitation', icon: MailWarning, query: 'Analyze this festival invitation email offering a 50% waiver' },
-  { label: 'Compare festivals', icon: GitCompare, query: 'Compare Raindance vs Leeds International Film Festival' },
-  { label: 'Scout strategy', icon: Compass, query: 'I have a 15-min sci-fi short looking for a UK premiere on a £200 budget' },
+  { label: 'Research a festival', icon: Search, query: 'I want to research a film festival' },
+  { label: 'Find a grant', icon: Coins, query: 'Help me find film grants and funding opportunities' },
+  { label: 'Analyze an invitation', icon: MailWarning, query: 'I received a festival invitation email I want to analyze' },
+  { label: 'Compare festivals', icon: GitCompare, query: 'I want to compare two film festivals' },
+  { label: 'Scout strategy', icon: Compass, query: 'Help me plan a festival submission strategy for my film' },
 ];
 
 interface ChatBubbleProps {
