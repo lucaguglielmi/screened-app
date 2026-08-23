@@ -165,7 +165,7 @@ export const DesignPlayground: React.FC = () => {
 
       {/* SECTION: IN-CHAT GENERATIVE TOOLS WITH SUBTABS */}
       {(activeSection === 'ALL' || activeSection === 'TOOLS') && (
-        <section className="space-y-4 rounded-2xl border border-[#22274C] bg-[#0E1124] p-6 shadow-md">
+        <section className="space-y-4 pt-4">
           <div className="border-b border-zinc-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
               <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider font-mono">
@@ -176,7 +176,7 @@ export const DesignPlayground: React.FC = () => {
           </div>
 
           {/* 2-STAGE TOOL PATTERN ARCHITECTURAL BLUEPRINT */}
-          <div className="p-4 rounded-xl bg-[#151B2E] border border-blue-900/30 space-y-2">
+          <div className="p-4 rounded-xl bg-[#151B2E] space-y-2">
             <div className="flex items-center space-x-2 text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">
               <span>Standard 2-Stage Generative Tool Lifecycle Architecture</span>
             </div>
@@ -210,7 +210,7 @@ export const DesignPlayground: React.FC = () => {
           </div>
 
           {/* Subtabs for Tools */}
-          <div className="flex items-center gap-1 bg-midnight p-1 rounded-xl border border-zinc-800 overflow-x-auto">
+          <div className="flex items-center gap-1 bg-midnight p-1 rounded-xl overflow-x-auto">
               <button
                 onClick={() => { soundEffects.playClick(); setActiveToolSubtab('FESTIVAL'); }}
                 className={`px-2.5 py-1 rounded-lg text-xs font-mono transition-colors ${
@@ -269,7 +269,7 @@ export const DesignPlayground: React.FC = () => {
               </button>
             </div>
 
-          <div className="p-4 rounded-xl bg-[#0B1021] border border-[#22274C] flex justify-center">
+          <div className="p-4 rounded-xl bg-[#0B1021] flex justify-center">
             {activeToolSubtab === 'FESTIVAL' && (
               <div className="w-full max-w-2xl">
                 <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-wider block mb-2">
@@ -380,7 +380,7 @@ export const DesignPlayground: React.FC = () => {
                 <span className="text-[11px] font-mono text-amber-400 uppercase tracking-wider block">
                   Feature: Interactive Multi-Step Follow-Up Probes & Document Intake (Branch A + B)
                 </span>
-                <div className="p-4 rounded-xl bg-[#141838]/90 border border-[#252C5E] space-y-3">
+                <div className="p-4 rounded-xl bg-[#141838]/90 space-y-3">
                   <div className="flex items-center gap-2 text-xs font-semibold text-indigo-300">
                     <span className="text-amber-400 text-sm">✦</span>
                     <span>Interactive Follow-Up Probes (1-Click Filmmaker Action Chips)</span>
@@ -417,7 +417,7 @@ export const DesignPlayground: React.FC = () => {
       {(activeSection === 'ALL' || activeSection === 'ARCHITECTURE') && (
         <div className="space-y-4">
           <ArchitecturePage />
-          <section className="space-y-4 rounded-2xl border border-[#22274C] bg-[#0E1124] p-6 shadow-md">
+          <section className="space-y-4 pt-4">
             <div className="border-b border-zinc-800 pb-3 flex items-center justify-between">
               <div>
                 <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider font-mono flex items-center space-x-2">
@@ -432,7 +432,7 @@ export const DesignPlayground: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-              <div className="p-4 rounded-xl bg-card border border-emerald-500/20 space-y-2">
+              <div className="p-4 rounded-xl bg-card space-y-2">
                 <div className="flex items-center space-x-2 text-emerald-400 font-bold font-mono">
                   <ShieldCheck className="w-4 h-4" />
                   <span>1. Festival Vetting Path</span>
@@ -442,7 +442,7 @@ export const DesignPlayground: React.FC = () => {
                 </p>
               </div>
 
-              <div className="p-4 rounded-xl bg-card border border-blue-500/20 space-y-2">
+              <div className="p-4 rounded-xl bg-card space-y-2">
                 <div className="flex items-center space-x-2 text-blue-400 font-bold font-mono">
                   <Coins className="w-4 h-4" />
                   <span>2. Grant & Funding Path</span>
@@ -452,7 +452,7 @@ export const DesignPlayground: React.FC = () => {
                 </p>
               </div>
 
-              <div className="p-4 rounded-xl bg-card border border-rose-500/20 space-y-2">
+              <div className="p-4 rounded-xl bg-card space-y-2">
                 <div className="flex items-center space-x-2 text-rose-400 font-bold font-mono">
                   <MailWarning className="w-4 h-4" />
                   <span>3. Email & Laurel Audit</span>
@@ -474,7 +474,7 @@ export const DesignPlayground: React.FC = () => {
 
       {/* SECTION: CHAT BUBBLES */}
       {(activeSection === 'ALL' || activeSection === 'BUBBLES') && (
-        <section className="space-y-4 rounded-2xl border border-[#22274C] bg-[#0E1124] p-6 shadow-md">
+        <section className="space-y-4 pt-4">
           <div className="border-b border-zinc-800 pb-3 flex items-center justify-between">
             <div>
               <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider font-mono">
@@ -487,7 +487,7 @@ export const DesignPlayground: React.FC = () => {
             </span>
           </div>
 
-          <div className="space-y-3 bg-zinc-900/40 p-4 rounded-xl border border-zinc-850">
+          <div className="space-y-3 bg-zinc-900/40 p-4 rounded-xl">
             <ChatBubble
               message={mockUserMsg}
               onLaunchDueDiligence={(name) => addLog(`Launch Due Diligence for: ${name}`)}
@@ -521,7 +521,7 @@ export const DesignPlayground: React.FC = () => {
 
       {/* SECTION: LOADERS & THINKING PILLS */}
       {(activeSection === 'ALL' || activeSection === 'LOADERS') && (
-        <section className="space-y-4 rounded-2xl border border-[#22274C] bg-[#0E1124] p-6 shadow-md">
+        <section className="space-y-4 pt-4">
           <div className="border-b border-zinc-800 pb-3 flex items-center justify-between">
             <div>
               <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider font-mono">
@@ -534,7 +534,7 @@ export const DesignPlayground: React.FC = () => {
             </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-zinc-900/40 p-4 rounded-xl border border-zinc-850">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-zinc-900/40 p-4 rounded-xl">
             <div>
               <span className="text-[11px] text-zinc-400 font-medium block mb-2">Default Executive Reasoning:</span>
               <AgentThinkingPill />
@@ -549,7 +549,7 @@ export const DesignPlayground: React.FC = () => {
 
       {/* SECTION: PROMPT BARS & STARTERS */}
       {(activeSection === 'ALL' || activeSection === 'PROMPTS') && (
-        <section className="space-y-4 rounded-2xl border border-[#22274C] bg-[#0E1124] p-6 shadow-md">
+        <section className="space-y-4 pt-4">
           <div className="border-b border-zinc-800 pb-3 flex items-center justify-between">
             <div>
               <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider font-mono">
@@ -562,7 +562,7 @@ export const DesignPlayground: React.FC = () => {
             </span>
           </div>
 
-          <div className="space-y-6 bg-zinc-900/40 p-4 rounded-xl border border-zinc-850">
+          <div className="space-y-6 bg-zinc-900/40 p-4 rounded-xl">
             <div>
               <span className="text-[11px] text-zinc-400 font-medium block mb-2">Interactive Prompt Bar:</span>
               <ChatPromptBar
@@ -575,7 +575,7 @@ export const DesignPlayground: React.FC = () => {
       )}
 
       {/* Interactive Activity & Event Log Drawer */}
-      <div className="p-4 rounded-2xl border border-[#22274C] bg-[#0E1124] text-xs font-mono text-zinc-300">
+      <div className="p-4 rounded-2xl bg-[#0E1124] text-xs font-mono text-zinc-300">
         <div className="flex items-center justify-between pb-2 border-b border-zinc-800 mb-2">
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />

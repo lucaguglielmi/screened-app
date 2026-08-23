@@ -113,7 +113,7 @@ export const AgentObservabilityLab: React.FC = () => {
 
       {/* Metric Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-4 rounded-2xl bg-[#0E1124] border border-[#22274C] space-y-1">
+        <div className="p-4 rounded-2xl bg-[#0E1124] space-y-1">
           <div className="flex items-center justify-between text-slate-400 text-xs font-mono">
             <span>Total Latency</span>
             <Clock className="size-4 text-indigo-400" />
@@ -122,7 +122,7 @@ export const AgentObservabilityLab: React.FC = () => {
           <p className="text-[11px] text-[#00D29E] font-mono">Within 90s SLA</p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-[#0E1124] border border-[#22274C] space-y-1">
+        <div className="p-4 rounded-2xl bg-[#0E1124] space-y-1">
           <div className="flex items-center justify-between text-slate-400 text-xs font-mono">
             <span>Tokens Consumed</span>
             <Coins className="size-4 text-amber-400" />
@@ -131,7 +131,7 @@ export const AgentObservabilityLab: React.FC = () => {
           <p className="text-[11px] text-slate-400 font-mono">~£0.0034 Vertex AI spend</p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-[#0E1124] border border-[#22274C] space-y-1">
+        <div className="p-4 rounded-2xl bg-[#0E1124] space-y-1">
           <div className="flex items-center justify-between text-slate-400 text-xs font-mono">
             <span>Verification Pass</span>
             <ShieldCheck className="size-4 text-[#00D29E]" />
@@ -140,7 +140,7 @@ export const AgentObservabilityLab: React.FC = () => {
           <p className="text-[11px] text-slate-400 font-mono">18/18 claims grounded</p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-[#0E1124] border border-[#22274C] space-y-1">
+        <div className="p-4 rounded-2xl bg-[#0E1124] space-y-1">
           <div className="flex items-center justify-between text-slate-400 text-xs font-mono">
             <span>Disputed Claims</span>
             <AlertTriangle className="size-4 text-rose-400" />
@@ -160,7 +160,7 @@ export const AgentObservabilityLab: React.FC = () => {
           <span className="text-xs font-mono text-slate-400">Click span for metadata</span>
         </div>
 
-        <div className="p-4 rounded-3xl bg-[#0E1124] border border-[#22274C] space-y-3">
+        <div className="p-4 rounded-3xl bg-[#0E1124] space-y-3">
           {traces.map((trace) => {
             const isSelected = selectedSpan?.id === trace.id;
             const widthPct = Math.max(12, (trace.durationMs / totalDuration) * 100);
@@ -187,7 +187,7 @@ export const AgentObservabilityLab: React.FC = () => {
                       }`}
                     />
                     <span className="font-semibold text-white">{trace.name}</span>
-                    <span className="text-[11px] font-mono text-slate-400 px-2 py-0.5 rounded-md bg-[#141731] border border-[#22274C]">
+                    <span className="text-[11px] font-mono text-slate-400 px-2 py-0.5 rounded-md bg-[#141731]">
                       {trace.service}
                     </span>
                   </div>
@@ -219,7 +219,7 @@ export const AgentObservabilityLab: React.FC = () => {
 
       {/* Selected Span Detail Inspector */}
       {selectedSpan && (
-        <div className="p-6 rounded-3xl bg-[#0E1124] border border-[#22274C] space-y-4">
+        <div className="p-6 rounded-3xl bg-[#0E1124] space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-[#1A1E3D]">
             <div className="flex items-center gap-2">
               <Cpu className="size-5 text-indigo-400" />

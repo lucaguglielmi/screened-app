@@ -7,7 +7,8 @@ import {
   Layers, 
   GripVertical, 
   Check, 
-  Scale
+  Scale,
+  Radio
 } from 'lucide-react';
 import { ActiveTool } from '../../types/investigation';
 import { soundEffects } from '../../utils/audio';
@@ -158,6 +159,34 @@ export const LeftNavigation: React.FC<Props> = ({
           {activeTooltip === 'Design Playground' && (
             <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-[#0E1124] text-slate-100 text-sm font-medium whitespace-nowrap shadow-xl border border-[#22274C] z-50 pointer-events-none">
               Design Playground
+            </div>
+          )}
+        </div>
+
+        {/* Live Deployment Status Indicator */}
+        <div className="relative">
+          <div
+            onMouseEnter={() => setActiveTooltip('Live Deployment')}
+            onMouseLeave={() => setActiveTooltip(null)}
+            className="p-2 rounded-xl bg-[#0A0D1E] border border-[#1B2042] flex items-center justify-center cursor-default group"
+          >
+            <div className="relative flex items-center justify-center">
+              <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-[#00D29E] opacity-75" />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#00D29E]" />
+            </div>
+          </div>
+          {activeTooltip === 'Live Deployment' && (
+            <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-2 rounded-xl bg-[#0E1124] text-slate-100 text-xs font-mono whitespace-nowrap shadow-xl border border-[#22274C] z-50 pointer-events-none">
+              <div className="flex items-center gap-1.5 text-[#00D29E] font-semibold">
+                <Radio className="size-3" />
+                <span>Live Cloud Run</span>
+              </div>
+              <div className="text-[11px] text-slate-400 mt-0.5">
+                Commit: <span className="text-slate-200">{typeof __COMMIT_SHA__ !== 'undefined' ? __COMMIT_SHA__ : 'dev'}</span>
+              </div>
+              <div className="text-[10px] text-slate-500 mt-0.5">
+                Built: {typeof __BUILD_TIME__ !== 'undefined' ? new Date(__BUILD_TIME__).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'local'}
+              </div>
             </div>
           )}
         </div>

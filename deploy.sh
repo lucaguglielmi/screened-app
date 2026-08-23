@@ -4,9 +4,24 @@ set -eo pipefail
 PROJECT_ID="screened-hackathon"
 REGION="europe-west2"
 SERVICE_NAME="screened"
-IMAGE_TAG="europe-west2-docker.pkg.dev/${PROJECT_ID}/screened-app/screened:latest"
+SHORT_SHA=$(git rev-parse --short HEAD 2>/dev/null || echo "latest")
+BUILD_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+IMAGE_TAG="europe-west2-docker.pkg.dev/${PROJECT_ID}/screened-app/screened:${SHORT_SHA}"
 
 echo "=== 🚀 Deploying Screened to Google Cloud Run (${REGION}) ==="
+echo "Commit: ${SHORT_SHA} | Build Time: ${BUILD_TIME}"
+
+# 0. Generate version metadata for client cache invalidation
+mkdir -p frontend/public frontend/dist
+cat <<EOF > frontend/public/version.json
+{
+  "version": "0.1.0",
+  "commitSha": "${SHORT_SHA}",
+  "buildTime": "${BUILD_TIME}",
+  "timestamp": $(date +%s%3N)
+}
+EOF
+cp frontend/public/version.json frontend/dist/version.json 2>/dev/null || true
 
 # 1. Ensure Artifact Registry repository exists
 echo "Checking Artifact Registry repository..."
@@ -29,7 +44,7 @@ gcloud run deploy "${SERVICE_NAME}" \
   --region="${REGION}" \
   --platform=managed \
   --allow-unauthenticated \
-  --set-env-vars="GOOGLE_CLOUD_PROJECT=${PROJECT_ID},GOOGLE_CLOUD_LOCATION=${REGION},ENVIRONMENT=production" \
+  --set-env-vars="GOOGLE_CLOUD_PROJECT=${PROJECT_ID},GOOGLE_CLOUD_LOCATION=${REGION},ENVIRONMENT=production,COMMIT_SHA=${SHORT_SHA}" \
   --set-secrets="PARALLEL_API_KEY=parallel-api-key:latest,SESSION_SIGNING_KEY=session-signing-key:latest" \
   --memory=1Gi \
   --cpu=1 \

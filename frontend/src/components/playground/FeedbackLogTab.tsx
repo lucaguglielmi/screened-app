@@ -134,7 +134,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({
       {/* Analytics Metric Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Metric 1 */}
-        <div className="p-5 rounded-2xl bg-[#090C19] border border-[#22274C] shadow-lg space-y-1">
+        <div className="p-5 rounded-2xl bg-[#090C19] shadow-lg space-y-1">
           <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 block">
             Total Submissions
           </span>
@@ -143,7 +143,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({
         </div>
 
         {/* Metric 2 */}
-        <div className="p-5 rounded-2xl bg-[#090C19] border border-[#22274C] shadow-lg space-y-1">
+        <div className="p-5 rounded-2xl bg-[#090C19] shadow-lg space-y-1">
           <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 block">
             Avg Satisfaction Rating
           </span>
@@ -155,7 +155,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({
         </div>
 
         {/* Metric 3 */}
-        <div className="p-5 rounded-2xl bg-[#090C19] border border-[#22274C] shadow-lg space-y-1">
+        <div className="p-5 rounded-2xl bg-[#090C19] shadow-lg space-y-1">
           <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 block">
             Accuracy & Vetting
           </span>
@@ -164,7 +164,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({
         </div>
 
         {/* Metric 4 */}
-        <div className="p-5 rounded-2xl bg-[#090C19] border border-[#22274C] shadow-lg space-y-1">
+        <div className="p-5 rounded-2xl bg-[#090C19] shadow-lg space-y-1">
           <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 block">
             Roadmap Requests
           </span>
@@ -174,7 +174,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="p-4 rounded-2xl bg-[#0E1124] border border-[#22274C] flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="p-4 rounded-2xl bg-[#0E1124] flex flex-col md:flex-row items-center justify-between gap-4">
         {/* Search */}
         <div className="relative w-full md:w-80">
           <Search className="size-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -212,7 +212,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({
       </div>
 
       {/* Main Feedback Data Table */}
-      <div className="rounded-3xl bg-[#090C19] border border-[#22274C] shadow-2xl overflow-hidden">
+      <div className="rounded-3xl bg-[#090C19] shadow-2xl overflow-hidden">
         {loading ? (
           <div className="p-16 text-center space-y-3">
             <Loader2 className="size-8 animate-spin mx-auto text-indigo-400" />

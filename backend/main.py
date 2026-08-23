@@ -1,7 +1,9 @@
 """Main FastAPI Application for Screened."""
 import json
 import logging
+import os
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Optional
 from fastapi import FastAPI, HTTPException, Response, Request
@@ -98,20 +100,64 @@ class ConfirmEntityRequest(BaseModel):
 # Include routers
 app.include_router(webhooks.router)
 
+# Anti-caching headers for HTML, version JSON, and SPA responses
+NO_CACHE_HEADERS = {
+    "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",
+    "Pragma": "no-cache",
+    "Expires": "0",
+}
+
+frontend_dist = Path(__file__).parent.parent / "frontend" / "dist"
+
+
+def get_current_version_payload() -> Dict[str, Any]:
+    """Helper to resolve current app version, git commit sha, and build timestamp."""
+    version_file = frontend_dist / "version.json" if frontend_dist.exists() else None
+    if version_file and version_file.exists():
+        try:
+            with open(version_file, "r") as f:
+                return json.load(f)
+        except Exception:
+            pass
+
+    return {
+        "version": settings.app_version,
+        "commitSha": os.getenv("COMMIT_SHA", "dev"),
+        "buildTime": os.getenv("BUILD_TIME", datetime.now(timezone.utc).isoformat()),
+        "environment": settings.environment,
+    }
+
+
 @app.get("/healthz")
 @app.get("/api/health")
 @app.get("/api/healthz")
 async def health_check():
-    """Liveness probe returning application health, GCP status, and Parallel SDK status."""
+    """Liveness probe returning application health, GCP status, Parallel SDK status, and version."""
+    v_data = get_current_version_payload()
     return {
         "status": "ok",
         "app": settings.app_name,
-        "version": settings.app_version,
+        "version": v_data.get("version", settings.app_version),
+        "commitSha": v_data.get("commitSha", "unknown"),
+        "buildTime": v_data.get("buildTime", ""),
         "environment": settings.environment,
         "parallel_configured": bool(settings.parallel_api_key),
         "gcp_project": settings.google_cloud_project,
         "gcp_location": settings.google_cloud_location,
     }
+
+
+@app.get("/api/version")
+@app.get("/version.json")
+async def get_version_info():
+    """Returns live deployment metadata with strict anti-caching headers for client update detection."""
+    payload = get_current_version_payload()
+    return Response(
+        content=json.dumps(payload),
+        media_type="application/json",
+        headers=NO_CACHE_HEADERS,
+    )
+
 
 
 
@@ -501,13 +547,30 @@ async def submit_feedback(request: FeedbackCreateRequest):
 
 
 # Mount Frontend static files if built
-frontend_dist = Path(__file__).parent.parent / "frontend" / "dist"
 if frontend_dist.exists():
-    app.mount("/assets", StaticFiles(directory=frontend_dist / "assets"), name="assets")
+    class CacheControlledStaticFiles(StaticFiles):
+        """Custom StaticFiles class that adds immutable long-cache headers to Vite chunk assets."""
+        def file_response(self, *args, **kwargs) -> Response:
+            response = super().file_response(*args, **kwargs)
+            response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+            return response
+
+    assets_dir = frontend_dist / "assets"
+    if assets_dir.exists():
+        app.mount("/assets", CacheControlledStaticFiles(directory=assets_dir), name="assets")
 
     @app.get("/{full_path:path}")
     async def serve_spa(full_path: str):
         file_path = frontend_dist / full_path
         if file_path.exists() and file_path.is_file():
+            # Never cache HTML, JSON, or manifest files
+            if file_path.suffix in [".html", ".json", ".webmanifest"]:
+                return FileResponse(file_path, headers=NO_CACHE_HEADERS)
             return FileResponse(file_path)
-        return FileResponse(frontend_dist / "index.html")
+
+        # SPA index.html fallback must ALWAYS have strict anti-caching headers
+        index_file = frontend_dist / "index.html"
+        if index_file.exists():
+            return FileResponse(index_file, headers=NO_CACHE_HEADERS)
+        return PlainTextResponse("Screened Frontend is building or dist is not available.", status_code=200)
+

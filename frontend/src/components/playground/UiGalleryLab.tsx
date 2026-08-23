@@ -39,7 +39,7 @@ export const UiGalleryLab: React.FC = () => {
   return (
     <div className="space-y-8 animate-fade-in text-zinc-100">
       {/* Header Banner */}
-      <div className="p-6 rounded-2xl border border-[#22274C] bg-[#0E1124] shadow-xl">
+      <div className="py-2">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
@@ -61,7 +61,7 @@ export const UiGalleryLab: React.FC = () => {
       </div>
 
       {/* SECTION 1: INTERACTIVE BUTTON BUILDER & MOTION PLAYGROUND */}
-      <section className="p-6 rounded-2xl border border-[#22274C] bg-[#0E1124] shadow-md space-y-6">
+      <section className="space-y-6">
         <div className="border-b border-zinc-800 pb-3 flex items-center justify-between">
           <div>
             <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider font-mono">
@@ -75,7 +75,7 @@ export const UiGalleryLab: React.FC = () => {
         </div>
 
         {/* Live Preview Card */}
-        <div className="p-8 rounded-xl bg-[#070913] border border-[#22274C] flex flex-col sm:flex-row items-center justify-around gap-6">
+        <div className="p-8 rounded-xl bg-[#070913] flex flex-col sm:flex-row items-center justify-around gap-6">
           <div className="flex flex-col items-center gap-3">
             <span className="text-[11px] font-mono text-zinc-500 uppercase tracking-wider">Live Configured Button</span>
             <Button
@@ -200,7 +200,7 @@ export const UiGalleryLab: React.FC = () => {
       </section>
 
       {/* SECTION 2: ICON-SPECIFIC MOTION SHOWCASE */}
-      <section className="p-6 rounded-2xl border border-[#22274C] bg-[#0E1124] shadow-md space-y-4">
+      <section className="space-y-4 pt-4">
         <div className="border-b border-zinc-800 pb-3">
           <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider font-mono">
             2. Icon-Specific Micro-Animation Matrix
@@ -214,7 +214,7 @@ export const UiGalleryLab: React.FC = () => {
           {iconOptions.map((opt) => (
             <div
               key={opt.type}
-              className="p-3.5 rounded-xl bg-[#0E1124] border border-[#22274C] hover:border-[#3D488E] transition-all flex flex-col justify-between space-y-3"
+              className="p-3.5 rounded-xl bg-[#0E1124] flex flex-col justify-between space-y-3"
             >
               <div>
                 <div className="flex items-center justify-between">
@@ -244,7 +244,7 @@ export const UiGalleryLab: React.FC = () => {
       </section>
 
       {/* SECTION 3: REUSABLE TEXT LINKS GALLERY */}
-      <section className="p-6 rounded-2xl border border-[#22274C] bg-[#0E1124] shadow-md space-y-4">
+      <section className="space-y-4 pt-4">
         <div className="border-b border-zinc-800 pb-3">
           <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider font-mono">
             3. Animated Text Links with Icon Motion
@@ -256,7 +256,7 @@ export const UiGalleryLab: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* Primary / Blue Link */}
-          <div className="p-4 rounded-xl bg-midnight/90 border border-zinc-800 space-y-2">
+          <div className="p-4 rounded-xl bg-midnight/90 space-y-2">
             <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Primary Help Link</span>
             <TextLink
               variant="primary"
@@ -272,7 +272,7 @@ export const UiGalleryLab: React.FC = () => {
           </div>
 
           {/* Emerald / Due Diligence Link */}
-          <div className="p-4 rounded-xl bg-midnight/90 border border-zinc-800 space-y-2">
+          <div className="p-4 rounded-xl bg-midnight/90 space-y-2">
             <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Emerald Diligence Link</span>
             <TextLink
               variant="emerald"
@@ -287,7 +287,7 @@ export const UiGalleryLab: React.FC = () => {
           </div>
 
           {/* Rose / Email Audit Link */}
-          <div className="p-4 rounded-xl bg-midnight/90 border border-zinc-800 space-y-2">
+          <div className="p-4 rounded-xl bg-midnight/90 space-y-2">
             <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Rose Scam Audit Link</span>
             <TextLink
               variant="rose"
@@ -302,7 +302,7 @@ export const UiGalleryLab: React.FC = () => {
           </div>
 
           {/* Amber / Scout Link */}
-          <div className="p-4 rounded-xl bg-midnight/90 border border-zinc-800 space-y-2">
+          <div className="p-4 rounded-xl bg-midnight/90 space-y-2">
             <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Amber Roadmap Link</span>
             <TextLink
               variant="amber"
@@ -318,7 +318,7 @@ export const UiGalleryLab: React.FC = () => {
           </div>
 
           {/* Chevron Down TextLink */}
-          <div className="p-4 rounded-xl bg-midnight/90 border border-zinc-800 space-y-2">
+          <div className="p-4 rounded-xl bg-midnight/90 space-y-2">
             <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Expandable / Collapse Link</span>
             <TextLink
               variant="muted"
@@ -334,7 +334,7 @@ export const UiGalleryLab: React.FC = () => {
           </div>
 
           {/* Plus Add Link */}
-          <div className="p-4 rounded-xl bg-midnight/90 border border-zinc-800 space-y-2">
+          <div className="p-4 rounded-xl bg-midnight/90 space-y-2">
             <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Plus Action Link</span>
             <TextLink
               variant="white"
@@ -349,7 +349,7 @@ export const UiGalleryLab: React.FC = () => {
           </div>
 
           {/* Paper Airplane Send Link */}
-          <div className="p-4 rounded-xl bg-midnight/90 border border-zinc-800 space-y-2">
+          <div className="p-4 rounded-xl bg-midnight/90 space-y-2">
             <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Airplane Send Link</span>
             <TextLink
               variant="primary"
@@ -365,7 +365,7 @@ export const UiGalleryLab: React.FC = () => {
           </div>
 
           {/* Cinema Reel Link */}
-          <div className="p-4 rounded-xl bg-midnight/90 border border-zinc-800 space-y-2">
+          <div className="p-4 rounded-xl bg-midnight/90 space-y-2">
             <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Cinema Reel Link</span>
             <TextLink
               variant="purple"
@@ -380,7 +380,7 @@ export const UiGalleryLab: React.FC = () => {
           </div>
 
           {/* Clapperboard Link */}
-          <div className="p-4 rounded-xl bg-midnight/90 border border-zinc-800 space-y-2">
+          <div className="p-4 rounded-xl bg-midnight/90 space-y-2">
             <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Clapperboard Link</span>
             <TextLink
               variant="white"
@@ -397,7 +397,7 @@ export const UiGalleryLab: React.FC = () => {
       </section>
 
       {/* SECTION 3: CINEMA CLAPPERBOARD AVATAR & MOTION PHYSICS */}
-      <section className="p-6 rounded-2xl border border-[#22274C] bg-[#0E1124] shadow-md space-y-6">
+      <section className="space-y-6 pt-4">
         <div className="border-b border-zinc-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
             <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider font-mono flex items-center gap-2">
@@ -414,28 +414,28 @@ export const UiGalleryLab: React.FC = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Size Small */}
-          <div className="p-4 rounded-xl bg-midnight/90 border border-zinc-800 flex flex-col items-center justify-center text-center space-y-3">
+          <div className="p-4 rounded-xl bg-midnight/90 flex flex-col items-center justify-center text-center space-y-3">
             <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">Small (`sm`) - Chat Feed</span>
             <AgentAvatar size="sm" onClick={() => logAction('Clicked Small Avatar')} />
             <p className="text-[11px] text-zinc-400">Used in compact thinking states and dense chat feeds.</p>
           </div>
 
           {/* Size Medium */}
-          <div className="p-4 rounded-xl bg-midnight/90 border border-zinc-800 flex flex-col items-center justify-center text-center space-y-3">
+          <div className="p-4 rounded-xl bg-midnight/90 flex flex-col items-center justify-center text-center space-y-3">
             <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">Medium (`md`) - Message Bubble</span>
             <AgentAvatar size="md" onClick={() => logAction('Clicked Medium Avatar')} />
             <p className="text-[11px] text-zinc-400">Default avatar for all Mission Control agent message bubbles.</p>
           </div>
 
           {/* Size Large */}
-          <div className="p-4 rounded-xl bg-midnight/90 border border-zinc-800 flex flex-col items-center justify-center text-center space-y-3">
+          <div className="p-4 rounded-xl bg-midnight/90 flex flex-col items-center justify-center text-center space-y-3">
             <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">Large (`lg`) - Header Hero</span>
             <AgentAvatar size="lg" onClick={() => logAction('Clicked Large Avatar')} />
             <p className="text-[11px] text-zinc-400">Expanded display with prominent holographic sweeps.</p>
           </div>
 
           {/* Thinking State */}
-          <div className="p-4 rounded-xl bg-midnight/90 border border-zinc-800 flex flex-col items-center justify-center text-center space-y-3">
+          <div className="p-4 rounded-xl bg-midnight/90 flex flex-col items-center justify-center text-center space-y-3">
             <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-wider font-semibold">Active Thinking Mode</span>
             <AgentAvatar size="md" isThinking={true} onClick={() => logAction('Clicked Thinking Avatar')} />
             <p className="text-[11px] text-zinc-400">High-speed dual-axis orbital spins and pulsating shockwaves.</p>

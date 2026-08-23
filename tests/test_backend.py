@@ -45,3 +45,24 @@ def test_feedback_endpoints():
     assert get_res_2.status_code == 200
     assert len(get_res_2.json()) == len(feedbacks) + 1
 
+
+def test_version_endpoints_and_cache_headers():
+    # Test /api/version
+    res = client.get("/api/version")
+    assert res.status_code == 200
+    data = res.json()
+    assert "version" in data
+    assert "commitSha" in data
+    assert "buildTime" in data
+
+    # Verify anti-caching headers
+    assert "no-cache" in res.headers.get("Cache-Control", "")
+    assert "no-store" in res.headers.get("Cache-Control", "")
+    assert res.headers.get("Pragma") == "no-cache"
+
+    # Test /version.json
+    res_vjson = client.get("/version.json")
+    assert res_vjson.status_code == 200
+    assert "no-cache" in res_vjson.headers.get("Cache-Control", "")
+
+

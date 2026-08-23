@@ -37,6 +37,7 @@ import { CommandPalette } from './components/CommandPalette';
 import { HistorySidebar } from './components/HistorySidebar';
 import { VectorFieldBackground } from './components/animations/VectorFieldBackground';
 import { AnimatedEE } from './components/animations/AnimatedEE';
+import { UpdateNotifier } from './components/common/UpdateNotifier';
 import { isSoundMuted, setSoundMuted, playSuccessChime } from './utils/audio';
 
 
@@ -408,6 +409,9 @@ export default function App() {
 
   return (
     <div className={`relative min-h-screen flex flex-row ${activeTool === 'DESIGN_PLAYGROUND' ? 'bg-[#0B1021]' : 'bg-paper-bg dark:bg-darkroom-bg'} text-paper-text dark:text-darkroom-text selection:bg-indigo-500/20 antialiased overflow-x-hidden`}>
+      {/* Live System Update Notifier */}
+      <UpdateNotifier />
+
       {/* Global Organic Morphing Mesh Gradient Background */}
       {activeTool !== 'DESIGN_PLAYGROUND' && (
         <VectorFieldBackground className="fixed inset-0 pointer-events-none z-0" />
@@ -530,7 +534,7 @@ export default function App() {
 
 
         {/* Main Workspace Area */}
-        <main className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8 flex-1 w-full space-y-8">
+        <main className={`${activeTool === 'DESIGN_PLAYGROUND' ? '' : 'max-w-6xl px-4 sm:px-6 md:px-8 py-8 space-y-8'} mx-auto flex-1 w-full`}>
           {/* Error Notification */}
           {error && (
             <div className="max-w-3xl mx-auto p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-base flex items-center gap-3">

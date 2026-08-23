@@ -6,6 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Screened — Agentic Cinema Due-Diligence</title>
     <meta name="description" content="Agentic due diligence and credibility intelligence for the cinema industry." />
+    
+    <!-- Strict Anti-Caching Directives -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
     <!-- Pre-hydration theme script to prevent flash -->
     <script>
       (function() {
@@ -18,6 +24,26 @@
             document.documentElement.classList.remove('dark');
           }
         } catch (e) {}
+
+        // Immediate Service Worker and Cache Purge (Clean up legacy PWA caches)
+        try {
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+              for (let registration of registrations) {
+                registration.unregister();
+              }
+            });
+          }
+          if ('caches' in window) {
+            caches.keys().then(function(keys) {
+              keys.forEach(function(key) {
+                caches.delete(key);
+              });
+            });
+          }
+        } catch (e) {
+          console.warn('Cache purge error:', e);
+        }
       })();
     </script>
   </head>
