@@ -340,7 +340,6 @@ export const DesignPlayground: React.FC = () => {
                     genre: 'Sci-Fi',
                     runtime_minutes: 14,
                     premiere_goals: ['WORLD_PREMIERE'],
-                    budget_tier: 'Micro (< £50k)',
                     target_regions: ['UK & Europe', 'North America'],
                     strategy_rationale: 'Target Tier-1 BAFTA-qualifying shorts showcases during Early Bird deadlines before regional runs.',
                   }}
