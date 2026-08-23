@@ -336,8 +336,9 @@ export const DesignPlayground: React.FC = () => {
                 <MiniScoutCard
                   args={{
                     film_title: 'The Silent Transmission',
-                    
                     genre: 'Sci-Fi',
+                    year: '2025',
+                    never_released: true,
                     runtime_minutes: 14,
                     premiere_goals: ['WORLD_PREMIERE'],
                     target_regions: ['UK & Europe', 'North America'],
