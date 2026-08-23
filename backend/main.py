@@ -15,6 +15,7 @@ from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 
 from backend.config import settings
+from backend.routers import webhooks
 from backend.models import (
     AtomicClaim,
     CandidateEntity,
@@ -93,6 +94,9 @@ class ConfirmEntityRequest(BaseModel):
     foundedYear: Optional[int] = None
     descriptor: str = Field("", max_length=1000)
 
+
+# Include routers
+app.include_router(webhooks.router)
 
 @app.get("/healthz")
 @app.get("/api/health")
