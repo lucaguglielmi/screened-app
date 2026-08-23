@@ -83,22 +83,21 @@ export const DesignPlayground: React.FC = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-6 space-y-8 animate-fade-in text-zinc-100">
-      {/* Playground Header & Nav Bar */}
-      <div className="rounded-2xl border border-purple-900/50 shadow-xl overflow-hidden mb-8">
-        {/* Header Top Section */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 bg-[#1A0B2E]">
+    <div className="min-h-screen bg-[#0A192F] text-zinc-100 pb-12 w-full">
+      {/* Full-width Header & Nav Bar */}
+      <div className="w-full bg-[#112240] border-b border-indigo-900/50 shadow-md mb-8">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4">
           <div>
             <div className="flex items-center gap-2">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-500/20 text-purple-400 text-base font-bold ring-1 ring-purple-500/40">
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/20 text-blue-400 text-base font-bold ring-1 ring-blue-500/40">
                 🎨
               </span>
               <h1 className="text-xl font-bold text-zinc-100 tracking-tight font-serif">
-                Review Playground
+                Design Playground
               </h1>
             </div>
-            <p className="text-xs text-purple-200/70 mt-1">
-              Visual workbench to review and test all components, tools, and UI states independently.
+            <p className="text-xs text-blue-200/70 mt-1">
+              Visual workbench to review components, tools, and UI states.
             </p>
           </div>
 
@@ -106,7 +105,7 @@ export const DesignPlayground: React.FC = () => {
             <button
               onClick={handleSimulateStream}
               disabled={isSimulating}
-              className="inline-flex items-center gap-2 rounded-xl bg-purple-600 px-3.5 py-2 text-xs font-semibold text-white shadow-md transition-all hover:bg-purple-500 active:scale-95 disabled:opacity-50 cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-3.5 py-2 text-xs font-semibold text-white shadow-md transition-all hover:bg-blue-500 active:scale-95 disabled:opacity-50 cursor-pointer"
             >
               <span>{isSimulating ? '⏳ Streaming...' : '▶ Token Stream'}</span>
             </button>
@@ -115,7 +114,7 @@ export const DesignPlayground: React.FC = () => {
                 soundEffects.playSuccess();
                 addLog('Sound effects chime triggered.');
               }}
-              className="rounded-xl border border-purple-700/50 bg-purple-900/40 px-3 py-2 text-xs font-medium text-purple-200 hover:bg-purple-800/60 transition-colors cursor-pointer"
+              className="rounded-xl border border-blue-700/50 bg-blue-900/40 px-3 py-2 text-xs font-medium text-blue-200 hover:bg-blue-800/60 transition-colors cursor-pointer"
             >
               🔊 Audio
             </button>
@@ -123,7 +122,7 @@ export const DesignPlayground: React.FC = () => {
         </div>
 
         {/* Full-width Navigation Bar */}
-        <div className="flex items-center gap-2 p-3 bg-[#11071F] border-t border-purple-900/50 overflow-x-auto w-full">
+        <div className="max-w-7xl mx-auto flex items-center gap-2 px-4 pb-3 overflow-x-auto">
           {(['UI', 'TOOLS', 'FEEDBACK', 'ARCHITECTURE', 'TOKENS', 'TRACES', 'ALL', 'BUBBLES', 'LOADERS', 'PROMPTS'] as const).map((sec) => (
             <button
               key={sec}
@@ -133,17 +132,17 @@ export const DesignPlayground: React.FC = () => {
               }}
               className={`px-4 py-1.5 rounded-lg text-xs font-bold tracking-wide transition-all cursor-pointer whitespace-nowrap ${
                 activeSection === sec
-                  ? 'bg-purple-500 text-white shadow-sm'
-                  : 'text-purple-300/70 hover:text-purple-100 hover:bg-purple-900/40'
+                  ? 'bg-blue-500 text-white shadow-sm'
+                  : 'text-blue-300/70 hover:text-blue-100 hover:bg-blue-900/40'
               }`}
             >
-              {sec === 'UI' && 'UI'}
+              {sec === 'UI' && 'UI Gallery'}
               {sec === 'TOOLS' && 'Tools'}
               {sec === 'FEEDBACK' && 'Feedback'}
               {sec === 'ARCHITECTURE' && 'Architecture'}
               {sec === 'TOKENS' && 'Tokens'}
               {sec === 'TRACES' && 'Traces'}
-              {sec === 'ALL' && 'All'}
+              {sec === 'ALL' && 'All Sections'}
               {sec === 'BUBBLES' && 'Bubbles'}
               {sec === 'LOADERS' && 'Loaders'}
               {sec === 'PROMPTS' && 'Prompts'}
@@ -151,6 +150,8 @@ export const DesignPlayground: React.FC = () => {
           ))}
         </div>
       </div>
+
+      <div className="max-w-7xl mx-auto px-4 space-y-8">
 
       {/* SECTION: SHARED UI GALLERY & ICON MOTION LAB */}
       {(activeSection === 'ALL' || activeSection === 'UI') && (
@@ -335,7 +336,7 @@ export const DesignPlayground: React.FC = () => {
                 <MiniScoutCard
                   args={{
                     film_title: 'The Silent Transmission',
-                    format: 'SHORT',
+                    year: "2024", neverReleased: true, premiereGoals: ["WORLD_PREMIERE"], targetRegions: ["UK & Europe"],
                     genre: 'Sci-Fi',
                     runtime_minutes: 14,
                     premiere_goal: 'WORLD_PREMIERE',
@@ -601,6 +602,7 @@ export const DesignPlayground: React.FC = () => {
         isOpen={isFeedbackModalOpen}
         onClose={() => setIsFeedbackModalOpen(false)}
       />
+      </div>
     </div>
   );
 };

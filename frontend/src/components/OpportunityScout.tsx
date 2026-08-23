@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { 
   FilmFormat, 
   FilmProfile, 
@@ -10,7 +10,8 @@ import {
   Compass, 
   Sparkles, 
   Film, 
-  Loader2 
+  Loader2,
+  Upload
 } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -21,19 +22,21 @@ interface Props {
 
 export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile }) => {
   const [profile, setProfile] = useState<FilmProfile>(() => initialProfile || {
-    title: 'The Silent Echo',
-    format: 'SHORT',
-    genre: 'Drama',
-    runtimeMinutes: 14,
-    premiereGoal: 'WORLD_PREMIERE',
+    title: '',
+    year: '',
+    genre: '',
+    runtimeMinutes: 0,
+    premiereGoals: ['WORLD_PREMIERE'],
     targetRegions: ['UK & Europe', 'North America'],
-    budgetTier: 'Micro (< $50k)',
+    neverReleased: false,
   });
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [scoutResult, setScoutResult] = useState<ScoutResponse | null>(null);
   const [filterTag, setFilterTag] = useState<string>('ALL');
+  
+  const [isDragging, setIsDragging] = useState(false);
 
   React.useEffect(() => {
     if (initialProfile) {
@@ -63,27 +66,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
 
   const handleScout = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch('/api/scout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ profile }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.detail || 'Failed to scout festival opportunities.');
-      }
-
-      const data: ScoutResponse = await res.json();
-      setScoutResult(data);
-    } catch (err: any) {
-      setError(err.message || 'Scouting search failed.');
-    } finally {
-      setLoading(false);
-    }
+    executeScout(profile);
   };
 
   const filteredOpportunities = scoutResult?.opportunities.filter((opp) => {
@@ -94,20 +77,50 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
     return true;
   }) || [];
 
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    // In a real app we would parse the file/URL here
+  };
+
+  const isFormValid = profile.title.length > 0 && profile.year.length > 0 && profile.genre.length > 0 && profile.runtimeMinutes > 0;
+
+  const handlePremiereGoalToggle = (goal: PremiereGoal) => {
+    setProfile(prev => {
+      const current = [...prev.premiereGoals];
+      if (current.includes(goal)) {
+        return { ...prev, premiereGoals: current.filter(g => g !== goal) };
+      }
+      return { ...prev, premiereGoals: [...current, goal] };
+    });
+  };
+
+  const handleRegionToggle = (region: string) => {
+    setProfile(prev => {
+      const current = [...prev.targetRegions];
+      if (current.includes(region)) {
+        return { ...prev, targetRegions: current.filter(r => r !== region) };
+      }
+      return { ...prev, targetRegions: [...current, region] };
+    });
+  };
+
   return (
     <div className="space-y-8">
       {/* Header & Hero */}
       <section className="text-center max-w-2xl mx-auto space-y-3">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-[#F43F5E]/15 text-[#F43F5E] border border-[#F43F5E]/30">
-          <Compass className="size-3.5" />
-          <span>Strategic Festival Scouting</span>
-        </div>
         <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-paper-text dark:text-darkroom-text">
-          Find matching festivals for your film.
+          Find the best festival for your film
         </h1>
-        <p className="text-base text-paper-muted dark:text-darkroom-muted leading-relaxed">
-          Screened scans open call-for-entries, deadlines, qualification lists (BAFTA/BIFA/Oscar), and fee schedules matching your specific runtime and premiere goals.
-        </p>
       </section>
 
       {/* Film Profile Intake Form */}
@@ -115,14 +128,19 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
         onSubmit={handleScout}
         className="max-w-3xl mx-auto p-6 sm:p-8 rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border shadow-sm space-y-6"
       >
-        <div className="flex items-center gap-2.5 border-b border-paper-border dark:border-darkroom-border pb-3">
-          <Film className="size-5 text-[#F43F5E]" />
-          <h2 className="font-serif text-lg font-semibold text-paper-text dark:text-darkroom-text">
-            Film Profile & Premiere Strategy
-          </h2>
+        {/* Dropzone */}
+        <div 
+          className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${isDragging ? 'border-[#F43F5E] bg-[#F43F5E]/5' : 'border-paper-border dark:border-darkroom-border hover:border-paper-muted'}`}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+        >
+          <Upload className="size-8 mx-auto mb-3 text-paper-muted dark:text-darkroom-muted" />
+          <p className="text-paper-text dark:text-darkroom-text font-medium">Drop any document about the film or an URL here</p>
+          <p className="text-sm text-paper-muted dark:text-darkroom-muted mt-1">We'll automatically extract the details</p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-sm">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-sm pt-4">
           {/* Film Title */}
           <div className="space-y-1.5">
             <label className="font-semibold text-paper-text dark:text-darkroom-text">
@@ -137,34 +155,29 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
             />
           </div>
 
-          {/* Format */}
+          {/* Year */}
           <div className="space-y-1.5">
             <label className="font-semibold text-paper-text dark:text-darkroom-text">
-              Format
+              Year
             </label>
-            <select
-              value={profile.format}
-              onChange={(e) => setProfile({ ...profile, format: e.target.value as FilmFormat })}
+            <input
+              type="text"
+              value={profile.year}
+              onChange={(e) => setProfile({ ...profile, year: e.target.value })}
               className="w-full px-4 py-2.5 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-base text-paper-text dark:text-darkroom-text focus:outline-none focus:border-[#F43F5E]"
-            >
-              <option value="SHORT">Short Film (&lt; 40 min)</option>
-              <option value="FEATURE">Feature Narrative (&gt; 60 min)</option>
-              <option value="DOCUMENTARY">Documentary</option>
-              <option value="ANIMATION">Animation</option>
-              <option value="EPISODIC">Episodic / Series</option>
-            </select>
+              required
+            />
           </div>
 
           {/* Genre */}
           <div className="space-y-1.5">
             <label className="font-semibold text-paper-text dark:text-darkroom-text">
-              Primary Genre
+              Genre
             </label>
             <input
               type="text"
               value={profile.genre}
               onChange={(e) => setProfile({ ...profile, genre: e.target.value })}
-              placeholder="e.g. Drama, Thriller, Sci-Fi, Horror"
               className="w-full px-4 py-2.5 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-base text-paper-text dark:text-darkroom-text focus:outline-none focus:border-[#F43F5E]"
               required
             />
@@ -173,50 +186,80 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
           {/* Runtime */}
           <div className="space-y-1.5">
             <label className="font-semibold text-paper-text dark:text-darkroom-text">
-              Runtime (Minutes)
+              Duration (Minutes)
             </label>
             <input
               type="number"
               min={1}
               max={300}
-              value={profile.runtimeMinutes}
-              onChange={(e) => setProfile({ ...profile, runtimeMinutes: parseInt(e.target.value) || 1 })}
+              value={profile.runtimeMinutes || ''}
+              onChange={(e) => setProfile({ ...profile, runtimeMinutes: parseInt(e.target.value) || 0 })}
               className="w-full px-4 py-2.5 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-base text-paper-text dark:text-darkroom-text focus:outline-none focus:border-[#F43F5E]"
               required
             />
           </div>
+        </div>
 
-          {/* Premiere Goal */}
-          <div className="space-y-1.5">
-            <label className="font-semibold text-paper-text dark:text-darkroom-text">
-              Target Premiere Status
+        <div className="pt-2">
+           <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={profile.neverReleased}
+                onChange={(e) => setProfile({ ...profile, neverReleased: e.target.checked })}
+                className="size-4 rounded border-paper-border text-[#F43F5E] focus:ring-[#F43F5E]"
+              />
+              <span className="text-paper-text dark:text-darkroom-text font-medium text-sm">
+                Never released on a festival
+              </span>
+           </label>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-sm pt-2">
+          {/* Premiere Goals Multiple */}
+          <div className="space-y-2">
+            <label className="font-semibold text-paper-text dark:text-darkroom-text block">
+              Premiere Status
             </label>
-            <select
-              value={profile.premiereGoal}
-              onChange={(e) => setProfile({ ...profile, premiereGoal: e.target.value as PremiereGoal })}
-              className="w-full px-4 py-2.5 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-base text-paper-text dark:text-darkroom-text focus:outline-none focus:border-[#F43F5E]"
-            >
-              <option value="WORLD_PREMIERE">World Premiere Required</option>
-              <option value="INTERNATIONAL_PREMIERE">International Premiere</option>
-              <option value="NATIONAL_PREMIERE">National / Regional Premiere</option>
-              <option value="NO_PREFERENCE">No Premiere Preference</option>
-            </select>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { id: 'WORLD_PREMIERE', label: 'World Premiere' },
+                { id: 'INTERNATIONAL_PREMIERE', label: 'International Premiere' },
+                { id: 'NATIONAL_PREMIERE', label: 'National Premiere' },
+                { id: 'NO_PREFERENCE', label: 'No Preference' }
+              ].map(goal => (
+                <button
+                  type="button"
+                  key={goal.id}
+                  onClick={() => handlePremiereGoalToggle(goal.id as PremiereGoal)}
+                  className={`px-3 py-1.5 rounded-lg border text-xs transition-colors ${profile.premiereGoals.includes(goal.id as PremiereGoal) ? 'border-[#F43F5E] bg-[#F43F5E]/10 text-[#F43F5E]' : 'border-paper-border dark:border-darkroom-border text-paper-muted dark:text-darkroom-muted hover:border-paper-muted'}`}
+                >
+                  {goal.label}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Target Regions */}
-          <div className="space-y-1.5">
-            <label className="font-semibold text-paper-text dark:text-darkroom-text">
-              Target Submission Region
+          {/* Target Regions Multiple */}
+          <div className="space-y-2">
+            <label className="font-semibold text-paper-text dark:text-darkroom-text block">
+              Submission Region
             </label>
-            <select
-              value={profile.targetRegions[0] || 'UK & Europe'}
-              onChange={(e) => setProfile({ ...profile, targetRegions: [e.target.value] })}
-              className="w-full px-4 py-2.5 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-base text-paper-text dark:text-darkroom-text focus:outline-none focus:border-[#F43F5E]"
-            >
-              <option value="UK & Europe">UK & Europe</option>
-              <option value="North America">North America (US & Canada)</option>
-              <option value="Global / International">Global / International</option>
-            </select>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { id: 'UK & Europe', label: 'UK & Europe' },
+                { id: 'North America', label: 'North America' },
+                { id: 'Global / International', label: 'Global' }
+              ].map(region => (
+                <button
+                  type="button"
+                  key={region.id}
+                  onClick={() => handleRegionToggle(region.id)}
+                  className={`px-3 py-1.5 rounded-lg border text-xs transition-colors ${profile.targetRegions.includes(region.id) ? 'border-[#F43F5E] bg-[#F43F5E]/10 text-[#F43F5E]' : 'border-paper-border dark:border-darkroom-border text-paper-muted dark:text-darkroom-muted hover:border-paper-muted'}`}
+                >
+                  {region.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -224,19 +267,16 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
         <div className="pt-3">
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || !isFormValid}
             className="w-full py-3.5 rounded-xl bg-[#F43F5E] hover:bg-[#E11D48] disabled:opacity-50 text-white font-bold text-base flex items-center justify-center gap-2.5 transition-all shadow-md shadow-[#F43F5E]/25 cursor-pointer"
           >
             {loading ? (
               <>
                 <Loader2 className="size-5 animate-spin" />
-                <span>Scanning 2026 Deadlines & Accreditations via Parallel...</span>
+                <span>Scanning...</span>
               </>
             ) : (
-              <>
-                <Sparkles className="size-5" />
-                <span>Discover Verified Festival Opportunities</span>
-              </>
+              <span>Scan for opportunities</span>
             )}
           </button>
         </div>

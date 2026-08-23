@@ -26,7 +26,7 @@ export const MiniScoutCard: React.FC<MiniScoutCardProps> = ({ args, onLaunch }) 
     soundEffects.playSuccess();
     const profile: FilmProfile = {
       title: filmTitle,
-      format: format,
+      year: "2024", neverReleased: true,
       genre: genre,
       runtimeMinutes: runtime,
       premiereGoal: (args.premiere_goal as PremiereGoal) || 'WORLD_PREMIERE',
@@ -37,7 +37,7 @@ export const MiniScoutCard: React.FC<MiniScoutCardProps> = ({ args, onLaunch }) 
   };
 
   return (
-    <div className="my-3 p-5 rounded-2xl border border-[#3E1C2A] bg-[#0B0F19] shadow-xl transition-all hover:border-[#F43F5E]/60 text-slate-100">
+    <div className="w-full max-w-full overflow-hidden box-border my-3 p-5 rounded-2xl border border-[#22274C] bg-[#0C1024] shadow-xl transition-all hover:border-[#F43F5E]/60 text-slate-100">
       {/* Header */}
       <div className="flex items-center justify-between gap-2 border-b border-[#F43F5E]/20 pb-3 mb-4">
         <div className="flex items-center gap-3">

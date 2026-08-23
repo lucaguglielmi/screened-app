@@ -6,7 +6,7 @@ export type VerificationStatus = 'CORROBORATED' | 'SUPPORTED' | 'DISPUTED' | 'UN
 
 export type Stance = 'SUPPORTS' | 'CONTRADICTS' | 'MENTIONS';
 
-export type DetailDensity = 'SUMMARY' | 'STANDARD' | 'EVIDENCE';
+export type DetailDensity = 'BASIC' | 'STANDARD' | 'DEEP_DIVE' | 'AI_MODE';
 
 export type ApprovalStatus = 'PENDING_APPROVAL' | 'APPROVED' | 'REJECTED' | 'EXECUTED_SANDBOX';
 
@@ -117,13 +117,12 @@ export interface OutreachDraft {
 
 export interface FilmProfile {
   title: string;
-  format: FilmFormat;
+  year: string;
   genre: string;
   runtimeMinutes: number;
-  premiereGoal: PremiereGoal;
+  premiereGoals: PremiereGoal[];
   targetRegions: string[];
-  budgetTier: string;
-  targetDeadlineMonth?: string;
+  neverReleased: boolean;
 }
 
 export interface FestivalOpportunity {
