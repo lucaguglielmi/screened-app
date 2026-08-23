@@ -128,37 +128,37 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
               </div>
             )}
             {formatContent(message.content)}
-
-            {/* Quick Action Tabs (Under First Greeting Bubble) */}
-            {message.id === 'initial-greeting-01' && (
-              <div className="mt-4 pt-3.5 border-t border-white/[0.08] space-y-2">
-                <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider block">
-                  Quick Actions:
-                </span>
-                <div className="flex flex-wrap gap-2">
-                  {ACTION_TABS.map((tab, idx) => {
-                    const Icon = tab.icon;
-                    return (
-                      <button
-                        key={idx}
-                        type="button"
-                        onClick={() => {
-                          soundEffects.playClick();
-                          if (onLaunchCustomPrompt) {
-                            onLaunchCustomPrompt(tab.query);
-                          }
-                        }}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#131730] hover:bg-[#2018E6] text-slate-300 hover:text-white transition-all text-xs font-mono cursor-pointer shadow-sm active:scale-95"
-                      >
-                        <Icon className="size-3.5 text-indigo-400 group-hover:text-white shrink-0" />
-                        <span>{tab.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
           </div>
+
+          {/* Quick Action Tabs (Under First Greeting Bubble) */}
+          {message.id === 'initial-greeting-01' && (
+            <div className="mt-3 space-y-2">
+              <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider block">
+                Quick Actions:
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {ACTION_TABS.map((tab, idx) => {
+                  const Icon = tab.icon;
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => {
+                        soundEffects.playClick();
+                        if (onLaunchCustomPrompt) {
+                          onLaunchCustomPrompt(tab.query);
+                        }
+                      }}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#131730] hover:bg-[#2018E6] border border-[#252C5E] text-slate-300 hover:text-white transition-all text-xs font-mono cursor-pointer shadow-sm active:scale-95"
+                    >
+                      <Icon className="size-3.5 text-indigo-400 group-hover:text-white shrink-0" />
+                      <span>{tab.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* Interactive Follow-Up Probes */}
           {message.followUpProbe && message.followUpProbe.options.length > 0 && (
