@@ -11,18 +11,7 @@ from backend.models import SourceRecord
 
 logger = logging.getLogger("screened.tools.parallel_search")
 
-# Tier 1: Official government / company registries, major trade publications
-TIER_1_DOMAINS = {
-    "companieshouse.gov.uk", "gov.uk", "bfi.org.uk", "variety.com",
-    "hollywoodreporter.com", "screendaily.com", "deadline.com", "imdb.com"
-}
-
-# Tier 3: Anonymous forums, social platforms, blog comments
-TIER_3_DOMAINS = {
-    "reddit.com", "quora.com", "medium.com", "facebook.com",
-    "twitter.com", "x.com", "tiktok.com"
-}
-
+from backend.tools.source_tiers import determine_source_tier
 
 def extract_registrable_domain(url: str) -> str:
     try:
@@ -33,18 +22,6 @@ def extract_registrable_domain(url: str) -> str:
         return netloc
     except Exception:
         return ""
-
-
-def determine_source_tier(domain: str) -> int:
-    domain_lower = domain.lower()
-    for t1 in TIER_1_DOMAINS:
-        if domain_lower == t1 or domain_lower.endswith("." + t1):
-            return 1
-    for t3 in TIER_3_DOMAINS:
-        if domain_lower == t3 or domain_lower.endswith("." + t3):
-            return 3
-    return 2
-
 
 def compute_content_hash(text: str) -> str:
     return hashlib.sha256(text.strip().encode("utf-8")).hexdigest()
@@ -59,31 +36,23 @@ class ParallelSearchTool:
             logger.warning("ParallelSearchTool initialized without PARALLEL_API_KEY")
         self.client = Parallel(api_key=self.api_key)
         self.async_client = AsyncParallel(api_key=self.api_key)
-        self._semaphore = asyncio.Semaphore(3)
+        self._semaphore = asyncio.Semaphore(5)
 
-    async def search(
-        self,
-        queries: List[str],
-        objective: str,
-        mode: str = "basic",
-        max_results: int = 8,
-    ) -> List[SourceRecord]:
-        """Execute a search with Parallel Search and normalize results to SourceRecord list."""
-        if not queries:
-            return []
-
-        logger.info(f"Executing Parallel Search for objective: {objective} with queries: {queries}")
+    async def _search_single_query(self, query: str, objective: str, mode: str, advanced_settings: dict, session_id: Optional[str]) -> List[SourceRecord]:
+        logger.info(f"Parallel Search single query: {query}")
         try:
             async with self._semaphore:
                 response = await self.async_client.search(
-                    search_queries=queries,
+                    search_queries=[query],
                     objective=objective,
-                    mode=mode,  # turbo, fast, basic, advanced
+                    mode=mode,
+                    advanced_settings=advanced_settings,
+                    session_id=session_id
                 )
             raw_results = getattr(response, "results", []) or []
             source_records: List[SourceRecord] = []
 
-            for item in raw_results[:max_results]:
+            for item in raw_results:
                 url = getattr(item, "url", "")
                 if not url:
                     continue
@@ -125,12 +94,55 @@ class ParallelSearchTool:
                         excerpts=excerpts,
                         sourceTier=tier,
                         contentHash=content_hash,
+                        discoveredByQuery=query,
                     )
                 )
-
-            logger.info(f"Parallel Search returned {len(source_records)} valid source records")
             return source_records
-
         except Exception as e:
-            logger.error(f"Parallel Search failed: {e}", exc_info=True)
-            raise
+            logger.error(f"Parallel Search single query failed for '{query}': {e}", exc_info=True)
+            return []
+
+    async def search(
+        self,
+        queries: List[str],
+        objective: str,
+        mode: str = "basic",
+        max_results_total: int = 10,
+        source_policy: Optional[dict] = None,
+        session_id: Optional[str] = None
+    ) -> List[SourceRecord]:
+        """Execute a search with Parallel Search and normalize results to SourceRecord list."""
+        if not queries:
+            return []
+
+        logger.info(f"Executing Parallel Search for objective: {objective} with {len(queries)} queries")
+        advanced_settings = {
+            "max_results": 10,
+            "excerpt_settings": {"max_chars_per_result": 1500}
+        }
+        if source_policy:
+            advanced_settings["source_policy"] = source_policy
+
+        tasks = [
+            self._search_single_query(q, objective, mode, advanced_settings, session_id)
+            for q in queries
+        ]
+        results_lists = await asyncio.gather(*tasks, return_exceptions=True)
+        
+        seen_urls = set()
+        deduped_records = []
+        
+        for records in results_lists:
+            if isinstance(records, Exception):
+                continue
+            for record in records:
+                # Normalize URL for deduplication
+                norm_url = record.url.lower().rstrip('/')
+                if norm_url not in seen_urls:
+                    seen_urls.add(norm_url)
+                    deduped_records.append(record)
+
+        # Optional: return max_results_total across all queries
+        deduped_records = deduped_records[:max_results_total]
+        logger.info(f"Parallel Search returned {len(deduped_records)} distinct source records")
+        return deduped_records

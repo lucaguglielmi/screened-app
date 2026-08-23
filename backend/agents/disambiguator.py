@@ -34,7 +34,7 @@ class DisambiguatorAgent:
             queries=[search_query, f"{query} location founded editions"],
             objective=f"Identify the official name, location, founding year, and official website for {query}",
             mode="fast",
-            max_results=5,
+            max_results_total=5,
         )
 
         if not sources:

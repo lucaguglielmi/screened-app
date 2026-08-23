@@ -44,7 +44,7 @@ class OpportunityScoutAgent:
             queries=search_queries,
             objective=objective,
             mode="basic",
-            max_results=8,
+            max_results_total=8,
         )
 
         sources_payload = [

@@ -23,7 +23,7 @@ class DomainAgent:
                 queries=plan.searchQueries,
                 objective=plan.objective,
                 mode="basic",
-                max_results=6,
+                max_results_total=6,
             )
             logger.info(f"[{self.domain.value}] Discovered {len(sources)} sources")
             return sources

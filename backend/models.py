@@ -119,6 +119,7 @@ class SourceRecord(BaseModel):
     excerpts: List[str] = Field(default_factory=list)
     sourceTier: int = Field(default=2, ge=1, le=3)
     contentHash: str = ""
+    discoveredByQuery: Optional[str] = None
 
 
 class ClaimEvidence(BaseModel):
