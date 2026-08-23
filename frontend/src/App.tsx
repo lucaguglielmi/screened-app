@@ -718,10 +718,6 @@ export default function App() {
           onClose={() => setIsCommandPaletteOpen(false)}
           onSelectTool={setActiveTool}
           onSearchFestival={handleDeepScreen}
-          theme={theme}
-          onToggleTheme={toggleTheme}
-          soundMuted={soundMuted}
-          onToggleSound={toggleSound}
         />
 
         {/* Outreach Sandbox Approval Modal */}

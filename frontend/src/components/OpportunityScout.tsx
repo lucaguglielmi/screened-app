@@ -1,17 +1,14 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { 
-  FilmFormat, 
   FilmProfile, 
-  PremiereGoal, 
-  ScoutResponse 
+  PremiereGoal,
+  ScoutResponse
 } from '../types/investigation';
 import { OpportunityCard } from './OpportunityCard';
 import { 
-  Compass, 
-  Sparkles, 
-  Film, 
+  Upload,
   Loader2,
-  Upload
+  Compass
 } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -69,7 +66,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
     executeScout(profile);
   };
 
-  const filteredOpportunities = scoutResult?.opportunities.filter((opp) => {
+  const filteredOpportunities = scoutResult?.opportunities.filter((opp: any) => {
     if (filterTag === 'ALL') return true;
     if (filterTag === 'BAFTA') return opp.accreditationTags.includes('BAFTA_QUALIFYING');
     if (filterTag === 'ACADEMY') return opp.accreditationTags.includes('ACADEMY_QUALIFYING');
@@ -337,7 +334,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
 
           {/* Opportunities Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {filteredOpportunities.map((opp) => (
+            {filteredOpportunities.map((opp: any) => (
               <OpportunityCard
                 key={opp.id}
                 opportunity={opp}

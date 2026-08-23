@@ -14,26 +14,18 @@ import {
 import { ActiveTool } from '../types/investigation';
 
 
-interface Props {
+interface CommandPaletteProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectTool: (tool: ActiveTool) => void;
   onSearchFestival: (name: string) => void;
-  theme: 'dark' | 'light';
-  onToggleTheme: () => void;
-  soundMuted: boolean;
-  onToggleSound: () => void;
 }
 
-export const CommandPalette: React.FC<Props> = ({
-  isOpen,
-  onClose,
+export const CommandPalette: React.FC<CommandPaletteProps> = ({ 
+  isOpen, 
+  onClose, 
   onSelectTool,
-  onSearchFestival,
-  theme,
-  onToggleTheme,
-  soundMuted,
-  onToggleSound,
+  onSearchFestival
 }) => {
   const [search, setSearch] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
