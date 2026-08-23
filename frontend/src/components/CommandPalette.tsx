@@ -73,6 +73,14 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       action: () => { onSelectTool('WHY_SCREENED'); onClose(); },
     },
     {
+      id: 'how',
+      label: 'How To Use Screened (AI Agent Page)',
+      category: 'Evidence & Research',
+      icon: Command,
+      iconColor: 'text-indigo-300',
+      action: () => { onSelectTool('HOW_TO_USE'); onClose(); },
+    },
+    {
       id: 'tokens',
       label: 'Design Playground',
       category: 'Design Playground',

@@ -32,9 +32,11 @@ import { KeyboardHelpModal } from './components/KeyboardHelpModal';
 import { ChatContainer } from './components/chat/ChatContainer';
 import { DesignPlayground } from './components/playground/DesignPlayground';
 import { WhyScreened } from './components/WhyScreened';
+import { HowToUse } from './components/HowToUse';
 import { CommandPalette } from './components/CommandPalette';
 import { HistorySidebar } from './components/HistorySidebar';
 import { MeshGradientBackground } from './components/animations/MeshGradientBackground';
+import { AnimatedEE } from './components/animations/AnimatedEE';
 import { isSoundMuted, setSoundMuted, playSuccessChime } from './utils/audio';
 
 
@@ -427,34 +429,10 @@ export default function App() {
               className="flex items-center gap-3 cursor-pointer shrink-0"
             >
               <div className="flex items-center gap-2.5">
-                <span className="font-serif text-xl font-bold tracking-tight text-paper-text dark:text-darkroom-text">
-                  Screened
+                <span className="font-serif text-2xl font-black tracking-normal text-paper-text dark:text-darkroom-text flex items-center">
+                  Scr<AnimatedEE />ned
                 </span>
-                {activeTool === 'CONVERSATIONAL_DESK' && (
-                  <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-[#2018E6]/20 text-indigo-400 border border-[#2018E6]/40">
-                    The Desk
-                  </span>
-                )}
-                {activeTool === 'DUE_DILIGENCE' && (
-                  <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-[#00D29E]/20 text-[#00D29E] border border-[#00D29E]/40">
-                    Due Diligence
-                  </span>
-                )}
-                {activeTool === 'OPPORTUNITY_SCOUT' && (
-                  <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-[#F43F5E]/20 text-[#F43F5E] border border-[#F43F5E]/40">
-                    Opportunity Scout
-                  </span>
-                )}
-                {activeTool === 'WHY_SCREENED' && (
-                  <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">
-                    Why Screened
-                  </span>
-                )}
-                {activeTool === 'DESIGN_PLAYGROUND' && (
-                  <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-400 border border-purple-500/40">
-                    Playground
-                  </span>
-                )}
+                <span className="text-xl">✨</span>
               </div>
             </div>
 
@@ -709,6 +687,14 @@ export default function App() {
                 />
               )}
             </>
+          )}
+
+          {activeTool === 'HOW_TO_USE' && (
+            <HowToUse
+              onNavigateToDesk={() => setActiveTool('CONVERSATIONAL_DESK')}
+              onNavigateToDiligence={() => setActiveTool('DUE_DILIGENCE')}
+              onNavigateToScout={() => setActiveTool('OPPORTUNITY_SCOUT')}
+            />
           )}
         </main>
 
