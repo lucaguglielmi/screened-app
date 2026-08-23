@@ -4,6 +4,10 @@ import logging
 from typing import Any, Dict, List, Optional
 from datetime import datetime, timezone
 import uuid
+import os
+import traceback
+
+from google.adk.runners import Runner
 
 from backend.db.firestore import db
 from backend.models import (
@@ -19,6 +23,7 @@ from backend.orchestrator.events import EventType, broadcaster
 from backend.agents import (
     DisambiguatorAgent,
     PlannerAgent,
+    create_planner_adk_agent,
     FestivalAgent,
     OrganizerAgent,
     ParticipantsAgent,
@@ -31,8 +36,12 @@ from backend.agents import (
     DeepVettingAgent,
 )
 
+from backend.orchestrator.session_service import FirestoreSessionService
+from backend.orchestrator.adk_bridge import pump_adk_events
+
 logger = logging.getLogger("screened.orchestrator.state_machine")
 
+USE_ADK = os.getenv("USE_ADK", "false").lower() == "true"
 
 class Orchestrator:
     """Coordinates multi-agent execution and manages investigation lifecycle."""
@@ -199,7 +208,44 @@ class Orchestrator:
                 message="Generating domain research questions for Festival, Organizer, and Participants...",
             )
 
-            plan = await self.planner.create_plan(entity, intent)
+            if USE_ADK:
+                logger.info("Using ADK for Planner Agent")
+                runner = Runner(
+                    agent=create_planner_adk_agent(
+                        entity_name=entity.name,
+                        location=entity.cityCountry or 'Unknown',
+                        official_website=entity.officialDomain or 'Unknown',
+                        intent=intent
+                    ),
+                    app_name="screened",
+                    session_service=FirestoreSessionService()
+                )
+                
+                # We start the runner as a background pump, or we can just iterate over it here
+                runner_stream = runner.run_async(
+                    user_id="default_user",
+                    session_id=investigation_id
+                )
+                # Pump events to SSE bridge concurrently
+                # To get the result we wait for the pump to finish.
+                await pump_adk_events(investigation_id, runner_stream)
+                
+                # Fetch plan from state
+                session_service = FirestoreSessionService()
+                session = await session_service.get_session(
+                    app_name="screened",
+                    user_id="default_user",
+                    session_id=investigation_id
+                )
+                plan = session.state.get("plan")
+                if not plan:
+                    raise ValueError("Planner ADK agent failed to produce a plan in state.")
+                from backend.agents.planner import InvestigationPlan
+                # plan is a dict, parse it
+                if isinstance(plan, dict):
+                    plan = InvestigationPlan.model_validate(plan)
+            else:
+                plan = await self.planner.create_plan(entity, intent)
 
             await broadcaster.emit(
                 investigation_id=investigation_id,

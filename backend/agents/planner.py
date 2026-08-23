@@ -4,6 +4,7 @@ import logging
 from typing import Dict, List
 from pydantic import BaseModel, Field
 from google.genai import types
+from google.adk.agents import LlmAgent
 
 from backend.models import CandidateEntity, ResearchDomain
 from backend.services.gemini_client import GeminiClient
@@ -21,6 +22,37 @@ class DomainPlan(BaseModel):
 class InvestigationPlan(BaseModel):
     festivalName: str
     domains: Dict[ResearchDomain, DomainPlan]
+
+
+def create_planner_adk_agent(entity_name: str, location: str, official_website: str, intent: str) -> LlmAgent:
+    instruction = f"""
+You are the Lead Research Planner for Screened, a cinema due-diligence intelligence platform.
+Create a structured 3-domain research plan for investigating the following film festival:
+
+Entity Name: {entity_name}
+Location: {location}
+Official Website: {official_website}
+Filmmaker Intent: {intent}
+
+Generate specific Parallel Search queries and questions covering 360° forensic vetting:
+1. FESTIVAL domain (physical cinema screening venues, municipal manifests, submission fee tiers, original rules vs boilerplate text, awards)
+2. ORGANIZER domain (operating legal entity name, Companies House or registry filing status, domain WHOIS age, founders, festival director IMDb credentials)
+3. PARTICIPANTS domain (filmmaker alumni confirmations, Letterboxd/Reddit threads, attendee reviews, fee dispute complaints, selection rates)
+
+Return a JSON object matching the requested output schema where keys are FESTIVAL, ORGANIZER, PARTICIPANTS.
+"""
+    return LlmAgent(
+        name="planner",
+        description="Creates a targeted 3-domain research plan with specific Parallel Search queries.",
+        model="gemini-2.5-pro",
+        instruction=instruction,
+        output_schema=InvestigationPlan,
+        output_key="plan",
+        generate_content_config=types.GenerateContentConfig(
+            temperature=0.1,
+        )
+    )
+
 
 
 class PlannerAgent:
