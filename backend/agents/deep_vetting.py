@@ -1,7 +1,7 @@
 """Deep Vetting Agent executing 360° forensic festival analysis (Spec 14)."""
 import json
 import logging
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 from google.genai import types
 
 from backend.models import (
@@ -17,11 +17,45 @@ from backend.services.gemini_client import GeminiClient
 logger = logging.getLogger("screened.agents.deep_vetting")
 
 
+from google.adk.agents import ParallelAgent, LlmAgent
+from google.adk.runners import Runner
+from google.adk.tools import FunctionTool
+from backend.orchestrator.session_service import FirestoreSessionService
+from backend.tools.parallel_task import parallel_task_run as _parallel_task_run
+
+DIMENSIONS = [
+    {"key": "CORPORATE_REGISTRY", "name": "corporate_identity", "desc": "Inspect company registration, entity active status, incorporation date vs claimed edition history."},
+    {"key": "DOMAIN_PROVENANCE", "name": "domain_forensics", "desc": "Inspect domain registration history, longevity vs claimed heritage, website provenance."},
+    {"key": "VENUE_CORROBORATION", "name": "venue_reality", "desc": "Cross-check physical theater leases, cinema screening spaces, and event schedules."},
+    {"key": "PERSONNEL_DOSSIER", "name": "jury_laurels", "desc": "Factually assess Festival Directors, Programmers, and Jury Members from public cinema credits."},
+    {"key": "BOILERPLATE_PLAGIARISM", "name": "rules_plagiarism", "desc": "Check if submission rules, fee policies, or waiver texts are unique or cloned from known laurel mills."},
+]
+
 class DeepVettingAgent:
-    """Performs structured 360° due-diligence vetting across 7 investigative dimensions."""
+    """Performs structured 360° due-diligence vetting across forensic dimensions using ADK."""
 
     def __init__(self, gemini: GeminiClient):
         self.gemini = gemini
+
+    def _create_dimension_tool(self, dimension: dict, investigation_id: str, festival_name: str, optional_url: Optional[str]) -> FunctionTool:
+        async def parallel_task_run(objective: str, queries: list[str]) -> Dict[str, Any]:
+            f"""Run a Parallel Task to extract claims about {dimension['name']}."""
+            entity_info = {"name": festival_name, "officialDomain": optional_url}
+            result = await _parallel_task_run(
+                investigation_id=investigation_id,
+                domain=dimension["name"],
+                entity_info=entity_info,
+                objective=objective,
+                queries=queries,
+                processor="core"
+            )
+            session_service = FirestoreSessionService()
+            session = await session_service.get_session("screened", "default_user", investigation_id)
+            session.state[f"{dimension['name']}_result"] = result
+            await session_service.save_session(session)
+            return result
+            
+        return FunctionTool(parallel_task_run)
 
     async def analyze(
         self,
@@ -29,119 +63,76 @@ class DeepVettingAgent:
         sources: List[SourceRecord],
         optional_url: Optional[str] = None,
         city_country: Optional[str] = None,
+        investigation_id: str = "unknown_investigation"
     ) -> DeepVettingReport:
-        logger.info(f"Conducting deep 360° forensic vetting for: {festival_name}")
+        logger.info(f"Conducting deep 360° forensic vetting (ParallelAgent) for: {festival_name}")
 
-        prompt = f"""
-You are the Chief Investigative Forensic Analyst for Screened, evaluating film festivals for legitimacy and prestige.
-Perform a structured 360° forensic vetting analysis across 7 specific dimensions for:
+        agents = []
+        for dim in DIMENSIONS:
+            tool = self._create_dimension_tool(dim, investigation_id, festival_name, optional_url)
+            instruction = f"You are the Deep Vetting Agent for the {dim['key']} dimension. Your goal is to {dim['desc']}. Use the parallel_task_run tool."
+            agents.append(
+                LlmAgent(
+                    name=dim["name"],
+                    model="gemini-2.5-flash",
+                    instruction=instruction,
+                    tools=[tool]
+                )
+            )
 
-Festival Name: {festival_name}
-Official URL: {optional_url or 'Not specified'}
-Location: {city_country or 'Not specified'}
-
-Available Evidence Sources:
-{json.dumps([{"url": s.url, "domain": s.domain, "title": s.title, "excerpts": s.excerpts[:3]} for s in sources], indent=2)}
-
-You must evaluate exactly these 7 forensic dimensions:
-1. CORPORATE_REGISTRY ("Corporate & Legal Entity Verification"):
-   - Inspect company registration (Companies House / local registries), entity active/dissolved status, incorporation date vs claimed edition history.
-2. DOMAIN_PROVENANCE ("Domain Age & WHOIS Provenance"):
-   - Inspect domain registration history, longevity vs claimed heritage, website provenance.
-3. BOILERPLATE_PLAGIARISM ("Boilerplate Rules & Text Duplication"):
-   - Check if submission rules, fee policies, or waiver texts are unique or cloned from known laurel mills.
-4. PERSONNEL_DOSSIER ("Key Personnel & Jury Dossiers"):
-   - Factually assess Festival Directors, Programmers, and Jury Members from public cinema credits and IMDb (maintain strict neutral and objective tone).
-5. VENUE_CORROBORATION ("Municipal Screening & Venue Corroboration"):
-   - Cross-check physical theater leases, cinema screening spaces, and event schedules.
-6. ALUMNI_FOOTPRINT ("Alumni Filmmaker & Selection Footprint"):
-   - Evaluate whether previous edition award winners and selected filmmakers publicly corroborate their participation.
-7. IMAGE_PROVENANCE ("Promotional Image & Asset Authenticity"):
-   - Verify if promotional screening photos depict the actual cinema venue or generic stock imagery.
-
-Return a JSON object conforming strictly to this schema:
-{{
-  "overallAuthenticityScore": number (0 to 100),
-  "totalFlags": number (count of RED_FLAG or AMBER_WARNING dimensions),
-  "dimensions": [
-    {{
-      "dimensionKey": "CORPORATE_REGISTRY" | "DOMAIN_PROVENANCE" | "BOILERPLATE_PLAGIARISM" | "PERSONNEL_DOSSIER" | "VENUE_CORROBORATION" | "ALUMNI_FOOTPRINT" | "IMAGE_PROVENANCE",
-      "title": "string (human readable title)",
-      "category": "CORPORATE_REGISTRY" | "DOMAIN_PROVENANCE" | "BOILERPLATE_PLAGIARISM" | "PERSONNEL_DOSSIER" | "VENUE_CORROBORATION" | "ALUMNI_FOOTPRINT" | "IMAGE_PROVENANCE",
-      "status": "VERIFIED_AUTHENTIC" | "INFORMATIONAL" | "AMBER_WARNING" | "RED_FLAG" | "INCONCLUSIVE",
-      "confidenceScore": number (0 to 100),
-      "summary": "string (2-3 factual sentences summarizing findings)",
-      "signalsFound": ["string signal 1", "string signal 2"],
-      "corroboratingSources": ["domain or url 1", "domain or url 2"],
-      "riskWeight": "LOW" | "MEDIUM" | "HIGH" | "CRITICAL"
-    }}
-  ]
-}}
+        reducer_instruction = f"""
+You are the Chief Investigative Forensic Analyst for Screened.
+Synthesize the parallel dimension analyses into a final deep vetting report for {festival_name}.
+Focus on these 5 dimensions: CORPORATE_REGISTRY, DOMAIN_PROVENANCE, VENUE_CORROBORATION, PERSONNEL_DOSSIER, BOILERPLATE_PLAGIARISM.
+Fill in the other 2 (ALUMNI_FOOTPRINT, IMAGE_PROVENANCE) with INCONCLUSIVE or INFORMATIONAL defaults.
+Return a JSON object conforming strictly to the output schema.
 """
 
-        try:
-            response = self.gemini.client.models.generate_content(
-                model="gemini-2.5-flash",
-                contents=prompt,
-                config=types.GenerateContentConfig(
-                    response_mime_type="application/json",
-                    temperature=0.1,
+        from google.adk.agents import SequentialAgent
+        vetting_agent = SequentialAgent(
+            name="deep_vetting_pipeline",
+            sub_agents=[
+                ParallelAgent(
+                    name="deep_vetting_dimensions",
+                    sub_agents=agents
                 ),
-            )
-            raw = json.loads(response.text or "{}")
-
-            dimensions: List[DeepVettingDimension] = []
-            for dim_data in raw.get("dimensions", []):
-                key = dim_data.get("dimensionKey", "CORPORATE_REGISTRY")
-                try:
-                    category = QuestionCategory(dim_data.get("category", key))
-                except ValueError:
-                    category = QuestionCategory.CORPORATE_REGISTRY
-
-                try:
-                    status = VettingSignalStatus(dim_data.get("status", "INFORMATIONAL"))
-                except ValueError:
-                    status = VettingSignalStatus.INFORMATIONAL
-
-                dimensions.append(
-                    DeepVettingDimension(
-                        dimensionKey=key,
-                        title=dim_data.get("title", key.replace("_", " ").title()),
-                        category=category,
-                        status=status,
-                        confidenceScore=int(dim_data.get("confidenceScore", 80)),
-                        summary=dim_data.get("summary", "Analysis completed based on public records."),
-                        signalsFound=dim_data.get("signalsFound", []),
-                        corroboratingSources=dim_data.get("corroboratingSources", []),
-                        riskWeight=dim_data.get("riskWeight", "MEDIUM"),
-                    )
+                LlmAgent(
+                    name="vetting_scorer",
+                    model="gemini-2.5-flash",
+                    instruction=reducer_instruction,
+                    output_schema=DeepVettingReport,
+                    output_key="report"
                 )
-
-            # If model returned fewer than 7 dimensions, fill in defaults
-            existing_keys = {d.dimensionKey for d in dimensions}
-            for default_dim in self._get_fallback_dimensions(festival_name, optional_url):
-                if default_dim.dimensionKey not in existing_keys:
-                    dimensions.append(default_dim)
-
-            overall_score = int(raw.get("overallAuthenticityScore", 82))
-            total_flags = int(raw.get("totalFlags", sum(1 for d in dimensions if d.status in (VettingSignalStatus.AMBER_WARNING, VettingSignalStatus.RED_FLAG))))
-
-            return DeepVettingReport(
-                festivalName=festival_name,
-                overallAuthenticityScore=overall_score,
-                totalFlags=total_flags,
-                dimensions=dimensions,
-            )
-
+            ]
+        )
+        
+        runner = Runner(
+            agent=vetting_agent,
+            app_name="screened",
+            session_service=FirestoreSessionService()
+        )
+        
+        prompt = f"Perform deep vetting on Festival: {festival_name}, URL: {optional_url or 'Unknown'}, Location: {city_country or 'Unknown'}."
+        
+        try:
+            final_report = None
+            async for step in runner.run_async(user_id="default_user", session_id=investigation_id, prompt=prompt):
+                if step.data and hasattr(step.data, "report"):
+                    final_report = step.data.report
+            
+            if final_report and isinstance(final_report, DeepVettingReport):
+                return final_report
+                
         except Exception as e:
-            logger.error(f"DeepVettingAgent LLM synthesis failed: {e}. Generating deterministic fallback.", exc_info=True)
-            fallback_dims = self._get_fallback_dimensions(festival_name, optional_url)
-            return DeepVettingReport(
-                festivalName=festival_name,
-                overallAuthenticityScore=78,
-                totalFlags=1,
-                dimensions=fallback_dims,
-            )
+            logger.error(f"DeepVettingAgent ADK execution failed: {e}. Generating deterministic fallback.", exc_info=True)
+
+        fallback_dims = self._get_fallback_dimensions(festival_name, optional_url)
+        return DeepVettingReport(
+            festivalName=festival_name,
+            overallAuthenticityScore=78,
+            totalFlags=1,
+            dimensions=fallback_dims,
+        )
 
     def _get_fallback_dimensions(self, festival_name: str, optional_url: Optional[str] = None) -> List[DeepVettingDimension]:
         """Provides realistic deterministic fallback dimensions for the 7 Spec 14 vectors."""

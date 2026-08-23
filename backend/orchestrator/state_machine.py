@@ -401,6 +401,7 @@ class Orchestrator:
                 sources=all_sources,
                 optional_url=entity.officialDomain,
                 city_country=entity.cityCountry,
+                investigation_id=investigation_id,
             )
 
             await broadcaster.emit(

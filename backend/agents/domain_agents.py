@@ -4,7 +4,7 @@ import logging
 from typing import List, Dict, Any
 from backend.models import ResearchDomain, SourceRecord
 from backend.agents.planner import DomainPlan
-from backend.tools.parallel_task import parallel_task_run
+from backend.tools.parallel_task import parallel_task_run as _parallel_task_run
 from google.adk.agents import LlmAgent
 from google.adk.tools import FunctionTool
 from backend.orchestrator.session_service import FirestoreSessionService
@@ -16,9 +16,9 @@ logger = logging.getLogger("screened.agents.domain_agents")
 def create_domain_agent(domain: str, investigation_id: str, entity_info: Dict[str, Any]) -> LlmAgent:
     """Create an ADK LlmAgent for a specific domain that uses parallel_task_run."""
     
-    # We create a wrapped function that injects investigation_id, domain, entity_info
-    async def wrapped_task_run(objective: str, queries: list[str]) -> Dict[str, Any]:
-        result = await parallel_task_run(
+    async def parallel_task_run(objective: str, queries: list[str]) -> Dict[str, Any]:
+        """Run a deep Parallel Task for a specific domain to extract claims."""
+        result = await _parallel_task_run(
             investigation_id=investigation_id,
             domain=domain,
             entity_info=entity_info,
@@ -35,15 +35,11 @@ def create_domain_agent(domain: str, investigation_id: str, entity_info: Dict[st
         
         return result
         
-    task_tool = FunctionTool(
-        name="parallel_task_run",
-        description="Run a deep Parallel Task for a specific domain to extract claims.",
-        fn=wrapped_task_run
-    )
+    task_tool = FunctionTool(parallel_task_run)
     
     return LlmAgent(
         name=f"{domain}Agent",
-        system_instruction=f"You are the {domain} Research Agent. Use the parallel_task_run tool to extract claims for your domain.",
+        instruction=f"You are the {domain} Research Agent. Use the parallel_task_run tool to extract claims for your domain.",
         tools=[task_tool]
     )
 
