@@ -1,6 +1,7 @@
 """Firestore Native Database Layer with in-memory fallback for Screened."""
 import logging
 from typing import Any, Dict, List, Optional
+from datetime import datetime
 from google.cloud import firestore
 from backend.config import settings
 from backend.models import (
@@ -123,22 +124,35 @@ class Database:
             return
         try:
             doc_ref = self.client.collection("events").document(event_data["id"])
-            self.client.batch().set(doc_ref, event_data).commit()
+            batch = self.client.batch()
+            batch.set(doc_ref, event_data)
+            batch.commit()
         except Exception as e:
             logger.error(f"Firestore save_event failed: {e}", exc_info=True)
             if investigation_id not in self._memory_store["events"]:
                 self._memory_store["events"][investigation_id] = []
             self._memory_store["events"][investigation_id].append(event_data)
 
+    def _parse_ts(self, ts: Any) -> float:
+        if isinstance(ts, (int, float)):
+            return float(ts)
+        elif isinstance(ts, str):
+            try:
+                return datetime.fromisoformat(ts.replace("Z", "+00:00")).timestamp()
+            except Exception:
+                pass
+        return 0.0
+
     async def get_events(self, investigation_id: str) -> List[Dict[str, Any]]:
         if self.use_memory or not self.client:
-            return self._memory_store["events"].get(investigation_id, [])
+            res = self._memory_store["events"].get(investigation_id, [])
+            return sorted(res, key=lambda x: self._parse_ts(x.get("timestamp")))
         try:
-            docs = self.client.collection("events").where("investigationId", "==", investigation_id).stream()
+            docs = self.client.collection("investigations").document(investigation_id).collection("events").stream()
             res = [d.to_dict() for d in docs]
             if not res:
                 return self._memory_store["events"].get(investigation_id, [])
-            return sorted(res, key=lambda x: x.get("timestamp", ""))
+            return sorted(res, key=lambda x: self._parse_ts(x.get("timestamp")))
         except Exception as e:
             logger.error(f"Firestore get_events failed: {e}", exc_info=True)
             return self._memory_store["events"].get(investigation_id, [])
@@ -158,16 +172,16 @@ class Database:
 
     async def get_all_feedback_items(self) -> List[Dict[str, Any]]:
         if self.use_memory or not self.client:
-            return sorted(list(self._memory_store["feedback"].values()), key=lambda x: x.get("timestamp", ""), reverse=True)
+            return sorted(list(self._memory_store["feedback"].values()), key=lambda x: self._parse_ts(x.get("timestamp")), reverse=True)
         try:
             docs = self.client.collection("feedback").stream()
             res = [d.to_dict() for d in docs]
             if not res:
-                return sorted(list(self._memory_store["feedback"].values()), key=lambda x: x.get("timestamp", ""), reverse=True)
-            return sorted(res, key=lambda x: x.get("timestamp", ""), reverse=True)
+                return sorted(list(self._memory_store["feedback"].values()), key=lambda x: self._parse_ts(x.get("timestamp")), reverse=True)
+            return sorted(res, key=lambda x: self._parse_ts(x.get("timestamp")), reverse=True)
         except Exception as e:
             logger.error(f"Firestore get_all_feedback_items failed: {e}", exc_info=True)
-            return sorted(list(self._memory_store["feedback"].values()), key=lambda x: x.get("timestamp", ""), reverse=True)
+            return sorted(list(self._memory_store["feedback"].values()), key=lambda x: self._parse_ts(x.get("timestamp")), reverse=True)
 
 
 db = Database()
