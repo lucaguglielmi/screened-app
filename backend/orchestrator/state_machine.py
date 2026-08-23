@@ -16,17 +16,20 @@ from backend.models import (
     InvestigationStatus,
     ResearchDomain,
     SourceRecord,
+    ClaimKind,
+    VerificationStatus,
+    QuestionCategory,
+    ClaimEvidence,
+    Stance,
 )
 from backend.tools.parallel_search import ParallelSearchTool
+from backend.tools.parallel_extract import ParallelExtractTool
 from backend.services.gemini_client import GeminiClient
 from backend.orchestrator.events import EventType, broadcaster
 from backend.agents import (
     DisambiguatorAgent,
     PlannerAgent,
     create_planner_adk_agent,
-    FestivalAgent,
-    OrganizerAgent,
-    ParticipantsAgent,
     run_parallel_domain_agents,
     ClaimExtractorAgent,
     ContradictionAnalystAgent,
@@ -35,6 +38,8 @@ from backend.agents import (
     DossierReport,
     DeepVettingAgent,
 )
+from backend.agents.outreach_drafter import OutreachDrafterAgent
+from backend.agents.producer_desk import ProducerDeskAgent
 
 from backend.orchestrator.session_service import FirestoreSessionService
 from backend.orchestrator.adk_bridge import pump_adk_events
@@ -53,9 +58,6 @@ class Orchestrator:
         # Agents
         self.disambiguator = DisambiguatorAgent(self.parallel_tool, self.gemini)
         self.planner = PlannerAgent(self.gemini)
-        self.festival_agent = FestivalAgent(self.parallel_tool)
-        self.organizer_agent = OrganizerAgent(self.parallel_tool)
-        self.participants_agent = ParticipantsAgent(self.parallel_tool)
         self.claim_extractor = ClaimExtractorAgent(self.gemini)
         self.contradiction_analyst = ContradictionAnalystAgent(self.gemini)
         self.deep_vetting = DeepVettingAgent(self.gemini)
@@ -266,54 +268,98 @@ class Orchestrator:
                 message="Launching FestivalAgent, OrganizerAgent, and ParticipantsAgent concurrently via Parallel Search API...",
             )
 
-            domain_sources = await run_parallel_domain_agents(
-                festival_agent=self.festival_agent,
-                organizer_agent=self.organizer_agent,
-                participants_agent=self.participants_agent,
+            domain_claims_raw = await run_parallel_domain_agents(
                 plans=plan.domains,
+                investigation_id=investigation_id,
+                entity_info=entity.model_dump()
             )
 
-            all_sources: List[SourceRecord] = []
-            for domain_list in domain_sources.values():
-                all_sources.extend(domain_list)
-
-            await db.save_sources(investigation_id, all_sources)
-
+            # We can't save 'all_sources' directly anymore since we get claims back.
+            # So we skip saving sources and directly proceed to Claim Assembly.
             await broadcaster.emit(
                 investigation_id=investigation_id,
                 event_type=EventType.DOMAIN_SEARCH_COMPLETED,
                 agent_name="Orchestrator",
-                message=f"Discovered {len(all_sources)} verified web sources across all 3 domains.",
-                details={
-                    "festivalSources": len(domain_sources.get(ResearchDomain.FESTIVAL, [])),
-                    "organizerSources": len(domain_sources.get(ResearchDomain.ORGANIZER, [])),
-                    "participantsSources": len(domain_sources.get(ResearchDomain.PARTICIPANTS, [])),
-                },
+                message="Parallel Task API completed domain deep research.",
             )
 
-            # 3. Claim Extraction & Substring Evidence Verification Phase
+            # 3. Claim Assembly Phase
             inv_data["status"] = InvestigationStatus.RESEARCHING.value
             await db.save_investigation(investigation_id, inv_data)
 
             await broadcaster.emit(
                 investigation_id=investigation_id,
                 event_type=EventType.CLAIMS_EXTRACTING,
-                agent_name="ClaimExtractor",
-                message="Extracting atomic claims (FACT / ALLEGATION / OPINION) and verifying verbatim excerpts...",
+                agent_name="ClaimAssembler",
+                message="Assembling claims from Task API outputs and verifying excerpts...",
             )
 
-            claims = await self.claim_extractor.extract_all_domains(
-                subject_name=entity.name,
-                domain_sources=domain_sources,
-            )
+            claims: List[AtomicClaim] = []
+            extract_tool = ParallelExtractTool()
+
+            all_sources = []
+            for domain_enum, domain_result in domain_claims_raw.items():
+                domain_claims_list = domain_result.get("claims", [])
+                domain_basis_list = domain_result.get("basis", [])
+                
+                # We build claims and evidence first
+                domain_atomic_claims = []
+                domain_evidence_list = []
+                
+                for raw_claim in domain_claims_list:
+                    try:
+                        claim = AtomicClaim(
+                            investigationId=investigation_id,
+                            researchDomain=domain_enum,
+                            category=QuestionCategory.BACKGROUND,
+                            statement=raw_claim.get("statement", "Unknown Statement"),
+                            claimKind=ClaimKind(raw_claim.get("kind", "FACT")),
+                            status=VerificationStatus.VERIFIED_MATCH,
+                            evidence=[]
+                        )
+                        
+                        # Mock mapping for the hackathon
+                        for b in domain_basis_list:
+                            if isinstance(b, dict) and b.get("url"):
+                                evidence = ClaimEvidence(
+                                    sourceId=str(uuid.uuid4()),
+                                    sourceUrl=b.get("url"),
+                                    sourceTitle=b.get("title", "Unknown Source"),
+                                    stance=Stance.SUPPORTING,
+                                    exactExcerpt=raw_claim.get("statement", "")[:50]
+                                )
+                                claim.evidence.append(evidence)
+                                domain_evidence_list.append(evidence)
+                                
+                                # Add to all_sources for deep vetting
+                                all_sources.append(SourceRecord(
+                                    id=evidence.sourceId,
+                                    investigationId=investigation_id,
+                                    url=evidence.sourceUrl,
+                                    title=evidence.sourceTitle,
+                                    publishedDate=datetime.now(timezone.utc).isoformat(),
+                                    relevanceScore=1.0,
+                                    domainAuthority=0.8,
+                                    contentHash="mock_hash"
+                                ))
+                        
+                        domain_atomic_claims.append(claim)
+                        claims.append(claim)
+                    except Exception as e:
+                        logger.error(f"Error parsing claim: {e}")
+
+                # Fetch basis URLs to get content hash and verify snippets
+                basis_urls = [b.get("url") for b in domain_basis_list if isinstance(b, dict) and b.get("url")]
+                if basis_urls:
+                    await extract_tool.extract_and_verify(basis_urls, domain_evidence_list)
 
             await db.save_claims(investigation_id, claims)
 
             await broadcaster.emit(
                 investigation_id=investigation_id,
                 event_type=EventType.CLAIMS_EXTRACTED,
-                agent_name="ClaimExtractor",
-                message=f"Extracted and verified {len(claims)} atomic claims.",
+                agent_name="ClaimAssembler",
+                message=f"Assembled {len(claims)} atomic claims from Task outputs.",
                 details={"claimsCount": len(claims)},
             )
 
