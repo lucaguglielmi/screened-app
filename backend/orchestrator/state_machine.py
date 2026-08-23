@@ -46,7 +46,7 @@ from backend.orchestrator.adk_bridge import pump_adk_events
 
 logger = logging.getLogger("screened.orchestrator.state_machine")
 
-USE_ADK = os.getenv("USE_ADK", "false").lower() == "true"
+USE_ADK = os.getenv("USE_ADK", "true").lower() == "true"
 
 class Orchestrator:
     """Coordinates multi-agent execution and manages investigation lifecycle."""

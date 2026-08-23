@@ -17,7 +17,7 @@ logger = logging.getLogger("screened.agents.opportunity_scout")
 
 
 class OpportunityScoutAgent:
-    """Discovers matching festival submission opportunities via Parallel Search and evaluates strategic fit."""
+    """Discovers matching festival submission opportunities via FindAll API and evaluates strategic fit."""
 
     def __init__(self, parallel_tool: ParallelSearchTool, gemini: GeminiClient):
         self.parallel_tool = parallel_tool
@@ -27,6 +27,66 @@ class OpportunityScoutAgent:
         start_time = time.time()
         logger.info(f"Scouting opportunities for film: {profile.title} ({profile.format.value}, {profile.genre})")
 
+        from google.adk.agents import LlmAgent
+        from google.adk.tools import FunctionTool
+        from backend.tools.findall_tools import findall_search, findall_enrich
+        from google.genai import types
+
+        search_tool = FunctionTool(findall_search)
+        enrich_tool = FunctionTool(findall_enrich)
+
+        instruction = f"""
+You are the Lead Submission Strategist for Screened, an agentic cinema due-diligence platform.
+Your goal is to identify high-fit film festival submission opportunities for this independent film.
+
+Film Profile:
+- Title: "{profile.title}"
+- Format: {profile.format.value} ({profile.runtimeMinutes} minutes)
+- Genre: {profile.genre}
+- Premiere Strategy: {profile.premiereGoal.value}
+- Target Regions: {', '.join(profile.targetRegions) if profile.targetRegions else 'international'}
+- Budget Tier: {profile.budgetTier}
+
+You MUST use the `findall_search` tool to discover festivals, and `findall_enrich` to get deadlines, fees, and accreditations.
+You MUST NOT invent entities, dates, or fees. Only rely on the data returned by the tools.
+Generate a cohesive submission strategy roadmap and a list of structured opportunities.
+        """
+
+        scout_agent = LlmAgent(
+            name="scout",
+            model="gemini-2.5-flash",
+            instruction=instruction,
+            tools=[search_tool, enrich_tool],
+            output_schema=ScoutResponse,
+            output_key="scout_response"
+        )
+
+        try:
+            # We use an ad-hoc runner for this agent
+            from google.adk.runners import Runner
+            from google.adk.sessions.memory import InMemorySessionService
+            import uuid
+
+            runner = Runner(agent=scout_agent, app_name="screened", session_service=InMemorySessionService())
+            scout_result = None
+            async for event in runner.run_async(user_id="sys", session_id=str(uuid.uuid4()), new_message="Please find film festival opportunities for my film."):
+                if event.type == "run_completed":
+                    if event.state and "scout_response" in event.state:
+                        scout_result = event.state["scout_response"]
+            
+            if scout_result:
+                scout_result.durationSeconds = round(time.time() - start_time, 2)
+                scout_result.opportunitiesFound = len(scout_result.opportunities)
+                return scout_result
+            else:
+                raise RuntimeError("scout_response not found in state")
+
+        except Exception as e:
+            logger.error(f"ADK FindAll Scout failed: {e}. Falling back to Search+Gemini path.", exc_info=True)
+            return await self._fallback_scout(profile, start_time)
+
+    async def _fallback_scout(self, profile: FilmProfile, start_time: float) -> ScoutResponse:
+        """Original Search+Gemini fallback path."""
         # Formulate search queries
         regions_str = " ".join(profile.targetRegions) if profile.targetRegions else "international"
         search_queries = [
@@ -53,7 +113,7 @@ class OpportunityScoutAgent:
         ]
 
         prompt = f"""
-You are the Lead Submission Strategist for Screened, an agentic cinema due-diligence platform.
+You are the Lead Submission Strategist for Screened.
 Analyze the provided web search excerpts to identify high-fit film festival submission opportunities for this independent film:
 
 Film Profile:
@@ -61,7 +121,7 @@ Film Profile:
 - Format: {profile.format.value} ({profile.runtimeMinutes} minutes)
 - Genre: {profile.genre}
 - Premiere Strategy: {profile.premiereGoal.value}
-- Target Regions: {', '.join(profile.targetRegions)}
+- Target Regions: {', '.join(profile.targetRegions) if profile.targetRegions else 'international'}
 - Budget Tier: {profile.budgetTier}
 
 Discovered Web Footprint:
@@ -71,12 +131,12 @@ REQUIREMENTS:
 1. Extract 3 to 6 distinct, reputable film festivals matching the film's profile from the sources or verified industry knowledge.
 2. For each festival, provide:
    - Canonical name & location
-   - Next deadline date (e.g. "October 15, 2026" or "Late Deadline: Nov 2026")
-   - Deadline tier (e.g. "Early Bird", "Regular Deadline", "Late Deadline")
-   - Estimated entry fee tier (e.g. "£30 - £50" or "$45 - $65")
+   - Next deadline date (e.g. "October 15, 2026")
+   - Deadline tier
+   - Estimated entry fee tier
    - Accreditation tags (array among: "BAFTA_QUALIFYING", "BIFA_QUALIFYING", "ACADEMY_QUALIFYING", "FIAPF_ACCREDITED", "INDIE_CIRCUIT", "GENRE_SPECIALIST")
-   - Clear strategic fit rationale explaining why this festival aligns with the film's genre, runtime, or premiere goals.
-   - Specific eligibility notes (e.g., premiere requirements, maximum runtime rules).
+   - Clear strategic fit rationale
+   - Specific eligibility notes
 
 Return a JSON object conforming to:
 {{
@@ -85,7 +145,7 @@ Return a JSON object conforming to:
     {{
       "name": "string",
       "cityCountry": "string (e.g. London, United Kingdom)",
-      "officialDomain": "string or null (e.g. raindance.org)",
+      "officialDomain": "string or null",
       "nextDeadline": "string",
       "deadlineTier": "string",
       "feeEstimate": "string",
@@ -97,7 +157,6 @@ Return a JSON object conforming to:
   ]
 }}
 """
-
         try:
             response = self.gemini.client.models.generate_content(
                 model="gemini-2.5-flash",
@@ -114,6 +173,8 @@ Return a JSON object conforming to:
                 "strategySummary",
                 f"Curated submission roadmap for '{profile.title}' focusing on {profile.genre} {profile.format.value.lower()}s."
             )
+            # Add advisory flag
+            strategy_summary = "⚠️ ADVISORY — VERIFY DEADLINES: FindAll API is unavailable. Results are inferred from web search and may contain outdated deadlines.\n\n" + strategy_summary
 
             raw_opps = raw.get("opportunities", [])
             opportunities: List[FestivalOpportunity] = []
@@ -135,7 +196,7 @@ Return a JSON object conforming to:
                 )
 
             duration = round(time.time() - start_time, 2)
-            logger.info(f"Opportunity Scout completed in {duration}s. Found {len(opportunities)} opportunities.")
+            logger.info(f"Fallback Opportunity Scout completed in {duration}s. Found {len(opportunities)} opportunities.")
 
             return ScoutResponse(
                 filmTitle=profile.title,
@@ -144,9 +205,8 @@ Return a JSON object conforming to:
                 strategySummary=strategy_summary,
                 durationSeconds=duration,
             )
-
-        except Exception as e:
-            logger.error(f"Opportunity scout failed: {e}", exc_info=True)
+        except Exception as fallback_e:
+            logger.error(f"Fallback Opportunity scout failed: {fallback_e}", exc_info=True)
             duration = round(time.time() - start_time, 2)
             return ScoutResponse(
                 filmTitle=profile.title,
