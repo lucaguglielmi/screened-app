@@ -87,7 +87,7 @@ export const DesignTokensLab: React.FC = () => {
           </div>
           <div>
             <h2 className="font-serif text-3xl font-bold tracking-tight text-white">
-              Design Tokens & Motion Lab
+              Design Playground
             </h2>
             <p className="text-sm text-slate-400">
               Palette variables, tool identity guidelines, droplet vector fields, and animated loaders.

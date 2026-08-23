@@ -140,7 +140,7 @@ export const DesignPlayground: React.FC = () => {
               {sec === 'TOOLS' && 'Tools'}
               {sec === 'FEEDBACK' && 'Feedback'}
               {sec === 'ARCHITECTURE' && 'Architecture'}
-              {sec === 'TOKENS' && 'Tokens'}
+              {sec === 'TOKENS' && 'Design Playground'}
               {sec === 'TRACES' && 'Traces'}
               {sec === 'ALL' && 'All Sections'}
               {sec === 'BUBBLES' && 'Bubbles'}
@@ -336,7 +336,7 @@ export const DesignPlayground: React.FC = () => {
                 <MiniScoutCard
                   args={{
                     film_title: 'The Silent Transmission',
-                    year: "2024", neverReleased: true, premiereGoals: ["WORLD_PREMIERE"], targetRegions: ["UK & Europe"],
+                    
                     genre: 'Sci-Fi',
                     runtime_minutes: 14,
                     premiere_goal: 'WORLD_PREMIERE',
@@ -466,7 +466,7 @@ export const DesignPlayground: React.FC = () => {
         </div>
       )}
 
-      {/* SECTION: DESIGN TOKENS & MOTION LAB */}
+      {/* SECTION: DESIGN PLAYGROUND */}
       {activeSection === 'TOKENS' && <DesignTokensLab />}
 
       {/* SECTION: AGENT TRACES & TELEMETRY */}

@@ -6,13 +6,10 @@ import {
   Compass, 
   Palette, 
   Scale, 
-  Moon, 
-  Sun, 
-  Volume2, 
-  VolumeX, 
   ArrowRight, 
   Command, 
-  X
+  X,
+  Keyboard
 } from 'lucide-react';
 import { ActiveTool } from '../types/investigation';
 
@@ -85,27 +82,11 @@ export const CommandPalette: React.FC<Props> = ({
     },
     {
       id: 'tokens',
-      label: 'Design Tokens & Motion Lab',
+      label: 'Design Playground',
       category: 'Design Playground',
       icon: Palette,
       iconColor: 'text-purple-400',
       action: () => { onSelectTool('DESIGN_PLAYGROUND'); onClose(); },
-    },
-    {
-      id: 'theme',
-      label: `Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`,
-      category: 'Preferences',
-      icon: theme === 'dark' ? Sun : Moon,
-      iconColor: 'text-amber-400',
-      action: () => { onToggleTheme(); onClose(); },
-    },
-    {
-      id: 'sound',
-      label: `${soundMuted ? 'Unmute' : 'Mute'} Audio Feedback`,
-      category: 'Preferences',
-      icon: soundMuted ? Volume2 : VolumeX,
-      iconColor: 'text-rose-400',
-      action: () => { onToggleSound(); onClose(); },
     },
   ];
 
@@ -238,8 +219,20 @@ export const CommandPalette: React.FC<Props> = ({
 
         {/* Footer shortcuts */}
         <div className="px-5 py-2.5 bg-[#070913] border-t border-[#1A1E3D] flex items-center justify-between text-[11px] font-mono text-slate-500">
-          <span>Navigate with ↑ ↓</span>
-          <span>Enter to execute • Esc to dismiss</span>
+          <span>Navigate with ↑ ↓ • Enter to execute • Esc to dismiss</span>
+          <button 
+            className="flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer"
+            onClick={() => {
+              // We can emit an event or just alert for now, wait we need to open the keyboard modal
+              // The user said: "add the keyboard shortcuts link to the quick search"
+              // For simplicity, let's just trigger a custom event that App.tsx can catch to open the modal
+              window.dispatchEvent(new CustomEvent('open-keyboard-shortcuts'));
+              onClose();
+            }}
+          >
+            <Keyboard className="size-3" />
+            <span>Keyboard Shortcuts</span>
+          </button>
         </div>
       </div>
     </div>

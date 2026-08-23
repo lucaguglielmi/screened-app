@@ -3,7 +3,6 @@ import {
   Search, 
   AlertTriangle,
   History,
-  MapPin,
   ShieldCheck,
   Command as CommandIcon,
   Scale,
@@ -35,42 +34,12 @@ import { DesignPlayground } from './components/playground/DesignPlayground';
 import { WhyScreened } from './components/WhyScreened';
 import { CommandPalette } from './components/CommandPalette';
 import { HistorySidebar } from './components/HistorySidebar';
-import { VectorFieldBackground } from './components/animations/VectorFieldBackground';
+import { MeshGradientBackground } from './components/animations/MeshGradientBackground';
 import { isSoundMuted, setSoundMuted, playSuccessChime } from './utils/audio';
 
 
 
 
-const SPOTLIGHT_PRESETS = [
-  {
-    name: 'Raindance Film Festival',
-    city: 'London, United Kingdom',
-    year: 1992,
-    badge: 'BIFA / BAFTA Qualifying',
-    desc: 'The UK’s leading independent film festival.'
-  },
-  {
-    name: 'Sundance Film Festival',
-    city: 'Park City, Utah, USA',
-    year: 1978,
-    badge: 'Oscar Qualifying',
-    desc: 'Premier showcase for original independent cinema.'
-  },
-  {
-    name: 'Aesthetica Short Film Festival',
-    city: 'York, United Kingdom',
-    year: 2011,
-    badge: 'BAFTA Qualifying',
-    desc: 'Major UK celebration of short-form and new talent.'
-  },
-  {
-    name: 'Aldergate Film Festival',
-    city: 'Bristol, United Kingdom',
-    year: 2021,
-    badge: 'Disputed Showcase',
-    desc: 'Sample festival with physical venue & fee disputes.'
-  }
-];
 
 export default function App() {
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
@@ -139,6 +108,9 @@ export default function App() {
     if ('Notification' in window && Notification.permission === 'default') {
       Notification.requestPermission();
     }
+    const handleOpenKeyboardShortcuts = () => setIsKeyboardHelpOpen(true);
+    window.addEventListener('open-keyboard-shortcuts', handleOpenKeyboardShortcuts);
+    return () => window.removeEventListener('open-keyboard-shortcuts', handleOpenKeyboardShortcuts);
 
     const handlePaste = (e: ClipboardEvent) => {
       const activeEl = document.activeElement as HTMLElement;
@@ -434,18 +406,9 @@ export default function App() {
 
   return (
     <div className={`relative min-h-screen flex flex-row ${activeTool === 'DESIGN_PLAYGROUND' ? 'bg-[#0B1021]' : 'bg-paper-bg dark:bg-darkroom-bg'} text-paper-text dark:text-darkroom-text selection:bg-indigo-500/20 antialiased overflow-x-hidden`}>
-      {/* Global Organic Morphing Magnetic Vector Field Background (~70% Screen Blob) */}
+      {/* Global Organic Morphing Mesh Gradient Background */}
       {activeTool !== 'DESIGN_PLAYGROUND' && (
-        <VectorFieldBackground
-        color="#E11D48"
-        speed={0.55}
-        amplitude={0.24}
-        gridSpacing={28}
-        dropletLength={7}
-        blobCoverage={0.72}
-        opacity={0.26}
-        className="fixed inset-0 pointer-events-none z-0"
-      />
+        <MeshGradientBackground className="fixed inset-0 pointer-events-none z-0" />
       )}
 
       {/* Left Vertical Navigation Rail & Expandable Flyout */}
@@ -694,53 +657,7 @@ export default function App() {
                     )}
                   </section>
 
-                  {/* Featured Spotlight Presets */}
-                  <section className="space-y-4 pt-4">
-                    <div className="flex items-center justify-between border-b border-paper-border dark:border-darkroom-border pb-2">
-                      <span className="font-mono text-xs uppercase tracking-wider text-paper-muted dark:text-darkroom-muted">
-                        Featured Festival Presets
-                      </span>
-                      <span className="text-xs font-mono text-paper-muted dark:text-darkroom-muted">
-                        Click to analyze live
-                      </span>
-                    </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                      {SPOTLIGHT_PRESETS.map((preset) => (
-                        <div
-                          key={preset.name}
-                          onClick={() => { setQuery(preset.name); handleStartInvestigation(preset.name); }}
-                          className="p-5 rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border hover:border-indigo-500/50 dark:hover:border-indigo-500/50 hover:shadow-md transition-all cursor-pointer space-y-3 group flex flex-col justify-between"
-                        >
-                          <div className="space-y-2.5">
-                            <div className="flex items-center justify-between">
-                              <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-[#00D29E]/15 text-[#00D29E] border border-[#00D29E]/30">
-                                {preset.badge}
-                              </span>
-                              <span className="text-xs font-mono text-paper-muted dark:text-darkroom-muted">
-                                Est. {preset.year}
-                              </span>
-                            </div>
-                            <h3 className="font-serif text-xl font-bold text-paper-text dark:text-darkroom-text group-hover:text-[#00D29E] transition-colors">
-                              {preset.name}
-                            </h3>
-                            <div className="flex items-center gap-1.5 text-sm font-mono text-paper-muted dark:text-darkroom-muted">
-                              <MapPin className="size-3.5 text-[#00D29E]" />
-                              <span>{preset.city}</span>
-                            </div>
-                            <p className="text-base text-paper-muted dark:text-darkroom-muted line-clamp-2 pt-1 leading-relaxed">
-                              {preset.desc}
-                            </p>
-                          </div>
-
-                          <div className="pt-3 border-t border-paper-border dark:border-darkroom-border flex items-center justify-between text-sm font-mono font-semibold text-[#00D29E]">
-                            <span>Run Due Diligence</span>
-                            <ShieldCheck className="size-4 group-hover:translate-x-1 transition-transform" />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </section>
                 </div>
               )}
 
@@ -850,12 +767,6 @@ export default function App() {
               >
                 <CommandIcon className="size-3" />
                 <span>Command Menu (⌘K)</span>
-              </button>
-              <button
-                onClick={() => setIsKeyboardHelpOpen(true)}
-                className="underline hover:text-indigo-400 transition-colors cursor-pointer text-xs"
-              >
-                Shortcuts (?)
               </button>
             </div>
             <div className="text-xs opacity-75">All findings are cryptographically hashed and cited to verified web excerpts.</div>
