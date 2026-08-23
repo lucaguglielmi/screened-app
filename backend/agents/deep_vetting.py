@@ -106,17 +106,23 @@ Return a JSON object conforming strictly to the output schema.
             ]
         )
         
+        session_service = FirestoreSessionService()
         runner = Runner(
             agent=vetting_agent,
             app_name="screened",
-            session_service=FirestoreSessionService()
+            session_service=session_service
         )
         
         prompt = f"Perform deep vetting on Festival: {festival_name}, URL: {optional_url or 'Unknown'}, Location: {city_country or 'Unknown'}."
+        content_msg = types.Content(parts=[types.Part.from_text(text=prompt)])
         
         try:
+            session = await session_service.get_session(app_name="screened", user_id="default_user", session_id=investigation_id)
+            if not session:
+                await session_service.create_session(app_name="screened", user_id="default_user", session_id=investigation_id)
+
             final_report = None
-            async for step in runner.run_async(user_id="default_user", session_id=investigation_id, prompt=prompt):
+            async for step in runner.run_async(user_id="default_user", session_id=investigation_id, new_message=content_msg):
                 if step.data and hasattr(step.data, "report"):
                     final_report = step.data.report
             
