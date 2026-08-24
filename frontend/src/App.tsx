@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import {
   Search,
   AlertTriangle,
@@ -23,18 +23,19 @@ import {
 } from './types/investigation';
 import { LeftNavigation } from './components/navigation/LeftNavigation';
 import { MobileNavigation } from './components/navigation/MobileNavigation';
-import { EntityConfirmation } from './components/EntityConfirmation';
 import { LiveProgress } from './components/LiveProgress';
-import { EvidenceDossier } from './components/EvidenceDossier';
 import { OutreachModal } from './components/OutreachModal';
-import { OpportunityScout } from './components/OpportunityScout';
 import { KeyboardHelpModal } from './components/KeyboardHelpModal';
 import { ChatContainer } from './components/chat/ChatContainer';
-import { DesignPlayground } from './components/playground/DesignPlayground';
 import { WhyScreened } from './components/WhyScreened';
 import { HowToUse } from './components/HowToUse';
 import { CommandPalette } from './components/CommandPalette';
 import { HistorySidebar } from './components/HistorySidebar';
+
+const EvidenceDossier = lazy(() => import('./components/EvidenceDossier').then(m => ({ default: m.EvidenceDossier })));
+const OpportunityScout = lazy(() => import('./components/OpportunityScout').then(m => ({ default: m.OpportunityScout })));
+const DesignPlayground = lazy(() => import('./components/playground/DesignPlayground').then(m => ({ default: m.DesignPlayground })));
+const EntityConfirmation = lazy(() => import('./components/EntityConfirmation').then(m => ({ default: m.EntityConfirmation })));
 import { VectorFieldBackground } from './components/animations/VectorFieldBackground';
 import { AnimatedEE } from './components/animations/AnimatedEE';
 import { UpdateNotifier } from './components/common/UpdateNotifier';
@@ -425,9 +426,9 @@ export default function App() {
   };
 
   const handleDeepScreen = (festivalName: string, sourceTool: 'chat' | 'scout' | 'command_palette') => {
+    handleReset();
     setActiveTool('DUE_DILIGENCE');
     setQuery(festivalName);
-    handleReset();
     handleStartInvestigation(festivalName, `${sourceTool}_deep_screen` as any);
   };
 
@@ -440,7 +441,7 @@ export default function App() {
 
   return (
     <div
-      className={`relative min-h-screen flex flex-row ${activeTool === 'DESIGN_PLAYGROUND' ? 'bg-darkroom-surface' : 'bg-paper-bg dark:bg-darkroom-bg'} text-paper-text dark:text-darkroom-text selection:bg-indigo-500/20 antialiased overflow-x-hidden`}
+      className={`relative min-h-screen flex flex-row ${activeTool === 'DESIGN_PLAYGROUND' ? 'bg-paper-surface dark:bg-darkroom-surface' : 'bg-paper-bg dark:bg-darkroom-bg'} text-paper-text dark:text-darkroom-text selection:bg-indigo-500/20 antialiased overflow-x-hidden`}
     >
       {/* Live System Update Notifier */}
       <UpdateNotifier />
@@ -457,7 +458,7 @@ export default function App() {
       <div className="flex-1 flex flex-col min-w-0 min-h-screen overflow-y-auto">
         {/* Top Header Bar */}
         <header
-          className={`border-b border-paper-border dark:border-darkroom-border ${activeTool === 'DESIGN_PLAYGROUND' ? 'bg-darkroom-surface' : 'bg-paper-surface/80 dark:bg-darkroom-surface/80 backdrop-blur'} sticky top-0 z-30 transition-colors no-print`}
+          className={`border-b border-paper-border dark:border-darkroom-border ${activeTool === 'DESIGN_PLAYGROUND' ? 'bg-paper-surface dark:bg-darkroom-surface' : 'bg-paper-surface/80 dark:bg-darkroom-surface/80 backdrop-blur'} sticky top-0 z-30 transition-colors no-print`}
         >
           <div className="px-4 sm:px-6 md:px-8 h-16 flex items-center justify-between gap-4">
             <div onClick={handleReset} className="flex items-center gap-3 cursor-pointer shrink-0">
@@ -476,12 +477,12 @@ export default function App() {
               {/* Quick Search / Command Palette (⌘K) */}
               <button
                 onClick={() => setIsCommandPaletteOpen(true)}
-                className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-darkroom-surface hover:bg-darkroom-card text-slate-400 hover:text-slate-200 border border-darkroom-border transition-colors cursor-pointer text-xs font-mono"
+                className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-card dark:hover:bg-darkroom-card text-slate-400 hover:text-slate-200 border border-paper-border dark:border-darkroom-border transition-colors cursor-pointer text-xs font-mono"
                 title="Command Palette (⌘K)"
               >
                 <Search className="size-3.5 text-indigo-400" />
                 <span>Search or jump to...</span>
-                <span className="flex items-center gap-0.5 text-[10px] bg-darkroom-border text-slate-400 px-1.5 py-0.5 rounded border border-darkroom-border">
+                <span className="flex items-center gap-0.5 text-[10px] bg-paper-border dark:bg-darkroom-border text-slate-400 px-1.5 py-0.5 rounded border border-paper-border dark:border-darkroom-border">
                   <CommandIcon className="size-2.5" /> K
                 </span>
               </button>
@@ -489,7 +490,7 @@ export default function App() {
               {/* History Button */}
               <button
                 onClick={() => setIsHistoryOpen(true)}
-                className="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-darkroom-surface hover:bg-darkroom-card text-slate-400 hover:text-indigo-300 border border-darkroom-border hover:border-indigo-500/40 transition-colors cursor-pointer text-xs font-mono flex items-center gap-1.5"
+                className="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-card dark:hover:bg-darkroom-card text-slate-400 hover:text-indigo-300 border border-paper-border dark:border-darkroom-border hover:border-indigo-500/40 transition-colors cursor-pointer text-xs font-mono flex items-center gap-1.5"
                 title="View Past Searches"
               >
                 <History className="size-4 text-indigo-400" />
@@ -501,8 +502,8 @@ export default function App() {
                 onClick={toggleSound}
                 className={`p-2 rounded-xl border transition-all cursor-pointer text-xs font-mono flex items-center gap-1.5 ${
                   soundMuted
-                    ? 'bg-darkroom-surface border-darkroom-border text-slate-400 hover:text-slate-200'
-                    : 'bg-darkroom-card border-indigo-500/40 text-indigo-300 hover:border-indigo-400 shadow-sm'
+                    ? 'bg-paper-surface dark:bg-darkroom-surface border-paper-border dark:border-darkroom-border text-slate-400 hover:text-slate-200'
+                    : 'bg-paper-card dark:bg-darkroom-card border-indigo-500/40 text-indigo-300 hover:border-indigo-400 shadow-sm'
                 }`}
                 title={soundMuted ? 'Unmute Audio (Press M)' : 'Mute Audio (Press M)'}
               >
@@ -514,7 +515,7 @@ export default function App() {
                 <span className="hidden lg:inline text-[11px]">
                   {soundMuted ? 'Muted' : 'Sound'}
                 </span>
-                <span className="hidden xl:inline text-[9px] px-1 py-0.5 rounded bg-darkroom-border text-slate-400 border border-darkroom-border">
+                <span className="hidden xl:inline text-[9px] px-1 py-0.5 rounded bg-paper-border dark:bg-darkroom-border text-slate-400 border border-paper-border dark:border-darkroom-border">
                   M
                 </span>
               </button>
@@ -522,7 +523,7 @@ export default function App() {
               {/* Light / Dark Mode Toggle Button (T) */}
               <button
                 onClick={toggleTheme}
-                className="p-2 rounded-xl bg-darkroom-surface hover:bg-darkroom-card text-slate-400 hover:text-amber-300 border border-darkroom-border hover:border-amber-400/40 transition-colors cursor-pointer text-xs font-mono flex items-center gap-1.5"
+                className="p-2 rounded-xl bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-card dark:hover:bg-darkroom-card text-slate-400 hover:text-amber-300 border border-paper-border dark:border-darkroom-border hover:border-amber-400/40 transition-colors cursor-pointer text-xs font-mono flex items-center gap-1.5"
                 title={
                   theme === 'dark'
                     ? 'Switch to Light Mode (Press T)'
@@ -534,7 +535,7 @@ export default function App() {
                 ) : (
                   <Moon className="size-4 text-indigo-400" />
                 )}
-                <span className="hidden xl:inline text-[9px] px-1 py-0.5 rounded bg-darkroom-border text-slate-400 border border-darkroom-border">
+                <span className="hidden xl:inline text-[9px] px-1 py-0.5 rounded bg-paper-border dark:bg-darkroom-border text-slate-400 border border-paper-border dark:border-darkroom-border">
                   T
                 </span>
               </button>
@@ -542,11 +543,11 @@ export default function App() {
               {/* Keyboard Shortcuts Quick Helper Hint */}
               <button
                 onClick={() => setIsKeyboardHelpOpen(true)}
-                className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-darkroom-surface hover:bg-darkroom-card text-slate-400 hover:text-indigo-300 border border-darkroom-border hover:border-indigo-500/40 transition-all cursor-pointer text-xs font-mono"
+                className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-card dark:hover:bg-darkroom-card text-slate-400 hover:text-indigo-300 border border-paper-border dark:border-darkroom-border hover:border-indigo-500/40 transition-all cursor-pointer text-xs font-mono"
                 title="Keyboard Shortcuts Cheat Sheet (Press ?)"
               >
                 <span>Shortcuts</span>
-                <kbd className="px-1.5 py-0.5 rounded bg-darkroom-border text-indigo-300 border border-darkroom-border text-[10px] font-bold font-mono">
+                <kbd className="px-1.5 py-0.5 rounded bg-paper-border dark:bg-darkroom-border text-indigo-300 border border-paper-border dark:border-darkroom-border text-[10px] font-bold font-mono">
                   ?
                 </kbd>
               </button>
@@ -589,14 +590,20 @@ export default function App() {
           )}
 
           {/* View 2: Design Playground */}
-          {activeTool === 'DESIGN_PLAYGROUND' && <DesignPlayground />}
+          {activeTool === 'DESIGN_PLAYGROUND' && (
+            <Suspense fallback={<div className="p-8 text-center text-slate-500">Loading Playground...</div>}>
+              <DesignPlayground />
+            </Suspense>
+          )}
 
           {/* View 3: Opportunity Scout */}
           {activeTool === 'OPPORTUNITY_SCOUT' && (
-            <OpportunityScout
-              onDeepScreen={(q) => handleDeepScreen(q, 'scout')}
-              initialProfile={initialScoutProfile}
-            />
+            <Suspense fallback={<div className="p-8 text-center text-slate-500">Loading Scout...</div>}>
+              <OpportunityScout
+                onDeepScreen={(q) => handleDeepScreen(q, 'scout')}
+                initialProfile={initialScoutProfile}
+              />
+            </Suspense>
           )}
 
           {/* View 4: Why Screened Exists */}
@@ -631,7 +638,7 @@ export default function App() {
                         e.preventDefault();
                         handleStartInvestigation(query, 'search_form');
                       }}
-                      className="p-2 rounded-2xl bg-darkroom-surface shadow-2xl shadow-black/80 flex flex-col sm:flex-row gap-2 transition-all"
+                      className="p-2 rounded-2xl bg-paper-surface dark:bg-darkroom-surface shadow-2xl shadow-black/80 flex flex-col sm:flex-row gap-2 transition-all"
                     >
                       <div className="relative flex-1 flex items-center">
                         <Search className="size-5 absolute left-3.5 text-slate-400" />
@@ -640,7 +647,7 @@ export default function App() {
                           type="text"
                           value={query}
                           onChange={(e) => setQuery(e.target.value)}
-                          placeholder="Enter festival name (e.g. Raindance, Aldergate, Sundance)..."
+                          placeholder="Enter festival name (e.g. Raindance, Aldergate (Test Entity), Sundance)..."
                           className="w-full pl-11 pr-4 py-3 bg-transparent text-base text-white placeholder-slate-500 focus:outline-none"
                           disabled={loading}
                         />
@@ -669,7 +676,7 @@ export default function App() {
                               setQuery(name);
                               handleStartInvestigation(name, 'starter_chip');
                             }}
-                            className="px-3.5 py-1.5 rounded-xl bg-darkroom-surface text-slate-300 hover:text-white hover:bg-darkroom-card transition-all cursor-pointer text-xs font-mono shadow-md"
+                            className="px-3.5 py-1.5 rounded-xl bg-paper-surface dark:bg-darkroom-surface text-slate-300 hover:text-white hover:bg-paper-card dark:hover:bg-darkroom-card transition-all cursor-pointer text-xs font-mono shadow-md"
                           >
                             {name}
                           </button>
@@ -690,12 +697,14 @@ export default function App() {
               )}
 
               {investigation && currentStatus === 'AWAITING_ENTITY_CONFIRMATION' && (
-                <EntityConfirmation
-                  candidates={investigation.candidates}
-                  query={investigation.query}
-                  onConfirm={handleConfirmEntity}
-                  loading={loading}
-                />
+                <Suspense fallback={<div className="p-8 text-center text-slate-500">Loading Confirmation...</div>}>
+                  <EntityConfirmation
+                    candidates={investigation.candidates}
+                    query={investigation.query}
+                    onConfirm={handleConfirmEntity}
+                    loading={loading}
+                  />
+                </Suspense>
               )}
 
               {/* State 2: Researching / Analyzing */}

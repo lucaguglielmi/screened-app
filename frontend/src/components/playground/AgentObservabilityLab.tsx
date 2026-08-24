@@ -26,7 +26,7 @@ export const AgentObservabilityLab: React.FC = () => {
   return (
     <div className="space-y-8 animate-fade-in text-slate-200">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-darkroom-border">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-paper-border dark:border-darkroom-border">
         <div>
           <div className="flex items-center gap-2">
             <span className="font-mono text-xs px-2.5 py-0.5 rounded-full bg-midnight-royal/20 text-indigo-400 border border-midnight-royal/40 font-semibold">
@@ -46,7 +46,7 @@ export const AgentObservabilityLab: React.FC = () => {
             onClick={() => {
               fetchTraces();
             }}
-            className="px-3 py-1.5 rounded-xl bg-darkroom-surface hover:bg-darkroom-border text-slate-300 text-xs font-mono flex items-center gap-1.5 border border-darkroom-border transition-colors cursor-pointer"
+            className="px-3 py-1.5 rounded-xl bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-border dark:hover:bg-darkroom-border text-slate-300 text-xs font-mono flex items-center gap-1.5 border border-paper-border dark:border-darkroom-border transition-colors cursor-pointer"
           >
             <RefreshCw className="size-3.5 text-indigo-400" />
             <span>Reset Trace</span>
@@ -56,7 +56,7 @@ export const AgentObservabilityLab: React.FC = () => {
 
       {/* Metric Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-4 rounded-2xl bg-darkroom-surface space-y-1">
+        <div className="p-4 rounded-2xl bg-paper-surface dark:bg-darkroom-surface space-y-1">
           <div className="flex items-center justify-between text-slate-400 text-xs font-mono">
             <span>Total Latency</span>
             <Clock className="size-4 text-indigo-400" />
@@ -65,7 +65,7 @@ export const AgentObservabilityLab: React.FC = () => {
           <p className="text-[11px] text-tool-diligence font-mono">Within 90s SLA</p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-darkroom-surface space-y-1">
+        <div className="p-4 rounded-2xl bg-paper-surface dark:bg-darkroom-surface space-y-1">
           <div className="flex items-center justify-between text-slate-400 text-xs font-mono">
             <span>Tokens Consumed</span>
             <Coins className="size-4 text-amber-400" />
@@ -74,7 +74,7 @@ export const AgentObservabilityLab: React.FC = () => {
           <p className="text-[11px] text-slate-400 font-mono">~£0.0034 Vertex AI spend</p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-darkroom-surface space-y-1">
+        <div className="p-4 rounded-2xl bg-paper-surface dark:bg-darkroom-surface space-y-1">
           <div className="flex items-center justify-between text-slate-400 text-xs font-mono">
             <span>Verification Pass</span>
             <ShieldCheck className="size-4 text-tool-diligence" />
@@ -83,7 +83,7 @@ export const AgentObservabilityLab: React.FC = () => {
           <p className="text-[11px] text-slate-400 font-mono">18/18 claims grounded</p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-darkroom-surface space-y-1">
+        <div className="p-4 rounded-2xl bg-paper-surface dark:bg-darkroom-surface space-y-1">
           <div className="flex items-center justify-between text-slate-400 text-xs font-mono">
             <span>Disputed Claims</span>
             <AlertTriangle className="size-4 text-rose-400" />
@@ -103,7 +103,7 @@ export const AgentObservabilityLab: React.FC = () => {
           <span className="text-xs font-mono text-slate-400">Click span for metadata</span>
         </div>
 
-        <div className="p-4 rounded-3xl bg-darkroom-surface space-y-3">
+        <div className="p-4 rounded-3xl bg-paper-surface dark:bg-darkroom-surface space-y-3">
           {traces.map((trace) => {
             const isSelected = selectedSpan?.id === trace.id;
             const widthPct = Math.max(12, (trace.durationMs / totalDuration) * 100);
@@ -114,8 +114,8 @@ export const AgentObservabilityLab: React.FC = () => {
                 onClick={() => setSelectedSpan(trace)}
                 className={`p-3 rounded-2xl transition-all cursor-pointer border ${
                   isSelected
-                    ? 'bg-darkroom-card border-indigo-500/50 shadow-md'
-                    : 'bg-darkroom-bg hover:bg-darkroom-surface border-darkroom-card'
+                    ? 'bg-paper-card dark:bg-darkroom-card border-indigo-500/50 shadow-md'
+                    : 'bg-paper-bg dark:bg-darkroom-bg hover:bg-paper-surface dark:hover:bg-darkroom-surface border-paper-card dark:border-darkroom-card'
                 }`}
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
@@ -130,7 +130,7 @@ export const AgentObservabilityLab: React.FC = () => {
                       }`}
                     />
                     <span className="font-semibold text-white">{trace.name}</span>
-                    <span className="text-[11px] font-mono text-slate-400 px-2 py-0.5 rounded-md bg-darkroom-card">
+                    <span className="text-[11px] font-mono text-slate-400 px-2 py-0.5 rounded-md bg-paper-card dark:bg-darkroom-card">
                       {trace.service}
                     </span>
                   </div>
@@ -142,7 +142,7 @@ export const AgentObservabilityLab: React.FC = () => {
                 </div>
 
                 {/* Progress bar visual */}
-                <div className="mt-2 w-full bg-darkroom-surface h-1.5 rounded-full overflow-hidden">
+                <div className="mt-2 w-full bg-paper-surface dark:bg-darkroom-surface h-1.5 rounded-full overflow-hidden">
                   <div
                     className={`h-full rounded-full ${
                       trace.service.includes('Parallel')
@@ -162,8 +162,8 @@ export const AgentObservabilityLab: React.FC = () => {
 
       {/* Selected Span Detail Inspector */}
       {selectedSpan && (
-        <div className="p-6 rounded-3xl bg-darkroom-surface space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-darkroom-border">
+        <div className="p-6 rounded-3xl bg-paper-surface dark:bg-darkroom-surface space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-paper-border dark:border-darkroom-border">
             <div className="flex items-center gap-2">
               <Cpu className="size-5 text-indigo-400" />
               <h4 className="font-serif text-base font-bold text-white">
@@ -176,23 +176,23 @@ export const AgentObservabilityLab: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-mono">
-            <div className="p-3 rounded-xl bg-darkroom-bg border border-darkroom-border space-y-1">
+            <div className="p-3 rounded-xl bg-paper-bg dark:bg-darkroom-bg border border-paper-border dark:border-darkroom-border space-y-1">
               <span className="text-slate-500">Service</span>
               <div className="text-white font-semibold">{selectedSpan.service}</div>
             </div>
-            <div className="p-3 rounded-xl bg-darkroom-bg border border-darkroom-border space-y-1">
+            <div className="p-3 rounded-xl bg-paper-bg dark:bg-darkroom-bg border border-paper-border dark:border-darkroom-border space-y-1">
               <span className="text-slate-500">Duration</span>
               <div className="text-indigo-400 font-semibold">
                 {selectedSpan.durationMs} milliseconds
               </div>
             </div>
-            <div className="p-3 rounded-xl bg-darkroom-bg border border-darkroom-border space-y-1">
+            <div className="p-3 rounded-xl bg-paper-bg dark:bg-darkroom-bg border border-paper-border dark:border-darkroom-border space-y-1">
               <span className="text-slate-500">Tokens</span>
               <div className="text-amber-400 font-semibold">{selectedSpan.tokens || 'N/A'}</div>
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-darkroom-bg border border-darkroom-border space-y-1.5">
+          <div className="p-4 rounded-2xl bg-paper-bg dark:bg-darkroom-bg border border-paper-border dark:border-darkroom-border space-y-1.5">
             <span className="text-xs font-mono text-slate-500">Payload Output & Findings</span>
             <p className="text-sm text-slate-300 font-mono leading-relaxed">
               {selectedSpan.detail}

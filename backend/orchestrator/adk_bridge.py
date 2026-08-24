@@ -68,14 +68,14 @@ def make_tool_callbacks(investigation_id: str):
     async def before_tool(tool_name: str, context: Any, **kwargs):
         await broadcaster.emit(
             investigation_id=investigation_id,
-            event_type=EventType.SEARCH_STARTED,
+            event_type=EventType.DOMAIN_SEARCH_STARTED,
             agent_name="Parallel Tool",
             message=f"Executing tool {tool_name}..."
         )
     async def after_tool(tool_name: str, context: Any, **kwargs):
         await broadcaster.emit(
             investigation_id=investigation_id,
-            event_type=EventType.SEARCH_COMPLETED,
+            event_type=EventType.DOMAIN_SEARCH_COMPLETED,
             agent_name="Parallel Tool",
             message=f"Completed tool {tool_name}."
         )

@@ -9,7 +9,7 @@ export const AgentThinkingPill: React.FC<AgentThinkingPillProps> = ({
   label = 'Executive Producer is analyzing festival records...',
 }) => {
   return (
-    <div className="flex items-center gap-3 my-4 px-4 py-2.5 rounded-2xl border border-indigo-500/40 bg-darkroom-surface/90 backdrop-blur-xl w-fit shadow-xl shadow-indigo-950/40">
+    <div className="flex items-center gap-3 my-4 px-4 py-2.5 rounded-2xl border border-indigo-500/40 bg-paper-surface dark:bg-darkroom-surface/90 backdrop-blur-xl w-fit shadow-xl shadow-indigo-950/40">
       <AgentAvatar size="sm" isThinking={true} />
       <div className="flex space-x-1.5 items-center">
         <div

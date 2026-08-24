@@ -27,7 +27,7 @@ async def create_festival_monitor(target_url: str, type: str = "snapshot", frequ
 
     client = AsyncParallel(api_key=api_key)
     # Best-effort base URL detection
-    base_url = "https://screened-hackathon.a.run.app" if settings.environment == "production" else "https://localhost:8000"
+    base_url = "https://screened-pludf2u7yq-nw.a.run.app" if settings.environment == "production" else "https://localhost:8000"
     webhook_url = f"{base_url}/api/webhooks/parallel"
 
     try:

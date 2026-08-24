@@ -138,7 +138,7 @@ export const UpdateNotifier: React.FC = () => {
       aria-label="System Updates"
       className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-lg px-4 animate-in fade-in slide-in-from-top-4 duration-300"
     >
-      <div className="flex items-center justify-between gap-3 px-4 py-3 rounded-2xl bg-darkroom-surface/95 backdrop-blur-xl border border-tool-diligence/40 shadow-2xl shadow-black/80 ring-1 ring-tool-diligence/20 text-slate-100">
+      <div className="flex items-center justify-between gap-3 px-4 py-3 rounded-2xl bg-paper-surface dark:bg-darkroom-surface/95 backdrop-blur-xl border border-tool-diligence/40 shadow-2xl shadow-black/80 ring-1 ring-tool-diligence/20 text-slate-100">
         {/* Left: Icon & Text */}
         <div className="flex items-center gap-3 min-w-0">
           <div className="size-9 rounded-xl bg-tool-diligence/15 border border-tool-diligence/30 flex items-center justify-center text-tool-diligence shrink-0 animate-pulse">
@@ -175,7 +175,7 @@ export const UpdateNotifier: React.FC = () => {
 
           <button
             onClick={() => setIsDismissed(true)}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-darkroom-card transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-paper-card dark:hover:bg-darkroom-card transition-colors cursor-pointer"
             title="Dismiss notification"
           >
             <X className="size-4" />

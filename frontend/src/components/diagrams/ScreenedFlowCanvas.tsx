@@ -46,7 +46,7 @@ export const ScreenedFlowCanvas: React.FC<ScreenedFlowCanvasProps> = ({
 }) => {
   return (
     <div
-      className={`relative rounded-2xl bg-darkroom-bg border-none overflow-hidden shadow-2xl ${className}`}
+      className={`relative rounded-2xl bg-paper-bg dark:bg-darkroom-bg border-none overflow-hidden shadow-2xl ${className}`}
     >
       <ReactFlow
         nodes={nodes}
@@ -64,11 +64,11 @@ export const ScreenedFlowCanvas: React.FC<ScreenedFlowCanvasProps> = ({
       >
         <Background variant={BackgroundVariant.Dots} gap={16} size={1.2} color="var(--color-midnight-base)" />
         {showControls && (
-          <Controls className="!bg-darkroom-surface !border-none !rounded-xl !shadow-xl !text-slate-300 [&>button]:!bg-darkroom-card [&>button]:!border-none [&>button]:!text-slate-300 hover:[&>button]:!bg-darkroom-card hover:[&>button]:!text-white" />
+          <Controls className="!bg-paper-surface dark:bg-darkroom-surface !border-none !rounded-xl !shadow-xl !text-slate-300 [&>button]:!bg-paper-card dark:bg-darkroom-card [&>button]:!border-none [&>button]:!text-slate-300 hover:[&>button]:!bg-paper-card dark:bg-darkroom-card hover:[&>button]:!text-white" />
         )}
         {showMiniMap && (
           <MiniMap
-            className="!bg-darkroom-surface !border-none !rounded-xl !shadow-xl !overflow-hidden hidden sm:block"
+            className="!bg-paper-surface dark:bg-darkroom-surface !border-none !rounded-xl !shadow-xl !overflow-hidden hidden sm:block"
             nodeColor={(node) => {
               if (node.data?.status === 'CORROBORATED' || node.data?.status === 'VERIFIED')
                 return 'var(--color-tool-diligence)';

@@ -227,7 +227,7 @@ export const VersusDecisionTree: React.FC<Props> = ({
           <span className="font-bold uppercase tracking-wider">Interactive Decision Tree</span>
         </div>
 
-        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-darkroom-card text-xs">
+        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-paper-card dark:bg-darkroom-card text-xs">
           {[
             { id: 'PRESTIGE', label: 'Max Prestige', icon: Trophy },
             { id: 'COST_ROI', label: 'Low Fee / ROI', icon: DollarSign },
@@ -264,7 +264,7 @@ export const VersusDecisionTree: React.FC<Props> = ({
 
       {/* Selected Node Details */}
       {selectedNode && (
-        <div className="p-4 rounded-2xl bg-darkroom-card text-xs space-y-1 animate-fade-in shadow-xl">
+        <div className="p-4 rounded-2xl bg-paper-card dark:bg-darkroom-card text-xs space-y-1 animate-fade-in shadow-xl">
           <div className="font-bold text-white font-serif text-sm">{selectedNode.label}</div>
           <p className="text-slate-300 leading-relaxed font-sans">
             {selectedNode.details || selectedNode.role}

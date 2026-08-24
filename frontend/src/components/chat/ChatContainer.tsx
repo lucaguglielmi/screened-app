@@ -286,7 +286,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
       <AboutScreenedModal
         isOpen={isAboutModalOpen}
         onClose={() => setIsAboutModalOpen(false)}
-        onNavigateToDiligence={() => onLaunchDueDiligence('Aldergate Film Festival')}
+        onNavigateToDiligence={() => onLaunchDueDiligence('Aldergate Film Festival (Test Entity)')}
       />
 
       {/* Filmmaker Feedback Modal */}

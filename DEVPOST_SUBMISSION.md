@@ -4,7 +4,7 @@
 Independent filmmakers spend thousands of pounds on festival submission fees, often falling victim to opaque screening venues, predatory organizers, and deceptive premiere policies. "Screened" was born to transform cinema due-diligence from guesswork into an autonomous, transparent multi-agent investigation. We wanted to build a research room, not a blackbox trust score.
 
 ## What it does
-Screened operates an orchestrated pipeline of specialized autonomous agents using the Google ADK, Gemini, and the Parallel Search API. A conversational "Producer Desk" agent takes filmmaker queries or uploaded scripts and dispatches specialized tools. The system dissects subject entities, gathers public evidence from official registries, and cites every atomic claim with cryptographic payload hashes and retrieval timestamps. It provides a Generative Mini-UI for users to review the evidence and make informed submission decisions.
+Screened operates an orchestrated pipeline of specialized autonomous agents using the Google ADK, Gemini, and the Parallel Search API. A conversational "Producer Desk" agent takes filmmaker queries or uploaded scripts and dispatches specialized tools. The system dissects subject entities, gathers public evidence from official registries, and grounds atomic claims using retrieved evidence sources and timestamps. It provides a Generative Mini-UI for users to review the evidence and make informed submission decisions.
 
 ## How we built it
 We utilized a multi-agent architecture built on the Google Agent Development Kit (ADK):

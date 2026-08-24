@@ -81,7 +81,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args, onLaunch
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full max-w-2xl bg-darkroom-surface rounded-2xl p-6 shadow-2xl space-y-4 my-2 text-zinc-100"
+      className="w-full max-w-2xl bg-paper-surface dark:bg-darkroom-surface rounded-2xl p-6 shadow-2xl space-y-4 my-2 text-zinc-100"
     >
       {/* Header */}
       <div className="flex items-center justify-between pb-3">
@@ -119,14 +119,14 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args, onLaunch
               value={projectTitle}
               onChange={(e) => setProjectTitle(e.target.value)}
               placeholder="e.g. Echoes of the Humber"
-              className="w-full bg-darkroom-card rounded-xl px-3.5 py-2.5 text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:bg-darkroom-border"
+              className="w-full bg-paper-card dark:bg-darkroom-card rounded-xl px-3.5 py-2.5 text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:bg-paper-border dark:focus:bg-darkroom-border"
             />
           </div>
 
           {/* Budget & Funding Needed Sliders */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             {/* Total Budget Slider */}
-            <div className="space-y-2 bg-darkroom-card p-4 rounded-xl">
+            <div className="space-y-2 bg-paper-card dark:bg-darkroom-card p-4 rounded-xl">
               <div className="flex justify-between items-center">
                 <span className="text-zinc-400 font-mono">Total Estimated Budget</span>
                 <span className="font-bold text-blue-400 font-mono">
@@ -140,7 +140,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args, onLaunch
                 step={5000}
                 value={budgetTier}
                 onChange={(e) => setBudgetTier(Number(e.target.value))}
-                className="w-full h-1.5 bg-darkroom-surface rounded-lg appearance-none cursor-pointer accent-blue-500"
+                className="w-full h-1.5 bg-paper-surface dark:bg-darkroom-surface rounded-lg appearance-none cursor-pointer accent-blue-500"
               />
               <div className="flex justify-between text-[10px] text-zinc-500 font-mono">
                 <span>£5k (Micro)</span>
@@ -149,7 +149,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args, onLaunch
             </div>
 
             {/* Funding Gap Needed Slider */}
-            <div className="space-y-2 bg-darkroom-card p-4 rounded-xl">
+            <div className="space-y-2 bg-paper-card dark:bg-darkroom-card p-4 rounded-xl">
               <div className="flex justify-between items-center">
                 <span className="text-zinc-400 font-mono">Grant Funding Needed</span>
                 <span className="font-bold text-emerald-400 font-mono">
@@ -163,7 +163,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args, onLaunch
                 step={1000}
                 value={fundingNeeded}
                 onChange={(e) => setFundingNeeded(Number(e.target.value))}
-                className="w-full h-1.5 bg-darkroom-surface rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                className="w-full h-1.5 bg-paper-surface dark:bg-darkroom-surface rounded-lg appearance-none cursor-pointer accent-emerald-500"
               />
               <div className="flex justify-between text-[10px] text-zinc-500 font-mono">
                 <span>£2k (Dev)</span>
@@ -181,7 +181,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args, onLaunch
               <select
                 value={filmmakerRegion}
                 onChange={(e) => setFilmmakerRegion(e.target.value)}
-                className="w-full bg-darkroom-card rounded-xl px-3 py-2.5 text-white text-xs focus:outline-none focus:bg-darkroom-border cursor-pointer"
+                className="w-full bg-paper-card dark:bg-darkroom-card rounded-xl px-3 py-2.5 text-white text-xs focus:outline-none focus:bg-paper-border dark:focus:bg-darkroom-border cursor-pointer"
               >
                 <option value="UK & Northern Ireland">
                   United Kingdom & NI (BFI/Lottery Focus)
@@ -199,7 +199,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args, onLaunch
               <select
                 value={productionStage}
                 onChange={(e) => setProductionStage(e.target.value)}
-                className="w-full bg-darkroom-card rounded-xl px-3 py-2.5 text-white text-xs focus:outline-none focus:bg-darkroom-border cursor-pointer"
+                className="w-full bg-paper-card dark:bg-darkroom-card rounded-xl px-3 py-2.5 text-white text-xs focus:outline-none focus:bg-paper-border dark:focus:bg-darkroom-border cursor-pointer"
               >
                 <option value="Development & Scriptwriting">Development & Scriptwriting</option>
                 <option value="Early Pre-Production">Early Pre-Production</option>
@@ -223,7 +223,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args, onLaunch
               onDragOver={(e) => e.preventDefault()}
               onDrop={handleFileDrop}
               onClick={() => fileInputRef.current?.click()}
-              className="bg-darkroom-card hover:bg-darkroom-card rounded-xl p-4 text-center cursor-pointer transition-all flex flex-col items-center justify-center space-y-1"
+              className="bg-paper-card dark:bg-darkroom-card hover:bg-paper-card dark:hover:bg-darkroom-card rounded-xl p-4 text-center cursor-pointer transition-all flex flex-col items-center justify-center space-y-1"
             >
               <input
                 ref={fileInputRef}
@@ -292,7 +292,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args, onLaunch
           animate={{ opacity: 1, scale: 1 }}
           className="space-y-4"
         >
-          <div className="p-4 rounded-xl bg-darkroom-card space-y-2.5 text-xs">
+          <div className="p-4 rounded-xl bg-paper-card dark:bg-darkroom-card space-y-2.5 text-xs">
             <div className="flex items-center justify-between pb-2">
               <span className="font-mono font-bold text-blue-400 uppercase tracking-wider">
                 Stage 2: Funding Search Strategy Ready
@@ -326,13 +326,13 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args, onLaunch
             <div className="pt-2">
               <span className="text-zinc-400 font-mono block mb-1">Target Funding Providers:</span>
               <div className="flex flex-wrap gap-1.5">
-                <span className="px-2.5 py-1 rounded-lg bg-darkroom-surface text-zinc-200 text-[11px]">
+                <span className="px-2.5 py-1 rounded-lg bg-paper-surface dark:bg-darkroom-surface text-zinc-200 text-[11px]">
                   ✓ BFI Filmmaking Fund
                 </span>
-                <span className="px-2.5 py-1 rounded-lg bg-darkroom-surface text-zinc-200 text-[11px]">
+                <span className="px-2.5 py-1 rounded-lg bg-paper-surface dark:bg-darkroom-surface text-zinc-200 text-[11px]">
                   ✓ National Lottery Good Causes
                 </span>
-                <span className="px-2.5 py-1 rounded-lg bg-darkroom-surface text-zinc-200 text-[11px]">
+                <span className="px-2.5 py-1 rounded-lg bg-paper-surface dark:bg-darkroom-surface text-zinc-200 text-[11px]">
                   ✓ Regional Match Schemes ({filmmakerRegion})
                 </span>
                 {attachedFile && (
@@ -352,7 +352,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args, onLaunch
                 soundEffects.playClick();
                 setStep('REQUIREMENTS');
               }}
-              className="px-4 py-2.5 rounded-xl bg-darkroom-card hover:bg-darkroom-border text-xs font-mono text-zinc-300 hover:text-white transition-colors cursor-pointer"
+              className="px-4 py-2.5 rounded-xl bg-paper-card dark:bg-darkroom-card hover:bg-paper-border dark:hover:bg-darkroom-border text-xs font-mono text-zinc-300 hover:text-white transition-colors cursor-pointer"
             >
               ‹ Edit Parameters
             </button>

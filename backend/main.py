@@ -26,6 +26,7 @@ from backend.models import (
     ApproveOutreachRequest,
     OutreachDraft,
     ResearchDomain,
+    SourceRecord,
     ScoutRequest,
     ScoutResponse,
     TestPipelineRequest,
@@ -48,6 +49,10 @@ from backend.agents.deep_vetting import DeepVettingAgent
 from backend.agents.producer_desk import producer_desk_agent
 from backend.orchestrator.events import broadcaster, EventType
 from backend.orchestrator.state_machine import orchestrator
+
+
+# LLM concurrency limiter
+llm_semaphore = asyncio.Semaphore(5)
 
 
 try:
@@ -360,6 +365,8 @@ async def get_investigation(investigation_id: str):
 @limiter.limit("30/minute")
 async def get_investigation_batch(investigation_ids: list[str], request: Request):
     """Retrieve summaries for multiple investigations (e.g. for History sidebar)."""
+    if len(investigation_ids) > 20:
+        raise HTTPException(status_code=400, detail="Maximum 20 investigations allowed in batch request")
     results = []
     for inv_id in investigation_ids:
         try:
@@ -380,7 +387,7 @@ async def resume_investigation(investigation_id: str, request: Request):
         inv = await orchestrator.resume_investigation(investigation_id)
         return inv
     except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail="Invalid request to resume investigation")
     except Exception as e:
         logger.exception(f"Failed to resume investigation: {e}")
         raise HTTPException(status_code=500, detail="Internal server error while resuming investigation")
@@ -397,7 +404,7 @@ async def confirm_entity(investigation_id: str, req: ConfirmEntityRequest, reque
         )
         return inv
     except ValueError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+        raise HTTPException(status_code=400, detail="Invalid request to confirm entity")
     except Exception as e:
         logger.exception(f"Failed to confirm entity: {e}")
         raise HTTPException(status_code=500, detail="Internal server error while confirming entity")
@@ -447,7 +454,8 @@ async def chat_with_producer_desk(req: ChatRequest, request: Request):
 async def analyze_document_endpoint(req: DocumentAnalysisRequest, request: Request):
     """Analyzes an uploaded script, synopsis, treatment, or invitation email."""
     try:
-        return await producer_desk_agent.analyze_document(req)
+        async with llm_semaphore:
+            return await producer_desk_agent.analyze_document(req)
     except Exception as e:
         logger.exception(f"Document analysis endpoint failed: {e}")
         raise HTTPException(status_code=500, detail="Internal server error during document analysis")
@@ -533,7 +541,7 @@ async def approve_outreach_inquiry(investigation_id: str, req: ApproveOutreachRe
 
         return draft
     except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail="Invalid request to approve outreach")
     except Exception as e:
         logger.exception(f"Approval failed: {e}")
         raise HTTPException(status_code=500, detail="Internal server error while processing approval")
@@ -604,11 +612,12 @@ async def test_walking_skeleton_pipeline(request: TestPipelineRequest):
             claims=claims,
         )
 
-        deep_vetting = await deep_vetting_agent.analyze(
-            festival_name=subject,
-            sources=sources,
-            optional_url=request.optionalUrl,
-        )
+        async with llm_semaphore:
+            deep_vetting = await deep_vetting_agent.analyze(
+                festival_name=subject,
+                sources=sources,
+                optional_url=request.optionalUrl,
+            )
 
         duration = round(time.time() - start_time, 2)
         return TestPipelineResponse(
@@ -642,66 +651,31 @@ async def get_investigation_deep_vetting(investigation_id: str):
     sources_data = await db.get_sources(investigation_id)
     sources = [SourceRecord(**s) for s in sources_data]
 
-    report = await deep_vetting_agent.analyze(
-        festival_name=entity_data.get("name", "Unknown"),
-        sources=sources,
-        optional_url=entity_data.get("officialDomain"),
-        city_country=entity_data.get("cityCountry"),
-    )
+    async with llm_semaphore:
+        report = await deep_vetting_agent.analyze(
+            festival_name=entity_data.get("name", "Unknown"),
+            sources=sources,
+            optional_url=entity_data.get("officialDomain"),
+            city_country=entity_data.get("cityCountry"),
+        )
 
     inv["deepVetting"] = report.model_dump()
     await db.save_investigation(investigation_id, inv)
     return report
 
 
-# Seed data for filmmaker feedback
-SEED_FEEDBACK = [
-    FeedbackItem(
-        id="fb-seed-001",
-        rating=5,
-        category="ACCURACY",
-        comment="Saved me £85 in scam submission fees for a fake European festival. The venue cross-check confirmed no cinema was ever booked!",
-        authorName="Sarah Jenkins",
-        authorEmail="sarah.j.films@gmail.com",
-        timestamp="2026-08-21T14:22:00Z",
-        status="REVIEWED",
-    ),
-    FeedbackItem(
-        id="fb-seed-002",
-        rating=5,
-        category="FEATURE_REQUEST",
-        comment="Love the Opportunity Scout slate generator! Would love to see more European micro-budget documentary grants included.",
-        authorName="Marcus Thorne",
-        authorEmail="marcus@thorne-doc.co.uk",
-        timestamp="2026-08-21T18:45:00Z",
-        status="PLANNED",
-    ),
-    FeedbackItem(
-        id="fb-seed-003",
-        rating=4,
-        category="UI_DESIGN",
-        comment="The Mission Control 2-stage tool launch is fantastic. Extremely clean and fast.",
-        authorName="Elena Rostova",
-        authorEmail="elena.r@indiefilm.fr",
-        timestamp="2026-08-22T06:10:00Z",
-        status="RECEIVED",
-    ),
-]
-
-
 @app.on_event("startup")
 async def startup_event():
-    # Seed feedback if empty
-    existing = await db.get_all_feedback_items()
-    if not existing:
-        for item in SEED_FEEDBACK:
-            await db.save_feedback_item(item)
+    pass
 
 
 @app.get("/api/feedback", response_model=list[FeedbackItem])
 async def get_all_feedback():
-    """Retrieve all submitted filmmaker feedback items."""
+    """Retrieve all submitted filmmaker feedback items without PII."""
     items = await db.get_all_feedback_items()
+    for item in items:
+        item.authorName = None
+        item.authorEmail = None
     return items
 
 

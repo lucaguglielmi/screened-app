@@ -124,7 +124,7 @@ export const UiGalleryLab: React.FC = () => {
         </div>
 
         {/* Live Preview Card */}
-        <div className="p-8 rounded-xl bg-darkroom-bg flex flex-col sm:flex-row items-center justify-around gap-6">
+        <div className="p-8 rounded-xl bg-paper-bg dark:bg-darkroom-bg flex flex-col sm:flex-row items-center justify-around gap-6">
           <div className="flex flex-col items-center gap-3">
             <span className="text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
               Live Configured Button
@@ -311,7 +311,7 @@ export const UiGalleryLab: React.FC = () => {
           {iconOptions.map((opt) => (
             <div
               key={opt.type}
-              className="p-3.5 rounded-xl bg-darkroom-surface flex flex-col justify-between space-y-3"
+              className="p-3.5 rounded-xl bg-paper-surface dark:bg-darkroom-surface flex flex-col justify-between space-y-3"
             >
               <div>
                 <div className="flex items-center justify-between">

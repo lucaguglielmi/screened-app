@@ -15,7 +15,7 @@ export const ArchitecturePage: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs mt-4">
-        <div className="p-4 rounded-xl bg-darkroom-card space-y-2">
+        <div className="p-4 rounded-xl bg-paper-card dark:bg-darkroom-card space-y-2">
           <div className="flex items-center space-x-2 text-blue-400 font-bold font-mono">
             <Layers className="w-4 h-4" />
             <span>ADK Orchestrator & State Machine</span>
@@ -26,7 +26,7 @@ export const ArchitecturePage: React.FC = () => {
           </p>
         </div>
 
-        <div className="p-4 rounded-xl bg-darkroom-card space-y-2">
+        <div className="p-4 rounded-xl bg-paper-card dark:bg-darkroom-card space-y-2">
           <div className="flex items-center space-x-2 text-amber-400 font-bold font-mono">
             <Database className="w-4 h-4" />
             <span>Firestore Persistence Layer</span>
@@ -37,7 +37,7 @@ export const ArchitecturePage: React.FC = () => {
           </p>
         </div>
 
-        <div className="p-4 rounded-xl bg-darkroom-card space-y-2">
+        <div className="p-4 rounded-xl bg-paper-card dark:bg-darkroom-card space-y-2">
           <div className="flex items-center space-x-2 text-purple-400 font-bold font-mono">
             <Shield className="w-4 h-4" />
             <span>Google Cloud Tasks & Parallel SDK</span>
@@ -47,7 +47,7 @@ export const ArchitecturePage: React.FC = () => {
           </p>
         </div>
 
-        <div className="p-4 rounded-xl bg-darkroom-card space-y-2">
+        <div className="p-4 rounded-xl bg-paper-card dark:bg-darkroom-card space-y-2">
           <div className="flex items-center space-x-2 text-emerald-400 font-bold font-mono">
             <Shield className="w-4 h-4" />
             <span>PII Masking & Vault Middleware</span>
@@ -57,7 +57,7 @@ export const ArchitecturePage: React.FC = () => {
           </p>
         </div>
 
-        <div className="p-4 rounded-xl bg-darkroom-card space-y-2 col-span-1 md:col-span-2">
+        <div className="p-4 rounded-xl bg-paper-card dark:bg-darkroom-card space-y-2 col-span-1 md:col-span-2">
           <div className="flex items-center space-x-2 text-rose-400 font-bold font-mono">
             <Workflow className="w-4 h-4" />
             <span>OpenTelemetry, Cloud Logging & GA4</span>

@@ -16,6 +16,7 @@ echo ""
 echo "[2/2] Testing /api/test-pipeline with Parallel Search..."
 PIPELINE_RESP=$(curl -s -f -X POST "${BASE_URL}/api/test-pipeline" \
   -H "Content-Type: application/json" \
+  ${DIAGNOSTICS_TOKEN:+-H "Authorization: Bearer ${DIAGNOSTICS_TOKEN}"} \
   -d '{"festivalName": "Aldergate Film Festival"}')
 
 SOURCES_FOUND=$(echo "${PIPELINE_RESP}" | python3 -c "import sys, json; data=json.load(sys.stdin); print(data.get('sourcesFound', 0))")

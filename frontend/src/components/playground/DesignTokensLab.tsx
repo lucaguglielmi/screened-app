@@ -89,7 +89,7 @@ export const DesignTokensLab: React.FC = () => {
   return (
     <div className="space-y-12 animate-fade-in text-slate-100">
       {/* Header */}
-      <div className="border-b border-darkroom-border pb-6">
+      <div className="border-b border-paper-border dark:border-darkroom-border pb-6">
         <div className="flex items-center gap-3 mb-2">
           <div className="p-2.5 rounded-2xl bg-midnight-royal/20 border border-midnight-royal/40 text-indigo-400">
             <Palette className="size-6" />
@@ -130,7 +130,7 @@ export const DesignTokensLab: React.FC = () => {
             <div
               key={swatch.hex}
               onClick={() => handleCopy(swatch.hex)}
-              className="p-4 rounded-2xl bg-darkroom-surface hover:bg-darkroom-card transition-all cursor-pointer group space-y-3 shadow-lg"
+              className="p-4 rounded-2xl bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-card dark:hover:bg-darkroom-card transition-all cursor-pointer group space-y-3 shadow-lg"
             >
               {/* Color preview box */}
               <div
@@ -165,7 +165,7 @@ export const DesignTokensLab: React.FC = () => {
       {/* ========================================================================= */}
       {/* 2. PALETTE 2: TOOL COLOR SYSTEM (2 TOOLS + DESK) */}
       {/* ========================================================================= */}
-      <section className="space-y-4 pt-4 border-t border-darkroom-border">
+      <section className="space-y-4 pt-4 border-t border-paper-border dark:border-darkroom-border">
         <div>
           <h3 className="text-xl font-bold text-white flex items-center gap-2">
             <span>🎯 Palette 2: Tool Color Architecture</span>
@@ -185,7 +185,7 @@ export const DesignTokensLab: React.FC = () => {
             return (
               <div
                 key={tool.tool}
-                className="p-6 rounded-3xl bg-darkroom-surface space-y-4 relative overflow-hidden"
+                className="p-6 rounded-3xl bg-paper-surface dark:bg-darkroom-surface space-y-4 relative overflow-hidden"
               >
                 <div
                   className="absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl opacity-20 pointer-events-none"
@@ -205,7 +205,7 @@ export const DesignTokensLab: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-darkroom-bg border border-darkroom-border space-y-1">
+                <div className="p-3 rounded-xl bg-paper-bg dark:bg-darkroom-bg border border-paper-border dark:border-darkroom-border space-y-1">
                   <div className="flex items-center justify-between text-xs font-mono">
                     <span className="text-slate-400">HEX Code:</span>
                     <span className="font-bold" style={{ color: tool.hex }}>
@@ -222,7 +222,7 @@ export const DesignTokensLab: React.FC = () => {
 
                 <button
                   onClick={() => handleCopy(tool.hex)}
-                  className="w-full py-2 px-3 rounded-xl bg-darkroom-card hover:bg-darkroom-border border border-darkroom-border text-xs font-mono flex items-center justify-center gap-2 text-slate-300 transition-colors cursor-pointer"
+                  className="w-full py-2 px-3 rounded-xl bg-paper-card dark:bg-darkroom-card hover:bg-paper-border dark:hover:bg-darkroom-border border border-paper-border dark:border-darkroom-border text-xs font-mono flex items-center justify-center gap-2 text-slate-300 transition-colors cursor-pointer"
                 >
                   {copiedHex === tool.hex ? (
                     <Check className="size-3.5 text-emerald-400" />
@@ -240,7 +240,7 @@ export const DesignTokensLab: React.FC = () => {
       {/* ========================================================================= */}
       {/* 3. ANIMATED DROPLET VECTOR FIELD LABORATORY (Reference Image Animation) */}
       {/* ========================================================================= */}
-      <section className="space-y-4 pt-4 border-t border-darkroom-border">
+      <section className="space-y-4 pt-4 border-t border-paper-border dark:border-darkroom-border">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h3 className="text-xl font-bold text-white flex items-center gap-2">
@@ -257,7 +257,7 @@ export const DesignTokensLab: React.FC = () => {
         </div>
 
         {/* Live Vector Field Container */}
-        <div className="relative h-80 w-full rounded-3xl bg-darkroom-bg overflow-hidden shadow-2xl flex items-center justify-center">
+        <div className="relative h-80 w-full rounded-3xl bg-paper-bg dark:bg-darkroom-bg overflow-hidden shadow-2xl flex items-center justify-center">
           <VectorFieldBackground
             color={vfColor}
             speed={vfSpeed}
@@ -267,7 +267,7 @@ export const DesignTokensLab: React.FC = () => {
             blobCoverage={vfBlobCoverage}
             opacity={vfOpacity}
           />
-          <div className="relative z-10 text-center space-y-2 p-6 rounded-2xl bg-darkroom-bg/85 backdrop-blur-md border border-darkroom-border max-w-md shadow-2xl">
+          <div className="relative z-10 text-center space-y-2 p-6 rounded-2xl bg-paper-bg dark:bg-darkroom-bg/85 backdrop-blur-md border border-paper-border dark:border-darkroom-border max-w-md shadow-2xl">
             <h4 className="font-serif text-lg font-bold text-white">
               Subterranean Magnet Simulation
             </h4>
@@ -279,7 +279,7 @@ export const DesignTokensLab: React.FC = () => {
         </div>
 
         {/* Vector Field Controls */}
-        <div className="p-6 rounded-3xl bg-darkroom-surface grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="p-6 rounded-3xl bg-paper-surface dark:bg-darkroom-surface grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Color Selector */}
           <div className="space-y-2">
             <label className="text-xs font-mono text-slate-400 uppercase">Needle Glow Color</label>
@@ -406,7 +406,7 @@ export const DesignTokensLab: React.FC = () => {
       {/* ========================================================================= */}
       {/* 4. ANIMATED LOADERS SUITE */}
       {/* ========================================================================= */}
-      <section className="space-y-6 pt-4 border-t border-darkroom-border">
+      <section className="space-y-6 pt-4 border-t border-paper-border dark:border-darkroom-border">
         <div>
           <h3 className="text-xl font-bold text-white flex items-center gap-2">
             <span>⚡ Animated Loaders & Status Indicators</span>
@@ -421,7 +421,7 @@ export const DesignTokensLab: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* 1. Neon Cyber Bar */}
-          <div className="p-6 rounded-3xl bg-darkroom-surface space-y-4">
+          <div className="p-6 rounded-3xl bg-paper-surface dark:bg-darkroom-surface space-y-4">
             <h4 className="font-semibold text-base text-white">1. Neon Cyber Progress Bar</h4>
             <NeonCyberBar
               progress={progressVal}
@@ -441,7 +441,7 @@ export const DesignTokensLab: React.FC = () => {
           </div>
 
           {/* 2. Indeterminate Laser Sweep */}
-          <div className="p-6 rounded-3xl bg-darkroom-surface space-y-4">
+          <div className="p-6 rounded-3xl bg-paper-surface dark:bg-darkroom-surface space-y-4">
             <h4 className="font-semibold text-base text-white">
               2. Indeterminate Agent Laser Sweep
             </h4>
@@ -452,13 +452,13 @@ export const DesignTokensLab: React.FC = () => {
           </div>
 
           {/* 3. Film Sprocket Scanner */}
-          <div className="p-6 rounded-3xl bg-darkroom-surface space-y-4">
+          <div className="p-6 rounded-3xl bg-paper-surface dark:bg-darkroom-surface space-y-4">
             <h4 className="font-semibold text-base text-white">3. Film Celluloid Scanner</h4>
             <FilmSprocketScanner label="Scanning Physical Screening Leases..." />
           </div>
 
           {/* 4. Quantum Harmonic Wave */}
-          <div className="p-6 rounded-3xl bg-darkroom-surface space-y-4">
+          <div className="p-6 rounded-3xl bg-paper-surface dark:bg-darkroom-surface space-y-4">
             <h4 className="font-semibold text-base text-white">4. Quantum Harmonic Wave</h4>
             <QuantumWaveLoader bars={22} height={42} />
             <p className="text-xs text-center text-slate-400">
@@ -467,7 +467,7 @@ export const DesignTokensLab: React.FC = () => {
           </div>
 
           {/* 5. Pipeline Stepper */}
-          <div className="p-6 rounded-3xl bg-darkroom-surface space-y-4 md:col-span-2">
+          <div className="p-6 rounded-3xl bg-paper-surface dark:bg-darkroom-surface space-y-4 md:col-span-2">
             <h4 className="font-semibold text-base text-white">
               5. Multi-Phase Investigation Stepper
             </h4>
@@ -475,7 +475,7 @@ export const DesignTokensLab: React.FC = () => {
           </div>
 
           {/* 6. Orbital Reactor */}
-          <div className="p-6 rounded-3xl bg-darkroom-surface space-y-4 md:col-span-2 flex flex-col items-center">
+          <div className="p-6 rounded-3xl bg-paper-surface dark:bg-darkroom-surface space-y-4 md:col-span-2 flex flex-col items-center">
             <h4 className="font-semibold text-base text-white mb-2">
               6. Orbital Dual-Ring Reactor
             </h4>

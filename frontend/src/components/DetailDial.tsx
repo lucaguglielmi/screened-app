@@ -113,7 +113,7 @@ export const DetailDial: React.FC<Props> = ({ density, onChange, dossier }) => {
   };
 
   // Download Data as .md File
-  const handleDownloadMarkdown = () => {
+  const handleDownloadMarkdown = async () => {
     soundEffects.playClick();
     setDownloadingMd(true);
 
@@ -121,20 +121,19 @@ export const DetailDial: React.FC<Props> = ({ density, onChange, dossier }) => {
     const dateStr = new Date().toISOString().split('T')[0];
     const filename = `${festName.toLowerCase().replace(/[^a-z0-9]/g, '_')}_due_diligence_${dateStr}.md`;
 
+    let digestHex = '0x8f7a93b2c14e56d8e90a';
+    if (dossier?.reportSummary) {
+      const msgUint8 = new TextEncoder().encode(JSON.stringify(dossier));
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      digestHex = '0x' + hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
     let mdContent = `# Screened Due Diligence Dossier: ${festName}\n\n`;
     mdContent += `**Date of Audit**: ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}\n`;
     mdContent += `**Target Domain**: ${dossier?.officialDomain || 'N/A'}\n`;
     mdContent += `**Transparency Index Score**: ${dossier?.transparencyIndex?.score || 85}/100\n`;
-    mdContent += `**Audit SHA-256 Digest**: \`${
-      dossier?.reportSummary
-        ? '0x' +
-          Array.from(festName)
-            .map((c: string) => c.charCodeAt(0).toString(16))
-            .join('')
-            .padEnd(64, '0')
-            .slice(0, 64)
-        : '0x8f7a93b2c14e56d8e90a'
-    }\`\n\n`;
+    mdContent += `**Audit SHA-256 Digest**: \`${digestHex}\`\n\n`;
 
     mdContent += `## Executive Summary\n\n${dossier?.reportSummary || 'Autonomous investigation concluded with full multi-source cross-verification.'}\n\n`;
 
@@ -183,7 +182,7 @@ export const DetailDial: React.FC<Props> = ({ density, onChange, dossier }) => {
   };
 
   return (
-    <div className="w-full rounded-3xl bg-darkroom-surface p-4 sm:p-5 shadow-2xl space-y-4">
+    <div className="w-full rounded-3xl bg-paper-surface dark:bg-darkroom-surface p-4 sm:p-5 shadow-2xl space-y-4">
       {/* Top Header: Exact user prompt and Action Buttons */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="flex items-center gap-2.5">
@@ -206,7 +205,7 @@ export const DetailDial: React.FC<Props> = ({ density, onChange, dossier }) => {
           <button
             type="button"
             onClick={handleSendToAntigravity}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-mono text-indigo-300 hover:text-white transition-all shadow-md cursor-pointer group active:scale-95"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-paper-card dark:bg-darkroom-card hover:bg-paper-card dark:hover:bg-darkroom-card text-xs font-mono text-indigo-300 hover:text-white transition-all shadow-md cursor-pointer group active:scale-95"
             title="Send structured data to Antigravity agent clipboard"
           >
             {copiedAntigravity ? (
@@ -227,7 +226,7 @@ export const DetailDial: React.FC<Props> = ({ density, onChange, dossier }) => {
             type="button"
             onClick={handleDownloadMarkdown}
             disabled={downloadingMd}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-mono text-slate-200 hover:text-white transition-all shadow-md cursor-pointer group active:scale-95"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-paper-card dark:bg-darkroom-card hover:bg-paper-card dark:hover:bg-darkroom-card text-xs font-mono text-slate-200 hover:text-white transition-all shadow-md cursor-pointer group active:scale-95"
             title="Download full due diligence evidence as a Markdown (.md) document"
           >
             <Download className="size-3.5 text-slate-400 group-hover:text-emerald-400 transition-colors" />
@@ -253,7 +252,7 @@ export const DetailDial: React.FC<Props> = ({ density, onChange, dossier }) => {
               className={`p-3 sm:p-3.5 rounded-2xl text-left transition-all cursor-pointer flex flex-col justify-between gap-1.5 ${
                 isSelected
                   ? `${opt.activeClass} scale-102`
-                  : 'bg-darkroom-card text-slate-300 hover:bg-darkroom-border hover:text-white'
+                  : 'bg-paper-card dark:bg-darkroom-card text-slate-300 hover:bg-paper-border dark:hover:bg-darkroom-border hover:text-white'
               }`}
             >
               <div className="flex items-center justify-between gap-2">

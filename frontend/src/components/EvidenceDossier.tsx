@@ -384,8 +384,8 @@ export const EvidenceDossier: React.FC<Props> = ({
       className="max-w-5xl mx-auto space-y-6"
     >
       {/* Top Profile & Header Card */}
-      <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-5">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-darkroom-card pb-4">
+      <div className="p-6 rounded-3xl bg-paper-surface dark:bg-darkroom-surface shadow-2xl space-y-5">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-paper-card dark:border-darkroom-card pb-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-400">
               <FileText className="size-4" />
@@ -421,7 +421,7 @@ export const EvidenceDossier: React.FC<Props> = ({
           <div className="flex items-center gap-2 flex-wrap no-print">
             <button
               onClick={handleCopySummary}
-              className="px-3.5 py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-medium text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="px-3.5 py-2 rounded-xl bg-paper-card dark:bg-darkroom-card hover:bg-paper-card dark:hover:bg-darkroom-card text-xs font-medium text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer"
               title="Copy executive summary to clipboard"
             >
               {copiedSummary ? (
@@ -433,7 +433,7 @@ export const EvidenceDossier: React.FC<Props> = ({
             </button>
             <button
               onClick={handlePrint}
-              className="px-3.5 py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-medium text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="px-3.5 py-2 rounded-xl bg-paper-card dark:bg-darkroom-card hover:bg-paper-card dark:hover:bg-darkroom-card text-xs font-medium text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer"
               title="Print formatted dossier or save as PDF"
             >
               <Printer className="size-3.5" />
@@ -441,7 +441,7 @@ export const EvidenceDossier: React.FC<Props> = ({
             </button>
             <button
               onClick={onExport}
-              className="px-3.5 py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-medium text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="px-3.5 py-2 rounded-xl bg-paper-card dark:bg-darkroom-card hover:bg-paper-card dark:hover:bg-darkroom-card text-xs font-medium text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer"
               title="Download signed Markdown archive with SHA-256 seal"
             >
               <Download className="size-3.5" />
@@ -449,7 +449,7 @@ export const EvidenceDossier: React.FC<Props> = ({
             </button>
             <button
               onClick={onNewInvestigation}
-              className="px-3.5 py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-medium text-slate-200 transition-colors cursor-pointer"
+              className="px-3.5 py-2 rounded-xl bg-paper-card dark:bg-darkroom-card hover:bg-paper-card dark:hover:bg-darkroom-card text-xs font-medium text-slate-200 transition-colors cursor-pointer"
             >
               New Search
             </button>
@@ -458,27 +458,27 @@ export const EvidenceDossier: React.FC<Props> = ({
 
         {/* Claim Metric Strip */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center">
-          <div className="p-3 rounded-2xl bg-darkroom-card">
+          <div className="p-3 rounded-2xl bg-paper-card dark:bg-darkroom-card">
             <div className="text-[10px] font-mono uppercase text-slate-400">Facts</div>
             <div className="text-base font-semibold text-blue-400">{factsCount}</div>
           </div>
-          <div className="p-3 rounded-2xl bg-darkroom-card">
+          <div className="p-3 rounded-2xl bg-paper-card dark:bg-darkroom-card">
             <div className="text-[10px] font-mono uppercase text-slate-400">Allegations</div>
             <div className="text-base font-semibold text-rose-400">{allegationsCount}</div>
           </div>
-          <div className="p-3 rounded-2xl bg-darkroom-card">
+          <div className="p-3 rounded-2xl bg-paper-card dark:bg-darkroom-card">
             <div className="text-[10px] font-mono uppercase text-slate-400">Corroborated</div>
             <div className="text-base font-semibold text-emerald-400">{corroboratedCount}</div>
           </div>
-          <div className="p-3 rounded-2xl bg-darkroom-card">
+          <div className="p-3 rounded-2xl bg-paper-card dark:bg-darkroom-card">
             <div className="text-[10px] font-mono uppercase text-slate-400">Disputes</div>
             <div className="text-base font-semibold text-amber-400">{disputes.length}</div>
           </div>
         </div>
 
         {/* View Mode Switcher: Dossier vs 360° Forensic Matrix */}
-        <div className="pt-3 border-t border-darkroom-card flex items-center justify-between flex-wrap gap-3 no-print">
-          <div className="flex items-center gap-2 p-1 rounded-2xl bg-darkroom-card">
+        <div className="pt-3 border-t border-paper-card dark:border-darkroom-card flex items-center justify-between flex-wrap gap-3 no-print">
+          <div className="flex items-center gap-2 p-1 rounded-2xl bg-paper-card dark:bg-darkroom-card">
             <button
               onClick={() => {
                 playDialClick();
@@ -530,7 +530,7 @@ export const EvidenceDossier: React.FC<Props> = ({
         /* ==================================================================== */
         <div className="space-y-5 animate-fade-in" data-density="MACHINE_AI_INGESTION">
           {/* Human Explanatory Banner */}
-          <div className="p-4 sm:p-5 rounded-3xl bg-darkroom-card border-l-4 border-tool-scout shadow-2xl flex items-start gap-4">
+          <div className="p-4 sm:p-5 rounded-3xl bg-paper-card dark:bg-darkroom-card border-l-4 border-tool-scout shadow-2xl flex items-start gap-4">
             <div className="size-10 rounded-2xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0">
               <Bot className="size-5" />
             </div>
@@ -549,8 +549,8 @@ export const EvidenceDossier: React.FC<Props> = ({
           </div>
 
           {/* 1. Structured JSON-LD Code Block & One-Click Token Copy */}
-          <div className="rounded-3xl bg-darkroom-surface p-5 shadow-2xl space-y-3">
-            <div className="flex items-center justify-between border-b border-darkroom-card pb-3 flex-wrap gap-2">
+          <div className="rounded-3xl bg-paper-surface dark:bg-darkroom-surface p-5 shadow-2xl space-y-3">
+            <div className="flex items-center justify-between border-b border-paper-card dark:border-darkroom-card pb-3 flex-wrap gap-2">
               <div className="flex items-center gap-2 font-mono text-xs text-slate-300">
                 <Code className="size-4 text-rose-400" />
                 <span>
@@ -561,7 +561,7 @@ export const EvidenceDossier: React.FC<Props> = ({
               <button
                 type="button"
                 onClick={handleCopyAiPayload}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-mono text-white transition-all cursor-pointer shadow-sm active:scale-95"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-paper-card dark:bg-darkroom-card hover:bg-paper-card dark:hover:bg-darkroom-card text-xs font-mono text-white transition-all cursor-pointer shadow-sm active:scale-95"
               >
                 {copiedAiPayload ? (
                   <>
@@ -579,15 +579,15 @@ export const EvidenceDossier: React.FC<Props> = ({
 
             <pre
               id="screened-jsonld-payload"
-              className="p-4 rounded-2xl bg-darkroom-bg text-emerald-400 font-mono text-xs overflow-x-auto max-h-[420px] leading-relaxed select-all"
+              className="p-4 rounded-2xl bg-paper-bg dark:bg-darkroom-bg text-emerald-400 font-mono text-xs overflow-x-auto max-h-[420px] leading-relaxed select-all"
             >
               {JSON.stringify(aiIngestionPayload, null, 2)}
             </pre>
           </div>
 
           {/* 2. Full Plain Text Raw Data Dump */}
-          <div className="rounded-3xl bg-darkroom-surface p-5 shadow-2xl space-y-3">
-            <div className="flex items-center justify-between border-b border-darkroom-card pb-3 flex-wrap gap-2">
+          <div className="rounded-3xl bg-paper-surface dark:bg-darkroom-surface p-5 shadow-2xl space-y-3">
+            <div className="flex items-center justify-between border-b border-paper-card dark:border-darkroom-card pb-3 flex-wrap gap-2">
               <div className="flex items-center gap-2 font-mono text-xs text-slate-300">
                 <FileText className="size-4 text-indigo-400" />
                 <span>Raw Plain Text Dossier Dump (Complete Ground Truth)</span>
@@ -595,7 +595,7 @@ export const EvidenceDossier: React.FC<Props> = ({
               <button
                 type="button"
                 onClick={handleCopyRawText}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-mono text-white transition-all cursor-pointer shadow-sm active:scale-95"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-paper-card dark:bg-darkroom-card hover:bg-paper-card dark:hover:bg-darkroom-card text-xs font-mono text-white transition-all cursor-pointer shadow-sm active:scale-95"
               >
                 {copiedRawText ? (
                   <>
@@ -613,7 +613,7 @@ export const EvidenceDossier: React.FC<Props> = ({
 
             <pre
               id="screened-raw-ai-dossier"
-              className="p-4 rounded-2xl bg-darkroom-bg text-slate-200 font-mono text-xs overflow-x-auto max-h-[500px] leading-relaxed whitespace-pre-wrap select-all border border-darkroom-card"
+              className="p-4 rounded-2xl bg-paper-bg dark:bg-darkroom-bg text-slate-200 font-mono text-xs overflow-x-auto max-h-[500px] leading-relaxed whitespace-pre-wrap select-all border border-paper-card dark:border-darkroom-card"
             >
               {rawPlainTextDossier}
             </pre>
@@ -625,7 +625,7 @@ export const EvidenceDossier: React.FC<Props> = ({
           <CredibilityRadar claims={claims} disputes={disputes} />
 
           {/* Executive Overview (All Human Modes) */}
-          <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-3">
+          <div className="p-6 rounded-3xl bg-paper-surface dark:bg-darkroom-surface shadow-2xl space-y-3">
             <div className="text-xs font-mono uppercase tracking-wider text-slate-400">
               Executive Overview
             </div>
@@ -636,7 +636,7 @@ export const EvidenceDossier: React.FC<Props> = ({
 
           {/* React Flow Interactive Diagram (Rendered in Balanced & Full Evidence modes) */}
           {(normalizedDensity === 'BALANCED' || normalizedDensity === 'FULL_EVIDENCE') && (
-            <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4">
+            <div className="p-6 rounded-3xl bg-paper-surface dark:bg-darkroom-surface shadow-2xl space-y-4">
               <EntityProvenanceGraph dossier={dossierAdapter} />
             </div>
           )}
@@ -648,8 +648,8 @@ export const EvidenceDossier: React.FC<Props> = ({
           {normalizedDensity !== 'SIMPLIFIED' && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Festival Domain */}
-              <div className="p-5 rounded-3xl bg-darkroom-surface shadow-2xl space-y-3">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-400 border-b border-darkroom-card pb-2">
+              <div className="p-5 rounded-3xl bg-paper-surface dark:bg-darkroom-surface shadow-2xl space-y-3">
+                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-400 border-b border-paper-card dark:border-darkroom-card pb-2">
                   <Layers className="size-4" />
                   <span>Festival Profile</span>
                 </div>
@@ -657,8 +657,8 @@ export const EvidenceDossier: React.FC<Props> = ({
               </div>
 
               {/* Organizer Domain */}
-              <div className="p-5 rounded-3xl bg-darkroom-surface shadow-2xl space-y-3">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-400 border-b border-darkroom-card pb-2">
+              <div className="p-5 rounded-3xl bg-paper-surface dark:bg-darkroom-surface shadow-2xl space-y-3">
+                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-400 border-b border-paper-card dark:border-darkroom-card pb-2">
                   <Building2 className="size-4" />
                   <span>Organizer Profile</span>
                 </div>
@@ -666,8 +666,8 @@ export const EvidenceDossier: React.FC<Props> = ({
               </div>
 
               {/* Participants Domain */}
-              <div className="p-5 rounded-3xl bg-darkroom-surface shadow-2xl space-y-3">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-400 border-b border-darkroom-card pb-2">
+              <div className="p-5 rounded-3xl bg-paper-surface dark:bg-darkroom-surface shadow-2xl space-y-3">
+                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-400 border-b border-paper-card dark:border-darkroom-card pb-2">
                   <Users className="size-4" />
                   <span>Community Accounts</span>
                 </div>
@@ -696,11 +696,11 @@ export const EvidenceDossier: React.FC<Props> = ({
                       value={searchFilter}
                       onChange={(e) => setSearchFilter(e.target.value)}
                       placeholder="Filter claims..."
-                      className="w-full pl-8 pr-2.5 py-1 text-xs rounded-xl bg-darkroom-card text-white placeholder-slate-400 focus:outline-none"
+                      className="w-full pl-8 pr-2.5 py-1 text-xs rounded-xl bg-paper-card dark:bg-darkroom-card text-white placeholder-slate-400 focus:outline-none"
                     />
                   </div>
 
-                  <div className="flex items-center gap-1 p-1 rounded-xl bg-darkroom-card text-xs">
+                  <div className="flex items-center gap-1 p-1 rounded-xl bg-paper-card dark:bg-darkroom-card text-xs">
                     {['ALL', 'FESTIVAL', 'ORGANIZER', 'PARTICIPANTS'].map((d) => (
                       <button
                         key={d}
@@ -721,7 +721,7 @@ export const EvidenceDossier: React.FC<Props> = ({
               {/* Claims List */}
               <div className="space-y-3">
                 {filteredClaims.length === 0 ? (
-                  <div className="p-8 rounded-3xl bg-darkroom-surface text-center text-xs text-slate-400">
+                  <div className="p-8 rounded-3xl bg-paper-surface dark:bg-darkroom-surface text-center text-xs text-slate-400">
                     No claims matched your filter query "{searchFilter}".
                   </div>
                 ) : (
@@ -731,7 +731,7 @@ export const EvidenceDossier: React.FC<Props> = ({
                     return (
                       <div
                         key={claim.id}
-                        className="rounded-2xl bg-darkroom-surface shadow-xl transition-colors overflow-hidden"
+                        className="rounded-2xl bg-paper-surface dark:bg-darkroom-surface shadow-xl transition-colors overflow-hidden"
                       >
                         <div className="p-4 flex flex-col sm:flex-row items-start justify-between gap-4">
                           <div className="space-y-1.5 flex-1">
@@ -765,7 +765,7 @@ export const EvidenceDossier: React.FC<Props> = ({
 
                             <button
                               onClick={() => onDraftOutreach(claim)}
-                              className="p-1.5 rounded-lg text-slate-400 hover:bg-darkroom-card hover:text-indigo-400 transition-colors cursor-pointer"
+                              className="p-1.5 rounded-lg text-slate-400 hover:bg-paper-card dark:hover:bg-darkroom-card hover:text-indigo-400 transition-colors cursor-pointer"
                               title="Draft Verification Inquiry for this claim"
                             >
                               <Mail className="size-4" />
@@ -774,7 +774,7 @@ export const EvidenceDossier: React.FC<Props> = ({
                             {normalizedDensity === 'BALANCED' && (
                               <button
                                 onClick={() => setExpandedClaim(isExpanded ? null : claim.id)}
-                                className="p-1.5 rounded-lg text-slate-400 hover:bg-darkroom-card transition-colors cursor-pointer"
+                                className="p-1.5 rounded-lg text-slate-400 hover:bg-paper-card dark:hover:bg-darkroom-card transition-colors cursor-pointer"
                               >
                                 {isExpanded ? (
                                   <ChevronUp className="size-4" />
@@ -788,14 +788,14 @@ export const EvidenceDossier: React.FC<Props> = ({
 
                         {/* Evidence Drawer */}
                         {isExpanded && (
-                          <div className="p-4 bg-darkroom-card border-t border-darkroom-border space-y-3 text-xs">
+                          <div className="p-4 bg-paper-card dark:bg-darkroom-card border-t border-paper-border dark:border-darkroom-border space-y-3 text-xs">
                             <div className="font-mono uppercase text-slate-400 text-[11px]">
                               Verbatim Quoted Excerpts ({claim.evidence.length})
                             </div>
                             {claim.evidence.map((ev, idx) => (
                               <div
                                 key={idx}
-                                className="p-3 rounded-xl bg-darkroom-surface space-y-1.5"
+                                className="p-3 rounded-xl bg-paper-surface dark:bg-darkroom-surface space-y-1.5"
                               >
                                 <div className="flex items-center justify-between gap-2">
                                   <span className="font-semibold text-white">
@@ -830,8 +830,8 @@ export const EvidenceDossier: React.FC<Props> = ({
           {/* Filmmaker Checklist & Unresolved Questions */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Due Diligence Checklist */}
-            <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4">
-              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-emerald-400 border-b border-darkroom-card pb-2">
+            <div className="p-6 rounded-3xl bg-paper-surface dark:bg-darkroom-surface shadow-2xl space-y-4">
+              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-emerald-400 border-b border-paper-card dark:border-darkroom-card pb-2">
                 <ListChecks className="size-4" />
                 <span>Filmmaker Action Checklist</span>
               </div>
@@ -846,8 +846,8 @@ export const EvidenceDossier: React.FC<Props> = ({
             </div>
 
             {/* Unresolved Questions */}
-            <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4">
-              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-amber-400 border-b border-darkroom-card pb-2">
+            <div className="p-6 rounded-3xl bg-paper-surface dark:bg-darkroom-surface shadow-2xl space-y-4">
+              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-amber-400 border-b border-paper-card dark:border-darkroom-card pb-2">
                 <HelpCircle className="size-4" />
                 <span>Unresolved Questions</span>
               </div>
@@ -864,8 +864,8 @@ export const EvidenceDossier: React.FC<Props> = ({
 
           {/* Discovered Footprint Drawer (Full Evidence Mode) */}
           {normalizedDensity === 'FULL_EVIDENCE' && (
-            <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4">
-              <div className="flex items-center justify-between border-b border-darkroom-card pb-3">
+            <div className="p-6 rounded-3xl bg-paper-surface dark:bg-darkroom-surface shadow-2xl space-y-4">
+              <div className="flex items-center justify-between border-b border-paper-card dark:border-darkroom-card pb-3">
                 <span className="text-sm font-mono uppercase tracking-wider text-slate-300">
                   Discovered Web Sources ({sources.length})
                 </span>
@@ -875,7 +875,7 @@ export const EvidenceDossier: React.FC<Props> = ({
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {sources.map((src) => (
-                  <div key={src.id} className="p-3 rounded-2xl bg-darkroom-card space-y-1">
+                  <div key={src.id} className="p-3 rounded-2xl bg-paper-card dark:bg-darkroom-card space-y-1">
                     <div className="flex items-center justify-between">
                       <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-slate-300">
                         Tier {src.sourceTier} • {src.domain}

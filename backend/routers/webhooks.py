@@ -1,6 +1,7 @@
 import hashlib
 import hmac
 import logging
+import time
 from typing import Dict, Any
 
 from fastapi import APIRouter, Request, Header, HTTPException
@@ -36,8 +37,16 @@ async def receive_parallel_webhook(
         hashlib.sha256
     ).hexdigest()
     
+    # Check expiration (5 minutes)
+    try:
+        ts = float(x_parallel_timestamp)
+        if abs(time.time() - ts) > 300:
+            raise HTTPException(status_code=400, detail="Webhook timestamp expired")
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid timestamp format")
+
     if not hmac.compare_digest(expected_signature, x_parallel_signature):
-        logger.warning(f"Invalid webhook signature. Expected {expected_signature}, got {x_parallel_signature}")
+        logger.warning("Invalid webhook signature.")
         raise HTTPException(status_code=401, detail="Invalid signature")
 
     try:

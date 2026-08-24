@@ -237,7 +237,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
       className="max-w-4xl mx-auto space-y-6"
     >
       {/* 1. Header Banner */}
-      <div className="p-6 sm:p-7 rounded-3xl bg-darkroom-surface flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 shadow-2xl shadow-black/80 relative overflow-hidden">
+      <div className="p-6 sm:p-7 rounded-3xl bg-paper-surface dark:bg-darkroom-surface flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 shadow-2xl shadow-black/80 relative overflow-hidden">
         {/* Glow ambient accent behind header */}
         <div className="absolute -right-20 -top-20 size-60 rounded-full bg-midnight-royal/20 blur-3xl pointer-events-none" />
         <div className="absolute -left-20 -bottom-20 size-60 rounded-full bg-tool-diligence/10 blur-3xl pointer-events-none" />
@@ -269,7 +269,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
       </div>
 
       {/* 2. THE SINGLE NEAT TIMELINE */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-darkroom-surface shadow-2xl shadow-black/80 space-y-6 relative">
+      <div className="p-6 sm:p-8 rounded-3xl bg-paper-surface dark:bg-darkroom-surface shadow-2xl shadow-black/80 space-y-6 relative">
         {/* Timeline Header Subtitle */}
         <div className="flex items-center justify-between pb-2">
           <div className="flex items-center gap-2">
@@ -286,7 +286,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
         {/* Timeline Horizontal Track */}
         <div className="relative py-6 px-2 sm:px-6">
           {/* Background Connecting Rail */}
-          <div className="absolute left-8 right-8 top-1/2 -translate-y-1/2 h-1 bg-darkroom-border rounded-full z-0" />
+          <div className="absolute left-8 right-8 top-1/2 -translate-y-1/2 h-1 bg-paper-border dark:bg-darkroom-border rounded-full z-0" />
 
           {/* Animated Gradient Active Fill Rail */}
           <motion.div
@@ -327,7 +327,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
                         ? 'size-11 sm:size-12 bg-gradient-to-tr from-tool-diligence to-emerald-400 text-slate-950 shadow-xl shadow-[var(--color-tool-diligence)]/40 ring-4 ring-tool-diligence/30 scale-110'
                         : state === 'COMPLETED'
                           ? 'size-9 sm:size-10 bg-tool-diligence/20 border border-tool-diligence/60 text-tool-diligence shadow-md shadow-[var(--color-tool-diligence)]/20 hover:scale-105 hover:bg-tool-diligence/30'
-                          : 'size-9 sm:size-10 bg-darkroom-surface border border-darkroom-border text-slate-400 hover:text-slate-200 hover:border-slate-500 hover:scale-105'
+                          : 'size-9 sm:size-10 bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border text-slate-400 hover:text-slate-200 hover:border-slate-500 hover:scale-105'
                     } ${isSelected ? 'ring-2 ring-tool-diligence' : isInspected && state !== 'ACTIVE' ? 'ring-2 ring-indigo-400/60 border-indigo-400' : ''}`}
                     title={`${step.stepNumber}. ${step.name}`}
                   >
@@ -354,7 +354,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
                           ? 'bg-slate-950 text-tool-diligence border border-tool-diligence'
                           : state === 'COMPLETED'
                             ? 'bg-tool-diligence text-slate-950'
-                            : 'bg-darkroom-card text-slate-400 border border-darkroom-border'
+                            : 'bg-paper-card dark:bg-darkroom-card text-slate-400 border border-paper-border dark:border-darkroom-border'
                       }`}
                     >
                       {step.stepNumber}
@@ -381,7 +381,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
 
                   {/* MINI HOVER TOOLTIP BADGE */}
                   {isHovered && (
-                    <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-xl bg-darkroom-bg text-slate-100 text-xs font-mono whitespace-nowrap shadow-xl border border-darkroom-border z-30 pointer-events-none animate-in fade-in zoom-in-95 duration-150 flex items-center gap-1.5">
+                    <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-xl bg-paper-bg dark:bg-darkroom-bg text-slate-100 text-xs font-mono whitespace-nowrap shadow-xl border border-paper-border dark:border-darkroom-border z-30 pointer-events-none animate-in fade-in zoom-in-95 duration-150 flex items-center gap-1.5">
                       <span
                         className={`size-1.5 rounded-full ${
                           state === 'ACTIVE'
@@ -416,11 +416,11 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
               activeStepState === 'ACTIVE'
                 ? 'bg-gradient-to-br from-darkroom-card to-darkroom-surface border-tool-diligence/40 shadow-lg shadow-[var(--color-tool-diligence)]/10'
                 : activeStepState === 'COMPLETED'
-                  ? 'bg-darkroom-card border-darkroom-border'
-                  : 'bg-darkroom-surface border-darkroom-border'
+                  ? 'bg-paper-card dark:bg-darkroom-card border-paper-border dark:border-darkroom-border'
+                  : 'bg-paper-surface dark:bg-darkroom-surface border-paper-border dark:border-darkroom-border'
             }`}
           >
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-darkroom-border pb-3.5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-paper-border dark:border-darkroom-border pb-3.5">
               <div className="flex items-center gap-3">
                 <div
                   className={`size-10 rounded-xl flex items-center justify-center shrink-0 ${
@@ -428,7 +428,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
                       ? 'bg-tool-diligence text-slate-950 shadow-md shadow-[var(--color-tool-diligence)]/30'
                       : activeStepState === 'COMPLETED'
                         ? 'bg-tool-diligence/20 text-tool-diligence border border-tool-diligence/40'
-                        : 'bg-darkroom-card text-slate-400 border border-darkroom-border'
+                        : 'bg-paper-card dark:bg-darkroom-card text-slate-400 border border-paper-border dark:border-darkroom-border'
                   }`}
                 >
                   <activeStep.icon className="size-5" />
@@ -487,7 +487,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
               </div>
 
               {/* Right Col: Tools & Live Log Peek */}
-              <div className="p-3.5 rounded-xl bg-darkroom-bg border border-darkroom-border space-y-3 flex flex-col justify-between">
+              <div className="p-3.5 rounded-xl bg-paper-bg dark:bg-darkroom-bg border border-paper-border dark:border-darkroom-border space-y-3 flex flex-col justify-between">
                 <div>
                   <span className="text-[10px] font-mono uppercase tracking-wider text-indigo-400 font-semibold flex items-center gap-1.5">
                     <Zap className="size-3" />
@@ -497,7 +497,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
                     {activeStep.toolsUsed.map((tool, tIdx) => (
                       <span
                         key={tIdx}
-                        className="px-2 py-0.5 rounded-lg bg-darkroom-card text-[11px] font-mono text-slate-300 border border-darkroom-border"
+                        className="px-2 py-0.5 rounded-lg bg-paper-card dark:bg-darkroom-card text-[11px] font-mono text-slate-300 border border-paper-border dark:border-darkroom-border"
                       >
                         {tool}
                       </span>
@@ -507,7 +507,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
 
                 {/* Latest Event for this Agent */}
                 {relatedEvents.length > 0 && (
-                  <div className="pt-2 border-t border-darkroom-card">
+                  <div className="pt-2 border-t border-paper-card dark:border-darkroom-card">
                     <span className="text-[10px] font-mono text-slate-400 block mb-1">
                       Latest Activity:
                     </span>
@@ -523,7 +523,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
       </div>
 
       {/* 4. Live SSE Activity Stream Console */}
-      <div className="rounded-3xl bg-darkroom-surface overflow-hidden shadow-2xl shadow-black/80">
+      <div className="rounded-3xl bg-paper-surface dark:bg-darkroom-surface overflow-hidden shadow-2xl shadow-black/80">
         <div className="p-4 sm:px-6 flex items-center justify-between">
           <span className="font-mono text-xs uppercase tracking-wider text-slate-300 flex items-center gap-2 font-semibold">
             <span
@@ -535,7 +535,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
           <span className="text-xs font-mono text-slate-400">{events.length} events recorded</span>
         </div>
 
-        <div className="p-4 sm:p-5 max-h-60 overflow-y-auto space-y-2.5 text-xs font-mono bg-darkroom-bg/60">
+        <div className="p-4 sm:p-5 max-h-60 overflow-y-auto space-y-2.5 text-xs font-mono bg-paper-bg dark:bg-darkroom-bg/60">
           {events.length === 0 ? (
             <div className="text-slate-400 text-center py-6 text-xs font-mono flex flex-col items-center gap-2">
               <Loader2
@@ -547,7 +547,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
             events.map((evt, idx) => (
               <div
                 key={idx}
-                className="flex items-start gap-2.5 leading-relaxed hover:bg-darkroom-surface/40 p-1 rounded-lg transition-colors"
+                className="flex items-start gap-2.5 leading-relaxed hover:bg-paper-surface dark:hover:bg-darkroom-surface/40 p-1 rounded-lg transition-colors"
               >
                 <span className="text-slate-400 text-[11px] shrink-0 pt-0.5 font-mono">
                   {evt.timestamp

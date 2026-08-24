@@ -416,6 +416,8 @@ Webhook endpoint signature-verified and rate-limited (existing `slowapi`); no fu
 
 ## 12. Phased Delivery Plan
 
+**Status**: ALL PHASES COMPLETED (as of 2026-08-24). The system has been fully migrated to ADK orchestration, Parallel Search evidence gathering, and has passed all final remediation, hardening, and deployment checks.
+
 | Phase | Scope | Parity gate (§9) | Outcome for judging |
 | :--- | :--- | :--- | :--- |
 | **Phase 1** (1–2 days) | P-03 Search deepening + `source_tiers.py` registry | Capabilities modal: Depth Dial entry | Bigger evidence pool; source-policy story |

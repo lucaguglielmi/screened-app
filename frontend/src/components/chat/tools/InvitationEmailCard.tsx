@@ -27,7 +27,7 @@ export const InvitationEmailCard: React.FC<InvitationEmailCardProps> = ({
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full max-w-2xl bg-darkroom-surface rounded-2xl p-6 shadow-2xl space-y-4 my-2 text-zinc-100"
+      className="w-full max-w-2xl bg-paper-surface dark:bg-darkroom-surface rounded-2xl p-6 shadow-2xl space-y-4 my-2 text-zinc-100"
     >
       {/* Header */}
       <div className="flex items-center justify-between pb-3">
@@ -53,19 +53,19 @@ export const InvitationEmailCard: React.FC<InvitationEmailCardProps> = ({
       </div>
 
       {/* Verdict & Signal Warning */}
-      <div className="p-4 rounded-xl bg-darkroom-card space-y-2.5 text-xs">
+      <div className="p-4 rounded-xl bg-paper-card dark:bg-darkroom-card space-y-2.5 text-xs">
         <div className="flex items-start space-x-2 text-rose-300">
           <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
           <p className="leading-relaxed">{args.initial_verdict}</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-          <div className="flex items-center space-x-2 text-[11px] text-zinc-300 bg-darkroom-surface p-2.5 rounded-lg">
+          <div className="flex items-center space-x-2 text-[11px] text-zinc-300 bg-paper-surface dark:bg-darkroom-surface p-2.5 rounded-lg">
             <Globe className="w-3.5 h-3.5 text-zinc-400" />
             <span className="font-mono truncate">Sender: {senderDomain}</span>
           </div>
 
-          <div className="flex items-center space-x-2 text-[11px] text-zinc-300 bg-darkroom-surface p-2.5 rounded-lg">
+          <div className="flex items-center space-x-2 text-[11px] text-zinc-300 bg-paper-surface dark:bg-darkroom-surface p-2.5 rounded-lg">
             <DollarSign className="w-3.5 h-3.5 text-zinc-400" />
             <span>
               Waiver Code: {args.fee_waiver_offered ? 'Yes (50-100% Discount)' : 'Standard Entry'}
@@ -89,7 +89,7 @@ export const InvitationEmailCard: React.FC<InvitationEmailCardProps> = ({
           ).map((signal, idx) => (
             <div
               key={idx}
-              className="flex items-start space-x-2.5 text-zinc-300 bg-darkroom-card p-3 rounded-xl"
+              className="flex items-start space-x-2.5 text-zinc-300 bg-paper-card dark:bg-darkroom-card p-3 rounded-xl"
             >
               <ShieldAlert className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
               <span className="text-xs leading-relaxed">{signal}</span>

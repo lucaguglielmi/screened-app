@@ -38,7 +38,9 @@ class Database:
 
     async def save_investigation(self, investigation_id: str, data: Dict[str, Any]) -> None:
         if self.use_memory or not self.client:
-            self._memory_store["investigations"][investigation_id] = data
+            if investigation_id not in self._memory_store["investigations"]:
+                self._memory_store["investigations"][investigation_id] = {}
+            self._memory_store["investigations"][investigation_id].update(data)
             return
         try:
             self.client.collection("investigations").document(investigation_id).set(data, merge=True)

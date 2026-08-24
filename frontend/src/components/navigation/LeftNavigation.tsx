@@ -66,7 +66,7 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
   };
 
   return (
-    <aside className="sticky top-0 h-screen hidden md:flex flex-col items-center justify-between w-16 sm:w-20 py-5 sm:py-6 bg-darkroom-bg border-r border-darkroom-border select-none z-40 shrink-0 text-slate-300">
+    <aside className="sticky top-0 h-screen hidden md:flex flex-col items-center justify-between w-16 sm:w-20 py-5 sm:py-6 bg-paper-bg dark:bg-darkroom-bg border-r border-paper-border dark:border-darkroom-border select-none z-40 shrink-0 text-slate-300">
       {/* Top Section: App Logo */}
       <div className="flex flex-col items-center gap-4 w-full">
         <button
@@ -92,7 +92,7 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
             className={`relative p-3 rounded-2xl transition-all cursor-pointer ${
               activeTool === 'CONVERSATIONAL_DESK'
                 ? 'bg-midnight-royal text-white shadow-lg shadow-[var(--color-midnight-royal)]/40 ring-1 ring-indigo-400/40'
-                : 'hover:bg-darkroom-surface text-slate-400 hover:text-slate-100'
+                : 'hover:bg-paper-surface dark:hover:bg-darkroom-surface text-slate-400 hover:text-slate-100'
             }`}
             title="Mission Control"
           >
@@ -102,7 +102,7 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
             )}
           </button>
           {activeTooltip === 'Mission Control' && (
-            <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-darkroom-surface text-slate-100 text-sm font-medium whitespace-nowrap shadow-xl border border-darkroom-border z-50 pointer-events-none">
+            <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-paper-surface dark:bg-darkroom-surface text-slate-100 text-sm font-medium whitespace-nowrap shadow-xl border border-paper-border dark:border-darkroom-border z-50 pointer-events-none">
               Mission Control (Main AI Interface)
             </div>
           )}
@@ -120,8 +120,8 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
             onMouseLeave={() => setActiveTooltip(null)}
             className={`relative p-3 rounded-2xl transition-all cursor-pointer ${
               isProductMenuOpen || activeTool !== 'CONVERSATIONAL_DESK'
-                ? 'bg-darkroom-card text-indigo-300 border border-midnight-royal/60 shadow-md ring-1 ring-midnight-royal/40'
-                : 'hover:bg-darkroom-surface text-slate-400 hover:text-slate-100'
+                ? 'bg-paper-card dark:bg-darkroom-card text-indigo-300 border border-midnight-royal/60 shadow-md ring-1 ring-midnight-royal/40'
+                : 'hover:bg-paper-surface dark:hover:bg-darkroom-surface text-slate-400 hover:text-slate-100'
             }`}
             title="Products & Workspaces"
           >
@@ -129,7 +129,7 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
             <span className="absolute -right-0.5 -top-0.5 size-2.5 rounded-full bg-tool-diligence ring-2 ring-darkroom-bg" />
           </button>
           {activeTooltip === 'Products' && !isProductMenuOpen && (
-            <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-darkroom-surface text-slate-100 text-sm font-medium whitespace-nowrap shadow-xl border border-darkroom-border z-50 pointer-events-none">
+            <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-paper-surface dark:bg-darkroom-surface text-slate-100 text-sm font-medium whitespace-nowrap shadow-xl border border-paper-border dark:border-darkroom-border z-50 pointer-events-none">
               Products & Workspaces
             </div>
           )}
@@ -147,14 +147,14 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
             className={`p-2.5 rounded-xl transition-all cursor-pointer ${
               activeTool === 'DESIGN_PLAYGROUND'
                 ? 'bg-purple-600 text-white shadow-lg shadow-purple-600/30'
-                : 'hover:bg-darkroom-surface text-slate-400 hover:text-purple-400'
+                : 'hover:bg-paper-surface dark:hover:bg-darkroom-surface text-slate-400 hover:text-purple-400'
             }`}
             title="Design Playground"
           >
             <Palette className="size-4.5" />
           </button>
           {activeTooltip === 'Design Playground' && (
-            <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-darkroom-surface text-slate-100 text-sm font-medium whitespace-nowrap shadow-xl border border-darkroom-border z-50 pointer-events-none">
+            <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-paper-surface dark:bg-darkroom-surface text-slate-100 text-sm font-medium whitespace-nowrap shadow-xl border border-paper-border dark:border-darkroom-border z-50 pointer-events-none">
               Design Playground
             </div>
           )}
@@ -165,7 +165,7 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
           <div
             onMouseEnter={() => setActiveTooltip('Live Deployment')}
             onMouseLeave={() => setActiveTooltip(null)}
-            className="p-2 rounded-xl bg-darkroom-surface border border-darkroom-border flex items-center justify-center cursor-default group"
+            className="p-2 rounded-xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border flex items-center justify-center cursor-default group"
           >
             <div className="relative flex items-center justify-center">
               <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-tool-diligence opacity-75" />
@@ -173,7 +173,7 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
             </div>
           </div>
           {activeTooltip === 'Live Deployment' && (
-            <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-2 rounded-xl bg-darkroom-surface text-slate-100 text-xs font-mono whitespace-nowrap shadow-xl border border-darkroom-border z-50 pointer-events-none">
+            <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-2 rounded-xl bg-paper-surface dark:bg-darkroom-surface text-slate-100 text-xs font-mono whitespace-nowrap shadow-xl border border-paper-border dark:border-darkroom-border z-50 pointer-events-none">
               <div className="flex items-center gap-1.5 text-tool-diligence font-semibold">
                 <Radio className="size-3" />
                 <span>Live Cloud Run</span>
@@ -204,9 +204,9 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
       {isProductMenuOpen && (
         <div
           ref={flyoutRef}
-          className="absolute left-[72px] sm:left-[88px] top-1/2 -translate-y-1/2 w-88 p-3 rounded-3xl bg-darkroom-surface/95 backdrop-blur-xl border border-darkroom-border shadow-2xl shadow-black/90 space-y-2 z-50 animate-in fade-in zoom-in-95 duration-150"
+          className="absolute left-[72px] sm:left-[88px] top-1/2 -translate-y-1/2 w-88 p-3 rounded-3xl bg-paper-surface dark:bg-darkroom-surface/95 backdrop-blur-xl border border-paper-border dark:border-darkroom-border shadow-2xl shadow-black/90 space-y-2 z-50 animate-in fade-in zoom-in-95 duration-150"
         >
-          <div className="px-3 py-2 border-b border-darkroom-border flex items-center justify-between">
+          <div className="px-3 py-2 border-b border-paper-border dark:border-darkroom-border flex items-center justify-between">
             <span className="text-xs font-mono font-semibold tracking-wider text-slate-400 uppercase">
               Select Workspace
             </span>
@@ -220,8 +220,8 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
             onClick={() => handleSelectTool('DUE_DILIGENCE')}
             className={`w-full p-3 rounded-2xl flex items-center gap-3.5 transition-all text-left group cursor-pointer ${
               activeTool === 'DUE_DILIGENCE'
-                ? 'bg-darkroom-card border border-tool-diligence/50 shadow-inner'
-                : 'hover:bg-darkroom-card border border-transparent'
+                ? 'bg-paper-card dark:bg-darkroom-card border border-tool-diligence/50 shadow-inner'
+                : 'hover:bg-paper-card dark:hover:bg-darkroom-card border border-transparent'
             }`}
           >
             <GripVertical className="size-4 text-slate-600 group-hover:text-slate-400 shrink-0" />
@@ -250,8 +250,8 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
             onClick={() => handleSelectTool('OPPORTUNITY_SCOUT')}
             className={`w-full p-3 rounded-2xl flex items-center gap-3.5 transition-all text-left group cursor-pointer ${
               activeTool === 'OPPORTUNITY_SCOUT'
-                ? 'bg-darkroom-card border border-tool-scout/50 shadow-inner'
-                : 'hover:bg-darkroom-card border border-transparent'
+                ? 'bg-paper-card dark:bg-darkroom-card border border-tool-scout/50 shadow-inner'
+                : 'hover:bg-paper-card dark:hover:bg-darkroom-card border border-transparent'
             }`}
           >
             <GripVertical className="size-4 text-slate-600 group-hover:text-slate-400 shrink-0" />
@@ -276,13 +276,13 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
           </button>
 
           {/* Section: Why Screened Exists */}
-          <div className="pt-2 border-t border-darkroom-border">
+          <div className="pt-2 border-t border-paper-border dark:border-darkroom-border">
             <button
               onClick={() => handleSelectTool('WHY_SCREENED')}
               className={`w-full p-2.5 rounded-2xl flex items-center gap-3 transition-all text-left group cursor-pointer ${
                 activeTool === 'WHY_SCREENED'
-                  ? 'bg-darkroom-card border border-indigo-500/50'
-                  : 'hover:bg-darkroom-card border border-transparent'
+                  ? 'bg-paper-card dark:bg-darkroom-card border border-indigo-500/50'
+                  : 'hover:bg-paper-card dark:hover:bg-darkroom-card border border-transparent'
               }`}
             >
               <div className="size-9 rounded-xl bg-midnight-royal/20 text-indigo-400 flex items-center justify-center shrink-0 border border-midnight-royal/40">
@@ -300,10 +300,10 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
           </div>
 
           {/* Quick Hub Option: Mission Control */}
-          <div className="pt-1.5 border-t border-darkroom-border">
+          <div className="pt-1.5 border-t border-paper-border dark:border-darkroom-border">
             <button
               onClick={() => handleSelectTool('CONVERSATIONAL_DESK')}
-              className="w-full px-3 py-2 rounded-xl flex items-center justify-between text-xs font-mono text-slate-400 hover:text-indigo-300 hover:bg-darkroom-card transition-colors cursor-pointer"
+              className="w-full px-3 py-2 rounded-xl flex items-center justify-between text-xs font-mono text-slate-400 hover:text-indigo-300 hover:bg-paper-card dark:hover:bg-darkroom-card transition-colors cursor-pointer"
             >
               <div className="flex items-center gap-2">
                 <Sparkles className="size-3.5 text-indigo-400" />

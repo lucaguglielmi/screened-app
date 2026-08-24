@@ -33,7 +33,7 @@ Every year, independent filmmakers spend thousands of pounds on festival submiss
 1. **The Producer Desk (Conversational Agent)**: Talks with filmmakers, analyzes queries or uploaded PDF scripts/emails, and autonomously dispatches specialized tools via **Gemini Function Calling API**.
 2. **Dissects Subject Entities**: Scrutinizes legal identity, physical venues, fee schedules, jury prestige, and filmmaker community feedback.
 3. **Gathers Public Evidence**: Pulls verified data from official registries, festival archives, major trade publications (Variety, ScreenDaily), and community forums.
-4. **Cites Every Atomic Claim**: Direct links to verbatim quotes with source tier tags, retrieval timestamps, and cryptographic payload hashes.
+4. **Cites Every Atomic Claim**: Direct links to verbatim quotes with source tier tags, retrieval timestamps, and SHA-256 report fingerprints.
 5. **Scouts Strategic Opportunities**: Matches film profiles (genre, runtime, premiere goals) to verified open calls, qualification roadmaps, and deadline calendar (`.ics`) exports.
 
 ---
@@ -90,7 +90,7 @@ Screened operates an orchestrated pipeline of specialized autonomous agents usin
 ### 5. Exact-Payload Action Approval with SHA-256 Integrity
 - Before any inquiry email is drafted to festival organizers, the system computes `sha256(recipient + subject + body + claim_id)`.
 - The user reviews the exact payload in the **Action Approval Gate Modal**.
-- Execution runs in **Sandbox Mode** with cryptographic audit logging in Cloud Firestore.
+- Execution runs in **Sandbox Mode** with report fingerprint logging in Cloud Firestore.
 
 ### 6. Opportunity Scout with `.ics` Calendar Export & Accreditation Tooltips
 - Filmmakers enter their project profile (*Short, Feature, Documentary*, genre, runtime, budget tier).
@@ -98,7 +98,7 @@ Screened operates an orchestrated pipeline of specialized autonomous agents usin
 - **`.ics` Calendar Generator**: 1-click export of deadlines with automatic reminders into Google Calendar / Apple Calendar.
 
 ### 7. Why Screened: Measured Baseline Matrix & Empirical Research
-- Direct comparison matrix of **Manual Due Diligence (3–5 Hours, £0–£180 in lost fees, zero cryptographic audit)** vs **Screened Autonomous Pipeline (< 45 Seconds, 100% quoted substring audit, zero fees at risk)**.
+- Direct comparison matrix of **Manual Due Diligence (3–5 Hours, £0–£180 in lost fees, zero auditable traces)** vs **Screened Autonomous Pipeline (< 45 Seconds, 100% quoted substring audit, zero fees at risk)**.
 - Features 4 documented empirical fraud themes from independent UK filmmakers (*Fee Without Screening*, *Laurel Mills*, *Phantom Venues*, *Ghost Organizers*).
 
 ### 8. Global Command Palette (`⌘K` / `Ctrl+K`)

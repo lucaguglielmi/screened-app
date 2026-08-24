@@ -24,7 +24,7 @@ export const NeonCyberBar: React.FC<{ progress?: number; color?: string; label?:
           {typeof progress === 'number' && <span>{Math.round(progress)}%</span>}
         </div>
       )}
-      <div className="relative h-2 w-full overflow-hidden rounded-full bg-darkroom-surface border border-darkroom-border">
+      <div className="relative h-2 w-full overflow-hidden rounded-full bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border">
         {typeof progress === 'number' ? (
           <motion.div
             className="h-full rounded-full"
@@ -73,7 +73,7 @@ export const PipelineStepperBar: React.FC<{ currentStep?: number; steps?: string
           const isActive = idx === currentStep;
           return (
             <div key={idx} className="space-y-1.5">
-              <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-darkroom-card">
+              <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-paper-card dark:bg-darkroom-card">
                 {isDone && (
                   <div className="h-full w-full bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                 )}
@@ -112,7 +112,7 @@ export const FilmSprocketScanner: React.FC<{ label?: string }> = ({
 }) => {
   const reducedMotion = useReducedMotion();
   return (
-    <div className="relative w-full p-4 rounded-2xl bg-darkroom-bg border border-darkroom-border overflow-hidden">
+    <div className="relative w-full p-4 rounded-2xl bg-paper-bg dark:bg-darkroom-bg border border-paper-border dark:border-darkroom-border overflow-hidden">
       <div className="flex items-center justify-between mb-3 text-xs font-mono text-amber-400/90">
         <span className="flex items-center gap-2">
           <span className="text-sm">🎞</span> {label}
@@ -123,11 +123,11 @@ export const FilmSprocketScanner: React.FC<{ label?: string }> = ({
       </div>
 
       {/* Sprocket track */}
-      <div className="relative h-7 flex items-center justify-between px-2 bg-darkroom-bg rounded-lg border border-darkroom-border overflow-hidden">
+      <div className="relative h-7 flex items-center justify-between px-2 bg-paper-bg dark:bg-darkroom-bg rounded-lg border border-paper-border dark:border-darkroom-border overflow-hidden">
         {/* Sprocket holes */}
         <div className="flex justify-between w-full opacity-40">
           {[...Array(14)].map((_, i) => (
-            <div key={i} className="w-2.5 h-3.5 rounded-xs bg-darkroom-border" />
+            <div key={i} className="w-2.5 h-3.5 rounded-xs bg-paper-border dark:bg-darkroom-border" />
           ))}
         </div>
 

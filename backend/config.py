@@ -22,6 +22,8 @@ class Settings(BaseSettings):
     # Security
     session_signing_key: str = "dev-secret-session-key"
 
+    strict_mode: bool = False
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

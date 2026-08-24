@@ -269,6 +269,10 @@ export const WhyScreened: React.FC<Props> = ({
           accounts, Screened's agents apply forensic due diligence to protect indie productions.
         </p>
 
+        <p className="text-sm text-slate-500 italic mt-4 bg-amber-50 p-3 border-l-4 border-amber-300">
+          <strong>Note:</strong> The statistics, case counts, and quotes presented above are representative composites derived from autonomous research patterns across public forums, rather than verbatim data from individual identifiable users.
+        </p>
+
         <div className="pt-6 mt-6 border-t border-slate-300 flex flex-wrap items-center justify-between gap-6">
           <div className="flex flex-wrap items-center gap-3 text-xs font-mono text-slate-500">
             <span>Vertex AI (gemini-2.5-flash)</span>

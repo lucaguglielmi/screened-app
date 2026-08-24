@@ -22,6 +22,7 @@ class ResearchDomain(str, Enum):
 
 
 class QuestionCategory(str, Enum):
+    BACKGROUND = "BACKGROUND"
     LEGAL_IDENTITY = "LEGAL_IDENTITY"
     VENUE_SCREENINGS = "VENUE_SCREENINGS"
     FEES_POLICY = "FEES_POLICY"

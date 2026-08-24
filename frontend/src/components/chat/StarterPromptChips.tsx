@@ -8,9 +8,9 @@ interface StarterPromptChipsProps {
 const STARTER_PROMPTS = [
   {
     icon: '🚨',
-    title: 'Vet Aldergate Festival',
+    title: 'Vet Aldergate Festival (Test Entity)',
     prompt:
-      'Is Aldergate Film Festival legitimate or a scam? Check their physical venue screening leases and entry fees.',
+      'Is Aldergate Film Festival (Test Entity) legitimate or a scam? Check their physical venue screening leases and entry fees.',
     badge: 'Due Diligence',
     badgeClass: 'bg-tool-diligence/20 text-tool-diligence border-tool-diligence/40',
   },
@@ -53,7 +53,7 @@ export const StarterPromptChips: React.FC<StarterPromptChipsProps> = ({ onSelect
               soundEffects.playClick();
               onSelectPrompt(item.prompt);
             }}
-            className="flex items-start gap-3.5 p-4 text-left rounded-2xl bg-darkroom-surface hover:bg-darkroom-card transition-all group cursor-pointer shadow-xl"
+            className="flex items-start gap-3.5 p-4 text-left rounded-2xl bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-card dark:hover:bg-darkroom-card transition-all group cursor-pointer shadow-xl"
           >
             <span className="text-2xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
               {item.icon}

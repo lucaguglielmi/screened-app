@@ -103,6 +103,8 @@ def enqueue_task(path: str, payload: dict, fallback_task_func, *args):
             logger.warning(f"Cloud Tasks enqueue failed: {e}", extra={"fallbackPath": path})
     else:
         logger.warning("Cloud Tasks not configured", extra={"fallbackPath": path})
+        if os.environ.get("ENVIRONMENT") == "production":
+            raise RuntimeError("Cloud Tasks configuration is required in production environments. Asyncio fallback is disabled.")
         
     # Fallback to asyncio
     return asyncio.create_task(fallback_task_func(*args))
@@ -219,6 +221,9 @@ class Orchestrator:
             )
 
         except Exception as e:
+            from backend.config import settings
+            if settings.strict_mode:
+                raise
             if trace:
                 span = trace.get_current_span()
                 if span and span.is_recording():
@@ -368,10 +373,16 @@ class Orchestrator:
                     session_service=FirestoreSessionService()
                 )
                 
+                from google.genai import types
+                
                 # We start the runner as a background pump, or we can just iterate over it here
                 runner_stream = runner.run_async(
                     user_id="default_user",
-                    session_id=investigation_id
+                    session_id=investigation_id,
+                    new_message=types.Content(
+                        role="user",
+                        parts=[types.Part.from_text(text="Generate the investigation plan")]
+                    )
                 )
                 # Pump events to SSE bridge concurrently
                 # To get the result we wait for the pump to finish.
@@ -516,7 +527,7 @@ class Orchestrator:
                                     sourceId=str(uuid.uuid4()),
                                     sourceUrl=cit.get("url"),
                                     sourceTitle=cit.get("title", "Unknown Source"),
-                                    stance=Stance.SUPPORTING,
+                                    stance=Stance.SUPPORTS,
                                     exactExcerpt=exact_excerpt
                                 )
                                 claim.evidence.append(evidence)
@@ -537,6 +548,9 @@ class Orchestrator:
                         domain_atomic_claims.append(claim)
                         claims.append(claim)
                     except Exception as e:
+                        from backend.config import settings
+                        if settings.strict_mode:
+                            raise
                         if trace:
                             span = trace.get_current_span()
                             if span and span.is_recording():
@@ -656,6 +670,9 @@ class Orchestrator:
             )
 
         except Exception as e:
+            from backend.config import settings
+            if settings.strict_mode:
+                raise
             if trace:
                 span = trace.get_current_span()
                 if span and span.is_recording():

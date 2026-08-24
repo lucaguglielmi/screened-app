@@ -38,7 +38,7 @@ export const QuestionsCategoryModal: React.FC<QuestionsCategoryModalProps> = ({
       description:
         'Scrutinize physical venues, fee transparency, legal entity status, and community reports.',
       questions: [
-        'Is Aldergate Film Festival legitimate or a virtual laurel mill?',
+        'Is Aldergate Film Festival (Test Entity) legitimate or a virtual laurel mill?',
         'Verify physical cinema venue leases for Raindance Film Festival.',
         'Check submission fee transparency and hidden costs for Aesthetica.',
         'Who is the festival director behind Cannes Indie Shorts and are they verified on IMDb?',

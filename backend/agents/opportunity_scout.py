@@ -64,15 +64,20 @@ Generate a cohesive submission strategy roadmap and a list of structured opportu
         try:
             # We use an ad-hoc runner for this agent
             from google.adk.runners import Runner
-            from google.adk.sessions.memory import InMemorySessionService
+            from google.adk.sessions.in_memory_session_service import InMemorySessionService
             import uuid
 
-            runner = Runner(agent=scout_agent, app_name="screened", session_service=InMemorySessionService())
+            sid = str(uuid.uuid4())
+            session_service = InMemorySessionService()
+            runner = Runner(agent=scout_agent, app_name="screened", session_service=session_service)
             scout_result = None
-            async for event in runner.run_async(user_id="sys", session_id=str(uuid.uuid4()), new_message="Please find film festival opportunities for my film."):
-                if event.type == "run_completed":
-                    if event.state and "scout_response" in event.state:
-                        scout_result = event.state["scout_response"]
+            new_msg = types.Content(role="user", parts=[types.Part.from_text(text="Please find film festival opportunities for my film.")])
+            async for event in runner.run_async(user_id="sys", session_id=sid, new_message=new_msg):
+                pass
+            
+            session = await session_service.get_session(app_name="screened", user_id="sys", session_id=sid)
+            if session and session.state and "scout_response" in session.state:
+                scout_result = session.state["scout_response"]
             
             if scout_result:
                 scout_result.durationSeconds = round(time.time() - start_time, 2)
@@ -82,6 +87,9 @@ Generate a cohesive submission strategy roadmap and a list of structured opportu
                 raise RuntimeError("scout_response not found in state")
 
         except Exception as e:
+            from backend.config import settings
+            if settings.strict_mode:
+                raise
             logger.exception(f"ADK FindAll Scout failed: {e}. Falling back to Search+Gemini path.")
             return await self._fallback_scout(profile, start_time)
 

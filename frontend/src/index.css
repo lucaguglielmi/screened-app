@@ -13,12 +13,12 @@
   --font-mono: 'Spline Sans Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   /* Ink & Light Theme Tokens */
-  --color-paper-bg: var(--color-white);
-  --color-paper-surface: var(--color-white);
-  --color-paper-card: var(--color-white);
-  --color-paper-border: transparent;
-  --color-paper-text: var(--color-white);
-  --color-paper-muted: var(--color-white);
+  --color-paper-bg: #f8fafc;
+  --color-paper-surface: #f1f5f9;
+  --color-paper-card: #ffffff;
+  --color-paper-border: #e2e8f0;
+  --color-paper-text: #0f172a;
+  --color-paper-muted: #64748b;
 
   /* Midnight Darkroom Theme Tokens (Palette 1) */
   --color-darkroom-bg: var(--color-midnight-base);

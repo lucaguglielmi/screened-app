@@ -70,7 +70,7 @@ export const Button: React.FC<ButtonProps> = ({
     primary:
       'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-md shadow-blue-500/20 border border-blue-400/30 hover:border-blue-400/50',
     secondary:
-      'bg-darkroom-card hover:bg-darkroom-border text-zinc-200 hover:text-white border border-darkroom-border hover:border-midnight-violet',
+      'bg-paper-card dark:bg-darkroom-card hover:bg-paper-border dark:hover:bg-darkroom-border text-zinc-200 hover:text-white border border-paper-border dark:border-darkroom-border hover:border-midnight-violet',
     outline:
       'bg-transparent hover:bg-zinc-800/50 text-zinc-300 hover:text-white border border-zinc-700 hover:border-zinc-500',
     ghost:
