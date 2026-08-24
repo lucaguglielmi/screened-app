@@ -82,7 +82,7 @@ Generate a cohesive submission strategy roadmap and a list of structured opportu
                 raise RuntimeError("scout_response not found in state")
 
         except Exception as e:
-            logger.error(f"ADK FindAll Scout failed: {e}. Falling back to Search+Gemini path.", exc_info=True)
+            logger.exception(f"ADK FindAll Scout failed: {e}. Falling back to Search+Gemini path.")
             return await self._fallback_scout(profile, start_time)
 
     async def _fallback_scout(self, profile: FilmProfile, start_time: float) -> ScoutResponse:
@@ -206,7 +206,7 @@ Return a JSON object conforming to:
                 durationSeconds=duration,
             )
         except Exception as fallback_e:
-            logger.error(f"Fallback Opportunity scout failed: {fallback_e}", exc_info=True)
+            logger.exception(f"Fallback Opportunity scout failed: {fallback_e}")
             duration = round(time.time() - start_time, 2)
             return ScoutResponse(
                 filmTitle=profile.title,

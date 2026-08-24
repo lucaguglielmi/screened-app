@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  X, 
-  Star, 
-  MessageSquare, 
-  Send, 
-  CheckCircle2, 
+import {
+  X,
+  Star,
+  MessageSquare,
+  Send,
+  CheckCircle2,
   Loader2,
   CheckCircle,
   HelpCircle,
-  XCircle
+  XCircle,
 } from 'lucide-react';
 import { soundEffects, playSuccessChime } from '../../utils/audio';
 
@@ -20,30 +20,37 @@ interface FeedbackModalProps {
 
 type GoalStatus = 'YES' | 'PARTIALLY' | 'NO';
 
-const GOAL_OPTIONS: { id: GoalStatus; label: string; sublabel: string; rating: number; icon: React.ReactNode; color: string }[] = [
-  { 
-    id: 'YES', 
-    label: 'Yes, completely', 
+const GOAL_OPTIONS: {
+  id: GoalStatus;
+  label: string;
+  sublabel: string;
+  rating: number;
+  icon: React.ReactNode;
+  color: string;
+}[] = [
+  {
+    id: 'YES',
+    label: 'Yes, completely',
     sublabel: 'Found what I needed',
-    rating: 5, 
-    icon: <CheckCircle className="size-4 text-[#00D29E]" />,
-    color: 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300'
+    rating: 5,
+    icon: <CheckCircle className="size-4 text-tool-diligence" />,
+    color: 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300',
   },
-  { 
-    id: 'PARTIALLY', 
-    label: 'Partially', 
+  {
+    id: 'PARTIALLY',
+    label: 'Partially',
     sublabel: 'Still exploring',
-    rating: 3, 
+    rating: 3,
     icon: <HelpCircle className="size-4 text-amber-400" />,
-    color: 'border-amber-500/40 bg-amber-500/10 text-amber-300'
+    color: 'border-amber-500/40 bg-amber-500/10 text-amber-300',
   },
-  { 
-    id: 'NO', 
-    label: 'Not yet', 
+  {
+    id: 'NO',
+    label: 'Not yet',
     sublabel: 'Encountered blockers',
-    rating: 1, 
+    rating: 1,
     icon: <XCircle className="size-4 text-rose-400" />,
-    color: 'border-rose-500/40 bg-rose-500/10 text-rose-300'
+    color: 'border-rose-500/40 bg-rose-500/10 text-rose-300',
   },
 ];
 
@@ -82,7 +89,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
 
   if (!isOpen) return null;
 
-  const handleSelectGoal = (option: typeof GOAL_OPTIONS[0]) => {
+  const handleSelectGoal = (option: (typeof GOAL_OPTIONS)[0]) => {
     soundEffects.playClick();
     setGoalStatus(option.id);
     setRating(option.rating);
@@ -140,8 +147,8 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-8 animate-fade-in select-none">
       {/* Dark backdrop */}
-      <div 
-        className="absolute inset-0 bg-[#05050A]/85 backdrop-blur-md transition-opacity"
+      <div
+        className="absolute inset-0 bg-midnight-void/85 backdrop-blur-md transition-opacity"
         onClick={() => {
           soundEffects.playClick();
           onClose();
@@ -149,9 +156,9 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
       />
 
       {/* Modal Dialog Card: Solid Opaque, Borderless */}
-      <div className="relative z-10 w-full max-w-lg flex flex-col rounded-3xl bg-[#0E1124] shadow-2xl shadow-black/90 overflow-hidden text-slate-100 animate-scale-up">
+      <div className="relative z-10 w-full max-w-lg flex flex-col rounded-3xl bg-darkroom-surface shadow-2xl shadow-black/90 overflow-hidden text-slate-100 animate-scale-up">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 bg-[#141834]">
+        <div className="flex items-center justify-between px-6 py-5 bg-darkroom-card">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-400">
               <MessageSquare className="size-5" />
@@ -171,7 +178,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
               soundEffects.playClick();
               onClose();
             }}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-[#1E244E] transition-colors cursor-pointer"
+            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-darkroom-border transition-colors cursor-pointer"
             aria-label="Close modal"
           >
             <X className="size-5" />
@@ -181,16 +188,15 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
         {/* Modal Body */}
         {isSubmitted ? (
           <div className="p-8 text-center space-y-6 animate-fade-in">
-            <div className="size-16 mx-auto rounded-full bg-[#00D29E]/20 text-[#00D29E] flex items-center justify-center shadow-lg shadow-[#00D29E]/20 animate-bounce">
+            <div className="size-16 mx-auto rounded-full bg-tool-diligence/20 text-tool-diligence flex items-center justify-center shadow-lg shadow-[#00D29E]/20 animate-bounce">
               <CheckCircle2 className="size-8" />
             </div>
 
             <div className="space-y-2">
-              <h3 className="font-serif text-2xl font-bold text-white">
-                Thank You, Filmmaker!
-              </h3>
+              <h3 className="font-serif text-2xl font-bold text-white">Thank You, Filmmaker!</h3>
               <p className="text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
-                Your feedback helps us refine the intelligence engine and festival verification tools for creators worldwide.
+                Your feedback helps us refine the intelligence engine and festival verification
+                tools for creators worldwide.
               </p>
             </div>
 
@@ -203,7 +209,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                     onClose();
                     onViewFeedbackLog();
                   }}
-                  className="px-4 py-2.5 rounded-xl bg-[#141834] hover:bg-[#1A2046] text-indigo-300 text-xs font-mono transition-colors cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl bg-darkroom-card hover:bg-darkroom-border text-indigo-300 text-xs font-mono transition-colors cursor-pointer"
                 >
                   View Feedback Log →
                 </button>
@@ -211,7 +217,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
               <button
                 type="button"
                 onClick={handleReset}
-                className="px-5 py-2.5 rounded-xl bg-[#2018E6] hover:bg-[#322CE8] text-white font-bold text-xs font-mono transition-all shadow-md cursor-pointer"
+                className="px-5 py-2.5 rounded-xl bg-midnight-royal hover:bg-midnight-royal text-white font-bold text-xs font-mono transition-all shadow-md cursor-pointer"
               >
                 Back to Workspace
               </button>
@@ -243,12 +249,14 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                       className={`p-3 rounded-2xl transition-all flex flex-col items-center justify-center text-center gap-1.5 cursor-pointer ${
                         isSelected
                           ? `${option.color} ring-2 ring-indigo-500/60 shadow-lg scale-102`
-                          : 'bg-[#141834] text-slate-300 hover:bg-[#1C224B] hover:text-white'
+                          : 'bg-darkroom-card text-slate-300 hover:bg-darkroom-border hover:text-white'
                       }`}
                     >
                       {option.icon}
                       <span className="text-xs font-semibold leading-tight">{option.label}</span>
-                      <span className="text-[10px] text-slate-400 font-mono hidden sm:inline">{option.sublabel}</span>
+                      <span className="text-[10px] text-slate-400 font-mono hidden sm:inline">
+                        {option.sublabel}
+                      </span>
                     </button>
                   );
                 })}
@@ -299,7 +307,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                 onChange={(e) => setComment(e.target.value)}
                 placeholder="What festival or goal were you working on? What went well or what can we improve?"
                 rows={3}
-                className="w-full px-4 py-3 rounded-xl bg-[#141834] text-slate-100 placeholder-slate-500 text-sm focus:bg-[#1A2046] focus:outline-none transition-colors resize-none leading-relaxed"
+                className="w-full px-4 py-3 rounded-xl bg-darkroom-card text-slate-100 placeholder-slate-500 text-sm focus:bg-darkroom-border focus:outline-none transition-colors resize-none leading-relaxed"
                 required
               />
             </div>
@@ -313,17 +321,19 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                   value={authorName}
                   onChange={(e) => setAuthorName(e.target.value)}
                   placeholder="e.g. Maya Lin (Director)"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#141834] text-slate-100 placeholder-slate-500 text-xs focus:bg-[#1A2046] focus:outline-none transition-colors"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-darkroom-card text-slate-100 placeholder-slate-500 text-xs focus:bg-darkroom-border focus:outline-none transition-colors"
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-[11px] font-mono text-slate-400">Email for follow-up (Optional)</label>
+                <label className="text-[11px] font-mono text-slate-400">
+                  Email for follow-up (Optional)
+                </label>
                 <input
                   type="email"
                   value={authorEmail}
                   onChange={(e) => setAuthorEmail(e.target.value)}
                   placeholder="director@indiefilm.org"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#141834] text-slate-100 placeholder-slate-500 text-xs focus:bg-[#1A2046] focus:outline-none transition-colors"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-darkroom-card text-slate-100 placeholder-slate-500 text-xs focus:bg-darkroom-border focus:outline-none transition-colors"
                 />
               </div>
             </div>
@@ -344,7 +354,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
               <button
                 type="submit"
                 disabled={isSubmitting || !comment.trim()}
-                className="px-6 py-2.5 rounded-xl bg-[#2018E6] hover:bg-[#322CE8] disabled:opacity-40 text-white font-bold text-xs font-mono transition-all flex items-center gap-2 shadow-lg shadow-indigo-950/60 cursor-pointer active:scale-95"
+                className="px-6 py-2.5 rounded-xl bg-midnight-royal hover:bg-midnight-royal disabled:opacity-40 text-white font-bold text-xs font-mono transition-all flex items-center gap-2 shadow-lg shadow-indigo-950/60 cursor-pointer active:scale-95"
               >
                 {isSubmitting ? (
                   <>

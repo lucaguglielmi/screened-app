@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  Building2, 
-  Globe, 
-  CopyCheck, 
-  Users, 
-  Ticket, 
-  GraduationCap, 
-  Image as ImageIcon, 
-  CheckCircle2, 
-  AlertTriangle, 
-  ShieldAlert, 
-  Info, 
-  HelpCircle, 
-  ChevronDown, 
-  ChevronUp, 
+import {
+  Building2,
+  Globe,
+  CopyCheck,
+  Users,
+  Ticket,
+  GraduationCap,
+  Image as ImageIcon,
+  CheckCircle2,
+  AlertTriangle,
+  ShieldAlert,
+  Info,
+  HelpCircle,
+  ChevronDown,
+  ChevronUp,
   ExternalLink,
   ShieldCheck,
-  Search
+  Search,
 } from 'lucide-react';
 import { DeepVettingReport, VettingSignalStatus } from '../../types/investigation';
 import { soundEffects } from '../../utils/audio';
@@ -27,10 +27,7 @@ interface DeepVettingMatrixProps {
   festivalName: string;
 }
 
-export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({
-  report,
-  festivalName,
-}) => {
+export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, festivalName }) => {
   const [filter, setFilter] = useState<'ALL' | 'VERIFIED' | 'ALERTS' | 'INFO'>('ALL');
   const [expandedDimId, setExpandedDimId] = useState<string | null>(null);
 
@@ -54,7 +51,10 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({
           'Incorporation date (1993) strictly matches claimed 32nd Edition history',
           'Physical registered office at central London cinema precinct',
         ],
-        corroboratingSources: ['find-and-update.company-information.service.gov.uk', 'opencorporates.com'],
+        corroboratingSources: [
+          'find-and-update.company-information.service.gov.uk',
+          'opencorporates.com',
+        ],
         riskWeight: 'LOW',
       },
       {
@@ -226,13 +226,13 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({
 
   const toggleExpand = (id: string) => {
     soundEffects.playClick();
-    setExpandedDimId(prev => (prev === id ? null : id));
+    setExpandedDimId((prev) => (prev === id ? null : id));
   };
 
   return (
     <div className="space-y-6">
       {/* Top Banner: Authenticity Radar & Health Metrics */}
-      <div className="p-6 rounded-2xl bg-gradient-to-r from-[#0C1024] via-[#080B1A] to-[#0C1024] border border-[#1F254E] shadow-xl">
+      <div className="p-6 rounded-2xl bg-gradient-to-r from-darkroom-surface via-darkroom-bg to-darkroom-surface border border-darkroom-border shadow-xl">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="flex items-center space-x-2">
@@ -248,7 +248,8 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({
               <span className="text-indigo-400">{activeReport.festivalName}</span>
             </h2>
             <p className="text-xs text-zinc-300 max-w-2xl leading-relaxed">
-              Multi-vector corroboration cross-examining corporate filings, WHOIS age, original entry rules, IMDb jury records, physical screening leases, and alumni footprint.
+              Multi-vector corroboration cross-examining corporate filings, WHOIS age, original
+              entry rules, IMDb jury records, physical screening leases, and alumni footprint.
             </p>
           </div>
 
@@ -266,7 +267,9 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({
             <div className="h-10 w-px bg-zinc-800" />
 
             <div className="text-center">
-              <div className={`text-2xl font-black font-mono ${activeReport.totalFlags === 0 ? 'text-zinc-400' : 'text-rose-400'}`}>
+              <div
+                className={`text-2xl font-black font-mono ${activeReport.totalFlags === 0 ? 'text-zinc-400' : 'text-rose-400'}`}
+              >
                 {activeReport.totalFlags}
               </div>
               <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
@@ -280,36 +283,64 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({
         <div className="mt-6 pt-4 border-t border-zinc-800/80 flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center gap-2">
             <button
-              onClick={() => { soundEffects.playClick(); setFilter('ALL'); }}
+              onClick={() => {
+                soundEffects.playClick();
+                setFilter('ALL');
+              }}
               className={`px-3 py-1 rounded-lg text-xs font-mono transition-colors ${
-                filter === 'ALL' ? 'bg-indigo-600 text-white font-bold' : 'bg-black/30 text-zinc-400 hover:text-white'
+                filter === 'ALL'
+                  ? 'bg-indigo-600 text-white font-bold'
+                  : 'bg-black/30 text-zinc-400 hover:text-white'
               }`}
             >
               All Dimensions ({activeReport.dimensions.length})
             </button>
             <button
-              onClick={() => { soundEffects.playClick(); setFilter('VERIFIED'); }}
+              onClick={() => {
+                soundEffects.playClick();
+                setFilter('VERIFIED');
+              }}
               className={`px-3 py-1 rounded-lg text-xs font-mono transition-colors ${
-                filter === 'VERIFIED' ? 'bg-emerald-600 text-white font-bold' : 'bg-black/30 text-zinc-400 hover:text-white'
+                filter === 'VERIFIED'
+                  ? 'bg-emerald-600 text-white font-bold'
+                  : 'bg-black/30 text-zinc-400 hover:text-white'
               }`}
             >
-              Verified Authentic ({activeReport.dimensions.filter(d => d.status === 'VERIFIED_AUTHENTIC').length})
+              Verified Authentic (
+              {activeReport.dimensions.filter((d) => d.status === 'VERIFIED_AUTHENTIC').length})
             </button>
             <button
-              onClick={() => { soundEffects.playClick(); setFilter('ALERTS'); }}
+              onClick={() => {
+                soundEffects.playClick();
+                setFilter('ALERTS');
+              }}
               className={`px-3 py-1 rounded-lg text-xs font-mono transition-colors ${
-                filter === 'ALERTS' ? 'bg-rose-600 text-white font-bold' : 'bg-black/30 text-zinc-400 hover:text-white'
+                filter === 'ALERTS'
+                  ? 'bg-rose-600 text-white font-bold'
+                  : 'bg-black/30 text-zinc-400 hover:text-white'
               }`}
             >
-              Risk Alerts ({activeReport.dimensions.filter(d => d.status === 'AMBER_WARNING' || d.status === 'RED_FLAG').length})
+              Risk Alerts (
+              {
+                activeReport.dimensions.filter(
+                  (d) => d.status === 'AMBER_WARNING' || d.status === 'RED_FLAG',
+                ).length
+              }
+              )
             </button>
             <button
-              onClick={() => { soundEffects.playClick(); setFilter('INFO'); }}
+              onClick={() => {
+                soundEffects.playClick();
+                setFilter('INFO');
+              }}
               className={`px-3 py-1 rounded-lg text-xs font-mono transition-colors ${
-                filter === 'INFO' ? 'bg-blue-600 text-white font-bold' : 'bg-black/30 text-zinc-400 hover:text-white'
+                filter === 'INFO'
+                  ? 'bg-blue-600 text-white font-bold'
+                  : 'bg-black/30 text-zinc-400 hover:text-white'
               }`}
             >
-              Informational ({activeReport.dimensions.filter(d => d.status === 'INFORMATIONAL').length})
+              Informational (
+              {activeReport.dimensions.filter((d) => d.status === 'INFORMATIONAL').length})
             </button>
           </div>
 
@@ -331,13 +362,13 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2, delay: idx * 0.04 }}
               className={`rounded-2xl border transition-all ${
-                isExpanded 
-                  ? 'bg-[#0E1229] border-indigo-500/60 shadow-lg shadow-indigo-500/10' 
-                  : 'bg-[#080B1C] border-[#1C2248] hover:border-[#2C3570]'
+                isExpanded
+                  ? 'bg-darkroom-surface border-indigo-500/60 shadow-lg shadow-indigo-500/10'
+                  : 'bg-darkroom-bg border-darkroom-border hover:border-midnight-violet'
               }`}
             >
               {/* Collapsed Header */}
-              <div 
+              <div
                 onClick={() => toggleExpand(dim.id)}
                 className="p-4 sm:p-5 flex items-center justify-between cursor-pointer select-none"
               >
@@ -352,9 +383,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({
                       </h3>
                       {getStatusBadge(dim.status)}
                     </div>
-                    <p className="text-xs text-zinc-400 mt-1 line-clamp-1">
-                      {dim.summary}
-                    </p>
+                    <p className="text-xs text-zinc-400 mt-1 line-clamp-1">{dim.summary}</p>
                   </div>
                 </div>
 
@@ -373,7 +402,11 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({
                     aria-label={isExpanded ? 'Collapse dimension' : 'Expand dimension'}
                     className="p-1.5 rounded-lg bg-white/[0.04] text-zinc-400 hover:text-white"
                   >
-                    {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                    {isExpanded ? (
+                      <ChevronUp className="w-4 h-4" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -393,9 +426,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({
                       <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-indigo-400 block mb-1">
                         Executive Forensic Summary
                       </span>
-                      <p className="text-zinc-200 leading-relaxed">
-                        {dim.summary}
-                      </p>
+                      <p className="text-zinc-200 leading-relaxed">{dim.summary}</p>
                     </div>
 
                     {/* Specific Extracted Signals */}
@@ -406,7 +437,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({
                         </span>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                           {dim.signalsFound.map((sig, sIdx) => (
-                            <div 
+                            <div
                               key={sIdx}
                               className="p-2.5 rounded-xl bg-black/40 flex items-start space-x-2"
                             >
@@ -423,11 +454,13 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({
                       <div className="pt-2 flex items-center justify-between flex-wrap gap-2 text-zinc-400">
                         <div className="flex items-center space-x-2">
                           <Search className="w-3.5 h-3.5 text-zinc-500" />
-                          <span className="text-[11px] font-mono">Corroborating Registers & Manifests:</span>
+                          <span className="text-[11px] font-mono">
+                            Corroborating Registers & Manifests:
+                          </span>
                         </div>
                         <div className="flex items-center gap-1.5 flex-wrap">
                           {dim.corroboratingSources.map((src, srcIdx) => (
-                            <span 
+                            <span
                               key={srcIdx}
                               className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-zinc-900 border border-zinc-800 text-[11px] font-mono text-zinc-300"
                             >

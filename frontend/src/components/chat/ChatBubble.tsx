@@ -1,11 +1,5 @@
 import React from 'react';
-import { 
-  Search, 
-  Coins, 
-  MailWarning, 
-  GitCompare, 
-  Compass 
-} from 'lucide-react';
+import { Search, Coins, MailWarning, GitCompare, Compass } from 'lucide-react';
 import { ChatMessage } from '../../types/chat';
 import { FilmProfile } from '../../types/investigation';
 import { MiniScoutCard } from './mini_apps/MiniScoutCard';
@@ -18,10 +12,22 @@ import { soundEffects } from '../../utils/audio';
 
 const ACTION_TABS = [
   { label: 'Research a festival', icon: Search, query: 'I want to research a film festival' },
-  { label: 'Find a grant', icon: Coins, query: 'Help me find film grants and funding opportunities' },
-  { label: 'Analyze an invitation', icon: MailWarning, query: 'I received a festival invitation email I want to analyze' },
+  {
+    label: 'Find a grant',
+    icon: Coins,
+    query: 'Help me find film grants and funding opportunities',
+  },
+  {
+    label: 'Analyze an invitation',
+    icon: MailWarning,
+    query: 'I received a festival invitation email I want to analyze',
+  },
   { label: 'Compare festivals', icon: GitCompare, query: 'I want to compare two film festivals' },
-  { label: 'Scout strategy', icon: Compass, query: 'Help me plan a festival submission strategy for my film' },
+  {
+    label: 'Scout strategy',
+    icon: Compass,
+    query: 'Help me plan a festival submission strategy for my film',
+  },
 ];
 
 interface ChatBubbleProps {
@@ -90,7 +96,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
         {/* Avatar */}
         <div className="shrink-0 mt-0.5">
           {isUser ? (
-            <div className="size-9 rounded-full bg-gradient-to-tr from-[#1E234B] to-[#2E3672] flex items-center justify-center text-sm font-bold text-white shadow-sm ring-1 ring-[#3D4791]">
+            <div className="size-9 rounded-full bg-gradient-to-tr from-darkroom-border to-midnight-violet flex items-center justify-center text-sm font-bold text-white shadow-sm ring-1 ring-midnight-violet">
               👤
             </div>
           ) : (
@@ -101,12 +107,17 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
         {/* Message Content & Mini-UIs */}
         <div className="flex-1 overflow-hidden">
           {/* Header */}
-          <div className={`flex items-center gap-2 mb-1.5 text-xs ${isUser ? 'justify-end' : 'justify-start'}`}>
+          <div
+            className={`flex items-center gap-2 mb-1.5 text-xs ${isUser ? 'justify-end' : 'justify-start'}`}
+          >
             <span className="font-semibold text-slate-300 font-mono">
               {isUser ? 'You' : 'The Producer Desk'}
             </span>
             <span className="text-xs text-slate-500 font-mono">
-              {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              {new Date(message.timestamp).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
             </span>
           </div>
 
@@ -114,8 +125,8 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
           <div
             className={`rounded-2xl px-5 py-4 text-base leading-relaxed shadow-md ${
               isUser
-                ? 'bg-[#1A1F45] text-slate-100 rounded-tr-none border border-[#2B346E]'
-                : 'bg-[#0E1124] text-slate-200 rounded-tl-none border border-[#22274C]'
+                ? 'bg-darkroom-border text-slate-100 rounded-tr-none border border-darkroom-border'
+                : 'bg-darkroom-surface text-slate-200 rounded-tl-none border border-darkroom-border'
             }`}
           >
             {message.attachedFile && (
@@ -123,7 +134,9 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
                 <span>📎</span>
                 <span className="font-semibold">{message.attachedFile.name}</span>
                 {message.attachedFile.size && (
-                  <span className="text-slate-400">({Math.round(message.attachedFile.size / 1024)} KB)</span>
+                  <span className="text-slate-400">
+                    ({Math.round(message.attachedFile.size / 1024)} KB)
+                  </span>
                 )}
               </div>
             )}
@@ -149,7 +162,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
                           onLaunchCustomPrompt(tab.query);
                         }
                       }}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#131730] hover:bg-[#2018E6] border border-[#252C5E] text-slate-300 hover:text-white transition-all text-xs font-mono cursor-pointer shadow-sm active:scale-95"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-darkroom-card hover:bg-midnight-royal border border-darkroom-border text-slate-300 hover:text-white transition-all text-xs font-mono cursor-pointer shadow-sm active:scale-95"
                     >
                       <Icon className="size-3.5 text-indigo-400 group-hover:text-white shrink-0" />
                       <span>{tab.label}</span>
@@ -162,7 +175,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
 
           {/* Interactive Follow-Up Probes */}
           {message.followUpProbe && message.followUpProbe.options.length > 0 && (
-            <div className="mt-3 p-3.5 rounded-xl bg-[#141838] border border-[#252C5E] space-y-2.5 shadow-sm">
+            <div className="mt-3 p-3.5 rounded-xl bg-darkroom-card border border-darkroom-border space-y-2.5 shadow-sm">
               <div className="flex items-center gap-1.5 text-xs font-semibold text-indigo-300">
                 <span>✦</span>
                 <span>{message.followUpProbe.question}</span>
@@ -177,7 +190,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
                         onLaunchCustomPrompt(opt.promptText);
                       }
                     }}
-                    className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1D2352] hover:bg-[#2018E6] border border-[#2E387A] hover:border-[#4B58C9] text-xs font-medium text-slate-200 hover:text-white transition-all shadow-sm cursor-pointer hover:shadow-indigo-500/20 text-left"
+                    className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-darkroom-border hover:bg-midnight-royal border border-midnight-violet hover:border-tool-ocean text-xs font-medium text-slate-200 hover:text-white transition-all shadow-sm cursor-pointer hover:shadow-indigo-500/20 text-left"
                   >
                     {opt.badge && (
                       <span className="px-1.5 py-0.5 rounded bg-indigo-500/20 group-hover:bg-white/20 text-[10px] font-mono text-indigo-300 group-hover:text-white">
@@ -185,7 +198,9 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
                       </span>
                     )}
                     <span>{opt.label}</span>
-                    <span className="text-slate-400 group-hover:text-white ml-0.5 font-mono text-xs">→</span>
+                    <span className="text-slate-400 group-hover:text-white ml-0.5 font-mono text-xs">
+                      →
+                    </span>
                   </button>
                 ))}
               </div>

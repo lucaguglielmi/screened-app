@@ -90,5 +90,5 @@ async def parallel_task_run(
         return {"claims": output_claims, "basis": basis}
         
     except Exception as e:
-        logger.error(f"Parallel Task API failed: {e}", exc_info=True)
+        logger.exception(f"Parallel Task API failed: {e}")
         return {"status": "error", "error": str(e)}

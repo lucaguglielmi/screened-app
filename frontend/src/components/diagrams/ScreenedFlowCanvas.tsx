@@ -1,8 +1,8 @@
 import React from 'react';
-import { 
-  ReactFlow, 
-  Background, 
-  Controls, 
+import {
+  ReactFlow,
+  Background,
+  Controls,
   MiniMap,
   BackgroundVariant,
   Node,
@@ -10,7 +10,7 @@ import {
   OnNodesChange,
   OnEdgesChange,
   NodeTypes,
-  EdgeTypes
+  EdgeTypes,
 } from '@xyflow/react';
 
 interface ScreenedFlowCanvasProps {
@@ -45,7 +45,9 @@ export const ScreenedFlowCanvas: React.FC<ScreenedFlowCanvasProps> = ({
   showControls = true,
 }) => {
   return (
-    <div className={`relative rounded-2xl bg-[#070913] border-none overflow-hidden shadow-2xl ${className}`}>
+    <div
+      className={`relative rounded-2xl bg-darkroom-bg border-none overflow-hidden shadow-2xl ${className}`}
+    >
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -60,24 +62,20 @@ export const ScreenedFlowCanvas: React.FC<ScreenedFlowCanvasProps> = ({
         proOptions={{ hideAttribution: true }}
         colorMode="dark"
       >
-        <Background 
-          variant={BackgroundVariant.Dots} 
-          gap={16} 
-          size={1.2} 
-          color="#1A2044" 
-        />
+        <Background variant={BackgroundVariant.Dots} gap={16} size={1.2} color="#1A2044" />
         {showControls && (
-          <Controls 
-            className="!bg-[#0E1124] !border-none !rounded-xl !shadow-xl !text-slate-300 [&>button]:!bg-[#141834] [&>button]:!border-none [&>button]:!text-slate-300 hover:[&>button]:!bg-[#1E2552] hover:[&>button]:!text-white" 
-          />
+          <Controls className="!bg-darkroom-surface !border-none !rounded-xl !shadow-xl !text-slate-300 [&>button]:!bg-darkroom-card [&>button]:!border-none [&>button]:!text-slate-300 hover:[&>button]:!bg-darkroom-card hover:[&>button]:!text-white" />
         )}
         {showMiniMap && (
-          <MiniMap 
-            className="!bg-[#0E1124] !border-none !rounded-xl !shadow-xl !overflow-hidden hidden sm:block"
+          <MiniMap
+            className="!bg-darkroom-surface !border-none !rounded-xl !shadow-xl !overflow-hidden hidden sm:block"
             nodeColor={(node) => {
-              if (node.data?.status === 'CORROBORATED' || node.data?.status === 'VERIFIED') return '#00D29E';
-              if (node.data?.status === 'DISPUTED' || node.data?.status === 'CONTRADICTED') return '#F43F5E';
-              if (node.data?.status === 'SUPPORTED' || node.data?.status === 'CAUTION') return '#0E86B3';
+              if (node.data?.status === 'CORROBORATED' || node.data?.status === 'VERIFIED')
+                return '#00D29E';
+              if (node.data?.status === 'DISPUTED' || node.data?.status === 'CONTRADICTED')
+                return '#F43F5E';
+              if (node.data?.status === 'SUPPORTED' || node.data?.status === 'CAUTION')
+                return '#0E86B3';
               return '#2018E6';
             }}
             maskColor="rgba(7, 9, 19, 0.75)"

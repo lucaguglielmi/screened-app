@@ -100,5 +100,5 @@ JSON Schema:
             return candidates
 
         except Exception as e:
-            logger.error(f"Disambiguation parsing failed: {e}", exc_info=True)
+            logger.exception(f"Disambiguation parsing failed: {e}")
             return [CandidateEntity(name=query, descriptor="Default candidate entity")]

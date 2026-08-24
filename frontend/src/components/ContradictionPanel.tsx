@@ -2,7 +2,6 @@ import React from 'react';
 import { DisputeRecord } from '../types/investigation';
 import { AlertTriangle, ExternalLink, Scale } from 'lucide-react';
 
-
 interface Props {
   disputes: DisputeRecord[];
 }
@@ -55,7 +54,10 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
                 {dispute.evidenceA && dispute.evidenceA.length > 0 && (
                   <div className="space-y-1.5 pt-1 text-[11px]">
                     {dispute.evidenceA.map((ev, eIdx) => (
-                      <div key={eIdx} className="border-l-2 border-blue-500/50 pl-2 text-paper-muted dark:text-darkroom-muted">
+                      <div
+                        key={eIdx}
+                        className="border-l-2 border-blue-500/50 pl-2 text-paper-muted dark:text-darkroom-muted"
+                      >
                         <div className="italic">"{ev.exactExcerpt}"</div>
                         {ev.sourceUrl && (
                           <a
@@ -64,7 +66,8 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
                             rel="noopener noreferrer"
                             className="text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center gap-1 mt-0.5"
                           >
-                            Source: {ev.sourceTitle || ev.sourceDomain} <ExternalLink className="size-2.5" />
+                            Source: {ev.sourceTitle || ev.sourceDomain}{' '}
+                            <ExternalLink className="size-2.5" />
                           </a>
                         )}
                       </div>
@@ -85,7 +88,10 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
                 {dispute.evidenceB && dispute.evidenceB.length > 0 && (
                   <div className="space-y-1.5 pt-1 text-[11px]">
                     {dispute.evidenceB.map((ev, eIdx) => (
-                      <div key={eIdx} className="border-l-2 border-rose-500/50 pl-2 text-paper-muted dark:text-darkroom-muted">
+                      <div
+                        key={eIdx}
+                        className="border-l-2 border-rose-500/50 pl-2 text-paper-muted dark:text-darkroom-muted"
+                      >
                         <div className="italic">"{ev.exactExcerpt}"</div>
                         {ev.sourceUrl && (
                           <a
@@ -94,7 +100,8 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
                             rel="noopener noreferrer"
                             className="text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center gap-1 mt-0.5"
                           >
-                            Source: {ev.sourceTitle || ev.sourceDomain} <ExternalLink className="size-2.5" />
+                            Source: {ev.sourceTitle || ev.sourceDomain}{' '}
+                            <ExternalLink className="size-2.5" />
                           </a>
                         )}
                       </div>
@@ -108,7 +115,9 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
             <div className="p-3 rounded-lg bg-amber-500/10 text-xs text-amber-800 dark:text-amber-200 flex items-start gap-2">
               <AlertTriangle className="size-4 shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
               <div>
-                <span className="font-semibold font-mono uppercase text-[10px]">Filmmaker Recommendation: </span>
+                <span className="font-semibold font-mono uppercase text-[10px]">
+                  Filmmaker Recommendation:{' '}
+                </span>
                 <span>{dispute.guidance}</span>
               </div>
             </div>

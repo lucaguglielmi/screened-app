@@ -49,10 +49,17 @@ from backend.orchestrator.events import broadcaster, EventType
 from backend.orchestrator.state_machine import orchestrator
 
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
-)
+try:
+    import google.cloud.logging
+    client = google.cloud.logging.Client()
+    client.setup_logging()
+except Exception as e:
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    )
+    logging.warning(f"Could not initialize Google Cloud Logging: {e}. Falling back to basic logging.")
+
 logger = logging.getLogger("screened.main")
 
 app = FastAPI(
@@ -60,6 +67,43 @@ app = FastAPI(
     version=settings.app_version,
     description="Agentic Cinema Due-Diligence Workspace (Parallel Track)",
 )
+
+import collections
+recent_spans = collections.deque(maxlen=50)
+
+try:
+    from opentelemetry import trace
+    from opentelemetry.sdk.trace import TracerProvider
+    from opentelemetry.sdk.trace.export import BatchSpanProcessor, SimpleSpanProcessor, SpanExporter, SpanExportResult
+    from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
+    from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+    from opentelemetry.sdk.resources import Resource
+
+    class RecentSpansExporter(SpanExporter):
+        def export(self, spans):
+            for span in spans:
+                recent_spans.appendleft(span)
+            return SpanExportResult.SUCCESS
+        def shutdown(self):
+            pass
+        def force_flush(self, timeout_millis=30000):
+            return True
+
+    resource = Resource.create({"service.name": "screened-backend"})
+    tracer_provider = TracerProvider(resource=resource)
+    trace.set_tracer_provider(tracer_provider)
+    
+    tracer_provider.add_span_processor(SimpleSpanProcessor(RecentSpansExporter()))
+
+    try:
+        exporter = CloudTraceSpanExporter()
+        tracer_provider.add_span_processor(BatchSpanProcessor(exporter))
+    except Exception as e:
+        logger.warning(f"CloudTraceSpanExporter failed to initialize: {e}. Traces will only be available locally.")
+
+    FastAPIInstrumentor.instrument_app(app)
+except Exception as e:
+    logger.warning(f"Could not initialize OpenTelemetry: {e}")
 
 # CORS configuration
 if settings.environment == "production":
@@ -163,6 +207,21 @@ async def health_check():
     }
 
 
+@app.get("/api/traces/recent")
+async def get_recent_traces():
+    """Returns the 50 most recent OpenTelemetry spans for the Observability Lab."""
+    return [{
+        "name": span.name,
+        "context": {
+            "trace_id": format(span.context.trace_id, "032x"),
+            "span_id": format(span.context.span_id, "016x"),
+        },
+        "start_time": span.start_time,
+        "end_time": span.end_time,
+        "attributes": dict(span.attributes) if span.attributes else {}
+    } for span in recent_spans]
+
+
 @app.get("/api/version")
 @app.get("/version.json")
 async def get_version_info():
@@ -219,7 +278,7 @@ async def get_investigation_batch(investigation_ids: list[str], request: Request
                 # Omit large collections like claims and sources for the summary view
                 results.append(inv)
         except Exception as e:
-            logger.error(f"Failed to fetch investigation {inv_id} for batch: {e}")
+            logger.exception(f"Failed to fetch investigation {inv_id} for batch: {e}")
     return results
 
 
@@ -233,7 +292,7 @@ async def resume_investigation(investigation_id: str, request: Request):
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
-        logger.error(f"Failed to resume investigation: {e}", exc_info=True)
+        logger.exception(f"Failed to resume investigation: {e}")
         raise HTTPException(status_code=500, detail="Internal server error while resuming investigation")
 
 
@@ -250,7 +309,7 @@ async def confirm_entity(investigation_id: str, req: ConfirmEntityRequest, reque
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
-        logger.error(f"Failed to confirm entity: {e}", exc_info=True)
+        logger.exception(f"Failed to confirm entity: {e}")
         raise HTTPException(status_code=500, detail="Internal server error while confirming entity")
 
 
@@ -279,7 +338,7 @@ async def chat_with_producer_desk(req: ChatRequest, request: Request):
             async for event in producer_desk_agent.process_chat(req):
                 yield f"data: {json.dumps(event)}\n\n"
         except Exception as e:
-            logger.error(f"Chat streaming error: {e}", exc_info=True)
+            logger.exception(f"Chat streaming error: {e}")
             yield f"data: {json.dumps({'type': 'ERROR', 'error': str(e)})}\n\n"
 
     return StreamingResponse(
@@ -300,7 +359,7 @@ async def analyze_document_endpoint(req: DocumentAnalysisRequest, request: Reque
     try:
         return await producer_desk_agent.analyze_document(req)
     except Exception as e:
-        logger.error(f"Document analysis endpoint failed: {e}", exc_info=True)
+        logger.exception(f"Document analysis endpoint failed: {e}")
         raise HTTPException(status_code=500, detail="Internal server error during document analysis")
 
 
@@ -315,7 +374,7 @@ async def scout_festival_opportunities(req: ScoutRequest, request: Request):
         response = await opportunity_scout.scout_opportunities(req.profile)
         return response
     except Exception as e:
-        logger.error(f"Opportunity scout failed: {e}", exc_info=True)
+        logger.exception(f"Opportunity scout failed: {e}")
         raise HTTPException(status_code=500, detail="Internal server error during opportunity scouting")
 
 
@@ -386,7 +445,7 @@ async def approve_outreach_inquiry(investigation_id: str, req: ApproveOutreachRe
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
-        logger.error(f"Approval failed: {e}", exc_info=True)
+        logger.exception(f"Approval failed: {e}")
         raise HTTPException(status_code=500, detail="Internal server error while processing approval")
 
 
@@ -473,7 +532,7 @@ async def test_walking_skeleton_pipeline(request: TestPipelineRequest):
         )
 
     except Exception as e:
-        logger.error(f"Test pipeline failed: {e}", exc_info=True)
+        logger.exception(f"Test pipeline failed: {e}")
         raise HTTPException(status_code=500, detail="Internal server error during test pipeline execution")
 
 

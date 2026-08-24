@@ -12,28 +12,74 @@ export const UiGalleryLab: React.FC = () => {
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const [iconPos, setIconPos] = useState<'left' | 'right'>('right');
   const [clickCount, setClickCount] = useState<number>(0);
-  const [statusLog, setStatusLog] = useState<string>('Hover any button or link to test icon-specific micro-animations.');
+  const [statusLog, setStatusLog] = useState<string>(
+    'Hover any button or link to test icon-specific micro-animations.',
+  );
 
   const logAction = (msg: string) => {
     setStatusLog(`[${new Date().toLocaleTimeString()}] ${msg}`);
   };
 
   const iconOptions: { type: IconAnimationType; label: string; desc: string }[] = [
-    { type: 'arrow-right', label: 'Arrow Right', desc: 'Soft horizontal nudge right (group-hover:translate-x-1.5)' },
-    { type: 'arrow-up-right', label: 'Arrow Up-Right', desc: 'Diagonal nudge up & right (group-hover:translate-x-1 -translate-y-1)' },
-    { type: 'plus', label: 'Plus (+)', desc: '180-degree rotation on self (group-hover:rotate-180)' },
-    { type: 'chevron-down', label: 'Chevron Down', desc: 'Subtle vertical float / shift down (group-hover:translate-y-1)' },
-    { type: 'sparkles', label: 'Sparkles (✦)', desc: 'Gentle twinkle & scale pulse (group-hover:scale-125 rotate-12)' },
-    { type: 'search', label: 'Search Lens', desc: 'Subtle lens pulse & tilt (group-hover:scale-115 -rotate-6)' },
-    { type: 'refresh', label: 'Refresh / Sync', desc: '180-degree spin cycle (group-hover:rotate-180)' },
-    { type: 'external', label: 'External Pop', desc: 'Corner diagonal pop (group-hover:translate-x-0.5 -translate-y-0.5)' },
+    {
+      type: 'arrow-right',
+      label: 'Arrow Right',
+      desc: 'Soft horizontal nudge right (group-hover:translate-x-1.5)',
+    },
+    {
+      type: 'arrow-up-right',
+      label: 'Arrow Up-Right',
+      desc: 'Diagonal nudge up & right (group-hover:translate-x-1 -translate-y-1)',
+    },
+    {
+      type: 'plus',
+      label: 'Plus (+)',
+      desc: '180-degree rotation on self (group-hover:rotate-180)',
+    },
+    {
+      type: 'chevron-down',
+      label: 'Chevron Down',
+      desc: 'Subtle vertical float / shift down (group-hover:translate-y-1)',
+    },
+    {
+      type: 'sparkles',
+      label: 'Sparkles (✦)',
+      desc: 'Gentle twinkle & scale pulse (group-hover:scale-125 rotate-12)',
+    },
+    {
+      type: 'search',
+      label: 'Search Lens',
+      desc: 'Subtle lens pulse & tilt (group-hover:scale-115 -rotate-6)',
+    },
+    {
+      type: 'refresh',
+      label: 'Refresh / Sync',
+      desc: '180-degree spin cycle (group-hover:rotate-180)',
+    },
+    {
+      type: 'external',
+      label: 'External Pop',
+      desc: 'Corner diagonal pop (group-hover:translate-x-0.5 -translate-y-0.5)',
+    },
     { type: 'check', label: 'Checkmark (✓)', desc: 'Elastic scale pop with emerald tint' },
     { type: 'mail', label: 'Mail Warning', desc: 'Gentle float and tilt with rose accent' },
     { type: 'help', label: 'Help / Question', desc: 'Curiosity tilt and scale pulse' },
     { type: 'doc', label: 'Doc Treatment', desc: 'Document scale lift with indigo accent' },
-    { type: 'send', label: 'Send Airplane (✈)', desc: 'Paper airplane diagonal flight (group-hover:translate-x-1 -translate-y-1 rotate-12)' },
-    { type: 'film', label: 'Cinema Reel (🎞)', desc: '45-degree cinematic spin (group-hover:rotate-45 scale-115)' },
-    { type: 'clapper', label: 'Clapperboard (🎬)', desc: 'Clapper snap scale & tilt (group-hover:scale-115 -rotate-6)' },
+    {
+      type: 'send',
+      label: 'Send Airplane (✈)',
+      desc: 'Paper airplane diagonal flight (group-hover:translate-x-1 -translate-y-1 rotate-12)',
+    },
+    {
+      type: 'film',
+      label: 'Cinema Reel (🎞)',
+      desc: '45-degree cinematic spin (group-hover:rotate-45 scale-115)',
+    },
+    {
+      type: 'clapper',
+      label: 'Clapperboard (🎬)',
+      desc: 'Clapper snap scale & tilt (group-hover:scale-115 -rotate-6)',
+    },
   ];
 
   return (
@@ -51,7 +97,8 @@ export const UiGalleryLab: React.FC = () => {
               </h2>
             </div>
             <p className="text-xs text-zinc-400 mt-1">
-              Reusable Buttons, Text Links, and icon-specific micro-animations used throughout Screened.
+              Reusable Buttons, Text Links, and icon-specific micro-animations used throughout
+              Screened.
             </p>
           </div>
           <div className="px-3.5 py-1.5 rounded-xl bg-midnight border border-zinc-800 text-xs font-mono text-indigo-300">
@@ -67,7 +114,9 @@ export const UiGalleryLab: React.FC = () => {
             <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider font-mono">
               1. Interactive Button Playground
             </h3>
-            <p className="text-xs text-zinc-400">Configure styles, icon animations, loading states, and live audio feedback.</p>
+            <p className="text-xs text-zinc-400">
+              Configure styles, icon animations, loading states, and live audio feedback.
+            </p>
           </div>
           <span className="text-[11px] font-mono text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">
             Clicks: {clickCount}
@@ -75,9 +124,11 @@ export const UiGalleryLab: React.FC = () => {
         </div>
 
         {/* Live Preview Card */}
-        <div className="p-8 rounded-xl bg-[#070913] flex flex-col sm:flex-row items-center justify-around gap-6">
+        <div className="p-8 rounded-xl bg-darkroom-bg flex flex-col sm:flex-row items-center justify-around gap-6">
           <div className="flex flex-col items-center gap-3">
-            <span className="text-[11px] font-mono text-zinc-500 uppercase tracking-wider">Live Configured Button</span>
+            <span className="text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
+              Live Configured Button
+            </span>
             <Button
               variant={selectedVariant}
               size={selectedSize}
@@ -87,7 +138,9 @@ export const UiGalleryLab: React.FC = () => {
               disabled={isDisabled}
               onClick={() => {
                 setClickCount((c) => c + 1);
-                logAction(`Clicked live button (${selectedVariant}, ${selectedSize}, icon: ${selectedIcon})`);
+                logAction(
+                  `Clicked live button (${selectedVariant}, ${selectedSize}, icon: ${selectedIcon})`,
+                );
               }}
             >
               Launch Due Diligence
@@ -95,7 +148,9 @@ export const UiGalleryLab: React.FC = () => {
           </div>
 
           <div className="flex flex-col items-center gap-3">
-            <span className="text-[11px] font-mono text-zinc-500 uppercase tracking-wider">Accent Tool Button</span>
+            <span className="text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
+              Accent Tool Button
+            </span>
             <Button
               variant="accent"
               size={selectedSize}
@@ -107,7 +162,9 @@ export const UiGalleryLab: React.FC = () => {
           </div>
 
           <div className="flex flex-col items-center gap-3">
-            <span className="text-[11px] font-mono text-zinc-500 uppercase tracking-wider">Ghost & Outline</span>
+            <span className="text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
+              Ghost & Outline
+            </span>
             <Button
               variant="outline"
               size={selectedSize}
@@ -123,12 +180,27 @@ export const UiGalleryLab: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
           {/* Variant Selector */}
           <div className="space-y-2">
-            <label className="text-xs font-mono text-zinc-400 uppercase tracking-wider block">Variants</label>
+            <label className="text-xs font-mono text-zinc-400 uppercase tracking-wider block">
+              Variants
+            </label>
             <div className="flex flex-wrap gap-1.5">
-              {(['primary', 'secondary', 'outline', 'ghost', 'danger', 'accent', 'glass'] as ButtonVariant[]).map((v) => (
+              {(
+                [
+                  'primary',
+                  'secondary',
+                  'outline',
+                  'ghost',
+                  'danger',
+                  'accent',
+                  'glass',
+                ] as ButtonVariant[]
+              ).map((v) => (
                 <button
                   key={v}
-                  onClick={() => { soundEffects.playClick(); setSelectedVariant(v); }}
+                  onClick={() => {
+                    soundEffects.playClick();
+                    setSelectedVariant(v);
+                  }}
                   className={`px-3 py-1 rounded-lg text-xs font-mono capitalize transition-all cursor-pointer ${
                     selectedVariant === v
                       ? 'bg-blue-600 text-white font-semibold shadow-sm'
@@ -143,15 +215,22 @@ export const UiGalleryLab: React.FC = () => {
 
           {/* Size & Position Selector */}
           <div className="space-y-2">
-            <label className="text-xs font-mono text-zinc-400 uppercase tracking-wider block">Size & Icon Alignment</label>
+            <label className="text-xs font-mono text-zinc-400 uppercase tracking-wider block">
+              Size & Icon Alignment
+            </label>
             <div className="flex gap-2">
               <div className="flex gap-1 bg-zinc-900 p-1 rounded-lg border border-zinc-800">
                 {(['xs', 'sm', 'md', 'lg'] as ButtonSize[]).map((s) => (
                   <button
                     key={s}
-                    onClick={() => { soundEffects.playClick(); setSelectedSize(s); }}
+                    onClick={() => {
+                      soundEffects.playClick();
+                      setSelectedSize(s);
+                    }}
                     className={`px-2.5 py-1 rounded text-xs font-mono uppercase transition-colors cursor-pointer ${
-                      selectedSize === s ? 'bg-blue-600 text-white font-bold' : 'text-zinc-400 hover:text-white'
+                      selectedSize === s
+                        ? 'bg-blue-600 text-white font-bold'
+                        : 'text-zinc-400 hover:text-white'
                     }`}
                   >
                     {s}
@@ -162,9 +241,14 @@ export const UiGalleryLab: React.FC = () => {
                 {(['left', 'right'] as const).map((pos) => (
                   <button
                     key={pos}
-                    onClick={() => { soundEffects.playClick(); setIconPos(pos); }}
+                    onClick={() => {
+                      soundEffects.playClick();
+                      setIconPos(pos);
+                    }}
                     className={`px-2.5 py-1 rounded text-xs font-mono capitalize transition-colors cursor-pointer ${
-                      iconPos === pos ? 'bg-indigo-600 text-white font-bold' : 'text-zinc-400 hover:text-white'
+                      iconPos === pos
+                        ? 'bg-indigo-600 text-white font-bold'
+                        : 'text-zinc-400 hover:text-white'
                     }`}
                   >
                     {pos}
@@ -176,20 +260,32 @@ export const UiGalleryLab: React.FC = () => {
 
           {/* States Toggles */}
           <div className="space-y-2">
-            <label className="text-xs font-mono text-zinc-400 uppercase tracking-wider block">State Overrides</label>
+            <label className="text-xs font-mono text-zinc-400 uppercase tracking-wider block">
+              State Overrides
+            </label>
             <div className="flex gap-2">
               <button
-                onClick={() => { soundEffects.playClick(); setIsLoading(!isLoading); }}
+                onClick={() => {
+                  soundEffects.playClick();
+                  setIsLoading(!isLoading);
+                }}
                 className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-colors cursor-pointer ${
-                  isLoading ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'bg-zinc-900 border border-zinc-800 text-zinc-400'
+                  isLoading
+                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                    : 'bg-zinc-900 border border-zinc-800 text-zinc-400'
                 }`}
               >
                 {isLoading ? '⏳ Loading: ON' : 'Loading: OFF'}
               </button>
               <button
-                onClick={() => { soundEffects.playClick(); setIsDisabled(!isDisabled); }}
+                onClick={() => {
+                  soundEffects.playClick();
+                  setIsDisabled(!isDisabled);
+                }}
                 className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-colors cursor-pointer ${
-                  isDisabled ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40' : 'bg-zinc-900 border border-zinc-800 text-zinc-400'
+                  isDisabled
+                    ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
+                    : 'bg-zinc-900 border border-zinc-800 text-zinc-400'
                 }`}
               >
                 {isDisabled ? '🚫 Disabled: ON' : 'Disabled: OFF'}
@@ -206,7 +302,8 @@ export const UiGalleryLab: React.FC = () => {
             2. Icon-Specific Micro-Animation Matrix
           </h3>
           <p className="text-xs text-zinc-400">
-            Hover each button to see how icon behaviors differ (nudges, 180° rotations, vertical floats, scale pulses).
+            Hover each button to see how icon behaviors differ (nudges, 180° rotations, vertical
+            floats, scale pulses).
           </p>
         </div>
 
@@ -214,7 +311,7 @@ export const UiGalleryLab: React.FC = () => {
           {iconOptions.map((opt) => (
             <div
               key={opt.type}
-              className="p-3.5 rounded-xl bg-[#0E1124] flex flex-col justify-between space-y-3"
+              className="p-3.5 rounded-xl bg-darkroom-surface flex flex-col justify-between space-y-3"
             >
               <div>
                 <div className="flex items-center justify-between">
@@ -250,14 +347,17 @@ export const UiGalleryLab: React.FC = () => {
             3. Animated Text Links with Icon Motion
           </h3>
           <p className="text-xs text-zinc-400">
-            Interactive inline links with animated underlines and corresponding micro-animated icons.
+            Interactive inline links with animated underlines and corresponding micro-animated
+            icons.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* Primary / Blue Link */}
           <div className="p-4 rounded-xl bg-midnight/90 space-y-2">
-            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Primary Help Link</span>
+            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">
+              Primary Help Link
+            </span>
             <TextLink
               variant="primary"
               size="sm"
@@ -268,12 +368,16 @@ export const UiGalleryLab: React.FC = () => {
             >
               what can you search?
             </TextLink>
-            <p className="text-xs text-zinc-400">Pulsing help icon with smooth blue underline on hover.</p>
+            <p className="text-xs text-zinc-400">
+              Pulsing help icon with smooth blue underline on hover.
+            </p>
           </div>
 
           {/* Emerald / Due Diligence Link */}
           <div className="p-4 rounded-xl bg-midnight/90 space-y-2">
-            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Emerald Diligence Link</span>
+            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">
+              Emerald Diligence Link
+            </span>
             <TextLink
               variant="emerald"
               size="sm"
@@ -288,7 +392,9 @@ export const UiGalleryLab: React.FC = () => {
 
           {/* Rose / Email Audit Link */}
           <div className="p-4 rounded-xl bg-midnight/90 space-y-2">
-            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Rose Scam Audit Link</span>
+            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">
+              Rose Scam Audit Link
+            </span>
             <TextLink
               variant="rose"
               size="sm"
@@ -298,12 +404,16 @@ export const UiGalleryLab: React.FC = () => {
             >
               Analyze Unsolicited Email
             </TextLink>
-            <p className="text-xs text-zinc-400">Hover tilt on envelope with warning rose underline.</p>
+            <p className="text-xs text-zinc-400">
+              Hover tilt on envelope with warning rose underline.
+            </p>
           </div>
 
           {/* Amber / Scout Link */}
           <div className="p-4 rounded-xl bg-midnight/90 space-y-2">
-            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Amber Roadmap Link</span>
+            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">
+              Amber Roadmap Link
+            </span>
             <TextLink
               variant="amber"
               size="sm"
@@ -319,7 +429,9 @@ export const UiGalleryLab: React.FC = () => {
 
           {/* Chevron Down TextLink */}
           <div className="p-4 rounded-xl bg-midnight/90 space-y-2">
-            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Expandable / Collapse Link</span>
+            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">
+              Expandable / Collapse Link
+            </span>
             <TextLink
               variant="muted"
               size="sm"
@@ -335,7 +447,9 @@ export const UiGalleryLab: React.FC = () => {
 
           {/* Plus Add Link */}
           <div className="p-4 rounded-xl bg-midnight/90 space-y-2">
-            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Plus Action Link</span>
+            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">
+              Plus Action Link
+            </span>
             <TextLink
               variant="white"
               size="sm"
@@ -345,12 +459,16 @@ export const UiGalleryLab: React.FC = () => {
             >
               Add Comparison Festival
             </TextLink>
-            <p className="text-xs text-zinc-400">Rotates 180° on hover with clean white underline.</p>
+            <p className="text-xs text-zinc-400">
+              Rotates 180° on hover with clean white underline.
+            </p>
           </div>
 
           {/* Paper Airplane Send Link */}
           <div className="p-4 rounded-xl bg-midnight/90 space-y-2">
-            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Airplane Send Link</span>
+            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">
+              Airplane Send Link
+            </span>
             <TextLink
               variant="primary"
               size="sm"
@@ -361,12 +479,16 @@ export const UiGalleryLab: React.FC = () => {
             >
               Submit Due Diligence Query
             </TextLink>
-            <p className="text-xs text-zinc-400">Paper airplane diagonal takeoff flight on hover.</p>
+            <p className="text-xs text-zinc-400">
+              Paper airplane diagonal takeoff flight on hover.
+            </p>
           </div>
 
           {/* Cinema Reel Link */}
           <div className="p-4 rounded-xl bg-midnight/90 space-y-2">
-            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Cinema Reel Link</span>
+            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">
+              Cinema Reel Link
+            </span>
             <TextLink
               variant="purple"
               size="sm"
@@ -376,12 +498,16 @@ export const UiGalleryLab: React.FC = () => {
             >
               Analyze Screenplay & Reel
             </TextLink>
-            <p className="text-xs text-zinc-400">45-degree cinematic reel spin with purple accent.</p>
+            <p className="text-xs text-zinc-400">
+              45-degree cinematic reel spin with purple accent.
+            </p>
           </div>
 
           {/* Clapperboard Link */}
           <div className="p-4 rounded-xl bg-midnight/90 space-y-2">
-            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">Clapperboard Link</span>
+            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">
+              Clapperboard Link
+            </span>
             <TextLink
               variant="white"
               size="sm"
@@ -407,7 +533,8 @@ export const UiGalleryLab: React.FC = () => {
               </span>
             </h3>
             <p className="text-xs text-zinc-400">
-              Bright dual-color gradient with clean all-white cinema clapperboard emblem, counter-rotating orbit rings, hover wave ripples, and click modal dispatch.
+              Bright dual-color gradient with clean all-white cinema clapperboard emblem,
+              counter-rotating orbit rings, hover wave ripples, and click modal dispatch.
             </p>
           </div>
         </div>
@@ -415,30 +542,50 @@ export const UiGalleryLab: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Size Small */}
           <div className="p-4 rounded-xl bg-midnight/90 flex flex-col items-center justify-center text-center space-y-3">
-            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">Small (`sm`) - Chat Feed</span>
+            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">
+              Small (`sm`) - Chat Feed
+            </span>
             <AgentAvatar size="sm" onClick={() => logAction('Clicked Small Avatar')} />
-            <p className="text-[11px] text-zinc-400">Used in compact thinking states and dense chat feeds.</p>
+            <p className="text-[11px] text-zinc-400">
+              Used in compact thinking states and dense chat feeds.
+            </p>
           </div>
 
           {/* Size Medium */}
           <div className="p-4 rounded-xl bg-midnight/90 flex flex-col items-center justify-center text-center space-y-3">
-            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">Medium (`md`) - Message Bubble</span>
+            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">
+              Medium (`md`) - Message Bubble
+            </span>
             <AgentAvatar size="md" onClick={() => logAction('Clicked Medium Avatar')} />
-            <p className="text-[11px] text-zinc-400">Default avatar for all Mission Control agent message bubbles.</p>
+            <p className="text-[11px] text-zinc-400">
+              Default avatar for all Mission Control agent message bubbles.
+            </p>
           </div>
 
           {/* Size Large */}
           <div className="p-4 rounded-xl bg-midnight/90 flex flex-col items-center justify-center text-center space-y-3">
-            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">Large (`lg`) - Header Hero</span>
+            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">
+              Large (`lg`) - Header Hero
+            </span>
             <AgentAvatar size="lg" onClick={() => logAction('Clicked Large Avatar')} />
-            <p className="text-[11px] text-zinc-400">Expanded display with prominent holographic sweeps.</p>
+            <p className="text-[11px] text-zinc-400">
+              Expanded display with prominent holographic sweeps.
+            </p>
           </div>
 
           {/* Thinking State */}
           <div className="p-4 rounded-xl bg-midnight/90 flex flex-col items-center justify-center text-center space-y-3">
-            <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-wider font-semibold">Active Thinking Mode</span>
-            <AgentAvatar size="md" isThinking={true} onClick={() => logAction('Clicked Thinking Avatar')} />
-            <p className="text-[11px] text-zinc-400">High-speed dual-axis orbital spins and pulsating shockwaves.</p>
+            <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-wider font-semibold">
+              Active Thinking Mode
+            </span>
+            <AgentAvatar
+              size="md"
+              isThinking={true}
+              onClick={() => logAction('Clicked Thinking Avatar')}
+            />
+            <p className="text-[11px] text-zinc-400">
+              High-speed dual-axis orbital spins and pulsating shockwaves.
+            </p>
           </div>
         </div>
       </section>

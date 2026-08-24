@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  X, 
-  HelpCircle, 
-  Search, 
-  Coins, 
-  MailWarning, 
-  GitCompare, 
-  Compass, 
+import {
+  X,
+  HelpCircle,
+  Search,
+  Coins,
+  MailWarning,
+  GitCompare,
+  Compass,
   ArrowRight,
-  CheckCircle2
+  CheckCircle2,
 } from 'lucide-react';
 import { soundEffects } from '../../utils/audio';
 
@@ -35,7 +35,8 @@ export const QuestionsCategoryModal: React.FC<QuestionsCategoryModalProps> = ({
       label: 'Festival Due Diligence',
       icon: Search,
       color: 'text-emerald-400',
-      description: 'Scrutinize physical venues, fee transparency, legal entity status, and community reports.',
+      description:
+        'Scrutinize physical venues, fee transparency, legal entity status, and community reports.',
       questions: [
         'Is Aldergate Film Festival legitimate or a virtual laurel mill?',
         'Verify physical cinema venue leases for Raindance Film Festival.',
@@ -131,7 +132,9 @@ export const QuestionsCategoryModal: React.FC<QuestionsCategoryModalProps> = ({
                 </div>
                 <div>
                   <h2 className="text-lg font-bold text-white font-serif">What Can I Ask?</h2>
-                  <p className="text-xs text-zinc-400">Select a category or click any example question to test</p>
+                  <p className="text-xs text-zinc-400">
+                    Select a category or click any example question to test
+                  </p>
                 </div>
               </div>
               <button
@@ -176,7 +179,9 @@ export const QuestionsCategoryModal: React.FC<QuestionsCategoryModalProps> = ({
               {/* Questions List */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <p className="text-xs text-zinc-400 font-mono">{currentCategoryData.description}</p>
+                  <p className="text-xs text-zinc-400 font-mono">
+                    {currentCategoryData.description}
+                  </p>
                   <span className="text-xs text-zinc-500 font-mono">
                     {currentCategoryData.questions.length} suggestions
                   </span>
@@ -195,7 +200,9 @@ export const QuestionsCategoryModal: React.FC<QuestionsCategoryModalProps> = ({
                     >
                       <div className="flex items-start space-x-3 pr-2">
                         <CheckCircle2 className="w-4 h-4 text-zinc-500 group-hover:text-blue-400 mt-0.5 shrink-0 transition-colors" />
-                        <span className="text-sm text-zinc-200 group-hover:text-white font-sans">{q}</span>
+                        <span className="text-sm text-zinc-200 group-hover:text-white font-sans">
+                          {q}
+                        </span>
                       </div>
                       <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:text-blue-400 group-hover:translate-x-0.5 shrink-0 transition-all" />
                     </button>
@@ -206,7 +213,9 @@ export const QuestionsCategoryModal: React.FC<QuestionsCategoryModalProps> = ({
 
             {/* Footer */}
             <div className="px-6 py-3.5 border-t border-zinc-800 bg-midnight/60 flex items-center justify-between text-xs text-zinc-400">
-              <span>You can also drop PDFs, emails, or treatment docs directly into the chat prompt bar.</span>
+              <span>
+                You can also drop PDFs, emails, or treatment docs directly into the chat prompt bar.
+              </span>
               <button
                 onClick={() => {
                   soundEffects.playClick();
@@ -221,6 +230,6 @@ export const QuestionsCategoryModal: React.FC<QuestionsCategoryModalProps> = ({
         </div>
       )}
     </AnimatePresence>,
-    document.body
+    document.body,
   );
 };

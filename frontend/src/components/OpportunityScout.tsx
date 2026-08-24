@@ -1,16 +1,7 @@
 import React, { useState } from 'react';
-import { 
-  FilmProfile, 
-  PremiereGoal,
-  ScoutResponse
-} from '../types/investigation';
+import { FilmProfile, PremiereGoal, ScoutResponse } from '../types/investigation';
 import { OpportunityCard } from './OpportunityCard';
-import { 
-  Upload,
-  Loader2,
-  Compass,
-  Check
-} from 'lucide-react';
+import { Upload, Loader2, Compass, Check } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface Props {
@@ -19,21 +10,24 @@ interface Props {
 }
 
 export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile }) => {
-  const [profile, setProfile] = useState<FilmProfile>(() => initialProfile || {
-    title: '',
-    year: '',
-    genre: '',
-    runtimeMinutes: 0,
-    premiereGoals: ['WORLD_PREMIERE'],
-    targetRegions: ['UK & Europe', 'North America'],
-    neverReleased: false,
-  });
+  const [profile, setProfile] = useState<FilmProfile>(
+    () =>
+      initialProfile || {
+        title: '',
+        year: '',
+        genre: '',
+        runtimeMinutes: 0,
+        premiereGoals: ['WORLD_PREMIERE'],
+        targetRegions: ['UK & Europe', 'North America'],
+        neverReleased: false,
+      },
+  );
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [scoutResult, setScoutResult] = useState<ScoutResponse | null>(null);
   const [filterTag, setFilterTag] = useState<string>('ALL');
-  
+
   const [isDragging, setIsDragging] = useState(false);
 
   React.useEffect(() => {
@@ -67,13 +61,14 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
     executeScout(profile);
   };
 
-  const filteredOpportunities = scoutResult?.opportunities.filter((opp: any) => {
-    if (filterTag === 'ALL') return true;
-    if (filterTag === 'BAFTA') return opp.accreditationTags.includes('BAFTA_QUALIFYING');
-    if (filterTag === 'ACADEMY') return opp.accreditationTags.includes('ACADEMY_QUALIFYING');
-    if (filterTag === 'BIFA') return opp.accreditationTags.includes('BIFA_QUALIFYING');
-    return true;
-  }) || [];
+  const filteredOpportunities =
+    scoutResult?.opportunities.filter((opp: any) => {
+      if (filterTag === 'ALL') return true;
+      if (filterTag === 'BAFTA') return opp.accreditationTags.includes('BAFTA_QUALIFYING');
+      if (filterTag === 'ACADEMY') return opp.accreditationTags.includes('ACADEMY_QUALIFYING');
+      if (filterTag === 'BIFA') return opp.accreditationTags.includes('BIFA_QUALIFYING');
+      return true;
+    }) || [];
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -89,23 +84,27 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
     setIsDragging(false);
   };
 
-  const isFormValid = profile.title.length > 0 && profile.year.length > 0 && profile.genre.length > 0 && profile.runtimeMinutes > 0;
+  const isFormValid =
+    profile.title.length > 0 &&
+    profile.year.length > 0 &&
+    profile.genre.length > 0 &&
+    profile.runtimeMinutes > 0;
 
   const handlePremiereGoalToggle = (goal: PremiereGoal) => {
-    setProfile(prev => {
+    setProfile((prev) => {
       const current = [...prev.premiereGoals];
       if (current.includes(goal)) {
-        return { ...prev, premiereGoals: current.filter(g => g !== goal) };
+        return { ...prev, premiereGoals: current.filter((g) => g !== goal) };
       }
       return { ...prev, premiereGoals: [...current, goal] };
     });
   };
 
   const handleRegionToggle = (region: string) => {
-    setProfile(prev => {
+    setProfile((prev) => {
       const current = [...prev.targetRegions];
       if (current.includes(region)) {
-        return { ...prev, targetRegions: current.filter(r => r !== region) };
+        return { ...prev, targetRegions: current.filter((r) => r !== region) };
       }
       return { ...prev, targetRegions: [...current, region] };
     });
@@ -126,18 +125,18 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
       {/* Film Profile Intake Form: Solid Opaque Card, No Borders */}
       <form
         onSubmit={handleScout}
-        className="p-7 sm:p-9 rounded-3xl bg-[#0E1124] shadow-2xl shadow-black/80 space-y-6"
+        className="p-7 sm:p-9 rounded-3xl bg-darkroom-surface shadow-2xl shadow-black/80 space-y-6"
       >
         {/* Minimalist Dropzone */}
-        <div 
+        <div
           className={`rounded-2xl p-6 text-center transition-all cursor-pointer ${
-            isDragging ? 'bg-[#2A1526]' : 'bg-[#141834] hover:bg-[#181E40]'
+            isDragging ? 'bg-darkroom-card' : 'bg-darkroom-card hover:bg-darkroom-card'
           }`}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
         >
-          <Upload className="size-7 mx-auto mb-2 text-[#F43F5E]" />
+          <Upload className="size-7 mx-auto mb-2 text-tool-scout" />
           <p className="text-white font-medium text-sm">
             Drop any document about the film or paste a URL
           </p>
@@ -158,7 +157,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
               value={profile.title}
               onChange={(e) => setProfile({ ...profile, title: e.target.value })}
               placeholder="e.g. Echoes of Daylight"
-              className="w-full px-4 py-3 rounded-xl bg-[#141834] text-base text-white placeholder-slate-500 focus:bg-[#1A2046] focus:outline-none transition-colors"
+              className="w-full px-4 py-3 rounded-xl bg-darkroom-card text-base text-white placeholder-slate-500 focus:bg-darkroom-border focus:outline-none transition-colors"
               required
             />
           </div>
@@ -173,7 +172,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
               value={profile.year}
               onChange={(e) => setProfile({ ...profile, year: e.target.value })}
               placeholder="2026"
-              className="w-full px-4 py-3 rounded-xl bg-[#141834] text-base text-white placeholder-slate-500 focus:bg-[#1A2046] focus:outline-none transition-colors"
+              className="w-full px-4 py-3 rounded-xl bg-darkroom-card text-base text-white placeholder-slate-500 focus:bg-darkroom-border focus:outline-none transition-colors"
               required
             />
           </div>
@@ -188,7 +187,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
               value={profile.genre}
               onChange={(e) => setProfile({ ...profile, genre: e.target.value })}
               placeholder="e.g. Sci-Fi, Drama, Documentary"
-              className="w-full px-4 py-3 rounded-xl bg-[#141834] text-base text-white placeholder-slate-500 focus:bg-[#1A2046] focus:outline-none transition-colors"
+              className="w-full px-4 py-3 rounded-xl bg-darkroom-card text-base text-white placeholder-slate-500 focus:bg-darkroom-border focus:outline-none transition-colors"
               required
             />
           </div>
@@ -203,9 +202,11 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
               min={1}
               max={300}
               value={profile.runtimeMinutes || ''}
-              onChange={(e) => setProfile({ ...profile, runtimeMinutes: parseInt(e.target.value) || 0 })}
+              onChange={(e) =>
+                setProfile({ ...profile, runtimeMinutes: parseInt(e.target.value) || 0 })
+              }
               placeholder="15"
-              className="w-full px-4 py-3 rounded-xl bg-[#141834] text-base text-white placeholder-slate-500 focus:bg-[#1A2046] focus:outline-none transition-colors"
+              className="w-full px-4 py-3 rounded-xl bg-darkroom-card text-base text-white placeholder-slate-500 focus:bg-darkroom-border focus:outline-none transition-colors"
               required
             />
           </div>
@@ -214,10 +215,12 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
         {/* Never Released Checkbox */}
         <div className="pt-1">
           <label className="flex items-center gap-3 cursor-pointer select-none group">
-            <div 
+            <div
               onClick={() => setProfile({ ...profile, neverReleased: !profile.neverReleased })}
               className={`size-5 rounded-lg flex items-center justify-center transition-all ${
-                profile.neverReleased ? 'bg-[#F43F5E] text-white shadow-md shadow-[#F43F5E]/30' : 'bg-[#141834] group-hover:bg-[#1B2046]'
+                profile.neverReleased
+                  ? 'bg-tool-scout text-white shadow-md shadow-[#F43F5E]/30'
+                  : 'bg-darkroom-card group-hover:bg-darkroom-border'
               }`}
             >
               {profile.neverReleased && <Check className="size-3.5 stroke-[3]" />}
@@ -240,8 +243,8 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
                 { id: 'WORLD_PREMIERE', label: 'World Premiere' },
                 { id: 'INTERNATIONAL_PREMIERE', label: 'International Premiere' },
                 { id: 'NATIONAL_PREMIERE', label: 'National Premiere' },
-                { id: 'NO_PREFERENCE', label: 'No Preference' }
-              ].map(goal => {
+                { id: 'NO_PREFERENCE', label: 'No Preference' },
+              ].map((goal) => {
                 const active = profile.premiereGoals.includes(goal.id as PremiereGoal);
                 return (
                   <button
@@ -249,9 +252,9 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
                     key={goal.id}
                     onClick={() => handlePremiereGoalToggle(goal.id as PremiereGoal)}
                     className={`px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-all cursor-pointer ${
-                      active 
-                        ? 'bg-[#F43F5E] text-white shadow-md shadow-[#F43F5E]/30 scale-102' 
-                        : 'bg-[#141834] text-slate-300 hover:bg-[#1C224B] hover:text-white'
+                      active
+                        ? 'bg-tool-scout text-white shadow-md shadow-[#F43F5E]/30 scale-102'
+                        : 'bg-darkroom-card text-slate-300 hover:bg-darkroom-border hover:text-white'
                     }`}
                   >
                     {goal.label}
@@ -270,8 +273,8 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
               {[
                 { id: 'UK & Europe', label: 'UK & Europe' },
                 { id: 'North America', label: 'North America' },
-                { id: 'Global / International', label: 'Global' }
-              ].map(region => {
+                { id: 'Global / International', label: 'Global' },
+              ].map((region) => {
                 const active = profile.targetRegions.includes(region.id);
                 return (
                   <button
@@ -279,9 +282,9 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
                     key={region.id}
                     onClick={() => handleRegionToggle(region.id)}
                     className={`px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-all cursor-pointer ${
-                      active 
-                        ? 'bg-[#F43F5E] text-white shadow-md shadow-[#F43F5E]/30 scale-102' 
-                        : 'bg-[#141834] text-slate-300 hover:bg-[#1C224B] hover:text-white'
+                      active
+                        ? 'bg-tool-scout text-white shadow-md shadow-[#F43F5E]/30 scale-102'
+                        : 'bg-darkroom-card text-slate-300 hover:bg-darkroom-border hover:text-white'
                     }`}
                   >
                     {region.label}
@@ -297,7 +300,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
           <button
             type="submit"
             disabled={loading || !isFormValid}
-            className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#F43F5E] to-[#E11D48] hover:brightness-110 disabled:opacity-40 text-white font-bold text-base flex items-center justify-center gap-2.5 transition-all shadow-xl shadow-[#F43F5E]/30 cursor-pointer active:scale-[0.99]"
+            className="w-full py-4 rounded-2xl bg-gradient-to-r from-tool-scout to-tool-scout-hover hover:brightness-110 disabled:opacity-40 text-white font-bold text-base flex items-center justify-center gap-2.5 transition-all shadow-xl shadow-[#F43F5E]/30 cursor-pointer active:scale-[0.99]"
           >
             {loading ? (
               <>
@@ -326,8 +329,8 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
           className="space-y-6 pt-2"
         >
           {/* Strategy Roadmap Narrative: Solid Opaque Card */}
-          <div className="p-7 sm:p-8 rounded-3xl bg-[#0E1124] shadow-2xl shadow-black/80 space-y-3">
-            <div className="text-xs font-mono font-semibold uppercase tracking-wider text-[#F43F5E] flex items-center gap-2">
+          <div className="p-7 sm:p-8 rounded-3xl bg-darkroom-surface shadow-2xl shadow-black/80 space-y-3">
+            <div className="text-xs font-mono font-semibold uppercase tracking-wider text-tool-scout flex items-center gap-2">
               <Compass className="size-4" />
               <span>Strategy Roadmap: {scoutResult.filmTitle}</span>
             </div>
@@ -339,10 +342,12 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
           {/* Filter Pills Strip */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-2">
             <div className="text-xs font-mono text-slate-400">
-              Found <span className="text-white font-semibold">{scoutResult.opportunitiesFound}</span> opportunities in {scoutResult.durationSeconds}s
+              Found{' '}
+              <span className="text-white font-semibold">{scoutResult.opportunitiesFound}</span>{' '}
+              opportunities in {scoutResult.durationSeconds}s
             </div>
 
-            <div className="flex items-center gap-1.5 p-1.5 rounded-xl bg-[#0E1124] text-xs shadow-lg">
+            <div className="flex items-center gap-1.5 p-1.5 rounded-xl bg-darkroom-surface text-xs shadow-lg">
               {[
                 { id: 'ALL', label: 'All Calls' },
                 { id: 'BAFTA', label: 'BAFTA' },
@@ -354,7 +359,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
                   onClick={() => setFilterTag(f.id)}
                   className={`px-3 py-1.5 rounded-lg font-mono text-xs transition-all cursor-pointer ${
                     filterTag === f.id
-                      ? 'bg-[#F43F5E] text-white shadow-sm font-semibold'
+                      ? 'bg-tool-scout text-white shadow-sm font-semibold'
                       : 'text-slate-400 hover:text-white'
                   }`}
                 >
@@ -367,11 +372,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
           {/* Opportunities Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {filteredOpportunities.map((opp: any) => (
-              <OpportunityCard
-                key={opp.id}
-                opportunity={opp}
-                onDeepScreen={onDeepScreen}
-              />
+              <OpportunityCard key={opp.id} opportunity={opp} onDeepScreen={onDeepScreen} />
             ))}
           </div>
         </motion.div>

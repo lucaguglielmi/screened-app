@@ -101,7 +101,7 @@ Return a JSON object:
             )
 
         except Exception as e:
-            logger.error(f"Outreach drafting failed: {e}", exc_info=True)
+            logger.exception(f"Outreach drafting failed: {e}")
             fallback_body = f"Dear {entity.name} Submissions Team,\n\nI am preparing to submit my project and would like to confirm your screening format and venue details.\n\nBest regards,\n[Filmmaker Name]"
             fallback_hash = compute_payload_hash(
                 recipient=f"info@{entity.officialDomain or 'festival.org'}",

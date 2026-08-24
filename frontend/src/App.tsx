@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { 
-  Search, 
+import {
+  Search,
   AlertTriangle,
   History,
   ShieldCheck,
@@ -9,17 +9,17 @@ import {
   Volume2,
   VolumeX,
   Sun,
-  Moon
+  Moon,
 } from 'lucide-react';
 
-import { 
-  ActivityEvent, 
+import {
+  ActivityEvent,
   ActiveTool,
   AtomicClaim,
-  CandidateEntity, 
+  CandidateEntity,
   Investigation,
   OutreachDraft,
-  FilmProfile
+  FilmProfile,
 } from './types/investigation';
 import { LeftNavigation } from './components/navigation/LeftNavigation';
 import { MobileNavigation } from './components/navigation/MobileNavigation';
@@ -39,10 +39,7 @@ import { VectorFieldBackground } from './components/animations/VectorFieldBackgr
 import { AnimatedEE } from './components/animations/AnimatedEE';
 import { UpdateNotifier } from './components/common/UpdateNotifier';
 import { isSoundMuted, setSoundMuted, playSuccessChime } from './utils/audio';
-
-
-
-
+import { trackEvent } from './utils/AnalyticsService';
 
 export default function App() {
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
@@ -63,7 +60,9 @@ export default function App() {
   });
 
   const [activeTool, setActiveTool] = useState<ActiveTool>('CONVERSATIONAL_DESK');
-  const [initialScoutProfile, setInitialScoutProfile] = useState<FilmProfile | undefined>(undefined);
+  const [initialScoutProfile, setInitialScoutProfile] = useState<FilmProfile | undefined>(
+    undefined,
+  );
   const [query, setQuery] = useState('');
 
   const [optionalUrl] = useState('');
@@ -82,7 +81,6 @@ export default function App() {
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
-
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -95,11 +93,11 @@ export default function App() {
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
 
   const toggleSound = () => {
-    setSoundMutedState(prev => {
+    setSoundMutedState((prev) => {
       const next = !prev;
       setSoundMuted(next);
       return next;
@@ -141,7 +139,7 @@ export default function App() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
-        setIsCommandPaletteOpen(prev => !prev);
+        setIsCommandPaletteOpen((prev) => !prev);
         return;
       }
 
@@ -161,7 +159,7 @@ export default function App() {
         searchInputRef.current?.focus();
       } else if (e.key === '?') {
         e.preventDefault();
-        setIsKeyboardHelpOpen(prev => !prev);
+        setIsKeyboardHelpOpen((prev) => !prev);
       } else if (e.key.toLowerCase() === 't') {
         toggleTheme();
       } else if (e.key.toLowerCase() === 'm') {
@@ -177,10 +175,12 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-
   const saveRecentSearch = (term: string) => {
-    setRecentSearches(prev => {
-      const updated = [term, ...prev.filter(t => t.toLowerCase() !== term.toLowerCase())].slice(0, 5);
+    setRecentSearches((prev) => {
+      const updated = [term, ...prev.filter((t) => t.toLowerCase() !== term.toLowerCase())].slice(
+        0,
+        5,
+      );
       localStorage.setItem('screened_recent_searches', JSON.stringify(updated));
       return updated;
     });
@@ -211,28 +211,34 @@ export default function App() {
         setEvents((prev) => [...prev, activityEvent]);
 
         if (activityEvent.eventType === 'CANDIDATES_FOUND' && activityEvent.details?.candidates) {
-          setInvestigation((prev) => prev ? {
-            ...prev,
-            status: 'AWAITING_ENTITY_CONFIRMATION',
-            candidates: activityEvent.details.candidates,
-          } : null);
+          setInvestigation((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  status: 'AWAITING_ENTITY_CONFIRMATION',
+                  candidates: activityEvent.details.candidates,
+                }
+              : null,
+          );
         } else if (activityEvent.eventType === 'DOSSIER_READY') {
           playSuccessChime();
           fetchInvestigation(investigation.id);
           if ('Notification' in window && Notification.permission === 'granted') {
             new Notification('Screened', {
               body: `Investigation for ${investigation.query} is complete.`,
-              icon: '/icon.svg'
+              icon: '/icon.svg',
             });
           }
         } else if (activityEvent.eventType === 'PLANNING_STARTED') {
-          setInvestigation((prev) => prev ? { ...prev, status: 'PLANNING' } : null);
+          setInvestigation((prev) => (prev ? { ...prev, status: 'PLANNING' } : null));
         } else if (activityEvent.eventType === 'DOMAIN_SEARCH_STARTED') {
-          setInvestigation((prev) => prev ? { ...prev, status: 'RESEARCHING' } : null);
+          setInvestigation((prev) => (prev ? { ...prev, status: 'RESEARCHING' } : null));
         } else if (activityEvent.eventType === 'CONTRADICTIONS_ANALYZING') {
-          setInvestigation((prev) => prev ? { ...prev, status: 'ANALYZING_CONTRADICTIONS' } : null);
+          setInvestigation((prev) =>
+            prev ? { ...prev, status: 'ANALYZING_CONTRADICTIONS' } : null,
+          );
         } else if (activityEvent.eventType === 'DOSSIER_SYNTHESIZING') {
-          setInvestigation((prev) => prev ? { ...prev, status: 'ASSEMBLING_DOSSIER' } : null);
+          setInvestigation((prev) => (prev ? { ...prev, status: 'ASSEMBLING_DOSSIER' } : null));
         }
       } catch (e) {
         console.error('Failed to parse SSE event:', e);
@@ -270,6 +276,7 @@ export default function App() {
     setError(null);
     setEvents([]);
     saveRecentSearch(subjectQuery.trim());
+    trackEvent('pipeline_start', { query: subjectQuery.trim() });
     try {
       const res = await fetch('/api/investigations', {
         method: 'POST',
@@ -352,6 +359,7 @@ export default function App() {
   const handleApproveOutreach = async (draftId: string, payloadHash: string) => {
     if (!investigation) return;
     setOutreachLoading(true);
+    trackEvent('outreach_approved', { draftId, payloadHash });
     try {
       const res = await fetch(`/api/investigations/${investigation.id}/outreach/approve`, {
         method: 'POST',
@@ -391,8 +399,12 @@ export default function App() {
     setActiveTool('CONVERSATIONAL_DESK');
   };
 
-
   const handleDeepScreen = (festivalName: string) => {
+    import('./utils/AnalyticsService').then(({ trackEvent }) => {
+      if (festivalName.toLowerCase().includes('aldergate')) {
+        trackEvent('demo_mode_active', { festival_name: festivalName });
+      }
+    });
     setActiveTool('DUE_DILIGENCE');
     setQuery(festivalName);
     handleReset();
@@ -404,11 +416,12 @@ export default function App() {
     setActiveTool('OPPORTUNITY_SCOUT');
   };
 
-
   const currentStatus = investigation?.status || 'DRAFT';
 
   return (
-    <div className={`relative min-h-screen flex flex-row ${activeTool === 'DESIGN_PLAYGROUND' ? 'bg-[#0B1021]' : 'bg-paper-bg dark:bg-darkroom-bg'} text-paper-text dark:text-darkroom-text selection:bg-indigo-500/20 antialiased overflow-x-hidden`}>
+    <div
+      className={`relative min-h-screen flex flex-row ${activeTool === 'DESIGN_PLAYGROUND' ? 'bg-darkroom-surface' : 'bg-paper-bg dark:bg-darkroom-bg'} text-paper-text dark:text-darkroom-text selection:bg-indigo-500/20 antialiased overflow-x-hidden`}
+    >
       {/* Live System Update Notifier */}
       <UpdateNotifier />
 
@@ -418,23 +431,21 @@ export default function App() {
       )}
 
       {/* Left Vertical Navigation Rail & Expandable Flyout */}
-      <LeftNavigation
-        activeTool={activeTool}
-        onChange={setActiveTool}
-      />
+      <LeftNavigation activeTool={activeTool} onChange={setActiveTool} />
 
       {/* Main Scrollable Workspace Container */}
       <div className="flex-1 flex flex-col min-w-0 min-h-screen overflow-y-auto">
         {/* Top Header Bar */}
-        <header className={`border-b border-paper-border dark:border-darkroom-border ${activeTool === 'DESIGN_PLAYGROUND' ? 'bg-[#0B1021]' : 'bg-paper-surface/80 dark:bg-darkroom-surface/80 backdrop-blur'} sticky top-0 z-30 transition-colors no-print`}>
+        <header
+          className={`border-b border-paper-border dark:border-darkroom-border ${activeTool === 'DESIGN_PLAYGROUND' ? 'bg-darkroom-surface' : 'bg-paper-surface/80 dark:bg-darkroom-surface/80 backdrop-blur'} sticky top-0 z-30 transition-colors no-print`}
+        >
           <div className="px-4 sm:px-6 md:px-8 h-16 flex items-center justify-between gap-4">
-            <div 
-              onClick={handleReset}
-              className="flex items-center gap-3 cursor-pointer shrink-0"
-            >
+            <div onClick={handleReset} className="flex items-center gap-3 cursor-pointer shrink-0">
               <div className="flex items-center gap-2.5">
                 <span className="font-serif text-2xl font-black tracking-normal text-paper-text dark:text-darkroom-text flex items-center">
-                  Scr<AnimatedEE />ned
+                  Scr
+                  <AnimatedEE />
+                  ned
                 </span>
                 <span className="text-xl">✨</span>
               </div>
@@ -445,12 +456,12 @@ export default function App() {
               {/* Quick Search / Command Palette (⌘K) */}
               <button
                 onClick={() => setIsCommandPaletteOpen(true)}
-                className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#0E1124] hover:bg-[#151936] text-slate-400 hover:text-slate-200 border border-[#22274C] transition-colors cursor-pointer text-xs font-mono"
+                className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-darkroom-surface hover:bg-darkroom-card text-slate-400 hover:text-slate-200 border border-darkroom-border transition-colors cursor-pointer text-xs font-mono"
                 title="Command Palette (⌘K)"
               >
                 <Search className="size-3.5 text-indigo-400" />
                 <span>Search or jump to...</span>
-                <span className="flex items-center gap-0.5 text-[10px] bg-[#1A1F45] text-slate-400 px-1.5 py-0.5 rounded border border-[#262D5F]">
+                <span className="flex items-center gap-0.5 text-[10px] bg-darkroom-border text-slate-400 px-1.5 py-0.5 rounded border border-darkroom-border">
                   <CommandIcon className="size-2.5" /> K
                 </span>
               </button>
@@ -458,7 +469,7 @@ export default function App() {
               {/* History Button */}
               <button
                 onClick={() => setIsHistoryOpen(true)}
-                className="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-[#0E1124] hover:bg-[#151936] text-slate-400 hover:text-indigo-300 border border-[#22274C] hover:border-indigo-500/40 transition-colors cursor-pointer text-xs font-mono flex items-center gap-1.5"
+                className="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-darkroom-surface hover:bg-darkroom-card text-slate-400 hover:text-indigo-300 border border-darkroom-border hover:border-indigo-500/40 transition-colors cursor-pointer text-xs font-mono flex items-center gap-1.5"
                 title="View Past Searches"
               >
                 <History className="size-4 text-indigo-400" />
@@ -469,9 +480,9 @@ export default function App() {
               <button
                 onClick={toggleSound}
                 className={`p-2 rounded-xl border transition-all cursor-pointer text-xs font-mono flex items-center gap-1.5 ${
-                  soundMuted 
-                    ? 'bg-[#0E1124] border-[#22274C] text-slate-400 hover:text-slate-200' 
-                    : 'bg-[#121838] border-indigo-500/40 text-indigo-300 hover:border-indigo-400 shadow-sm'
+                  soundMuted
+                    ? 'bg-darkroom-surface border-darkroom-border text-slate-400 hover:text-slate-200'
+                    : 'bg-darkroom-card border-indigo-500/40 text-indigo-300 hover:border-indigo-400 shadow-sm'
                 }`}
                 title={soundMuted ? 'Unmute Audio (Press M)' : 'Mute Audio (Press M)'}
               >
@@ -483,7 +494,7 @@ export default function App() {
                 <span className="hidden lg:inline text-[11px]">
                   {soundMuted ? 'Muted' : 'Sound'}
                 </span>
-                <span className="hidden xl:inline text-[9px] px-1 py-0.5 rounded bg-[#1A1F45] text-slate-400 border border-[#262D5F]">
+                <span className="hidden xl:inline text-[9px] px-1 py-0.5 rounded bg-darkroom-border text-slate-400 border border-darkroom-border">
                   M
                 </span>
               </button>
@@ -491,15 +502,19 @@ export default function App() {
               {/* Light / Dark Mode Toggle Button (T) */}
               <button
                 onClick={toggleTheme}
-                className="p-2 rounded-xl bg-[#0E1124] hover:bg-[#151936] text-slate-400 hover:text-amber-300 border border-[#22274C] hover:border-amber-400/40 transition-colors cursor-pointer text-xs font-mono flex items-center gap-1.5"
-                title={theme === 'dark' ? 'Switch to Light Mode (Press T)' : 'Switch to Dark Mode (Press T)'}
+                className="p-2 rounded-xl bg-darkroom-surface hover:bg-darkroom-card text-slate-400 hover:text-amber-300 border border-darkroom-border hover:border-amber-400/40 transition-colors cursor-pointer text-xs font-mono flex items-center gap-1.5"
+                title={
+                  theme === 'dark'
+                    ? 'Switch to Light Mode (Press T)'
+                    : 'Switch to Dark Mode (Press T)'
+                }
               >
                 {theme === 'dark' ? (
                   <Sun className="size-4 text-amber-400" />
                 ) : (
                   <Moon className="size-4 text-indigo-400" />
                 )}
-                <span className="hidden xl:inline text-[9px] px-1 py-0.5 rounded bg-[#1A1F45] text-slate-400 border border-[#262D5F]">
+                <span className="hidden xl:inline text-[9px] px-1 py-0.5 rounded bg-darkroom-border text-slate-400 border border-darkroom-border">
                   T
                 </span>
               </button>
@@ -507,11 +522,11 @@ export default function App() {
               {/* Keyboard Shortcuts Quick Helper Hint */}
               <button
                 onClick={() => setIsKeyboardHelpOpen(true)}
-                className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-[#0E1124] hover:bg-[#151936] text-slate-400 hover:text-indigo-300 border border-[#22274C] hover:border-indigo-500/40 transition-all cursor-pointer text-xs font-mono"
+                className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-darkroom-surface hover:bg-darkroom-card text-slate-400 hover:text-indigo-300 border border-darkroom-border hover:border-indigo-500/40 transition-all cursor-pointer text-xs font-mono"
                 title="Keyboard Shortcuts Cheat Sheet (Press ?)"
               >
                 <span>Shortcuts</span>
-                <kbd className="px-1.5 py-0.5 rounded bg-[#1A1F45] text-indigo-300 border border-[#262D5F] text-[10px] font-bold font-mono">
+                <kbd className="px-1.5 py-0.5 rounded bg-darkroom-border text-indigo-300 border border-darkroom-border text-[10px] font-bold font-mono">
                   ?
                 </kbd>
               </button>
@@ -531,10 +546,10 @@ export default function App() {
           </div>
         </header>
 
-
-
         {/* Main Workspace Area */}
-        <main className={`${activeTool === 'DESIGN_PLAYGROUND' ? '' : 'max-w-6xl px-4 sm:px-6 md:px-8 py-8 space-y-8'} mx-auto flex-1 w-full`}>
+        <main
+          className={`${activeTool === 'DESIGN_PLAYGROUND' ? '' : 'max-w-6xl px-4 sm:px-6 md:px-8 py-8 space-y-8'} mx-auto flex-1 w-full`}
+        >
           {/* Error Notification */}
           {error && (
             <div className="max-w-3xl mx-auto p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-base flex items-center gap-3">
@@ -554,9 +569,7 @@ export default function App() {
           )}
 
           {/* View 2: Design Playground */}
-          {activeTool === 'DESIGN_PLAYGROUND' && (
-            <DesignPlayground />
-          )}
+          {activeTool === 'DESIGN_PLAYGROUND' && <DesignPlayground />}
 
           {/* View 3: Opportunity Scout */}
           {activeTool === 'OPPORTUNITY_SCOUT' && (
@@ -586,15 +599,19 @@ export default function App() {
                       Investigate before you submit.
                     </h1>
                     <p className="text-base text-slate-400 leading-relaxed">
-                      Autonomous multi-agent research across trade registries, press archives, and participant accounts. Transparent, cited facts — no blackbox scores.
+                      Autonomous multi-agent research across trade registries, press archives, and
+                      participant accounts. Transparent, cited facts — no blackbox scores.
                     </p>
                   </section>
 
                   {/* Search Intake Box: Solid Opaque, Borderless */}
                   <section className="max-w-2xl mx-auto space-y-4">
-                    <form 
-                      onSubmit={(e) => { e.preventDefault(); handleStartInvestigation(query); }}
-                      className="p-2 rounded-2xl bg-[#0E1124] shadow-2xl shadow-black/80 flex flex-col sm:flex-row gap-2 transition-all"
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        handleStartInvestigation(query);
+                      }}
+                      className="p-2 rounded-2xl bg-darkroom-surface shadow-2xl shadow-black/80 flex flex-col sm:flex-row gap-2 transition-all"
                     >
                       <div className="relative flex-1 flex items-center">
                         <Search className="size-5 absolute left-3.5 text-slate-400" />
@@ -611,7 +628,7 @@ export default function App() {
                       <button
                         type="submit"
                         disabled={loading || !query.trim()}
-                        className="px-6 py-3 rounded-xl bg-[#00D29E] hover:bg-[#00B887] disabled:opacity-40 text-slate-950 font-bold text-base flex items-center justify-center gap-2 transition-all shadow-lg shadow-[#00D29E]/20 shrink-0 cursor-pointer"
+                        className="px-6 py-3 rounded-xl bg-tool-diligence hover:bg-tool-diligence-hover disabled:opacity-40 text-slate-950 font-bold text-base flex items-center justify-center gap-2 transition-all shadow-lg shadow-[#00D29E]/20 shrink-0 cursor-pointer"
                       >
                         <ShieldCheck className="size-5 text-slate-950" />
                         <span>Start Due Diligence</span>
@@ -628,8 +645,11 @@ export default function App() {
                           <button
                             key={name}
                             type="button"
-                            onClick={() => { setQuery(name); handleStartInvestigation(name); }}
-                            className="px-3.5 py-1.5 rounded-xl bg-[#0E1124] text-slate-300 hover:text-white hover:bg-[#141834] transition-all cursor-pointer text-xs font-mono shadow-md"
+                            onClick={() => {
+                              setQuery(name);
+                              handleStartInvestigation(name);
+                            }}
+                            className="px-3.5 py-1.5 rounded-xl bg-darkroom-surface text-slate-300 hover:text-white hover:bg-darkroom-card transition-all cursor-pointer text-xs font-mono shadow-md"
                           >
                             {name}
                           </button>
@@ -659,24 +679,32 @@ export default function App() {
               )}
 
               {/* State 2: Researching / Analyzing */}
-              {investigation && ['PLANNING', 'RESEARCHING', 'ANALYZING_CONTRADICTIONS', 'ASSEMBLING_DOSSIER'].includes(currentStatus) && (
-                <LiveProgress
-                  status={currentStatus}
-                  events={events}
-                  festivalName={investigation.confirmedEntity?.name || investigation.query}
-                />
-              )}
+              {investigation &&
+                [
+                  'PLANNING',
+                  'RESEARCHING',
+                  'ANALYZING_CONTRADICTIONS',
+                  'ASSEMBLING_DOSSIER',
+                ].includes(currentStatus) && (
+                  <LiveProgress
+                    status={currentStatus}
+                    events={events}
+                    festivalName={investigation.confirmedEntity?.name || investigation.query}
+                  />
+                )}
 
               {/* State 3: Dossier Ready */}
               {investigation && currentStatus === 'READY' && investigation.dossier && (
                 <EvidenceDossier
-                  entity={investigation.confirmedEntity || {
-                    id: 'default',
-                    name: investigation.query,
-                    entityType: 'FESTIVAL',
-                    descriptor: '',
-                    sourceIds: [],
-                  }}
+                  entity={
+                    investigation.confirmedEntity || {
+                      id: 'default',
+                      name: investigation.query,
+                      entityType: 'FESTIVAL',
+                      descriptor: '',
+                      sourceIds: [],
+                    }
+                  }
                   dossier={investigation.dossier}
                   claims={investigation.claims || []}
                   sources={investigation.sources || []}
@@ -752,12 +780,12 @@ export default function App() {
                 <span>Command Menu (⌘K)</span>
               </button>
             </div>
-            <div className="text-xs opacity-75">All findings are cryptographically hashed and cited to verified web excerpts.</div>
+            <div className="text-xs opacity-75">
+              All findings are cryptographically hashed and cited to verified web excerpts.
+            </div>
           </div>
         </footer>
-
       </div>
     </div>
   );
 }
-

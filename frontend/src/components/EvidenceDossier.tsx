@@ -15,15 +15,15 @@
  */
 
 import React, { useState, useMemo, useEffect } from 'react';
-import { 
-  AtomicClaim, 
-  CandidateEntity, 
-  DossierReport, 
-  DisputeRecord, 
+import {
+  AtomicClaim,
+  CandidateEntity,
+  DossierReport,
+  DisputeRecord,
   DetailDensity,
   SourceRecord,
   DeepVettingReport,
-  EvidenceDossier as EvidenceDossierType
+  EvidenceDossier as EvidenceDossierType,
 } from '../types/investigation';
 import { ContradictionPanel } from './ContradictionPanel';
 import { DetailDial } from './DetailDial';
@@ -32,18 +32,18 @@ import { CredibilityRadar } from './CredibilityRadar';
 import { DeepVettingMatrix } from './investigation/DeepVettingMatrix';
 import { EntityProvenanceGraph } from './diagrams/EntityProvenanceGraph';
 import { playDialClick, soundEffects } from '../utils/audio';
-import { 
-  FileText, 
-  Building2, 
-  Users, 
-  ShieldCheck, 
-  CheckCircle2, 
-  AlertTriangle, 
-  ExternalLink, 
-  Layers, 
-  ChevronDown, 
-  ChevronUp, 
-  ListChecks, 
+import {
+  FileText,
+  Building2,
+  Users,
+  ShieldCheck,
+  CheckCircle2,
+  AlertTriangle,
+  ExternalLink,
+  Layers,
+  ChevronDown,
+  ChevronUp,
+  ListChecks,
   HelpCircle,
   Globe,
   MapPin,
@@ -56,7 +56,7 @@ import {
   Mail,
   Fingerprint,
   Bot,
-  Code
+  Code,
 } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -93,10 +93,14 @@ export const EvidenceDossier: React.FC<Props> = ({
   const [copiedRawText, setCopiedRawText] = useState(false);
 
   // Normalize density mode (routing logic for AI agents vs human readers)
-  const normalizedDensity: DetailDensity = 
-    density === 'SUMMARY' ? 'SIMPLIFIED' :
-    density === 'STANDARD' ? 'BALANCED' :
-    density === 'EVIDENCE' ? 'FULL_EVIDENCE' : density;
+  const normalizedDensity: DetailDensity =
+    density === 'SUMMARY'
+      ? 'SIMPLIFIED'
+      : density === 'STANDARD'
+        ? 'BALANCED'
+        : density === 'EVIDENCE'
+          ? 'FULL_EVIDENCE'
+          : density;
 
   const handleDensityChange = (newDensity: DetailDensity) => {
     playDialClick();
@@ -128,10 +132,20 @@ export const EvidenceDossier: React.FC<Props> = ({
       fitDomainSummary: '',
       contradictions: disputes.map((d, i) => ({
         id: `c-${i}`,
-        claimA: { statement: d.claimA || 'Statement A', status: 'SUPPORTED', claimKind: 'FACT', researchDomain: 'FESTIVAL' },
-        claimB: { statement: d.claimB || 'Statement B', status: 'DISPUTED', claimKind: 'ALLEGATION', researchDomain: 'PARTICIPANTS' },
+        claimA: {
+          statement: d.claimA || 'Statement A',
+          status: 'SUPPORTED',
+          claimKind: 'FACT',
+          researchDomain: 'FESTIVAL',
+        },
+        claimB: {
+          statement: d.claimB || 'Statement B',
+          status: 'DISPUTED',
+          claimKind: 'ALLEGATION',
+          researchDomain: 'PARTICIPANTS',
+        },
         reconciliationNote: d.guidance || d.pointOfContention || 'Under review',
-        domain: 'FESTIVAL'
+        domain: 'FESTIVAL',
       })),
       atomicClaims: claims,
       transparencyIndex: {
@@ -142,9 +156,9 @@ export const EvidenceDossier: React.FC<Props> = ({
           feeStructure: { score: 80, status: 'MEDIUM', notes: 'Standard fee tier progression' },
           organizerTrackRecord: { score: 85, status: 'HIGH', notes: 'Companies House active' },
           participantFeedback: { score: 85, status: 'HIGH', notes: 'Filmmaker accounts positive' },
-        }
+        },
       },
-      sources: sources.map(s => ({
+      sources: sources.map((s) => ({
         id: s.id,
         domain: s.domain,
         url: s.url,
@@ -161,47 +175,47 @@ export const EvidenceDossier: React.FC<Props> = ({
   // Machine AI Ingestion Schema (JSON-LD + Markdown Graph)
   const aiIngestionPayload = useMemo(() => {
     return {
-      "@context": "https://schema.org",
-      "@type": "InvestigationReport",
-      "targetEntity": {
-        "name": entity.name,
-        "cityCountry": entity.cityCountry || "N/A",
-        "foundedYear": entity.foundedYear || "N/A",
-        "officialDomain": entity.officialDomain || "N/A"
+      '@context': 'https://schema.org',
+      '@type': 'InvestigationReport',
+      targetEntity: {
+        name: entity.name,
+        cityCountry: entity.cityCountry || 'N/A',
+        foundedYear: entity.foundedYear || 'N/A',
+        officialDomain: entity.officialDomain || 'N/A',
       },
-      "auditProvenance": {
-        "engine": "Screened Agentic Multi-Agent Pipeline",
-        "llmReasoning": "Google Vertex AI (Gemini 2.5 Pro & Flash)",
-        "searchProvider": "Parallel Search API",
-        "timestamp": new Date().toISOString(),
-        "transparencyScore": 85,
-        "overallRisk": disputes.length > 0 ? "MEDIUM" : "LOW"
+      auditProvenance: {
+        engine: 'Screened Agentic Multi-Agent Pipeline',
+        llmReasoning: 'Google Vertex AI (Gemini 2.5 Pro & Flash)',
+        searchProvider: 'Parallel Search API',
+        timestamp: new Date().toISOString(),
+        transparencyScore: 85,
+        overallRisk: disputes.length > 0 ? 'MEDIUM' : 'LOW',
       },
-      "executiveSynthesis": dossier.executiveSummary,
-      "filmmakerChecklist": dossier.filmmakerChecklist,
-      "unresolvedQuestions": dossier.unresolvedQuestions,
-      "contradictions": disputes.map(d => ({
-        topic: d.pointOfContention || "Dispute",
-        narrative: d.guidance || "Under investigation",
+      executiveSynthesis: dossier.executiveSummary,
+      filmmakerChecklist: dossier.filmmakerChecklist,
+      unresolvedQuestions: dossier.unresolvedQuestions,
+      contradictions: disputes.map((d) => ({
+        topic: d.pointOfContention || 'Dispute',
+        narrative: d.guidance || 'Under investigation',
         claimA: d.claimA,
-        claimB: d.claimB
+        claimB: d.claimB,
       })),
-      "atomicClaimsGraph": claims.map(c => ({
+      atomicClaimsGraph: claims.map((c) => ({
         id: c.id,
         domain: c.researchDomain,
         statement: c.statement,
         kind: c.claimKind,
         status: c.status,
-        primarySource: c.evidence?.[0]?.sourceDomain || "Trade Press",
-        verbatimExcerpt: c.evidence?.[0]?.exactExcerpt || ""
+        primarySource: c.evidence?.[0]?.sourceDomain || 'Trade Press',
+        verbatimExcerpt: c.evidence?.[0]?.exactExcerpt || '',
       })),
-      "sources": sources.map(s => ({
+      sources: sources.map((s) => ({
         id: s.id,
         title: s.title,
         domain: s.domain,
         url: s.url,
-        sourceTier: s.sourceTier
-      }))
+        sourceTier: s.sourceTier,
+      })),
     };
   }, [entity, dossier, claims, disputes, sources]);
 
@@ -252,7 +266,9 @@ export const EvidenceDossier: React.FC<Props> = ({
       text += `--- ATOMIC CLAIMS & CITATIONS LEDGER (${claims.length} CLAIMS) ---\n`;
       claims.forEach((c, idx) => {
         const sourceDomain = c.evidence?.[0]?.sourceDomain || 'Trade Archive';
-        const excerpt = c.evidence?.[0]?.exactExcerpt ? ` | Quoted: "${c.evidence[0].exactExcerpt}"` : '';
+        const excerpt = c.evidence?.[0]?.exactExcerpt
+          ? ` | Quoted: "${c.evidence[0].exactExcerpt}"`
+          : '';
         text += `CLAIM ${idx + 1} [${c.researchDomain}] [${c.claimKind}] [${c.status}]: ${c.statement} (Source: ${sourceDomain}${excerpt})\n`;
       });
       text += `\n`;
@@ -298,7 +314,8 @@ export const EvidenceDossier: React.FC<Props> = ({
 
   const filteredClaims = claims.filter((c) => {
     const matchesDomain = activeDomain === 'ALL' || c.researchDomain === activeDomain;
-    const matchesSearch = !searchFilter.trim() || 
+    const matchesSearch =
+      !searchFilter.trim() ||
       c.statement.toLowerCase().includes(searchFilter.toLowerCase()) ||
       c.category.toLowerCase().includes(searchFilter.toLowerCase());
     return matchesDomain && matchesSearch;
@@ -340,11 +357,23 @@ export const EvidenceDossier: React.FC<Props> = ({
   const getKindBadge = (kind: AtomicClaim['claimKind']) => {
     switch (kind) {
       case 'FACT':
-        return <span className="font-mono text-[10px] uppercase tracking-wider text-blue-400 font-semibold">FACT</span>;
+        return (
+          <span className="font-mono text-[10px] uppercase tracking-wider text-blue-400 font-semibold">
+            FACT
+          </span>
+        );
       case 'ALLEGATION':
-        return <span className="font-mono text-[10px] uppercase tracking-wider text-rose-400 font-semibold">ALLEGATION</span>;
+        return (
+          <span className="font-mono text-[10px] uppercase tracking-wider text-rose-400 font-semibold">
+            ALLEGATION
+          </span>
+        );
       case 'OPINION':
-        return <span className="font-mono text-[10px] uppercase tracking-wider text-purple-400 font-semibold">OPINION</span>;
+        return (
+          <span className="font-mono text-[10px] uppercase tracking-wider text-purple-400 font-semibold">
+            OPINION
+          </span>
+        );
     }
   };
 
@@ -355,8 +384,8 @@ export const EvidenceDossier: React.FC<Props> = ({
       className="max-w-5xl mx-auto space-y-6"
     >
       {/* Top Profile & Header Card */}
-      <div className="p-6 rounded-3xl bg-[#0E1124] shadow-2xl space-y-5">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#141834] pb-4">
+      <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-5">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-darkroom-card pb-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-400">
               <FileText className="size-4" />
@@ -392,15 +421,19 @@ export const EvidenceDossier: React.FC<Props> = ({
           <div className="flex items-center gap-2 flex-wrap no-print">
             <button
               onClick={handleCopySummary}
-              className="px-3.5 py-2 rounded-xl bg-[#141834] hover:bg-[#1E2552] text-xs font-medium text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="px-3.5 py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-medium text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer"
               title="Copy executive summary to clipboard"
             >
-              {copiedSummary ? <Check className="size-3.5 text-emerald-400" /> : <Copy className="size-3.5" />}
+              {copiedSummary ? (
+                <Check className="size-3.5 text-emerald-400" />
+              ) : (
+                <Copy className="size-3.5" />
+              )}
               <span>{copiedSummary ? 'Copied!' : 'Copy Summary'}</span>
             </button>
             <button
               onClick={handlePrint}
-              className="px-3.5 py-2 rounded-xl bg-[#141834] hover:bg-[#1E2552] text-xs font-medium text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="px-3.5 py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-medium text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer"
               title="Print formatted dossier or save as PDF"
             >
               <Printer className="size-3.5" />
@@ -408,7 +441,7 @@ export const EvidenceDossier: React.FC<Props> = ({
             </button>
             <button
               onClick={onExport}
-              className="px-3.5 py-2 rounded-xl bg-[#141834] hover:bg-[#1E2552] text-xs font-medium text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="px-3.5 py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-medium text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer"
               title="Download signed Markdown archive with SHA-256 seal"
             >
               <Download className="size-3.5" />
@@ -416,7 +449,7 @@ export const EvidenceDossier: React.FC<Props> = ({
             </button>
             <button
               onClick={onNewInvestigation}
-              className="px-3.5 py-2 rounded-xl bg-[#141834] hover:bg-[#1E2552] text-xs font-medium text-slate-200 transition-colors cursor-pointer"
+              className="px-3.5 py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-medium text-slate-200 transition-colors cursor-pointer"
             >
               New Search
             </button>
@@ -425,32 +458,35 @@ export const EvidenceDossier: React.FC<Props> = ({
 
         {/* Claim Metric Strip */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center">
-          <div className="p-3 rounded-2xl bg-[#141834]">
+          <div className="p-3 rounded-2xl bg-darkroom-card">
             <div className="text-[10px] font-mono uppercase text-slate-400">Facts</div>
             <div className="text-base font-semibold text-blue-400">{factsCount}</div>
           </div>
-          <div className="p-3 rounded-2xl bg-[#141834]">
+          <div className="p-3 rounded-2xl bg-darkroom-card">
             <div className="text-[10px] font-mono uppercase text-slate-400">Allegations</div>
             <div className="text-base font-semibold text-rose-400">{allegationsCount}</div>
           </div>
-          <div className="p-3 rounded-2xl bg-[#141834]">
+          <div className="p-3 rounded-2xl bg-darkroom-card">
             <div className="text-[10px] font-mono uppercase text-slate-400">Corroborated</div>
             <div className="text-base font-semibold text-emerald-400">{corroboratedCount}</div>
           </div>
-          <div className="p-3 rounded-2xl bg-[#141834]">
+          <div className="p-3 rounded-2xl bg-darkroom-card">
             <div className="text-[10px] font-mono uppercase text-slate-400">Disputes</div>
             <div className="text-base font-semibold text-amber-400">{disputes.length}</div>
           </div>
         </div>
 
         {/* View Mode Switcher: Dossier vs 360° Forensic Matrix */}
-        <div className="pt-3 border-t border-[#141834] flex items-center justify-between flex-wrap gap-3 no-print">
-          <div className="flex items-center gap-2 p-1 rounded-2xl bg-[#141834]">
+        <div className="pt-3 border-t border-darkroom-card flex items-center justify-between flex-wrap gap-3 no-print">
+          <div className="flex items-center gap-2 p-1 rounded-2xl bg-darkroom-card">
             <button
-              onClick={() => { playDialClick(); setActiveTab('DOSSIER'); }}
+              onClick={() => {
+                playDialClick();
+                setActiveTab('DOSSIER');
+              }}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'DOSSIER'
-                  ? 'bg-[#2018E6] text-white shadow-xs font-bold'
+                  ? 'bg-midnight-royal text-white shadow-xs font-bold'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -458,7 +494,10 @@ export const EvidenceDossier: React.FC<Props> = ({
               <span>Due Diligence Intelligence</span>
             </button>
             <button
-              onClick={() => { playDialClick(); setActiveTab('FORENSIC_VETTING'); }}
+              onClick={() => {
+                playDialClick();
+                setActiveTab('FORENSIC_VETTING');
+              }}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'FORENSIC_VETTING'
                   ? 'bg-emerald-600 text-white shadow-xs font-bold'
@@ -471,18 +510,16 @@ export const EvidenceDossier: React.FC<Props> = ({
           </div>
 
           <span className="text-xs text-slate-400 font-mono">
-            {activeTab === 'DOSSIER' ? `${claims.length} Claims · ${disputes.length} Disputes` : `7 Forensic Inspection Vectors`}
+            {activeTab === 'DOSSIER'
+              ? `${claims.length} Claims · ${disputes.length} Disputes`
+              : `7 Forensic Inspection Vectors`}
           </span>
         </div>
       </div>
 
       {/* 🎛️ 4-Tier Magic Toolbar ("How much data do you want to see?") */}
       <div className="no-print">
-        <DetailDial 
-          density={density} 
-          onChange={handleDensityChange} 
-          dossier={dossierAdapter}
-        />
+        <DetailDial density={density} onChange={handleDensityChange} dossier={dossierAdapter} />
       </div>
 
       {activeTab === 'FORENSIC_VETTING' ? (
@@ -493,32 +530,38 @@ export const EvidenceDossier: React.FC<Props> = ({
         /* ==================================================================== */
         <div className="space-y-5 animate-fade-in" data-density="MACHINE_AI_INGESTION">
           {/* Human Explanatory Banner */}
-          <div className="p-4 sm:p-5 rounded-3xl bg-[#141834] border-l-4 border-[#F43F5E] shadow-2xl flex items-start gap-4">
+          <div className="p-4 sm:p-5 rounded-3xl bg-darkroom-card border-l-4 border-tool-scout shadow-2xl flex items-start gap-4">
             <div className="size-10 rounded-2xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0">
               <Bot className="size-5" />
             </div>
             <div className="space-y-1">
               <h3 className="font-mono text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
                 <span>🤖 This is meant to be processed by AI</span>
-                <span className="px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 text-[10px] font-semibold">I Am Not Human Mode</span>
+                <span className="px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 text-[10px] font-semibold">
+                  I Am Not Human Mode
+                </span>
               </h3>
               <p className="text-xs text-slate-300 leading-relaxed font-sans">
-                This raw, uncompressed view is formatted strictly for autonomous agents, LLMs, and Antigravity IDE coding sessions (JSON-LD + structured claim graph).
+                This raw, uncompressed view is formatted strictly for autonomous agents, LLMs, and
+                Antigravity IDE coding sessions (JSON-LD + structured claim graph).
               </p>
             </div>
           </div>
 
           {/* 1. Structured JSON-LD Code Block & One-Click Token Copy */}
-          <div className="rounded-3xl bg-[#0E1124] p-5 shadow-2xl space-y-3">
-            <div className="flex items-center justify-between border-b border-[#141834] pb-3 flex-wrap gap-2">
+          <div className="rounded-3xl bg-darkroom-surface p-5 shadow-2xl space-y-3">
+            <div className="flex items-center justify-between border-b border-darkroom-card pb-3 flex-wrap gap-2">
               <div className="flex items-center gap-2 font-mono text-xs text-slate-300">
                 <Code className="size-4 text-rose-400" />
-                <span>JSON-LD Semantic Due Diligence Payload ({JSON.stringify(aiIngestionPayload).length} bytes)</span>
+                <span>
+                  JSON-LD Semantic Due Diligence Payload (
+                  {JSON.stringify(aiIngestionPayload).length} bytes)
+                </span>
               </div>
               <button
                 type="button"
                 onClick={handleCopyAiPayload}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#141834] hover:bg-[#1E2552] text-xs font-mono text-white transition-all cursor-pointer shadow-sm active:scale-95"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-mono text-white transition-all cursor-pointer shadow-sm active:scale-95"
               >
                 {copiedAiPayload ? (
                   <>
@@ -534,17 +577,17 @@ export const EvidenceDossier: React.FC<Props> = ({
               </button>
             </div>
 
-            <pre 
+            <pre
               id="screened-jsonld-payload"
-              className="p-4 rounded-2xl bg-[#070913] text-emerald-400 font-mono text-xs overflow-x-auto max-h-[420px] leading-relaxed select-all"
+              className="p-4 rounded-2xl bg-darkroom-bg text-emerald-400 font-mono text-xs overflow-x-auto max-h-[420px] leading-relaxed select-all"
             >
               {JSON.stringify(aiIngestionPayload, null, 2)}
             </pre>
           </div>
 
           {/* 2. Full Plain Text Raw Data Dump */}
-          <div className="rounded-3xl bg-[#0E1124] p-5 shadow-2xl space-y-3">
-            <div className="flex items-center justify-between border-b border-[#141834] pb-3 flex-wrap gap-2">
+          <div className="rounded-3xl bg-darkroom-surface p-5 shadow-2xl space-y-3">
+            <div className="flex items-center justify-between border-b border-darkroom-card pb-3 flex-wrap gap-2">
               <div className="flex items-center gap-2 font-mono text-xs text-slate-300">
                 <FileText className="size-4 text-indigo-400" />
                 <span>Raw Plain Text Dossier Dump (Complete Ground Truth)</span>
@@ -552,7 +595,7 @@ export const EvidenceDossier: React.FC<Props> = ({
               <button
                 type="button"
                 onClick={handleCopyRawText}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#141834] hover:bg-[#1E2552] text-xs font-mono text-white transition-all cursor-pointer shadow-sm active:scale-95"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-mono text-white transition-all cursor-pointer shadow-sm active:scale-95"
               >
                 {copiedRawText ? (
                   <>
@@ -568,9 +611,9 @@ export const EvidenceDossier: React.FC<Props> = ({
               </button>
             </div>
 
-            <pre 
-              id="screened-raw-ai-dossier" 
-              className="p-4 rounded-2xl bg-[#070913] text-slate-200 font-mono text-xs overflow-x-auto max-h-[500px] leading-relaxed whitespace-pre-wrap select-all border border-[#141834]"
+            <pre
+              id="screened-raw-ai-dossier"
+              className="p-4 rounded-2xl bg-darkroom-bg text-slate-200 font-mono text-xs overflow-x-auto max-h-[500px] leading-relaxed whitespace-pre-wrap select-all border border-darkroom-card"
             >
               {rawPlainTextDossier}
             </pre>
@@ -582,7 +625,7 @@ export const EvidenceDossier: React.FC<Props> = ({
           <CredibilityRadar claims={claims} disputes={disputes} />
 
           {/* Executive Overview (All Human Modes) */}
-          <div className="p-6 rounded-3xl bg-[#0E1124] shadow-2xl space-y-3">
+          <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-3">
             <div className="text-xs font-mono uppercase tracking-wider text-slate-400">
               Executive Overview
             </div>
@@ -593,7 +636,7 @@ export const EvidenceDossier: React.FC<Props> = ({
 
           {/* React Flow Interactive Diagram (Rendered in Balanced & Full Evidence modes) */}
           {(normalizedDensity === 'BALANCED' || normalizedDensity === 'FULL_EVIDENCE') && (
-            <div className="p-6 rounded-3xl bg-[#0E1124] shadow-2xl space-y-4">
+            <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4">
               <EntityProvenanceGraph dossier={dossierAdapter} />
             </div>
           )}
@@ -605,30 +648,26 @@ export const EvidenceDossier: React.FC<Props> = ({
           {normalizedDensity !== 'SIMPLIFIED' && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Festival Domain */}
-              <div className="p-5 rounded-3xl bg-[#0E1124] shadow-2xl space-y-3">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-400 border-b border-[#141834] pb-2">
+              <div className="p-5 rounded-3xl bg-darkroom-surface shadow-2xl space-y-3">
+                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-400 border-b border-darkroom-card pb-2">
                   <Layers className="size-4" />
                   <span>Festival Profile</span>
                 </div>
-                <p className="text-sm text-slate-200 leading-relaxed">
-                  {dossier.festivalOverview}
-                </p>
+                <p className="text-sm text-slate-200 leading-relaxed">{dossier.festivalOverview}</p>
               </div>
 
               {/* Organizer Domain */}
-              <div className="p-5 rounded-3xl bg-[#0E1124] shadow-2xl space-y-3">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-400 border-b border-[#141834] pb-2">
+              <div className="p-5 rounded-3xl bg-darkroom-surface shadow-2xl space-y-3">
+                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-400 border-b border-darkroom-card pb-2">
                   <Building2 className="size-4" />
                   <span>Organizer Profile</span>
                 </div>
-                <p className="text-sm text-slate-200 leading-relaxed">
-                  {dossier.organizerProfile}
-                </p>
+                <p className="text-sm text-slate-200 leading-relaxed">{dossier.organizerProfile}</p>
               </div>
 
               {/* Participants Domain */}
-              <div className="p-5 rounded-3xl bg-[#0E1124] shadow-2xl space-y-3">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-400 border-b border-[#141834] pb-2">
+              <div className="p-5 rounded-3xl bg-darkroom-surface shadow-2xl space-y-3">
+                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-400 border-b border-darkroom-card pb-2">
                   <Users className="size-4" />
                   <span>Community Accounts</span>
                 </div>
@@ -644,7 +683,8 @@ export const EvidenceDossier: React.FC<Props> = ({
             <div className="space-y-4">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <h2 className="font-serif text-xl font-semibold text-white flex items-center gap-2">
-                  <ShieldCheck className="size-5 text-indigo-400" /> Atomic Claims & Evidence Citations
+                  <ShieldCheck className="size-5 text-indigo-400" /> Atomic Claims & Evidence
+                  Citations
                 </h2>
 
                 {/* In-Dossier Search & Domain Filters */}
@@ -656,18 +696,18 @@ export const EvidenceDossier: React.FC<Props> = ({
                       value={searchFilter}
                       onChange={(e) => setSearchFilter(e.target.value)}
                       placeholder="Filter claims..."
-                      className="w-full pl-8 pr-2.5 py-1 text-xs rounded-xl bg-[#141834] text-white placeholder-slate-400 focus:outline-none"
+                      className="w-full pl-8 pr-2.5 py-1 text-xs rounded-xl bg-darkroom-card text-white placeholder-slate-400 focus:outline-none"
                     />
                   </div>
 
-                  <div className="flex items-center gap-1 p-1 rounded-xl bg-[#141834] text-xs">
+                  <div className="flex items-center gap-1 p-1 rounded-xl bg-darkroom-card text-xs">
                     {['ALL', 'FESTIVAL', 'ORGANIZER', 'PARTICIPANTS'].map((d) => (
                       <button
                         key={d}
                         onClick={() => setActiveDomain(d)}
                         className={`px-2.5 py-0.5 rounded-lg transition-all cursor-pointer font-mono text-[10px] ${
                           activeDomain === d
-                            ? 'bg-[#2018E6] text-white font-medium shadow-xs'
+                            ? 'bg-midnight-royal text-white font-medium shadow-xs'
                             : 'text-slate-400 hover:text-white'
                         }`}
                       >
@@ -681,16 +721,17 @@ export const EvidenceDossier: React.FC<Props> = ({
               {/* Claims List */}
               <div className="space-y-3">
                 {filteredClaims.length === 0 ? (
-                  <div className="p-8 rounded-3xl bg-[#0E1124] text-center text-xs text-slate-400">
+                  <div className="p-8 rounded-3xl bg-darkroom-surface text-center text-xs text-slate-400">
                     No claims matched your filter query "{searchFilter}".
                   </div>
                 ) : (
                   filteredClaims.map((claim) => {
-                    const isExpanded = expandedClaim === claim.id || normalizedDensity === 'FULL_EVIDENCE';
+                    const isExpanded =
+                      expandedClaim === claim.id || normalizedDensity === 'FULL_EVIDENCE';
                     return (
                       <div
                         key={claim.id}
-                        className="rounded-2xl bg-[#0E1124] shadow-xl transition-colors overflow-hidden"
+                        className="rounded-2xl bg-darkroom-surface shadow-xl transition-colors overflow-hidden"
                       >
                         <div className="p-4 flex flex-col sm:flex-row items-start justify-between gap-4">
                           <div className="space-y-1.5 flex-1">
@@ -724,7 +765,7 @@ export const EvidenceDossier: React.FC<Props> = ({
 
                             <button
                               onClick={() => onDraftOutreach(claim)}
-                              className="p-1.5 rounded-lg text-slate-400 hover:bg-[#141834] hover:text-indigo-400 transition-colors cursor-pointer"
+                              className="p-1.5 rounded-lg text-slate-400 hover:bg-darkroom-card hover:text-indigo-400 transition-colors cursor-pointer"
                               title="Draft Verification Inquiry for this claim"
                             >
                               <Mail className="size-4" />
@@ -733,9 +774,13 @@ export const EvidenceDossier: React.FC<Props> = ({
                             {normalizedDensity === 'BALANCED' && (
                               <button
                                 onClick={() => setExpandedClaim(isExpanded ? null : claim.id)}
-                                className="p-1.5 rounded-lg text-slate-400 hover:bg-[#141834] transition-colors cursor-pointer"
+                                className="p-1.5 rounded-lg text-slate-400 hover:bg-darkroom-card transition-colors cursor-pointer"
                               >
-                                {isExpanded ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
+                                {isExpanded ? (
+                                  <ChevronUp className="size-4" />
+                                ) : (
+                                  <ChevronDown className="size-4" />
+                                )}
                               </button>
                             )}
                           </div>
@@ -743,14 +788,14 @@ export const EvidenceDossier: React.FC<Props> = ({
 
                         {/* Evidence Drawer */}
                         {isExpanded && (
-                          <div className="p-4 bg-[#141834] border-t border-[#1C224B] space-y-3 text-xs">
+                          <div className="p-4 bg-darkroom-card border-t border-darkroom-border space-y-3 text-xs">
                             <div className="font-mono uppercase text-slate-400 text-[11px]">
                               Verbatim Quoted Excerpts ({claim.evidence.length})
                             </div>
                             {claim.evidence.map((ev, idx) => (
                               <div
                                 key={idx}
-                                className="p-3 rounded-xl bg-[#0E1124] space-y-1.5"
+                                className="p-3 rounded-xl bg-darkroom-surface space-y-1.5"
                               >
                                 <div className="flex items-center justify-between gap-2">
                                   <span className="font-semibold text-white">
@@ -785,8 +830,8 @@ export const EvidenceDossier: React.FC<Props> = ({
           {/* Filmmaker Checklist & Unresolved Questions */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Due Diligence Checklist */}
-            <div className="p-6 rounded-3xl bg-[#0E1124] shadow-2xl space-y-4">
-              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-emerald-400 border-b border-[#141834] pb-2">
+            <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4">
+              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-emerald-400 border-b border-darkroom-card pb-2">
                 <ListChecks className="size-4" />
                 <span>Filmmaker Action Checklist</span>
               </div>
@@ -801,8 +846,8 @@ export const EvidenceDossier: React.FC<Props> = ({
             </div>
 
             {/* Unresolved Questions */}
-            <div className="p-6 rounded-3xl bg-[#0E1124] shadow-2xl space-y-4">
-              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-amber-400 border-b border-[#141834] pb-2">
+            <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4">
+              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-amber-400 border-b border-darkroom-card pb-2">
                 <HelpCircle className="size-4" />
                 <span>Unresolved Questions</span>
               </div>
@@ -819,8 +864,8 @@ export const EvidenceDossier: React.FC<Props> = ({
 
           {/* Discovered Footprint Drawer (Full Evidence Mode) */}
           {normalizedDensity === 'FULL_EVIDENCE' && (
-            <div className="p-6 rounded-3xl bg-[#0E1124] shadow-2xl space-y-4">
-              <div className="flex items-center justify-between border-b border-[#141834] pb-3">
+            <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4">
+              <div className="flex items-center justify-between border-b border-darkroom-card pb-3">
                 <span className="text-sm font-mono uppercase tracking-wider text-slate-300">
                   Discovered Web Sources ({sources.length})
                 </span>
@@ -830,7 +875,7 @@ export const EvidenceDossier: React.FC<Props> = ({
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {sources.map((src) => (
-                  <div key={src.id} className="p-3 rounded-2xl bg-[#141834] space-y-1">
+                  <div key={src.id} className="p-3 rounded-2xl bg-darkroom-card space-y-1">
                     <div className="flex items-center justify-between">
                       <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-slate-300">
                         Tier {src.sourceTier} • {src.domain}
@@ -844,9 +889,7 @@ export const EvidenceDossier: React.FC<Props> = ({
                         <ExternalLink className="size-3.5" />
                       </a>
                     </div>
-                    <div className="font-medium text-xs text-slate-200 truncate">
-                      {src.title}
-                    </div>
+                    <div className="font-medium text-xs text-slate-200 truncate">{src.title}</div>
                   </div>
                 ))}
               </div>

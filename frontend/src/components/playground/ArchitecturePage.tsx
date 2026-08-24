@@ -15,34 +15,36 @@ export const ArchitecturePage: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs mt-4">
-        <div className="p-4 rounded-xl bg-[#151B2E] space-y-2">
+        <div className="p-4 rounded-xl bg-darkroom-card space-y-2">
           <div className="flex items-center space-x-2 text-blue-400 font-bold font-mono">
             <Layers className="w-4 h-4" />
             <span>ADK Orchestrator & State Machine</span>
           </div>
           <p className="text-zinc-300">
-            Coordinates agent flows, lifecycle events, and API boundaries. 
-            Handles investigation resumption and checkpointing.
+            Coordinates agent flows, lifecycle events, and API boundaries. Handles investigation
+            resumption and checkpointing.
           </p>
         </div>
 
-        <div className="p-4 rounded-xl bg-[#151B2E] space-y-2">
+        <div className="p-4 rounded-xl bg-darkroom-card space-y-2">
           <div className="flex items-center space-x-2 text-amber-400 font-bold font-mono">
             <Database className="w-4 h-4" />
             <span>Firestore Persistence Layer</span>
           </div>
           <p className="text-zinc-300">
-            Maintains the single source of truth for investigations, claims, sources, events, and filmmaker feedback.
+            Maintains the single source of truth for investigations, claims, sources, events, and
+            filmmaker feedback.
           </p>
         </div>
 
-        <div className="p-4 rounded-xl bg-[#151B2E] space-y-2">
+        <div className="p-4 rounded-xl bg-darkroom-card space-y-2">
           <div className="flex items-center space-x-2 text-purple-400 font-bold font-mono">
             <Shield className="w-4 h-4" />
             <span>Parallel Search & Gemini Clients</span>
           </div>
           <p className="text-zinc-300">
-            Integrates with Parallel Search SDK for external domain intelligence and Vertex AI for structured extraction, bounded by asyncio concurrency limits.
+            Integrates with Parallel Search SDK for external domain intelligence and Vertex AI for
+            structured extraction, bounded by asyncio concurrency limits.
           </p>
         </div>
       </div>

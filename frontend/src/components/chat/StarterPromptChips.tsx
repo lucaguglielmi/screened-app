@@ -9,16 +9,18 @@ const STARTER_PROMPTS = [
   {
     icon: '🚨',
     title: 'Vet Aldergate Festival',
-    prompt: 'Is Aldergate Film Festival legitimate or a scam? Check their physical venue screening leases and entry fees.',
+    prompt:
+      'Is Aldergate Film Festival legitimate or a scam? Check their physical venue screening leases and entry fees.',
     badge: 'Due Diligence',
-    badgeClass: 'bg-[#00D29E]/20 text-[#00D29E] border-[#00D29E]/40',
+    badgeClass: 'bg-tool-diligence/20 text-tool-diligence border-tool-diligence/40',
   },
   {
     icon: '🎯',
     title: 'Short Film Strategy',
-    prompt: 'I have a 14-minute sci-fi short looking for a UK premiere under a £250 submission budget. Where should I apply?',
+    prompt:
+      'I have a 14-minute sci-fi short looking for a UK premiere under a £250 submission budget. Where should I apply?',
     badge: 'Opportunity Scout',
-    badgeClass: 'bg-[#F43F5E]/20 text-[#F43F5E] border-[#F43F5E]/40',
+    badgeClass: 'bg-tool-scout/20 text-tool-scout border-tool-scout/40',
   },
   {
     icon: '⚔️',
@@ -30,9 +32,10 @@ const STARTER_PROMPTS = [
   {
     icon: '📜',
     title: 'Raindance Legitimacy',
-    prompt: 'Check Raindance Film Festival accreditation, BAFTA/BIFA qualifying status, and recent filmmaker feedback.',
+    prompt:
+      'Check Raindance Film Festival accreditation, BAFTA/BIFA qualifying status, and recent filmmaker feedback.',
     badge: 'Prestige Audit',
-    badgeClass: 'bg-[#2018E6]/20 text-indigo-300 border-[#2018E6]/40',
+    badgeClass: 'bg-midnight-royal/20 text-indigo-300 border-midnight-royal/40',
   },
 ];
 
@@ -50,7 +53,7 @@ export const StarterPromptChips: React.FC<StarterPromptChipsProps> = ({ onSelect
               soundEffects.playClick();
               onSelectPrompt(item.prompt);
             }}
-            className="flex items-start gap-3.5 p-4 text-left rounded-2xl bg-[#0E1124] hover:bg-[#141834] transition-all group cursor-pointer shadow-xl"
+            className="flex items-start gap-3.5 p-4 text-left rounded-2xl bg-darkroom-surface hover:bg-darkroom-card transition-all group cursor-pointer shadow-xl"
           >
             <span className="text-2xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
               {item.icon}
@@ -60,13 +63,13 @@ export const StarterPromptChips: React.FC<StarterPromptChipsProps> = ({ onSelect
                 <span className="text-base font-bold text-white group-hover:text-indigo-300 transition-colors truncate">
                   {item.title}
                 </span>
-                <span className={`text-xs font-mono font-semibold px-2.5 py-0.5 rounded-md ${item.badgeClass}`}>
+                <span
+                  className={`text-xs font-mono font-semibold px-2.5 py-0.5 rounded-md ${item.badgeClass}`}
+                >
                   {item.badge}
                 </span>
               </div>
-              <p className="text-base text-slate-300 line-clamp-2 leading-relaxed">
-                {item.prompt}
-              </p>
+              <p className="text-base text-slate-300 line-clamp-2 leading-relaxed">{item.prompt}</p>
             </div>
           </button>
         ))}

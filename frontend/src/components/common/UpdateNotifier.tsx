@@ -25,7 +25,7 @@ export const UpdateNotifier: React.FC = () => {
       const res = await fetch(`/api/version?_cb=${Date.now()}`, {
         headers: {
           'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache',
+          Pragma: 'no-cache',
         },
       });
 
@@ -49,16 +49,14 @@ export const UpdateNotifier: React.FC = () => {
     if (!serverData) return;
 
     // Check if remote commit or build time differs from current client bundle
-    const hasDifferentCommit = 
-      currentCommitSha && 
-      serverData.commitSha && 
-      serverData.commitSha !== 'dev' && 
+    const hasDifferentCommit =
+      currentCommitSha &&
+      serverData.commitSha &&
+      serverData.commitSha !== 'dev' &&
       serverData.commitSha !== currentCommitSha;
 
-    const hasNewerBuildTime = 
-      currentBuildTime && 
-      serverData.buildTime && 
-      serverData.buildTime !== currentBuildTime;
+    const hasNewerBuildTime =
+      currentBuildTime && serverData.buildTime && serverData.buildTime !== currentBuildTime;
 
     if (hasDifferentCommit || hasNewerBuildTime) {
       setRemoteVersion(serverData);
@@ -128,31 +126,38 @@ export const UpdateNotifier: React.FC = () => {
   }
 
   // Format relative or friendly build time
-  const formattedTime = remoteVersion?.buildTime 
-    ? new Date(remoteVersion.buildTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  const formattedTime = remoteVersion?.buildTime
+    ? new Date(remoteVersion.buildTime).toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+      })
     : 'Just now';
 
   return (
-    <aside aria-label="System Updates" className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-lg px-4 animate-in fade-in slide-in-from-top-4 duration-300">
-      <div className="flex items-center justify-between gap-3 px-4 py-3 rounded-2xl bg-[#0E1124]/95 backdrop-blur-xl border border-[#00D29E]/40 shadow-2xl shadow-black/80 ring-1 ring-[#00D29E]/20 text-slate-100">
-        
+    <aside
+      aria-label="System Updates"
+      className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-lg px-4 animate-in fade-in slide-in-from-top-4 duration-300"
+    >
+      <div className="flex items-center justify-between gap-3 px-4 py-3 rounded-2xl bg-darkroom-surface/95 backdrop-blur-xl border border-tool-diligence/40 shadow-2xl shadow-black/80 ring-1 ring-tool-diligence/20 text-slate-100">
         {/* Left: Icon & Text */}
         <div className="flex items-center gap-3 min-w-0">
-          <div className="size-9 rounded-xl bg-[#00D29E]/15 border border-[#00D29E]/30 flex items-center justify-center text-[#00D29E] shrink-0 animate-pulse">
+          <div className="size-9 rounded-xl bg-tool-diligence/15 border border-tool-diligence/30 flex items-center justify-center text-tool-diligence shrink-0 animate-pulse">
             <Sparkles className="size-4.5" />
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wider text-[#00D29E] font-mono">
+              <span className="text-xs font-semibold uppercase tracking-wider text-tool-diligence font-mono">
                 Update Live
               </span>
-              <span className="size-1.5 rounded-full bg-[#00D29E]" />
-              <span className="text-[11px] text-slate-400 font-mono">
-                {formattedTime}
-              </span>
+              <span className="size-1.5 rounded-full bg-tool-diligence" />
+              <span className="text-[11px] text-slate-400 font-mono">{formattedTime}</span>
             </div>
             <p className="text-xs text-slate-300 truncate">
-              New build <span className="font-mono text-slate-200">{remoteVersion?.commitSha?.slice(0, 7) || 'latest'}</span> is available.
+              New build{' '}
+              <span className="font-mono text-slate-200">
+                {remoteVersion?.commitSha?.slice(0, 7) || 'latest'}
+              </span>{' '}
+              is available.
             </p>
           </div>
         </div>
@@ -162,7 +167,7 @@ export const UpdateNotifier: React.FC = () => {
           <button
             onClick={handleRefresh}
             disabled={isRefreshing}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#00D29E] hover:bg-[#00B887] text-slate-950 text-xs font-semibold transition-all shadow-md shadow-[#00D29E]/20 cursor-pointer active:scale-95 disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-tool-diligence hover:bg-tool-diligence-hover text-slate-950 text-xs font-semibold transition-all shadow-md shadow-[#00D29E]/20 cursor-pointer active:scale-95 disabled:opacity-50"
           >
             <RefreshCw className={`size-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
             <span>{isRefreshing ? 'Refreshing...' : 'Refresh'}</span>
@@ -170,7 +175,7 @@ export const UpdateNotifier: React.FC = () => {
 
           <button
             onClick={() => setIsDismissed(true)}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-[#1A1F3D] transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-darkroom-card transition-colors cursor-pointer"
             title="Dismiss notification"
           >
             <X className="size-4" />

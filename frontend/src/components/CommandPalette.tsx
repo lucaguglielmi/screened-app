@@ -1,18 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Search, 
-  Sparkles, 
-  ShieldCheck, 
-  Compass, 
-  Palette, 
-  Scale, 
-  ArrowRight, 
-  Command, 
+import {
+  Search,
+  Sparkles,
+  ShieldCheck,
+  Compass,
+  Palette,
+  Scale,
+  ArrowRight,
+  Command,
   X,
-  Keyboard
+  Keyboard,
 } from 'lucide-react';
 import { ActiveTool } from '../types/investigation';
-
 
 interface CommandPaletteProps {
   isOpen: boolean;
@@ -21,11 +20,11 @@ interface CommandPaletteProps {
   onSearchFestival: (name: string) => void;
 }
 
-export const CommandPalette: React.FC<CommandPaletteProps> = ({ 
-  isOpen, 
-  onClose, 
+export const CommandPalette: React.FC<CommandPaletteProps> = ({
+  isOpen,
+  onClose,
   onSelectTool,
-  onSearchFestival
+  onSearchFestival,
 }) => {
   const [search, setSearch] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -46,23 +45,32 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       category: 'Workspaces',
       icon: Sparkles,
       iconColor: 'text-indigo-400',
-      action: () => { onSelectTool('CONVERSATIONAL_DESK'); onClose(); },
+      action: () => {
+        onSelectTool('CONVERSATIONAL_DESK');
+        onClose();
+      },
     },
     {
       id: 'diligence',
       label: 'Due Diligence (Cinema Investigation)',
       category: 'Workspaces',
       icon: ShieldCheck,
-      iconColor: 'text-[#00D29E]',
-      action: () => { onSelectTool('DUE_DILIGENCE'); onClose(); },
+      iconColor: 'text-tool-diligence',
+      action: () => {
+        onSelectTool('DUE_DILIGENCE');
+        onClose();
+      },
     },
     {
       id: 'scout',
       label: 'Opportunity Scout (Slate Matching)',
       category: 'Workspaces',
       icon: Compass,
-      iconColor: 'text-[#F43F5E]',
-      action: () => { onSelectTool('OPPORTUNITY_SCOUT'); onClose(); },
+      iconColor: 'text-tool-scout',
+      action: () => {
+        onSelectTool('OPPORTUNITY_SCOUT');
+        onClose();
+      },
     },
     {
       id: 'why',
@@ -70,7 +78,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       category: 'Evidence & Research',
       icon: Scale,
       iconColor: 'text-indigo-300',
-      action: () => { onSelectTool('WHY_SCREENED'); onClose(); },
+      action: () => {
+        onSelectTool('WHY_SCREENED');
+        onClose();
+      },
     },
     {
       id: 'how',
@@ -78,7 +89,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       category: 'Evidence & Research',
       icon: Command,
       iconColor: 'text-indigo-300',
-      action: () => { onSelectTool('HOW_TO_USE'); onClose(); },
+      action: () => {
+        onSelectTool('HOW_TO_USE');
+        onClose();
+      },
     },
     {
       id: 'tokens',
@@ -86,13 +100,17 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       category: 'Design Playground',
       icon: Palette,
       iconColor: 'text-purple-400',
-      action: () => { onSelectTool('DESIGN_PLAYGROUND'); onClose(); },
+      action: () => {
+        onSelectTool('DESIGN_PLAYGROUND');
+        onClose();
+      },
     },
   ];
 
-  const filteredItems = navItems.filter((item) =>
-    item.label.toLowerCase().includes(search.toLowerCase()) ||
-    item.category.toLowerCase().includes(search.toLowerCase())
+  const filteredItems = navItems.filter(
+    (item) =>
+      item.label.toLowerCase().includes(search.toLowerCase()) ||
+      item.category.toLowerCase().includes(search.toLowerCase()),
   );
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -119,12 +137,12 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-150">
-      <div 
+      <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-xl rounded-3xl bg-[#0E1124] border border-[#22274C] shadow-2xl shadow-black/90 overflow-hidden space-y-0 text-slate-200"
+        className="w-full max-w-xl rounded-3xl bg-darkroom-surface border border-darkroom-border shadow-2xl shadow-black/90 overflow-hidden space-y-0 text-slate-200"
       >
         {/* Search Input Bar */}
-        <div className="flex items-center gap-3 px-5 py-4 border-b border-[#1A1E3D] bg-[#070913]">
+        <div className="flex items-center gap-3 px-5 py-4 border-b border-darkroom-border bg-darkroom-bg">
           <Search className="size-5 text-indigo-400 shrink-0" />
           <input
             ref={inputRef}
@@ -138,13 +156,13 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             placeholder="Type a command or festival to investigate..."
             className="w-full bg-transparent text-base text-white placeholder-slate-500 focus:outline-none"
           />
-          <div className="flex items-center gap-1.5 text-[11px] font-mono text-slate-500 bg-[#141731] px-2 py-0.5 rounded-md border border-[#23284E]">
+          <div className="flex items-center gap-1.5 text-[11px] font-mono text-slate-500 bg-darkroom-card px-2 py-0.5 rounded-md border border-darkroom-border">
             <Command className="size-3" />
             <span>K</span>
           </div>
-          <button 
+          <button
             onClick={onClose}
-            className="p-1 rounded-lg hover:bg-[#1A1E3D] text-slate-400 hover:text-white transition-colors cursor-pointer"
+            className="p-1 rounded-lg hover:bg-darkroom-border text-slate-400 hover:text-white transition-colors cursor-pointer"
           >
             <X className="size-4" />
           </button>
@@ -158,10 +176,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                 onSearchFestival(search.trim());
                 onClose();
               }}
-              className="p-3 rounded-2xl bg-[#151936] hover:bg-[#1D224A] border border-[#00D29E]/30 flex items-center justify-between cursor-pointer transition-colors"
+              className="p-3 rounded-2xl bg-darkroom-card hover:bg-darkroom-border border border-tool-diligence/30 flex items-center justify-between cursor-pointer transition-colors"
             >
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-[#00D29E]/20 text-[#00D29E]">
+                <div className="p-2 rounded-xl bg-tool-diligence/20 text-tool-diligence">
                   <ShieldCheck className="size-4" />
                 </div>
                 <div>
@@ -173,7 +191,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                   </div>
                 </div>
               </div>
-              <ArrowRight className="size-4 text-[#00D29E]" />
+              <ArrowRight className="size-4 text-tool-diligence" />
             </div>
           )}
 
@@ -187,12 +205,14 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                 onMouseEnter={() => setSelectedIndex(idx)}
                 className={`p-3 rounded-2xl flex items-center justify-between cursor-pointer transition-all ${
                   isSelected
-                    ? 'bg-[#181D40] border border-indigo-500/40 text-white'
-                    : 'hover:bg-[#121633] text-slate-300 border border-transparent'
+                    ? 'bg-darkroom-card border border-indigo-500/40 text-white'
+                    : 'hover:bg-darkroom-surface text-slate-300 border border-transparent'
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-xl bg-[#070913] border border-[#1A1E3D] ${item.iconColor}`}>
+                  <div
+                    className={`p-2 rounded-xl bg-darkroom-bg border border-darkroom-border ${item.iconColor}`}
+                  >
                     <Icon className="size-4" />
                   </div>
                   <div>
@@ -218,9 +238,9 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         </div>
 
         {/* Footer shortcuts */}
-        <div className="px-5 py-2.5 bg-[#070913] border-t border-[#1A1E3D] flex items-center justify-between text-[11px] font-mono text-slate-500">
+        <div className="px-5 py-2.5 bg-darkroom-bg border-t border-darkroom-border flex items-center justify-between text-[11px] font-mono text-slate-500">
           <span>Navigate with ↑ ↓ • Enter to execute • Esc to dismiss</span>
-          <button 
+          <button
             className="flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer"
             onClick={() => {
               // We can emit an event or just alert for now, wait we need to open the keyboard modal

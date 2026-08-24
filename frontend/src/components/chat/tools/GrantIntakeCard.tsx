@@ -1,13 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  Coins, 
-  FileText, 
-  UploadCloud, 
-  ArrowRight, 
-  AlertTriangle,
-  Sparkles
-} from 'lucide-react';
+import { Coins, FileText, UploadCloud, ArrowRight, AlertTriangle, Sparkles } from 'lucide-react';
 import { GrantScoutArgs } from '../../../types/chat';
 import { soundEffects } from '../../../utils/audio';
 
@@ -16,17 +9,18 @@ interface GrantIntakeCardProps {
   onLaunchSearch: (searchSummary: string) => void;
 }
 
-export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
-  args,
-  onLaunchSearch,
-}) => {
+export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args, onLaunchSearch }) => {
   const [step, setStep] = useState<'REQUIREMENTS' | 'REVIEW'>('REQUIREMENTS');
   const [projectTitle, setProjectTitle] = useState(args.project_title || 'Untitled Project');
   const [budgetTier, setBudgetTier] = useState<number>(50000); // £50k
   const [fundingNeeded, setFundingNeeded] = useState<number>(25000); // £25k
-  const [productionStage, setProductionStage] = useState<string>(args.production_stage || 'Production');
-  const [filmmakerRegion, setFilmmakerRegion] = useState<string>(args.filmmaker_region || 'UK & Europe');
-  
+  const [productionStage, setProductionStage] = useState<string>(
+    args.production_stage || 'Production',
+  );
+  const [filmmakerRegion, setFilmmakerRegion] = useState<string>(
+    args.filmmaker_region || 'UK & Europe',
+  );
+
   // File upload state
   const [attachedFile, setAttachedFile] = useState<{ name: string; size: string } | null>(null);
   const [videoGuardWarning, setVideoGuardWarning] = useState<string | null>(null);
@@ -49,11 +43,16 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
     setVideoGuardWarning(null);
     const videoExtensions = ['.mp4', '.mov', '.avi', '.mkv', '.webm', '.m4v', '.wmv'];
     const fileNameLower = file.name.toLowerCase();
-    
+
     // Check if user dropped a video file
-    if (videoExtensions.some(ext => fileNameLower.endsWith(ext)) || file.type.startsWith('video/')) {
+    if (
+      videoExtensions.some((ext) => fileNameLower.endsWith(ext)) ||
+      file.type.startsWith('video/')
+    ) {
       soundEffects.playCaution();
-      setVideoGuardWarning('Video analysis is coming soon! For now, please upload your script synopsis, treatment, or pitch deck PDF.');
+      setVideoGuardWarning(
+        'Video analysis is coming soon! For now, please upload your script synopsis, treatment, or pitch deck PDF.',
+      );
       return;
     }
 
@@ -82,7 +81,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full max-w-2xl bg-[#0E1124] rounded-2xl p-6 shadow-2xl space-y-4 my-2 text-zinc-100"
+      className="w-full max-w-2xl bg-darkroom-surface rounded-2xl p-6 shadow-2xl space-y-4 my-2 text-zinc-100"
     >
       {/* Header */}
       <div className="flex items-center justify-between pb-3">
@@ -103,7 +102,9 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
           </div>
         </div>
         <div className="text-right hidden sm:block">
-          <span className="text-[11px] text-zinc-400 font-mono">BFI · Screen Scotland · Lottery</span>
+          <span className="text-[11px] text-zinc-400 font-mono">
+            BFI · Screen Scotland · Lottery
+          </span>
         </div>
       </div>
 
@@ -118,17 +119,19 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
               value={projectTitle}
               onChange={(e) => setProjectTitle(e.target.value)}
               placeholder="e.g. Echoes of the Humber"
-              className="w-full bg-[#141834] rounded-xl px-3.5 py-2.5 text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:bg-[#1A2046]"
+              className="w-full bg-darkroom-card rounded-xl px-3.5 py-2.5 text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:bg-darkroom-border"
             />
           </div>
 
           {/* Budget & Funding Needed Sliders */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             {/* Total Budget Slider */}
-            <div className="space-y-2 bg-[#141834] p-4 rounded-xl">
+            <div className="space-y-2 bg-darkroom-card p-4 rounded-xl">
               <div className="flex justify-between items-center">
                 <span className="text-zinc-400 font-mono">Total Estimated Budget</span>
-                <span className="font-bold text-blue-400 font-mono">£{budgetTier.toLocaleString()}</span>
+                <span className="font-bold text-blue-400 font-mono">
+                  £{budgetTier.toLocaleString()}
+                </span>
               </div>
               <input
                 type="range"
@@ -137,7 +140,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
                 step={5000}
                 value={budgetTier}
                 onChange={(e) => setBudgetTier(Number(e.target.value))}
-                className="w-full h-1.5 bg-[#0E1124] rounded-lg appearance-none cursor-pointer accent-blue-500"
+                className="w-full h-1.5 bg-darkroom-surface rounded-lg appearance-none cursor-pointer accent-blue-500"
               />
               <div className="flex justify-between text-[10px] text-zinc-500 font-mono">
                 <span>£5k (Micro)</span>
@@ -146,10 +149,12 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
             </div>
 
             {/* Funding Gap Needed Slider */}
-            <div className="space-y-2 bg-[#141834] p-4 rounded-xl">
+            <div className="space-y-2 bg-darkroom-card p-4 rounded-xl">
               <div className="flex justify-between items-center">
                 <span className="text-zinc-400 font-mono">Grant Funding Needed</span>
-                <span className="font-bold text-emerald-400 font-mono">£{fundingNeeded.toLocaleString()}</span>
+                <span className="font-bold text-emerald-400 font-mono">
+                  £{fundingNeeded.toLocaleString()}
+                </span>
               </div>
               <input
                 type="range"
@@ -158,7 +163,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
                 step={1000}
                 value={fundingNeeded}
                 onChange={(e) => setFundingNeeded(Number(e.target.value))}
-                className="w-full h-1.5 bg-[#0E1124] rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                className="w-full h-1.5 bg-darkroom-surface rounded-lg appearance-none cursor-pointer accent-emerald-500"
               />
               <div className="flex justify-between text-[10px] text-zinc-500 font-mono">
                 <span>£2k (Dev)</span>
@@ -170,13 +175,17 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
           {/* Region and Stage Pickers */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div>
-              <label className="block text-zinc-400 font-mono mb-1">Filmmaker / Producer Region</label>
+              <label className="block text-zinc-400 font-mono mb-1">
+                Filmmaker / Producer Region
+              </label>
               <select
                 value={filmmakerRegion}
                 onChange={(e) => setFilmmakerRegion(e.target.value)}
-                className="w-full bg-[#141834] rounded-xl px-3 py-2.5 text-white text-xs focus:outline-none focus:bg-[#1A2046] cursor-pointer"
+                className="w-full bg-darkroom-card rounded-xl px-3 py-2.5 text-white text-xs focus:outline-none focus:bg-darkroom-border cursor-pointer"
               >
-                <option value="UK & Northern Ireland">United Kingdom & NI (BFI/Lottery Focus)</option>
+                <option value="UK & Northern Ireland">
+                  United Kingdom & NI (BFI/Lottery Focus)
+                </option>
                 <option value="Screen Scotland">Scotland (Screen Scotland Focus)</option>
                 <option value="Creative Wales">Wales (Ffilm Cymru Focus)</option>
                 <option value="European Union">European Union (Eurimages / Creative Europe)</option>
@@ -190,25 +199,31 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
               <select
                 value={productionStage}
                 onChange={(e) => setProductionStage(e.target.value)}
-                className="w-full bg-[#141834] rounded-xl px-3 py-2.5 text-white text-xs focus:outline-none focus:bg-[#1A2046] cursor-pointer"
+                className="w-full bg-darkroom-card rounded-xl px-3 py-2.5 text-white text-xs focus:outline-none focus:bg-darkroom-border cursor-pointer"
               >
                 <option value="Development & Scriptwriting">Development & Scriptwriting</option>
                 <option value="Early Pre-Production">Early Pre-Production</option>
                 <option value="Production">Production & Principal Photography</option>
-                <option value="Post-Production & Completion">Post-Production & Completion Funds</option>
-                <option value="Distribution & Festival Travel">Distribution & Festival Travel</option>
+                <option value="Post-Production & Completion">
+                  Post-Production & Completion Funds
+                </option>
+                <option value="Distribution & Festival Travel">
+                  Distribution & Festival Travel
+                </option>
               </select>
             </div>
           </div>
 
           {/* Document Dropzone */}
           <div className="space-y-1.5 text-xs">
-            <span className="block text-zinc-400 font-mono">Attach Script Treatment / Pitch Deck (Optional):</span>
+            <span className="block text-zinc-400 font-mono">
+              Attach Script Treatment / Pitch Deck (Optional):
+            </span>
             <div
               onDragOver={(e) => e.preventDefault()}
               onDrop={handleFileDrop}
               onClick={() => fileInputRef.current?.click()}
-              className="bg-[#141834] hover:bg-[#181D3D] rounded-xl p-4 text-center cursor-pointer transition-all flex flex-col items-center justify-center space-y-1"
+              className="bg-darkroom-card hover:bg-darkroom-card rounded-xl p-4 text-center cursor-pointer transition-all flex flex-col items-center justify-center space-y-1"
             >
               <input
                 ref={fileInputRef}
@@ -228,9 +243,12 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
                 <>
                   <UploadCloud className="w-5 h-5 text-blue-400" />
                   <p className="text-zinc-300 font-medium text-xs">
-                    Drop PDF synopsis, treatment or deck, or <span className="text-blue-400">browse</span>
+                    Drop PDF synopsis, treatment or deck, or{' '}
+                    <span className="text-blue-400">browse</span>
                   </p>
-                  <p className="text-[10px] text-zinc-500">Extracts grant eligibility themes and non-dilutive matching</p>
+                  <p className="text-[10px] text-zinc-500">
+                    Extracts grant eligibility themes and non-dilutive matching
+                  </p>
                 </>
               )}
             </div>
@@ -274,7 +292,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
           animate={{ opacity: 1, scale: 1 }}
           className="space-y-4"
         >
-          <div className="p-4 rounded-xl bg-[#141834] space-y-2.5 text-xs">
+          <div className="p-4 rounded-xl bg-darkroom-card space-y-2.5 text-xs">
             <div className="flex items-center justify-between pb-2">
               <span className="font-mono font-bold text-blue-400 uppercase tracking-wider">
                 Stage 2: Funding Search Strategy Ready
@@ -291,7 +309,9 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
               </div>
               <div>
                 <span className="text-zinc-500 font-mono block">Target Grant Need:</span>
-                <span className="text-emerald-400 font-mono font-bold">£{fundingNeeded.toLocaleString()} (of £{budgetTier.toLocaleString()})</span>
+                <span className="text-emerald-400 font-mono font-bold">
+                  £{fundingNeeded.toLocaleString()} (of £{budgetTier.toLocaleString()})
+                </span>
               </div>
               <div>
                 <span className="text-zinc-500 font-mono block">Region / Scheme:</span>
@@ -306,13 +326,13 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
             <div className="pt-2">
               <span className="text-zinc-400 font-mono block mb-1">Target Funding Providers:</span>
               <div className="flex flex-wrap gap-1.5">
-                <span className="px-2.5 py-1 rounded-lg bg-[#0E1124] text-zinc-200 text-[11px]">
+                <span className="px-2.5 py-1 rounded-lg bg-darkroom-surface text-zinc-200 text-[11px]">
                   ✓ BFI Filmmaking Fund
                 </span>
-                <span className="px-2.5 py-1 rounded-lg bg-[#0E1124] text-zinc-200 text-[11px]">
+                <span className="px-2.5 py-1 rounded-lg bg-darkroom-surface text-zinc-200 text-[11px]">
                   ✓ National Lottery Good Causes
                 </span>
-                <span className="px-2.5 py-1 rounded-lg bg-[#0E1124] text-zinc-200 text-[11px]">
+                <span className="px-2.5 py-1 rounded-lg bg-darkroom-surface text-zinc-200 text-[11px]">
                   ✓ Regional Match Schemes ({filmmakerRegion})
                 </span>
                 {attachedFile && (
@@ -332,7 +352,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
                 soundEffects.playClick();
                 setStep('REQUIREMENTS');
               }}
-              className="px-4 py-2.5 rounded-xl bg-[#141834] hover:bg-[#1A2046] text-xs font-mono text-zinc-300 hover:text-white transition-colors cursor-pointer"
+              className="px-4 py-2.5 rounded-xl bg-darkroom-card hover:bg-darkroom-border text-xs font-mono text-zinc-300 hover:text-white transition-colors cursor-pointer"
             >
               ‹ Edit Parameters
             </button>

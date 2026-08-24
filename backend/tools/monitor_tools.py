@@ -42,7 +42,7 @@ async def create_festival_monitor(target_url: str, type: str = "snapshot", frequ
         monitor_id = getattr(res, "id", None) or (res.get("id") if isinstance(res, dict) else str(res))
         return f"Created monitor {monitor_id}"
     except Exception as e:
-        logger.error(f"Failed to create monitor: {e}")
+        logger.exception(f"Failed to create monitor: {e}")
         return f"Failed to create monitor: {e}"
 
 async def trigger_monitor(monitor_id: str) -> str:
@@ -65,7 +65,7 @@ async def trigger_monitor(monitor_id: str) -> str:
         await client.beta.monitor.trigger(monitor_id)
         return "Triggered successfully"
     except Exception as e:
-        logger.error(f"Failed to trigger monitor: {e}")
+        logger.exception(f"Failed to trigger monitor: {e}")
         return f"Failed to trigger monitor: {e}"
 
 async def create_task_group(monitor_ids: List[str]) -> str:
@@ -90,7 +90,7 @@ async def create_task_group(monitor_ids: List[str]) -> str:
         tg_id = getattr(res, "id", None) or (res.get("id") if isinstance(res, dict) else str(res))
         return f"Created task group {tg_id}"
     except Exception as e:
-        logger.error(f"Failed to create task group: {e}")
+        logger.exception(f"Failed to create task group: {e}")
         return f"Failed to create task group: {e}"
 
 # ADK Tool Definitions

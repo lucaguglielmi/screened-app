@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  ShieldCheck, 
-  MapPin, 
-  CheckSquare, 
-  Square, 
-  UserCheck, 
-  Mail, 
-  Phone, 
-  AlertCircle, 
-  ArrowRight, 
-  Globe
+import {
+  ShieldCheck,
+  MapPin,
+  CheckSquare,
+  Square,
+  UserCheck,
+  Mail,
+  Phone,
+  AlertCircle,
+  ArrowRight,
+  Globe,
 } from 'lucide-react';
 import { DueDiligenceArgs } from '../../../types/chat';
 import { soundEffects } from '../../../utils/audio';
@@ -43,10 +43,7 @@ const COMMON_LOCATIONS = [
   'Melbourne, Australia',
 ];
 
-export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
-  args,
-  onLaunch,
-}) => {
+export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, onLaunch }) => {
   const [step, setStep] = useState<'REQUIREMENTS' | 'REVIEW'>('REQUIREMENTS');
   const [festivalName, setFestivalName] = useState(args.festival_name || '');
   const [cityCountry, setCityCountry] = useState(args.city_country || '');
@@ -80,14 +77,14 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
   };
 
   const filteredLocations = COMMON_LOCATIONS.filter((loc) =>
-    loc.toLowerCase().includes(cityCountry.toLowerCase())
+    loc.toLowerCase().includes(cityCountry.toLowerCase()),
   );
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full max-w-2xl bg-[#0E1124] rounded-2xl p-6 shadow-2xl space-y-4 my-2 text-zinc-100"
+      className="w-full max-w-2xl bg-darkroom-surface rounded-2xl p-6 shadow-2xl space-y-4 my-2 text-zinc-100"
     >
       {/* Header Badge */}
       <div className="flex items-center justify-between pb-3">
@@ -104,7 +101,9 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
                 Active Probe
               </span>
             </div>
-            <h3 className="text-base font-bold text-white font-serif">{festivalName || 'Target Film Festival'}</h3>
+            <h3 className="text-base font-bold text-white font-serif">
+              {festivalName || 'Target Film Festival'}
+            </h3>
           </div>
         </div>
         <div className="text-right hidden sm:block">
@@ -126,7 +125,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
                   value={festivalName}
                   onChange={(e) => setFestivalName(e.target.value)}
                   placeholder="e.g. Raindance Film Festival"
-                  className="w-full bg-[#141834] rounded-xl px-3.5 py-2.5 text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:bg-[#1A2046]"
+                  className="w-full bg-darkroom-card rounded-xl px-3.5 py-2.5 text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:bg-darkroom-border"
                 />
               </div>
             </div>
@@ -146,12 +145,12 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
                 }}
                 onFocus={() => setShowLocationSuggestions(true)}
                 placeholder="e.g. London, United Kingdom"
-                className="w-full bg-[#141834] rounded-xl px-3.5 py-2.5 text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:bg-[#1A2046]"
+                className="w-full bg-darkroom-card rounded-xl px-3.5 py-2.5 text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:bg-darkroom-border"
               />
 
               {/* Location Suggestions Dropdown */}
               {showLocationSuggestions && cityCountry && filteredLocations.length > 0 && (
-                <div className="absolute left-0 right-0 top-full mt-1 bg-[#0E1124] rounded-xl shadow-2xl z-20 max-h-36 overflow-y-auto p-1">
+                <div className="absolute left-0 right-0 top-full mt-1 bg-darkroom-surface rounded-xl shadow-2xl z-20 max-h-36 overflow-y-auto p-1">
                   {filteredLocations.slice(0, 5).map((loc) => (
                     <button
                       key={loc}
@@ -160,7 +159,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
                         setCityCountry(loc);
                         setShowLocationSuggestions(false);
                       }}
-                      className="w-full text-left px-3 py-2 hover:bg-[#141834] hover:text-emerald-300 text-zinc-300 text-xs rounded-lg transition-colors flex items-center space-x-1.5 cursor-pointer"
+                      className="w-full text-left px-3 py-2 hover:bg-darkroom-card hover:text-emerald-300 text-zinc-300 text-xs rounded-lg transition-colors flex items-center space-x-1.5 cursor-pointer"
                     >
                       <MapPin className="w-3 h-3 text-emerald-400 shrink-0" />
                       <span>{loc}</span>
@@ -182,24 +181,30 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
               value={websiteUrl}
               onChange={(e) => setWebsiteUrl(e.target.value)}
               placeholder="https://festival-official-site.org"
-              className="w-full bg-[#141834] rounded-xl px-3.5 py-2.5 text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:bg-[#1A2046]"
+              className="w-full bg-darkroom-card rounded-xl px-3.5 py-2.5 text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:bg-darkroom-border"
             />
           </div>
 
           {/* Interactive Checkbox Matrix */}
           <div className="space-y-2 text-xs">
-            <label className="block text-zinc-400 font-mono">Check if any apply to your inquiry:</label>
+            <label className="block text-zinc-400 font-mono">
+              Check if any apply to your inquiry:
+            </label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => setTalkedToSomeone(!talkedToSomeone)}
                 className={`flex items-center space-x-2.5 p-3 rounded-xl text-left transition-all cursor-pointer ${
                   talkedToSomeone
-                    ? 'bg-[#0E2822] text-emerald-300 font-semibold'
-                    : 'bg-[#141834] text-zinc-300 hover:bg-[#1C224B]'
+                    ? 'bg-darkroom-surface text-emerald-300 font-semibold'
+                    : 'bg-darkroom-card text-zinc-300 hover:bg-darkroom-border'
                 }`}
               >
-                {talkedToSomeone ? <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" /> : <Square className="w-4 h-4 text-zinc-500 shrink-0" />}
+                {talkedToSomeone ? (
+                  <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" />
+                ) : (
+                  <Square className="w-4 h-4 text-zinc-500 shrink-0" />
+                )}
                 <span>I talked to a festival organizer / team member</span>
               </button>
 
@@ -208,11 +213,15 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
                 onClick={() => setWasInvited(!wasInvited)}
                 className={`flex items-center space-x-2.5 p-3 rounded-xl text-left transition-all cursor-pointer ${
                   wasInvited
-                    ? 'bg-[#0E2822] text-emerald-300 font-semibold'
-                    : 'bg-[#141834] text-zinc-300 hover:bg-[#1C224B]'
+                    ? 'bg-darkroom-surface text-emerald-300 font-semibold'
+                    : 'bg-darkroom-card text-zinc-300 hover:bg-darkroom-border'
                 }`}
               >
-                {wasInvited ? <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" /> : <Square className="w-4 h-4 text-zinc-500 shrink-0" />}
+                {wasInvited ? (
+                  <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" />
+                ) : (
+                  <Square className="w-4 h-4 text-zinc-500 shrink-0" />
+                )}
                 <span>I was invited to submit directly</span>
               </button>
 
@@ -221,11 +230,15 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
                 onClick={() => setReceivedEmail(!receivedEmail)}
                 className={`flex items-center space-x-2.5 p-3 rounded-xl text-left transition-all cursor-pointer ${
                   receivedEmail
-                    ? 'bg-[#0E2822] text-emerald-300 font-semibold'
-                    : 'bg-[#141834] text-zinc-300 hover:bg-[#1C224B]'
+                    ? 'bg-darkroom-surface text-emerald-300 font-semibold'
+                    : 'bg-darkroom-card text-zinc-300 hover:bg-darkroom-border'
                 }`}
               >
-                {receivedEmail ? <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" /> : <Square className="w-4 h-4 text-zinc-500 shrink-0" />}
+                {receivedEmail ? (
+                  <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" />
+                ) : (
+                  <Square className="w-4 h-4 text-zinc-500 shrink-0" />
+                )}
                 <span>I received an email solicitation</span>
               </button>
 
@@ -234,11 +247,15 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
                 onClick={() => setWaiverOffered(!waiverOffered)}
                 className={`flex items-center space-x-2.5 p-3 rounded-xl text-left transition-all cursor-pointer ${
                   waiverOffered
-                    ? 'bg-[#0E2822] text-emerald-300 font-semibold'
-                    : 'bg-[#141834] text-zinc-300 hover:bg-[#1C224B]'
+                    ? 'bg-darkroom-surface text-emerald-300 font-semibold'
+                    : 'bg-darkroom-card text-zinc-300 hover:bg-darkroom-border'
                 }`}
               >
-                {waiverOffered ? <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" /> : <Square className="w-4 h-4 text-zinc-500 shrink-0" />}
+                {waiverOffered ? (
+                  <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" />
+                ) : (
+                  <Square className="w-4 h-4 text-zinc-500 shrink-0" />
+                )}
                 <span>Offered discount / entry fee waiver</span>
               </button>
 
@@ -247,11 +264,15 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
                 onClick={() => setAlreadyPaid(!alreadyPaid)}
                 className={`flex items-center space-x-2.5 p-3 rounded-xl text-left transition-all cursor-pointer ${
                   alreadyPaid
-                    ? 'bg-[#0E2822] text-emerald-300 font-semibold'
-                    : 'bg-[#141834] text-zinc-300 hover:bg-[#1C224B]'
+                    ? 'bg-darkroom-surface text-emerald-300 font-semibold'
+                    : 'bg-darkroom-card text-zinc-300 hover:bg-darkroom-border'
                 }`}
               >
-                {alreadyPaid ? <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" /> : <Square className="w-4 h-4 text-zinc-500 shrink-0" />}
+                {alreadyPaid ? (
+                  <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" />
+                ) : (
+                  <Square className="w-4 h-4 text-zinc-500 shrink-0" />
+                )}
                 <span>I already paid submission / trophy fee</span>
               </button>
 
@@ -260,11 +281,15 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
                 onClick={() => setAdvertisedCinemaVenue(!advertisedCinemaVenue)}
                 className={`flex items-center space-x-2.5 p-3 rounded-xl text-left transition-all cursor-pointer ${
                   advertisedCinemaVenue
-                    ? 'bg-[#0E2822] text-emerald-300 font-semibold'
-                    : 'bg-[#141834] text-zinc-300 hover:bg-[#1C224B]'
+                    ? 'bg-darkroom-surface text-emerald-300 font-semibold'
+                    : 'bg-darkroom-card text-zinc-300 hover:bg-darkroom-border'
                 }`}
               >
-                {advertisedCinemaVenue ? <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" /> : <Square className="w-4 h-4 text-zinc-500 shrink-0" />}
+                {advertisedCinemaVenue ? (
+                  <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" />
+                ) : (
+                  <Square className="w-4 h-4 text-zinc-500 shrink-0" />
+                )}
                 <span>Advertised physical cinema theater</span>
               </button>
             </div>
@@ -277,7 +302,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                className="p-4 rounded-2xl bg-[#141834] space-y-3 overflow-hidden text-xs"
+                className="p-4 rounded-2xl bg-darkroom-card space-y-3 overflow-hidden text-xs"
               >
                 <div className="flex items-center space-x-2 text-emerald-400 font-mono text-xs">
                   <AlertCircle className="w-4 h-4" />
@@ -295,7 +320,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
                       value={contactName}
                       onChange={(e) => setContactName(e.target.value)}
                       placeholder="e.g. Program Director Alex Mercer"
-                      className="w-full bg-[#0E1124] rounded-xl px-3 py-2 text-white placeholder:text-zinc-500 focus:outline-none text-xs"
+                      className="w-full bg-darkroom-surface rounded-xl px-3 py-2 text-white placeholder:text-zinc-500 focus:outline-none text-xs"
                     />
                   </div>
 
@@ -309,7 +334,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
                       value={contactPhone}
                       onChange={(e) => setContactPhone(e.target.value)}
                       placeholder="+44 7700 900077"
-                      className="w-full bg-[#0E1124] rounded-xl px-3 py-2 text-white placeholder:text-zinc-500 focus:outline-none text-xs"
+                      className="w-full bg-darkroom-surface rounded-xl px-3 py-2 text-white placeholder:text-zinc-500 focus:outline-none text-xs"
                     />
                   </div>
                 </div>
@@ -324,7 +349,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
                     value={emailSnippet}
                     onChange={(e) => setEmailSnippet(e.target.value)}
                     placeholder="Paste the invitation message or waiver code..."
-                    className="w-full bg-[#0E1124] rounded-xl px-3 py-2 text-white placeholder:text-zinc-500 focus:outline-none text-xs font-mono"
+                    className="w-full bg-darkroom-surface rounded-xl px-3 py-2 text-white placeholder:text-zinc-500 focus:outline-none text-xs font-mono"
                   />
                 </div>
               </motion.div>
@@ -352,7 +377,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
           animate={{ opacity: 1, scale: 1 }}
           className="space-y-4"
         >
-          <div className="p-4 rounded-xl bg-[#0E2822] border border-emerald-900 space-y-2.5 text-xs">
+          <div className="p-4 rounded-xl bg-darkroom-surface border border-emerald-900 space-y-2.5 text-xs">
             <div className="flex items-center justify-between border-b border-emerald-800 pb-2">
               <span className="font-mono font-bold text-emerald-400 uppercase tracking-wider">
                 Stage 2: Investigation Parameters Ready
@@ -373,7 +398,9 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
               </div>
               <div>
                 <span className="text-zinc-500 font-mono block">Domain Source:</span>
-                <span className="text-zinc-200 truncate">{websiteUrl || 'Autonomous Discovery'}</span>
+                <span className="text-zinc-200 truncate">
+                  {websiteUrl || 'Autonomous Discovery'}
+                </span>
               </div>
               <div>
                 <span className="text-zinc-500 font-mono block">Target Page:</span>
@@ -382,7 +409,9 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
             </div>
 
             <div className="pt-2 border-t border-emerald-500/20">
-              <span className="text-zinc-400 font-mono block mb-1">Autonomous Inspection Directives:</span>
+              <span className="text-zinc-400 font-mono block mb-1">
+                Autonomous Inspection Directives:
+              </span>
               <div className="flex flex-wrap gap-1.5">
                 <span className="px-2 py-0.5 rounded bg-midnight border border-zinc-700 text-zinc-200 text-[11px]">
                   ✓ Municipal Theater Leases

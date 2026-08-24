@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  X, 
-  Search, 
-  Coins, 
-  Compass, 
-  ShieldCheck, 
+import {
+  X,
+  Search,
+  Coins,
+  Compass,
+  ShieldCheck,
   Sparkles,
   ArrowRight,
   FileText,
   Info,
-  Activity
+  Activity,
 } from 'lucide-react';
 import { soundEffects } from '../../utils/audio';
 
@@ -61,20 +61,51 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
       badgeColor: 'text-emerald-400 bg-emerald-500/10',
       icon: Search,
       iconColor: 'text-emerald-400',
-      summary: 'Autonomous background checks cross-examining cinema leases, registry filings, and entry fees.',
+      summary:
+        'Autonomous background checks cross-examining cinema leases, registry filings, and entry fees.',
       tags: [
-        { label: 'Venue Lease Tracing', info: 'Cross-checks municipal theater rental manifests to verify real cinema screenings vs. private streaming links.' },
-        { label: 'Corporate Registry', info: 'Searches UK Companies House & global records for active business status and dissolution warnings.' },
-        { label: 'Fee Escalation Audit', info: 'Scans past festival editions to detect aggressive late fee inflation and predatory pricing.' },
-        { label: 'Jury Credibility', info: 'Verifies published industry credits across IMDb, BAFTA rosters, and trade press records.' },
-        { label: 'Scam Forum Scrutiny', info: 'Scans Reddit, Letterboxd, and filmmaker forums for red flags and unfulfilled prize reports.' },
-        { label: 'Accreditation Status', info: 'Confirms qualifying status for BAFTA, BIFA, and Academy Awards.' }
+        {
+          label: 'Venue Lease Tracing',
+          info: 'Cross-checks municipal theater rental manifests to verify real cinema screenings vs. private streaming links.',
+        },
+        {
+          label: 'Corporate Registry',
+          info: 'Searches UK Companies House & global records for active business status and dissolution warnings.',
+        },
+        {
+          label: 'Fee Escalation Audit',
+          info: 'Scans past festival editions to detect aggressive late fee inflation and predatory pricing.',
+        },
+        {
+          label: 'Jury Credibility',
+          info: 'Verifies published industry credits across IMDb, BAFTA rosters, and trade press records.',
+        },
+        {
+          label: 'Scam Forum Scrutiny',
+          info: 'Scans Reddit, Letterboxd, and filmmaker forums for red flags and unfulfilled prize reports.',
+        },
+        {
+          label: 'Accreditation Status',
+          info: 'Confirms qualifying status for BAFTA, BIFA, and Academy Awards.',
+        },
       ],
       searchExamples: [
-        { label: 'Vet Aberdeen Film Festival', promptText: 'Is Aberdeen Film Festival legitimate? Check their physical venue leases and entry fees.' },
-        { label: 'Audit Aldergate Festival', promptText: 'Is Aldergate Film Festival legitimate or a scam? Check their screening leases.' },
-        { label: 'Check Raindance credentials', promptText: 'Perform due diligence on Raindance Film Festival accreditation and venue scale.' }
-      ]
+        {
+          label: 'Vet Aberdeen Film Festival',
+          promptText:
+            'Is Aberdeen Film Festival legitimate? Check their physical venue leases and entry fees.',
+        },
+        {
+          label: 'Audit Aldergate Festival',
+          promptText:
+            'Is Aldergate Film Festival legitimate or a scam? Check their screening leases.',
+        },
+        {
+          label: 'Check Raindance credentials',
+          promptText:
+            'Perform due diligence on Raindance Film Festival accreditation and venue scale.',
+        },
+      ],
     },
     {
       id: 'opportunity-scout',
@@ -83,19 +114,46 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
       badgeColor: 'text-rose-400 bg-rose-500/10',
       icon: Compass,
       iconColor: 'text-rose-400',
-      summary: 'Custom submission calendar tailored to your film’s format, genre, runtime, and premiere goals.',
+      summary:
+        'Custom submission calendar tailored to your film’s format, genre, runtime, and premiere goals.',
       tags: [
-        { label: 'Circuit Matching', info: 'Matches the highest-yield festivals based on film duration, genre, and production budget.' },
-        { label: 'Early Bird Deadlines', info: 'Flags discounted submission windows to keep distribution expenses low.' },
-        { label: 'Premiere Protection', info: 'Protects World, International, and Regional premiere requirements from disqualification.' },
-        { label: 'BAFTA / Oscar Filters', info: 'Isolates qualifying festival windows for short films and independent features.' },
-        { label: 'ICS Calendar Export', info: 'Generates downloadable calendar reminders for upcoming submission cutoffs.' }
+        {
+          label: 'Circuit Matching',
+          info: 'Matches the highest-yield festivals based on film duration, genre, and production budget.',
+        },
+        {
+          label: 'Early Bird Deadlines',
+          info: 'Flags discounted submission windows to keep distribution expenses low.',
+        },
+        {
+          label: 'Premiere Protection',
+          info: 'Protects World, International, and Regional premiere requirements from disqualification.',
+        },
+        {
+          label: 'BAFTA / Oscar Filters',
+          info: 'Isolates qualifying festival windows for short films and independent features.',
+        },
+        {
+          label: 'ICS Calendar Export',
+          info: 'Generates downloadable calendar reminders for upcoming submission cutoffs.',
+        },
       ],
       searchExamples: [
-        { label: 'Sci-Fi Short Strategy', promptText: 'Where should I submit my 15-minute sci-fi short film looking for a UK premiere on a £300 budget?' },
-        { label: 'Feature Doc Rollout', promptText: 'Recommend a festival premiere strategy for an 80-minute independent documentary.' },
-        { label: 'Early Bird Deadlines', promptText: 'Find upcoming Early Bird submission deadlines under £40 for indie shorts.' }
-      ]
+        {
+          label: 'Sci-Fi Short Strategy',
+          promptText:
+            'Where should I submit my 15-minute sci-fi short film looking for a UK premiere on a £300 budget?',
+        },
+        {
+          label: 'Feature Doc Rollout',
+          promptText:
+            'Recommend a festival premiere strategy for an 80-minute independent documentary.',
+        },
+        {
+          label: 'Early Bird Deadlines',
+          promptText: 'Find upcoming Early Bird submission deadlines under £40 for indie shorts.',
+        },
+      ],
     },
     {
       id: 'grants-funding',
@@ -106,15 +164,35 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
       iconColor: 'text-blue-400',
       summary: 'Scouts public film funds, development schemes, and regional non-dilutive awards.',
       tags: [
-        { label: 'BFI & National Lottery', info: 'Matches BFI Filmmaking Fund, Screen Scotland, and UK regional grant windows.' },
-        { label: 'Eurimages & Co-Production', info: 'Screens international treaty co-production quotas and regional match funding.' },
-        { label: 'Script Development', info: 'Surfaces early-stage screenwriting development and treatment incubator funds.' },
-        { label: 'Eligibility Scanner', info: 'Evaluates required match ratios, producer residency rules, and expenditure criteria.' }
+        {
+          label: 'BFI & National Lottery',
+          info: 'Matches BFI Filmmaking Fund, Screen Scotland, and UK regional grant windows.',
+        },
+        {
+          label: 'Eurimages & Co-Production',
+          info: 'Screens international treaty co-production quotas and regional match funding.',
+        },
+        {
+          label: 'Script Development',
+          info: 'Surfaces early-stage screenwriting development and treatment incubator funds.',
+        },
+        {
+          label: 'Eligibility Scanner',
+          info: 'Evaluates required match ratios, producer residency rules, and expenditure criteria.',
+        },
       ],
       searchExamples: [
-        { label: 'UK Doc Production Grants', promptText: 'Find £25k documentary production grants and public funding schemes in the UK.' },
-        { label: 'Script Development Funds', promptText: 'Show active early-stage development grants and script development funds for indie filmmakers.' }
-      ]
+        {
+          label: 'UK Doc Production Grants',
+          promptText:
+            'Find £25k documentary production grants and public funding schemes in the UK.',
+        },
+        {
+          label: 'Script Development Funds',
+          promptText:
+            'Show active early-stage development grants and script development funds for indie filmmakers.',
+        },
+      ],
     },
     {
       id: 'script-intake',
@@ -123,16 +201,32 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
       badgeColor: 'text-purple-400 bg-purple-500/10',
       icon: FileText,
       iconColor: 'text-purple-400',
-      summary: 'Drag and drop PDF scripts, treatments, or invitation emails for instant autonomous extraction.',
+      summary:
+        'Drag and drop PDF scripts, treatments, or invitation emails for instant autonomous extraction.',
       tags: [
-        { label: 'PDF Treatment Parsing', info: 'Extracts logline, genre, runtime, budget tier, and festival eligibility directly from documents.' },
-        { label: 'Invitation Verification', info: 'Examines waiver codes, sender domains, and trophy-fee solicitations in invitation emails.' },
-        { label: 'Direct Circuit Pre-fill', info: 'Automatically populates Opportunity Scout parameters from the uploaded screenplay.' }
+        {
+          label: 'PDF Treatment Parsing',
+          info: 'Extracts logline, genre, runtime, budget tier, and festival eligibility directly from documents.',
+        },
+        {
+          label: 'Invitation Verification',
+          info: 'Examines waiver codes, sender domains, and trophy-fee solicitations in invitation emails.',
+        },
+        {
+          label: 'Direct Circuit Pre-fill',
+          info: 'Automatically populates Opportunity Scout parameters from the uploaded screenplay.',
+        },
       ],
       searchExamples: [
-        { label: 'Analyze Waiver Email', promptText: 'Analyze this festival invitation email offering a 50% discount waiver code.' },
-        { label: 'Review Attached Script', promptText: 'Review my uploaded treatment PDF and recommend 5 top UK festival matches.' }
-      ]
+        {
+          label: 'Analyze Waiver Email',
+          promptText: 'Analyze this festival invitation email offering a 50% discount waiver code.',
+        },
+        {
+          label: 'Review Attached Script',
+          promptText: 'Review my uploaded treatment PDF and recommend 5 top UK festival matches.',
+        },
+      ],
     },
     {
       id: 'deep-vetting',
@@ -141,16 +235,33 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
       badgeColor: 'text-amber-400 bg-amber-500/10',
       icon: ShieldCheck,
       iconColor: 'text-amber-400',
-      summary: '7-dimension multi-year forensic examination evaluating domain longevity, boilerplate rules, and alumni.',
+      summary:
+        '7-dimension multi-year forensic examination evaluating domain longevity, boilerplate rules, and alumni.',
       tags: [
-        { label: 'Image Reverse Tracing', info: 'Detects whether promotional gala photos are stock images or authentic physical venues.' },
-        { label: 'Boilerplate Plagiarism', info: 'Identifies copy-pasted rules and submission guidelines from known scam syndicates.' },
-        { label: 'Domain WHOIS Longevity', info: 'Checks domain creation dates against claimed edition longevity numbers.' },
-        { label: 'Alumni Corroboration', info: 'Verifies real filmmaker screening confirmations on Letterboxd and IMDb.' }
+        {
+          label: 'Image Reverse Tracing',
+          info: 'Detects whether promotional gala photos are stock images or authentic physical venues.',
+        },
+        {
+          label: 'Boilerplate Plagiarism',
+          info: 'Identifies copy-pasted rules and submission guidelines from known scam syndicates.',
+        },
+        {
+          label: 'Domain WHOIS Longevity',
+          info: 'Checks domain creation dates against claimed edition longevity numbers.',
+        },
+        {
+          label: 'Alumni Corroboration',
+          info: 'Verifies real filmmaker screening confirmations on Letterboxd and IMDb.',
+        },
       ],
       searchExamples: [
-        { label: 'Multi-Year Forensic Check', promptText: 'Run a deep multi-year forensic scan on Aldergate Film Festival examining alumni and domain history.' }
-      ]
+        {
+          label: 'Multi-Year Forensic Check',
+          promptText:
+            'Run a deep multi-year forensic scan on Aldergate Film Festival examining alumni and domain history.',
+        },
+      ],
     },
     {
       id: 'continuous-monitoring',
@@ -159,16 +270,29 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
       badgeColor: 'text-cyan-400 bg-cyan-500/10',
       icon: Activity,
       iconColor: 'text-cyan-400',
-      summary: 'Set autonomous watchlists and drift checks to monitor festivals for changes in deadlines, fees, or leadership.',
+      summary:
+        'Set autonomous watchlists and drift checks to monitor festivals for changes in deadlines, fees, or leadership.',
       tags: [
-        { label: 'Drift Detection', info: 'Detects changes in festival rules, fees, and submission deadlines over time.' },
-        { label: 'Autonomous Watchlists', info: 'Registers festivals into a continuous background monitoring list.' },
-        { label: 'Alert Dispatch', info: 'Dispatches notifications when monitored festivals show significant rule changes.' }
+        {
+          label: 'Drift Detection',
+          info: 'Detects changes in festival rules, fees, and submission deadlines over time.',
+        },
+        {
+          label: 'Autonomous Watchlists',
+          info: 'Registers festivals into a continuous background monitoring list.',
+        },
+        {
+          label: 'Alert Dispatch',
+          info: 'Dispatches notifications when monitored festivals show significant rule changes.',
+        },
       ],
       searchExamples: [
-        { label: 'Monitor Raindance', promptText: 'Add Raindance Film Festival to my watchlist and monitor for fee changes.' }
-      ]
-    }
+        {
+          label: 'Monitor Raindance',
+          promptText: 'Add Raindance Film Festival to my watchlist and monitor for fee changes.',
+        },
+      ],
+    },
   ];
 
   return createPortal(
@@ -190,10 +314,10 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 10 }}
             transition={{ duration: 0.18 }}
-            className="relative w-full max-w-3xl max-h-[88vh] rounded-3xl bg-[#090C1B] border border-[#1F254E] shadow-2xl p-5 sm:p-7 flex flex-col text-slate-100 z-10 overflow-hidden"
+            className="relative w-full max-w-3xl max-h-[88vh] rounded-3xl bg-darkroom-bg border border-darkroom-border shadow-2xl p-5 sm:p-7 flex flex-col text-slate-100 z-10 overflow-hidden"
           >
             {/* Header */}
-            <div className="flex items-start justify-between pb-4 border-b border-[#1A2045]">
+            <div className="flex items-start justify-between pb-4 border-b border-darkroom-border">
               <div>
                 <div className="flex items-center gap-2">
                   <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-500/20 text-indigo-400 text-sm">
@@ -204,7 +328,8 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
                   </h2>
                 </div>
                 <p className="text-base text-slate-300 mt-1">
-                  Hover on any capability tag to learn how the agent works, or click an example query.
+                  Hover on any capability tag to learn how the agent works, or click an example
+                  query.
                 </p>
               </div>
 
@@ -214,7 +339,7 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
                   soundEffects.playClick();
                   onClose();
                 }}
-                className="p-2 rounded-xl bg-[#111633] hover:bg-[#1A214D] border border-[#222B5F] text-slate-400 hover:text-white transition-colors cursor-pointer"
+                className="p-2 rounded-xl bg-darkroom-card hover:bg-darkroom-border border border-darkroom-border text-slate-400 hover:text-white transition-colors cursor-pointer"
                 title="Close"
               >
                 <X className="size-5" />
@@ -228,7 +353,7 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
                 return (
                   <div
                     key={domain.id}
-                    className="p-4 sm:p-5 rounded-2xl bg-[#03050B] transition-all space-y-3.5"
+                    className="p-4 sm:p-5 rounded-2xl bg-midnight-void transition-all space-y-3.5"
                   >
                     {/* Domain Header */}
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -240,15 +365,15 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
                           {domain.title}
                         </h3>
                       </div>
-                      <span className={`px-2.5 py-0.5 rounded-full text-xs font-mono ${domain.badgeColor} w-fit`}>
+                      <span
+                        className={`px-2.5 py-0.5 rounded-full text-xs font-mono ${domain.badgeColor} w-fit`}
+                      >
                         {domain.badge}
                       </span>
                     </div>
 
                     {/* Summary (Readable 16px font) */}
-                    <p className="text-base text-slate-300 leading-relaxed">
-                      {domain.summary}
-                    </p>
+                    <p className="text-base text-slate-300 leading-relaxed">{domain.summary}</p>
 
                     {/* Capability Tags Grid with Interactive Hover Tooltips */}
                     <div className="space-y-1.5">
@@ -257,7 +382,8 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
                       </span>
                       <div className="flex flex-wrap gap-2">
                         {domain.tags.map((tag, idx) => {
-                          const isHovered = activeHoverTag?.id === domain.id && activeHoverTag?.index === idx;
+                          const isHovered =
+                            activeHoverTag?.id === domain.id && activeHoverTag?.index === idx;
                           return (
                             <div
                               key={idx}
@@ -284,12 +410,14 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
                                     animate={{ opacity: 1, y: 0, scale: 1 }}
                                     exit={{ opacity: 0, y: 4, scale: 0.95 }}
                                     transition={{ duration: 0.12 }}
-                                    className="absolute bottom-full left-0 mb-2 w-64 p-3 rounded-xl bg-[#090C1F] border border-indigo-500/40 text-slate-100 text-xs shadow-2xl z-50 pointer-events-none"
+                                    className="absolute bottom-full left-0 mb-2 w-64 p-3 rounded-xl bg-darkroom-surface border border-indigo-500/40 text-slate-100 text-xs shadow-2xl z-50 pointer-events-none"
                                   >
                                     <div className="font-semibold text-indigo-300 mb-1 flex items-center gap-1">
                                       <span>⚡ {tag.label}</span>
                                     </div>
-                                    <p className="text-slate-300 leading-relaxed font-sans">{tag.info}</p>
+                                    <p className="text-slate-300 leading-relaxed font-sans">
+                                      {tag.info}
+                                    </p>
                                   </motion.div>
                                 )}
                               </AnimatePresence>
@@ -320,7 +448,7 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
             </div>
 
             {/* Modal Footer */}
-            <div className="pt-3 border-t border-[#1A2045] flex items-center justify-between text-xs font-mono text-slate-400">
+            <div className="pt-3 border-t border-darkroom-border flex items-center justify-between text-xs font-mono text-slate-400">
               <span>Screened Autonomous Intelligence</span>
               <button
                 type="button"
@@ -334,6 +462,6 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
         </div>
       )}
     </AnimatePresence>,
-    document.body
+    document.body,
   );
 };

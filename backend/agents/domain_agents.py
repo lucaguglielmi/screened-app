@@ -85,7 +85,7 @@ async def run_parallel_domain_agents(
     
     async def process_res(domain: ResearchDomain, res: Any) -> dict:
         if isinstance(res, Exception):
-            logger.error(f"Domain agent {domain.value} failed: {res}", exc_info=res)
+            logger.exception(f"Domain agent {domain.value} failed: {res}")
             await broadcaster.emit(
                 investigation_id=investigation_id,
                 event_type=EventType.ERROR,

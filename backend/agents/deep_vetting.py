@@ -147,7 +147,7 @@ Return a JSON object conforming strictly to the output schema.
                     return DeepVettingReport.model_validate(final_report_data)
                 
         except Exception as e:
-            logger.error(f"DeepVettingAgent ADK execution failed: {e}. Generating deterministic fallback.", exc_info=True)
+            logger.exception(f"DeepVettingAgent ADK execution failed: {e}. Generating deterministic fallback.")
             await broadcaster.emit(
                 investigation_id=investigation_id,
                 event_type=EventType.ERROR,

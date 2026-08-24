@@ -6,10 +6,10 @@ export type VerificationStatus = 'CORROBORATED' | 'SUPPORTED' | 'DISPUTED' | 'UN
 
 export type Stance = 'SUPPORTS' | 'CONTRADICTS' | 'MENTIONS';
 
-export type DetailDensity = 
-  | 'SIMPLIFIED' 
-  | 'BALANCED' 
-  | 'FULL_EVIDENCE' 
+export type DetailDensity =
+  | 'SIMPLIFIED'
+  | 'BALANCED'
+  | 'FULL_EVIDENCE'
   | 'MACHINE_AI_INGESTION'
   | 'SUMMARY'
   | 'STANDARD'
@@ -17,15 +17,20 @@ export type DetailDensity =
 
 export type ApprovalStatus = 'PENDING_APPROVAL' | 'APPROVED' | 'REJECTED' | 'EXECUTED_SANDBOX';
 
-export type ActiveTool = 'CONVERSATIONAL_DESK' | 'DUE_DILIGENCE' | 'OPPORTUNITY_SCOUT' | 'DESIGN_PLAYGROUND' | 'WHY_SCREENED' | 'HOW_TO_USE';
-
-
+export type ActiveTool =
+  | 'CONVERSATIONAL_DESK'
+  | 'DUE_DILIGENCE'
+  | 'OPPORTUNITY_SCOUT'
+  | 'DESIGN_PLAYGROUND'
+  | 'WHY_SCREENED'
+  | 'HOW_TO_USE';
 
 export type FilmFormat = 'SHORT' | 'FEATURE' | 'DOCUMENTARY' | 'ANIMATION' | 'EPISODIC';
 
-export type PremiereGoal = 'WORLD_PREMIERE' | 'INTERNATIONAL_PREMIERE' | 'NATIONAL_PREMIERE' | 'NO_PREFERENCE';
+export type PremiereGoal =
+  'WORLD_PREMIERE' | 'INTERNATIONAL_PREMIERE' | 'NATIONAL_PREMIERE' | 'NO_PREFERENCE';
 
-export type InvestigationStatus = 
+export type InvestigationStatus =
   | 'DRAFT'
   | 'DISAMBIGUATING'
   | 'AWAITING_ENTITY_CONFIRMATION'
@@ -228,7 +233,8 @@ export interface ActivityEvent {
   details?: any;
 }
 
-export type VettingSignalStatus = 'VERIFIED_AUTHENTIC' | 'INFORMATIONAL' | 'AMBER_WARNING' | 'RED_FLAG' | 'INCONCLUSIVE';
+export type VettingSignalStatus =
+  'VERIFIED_AUTHENTIC' | 'INFORMATIONAL' | 'AMBER_WARNING' | 'RED_FLAG' | 'INCONCLUSIVE';
 
 export interface DeepVettingDimension {
   id: string;

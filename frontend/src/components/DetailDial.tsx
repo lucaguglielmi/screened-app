@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { DetailDensity, EvidenceDossier, AtomicClaim } from '../types/investigation';
-import { 
-  Sparkles, 
-  BookOpen, 
-  Layers, 
-  ShieldAlert, 
-  Bot, 
-  Download, 
-  Check, 
-  SlidersHorizontal
+import {
+  Sparkles,
+  BookOpen,
+  Layers,
+  ShieldAlert,
+  Bot,
+  Download,
+  Check,
+  SlidersHorizontal,
 } from 'lucide-react';
 import { soundEffects } from '../utils/audio';
 
@@ -23,10 +23,14 @@ export const DetailDial: React.FC<Props> = ({ density, onChange, dossier }) => {
   const [downloadingMd, setDownloadingMd] = useState(false);
 
   // Normalize active density (handling legacy values)
-  const activeMode: DetailDensity = 
-    density === 'SUMMARY' ? 'SIMPLIFIED' :
-    density === 'STANDARD' ? 'BALANCED' :
-    density === 'EVIDENCE' ? 'FULL_EVIDENCE' : density;
+  const activeMode: DetailDensity =
+    density === 'SUMMARY'
+      ? 'SIMPLIFIED'
+      : density === 'STANDARD'
+        ? 'BALANCED'
+        : density === 'EVIDENCE'
+          ? 'FULL_EVIDENCE'
+          : density;
 
   const modeOptions: {
     value: DetailDensity;
@@ -53,7 +57,7 @@ export const DetailDial: React.FC<Props> = ({ density, onChange, dossier }) => {
       sublabel: 'Content, not overwhelming',
       icon: Layers,
       badgeColor: 'bg-blue-500/20 text-blue-400',
-      activeClass: 'bg-[#2018E6] text-white shadow-lg shadow-indigo-950/50',
+      activeClass: 'bg-midnight-royal text-white shadow-lg shadow-indigo-950/50',
     },
     {
       value: 'FULL_EVIDENCE',
@@ -71,7 +75,8 @@ export const DetailDial: React.FC<Props> = ({ density, onChange, dossier }) => {
       sublabel: 'AI & machine ingestion',
       icon: Bot,
       badgeColor: 'bg-rose-500/20 text-rose-400',
-      activeClass: 'bg-gradient-to-r from-[#F43F5E] to-[#E11D48] text-white shadow-lg shadow-rose-950/50',
+      activeClass:
+        'bg-gradient-to-r from-tool-scout to-tool-scout-hover text-white shadow-lg shadow-rose-950/50',
     },
   ];
 
@@ -86,15 +91,17 @@ export const DetailDial: React.FC<Props> = ({ density, onChange, dossier }) => {
       overall_risk: dossier?.overallRisk || 'MEDIUM',
       transparency_score: dossier?.transparencyIndex?.score || 85,
       contradictions_count: dossier?.contradictions?.length || 0,
-      claims_extracted: dossier?.atomicClaims?.map((c: AtomicClaim) => ({
-        id: c.id,
-        statement: c.statement,
-        status: c.status,
-        kind: c.claimKind,
-        source: c.evidence?.[0]?.sourceDomain || 'Trade Archive'
-      })) || [],
+      claims_extracted:
+        dossier?.atomicClaims?.map((c: AtomicClaim) => ({
+          id: c.id,
+          statement: c.statement,
+          status: c.status,
+          kind: c.claimKind,
+          source: c.evidence?.[0]?.sourceDomain || 'Trade Archive',
+        })) || [],
       ingestion_timestamp: new Date().toISOString(),
-      recommended_action: "Analyze contradiction graph and draft verified inquiry email to organizers if required."
+      recommended_action:
+        'Analyze contradiction graph and draft verified inquiry email to organizers if required.',
     };
 
     const textToCopy = `// === SCREENED INTEL -> ANTIGRAVITY AGENT CONTEXT ===\n${JSON.stringify(payload, null, 2)}`;
@@ -118,7 +125,16 @@ export const DetailDial: React.FC<Props> = ({ density, onChange, dossier }) => {
     mdContent += `**Date of Audit**: ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}\n`;
     mdContent += `**Target Domain**: ${dossier?.officialDomain || 'N/A'}\n`;
     mdContent += `**Transparency Index Score**: ${dossier?.transparencyIndex?.score || 85}/100\n`;
-    mdContent += `**Audit SHA-256 Digest**: \`${dossier?.reportSummary ? '0x' + Array.from(festName).map((c: string) => c.charCodeAt(0).toString(16)).join('').padEnd(64, '0').slice(0, 64) : '0x8f7a93b2c14e56d8e90a'}\`\n\n`;
+    mdContent += `**Audit SHA-256 Digest**: \`${
+      dossier?.reportSummary
+        ? '0x' +
+          Array.from(festName)
+            .map((c: string) => c.charCodeAt(0).toString(16))
+            .join('')
+            .padEnd(64, '0')
+            .slice(0, 64)
+        : '0x8f7a93b2c14e56d8e90a'
+    }\`\n\n`;
 
     mdContent += `## Executive Summary\n\n${dossier?.reportSummary || 'Autonomous investigation concluded with full multi-source cross-verification.'}\n\n`;
 
@@ -167,7 +183,7 @@ export const DetailDial: React.FC<Props> = ({ density, onChange, dossier }) => {
   };
 
   return (
-    <div className="w-full rounded-3xl bg-[#0E1124] p-4 sm:p-5 shadow-2xl space-y-4">
+    <div className="w-full rounded-3xl bg-darkroom-surface p-4 sm:p-5 shadow-2xl space-y-4">
       {/* Top Header: Exact user prompt and Action Buttons */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="flex items-center gap-2.5">
@@ -190,7 +206,7 @@ export const DetailDial: React.FC<Props> = ({ density, onChange, dossier }) => {
           <button
             type="button"
             onClick={handleSendToAntigravity}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#141834] hover:bg-[#1E2552] text-xs font-mono text-indigo-300 hover:text-white transition-all shadow-md cursor-pointer group active:scale-95"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-mono text-indigo-300 hover:text-white transition-all shadow-md cursor-pointer group active:scale-95"
             title="Send structured data to Antigravity agent clipboard"
           >
             {copiedAntigravity ? (
@@ -211,7 +227,7 @@ export const DetailDial: React.FC<Props> = ({ density, onChange, dossier }) => {
             type="button"
             onClick={handleDownloadMarkdown}
             disabled={downloadingMd}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#141834] hover:bg-[#1E2552] text-xs font-mono text-slate-200 hover:text-white transition-all shadow-md cursor-pointer group active:scale-95"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-mono text-slate-200 hover:text-white transition-all shadow-md cursor-pointer group active:scale-95"
             title="Download full due diligence evidence as a Markdown (.md) document"
           >
             <Download className="size-3.5 text-slate-400 group-hover:text-emerald-400 transition-colors" />
@@ -237,7 +253,7 @@ export const DetailDial: React.FC<Props> = ({ density, onChange, dossier }) => {
               className={`p-3 sm:p-3.5 rounded-2xl text-left transition-all cursor-pointer flex flex-col justify-between gap-1.5 ${
                 isSelected
                   ? `${opt.activeClass} scale-102`
-                  : 'bg-[#141834] text-slate-300 hover:bg-[#1C224B] hover:text-white'
+                  : 'bg-darkroom-card text-slate-300 hover:bg-darkroom-border hover:text-white'
               }`}
             >
               <div className="flex items-center justify-between gap-2">
@@ -247,11 +263,11 @@ export const DetailDial: React.FC<Props> = ({ density, onChange, dossier }) => {
                     {opt.stepNumber}. {opt.label}
                   </span>
                 </div>
-                {isSelected && (
-                  <span className="size-2 rounded-full bg-white animate-pulse" />
-                )}
+                {isSelected && <span className="size-2 rounded-full bg-white animate-pulse" />}
               </div>
-              <p className={`text-[10px] font-mono leading-tight ${isSelected ? 'text-white/85' : 'text-slate-400'}`}>
+              <p
+                className={`text-[10px] font-mono leading-tight ${isSelected ? 'text-white/85' : 'text-slate-400'}`}
+              >
                 {opt.sublabel}
               </p>
             </button>

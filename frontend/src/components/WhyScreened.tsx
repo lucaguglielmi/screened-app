@@ -1,15 +1,15 @@
 import React from 'react';
-import { 
-  ShieldCheck, 
-  Sparkles, 
-  Scale, 
-  Clock, 
-  FileText, 
-  Compass, 
-  Quote, 
-  CheckCircle2, 
+import {
+  ShieldCheck,
+  Sparkles,
+  Scale,
+  Clock,
+  FileText,
+  Compass,
+  Quote,
+  CheckCircle2,
   TrendingDown,
-  Layers
+  Layers,
 } from 'lucide-react';
 
 interface Props {
@@ -18,38 +18,45 @@ interface Props {
   onNavigateToScout: () => void;
 }
 
-
 const RESEARCH_THEMES = [
   {
     theme: 'Fee Without Physical Screening',
-    description: 'Festivals soliciting £50–£120 submission fees under the promise of West End / theatrical galas, subsequently pivoting to unlisted private Vimeo links with zero audience.',
+    description:
+      'Festivals soliciting £50–£120 submission fees under the promise of West End / theatrical galas, subsequently pivoting to unlisted private Vimeo links with zero audience.',
     sourceCount: 38,
     dateRange: '2022 – 2026',
-    quote: '"We paid £85 for a Gala Premiere category. Two days before, they emailed an unlisted Vimeo link with 3 total views. The cinema venue they advertised had no record of them."',
+    quote:
+      '"We paid £85 for a Gala Premiere category. Two days before, they emailed an unlisted Vimeo link with 3 total views. The cinema venue they advertised had no record of them."',
     attribution: 'INDEPENDENT DOCUMENTARY DIRECTOR, UK',
   },
   {
     theme: 'Laurel Mill & Vanity Certificate Schemes',
-    description: 'Fabricated awards created exclusively to sell digital laurels, physical trophies (£150+), and paid press releases to micro-budget filmmakers seeking early validation.',
+    description:
+      'Fabricated awards created exclusively to sell digital laurels, physical trophies (£150+), and paid press releases to micro-budget filmmakers seeking early validation.',
     sourceCount: 45,
     dateRange: '2021 – 2026',
-    quote: '"Selected in 14 categories within 6 hours of submitting. They offered an Official Laurel Trophy for £180 plus shipping. There was no festival program or jury."',
+    quote:
+      '"Selected in 14 categories within 6 hours of submitting. They offered an Official Laurel Trophy for £180 plus shipping. There was no festival program or jury."',
     attribution: 'DEBUT INDIE PRODUCER, BIFA LONGLIST CANDIDATE',
   },
   {
     theme: 'Phantom Venue & Municipal Lease Contradictions',
-    description: 'Promotional literature claiming historical cinema leases (e.g. IMAX, BFI Southbank, Curzon), contradicted by municipal licensing records and direct cinema manifests.',
+    description:
+      'Promotional literature claiming historical cinema leases (e.g. IMAX, BFI Southbank, Curzon), contradicted by municipal licensing records and direct cinema manifests.',
     sourceCount: 29,
     dateRange: '2023 – 2026',
-    quote: '"I called the venue directly to ask about technical DCP specs. The box office manager said they had never heard of the festival and were screening Dune 2 that night."',
+    quote:
+      '"I called the venue directly to ask about technical DCP specs. The box office manager said they had never heard of the festival and were screening Dune 2 that night."',
     attribution: 'NARRATIVE SHORT FILMMAKER, GLASGOW',
   },
   {
     theme: 'Ghost Organizers & Impunity',
-    description: 'Dissolved corporate entities with no public directors, unmonitored generic web forms, and zero refund accountability once fees are transferred.',
+    description:
+      'Dissolved corporate entities with no public directors, unmonitored generic web forms, and zero refund accountability once fees are transferred.',
     sourceCount: 22,
     dateRange: '2022 – 2026',
-    quote: '"Once payment went through, all communication vanished. When we checked Companies House, the operating company was dissolved 8 months before submissions opened."',
+    quote:
+      '"Once payment went through, all communication vanished. When we checked Companies House, the operating company was dissolved 8 months before submissions opened."',
     attribution: 'ANIMATION PRODUCER, BRISTOL',
   },
 ];
@@ -71,8 +78,10 @@ export const WhyScreened: React.FC<Props> = ({
           Why Screened Exists
         </h1>
         <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
-          Independent filmmakers spend over <strong className="text-black font-bold">£1,500 – £4,000</strong> per festival cycle in submission fees. 
-          Without transparent public evidence, micro-budget productions bear the brunt of predatory laurel mills and phantom venue claims.
+          Independent filmmakers spend over{' '}
+          <strong className="text-black font-bold">£1,500 – £4,000</strong> per festival cycle in
+          submission fees. Without transparent public evidence, micro-budget productions bear the
+          brunt of predatory laurel mills and phantom venue claims.
         </p>
       </section>
 
@@ -114,7 +123,9 @@ export const WhyScreened: React.FC<Props> = ({
                 </div>
                 <div>
                   <div className="text-xl font-bold text-black">20+ Browser Tabs</div>
-                  <p className="text-xs text-slate-600">Reddit, FilmFreeway, Companies House, blogs</p>
+                  <p className="text-xs text-slate-600">
+                    Reddit, FilmFreeway, Companies House, blogs
+                  </p>
                 </div>
               </div>
 
@@ -124,13 +135,16 @@ export const WhyScreened: React.FC<Props> = ({
                 </div>
                 <div>
                   <div className="text-xl font-bold text-black">Ungrounded Risk</div>
-                  <p className="text-xs text-slate-600">No cryptographic verification or citation index</p>
+                  <p className="text-xs text-slate-600">
+                    No cryptographic verification or citation index
+                  </p>
                 </div>
               </div>
             </div>
 
             <p className="text-xs text-slate-600 italic pt-3 border-t border-slate-200">
-              "You end up relying on fragmented hearsay in Facebook groups, or you just pay the £80 and hope for the best."
+              "You end up relying on fragmented hearsay in Facebook groups, or you just pay the £80
+              and hope for the best."
             </p>
           </div>
 
@@ -162,7 +176,9 @@ export const WhyScreened: React.FC<Props> = ({
                 </div>
                 <div>
                   <div className="text-xl font-bold text-black">100% Verifiable Excerpts</div>
-                  <p className="text-xs text-slate-700">Every statement mapped to source dates & URLs</p>
+                  <p className="text-xs text-slate-700">
+                    Every statement mapped to source dates & URLs
+                  </p>
                 </div>
               </div>
 
@@ -172,7 +188,9 @@ export const WhyScreened: React.FC<Props> = ({
                 </div>
                 <div>
                   <div className="text-xl font-bold text-black">Contradiction Analysis</div>
-                  <p className="text-xs text-slate-700">Conflicting trade evidence reconciled neutrally</p>
+                  <p className="text-xs text-slate-700">
+                    Conflicting trade evidence reconciled neutrally
+                  </p>
                 </div>
               </div>
             </div>
@@ -194,16 +212,14 @@ export const WhyScreened: React.FC<Props> = ({
             Common Grievance Vectors Harvested via Parallel Search
           </h2>
           <p className="text-base text-slate-700 max-w-3xl">
-            Representative qualitative accounts harvested across filmmaker forums (Reddit r/Filmmakers, FilmFreeway communities, Stage 32, and industry blogs).
+            Representative qualitative accounts harvested across filmmaker forums (Reddit
+            r/Filmmakers, FilmFreeway communities, Stage 32, and industry blogs).
           </p>
         </div>
 
         <div className="space-y-8 pt-4">
           {RESEARCH_THEMES.map((item, idx) => (
-            <div
-              key={idx}
-              className="space-y-3"
-            >
+            <div key={idx} className="space-y-3">
               <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-slate-200 pb-2">
                 <h3 className="text-lg font-bold text-black font-serif">
                   {idx + 1}. {item.theme}
@@ -215,16 +231,12 @@ export const WhyScreened: React.FC<Props> = ({
                 </div>
               </div>
 
-              <p className="text-base text-slate-800 leading-relaxed">
-                {item.description}
-              </p>
+              <p className="text-base text-slate-800 leading-relaxed">{item.description}</p>
 
               <div className="pl-4 border-l-4 border-slate-300 space-y-1">
                 <div className="flex items-start gap-2">
                   <Quote className="size-4 text-slate-400 shrink-0 mt-1" />
-                  <p className="text-base text-slate-700 italic leading-relaxed">
-                    {item.quote}
-                  </p>
+                  <p className="text-base text-slate-700 italic leading-relaxed">{item.quote}</p>
                 </div>
                 <div className="text-[10px] font-mono text-slate-500 uppercase tracking-wider pl-6">
                   — {item.attribution}
@@ -240,14 +252,21 @@ export const WhyScreened: React.FC<Props> = ({
         <div className="flex items-center gap-3 border-b border-slate-300 pb-4">
           <FileText className="size-6 text-black" />
           <div>
-            <h3 className="text-xl font-bold text-black font-serif">Methodology & Research Provenance</h3>
-            <p className="text-xs font-mono text-slate-600">Self-Validating Research Architecture</p>
+            <h3 className="text-xl font-bold text-black font-serif">
+              Methodology & Research Provenance
+            </h3>
+            <p className="text-xs font-mono text-slate-600">
+              Self-Validating Research Architecture
+            </p>
           </div>
         </div>
 
         <p className="text-base text-slate-800 leading-relaxed pt-2">
-          The research behind this problem framing was conducted using <strong className="text-black font-bold">Parallel Search</strong> — the exact same autonomous web-mining engine that powers Screened. 
-          By cross-examining public trade archives, Companies House filings, municipal screening license records, and filmmaker accounts, Screened's agents apply forensic due diligence to protect indie productions.
+          The research behind this problem framing was conducted using{' '}
+          <strong className="text-black font-bold">Parallel Search</strong> — the exact same
+          autonomous web-mining engine that powers Screened. By cross-examining public trade
+          archives, Companies House filings, municipal screening license records, and filmmaker
+          accounts, Screened's agents apply forensic due diligence to protect indie productions.
         </p>
 
         <div className="pt-6 mt-6 border-t border-slate-300 flex flex-wrap items-center justify-between gap-6">
@@ -287,4 +306,3 @@ export const WhyScreened: React.FC<Props> = ({
     </div>
   );
 };
-

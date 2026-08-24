@@ -63,5 +63,5 @@ class ParallelExtractTool:
                         }
             return provenance
         except Exception as e:
-            logger.error(f"Extract failed: {e}", exc_info=True)
+            logger.exception(f"Extract failed: {e}")
             return {}

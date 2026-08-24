@@ -8,7 +8,8 @@ import path from 'path';
 // Determine commit hash and build time
 let commitSha = 'dev';
 try {
-  commitSha = process.env.COMMIT_SHA || execSync('git rev-parse --short HEAD', { encoding: 'utf-8' }).trim();
+  commitSha =
+    process.env.COMMIT_SHA || execSync('git rev-parse --short HEAD', { encoding: 'utf-8' }).trim();
 } catch {
   commitSha = process.env.COMMIT_SHA || 'unknown';
 }
@@ -34,7 +35,7 @@ function versionGeneratorPlugin() {
       }
       fs.writeFileSync(
         path.resolve(publicDir, 'version.json'),
-        JSON.stringify(versionData, null, 2)
+        JSON.stringify(versionData, null, 2),
       );
     },
     generateBundle() {
@@ -54,11 +55,7 @@ export default defineConfig({
     __COMMIT_SHA__: JSON.stringify(commitSha),
     __APP_VERSION__: JSON.stringify(appVersion),
   },
-  plugins: [
-    react(),
-    tailwindcss(),
-    versionGeneratorPlugin(),
-  ],
+  plugins: [react(), tailwindcss(), versionGeneratorPlugin()],
   server: {
     port: 5173,
     proxy: {

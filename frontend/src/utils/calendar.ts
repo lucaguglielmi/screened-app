@@ -5,7 +5,7 @@ export function downloadFestivalIcs(
   deadlineName: string,
   deadlineDateStr: string,
   feeEstimate?: string,
-  festivalUrl?: string
+  festivalUrl?: string,
 ) {
   // Parse date
   let dateObj = new Date(deadlineDateStr);
@@ -31,8 +31,10 @@ export function downloadFestivalIcs(
     feeEstimate ? `Estimated Fee: ${feeEstimate}` : '',
     festivalUrl ? `URL: ${festivalUrl}` : '',
     '',
-    'Tracked via Screened (Agentic Cinema Due-Diligence)'
-  ].filter(Boolean).join('\\n');
+    'Tracked via Screened (Agentic Cinema Due-Diligence)',
+  ]
+    .filter(Boolean)
+    .join('\\n');
 
   const icsContent = [
     'BEGIN:VCALENDAR',
@@ -52,7 +54,7 @@ export function downloadFestivalIcs(
     'TRIGGER:-P3D',
     'END:VALARM',
     'END:VEVENT',
-    'END:VCALENDAR'
+    'END:VCALENDAR',
   ].join('\r\n');
 
   const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });

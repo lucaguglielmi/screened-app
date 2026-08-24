@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  MessageSquare, 
-  Star, 
-  Search, 
-  RefreshCw, 
-  Filter, 
-  Plus, 
-  User, 
-  Clock, 
-  Loader2
+import {
+  MessageSquare,
+  Star,
+  Search,
+  RefreshCw,
+  Filter,
+  Plus,
+  User,
+  Clock,
+  Loader2,
 } from 'lucide-react';
 import { soundEffects } from '../../utils/audio';
 
@@ -28,23 +28,54 @@ interface FeedbackLogTabProps {
 }
 
 const CATEGORY_MAP: Record<string, { label: string; bg: string; text: string; border: string }> = {
-  ACCURACY: { label: 'Forensic Accuracy', bg: 'bg-[#00D29E]/20', text: 'text-[#00D29E]', border: 'border-[#00D29E]/40' },
-  RECOMMENDATIONS: { label: 'Grant Matching', bg: 'bg-emerald-500/20', text: 'text-emerald-300', border: 'border-emerald-500/40' },
-  CHAT_INTELLIGENCE: { label: 'Mission Control AI', bg: 'bg-indigo-500/20', text: 'text-indigo-300', border: 'border-indigo-500/40' },
-  UI_DESIGN: { label: 'UI & Design', bg: 'bg-purple-500/20', text: 'text-purple-300', border: 'border-purple-500/40' },
-  FEATURE_REQUEST: { label: 'Feature Request', bg: 'bg-amber-500/20', text: 'text-amber-300', border: 'border-amber-500/40' },
-  GENERAL: { label: 'General', bg: 'bg-slate-500/20', text: 'text-slate-300', border: 'border-slate-500/40' },
+  ACCURACY: {
+    label: 'Forensic Accuracy',
+    bg: 'bg-tool-diligence/20',
+    text: 'text-tool-diligence',
+    border: 'border-tool-diligence/40',
+  },
+  RECOMMENDATIONS: {
+    label: 'Grant Matching',
+    bg: 'bg-emerald-500/20',
+    text: 'text-emerald-300',
+    border: 'border-emerald-500/40',
+  },
+  CHAT_INTELLIGENCE: {
+    label: 'Mission Control AI',
+    bg: 'bg-indigo-500/20',
+    text: 'text-indigo-300',
+    border: 'border-indigo-500/40',
+  },
+  UI_DESIGN: {
+    label: 'UI & Design',
+    bg: 'bg-purple-500/20',
+    text: 'text-purple-300',
+    border: 'border-purple-500/40',
+  },
+  FEATURE_REQUEST: {
+    label: 'Feature Request',
+    bg: 'bg-amber-500/20',
+    text: 'text-amber-300',
+    border: 'border-amber-500/40',
+  },
+  GENERAL: {
+    label: 'General',
+    bg: 'bg-slate-500/20',
+    text: 'text-slate-300',
+    border: 'border-slate-500/40',
+  },
 };
 
 const STATUS_MAP: Record<string, { label: string; color: string }> = {
   RECEIVED: { label: 'Received', color: 'bg-blue-500/20 text-blue-300 border-blue-500/30' },
-  REVIEWED: { label: 'Reviewed', color: 'bg-[#00D29E]/20 text-[#00D29E] border-[#00D29E]/30' },
+  REVIEWED: {
+    label: 'Reviewed',
+    color: 'bg-tool-diligence/20 text-tool-diligence border-tool-diligence/30',
+  },
   PLANNED: { label: 'In Roadmap', color: 'bg-purple-500/20 text-purple-300 border-purple-500/30' },
 };
 
-export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({
-  onOpenFeedbackModal,
-}) => {
+export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({ onOpenFeedbackModal }) => {
   const [feedbacks, setFeedbacks] = useState<FeedbackItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -72,7 +103,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({
 
   const filteredFeedbacks = feedbacks.filter((item) => {
     const matchesCat = selectedCategory === 'ALL' || item.category === selectedCategory;
-    const matchesSearch = 
+    const matchesSearch =
       item.comment.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (item.authorName && item.authorName.toLowerCase().includes(searchQuery.toLowerCase())) ||
       (item.authorEmail && item.authorEmail.toLowerCase().includes(searchQuery.toLowerCase()));
@@ -81,14 +112,17 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({
 
   // Analytics Metrics
   const totalCount = feedbacks.length;
-  const avgRating = totalCount > 0 ? (feedbacks.reduce((acc, f) => acc + f.rating, 0) / totalCount).toFixed(1) : '5.0';
-  const accuracyCount = feedbacks.filter(f => f.category === 'ACCURACY').length;
-  const featureCount = feedbacks.filter(f => f.category === 'FEATURE_REQUEST').length;
+  const avgRating =
+    totalCount > 0
+      ? (feedbacks.reduce((acc, f) => acc + f.rating, 0) / totalCount).toFixed(1)
+      : '5.0';
+  const accuracyCount = feedbacks.filter((f) => f.category === 'ACCURACY').length;
+  const featureCount = feedbacks.filter((f) => f.category === 'FEATURE_REQUEST').length;
 
   return (
     <div className="space-y-8 animate-fade-in text-slate-100 select-none">
       {/* Tab Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#22274C] pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-darkroom-border pb-6">
         <div className="flex items-center gap-3">
           <div className="p-3 rounded-2xl bg-indigo-500/20 border border-indigo-500/40 text-indigo-400">
             <MessageSquare className="size-6" />
@@ -98,7 +132,8 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({
               Filmmaker Feedback & Intelligence Log
             </h2>
             <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
-              Live repository of user submissions, feature requests, and forensic accuracy assessments
+              Live repository of user submissions, feature requests, and forensic accuracy
+              assessments
             </p>
           </div>
         </div>
@@ -110,7 +145,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({
               fetchFeedback();
             }}
             disabled={loading}
-            className="px-3.5 py-2 rounded-xl bg-[#0E1124] hover:bg-[#181D3D] text-slate-300 border border-[#22274C] text-xs font-mono flex items-center gap-2 transition-colors cursor-pointer"
+            className="px-3.5 py-2 rounded-xl bg-darkroom-surface hover:bg-darkroom-card text-slate-300 border border-darkroom-border text-xs font-mono flex items-center gap-2 transition-colors cursor-pointer"
           >
             <RefreshCw className={`size-3.5 ${loading ? 'animate-spin' : ''}`} />
             <span>Refresh</span>
@@ -122,7 +157,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({
                 soundEffects.playClick();
                 onOpenFeedbackModal();
               }}
-              className="px-4 py-2 rounded-xl bg-[#2018E6] hover:bg-[#322CE8] text-white font-bold text-xs font-mono flex items-center gap-2 transition-all shadow-md shadow-indigo-950/50 cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-midnight-royal hover:bg-midnight-royal text-white font-bold text-xs font-mono flex items-center gap-2 transition-all shadow-md shadow-indigo-950/50 cursor-pointer"
             >
               <Plus className="size-3.5" />
               <span>Submit Test Feedback</span>
@@ -134,7 +169,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({
       {/* Analytics Metric Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Metric 1 */}
-        <div className="p-5 rounded-2xl bg-[#090C19] shadow-lg space-y-1">
+        <div className="p-5 rounded-2xl bg-darkroom-bg shadow-lg space-y-1">
           <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 block">
             Total Submissions
           </span>
@@ -143,7 +178,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({
         </div>
 
         {/* Metric 2 */}
-        <div className="p-5 rounded-2xl bg-[#090C19] shadow-lg space-y-1">
+        <div className="p-5 rounded-2xl bg-darkroom-bg shadow-lg space-y-1">
           <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 block">
             Avg Satisfaction Rating
           </span>
@@ -155,16 +190,16 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({
         </div>
 
         {/* Metric 3 */}
-        <div className="p-5 rounded-2xl bg-[#090C19] shadow-lg space-y-1">
+        <div className="p-5 rounded-2xl bg-darkroom-bg shadow-lg space-y-1">
           <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 block">
             Accuracy & Vetting
           </span>
-          <div className="text-3xl font-bold font-serif text-[#00D29E]">{accuracyCount}</div>
+          <div className="text-3xl font-bold font-serif text-tool-diligence">{accuracyCount}</div>
           <span className="text-[11px] text-slate-400">Forensic accuracy reports</span>
         </div>
 
         {/* Metric 4 */}
-        <div className="p-5 rounded-2xl bg-[#090C19] shadow-lg space-y-1">
+        <div className="p-5 rounded-2xl bg-darkroom-bg shadow-lg space-y-1">
           <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 block">
             Roadmap Requests
           </span>
@@ -174,7 +209,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="p-4 rounded-2xl bg-[#0E1124] flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="p-4 rounded-2xl bg-darkroom-surface flex flex-col md:flex-row items-center justify-between gap-4">
         {/* Search */}
         <div className="relative w-full md:w-80">
           <Search className="size-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -183,7 +218,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search feedback by text or author..."
-            className="w-full pl-10 pr-4 py-2 rounded-xl bg-[#090C19] border border-[#22274C] text-xs font-mono text-slate-100 placeholder-slate-400 focus:outline-none focus:border-indigo-500"
+            className="w-full pl-10 pr-4 py-2 rounded-xl bg-darkroom-bg border border-darkroom-border text-xs font-mono text-slate-100 placeholder-slate-400 focus:outline-none focus:border-indigo-500"
           />
         </div>
 
@@ -192,7 +227,15 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({
           <span className="text-xs font-mono text-slate-400 mr-1 flex items-center gap-1">
             <Filter className="size-3" /> Filter:
           </span>
-          {['ALL', 'ACCURACY', 'RECOMMENDATIONS', 'CHAT_INTELLIGENCE', 'UI_DESIGN', 'FEATURE_REQUEST', 'GENERAL'].map((cat) => (
+          {[
+            'ALL',
+            'ACCURACY',
+            'RECOMMENDATIONS',
+            'CHAT_INTELLIGENCE',
+            'UI_DESIGN',
+            'FEATURE_REQUEST',
+            'GENERAL',
+          ].map((cat) => (
             <button
               key={cat}
               onClick={() => {
@@ -201,18 +244,18 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({
               }}
               className={`px-2.5 py-1 rounded-lg text-xs font-mono whitespace-nowrap transition-colors cursor-pointer border ${
                 selectedCategory === cat
-                  ? 'bg-[#2018E6] text-white border-indigo-400'
-                  : 'bg-[#090C19] text-slate-300 border-[#22274C] hover:border-[#38407B]'
+                  ? 'bg-midnight-royal text-white border-indigo-400'
+                  : 'bg-darkroom-bg text-slate-300 border-darkroom-border hover:border-midnight-violet'
               }`}
             >
-              {cat === 'ALL' ? 'All Logs' : (CATEGORY_MAP[cat]?.label || cat)}
+              {cat === 'ALL' ? 'All Logs' : CATEGORY_MAP[cat]?.label || cat}
             </button>
           ))}
         </div>
       </div>
 
       {/* Main Feedback Data Table */}
-      <div className="rounded-3xl bg-[#090C19] shadow-2xl overflow-hidden">
+      <div className="rounded-3xl bg-darkroom-bg shadow-2xl overflow-hidden">
         {loading ? (
           <div className="p-16 text-center space-y-3">
             <Loader2 className="size-8 animate-spin mx-auto text-indigo-400" />
@@ -237,7 +280,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="border-b border-[#1F254E] bg-[#0C1024] text-slate-400 font-mono uppercase text-[11px] tracking-wider">
+                <tr className="border-b border-darkroom-border bg-darkroom-surface text-slate-400 font-mono uppercase text-[11px] tracking-wider">
                   <th className="py-3.5 px-4 font-semibold">Rating</th>
                   <th className="py-3.5 px-4 font-semibold">Category</th>
                   <th className="py-3.5 px-6 font-semibold">Comment & Suggestions</th>
@@ -259,7 +302,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({
                   });
 
                   return (
-                    <tr key={item.id} className="hover:bg-[#0E1228] transition-colors">
+                    <tr key={item.id} className="hover:bg-darkroom-surface transition-colors">
                       {/* Rating Stars */}
                       <td className="py-4 px-4 whitespace-nowrap">
                         <div className="flex items-center gap-1 text-amber-400">

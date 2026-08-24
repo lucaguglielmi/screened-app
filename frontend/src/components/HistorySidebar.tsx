@@ -19,7 +19,7 @@ export const HistorySidebar: React.FC<Props> = ({ isOpen, onClose, onSelectInves
       try {
         const saved = localStorage.getItem('screened_investigation_ids');
         if (!saved) return;
-        
+
         const ids: string[] = JSON.parse(saved);
         if (ids.length === 0) return;
 
@@ -49,18 +49,16 @@ export const HistorySidebar: React.FC<Props> = ({ isOpen, onClose, onSelectInves
 
   return (
     <>
-      <div 
+      <div
         className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 transition-opacity"
         onClick={onClose}
       />
-      
+
       <aside className="fixed inset-y-0 right-0 w-full sm:w-96 bg-paper-surface dark:bg-darkroom-surface border-l border-paper-border dark:border-darkroom-border shadow-2xl z-50 flex flex-col animate-in slide-in-from-right duration-200">
         <div className="p-4 border-b border-paper-border dark:border-darkroom-border flex items-center justify-between">
           <div className="flex items-center gap-2">
             <History className="size-5 text-indigo-500" />
-            <h2 className="font-semibold text-paper-text dark:text-darkroom-text">
-              Past Searches
-            </h2>
+            <h2 className="font-semibold text-paper-text dark:text-darkroom-text">Past Searches</h2>
           </div>
           <button
             onClick={onClose}
@@ -96,19 +94,21 @@ export const HistorySidebar: React.FC<Props> = ({ isOpen, onClose, onSelectInves
                   </h3>
                   <ChevronRight className="size-4 text-paper-muted dark:text-darkroom-muted group-hover:translate-x-1 transition-transform shrink-0" />
                 </div>
-                
+
                 <div className="flex items-center gap-3 text-xs text-paper-muted dark:text-darkroom-muted">
                   <span className="flex items-center gap-1">
                     <Clock className="size-3" />
                     {new Date(inv.createdAt).toLocaleDateString()}
                   </span>
-                  <span className={`px-2 py-0.5 rounded-full font-mono font-medium ${
-                    inv.status === 'READY' 
-                      ? 'bg-emerald-500/10 text-emerald-500'
-                      : inv.status === 'FAILED'
-                      ? 'bg-rose-500/10 text-rose-500'
-                      : 'bg-indigo-500/10 text-indigo-500'
-                  }`}>
+                  <span
+                    className={`px-2 py-0.5 rounded-full font-mono font-medium ${
+                      inv.status === 'READY'
+                        ? 'bg-emerald-500/10 text-emerald-500'
+                        : inv.status === 'FAILED'
+                          ? 'bg-rose-500/10 text-rose-500'
+                          : 'bg-indigo-500/10 text-indigo-500'
+                    }`}
+                  >
                     {inv.status}
                   </span>
                 </div>

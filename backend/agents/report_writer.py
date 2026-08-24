@@ -112,7 +112,7 @@ Return a JSON object conforming to this schema:
                 ]),
             )
         except Exception as e:
-            logger.error(f"ReportWriter failed: {e}", exc_info=True)
+            logger.exception(f"ReportWriter failed: {e}")
             return DossierReport(
                 executiveSummary=f"Investigation completed for {entity.name}. Extracted {len(claims)} claims across {len(sources)} sources.",
                 festivalOverview="Festival details compiled from verified web excerpts.",

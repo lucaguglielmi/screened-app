@@ -43,7 +43,7 @@ class Database:
         try:
             self.client.collection("investigations").document(investigation_id).set(data, merge=True)
         except Exception as e:
-            logger.error(f"Firestore save_investigation failed: {e}. Writing to memory.", exc_info=True)
+            logger.exception(f"Firestore save_investigation failed: {e}. Writing to memory.")
             self._memory_store["investigations"][investigation_id] = data
 
     async def get_investigation(self, investigation_id: str) -> Optional[Dict[str, Any]]:
@@ -55,7 +55,7 @@ class Database:
                 return doc.to_dict()
             return self._memory_store["investigations"].get(investigation_id)
         except Exception as e:
-            logger.error(f"Firestore get_investigation failed: {e}", exc_info=True)
+            logger.exception(f"Firestore get_investigation failed: {e}")
             return self._memory_store["investigations"].get(investigation_id)
 
     async def save_claims(self, investigation_id: str, claims: List[AtomicClaim]) -> None:
@@ -71,7 +71,7 @@ class Database:
                 batch.set(doc_ref, data)
             batch.commit()
         except Exception as e:
-            logger.error(f"Firestore save_claims failed: {e}", exc_info=True)
+            logger.exception(f"Firestore save_claims failed: {e}")
             self._memory_store["claims"][investigation_id] = [c.model_dump() for c in claims]
 
     async def get_claims(self, investigation_id: str) -> List[Dict[str, Any]]:
@@ -84,7 +84,7 @@ class Database:
                 return self._memory_store["claims"].get(investigation_id, [])
             return res
         except Exception as e:
-            logger.error(f"Firestore get_claims failed: {e}", exc_info=True)
+            logger.exception(f"Firestore get_claims failed: {e}")
             return self._memory_store["claims"].get(investigation_id, [])
 
     async def save_sources(self, investigation_id: str, sources: List[SourceRecord]) -> None:
@@ -100,7 +100,7 @@ class Database:
                 batch.set(doc_ref, data)
             batch.commit()
         except Exception as e:
-            logger.error(f"Firestore save_sources failed: {e}", exc_info=True)
+            logger.exception(f"Firestore save_sources failed: {e}")
             self._memory_store["sources"][investigation_id] = [s.model_dump() for s in sources]
 
     async def get_sources(self, investigation_id: str) -> List[Dict[str, Any]]:
@@ -113,7 +113,7 @@ class Database:
                 return self._memory_store["sources"].get(investigation_id, [])
             return res
         except Exception as e:
-            logger.error(f"Firestore get_sources failed: {e}", exc_info=True)
+            logger.exception(f"Firestore get_sources failed: {e}")
             return self._memory_store["sources"].get(investigation_id, [])
 
     async def save_event(self, investigation_id: str, event_data: Dict[str, Any]) -> None:
@@ -128,7 +128,7 @@ class Database:
             batch.set(doc_ref, event_data)
             batch.commit()
         except Exception as e:
-            logger.error(f"Firestore save_event failed: {e}", exc_info=True)
+            logger.exception(f"Firestore save_event failed: {e}")
             if investigation_id not in self._memory_store["events"]:
                 self._memory_store["events"][investigation_id] = []
             self._memory_store["events"][investigation_id].append(event_data)
@@ -154,7 +154,7 @@ class Database:
                 return self._memory_store["events"].get(investigation_id, [])
             return sorted(res, key=lambda x: self._parse_ts(x.get("timestamp")))
         except Exception as e:
-            logger.error(f"Firestore get_events failed: {e}", exc_info=True)
+            logger.exception(f"Firestore get_events failed: {e}")
             return self._memory_store["events"].get(investigation_id, [])
 
     async def save_feedback_item(self, feedback: Any) -> None:
@@ -167,7 +167,7 @@ class Database:
         try:
             self.client.collection("feedback").document(feedback_id).set(data)
         except Exception as e:
-            logger.error(f"Firestore save_feedback_item failed: {e}", exc_info=True)
+            logger.exception(f"Firestore save_feedback_item failed: {e}")
             self._memory_store["feedback"][feedback_id] = data
 
     async def get_all_feedback_items(self) -> List[Dict[str, Any]]:
@@ -180,7 +180,7 @@ class Database:
                 return sorted(list(self._memory_store["feedback"].values()), key=lambda x: self._parse_ts(x.get("timestamp")), reverse=True)
             return sorted(res, key=lambda x: self._parse_ts(x.get("timestamp")), reverse=True)
         except Exception as e:
-            logger.error(f"Firestore get_all_feedback_items failed: {e}", exc_info=True)
+            logger.exception(f"Firestore get_all_feedback_items failed: {e}")
             return sorted(list(self._memory_store["feedback"].values()), key=lambda x: self._parse_ts(x.get("timestamp")), reverse=True)
 
 

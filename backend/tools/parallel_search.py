@@ -99,7 +99,7 @@ class ParallelSearchTool:
                 )
             return source_records
         except Exception as e:
-            logger.error(f"Parallel Search single query failed for '{query}': {e}", exc_info=True)
+            logger.exception(f"Parallel Search single query failed for '{query}': {e}")
             return []
 
     async def search(

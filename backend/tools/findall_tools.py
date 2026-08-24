@@ -38,7 +38,7 @@ async def findall_search(
         # The result might be a pydantic model in the SDK, let's just return a dict
         return {"status": "success", "data": result.model_dump() if hasattr(result, "model_dump") else result}
     except Exception as e:
-        logger.error(f"FindAll search failed: {e}")
+        logger.exception(f"FindAll search failed: {e}")
         raise RuntimeError(f"FindAll API failed: {e}")
 
 async def findall_enrich(
@@ -66,5 +66,5 @@ async def findall_enrich(
         )
         return {"status": "success", "data": result.model_dump() if hasattr(result, "model_dump") else result}
     except Exception as e:
-        logger.error(f"FindAll enrich failed: {e}")
+        logger.exception(f"FindAll enrich failed: {e}")
         raise RuntimeError(f"FindAll enrich API failed: {e}")

@@ -140,7 +140,7 @@ class Orchestrator:
             )
 
         except Exception as e:
-            logger.error(f"Disambiguation error for {inv_id}: {e}", exc_info=True)
+            logger.exception(f"Disambiguation error for {inv_id}: {e}")
             await broadcaster.emit(
                 investigation_id=inv_id,
                 event_type=EventType.ERROR,
@@ -396,7 +396,7 @@ class Orchestrator:
                         domain_atomic_claims.append(claim)
                         claims.append(claim)
                     except Exception as e:
-                        logger.error(f"Error parsing claim: {e}")
+                        logger.exception(f"Error parsing claim: {e}")
 
                 # Fetch basis URLs to get content hash and verify snippets
                 basis_urls = [b.get("url") for b in domain_basis_list if isinstance(b, dict) and b.get("url")]
@@ -505,7 +505,7 @@ class Orchestrator:
             )
 
         except Exception as e:
-            logger.error(f"Pipeline execution failed for {investigation_id}: {e}", exc_info=True)
+            logger.exception(f"Pipeline execution failed for {investigation_id}: {e}")
             inv_data = await db.get_investigation(investigation_id) or {}
             inv_data["status"] = InvestigationStatus.FAILED.value
             await db.save_investigation(investigation_id, inv_data)

@@ -114,5 +114,5 @@ If there are NO contradictions or opposing claims, return an empty array `[]`.
             return disputes
 
         except Exception as e:
-            logger.error(f"Contradiction analysis failed: {e}", exc_info=True)
+            logger.exception(f"Contradiction analysis failed: {e}")
             return []

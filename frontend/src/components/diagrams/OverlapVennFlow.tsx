@@ -25,7 +25,8 @@ export const OverlapVennFlow: React.FC<Props> = ({
       data: {
         label: 'Shared Accreditation Scope',
         sublabel: 'Academy Awards (Oscars) Qualifying',
-        details: 'Award winners across eligible competition categories at both festivals qualify for Oscar consideration.',
+        details:
+          'Award winners across eligible competition categories at both festivals qualify for Oscar consideration.',
       },
       style: {
         background: '#1D1A38',
@@ -128,7 +129,9 @@ export const OverlapVennFlow: React.FC<Props> = ({
     <div className="space-y-3">
       <div className="flex items-center gap-2 text-xs font-mono text-slate-300 px-1">
         <Award className="size-4 text-amber-400" />
-        <span className="font-bold uppercase tracking-wider">Accreditation & Qualifying Honors Overlap</span>
+        <span className="font-bold uppercase tracking-wider">
+          Accreditation & Qualifying Honors Overlap
+        </span>
       </div>
 
       <ScreenedFlowCanvas

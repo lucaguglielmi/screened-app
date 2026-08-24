@@ -1,14 +1,6 @@
 import React, { useState } from 'react';
 import { OutreachDraft } from '../types/investigation';
-import { 
-  Mail, 
-  Send, 
-  ShieldCheck, 
-  X, 
-  CheckCircle2, 
-  Loader2,
-  Lock
-} from 'lucide-react';
+import { Mail, Send, ShieldCheck, X, CheckCircle2, Loader2, Lock } from 'lucide-react';
 
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -20,13 +12,7 @@ interface Props {
   loading: boolean;
 }
 
-export const OutreachModal: React.FC<Props> = ({
-  draft,
-  isOpen,
-  onClose,
-  onApprove,
-  loading,
-}) => {
+export const OutreachModal: React.FC<Props> = ({ draft, isOpen, onClose, onApprove, loading }) => {
   const [executed, setExecuted] = useState(false);
   const [recipientEmail, setRecipientEmail] = useState(draft?.recipientEmail || '');
   const [subject, setSubject] = useState(draft?.subject || '');
@@ -90,7 +76,9 @@ export const OutreachModal: React.FC<Props> = ({
                 <span>Sandbox Delivery Guarantee</span>
               </div>
               <p className="text-[11px] text-paper-muted dark:text-darkroom-muted leading-relaxed">
-                To guarantee safety and prevent unapproved spam, this inquiry executes inside a simulated sandbox mailbox with cryptographic audit logging. No unapproved real emails are dispatched.
+                To guarantee safety and prevent unapproved spam, this inquiry executes inside a
+                simulated sandbox mailbox with cryptographic audit logging. No unapproved real
+                emails are dispatched.
               </p>
             </div>
 

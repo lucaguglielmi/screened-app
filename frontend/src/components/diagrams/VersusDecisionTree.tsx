@@ -1,12 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Node, Edge, MarkerType } from '@xyflow/react';
 import { ScreenedFlowCanvas } from './ScreenedFlowCanvas';
-import { 
-  GitBranch, 
-  Trophy, 
-  DollarSign, 
-  ShieldCheck
-} from 'lucide-react';
+import { GitBranch, Trophy, DollarSign, ShieldCheck } from 'lucide-react';
 
 interface FestivalComparisonSpec {
   name: string;
@@ -40,7 +35,7 @@ export const VersusDecisionTree: React.FC<Props> = ({
     accreditation: ['Academy Qualifying', 'BIFA Recognised'],
     notificationDate: 'Feb 15',
     ratingScore: 88,
-  }
+  },
 }) => {
   const [priority, setPriority] = useState<StrategyPriority>('PRESTIGE');
   const [selectedNode, setSelectedNode] = useState<any | null>(null);
@@ -232,7 +227,7 @@ export const VersusDecisionTree: React.FC<Props> = ({
           <span className="font-bold uppercase tracking-wider">Interactive Decision Tree</span>
         </div>
 
-        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[#141834] text-xs">
+        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-darkroom-card text-xs">
           {[
             { id: 'PRESTIGE', label: 'Max Prestige', icon: Trophy },
             { id: 'COST_ROI', label: 'Low Fee / ROI', icon: DollarSign },
@@ -247,7 +242,7 @@ export const VersusDecisionTree: React.FC<Props> = ({
                 onClick={() => setPriority(item.id as StrategyPriority)}
                 className={`px-3 py-1 rounded-lg font-mono text-xs flex items-center gap-1.5 transition-all cursor-pointer ${
                   isSelected
-                    ? 'bg-[#2018E6] text-white font-semibold shadow-xs'
+                    ? 'bg-midnight-royal text-white font-semibold shadow-xs'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
@@ -269,9 +264,11 @@ export const VersusDecisionTree: React.FC<Props> = ({
 
       {/* Selected Node Details */}
       {selectedNode && (
-        <div className="p-4 rounded-2xl bg-[#141834] text-xs space-y-1 animate-fade-in shadow-xl">
+        <div className="p-4 rounded-2xl bg-darkroom-card text-xs space-y-1 animate-fade-in shadow-xl">
           <div className="font-bold text-white font-serif text-sm">{selectedNode.label}</div>
-          <p className="text-slate-300 leading-relaxed font-sans">{selectedNode.details || selectedNode.role}</p>
+          <p className="text-slate-300 leading-relaxed font-sans">
+            {selectedNode.details || selectedNode.role}
+          </p>
         </div>
       )}
     </div>

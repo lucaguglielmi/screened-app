@@ -1,26 +1,27 @@
 import React from 'react';
-import { 
-  ArrowRight, 
-  ArrowUpRight, 
-  Plus, 
-  ChevronDown, 
-  Sparkles, 
-  Search, 
-  RefreshCw, 
-  ExternalLink, 
-  Check, 
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Plus,
+  ChevronDown,
+  Sparkles,
+  Search,
+  RefreshCw,
+  ExternalLink,
+  Check,
   HelpCircle,
   Mail,
   FileText,
   Send,
   Film,
   Clapperboard,
-  LucideIcon
+  LucideIcon,
 } from 'lucide-react';
 import { soundEffects } from '../../utils/audio';
 import { IconAnimationType } from './Button';
 
-export type TextLinkVariant = 'primary' | 'emerald' | 'rose' | 'amber' | 'purple' | 'muted' | 'white';
+export type TextLinkVariant =
+  'primary' | 'emerald' | 'rose' | 'amber' | 'purple' | 'muted' | 'white';
 export type TextLinkSize = 'xs' | 'sm' | 'md' | 'lg';
 
 export interface TextLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
@@ -55,7 +56,10 @@ export const TextLink: React.FC<TextLinkProps> = ({
   ...props
 }) => {
   // Color Variants
-  const variantStyles: Record<TextLinkVariant, { text: string; underline: string; iconColor: string }> = {
+  const variantStyles: Record<
+    TextLinkVariant,
+    { text: string; underline: string; iconColor: string }
+  > = {
     primary: {
       text: 'text-blue-400 hover:text-blue-300',
       underline: 'decoration-blue-500/40 hover:decoration-blue-400',
@@ -238,8 +242,8 @@ export const TextLink: React.FC<TextLinkProps> = ({
   const underlineClass = alwaysUnderlined
     ? `underline underline-offset-4 ${selected.underline}`
     : underlineOnHover
-    ? `hover:underline hover:underline-offset-4 ${selected.underline}`
-    : '';
+      ? `hover:underline hover:underline-offset-4 ${selected.underline}`
+      : '';
 
   const iconElement = renderIcon();
 

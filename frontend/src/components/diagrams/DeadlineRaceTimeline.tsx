@@ -133,9 +133,13 @@ export const DeadlineRaceTimeline: React.FC<Props> = ({
       <div className="flex items-center justify-between px-1">
         <div className="flex items-center gap-2 text-xs font-mono text-slate-300">
           <Clock className="size-4 text-indigo-400" />
-          <span className="font-bold uppercase tracking-wider">Submission Race & Rollover Timeline</span>
+          <span className="font-bold uppercase tracking-wider">
+            Submission Race & Rollover Timeline
+          </span>
         </div>
-        <span className="text-[11px] font-mono text-emerald-400">Zero Premiere Forfeiture Conflict</span>
+        <span className="text-[11px] font-mono text-emerald-400">
+          Zero Premiere Forfeiture Conflict
+        </span>
       </div>
 
       <ScreenedFlowCanvas

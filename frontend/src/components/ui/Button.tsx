@@ -1,36 +1,37 @@
 import React from 'react';
-import { 
-  ArrowRight, 
-  ArrowUpRight, 
-  Plus, 
-  ChevronDown, 
-  Sparkles, 
-  Search, 
-  RefreshCw, 
-  ExternalLink, 
-  Check, 
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Plus,
+  ChevronDown,
+  Sparkles,
+  Search,
+  RefreshCw,
+  ExternalLink,
+  Check,
   HelpCircle,
   Mail,
   FileText,
   Send,
   Film,
   Clapperboard,
-  LucideIcon
+  LucideIcon,
 } from 'lucide-react';
 import { soundEffects } from '../../utils/audio';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'accent' | 'glass';
+export type ButtonVariant =
+  'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'accent' | 'glass';
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
-export type IconAnimationType = 
-  | 'arrow-right' 
-  | 'arrow-up-right' 
-  | 'plus' 
-  | 'chevron-down' 
-  | 'sparkles' 
-  | 'search' 
-  | 'refresh' 
-  | 'external' 
-  | 'check' 
+export type IconAnimationType =
+  | 'arrow-right'
+  | 'arrow-up-right'
+  | 'plus'
+  | 'chevron-down'
+  | 'sparkles'
+  | 'search'
+  | 'refresh'
+  | 'external'
+  | 'check'
   | 'help'
   | 'mail'
   | 'doc'
@@ -69,7 +70,7 @@ export const Button: React.FC<ButtonProps> = ({
     primary:
       'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-md shadow-blue-500/20 border border-blue-400/30 hover:border-blue-400/50',
     secondary:
-      'bg-[#141838] hover:bg-[#1D2352] text-zinc-200 hover:text-white border border-[#252C5E] hover:border-[#3D488E]',
+      'bg-darkroom-card hover:bg-darkroom-border text-zinc-200 hover:text-white border border-darkroom-border hover:border-midnight-violet',
     outline:
       'bg-transparent hover:bg-zinc-800/50 text-zinc-300 hover:text-white border border-zinc-700 hover:border-zinc-500',
     ghost:
@@ -101,17 +102,13 @@ export const Button: React.FC<ButtonProps> = ({
   // Icon Render Helper with dedicated micro-animation CSS transitions
   const renderIcon = () => {
     if (isLoading) {
-      return (
-        <RefreshCw 
-          className={`${iconSizeMap[size]} animate-spin text-current opacity-80`} 
-        />
-      );
+      return <RefreshCw className={`${iconSizeMap[size]} animate-spin text-current opacity-80`} />;
     }
 
     if (CustomIconComponent) {
       return (
-        <CustomIconComponent 
-          className={`${iconSizeMap[size]} transition-transform duration-300 group-hover:scale-110`} 
+        <CustomIconComponent
+          className={`${iconSizeMap[size]} transition-transform duration-300 group-hover:scale-110`}
         />
       );
     }
@@ -119,92 +116,92 @@ export const Button: React.FC<ButtonProps> = ({
     switch (iconType) {
       case 'arrow-right':
         return (
-          <ArrowRight 
-            className={`${iconSizeMap[size]} transition-transform duration-300 ease-out group-hover:translate-x-1.5`} 
+          <ArrowRight
+            className={`${iconSizeMap[size]} transition-transform duration-300 ease-out group-hover:translate-x-1.5`}
           />
         );
       case 'arrow-up-right':
         return (
-          <ArrowUpRight 
-            className={`${iconSizeMap[size]} transition-transform duration-300 ease-out group-hover:translate-x-1 group-hover:-translate-y-1`} 
+          <ArrowUpRight
+            className={`${iconSizeMap[size]} transition-transform duration-300 ease-out group-hover:translate-x-1 group-hover:-translate-y-1`}
           />
         );
       case 'plus':
         return (
-          <Plus 
-            className={`${iconSizeMap[size]} transition-transform duration-500 ease-in-out group-hover:rotate-180`} 
+          <Plus
+            className={`${iconSizeMap[size]} transition-transform duration-500 ease-in-out group-hover:rotate-180`}
           />
         );
       case 'chevron-down':
         return (
-          <ChevronDown 
-            className={`${iconSizeMap[size]} transition-transform duration-300 ease-out group-hover:translate-y-1`} 
+          <ChevronDown
+            className={`${iconSizeMap[size]} transition-transform duration-300 ease-out group-hover:translate-y-1`}
           />
         );
       case 'sparkles':
         return (
-          <Sparkles 
-            className={`${iconSizeMap[size]} transition-all duration-300 ease-out group-hover:scale-125 group-hover:rotate-12 text-amber-400`} 
+          <Sparkles
+            className={`${iconSizeMap[size]} transition-all duration-300 ease-out group-hover:scale-125 group-hover:rotate-12 text-amber-400`}
           />
         );
       case 'search':
         return (
-          <Search 
-            className={`${iconSizeMap[size]} transition-transform duration-300 ease-out group-hover:scale-115 group-hover:-rotate-6`} 
+          <Search
+            className={`${iconSizeMap[size]} transition-transform duration-300 ease-out group-hover:scale-115 group-hover:-rotate-6`}
           />
         );
       case 'refresh':
         return (
-          <RefreshCw 
-            className={`${iconSizeMap[size]} transition-transform duration-500 ease-in-out group-hover:rotate-180`} 
+          <RefreshCw
+            className={`${iconSizeMap[size]} transition-transform duration-500 ease-in-out group-hover:rotate-180`}
           />
         );
       case 'external':
         return (
-          <ExternalLink 
-            className={`${iconSizeMap[size]} transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5`} 
+          <ExternalLink
+            className={`${iconSizeMap[size]} transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5`}
           />
         );
       case 'check':
         return (
-          <Check 
-            className={`${iconSizeMap[size]} transition-transform duration-300 ease-out group-hover:scale-120 text-emerald-400`} 
+          <Check
+            className={`${iconSizeMap[size]} transition-transform duration-300 ease-out group-hover:scale-120 text-emerald-400`}
           />
         );
       case 'help':
         return (
-          <HelpCircle 
-            className={`${iconSizeMap[size]} transition-transform duration-300 ease-out group-hover:rotate-12 text-blue-400`} 
+          <HelpCircle
+            className={`${iconSizeMap[size]} transition-transform duration-300 ease-out group-hover:rotate-12 text-blue-400`}
           />
         );
       case 'mail':
         return (
-          <Mail 
-            className={`${iconSizeMap[size]} transition-transform duration-300 ease-out group-hover:-translate-y-0.5 group-hover:rotate-6 text-rose-400`} 
+          <Mail
+            className={`${iconSizeMap[size]} transition-transform duration-300 ease-out group-hover:-translate-y-0.5 group-hover:rotate-6 text-rose-400`}
           />
         );
       case 'doc':
         return (
-          <FileText 
-            className={`${iconSizeMap[size]} transition-transform duration-300 ease-out group-hover:scale-110 text-indigo-400`} 
+          <FileText
+            className={`${iconSizeMap[size]} transition-transform duration-300 ease-out group-hover:scale-110 text-indigo-400`}
           />
         );
       case 'send':
         return (
-          <Send 
-            className={`${iconSizeMap[size]} transition-transform duration-300 ease-out group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:rotate-12 text-sky-400`} 
+          <Send
+            className={`${iconSizeMap[size]} transition-transform duration-300 ease-out group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:rotate-12 text-sky-400`}
           />
         );
       case 'film':
         return (
-          <Film 
-            className={`${iconSizeMap[size]} transition-transform duration-500 ease-in-out group-hover:rotate-45 group-hover:scale-115 text-indigo-300`} 
+          <Film
+            className={`${iconSizeMap[size]} transition-transform duration-500 ease-in-out group-hover:rotate-45 group-hover:scale-115 text-indigo-300`}
           />
         );
       case 'clapper':
         return (
-          <Clapperboard 
-            className={`${iconSizeMap[size]} transition-transform duration-300 ease-out group-hover:scale-115 group-hover:-rotate-6 text-white`} 
+          <Clapperboard
+            className={`${iconSizeMap[size]} transition-transform duration-300 ease-out group-hover:scale-115 group-hover:-rotate-6 text-white`}
           />
         );
       default:

@@ -11,15 +11,17 @@ interface MiniCompareArenaProps {
 }
 
 export const MiniCompareArena: React.FC<MiniCompareArenaProps> = ({ args, onSelectFestival }) => {
-  const [activeDiagram, setActiveDiagram] = useState<'NONE' | 'DECISION_TREE' | 'ACCREDITATION'>('NONE');
+  const [activeDiagram, setActiveDiagram] = useState<'NONE' | 'DECISION_TREE' | 'ACCREDITATION'>(
+    'NONE',
+  );
 
   const festA = args.festival_a || 'Raindance Film Festival';
   const festB = args.festival_b || 'London Independent Film Festival';
 
   return (
-    <div className="my-3 p-5 rounded-3xl bg-[#0E1124] shadow-2xl space-y-4">
+    <div className="my-3 p-5 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between gap-2 border-b border-[#141834] pb-3">
+      <div className="flex items-center justify-between gap-2 border-b border-darkroom-card pb-3">
         <div className="flex items-center gap-2.5">
           <div className="size-8 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold">
             <Swords className="size-4" />
@@ -28,7 +30,9 @@ export const MiniCompareArena: React.FC<MiniCompareArenaProps> = ({ args, onSele
             <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-purple-400">
               Festival Versus Arena
             </h4>
-            <p className="text-[11px] text-slate-400 font-mono">Head-to-Head Comparative Due Diligence</p>
+            <p className="text-[11px] text-slate-400 font-mono">
+              Head-to-Head Comparative Due Diligence
+            </p>
           </div>
         </div>
         <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-mono font-semibold bg-purple-500/20 text-purple-300">
@@ -39,10 +43,12 @@ export const MiniCompareArena: React.FC<MiniCompareArenaProps> = ({ args, onSele
       {/* Comparison Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-sm">
         {/* Festival A */}
-        <div className="rounded-2xl bg-[#141834] p-4 flex flex-col justify-between space-y-3">
+        <div className="rounded-2xl bg-darkroom-card p-4 flex flex-col justify-between space-y-3">
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-purple-400">Option A</span>
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-purple-400">
+                Option A
+              </span>
               <span className="text-xs text-emerald-400 font-medium">BAFTA / BIFA</span>
             </div>
             <h5 className="font-semibold text-white text-base mb-2 font-serif">{festA}</h5>
@@ -65,10 +71,12 @@ export const MiniCompareArena: React.FC<MiniCompareArenaProps> = ({ args, onSele
         </div>
 
         {/* Festival B */}
-        <div className="rounded-2xl bg-[#141834] p-4 flex flex-col justify-between space-y-3">
+        <div className="rounded-2xl bg-darkroom-card p-4 flex flex-col justify-between space-y-3">
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-400">Option B</span>
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-400">
+                Option B
+              </span>
               <span className="text-xs text-slate-400 font-medium">Independent</span>
             </div>
             <h5 className="font-semibold text-white text-base mb-2 font-serif">{festB}</h5>
@@ -92,13 +100,14 @@ export const MiniCompareArena: React.FC<MiniCompareArenaProps> = ({ args, onSele
       </div>
 
       {args.verdict_summary && (
-        <div className="rounded-2xl bg-[#141834] p-3.5 text-xs text-slate-300 leading-relaxed font-sans">
-          <strong className="text-purple-400 font-mono">Producer Advice: </strong> {args.verdict_summary}
+        <div className="rounded-2xl bg-darkroom-card p-3.5 text-xs text-slate-300 leading-relaxed font-sans">
+          <strong className="text-purple-400 font-mono">Producer Advice: </strong>{' '}
+          {args.verdict_summary}
         </div>
       )}
 
       {/* Interactive React Flow Diagram Toggles */}
-      <div className="border-t border-[#141834] pt-3 flex items-center gap-2 flex-wrap">
+      <div className="border-t border-darkroom-card pt-3 flex items-center gap-2 flex-wrap">
         <button
           type="button"
           onClick={() => {
@@ -107,13 +116,17 @@ export const MiniCompareArena: React.FC<MiniCompareArenaProps> = ({ args, onSele
           }}
           className={`px-3 py-1.5 rounded-xl text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer ${
             activeDiagram === 'DECISION_TREE'
-              ? 'bg-[#2018E6] text-white font-bold shadow-xs'
-              : 'bg-[#141834] text-slate-300 hover:text-white'
+              ? 'bg-midnight-royal text-white font-bold shadow-xs'
+              : 'bg-darkroom-card text-slate-300 hover:text-white'
           }`}
         >
           <GitBranch className="size-3.5" />
           <span>Interactive Decision Flowchart</span>
-          {activeDiagram === 'DECISION_TREE' ? <ChevronUp className="size-3" /> : <ChevronDown className="size-3" />}
+          {activeDiagram === 'DECISION_TREE' ? (
+            <ChevronUp className="size-3" />
+          ) : (
+            <ChevronDown className="size-3" />
+          )}
         </button>
 
         <button
@@ -125,12 +138,16 @@ export const MiniCompareArena: React.FC<MiniCompareArenaProps> = ({ args, onSele
           className={`px-3 py-1.5 rounded-xl text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer ${
             activeDiagram === 'ACCREDITATION'
               ? 'bg-amber-600 text-white font-bold shadow-xs'
-              : 'bg-[#141834] text-slate-300 hover:text-white'
+              : 'bg-darkroom-card text-slate-300 hover:text-white'
           }`}
         >
           <Award className="size-3.5" />
           <span>Accreditation Scope</span>
-          {activeDiagram === 'ACCREDITATION' ? <ChevronUp className="size-3" /> : <ChevronDown className="size-3" />}
+          {activeDiagram === 'ACCREDITATION' ? (
+            <ChevronUp className="size-3" />
+          ) : (
+            <ChevronDown className="size-3" />
+          )}
         </button>
       </div>
 
@@ -160,10 +177,7 @@ export const MiniCompareArena: React.FC<MiniCompareArenaProps> = ({ args, onSele
 
       {activeDiagram === 'ACCREDITATION' && (
         <div className="pt-2 animate-fade-in">
-          <OverlapVennFlow
-            festAName={festA}
-            festBName={festB}
-          />
+          <OverlapVennFlow festAName={festA} festBName={festB} />
         </div>
       )}
     </div>

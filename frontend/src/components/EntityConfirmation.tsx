@@ -10,12 +10,7 @@ interface Props {
   loading: boolean;
 }
 
-export const EntityConfirmation: React.FC<Props> = ({
-  candidates,
-  query,
-  onConfirm,
-  loading,
-}) => {
+export const EntityConfirmation: React.FC<Props> = ({ candidates, query, onConfirm, loading }) => {
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [customName, setCustomName] = useState(candidates[0]?.name || query);
   const [customDomain, setCustomDomain] = useState(candidates[0]?.officialDomain || '');
@@ -57,7 +52,7 @@ export const EntityConfirmation: React.FC<Props> = ({
       className="max-w-3xl mx-auto space-y-6"
     >
       <div className="p-6 sm:p-8 rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border space-y-5 shadow-sm">
-        <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#00D29E]">
+        <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-tool-diligence">
           <Building2 className="size-4" />
           <span>Entity Confirmation Gate</span>
         </div>
@@ -67,7 +62,8 @@ export const EntityConfirmation: React.FC<Props> = ({
             Confirm Festival Identity
           </h2>
           <p className="text-base text-paper-muted dark:text-darkroom-muted leading-relaxed">
-            To prevent false-identity mixing, please verify which entity you want Screened to investigate.
+            To prevent false-identity mixing, please verify which entity you want Screened to
+            investigate.
           </p>
         </div>
 
@@ -81,7 +77,7 @@ export const EntityConfirmation: React.FC<Props> = ({
                 onClick={() => handleSelect(idx)}
                 className={`p-5 rounded-2xl border transition-all cursor-pointer flex items-start justify-between gap-4 ${
                   isSelected
-                    ? 'border-[#00D29E] bg-[#00D29E]/10 dark:border-[#00D29E] dark:bg-[#00D29E]/10 shadow-md'
+                    ? 'border-tool-diligence bg-tool-diligence/10 dark:border-tool-diligence dark:bg-tool-diligence/10 shadow-md'
                     : 'border-paper-border dark:border-darkroom-border hover:border-neutral-400 dark:hover:border-neutral-600'
                 }`}
               >
@@ -104,19 +100,19 @@ export const EntityConfirmation: React.FC<Props> = ({
                   <div className="flex items-center gap-4 text-sm font-mono text-paper-muted dark:text-darkroom-muted pt-1">
                     {c.cityCountry && (
                       <span className="inline-flex items-center gap-1.5">
-                        <MapPin className="size-3.5 text-[#00D29E]" /> {c.cityCountry}
+                        <MapPin className="size-3.5 text-tool-diligence" /> {c.cityCountry}
                       </span>
                     )}
                     {c.officialDomain && (
                       <span className="inline-flex items-center gap-1.5">
-                        <Globe className="size-3.5 text-[#00D29E]" /> {c.officialDomain}
+                        <Globe className="size-3.5 text-tool-diligence" /> {c.officialDomain}
                       </span>
                     )}
                   </div>
                 </div>
 
                 <div className="size-6 rounded-full border flex items-center justify-center shrink-0 mt-1 border-neutral-400 dark:border-neutral-600">
-                  {isSelected && <div className="size-3 rounded-full bg-[#00D29E]" />}
+                  {isSelected && <div className="size-3 rounded-full bg-tool-diligence" />}
                 </div>
               </div>
             );
@@ -137,7 +133,7 @@ export const EntityConfirmation: React.FC<Props> = ({
                 type="text"
                 value={customName}
                 onChange={(e) => setCustomName(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border text-paper-text dark:text-darkroom-text font-sans focus:outline-none focus:border-[#00D29E] text-base"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border text-paper-text dark:text-darkroom-text font-sans focus:outline-none focus:border-tool-diligence text-base"
               />
             </div>
             <div>
@@ -149,7 +145,7 @@ export const EntityConfirmation: React.FC<Props> = ({
                 value={customDomain}
                 onChange={(e) => setCustomDomain(e.target.value)}
                 placeholder="e.g. raindance.org"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border text-paper-text dark:text-darkroom-text font-sans focus:outline-none focus:border-[#00D29E] text-base"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border text-paper-text dark:text-darkroom-text font-sans focus:outline-none focus:border-tool-diligence text-base"
               />
             </div>
           </div>
@@ -164,7 +160,7 @@ export const EntityConfirmation: React.FC<Props> = ({
           <button
             onClick={handleSubmit}
             disabled={loading || !customName.trim()}
-            className="px-6 py-3 rounded-xl bg-[#00D29E] hover:bg-[#00B887] disabled:opacity-50 text-slate-950 font-bold text-base flex items-center gap-2 transition-all shadow-md shadow-[#00D29E]/20 cursor-pointer"
+            className="px-6 py-3 rounded-xl bg-tool-diligence hover:bg-tool-diligence-hover disabled:opacity-50 text-slate-950 font-bold text-base flex items-center gap-2 transition-all shadow-md shadow-[#00D29E]/20 cursor-pointer"
           >
             <span>Confirm & Launch Research</span>
             <ArrowRight className="size-4" />

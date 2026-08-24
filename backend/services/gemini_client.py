@@ -209,7 +209,7 @@ Extract all relevant atomic claims in JSON format according to this schema:
             return validated_claims
 
         except Exception as e:
-            logger.error(f"Gemini claim extraction failed: {e}", exc_info=True)
+            logger.exception(f"Gemini claim extraction failed: {e}")
             return []
 
     async def generate_dossier_summary(
@@ -253,5 +253,5 @@ Requirements:
                 )
             return response.text or ""
         except Exception as e:
-            logger.error(f"Gemini summary generation failed: {e}", exc_info=True)
+            logger.exception(f"Gemini summary generation failed: {e}")
             return f"Investigation completed for {subject_name}. {len(claims)} atomic claims extracted."

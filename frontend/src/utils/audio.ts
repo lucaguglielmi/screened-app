@@ -59,7 +59,7 @@ export const playSuccessChime = () => {
     const ctx = getAudioContext();
     if (!ctx) return;
 
-    [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+    [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
 

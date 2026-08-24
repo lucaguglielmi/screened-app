@@ -1,5 +1,6 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
+import { useReducedMotion } from '../../utils/motionTokens';
 
 // ============================================================================
 // 1. Neon Cyber Loading Bar
@@ -9,24 +10,27 @@ export const NeonCyberBar: React.FC<{ progress?: number; color?: string; label?:
   color = '#2018E6',
   label = 'AI Agent Processing...',
 }) => {
+  const reducedMotion = useReducedMotion();
   return (
     <div className="w-full space-y-2">
       {label && (
         <div className="flex items-center justify-between text-xs font-mono text-slate-400">
           <span className="flex items-center gap-2">
-            <span className="size-2 rounded-full bg-indigo-500 animate-ping" />
+            <span
+              className={`size-2 rounded-full bg-indigo-500 ${reducedMotion ? '' : 'animate-ping'}`}
+            />
             {label}
           </span>
           {typeof progress === 'number' && <span>{Math.round(progress)}%</span>}
         </div>
       )}
-      <div className="relative h-2 w-full overflow-hidden rounded-full bg-[#11142A] border border-[#232856]">
+      <div className="relative h-2 w-full overflow-hidden rounded-full bg-darkroom-surface border border-darkroom-border">
         {typeof progress === 'number' ? (
           <motion.div
             className="h-full rounded-full"
-            style={{ 
+            style={{
               backgroundColor: color,
-              boxShadow: `0 0 14px ${color}99`
+              boxShadow: `0 0 14px ${color}99`,
             }}
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
@@ -37,14 +41,13 @@ export const NeonCyberBar: React.FC<{ progress?: number; color?: string; label?:
             className="absolute top-0 bottom-0 w-1/3 rounded-full"
             style={{
               background: `linear-gradient(90deg, transparent 0%, ${color} 50%, transparent 100%)`,
-              boxShadow: `0 0 16px ${color}B3`
+              boxShadow: `0 0 16px ${color}B3`,
             }}
-            animate={{ x: ['-100%', '350%'] }}
-            transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}
+            animate={reducedMotion ? { x: '0%' } : { x: ['-100%', '350%'] }}
+            transition={reducedMotion ? {} : { repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}
           />
         )}
       </div>
-
     </div>
   );
 };
@@ -54,8 +57,14 @@ export const NeonCyberBar: React.FC<{ progress?: number; color?: string; label?:
 // ============================================================================
 export const PipelineStepperBar: React.FC<{ currentStep?: number; steps?: string[] }> = ({
   currentStep = 2,
-  steps = ['Target Disambiguation', 'Multi-Source Mining', 'Contradiction Audit', 'Dossier Assembly'],
+  steps = [
+    'Target Disambiguation',
+    'Multi-Source Mining',
+    'Contradiction Audit',
+    'Dossier Assembly',
+  ],
 }) => {
+  const reducedMotion = useReducedMotion();
   return (
     <div className="w-full space-y-3">
       <div className="grid grid-cols-4 gap-2">
@@ -64,19 +73,25 @@ export const PipelineStepperBar: React.FC<{ currentStep?: number; steps?: string
           const isActive = idx === currentStep;
           return (
             <div key={idx} className="space-y-1.5">
-              <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-[#151933]">
-                {isDone && <div className="h-full w-full bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />}
+              <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-darkroom-card">
+                {isDone && (
+                  <div className="h-full w-full bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                )}
                 {isActive && (
                   <motion.div
                     className="h-full w-full bg-gradient-to-r from-indigo-500 to-purple-500 shadow-[0_0_10px_rgba(99,102,241,0.8)]"
-                    animate={{ opacity: [0.4, 1, 0.4] }}
-                    transition={{ repeat: Infinity, duration: 1.2 }}
+                    animate={reducedMotion ? { opacity: 1 } : { opacity: [0.4, 1, 0.4] }}
+                    transition={reducedMotion ? {} : { repeat: Infinity, duration: 1.2 }}
                   />
                 )}
               </div>
               <p
                 className={`text-[11px] font-mono truncate ${
-                  isActive ? 'text-indigo-300 font-semibold' : isDone ? 'text-emerald-400' : 'text-slate-500'
+                  isActive
+                    ? 'text-indigo-300 font-semibold'
+                    : isDone
+                      ? 'text-emerald-400'
+                      : 'text-slate-500'
                 }`}
               >
                 {step}
@@ -92,9 +107,12 @@ export const PipelineStepperBar: React.FC<{ currentStep?: number; steps?: string
 // ============================================================================
 // 3. Celluloid Film Sprocket Scanner
 // ============================================================================
-export const FilmSprocketScanner: React.FC<{ label?: string }> = ({ label = 'Vetting Trade Registry...' }) => {
+export const FilmSprocketScanner: React.FC<{ label?: string }> = ({
+  label = 'Vetting Trade Registry...',
+}) => {
+  const reducedMotion = useReducedMotion();
   return (
-    <div className="relative w-full p-4 rounded-2xl bg-[#090C1A] border border-[#1F254B] overflow-hidden">
+    <div className="relative w-full p-4 rounded-2xl bg-darkroom-bg border border-darkroom-border overflow-hidden">
       <div className="flex items-center justify-between mb-3 text-xs font-mono text-amber-400/90">
         <span className="flex items-center gap-2">
           <span className="text-sm">🎞</span> {label}
@@ -105,19 +123,19 @@ export const FilmSprocketScanner: React.FC<{ label?: string }> = ({ label = 'Vet
       </div>
 
       {/* Sprocket track */}
-      <div className="relative h-7 flex items-center justify-between px-2 bg-[#050711] rounded-lg border border-[#161C38] overflow-hidden">
+      <div className="relative h-7 flex items-center justify-between px-2 bg-darkroom-bg rounded-lg border border-darkroom-border overflow-hidden">
         {/* Sprocket holes */}
         <div className="flex justify-between w-full opacity-40">
           {[...Array(14)].map((_, i) => (
-            <div key={i} className="w-2.5 h-3.5 rounded-xs bg-[#1F254B]" />
+            <div key={i} className="w-2.5 h-3.5 rounded-xs bg-darkroom-border" />
           ))}
         </div>
 
         {/* Laser scanner head */}
         <motion.div
           className="absolute top-0 bottom-0 w-8 bg-gradient-to-r from-transparent via-amber-400/80 to-transparent shadow-[0_0_16px_rgba(251,191,36,0.8)]"
-          animate={{ x: ['-20px', '460px'] }}
-          transition={{ repeat: Infinity, duration: 2, ease: 'linear' }}
+          animate={reducedMotion ? { x: '50%' } : { x: ['-20px', '460px'] }}
+          transition={reducedMotion ? {} : { repeat: Infinity, duration: 2, ease: 'linear' }}
         />
       </div>
     </div>
@@ -127,22 +145,28 @@ export const FilmSprocketScanner: React.FC<{ label?: string }> = ({ label = 'Vet
 // ============================================================================
 // 4. Quantum Harmonic Pulse Wave
 // ============================================================================
-export const QuantumWaveLoader: React.FC<{ bars?: number; height?: number }> = ({ bars = 18, height = 36 }) => {
+export const QuantumWaveLoader: React.FC<{ bars?: number; height?: number }> = ({
+  bars = 18,
+  height = 36,
+}) => {
+  const reducedMotion = useReducedMotion();
   return (
     <div className="flex items-center justify-center gap-1.5" style={{ height }}>
       {[...Array(bars)].map((_, i) => (
         <motion.div
           key={i}
           className="w-1.5 rounded-full bg-gradient-to-t from-indigo-600 via-purple-500 to-rose-400"
-          animate={{
-            height: ['15%', '95%', '15%'],
-          }}
-          transition={{
-            repeat: Infinity,
-            duration: 1.1,
-            ease: 'easeInOut',
-            delay: i * 0.06,
-          }}
+          animate={reducedMotion ? { height: '50%' } : { height: ['15%', '95%', '15%'] }}
+          transition={
+            reducedMotion
+              ? {}
+              : {
+                  repeat: Infinity,
+                  duration: 1.1,
+                  ease: 'easeInOut',
+                  delay: i * 0.06,
+                }
+          }
         />
       ))}
     </div>
@@ -156,28 +180,29 @@ export const OrbitalReactorLoader: React.FC<{ size?: number; label?: string }> =
   size = 64,
   label = 'Synthesizing Evidence Dossier...',
 }) => {
+  const reducedMotion = useReducedMotion();
   return (
     <div className="flex flex-col items-center justify-center gap-3">
       <div className="relative" style={{ width: size, height: size }}>
         {/* Outer Ring */}
         <motion.div
           className="absolute inset-0 rounded-full border-2 border-dashed border-indigo-500/40"
-          animate={{ rotate: 360 }}
-          transition={{ repeat: Infinity, duration: 8, ease: 'linear' }}
+          animate={reducedMotion ? { rotate: 0 } : { rotate: 360 }}
+          transition={reducedMotion ? {} : { repeat: Infinity, duration: 8, ease: 'linear' }}
         />
 
         {/* Inner Counter Ring */}
         <motion.div
           className="absolute inset-2 rounded-full border-2 border-t-indigo-400 border-r-rose-400 border-b-transparent border-l-transparent"
-          animate={{ rotate: -360 }}
-          transition={{ repeat: Infinity, duration: 2.5, ease: 'linear' }}
+          animate={reducedMotion ? { rotate: 0 } : { rotate: -360 }}
+          transition={reducedMotion ? {} : { repeat: Infinity, duration: 2.5, ease: 'linear' }}
         />
 
         {/* Orbiting Satellite 1 */}
         <motion.div
           className="absolute inset-0 flex items-start justify-center"
-          animate={{ rotate: 360 }}
-          transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+          animate={reducedMotion ? { rotate: 0 } : { rotate: 360 }}
+          transition={reducedMotion ? {} : { repeat: Infinity, duration: 3, ease: 'easeInOut' }}
         >
           <div className="size-2 rounded-full bg-cyan-400 shadow-[0_0_8px_cyan]" />
         </motion.div>
@@ -185,8 +210,8 @@ export const OrbitalReactorLoader: React.FC<{ size?: number; label?: string }> =
         {/* Orbiting Satellite 2 */}
         <motion.div
           className="absolute inset-0 flex items-end justify-center"
-          animate={{ rotate: -360 }}
-          transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
+          animate={reducedMotion ? { rotate: 0 } : { rotate: -360 }}
+          transition={reducedMotion ? {} : { repeat: Infinity, duration: 4, ease: 'easeInOut' }}
         >
           <div className="size-2 rounded-full bg-rose-400 shadow-[0_0_8px_magenta]" />
         </motion.div>
@@ -196,7 +221,11 @@ export const OrbitalReactorLoader: React.FC<{ size?: number; label?: string }> =
           🎬
         </div>
       </div>
-      {label && <p className="text-xs font-mono text-slate-400 animate-pulse">{label}</p>}
+      {label && (
+        <p className={`text-xs font-mono text-slate-400 ${reducedMotion ? '' : 'animate-pulse'}`}>
+          {label}
+        </p>
+      )}
     </div>
   );
 };

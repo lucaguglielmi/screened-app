@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { 
-  Menu, 
-  X, 
-  Sparkles, 
-  ShieldCheck, 
-  Compass, 
-  Palette, 
-  Moon, 
-  Sun, 
-  Volume2, 
-  VolumeX, 
-  Search, 
-  Scale, 
+import {
+  Menu,
+  X,
+  Sparkles,
+  ShieldCheck,
+  Compass,
+  Palette,
+  Moon,
+  Sun,
+  Volume2,
+  VolumeX,
+  Search,
+  Scale,
   Keyboard,
   Check,
-  ExternalLink
+  ExternalLink,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ActiveTool } from '../../types/investigation';
@@ -95,24 +95,28 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 26, stiffness: 280 }}
-            className="fixed inset-y-0 right-0 w-full max-w-sm h-[100dvh] bg-[#070913] border-l border-[#1F254E] shadow-2xl p-6 flex flex-col justify-between overflow-y-auto text-slate-200"
+            className="fixed inset-y-0 right-0 w-full max-w-sm h-[100dvh] bg-darkroom-bg border-l border-darkroom-border shadow-2xl p-6 flex flex-col justify-between overflow-y-auto text-slate-200"
           >
             {/* Top Bar inside Drawer */}
             <div>
-              <div className="flex items-center justify-between pb-5 border-b border-[#1B2042]">
+              <div className="flex items-center justify-between pb-5 border-b border-darkroom-border">
                 <div className="flex items-center gap-3">
-                  <div className="size-9 rounded-xl bg-[#2018E6] flex items-center justify-center text-white font-serif font-bold text-lg shadow-md shadow-[#2018E6]/50">
+                  <div className="size-9 rounded-xl bg-midnight-royal flex items-center justify-center text-white font-serif font-bold text-lg shadow-md shadow-[#2018E6]/50">
                     S
                   </div>
                   <div>
-                    <h3 className="font-serif text-lg font-bold text-white tracking-tight">Screened</h3>
-                    <p className="text-xs text-slate-400 font-mono">Autonomous Cinema Intelligence</p>
+                    <h3 className="font-serif text-lg font-bold text-white tracking-tight">
+                      Screened
+                    </h3>
+                    <p className="text-xs text-slate-400 font-mono">
+                      Autonomous Cinema Intelligence
+                    </p>
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
-                  className="p-2 rounded-xl bg-[#0E1124] border border-[#22274C] text-slate-400 hover:text-white transition-colors cursor-pointer"
+                  className="p-2 rounded-xl bg-darkroom-surface border border-darkroom-border text-slate-400 hover:text-white transition-colors cursor-pointer"
                   aria-label="Close menu"
                 >
                   <X className="size-5" />
@@ -127,13 +131,13 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                     setIsOpen(false);
                     onOpenCommandPalette();
                   }}
-                  className="w-full py-3 px-4 rounded-2xl bg-[#0E1124] hover:bg-[#151936] border border-[#22274C] text-left flex items-center justify-between text-base text-slate-300 transition-colors cursor-pointer"
+                  className="w-full py-3 px-4 rounded-2xl bg-darkroom-surface hover:bg-darkroom-card border border-darkroom-border text-left flex items-center justify-between text-base text-slate-300 transition-colors cursor-pointer"
                 >
                   <div className="flex items-center gap-3">
                     <Search className="size-5 text-indigo-400" />
                     <span>Quick Search (⌘K)</span>
                   </div>
-                  <span className="text-xs font-mono px-2 py-0.5 rounded bg-[#1A1F45] text-slate-400 border border-[#262D5F]">
+                  <span className="text-xs font-mono px-2 py-0.5 rounded bg-darkroom-border text-slate-400 border border-darkroom-border">
                     ⌘K
                   </span>
                 </button>
@@ -151,17 +155,19 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                   onClick={() => handleSelect('CONVERSATIONAL_DESK')}
                   className={`w-full p-3.5 rounded-2xl flex items-center gap-3.5 transition-all text-left cursor-pointer ${
                     activeTool === 'CONVERSATIONAL_DESK'
-                      ? 'bg-[#151936] border border-[#2018E6]/80 text-white shadow-lg shadow-[#2018E6]/20'
-                      : 'bg-[#0E1124] hover:bg-[#141838] border border-[#1F254E] text-slate-300'
+                      ? 'bg-darkroom-card border border-midnight-royal/80 text-white shadow-lg shadow-[#2018E6]/20'
+                      : 'bg-darkroom-surface hover:bg-darkroom-card border border-darkroom-border text-slate-300'
                   }`}
                 >
-                  <div className="size-10 rounded-xl bg-[#2018E6] flex items-center justify-center text-white shadow-md shrink-0">
+                  <div className="size-10 rounded-xl bg-midnight-royal flex items-center justify-center text-white shadow-md shrink-0">
                     <Sparkles className="size-5" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
                       <h4 className="text-base font-bold text-white">Mission Control</h4>
-                      {activeTool === 'CONVERSATIONAL_DESK' && <Check className="size-4 text-indigo-400" />}
+                      {activeTool === 'CONVERSATIONAL_DESK' && (
+                        <Check className="size-4 text-indigo-400" />
+                      )}
                     </div>
                     <p className="text-xs text-slate-400 line-clamp-1">Main AI Command Interface</p>
                   </div>
@@ -173,19 +179,23 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                   onClick={() => handleSelect('DUE_DILIGENCE')}
                   className={`w-full p-3.5 rounded-2xl flex items-center gap-3.5 transition-all text-left cursor-pointer ${
                     activeTool === 'DUE_DILIGENCE'
-                      ? 'bg-[#151936] border border-[#00D29E]/80 text-white shadow-lg shadow-[#00D29E]/20'
-                      : 'bg-[#0E1124] hover:bg-[#141838] border border-[#1F254E] text-slate-300'
+                      ? 'bg-darkroom-card border border-tool-diligence/80 text-white shadow-lg shadow-[#00D29E]/20'
+                      : 'bg-darkroom-surface hover:bg-darkroom-card border border-darkroom-border text-slate-300'
                   }`}
                 >
-                  <div className="size-10 rounded-xl bg-gradient-to-tr from-[#00D29E] to-[#00B887] flex items-center justify-center text-slate-950 shadow-md shrink-0">
+                  <div className="size-10 rounded-xl bg-gradient-to-tr from-tool-diligence to-tool-diligence-hover flex items-center justify-center text-slate-950 shadow-md shrink-0">
                     <ShieldCheck className="size-5 text-slate-950" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
                       <h4 className="text-base font-bold text-white">Due Diligence</h4>
-                      {activeTool === 'DUE_DILIGENCE' && <Check className="size-4 text-[#00D29E]" />}
+                      {activeTool === 'DUE_DILIGENCE' && (
+                        <Check className="size-4 text-tool-diligence" />
+                      )}
                     </div>
-                    <p className="text-xs text-slate-400 line-clamp-1">Festival Dossier & Fact Vetting</p>
+                    <p className="text-xs text-slate-400 line-clamp-1">
+                      Festival Dossier & Fact Vetting
+                    </p>
                   </div>
                 </button>
 
@@ -195,19 +205,23 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                   onClick={() => handleSelect('OPPORTUNITY_SCOUT')}
                   className={`w-full p-3.5 rounded-2xl flex items-center gap-3.5 transition-all text-left cursor-pointer ${
                     activeTool === 'OPPORTUNITY_SCOUT'
-                      ? 'bg-[#151936] border border-[#F43F5E]/80 text-white shadow-lg shadow-[#F43F5E]/20'
-                      : 'bg-[#0E1124] hover:bg-[#141838] border border-[#1F254E] text-slate-300'
+                      ? 'bg-darkroom-card border border-tool-scout/80 text-white shadow-lg shadow-[#F43F5E]/20'
+                      : 'bg-darkroom-surface hover:bg-darkroom-card border border-darkroom-border text-slate-300'
                   }`}
                 >
-                  <div className="size-10 rounded-xl bg-gradient-to-tr from-[#F43F5E] via-[#EE3B65] to-orange-500 flex items-center justify-center text-white shadow-md shrink-0">
+                  <div className="size-10 rounded-xl bg-gradient-to-tr from-tool-scout via-tool-scout to-orange-500 flex items-center justify-center text-white shadow-md shrink-0">
                     <Compass className="size-5 text-white" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
                       <h4 className="text-base font-bold text-white">Opportunity Scout</h4>
-                      {activeTool === 'OPPORTUNITY_SCOUT' && <Check className="size-4 text-[#F43F5E]" />}
+                      {activeTool === 'OPPORTUNITY_SCOUT' && (
+                        <Check className="size-4 text-tool-scout" />
+                      )}
                     </div>
-                    <p className="text-xs text-slate-400 line-clamp-1">Slate Strategy & Circuit Match</p>
+                    <p className="text-xs text-slate-400 line-clamp-1">
+                      Slate Strategy & Circuit Match
+                    </p>
                   </div>
                 </button>
               </div>
@@ -253,7 +267,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
             </div>
 
             {/* Bottom Utilities Row (Theme & Sound as Icons) */}
-            <div className="pt-4 mt-6 border-t border-[#1B2042] flex items-center justify-between">
+            <div className="pt-4 mt-6 border-t border-darkroom-border flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 {/* Theme Icon Button */}
                 <button
@@ -262,11 +276,15 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                     soundEffects.playClick();
                     onToggleTheme();
                   }}
-                  className="p-2.5 rounded-xl bg-[#0E1124] hover:bg-[#151936] border border-[#22274C] text-slate-300 hover:text-white transition-colors cursor-pointer"
+                  className="p-2.5 rounded-xl bg-darkroom-surface hover:bg-darkroom-card border border-darkroom-border text-slate-300 hover:text-white transition-colors cursor-pointer"
                   title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
                   aria-label="Toggle theme"
                 >
-                  {theme === 'dark' ? <Sun className="size-4 text-amber-400" /> : <Moon className="size-4 text-indigo-400" />}
+                  {theme === 'dark' ? (
+                    <Sun className="size-4 text-amber-400" />
+                  ) : (
+                    <Moon className="size-4 text-indigo-400" />
+                  )}
                 </button>
 
                 {/* Sound Icon Button */}
@@ -276,11 +294,15 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                     soundEffects.playClick();
                     onToggleSound();
                   }}
-                  className="p-2.5 rounded-xl bg-[#0E1124] hover:bg-[#151936] border border-[#22274C] text-slate-300 hover:text-white transition-colors cursor-pointer"
+                  className="p-2.5 rounded-xl bg-darkroom-surface hover:bg-darkroom-card border border-darkroom-border text-slate-300 hover:text-white transition-colors cursor-pointer"
                   title={soundMuted ? 'Unmute Sound Effects' : 'Mute Sound Effects'}
                   aria-label="Toggle sound"
                 >
-                  {soundMuted ? <VolumeX className="size-4 text-rose-400" /> : <Volume2 className="size-4 text-indigo-400" />}
+                  {soundMuted ? (
+                    <VolumeX className="size-4 text-rose-400" />
+                  ) : (
+                    <Volume2 className="size-4 text-indigo-400" />
+                  )}
                 </button>
               </div>
 
@@ -291,7 +313,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                   setIsOpen(false);
                   onOpenKeyboardHelp();
                 }}
-                className="p-2.5 rounded-xl bg-[#0E1124] hover:bg-[#151936] border border-[#22274C] text-slate-300 hover:text-white transition-colors cursor-pointer"
+                className="p-2.5 rounded-xl bg-darkroom-surface hover:bg-darkroom-card border border-darkroom-border text-slate-300 hover:text-white transition-colors cursor-pointer"
                 title="Keyboard Shortcuts (?)"
                 aria-label="Keyboard Shortcuts"
               >
@@ -314,9 +336,13 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
           setIsOpen(!isOpen);
         }}
         aria-label="Open Navigation Menu"
-        className="md:hidden p-2 rounded-xl bg-[#0E1124] hover:bg-[#151936] border border-[#22274C] text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer transition-colors"
+        className="md:hidden p-2 rounded-xl bg-darkroom-surface hover:bg-darkroom-card border border-darkroom-border text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer transition-colors"
       >
-        {isOpen ? <X className="size-5 text-indigo-400" /> : <Menu className="size-5 text-indigo-400" />}
+        {isOpen ? (
+          <X className="size-5 text-indigo-400" />
+        ) : (
+          <Menu className="size-5 text-indigo-400" />
+        )}
       </button>
 
       {/* Render Mobile Drawer via Portal into document.body */}

@@ -1,13 +1,13 @@
 import React, { useState, useRef } from 'react';
-import { 
-  Paperclip, 
-  Send, 
-  Loader2, 
-  Sparkles, 
-  HelpCircle, 
+import {
+  Paperclip,
+  Send,
+  Loader2,
+  Sparkles,
+  HelpCircle,
   AlertTriangle,
   Mic,
-  Plus
+  Plus,
 } from 'lucide-react';
 import { soundEffects } from '../../utils/audio';
 import { QuestionsCategoryModal } from '../modals/QuestionsCategoryModal';
@@ -27,7 +27,7 @@ interface ChatPromptBarProps {
     attachedFileContent?: string,
     attachedFileBase64?: string,
     attachedFileMimeType?: string,
-    attachedFileSize?: number
+    attachedFileSize?: number,
   ) => void;
   isLoading: boolean;
 }
@@ -55,7 +55,7 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
       attachedFile?.content,
       attachedFile?.base64,
       attachedFile?.mimeType,
-      attachedFile?.size
+      attachedFile?.size,
     );
     setInput('');
     setAttachedFile(null);
@@ -64,10 +64,13 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
   };
 
   const startRecording = () => {
-    const SpeechRecognitionClass = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const SpeechRecognitionClass =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SpeechRecognitionClass) {
       soundEffects.playCaution();
-      setVideoGuardWarning('Voice dictation is supported in modern browsers (Chrome, Edge, Safari, Brave).');
+      setVideoGuardWarning(
+        'Voice dictation is supported in modern browsers (Chrome, Edge, Safari, Brave).',
+      );
       return;
     }
 
@@ -100,7 +103,9 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
         setIsRecording(false);
         if (event.error === 'not-allowed') {
           soundEffects.playCaution();
-          setVideoGuardWarning('Microphone access was denied. Please allow microphone permissions in your browser.');
+          setVideoGuardWarning(
+            'Microphone access was denied. Please allow microphone permissions in your browser.',
+          );
         }
       };
 
@@ -115,7 +120,7 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
             attachedFile?.content,
             attachedFile?.base64,
             attachedFile?.mimeType,
-            attachedFile?.size
+            attachedFile?.size,
           );
           setInput('');
           setAttachedFile(null);
@@ -153,10 +158,22 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
   const processFile = (file: File) => {
     setVideoGuardWarning(null);
     const fileNameLower = file.name.toLowerCase();
-    
+
     // Security check: block executables, scripts, and potentially malicious files
-    const dangerousExtensions = ['.exe', '.bat', '.sh', '.js', '.vbs', '.cmd', '.scr', '.msi', '.pif', '.application', '.ps1'];
-    if (dangerousExtensions.some(ext => fileNameLower.endsWith(ext))) {
+    const dangerousExtensions = [
+      '.exe',
+      '.bat',
+      '.sh',
+      '.js',
+      '.vbs',
+      '.cmd',
+      '.scr',
+      '.msi',
+      '.pif',
+      '.application',
+      '.ps1',
+    ];
+    if (dangerousExtensions.some((ext) => fileNameLower.endsWith(ext))) {
       soundEffects.playCaution();
       setVideoGuardWarning('Security Alert: This file type is not allowed.');
       return;
@@ -165,9 +182,14 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
     const videoExtensions = ['.mp4', '.mov', '.avi', '.mkv', '.webm', '.m4v', '.wmv'];
 
     // Check for video file attempt
-    if (videoExtensions.some((ext) => fileNameLower.endsWith(ext)) || file.type.startsWith('video/')) {
+    if (
+      videoExtensions.some((ext) => fileNameLower.endsWith(ext)) ||
+      file.type.startsWith('video/')
+    ) {
       soundEffects.playCaution();
-      setVideoGuardWarning('Video analysis is coming soon! Please drop your script, synopsis, treatment, or email for now.');
+      setVideoGuardWarning(
+        'Video analysis is coming soon! Please drop your script, synopsis, treatment, or email for now.',
+      );
       return;
     }
 
@@ -178,7 +200,8 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
       return;
     }
 
-    const mimeType = file.type || (fileNameLower.endsWith('.pdf') ? 'application/pdf' : 'text/plain');
+    const mimeType =
+      file.type || (fileNameLower.endsWith('.pdf') ? 'application/pdf' : 'text/plain');
 
     if (mimeType.startsWith('image/')) {
       // Image cropping/resizing via Canvas
@@ -203,7 +226,7 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
           canvas.width = width;
           canvas.height = height;
           const ctx = canvas.getContext('2d');
-          
+
           if (ctx) {
             ctx.drawImage(img, 0, 0, width, height);
             const dataUrl = canvas.toDataURL(mimeType, 0.8);
@@ -262,10 +285,12 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
     <div className="w-full max-w-4xl mx-auto relative space-y-2">
       {/* Drag & Drop overlay */}
       {isDragging && (
-        <div className="absolute inset-0 z-30 flex items-center justify-center rounded-2xl border-2 border-dashed border-[#2018E6] bg-[#070913]/95 backdrop-blur-md">
+        <div className="absolute inset-0 z-30 flex items-center justify-center rounded-2xl border-2 border-dashed border-midnight-royal bg-darkroom-bg/95 backdrop-blur-md">
           <div className="text-center text-indigo-300">
-            <Sparkles className="size-8 mx-auto text-[#2018E6] animate-bounce" />
-            <p className="mt-2 text-base font-semibold">Drop PDF synopsis, treatment, or festival email</p>
+            <Sparkles className="size-8 mx-auto text-midnight-royal animate-bounce" />
+            <p className="mt-2 text-base font-semibold">
+              Drop PDF synopsis, treatment, or festival email
+            </p>
           </div>
         </div>
       )}
@@ -311,7 +336,7 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
         }}
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
-        className="relative flex flex-col sm:flex-row items-stretch sm:items-center rounded-2xl bg-[#0E1124] shadow-2xl transition-all p-2 gap-2"
+        className="relative flex flex-col sm:flex-row items-stretch sm:items-center rounded-2xl bg-darkroom-surface shadow-2xl transition-all p-2 gap-2"
       >
         <input
           type="file"
@@ -325,14 +350,14 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
             }
           }}
         />
-        
+
         <div className="flex items-center flex-1 min-w-0 gap-1.5 pl-1">
           {/* Prominent Document Upload Button */}
           <button
             type="button"
             title="Attach a file or photo"
             onClick={() => fileInputRef.current?.click()}
-            className="flex items-center justify-center size-10 rounded-xl bg-[#141834] hover:bg-[#1C224B] text-slate-300 hover:text-white transition-all cursor-pointer shadow-sm shrink-0"
+            className="flex items-center justify-center size-10 rounded-xl bg-darkroom-card hover:bg-darkroom-border text-slate-300 hover:text-white transition-all cursor-pointer shadow-sm shrink-0"
           >
             <Plus className="size-4" />
           </button>
@@ -342,7 +367,11 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={isRecording ? "Listening... Speak now..." : "Ask Mission Control, research a festival, or drop a script/treatment PDF..."}
+            placeholder={
+              isRecording
+                ? 'Listening... Speak now...'
+                : 'Ask Mission Control, research a festival, or drop a script/treatment PDF...'
+            }
             className={`w-full bg-transparent px-2.5 py-2 text-base text-slate-100 placeholder-slate-400 focus:outline-none ${
               isRecording ? 'placeholder-rose-300 animate-pulse' : ''
             }`}
@@ -368,12 +397,12 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
           <button
             type="button"
             onClick={toggleRecording}
-            title={isRecording ? "Listening... Click to stop & send" : "Click to speak & auto-send"}
-            aria-label={isRecording ? "Stop voice recording" : "Start voice recording"}
+            title={isRecording ? 'Listening... Click to stop & send' : 'Click to speak & auto-send'}
+            aria-label={isRecording ? 'Stop voice recording' : 'Start voice recording'}
             className={`flex h-10 items-center justify-center rounded-xl transition-all cursor-pointer shrink-0 ${
               isRecording
                 ? 'px-3 gap-1.5 bg-rose-500/20 border border-rose-500/60 text-rose-300 shadow-md shadow-rose-950 animate-pulse'
-                : 'w-10 bg-midnight/80 hover:bg-[#141A3B] border border-zinc-700 hover:border-indigo-500/50 text-zinc-300 hover:text-white'
+                : 'w-10 bg-midnight/80 hover:bg-darkroom-card border border-zinc-700 hover:border-indigo-500/50 text-zinc-300 hover:text-white'
             }`}
           >
             {isRecording ? (
@@ -393,7 +422,7 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
           <button
             type="submit"
             disabled={isLoading || (!input.trim() && !attachedFile)}
-            className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#2018E6] hover:bg-[#1A13C7] text-white shadow-md shadow-[#2018E6]/30 transition-all hover:brightness-110 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shrink-0"
+            className="flex h-10 w-10 items-center justify-center rounded-xl bg-midnight-royal hover:bg-midnight-royal text-white shadow-md shadow-[#2018E6]/30 transition-all hover:brightness-110 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shrink-0"
             title="Send message"
             aria-label="Send message"
           >

@@ -44,7 +44,8 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
     });
 
     // 2. Official Domain Node
-    const domain = dossier.officialDomain || `${festivalName.toLowerCase().replace(/[^a-z0-9]/g, '')}.org`;
+    const domain =
+      dossier.officialDomain || `${festivalName.toLowerCase().replace(/[^a-z0-9]/g, '')}.org`;
     rawNodes.push({
       id: 'node-domain',
       position: { x: 50, y: 150 },
@@ -82,8 +83,8 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
         label: 'Corporate & Registry Filings',
         sublabel: hasDisputes ? 'Disputed Incorporation' : 'UK Companies House Record',
         status: hasDisputes ? 'DISPUTED' : 'VERIFIED',
-        details: hasDisputes 
-          ? 'Registry records show conflicting operating addresses or recent dissolution notices.' 
+        details: hasDisputes
+          ? 'Registry records show conflicting operating addresses or recent dissolution notices.'
           : 'Verified active corporate entity registration with verified filing records.',
       },
       style: {
@@ -114,8 +115,8 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
         label: 'Physical Theater Screening Venue',
         sublabel: 'Commercial Cinema Lease Check',
         status: hasDisputes ? 'DISPUTED' : 'VERIFIED',
-        details: hasDisputes 
-          ? 'Physical screening lease could not be cross-corroborated with municipal venue schedule.' 
+        details: hasDisputes
+          ? 'Physical screening lease could not be cross-corroborated with municipal venue schedule.'
           : 'Physical auditorium confirmed via press archives and venue programming listings.',
       },
       style: {
@@ -168,7 +169,8 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
       });
 
       // Connect claim to corresponding parent
-      const parentId = idx === 0 ? 'node-domain' : idx === 1 || idx === 2 ? 'node-registry' : 'node-venue';
+      const parentId =
+        idx === 0 ? 'node-domain' : idx === 1 || idx === 2 ? 'node-registry' : 'node-venue';
       rawEdges.push({
         id: `e-${parentId}-claim-${claim.id}`,
         source: parentId,
@@ -180,16 +182,23 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
 
     // Filter if requested
     if (filterMode === 'DISPUTES') {
-      const filteredNodes = rawNodes.filter(n => n.id === 'root-entity' || n.data?.status === 'DISPUTED' || n.data?.status === 'CAUTION');
-      const validNodeIds = new Set(filteredNodes.map(n => n.id));
-      const filteredEdges = rawEdges.filter(e => validNodeIds.has(e.source) && validNodeIds.has(e.target));
+      const filteredNodes = rawNodes.filter(
+        (n) =>
+          n.id === 'root-entity' || n.data?.status === 'DISPUTED' || n.data?.status === 'CAUTION',
+      );
+      const validNodeIds = new Set(filteredNodes.map((n) => n.id));
+      const filteredEdges = rawEdges.filter(
+        (e) => validNodeIds.has(e.source) && validNodeIds.has(e.target),
+      );
       return { nodes: filteredNodes, edges: filteredEdges };
     }
 
     if (filterMode === 'VERIFIED') {
-      const filteredNodes = rawNodes.filter(n => n.data?.status === 'VERIFIED');
-      const validNodeIds = new Set(filteredNodes.map(n => n.id));
-      const filteredEdges = rawEdges.filter(e => validNodeIds.has(e.source) && validNodeIds.has(e.target));
+      const filteredNodes = rawNodes.filter((n) => n.data?.status === 'VERIFIED');
+      const validNodeIds = new Set(filteredNodes.map((n) => n.id));
+      const filteredEdges = rawEdges.filter(
+        (e) => validNodeIds.has(e.source) && validNodeIds.has(e.target),
+      );
       return { nodes: filteredNodes, edges: filteredEdges };
     }
 
@@ -208,11 +217,13 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
       {/* Diagram Controls & Mode Bar */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-1">
         <div className="flex items-center gap-2 text-xs font-mono text-slate-300">
-          <ShieldCheck className="size-4 text-[#00D29E]" />
-          <span className="font-bold uppercase tracking-wider">Entity Verification & Provenance Graph</span>
+          <ShieldCheck className="size-4 text-tool-diligence" />
+          <span className="font-bold uppercase tracking-wider">
+            Entity Verification & Provenance Graph
+          </span>
         </div>
 
-        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[#141834] text-xs">
+        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-darkroom-card text-xs">
           {[
             { id: 'ALL', label: 'Complete Graph' },
             { id: 'VERIFIED', label: 'Verified Nodes' },
@@ -224,7 +235,7 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
               onClick={() => setFilterMode(mode.id as any)}
               className={`px-3 py-1 rounded-lg font-mono text-xs transition-all cursor-pointer ${
                 filterMode === mode.id
-                  ? 'bg-[#2018E6] text-white font-semibold shadow-xs'
+                  ? 'bg-midnight-royal text-white font-semibold shadow-xs'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -244,17 +255,26 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
 
       {/* Node Context Inspector Pill / Callout */}
       {selectedNodeData && (
-        <div className="p-4 rounded-2xl bg-[#141834] text-xs space-y-1.5 animate-fade-in shadow-xl">
+        <div className="p-4 rounded-2xl bg-darkroom-card text-xs space-y-1.5 animate-fade-in shadow-xl">
           <div className="flex items-center justify-between gap-2">
-            <span className="font-bold text-white font-serif text-sm">{selectedNodeData.label}</span>
-            <span className={`px-2 py-0.5 rounded-md font-mono text-[10px] font-semibold ${
-              selectedNodeData.status === 'VERIFIED' ? 'bg-emerald-500/20 text-emerald-300' :
-              selectedNodeData.status === 'DISPUTED' ? 'bg-rose-500/20 text-rose-300' : 'bg-indigo-500/20 text-indigo-300'
-            }`}>
+            <span className="font-bold text-white font-serif text-sm">
+              {selectedNodeData.label}
+            </span>
+            <span
+              className={`px-2 py-0.5 rounded-md font-mono text-[10px] font-semibold ${
+                selectedNodeData.status === 'VERIFIED'
+                  ? 'bg-emerald-500/20 text-emerald-300'
+                  : selectedNodeData.status === 'DISPUTED'
+                    ? 'bg-rose-500/20 text-rose-300'
+                    : 'bg-indigo-500/20 text-indigo-300'
+              }`}
+            >
               {selectedNodeData.status || 'ACTIVE NODE'}
             </span>
           </div>
-          <p className="text-slate-300 leading-relaxed font-sans">{selectedNodeData.details || selectedNodeData.role || selectedNodeData.sublabel}</p>
+          <p className="text-slate-300 leading-relaxed font-sans">
+            {selectedNodeData.details || selectedNodeData.role || selectedNodeData.sublabel}
+          </p>
         </div>
       )}
     </div>

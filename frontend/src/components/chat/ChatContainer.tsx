@@ -21,7 +21,8 @@ interface ChatContainerProps {
 const INITIAL_HARDCODED_MESSAGE: ChatMessage = {
   id: 'initial-greeting-01',
   role: 'assistant',
-  content: 'Cinema Due Diligence Desk online. Enter a festival name to investigate, request a grant/funding scan, or drop an invitation email.',
+  content:
+    'Cinema Due Diligence Desk online. Enter a festival name to investigate, request a grant/funding scan, or drop an invitation email.',
   timestamp: new Date().toISOString(),
 };
 
@@ -52,7 +53,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
     attachedFileContent?: string,
     attachedFileBase64?: string,
     attachedFileMimeType?: string,
-    attachedFileSize?: number
+    attachedFileSize?: number,
   ) => {
     const userMsg: ChatMessage = {
       id: String(Date.now()),
@@ -76,7 +77,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
     setThinkingMessage(
       attachedFileName
         ? `Cinema Due Diligence Desk is analyzing attached file '${attachedFileName}'...`
-        : 'Cinema Due Diligence Desk is evaluating your request...'
+        : 'Cinema Due Diligence Desk is evaluating your request...',
     );
 
     try {
@@ -141,18 +142,28 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
                 setMessages((prev) =>
                   prev.map((msg) =>
                     msg.id === assistantMsgId
-                      ? { ...msg, content: assistantContent, toolCall: detectedToolCall, followUpProbe: detectedFollowUpProbe }
-                      : msg
-                  )
+                      ? {
+                          ...msg,
+                          content: assistantContent,
+                          toolCall: detectedToolCall,
+                          followUpProbe: detectedFollowUpProbe,
+                        }
+                      : msg,
+                  ),
                 );
               } else if (event.type === 'TOOL_CALL' && event.toolCall) {
                 detectedToolCall = event.toolCall;
                 setMessages((prev) =>
                   prev.map((msg) =>
                     msg.id === assistantMsgId
-                      ? { ...msg, content: assistantContent, toolCall: detectedToolCall, followUpProbe: detectedFollowUpProbe }
-                      : msg
-                  )
+                      ? {
+                          ...msg,
+                          content: assistantContent,
+                          toolCall: detectedToolCall,
+                          followUpProbe: detectedFollowUpProbe,
+                        }
+                      : msg,
+                  ),
                 );
                 soundEffects.playSuccess();
               } else if (event.type === 'FOLLOW_UP_PROBE' && event.followUpProbe) {
@@ -160,9 +171,14 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
                 setMessages((prev) =>
                   prev.map((msg) =>
                     msg.id === assistantMsgId
-                      ? { ...msg, content: assistantContent, toolCall: detectedToolCall, followUpProbe: detectedFollowUpProbe }
-                      : msg
-                  )
+                      ? {
+                          ...msg,
+                          content: assistantContent,
+                          toolCall: detectedToolCall,
+                          followUpProbe: detectedFollowUpProbe,
+                        }
+                      : msg,
+                  ),
                 );
               } else if (event.type === 'THINKING' && event.message) {
                 setThinkingMessage(event.message);
@@ -201,12 +217,8 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
           <span className="animate-cinema-glitch text-transparent bg-clip-text bg-gradient-to-r from-zinc-100 via-stone-200 to-zinc-300">
             Cinema
           </span>
-          <span className="animate-word-shift-2 text-zinc-100">
-            Due
-          </span>
-          <span className="animate-word-shift-3 text-zinc-300">
-            diligence
-          </span>
+          <span className="animate-word-shift-2 text-zinc-100">Due</span>
+          <span className="animate-word-shift-3 text-zinc-300">diligence</span>
         </h1>
         <TextLink
           variant="primary"
@@ -244,11 +256,8 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
 
       {/* Persistent Bottom Prompt Bar with Action Pills */}
       <div className="relative z-10 pt-2 pb-1 border-t border-zinc-800/80 mt-1">
-        <ChatPromptBar
-          onSendMessage={handleSendMessage}
-          isLoading={isLoading}
-        />
-        
+        <ChatPromptBar onSendMessage={handleSendMessage} isLoading={isLoading} />
+
         {/* Centered Filmmaker Feedback Link */}
         <div className="flex items-center justify-center text-[11px] font-mono text-slate-500 pt-2 pb-0.5 select-none">
           <button

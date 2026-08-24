@@ -51,7 +51,7 @@ class ApprovalService:
         )
 
         if submitted_hash != draft.payloadHash or submitted_hash != recalculated_hash:
-            logger.error(f"Hash mismatch! Submitted: {submitted_hash}, Calculated: {recalculated_hash}")
+            logger.exception(f"Hash mismatch! Submitted: {submitted_hash}, Calculated: {recalculated_hash}")
             raise ValueError("Exact payload hash mismatch! The draft content was modified or tampered with.")
 
         # Mark as approved and sandbox executed

@@ -155,7 +155,7 @@ Return a JSON object matching this schema:
             )
 
         except Exception as e:
-            logger.error(f"Planner failed: {e}. Using deterministic default plan.", exc_info=True)
+            logger.exception(f"Planner failed: {e}. Using deterministic default plan.")
             return InvestigationPlan(
                 festivalName=entity.name,
                 domains={

@@ -37,7 +37,7 @@ async def pump_adk_events(investigation_id: str, runner_stream: AsyncGenerator[E
             # to emit these events. So maybe `adk_bridge` exposes those callbacks instead!
             
     except Exception as e:
-        logger.error(f"Error pumping ADK events for {investigation_id}: {e}", exc_info=True)
+        logger.exception(f"Error pumping ADK events for {investigation_id}: {e}")
         await broadcaster.emit(
             investigation_id=investigation_id,
             event_type=EventType.ERROR,

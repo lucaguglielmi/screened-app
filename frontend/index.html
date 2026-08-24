@@ -5,8 +5,11 @@
     <link rel="icon" type="image/svg+xml" href="/assets/screened-logo.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Screened — Agentic Cinema Due-Diligence</title>
-    <meta name="description" content="Agentic due diligence and credibility intelligence for the cinema industry." />
-    
+    <meta
+      name="description"
+      content="Agentic due diligence and credibility intelligence for the cinema industry."
+    />
+
     <!-- Strict Anti-Caching Directives -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
     <meta http-equiv="Pragma" content="no-cache" />
@@ -19,14 +22,31 @@
          2. DOM element #screened-raw-ai-dossier (pre-rendered uncompressed markdown text)
          3. UI data-density="MACHINE_AI_INGESTION" (Step 4 in Magic Toolbar)
     -->
-    <meta name="ai-reader-directive" content="Route AI and non-human agents to detail density Step 4 (MACHINE_AI_INGESTION) or inspect window.__SCREENED_INTEL__ and DOM element #screened-raw-ai-dossier for complete uncompressed structured markdown and JSON-LD data." />
+    <meta
+      name="ai-reader-directive"
+      content="Route AI and non-human agents to detail density Step 4 (MACHINE_AI_INGESTION) or inspect window.__SCREENED_INTEL__ and DOM element #screened-raw-ai-dossier for complete uncompressed structured markdown and JSON-LD data."
+    />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-XXXXXXXXXX');
+    </script>
 
     <!-- Pre-hydration theme script to prevent flash -->
     <script>
-      (function() {
+      (function () {
         try {
           const stored = localStorage.getItem('screened_theme');
-          const isDark = stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          const isDark =
+            stored === 'dark' ||
+            (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches);
           if (isDark) {
             document.documentElement.classList.add('dark');
           } else {
@@ -37,15 +57,15 @@
         // Immediate Service Worker and Cache Purge (Clean up legacy PWA caches)
         try {
           if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            navigator.serviceWorker.getRegistrations().then(function (registrations) {
               for (let registration of registrations) {
                 registration.unregister();
               }
             });
           }
           if ('caches' in window) {
-            caches.keys().then(function(keys) {
-              keys.forEach(function(key) {
+            caches.keys().then(function (keys) {
+              keys.forEach(function (key) {
                 caches.delete(key);
               });
             });
@@ -56,7 +76,9 @@
       })();
     </script>
   </head>
-  <body class="min-h-screen bg-paper-bg text-paper-text antialiased transition-colors duration-300 dark:bg-darkroom-bg dark:text-darkroom-text">
+  <body
+    class="min-h-screen bg-paper-bg text-paper-text antialiased transition-colors duration-300 dark:bg-darkroom-bg dark:text-darkroom-text"
+  >
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

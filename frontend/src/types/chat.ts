@@ -21,7 +21,8 @@ export interface OpportunityScoutArgs {
   format: 'SHORT' | 'FEATURE' | 'DOCUMENTARY' | 'ANIMATION' | 'EPISODIC';
   genre: string;
   runtime_minutes: number;
-  premiere_goal: 'WORLD_PREMIERE' | 'INTERNATIONAL_PREMIERE' | 'NATIONAL_PREMIERE' | 'NO_PREFERENCE';
+  premiere_goal:
+    'WORLD_PREMIERE' | 'INTERNATIONAL_PREMIERE' | 'NATIONAL_PREMIERE' | 'NO_PREFERENCE';
   budget_tier: string;
   target_regions: string[];
   strategy_rationale: string;
@@ -70,7 +71,8 @@ export interface DocumentAnalysisResult {
   runtimeMinutes?: number;
   logline?: string;
   budgetTier?: string;
-  suggestedPremiereGoal?: 'WORLD_PREMIERE' | 'INTERNATIONAL_PREMIERE' | 'NATIONAL_PREMIERE' | 'NO_PREFERENCE';
+  suggestedPremiereGoal?:
+    'WORLD_PREMIERE' | 'INTERNATIONAL_PREMIERE' | 'NATIONAL_PREMIERE' | 'NO_PREFERENCE';
   keyThemes?: string[];
   festivalClaimed?: string;
   senderDomain?: string;

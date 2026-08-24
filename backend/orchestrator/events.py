@@ -66,7 +66,7 @@ class EventBroadcaster:
                 evt = ActivityEvent(**evt_data)
                 queue.put_nowait(evt)
             except Exception as e:
-                logger.error(f"Failed to replay event: {e}", exc_info=True)
+                logger.exception(f"Failed to replay event: {e}")
 
         return queue
 
