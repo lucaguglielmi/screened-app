@@ -7,7 +7,7 @@ import { useReducedMotion } from '../../utils/motionTokens';
 // ============================================================================
 export const NeonCyberBar: React.FC<{ progress?: number; color?: string; label?: string }> = ({
   progress,
-  color = '#2018E6',
+  color = 'var(--color-midnight-royal)',
   label = 'AI Agent Processing...',
 }) => {
   const reducedMotion = useReducedMotion();

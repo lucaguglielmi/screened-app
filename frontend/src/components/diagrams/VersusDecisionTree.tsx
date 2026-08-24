@@ -53,9 +53,9 @@ export const VersusDecisionTree: React.FC<Props> = ({
         role: 'Input Film Profile & Strategy Target',
       },
       style: {
-        background: '#0E1124',
-        color: '#FFFFFF',
-        border: '2px solid #2018E6',
+        background: 'var(--color-darkroom-surface)',
+        color: 'var(--color-white)',
+        border: '2px solid var(--color-midnight-royal)',
         borderRadius: '16px',
         padding: '12px 18px',
         width: 280,
@@ -78,9 +78,9 @@ export const VersusDecisionTree: React.FC<Props> = ({
         details: `Top-tier industry footprint. Notifies on ${festivalA.notificationDate}. ${festivalA.premierePolicy}.`,
       },
       style: {
-        background: isAPreferred ? '#132822' : '#141834',
-        color: '#F8F9FC',
-        border: isAPreferred ? '2px solid #00D29E' : '1.5px solid #22274C',
+        background: isAPreferred ? 'var(--color-darkroom-surface)' : 'var(--color-darkroom-card)',
+        color: 'var(--color-white)',
+        border: isAPreferred ? '2px solid var(--color-tool-diligence)' : '1.5px solid var(--color-midnight-border)',
         borderRadius: '14px',
         padding: '12px 16px',
         width: 240,
@@ -94,8 +94,8 @@ export const VersusDecisionTree: React.FC<Props> = ({
       target: 'node-fest-a',
       animated: isAPreferred,
       label: isAPreferred ? '★ Priority 1 Route' : 'Alternative',
-      style: { stroke: isAPreferred ? '#00D29E' : '#9499B8', strokeWidth: isAPreferred ? 2 : 1 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: isAPreferred ? '#00D29E' : '#9499B8' },
+      style: { stroke: isAPreferred ? 'var(--color-tool-diligence)' : 'var(--color-midnight-border)', strokeWidth: isAPreferred ? 2 : 1 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: isAPreferred ? 'var(--color-tool-diligence)' : 'var(--color-midnight-border)' },
     });
 
     // Branch B: Festival B
@@ -112,9 +112,9 @@ export const VersusDecisionTree: React.FC<Props> = ({
         details: `Lower entry cost (${festivalB.entryFee}). Notifies on ${festivalB.notificationDate}. Ideal second-window premiere.`,
       },
       style: {
-        background: isBPreferred ? '#132822' : '#141834',
-        color: '#F8F9FC',
-        border: isBPreferred ? '2px solid #00D29E' : '1.5px solid #22274C',
+        background: isBPreferred ? 'var(--color-darkroom-surface)' : 'var(--color-darkroom-card)',
+        color: 'var(--color-white)',
+        border: isBPreferred ? '2px solid var(--color-tool-diligence)' : '1.5px solid var(--color-midnight-border)',
         borderRadius: '14px',
         padding: '12px 16px',
         width: 240,
@@ -128,8 +128,8 @@ export const VersusDecisionTree: React.FC<Props> = ({
       target: 'node-fest-b',
       animated: isBPreferred,
       label: isBPreferred ? '★ Priority 1 Route' : 'Phase 2 Fallback',
-      style: { stroke: isBPreferred ? '#00D29E' : '#9499B8', strokeWidth: isBPreferred ? 2 : 1 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: isBPreferred ? '#00D29E' : '#9499B8' },
+      style: { stroke: isBPreferred ? 'var(--color-tool-diligence)' : 'var(--color-midnight-border)', strokeWidth: isBPreferred ? 2 : 1 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: isBPreferred ? 'var(--color-tool-diligence)' : 'var(--color-midnight-border)' },
     });
 
     // Outcome 1: Accepted at Festival A
@@ -141,9 +141,9 @@ export const VersusDecisionTree: React.FC<Props> = ({
         details: `Lock World Premiere status. Withdraw from competing North American calls to preserve distribution rights.`,
       },
       style: {
-        background: '#0E1124',
-        color: '#00D29E',
-        border: '1.5px solid #00D29E',
+        background: 'var(--color-darkroom-surface)',
+        color: 'var(--color-tool-diligence)',
+        border: '1.5px solid var(--color-tool-diligence)',
         borderRadius: '10px',
         padding: '10px 12px',
         width: 180,
@@ -156,8 +156,8 @@ export const VersusDecisionTree: React.FC<Props> = ({
       source: 'node-fest-a',
       target: 'outcome-a-accepted',
       label: 'If Selected',
-      style: { stroke: '#00D29E', strokeWidth: 1.5 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: '#00D29E' },
+      style: { stroke: 'var(--color-tool-diligence)', strokeWidth: 1.5 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'var(--color-tool-diligence)' },
     });
 
     // Outcome 2: Rejected at Festival A -> Immediate Rollover to Festival B
@@ -169,9 +169,9 @@ export const VersusDecisionTree: React.FC<Props> = ({
         details: `Submit to ${festivalB.name} immediately before late deadline (${festivalB.notificationDate}). Preserves national premiere qualification.`,
       },
       style: {
-        background: '#0E1124',
-        color: '#F8F9FC',
-        border: '1.5px solid #2018E6',
+        background: 'var(--color-darkroom-surface)',
+        color: 'var(--color-white)',
+        border: '1.5px solid var(--color-midnight-royal)',
         borderRadius: '10px',
         padding: '10px 12px',
         width: 200,
@@ -184,8 +184,8 @@ export const VersusDecisionTree: React.FC<Props> = ({
       source: 'node-fest-a',
       target: 'outcome-rollover',
       label: 'If Rejected',
-      style: { stroke: '#2018E6', strokeWidth: 1.2, strokeDasharray: '4 4' },
-      markerEnd: { type: MarkerType.ArrowClosed, color: '#2018E6' },
+      style: { stroke: 'var(--color-midnight-royal)', strokeWidth: 1.2, strokeDasharray: '4 4' },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'var(--color-midnight-royal)' },
     });
 
     // Outcome 3: Dual Qualifying Awards
@@ -197,9 +197,9 @@ export const VersusDecisionTree: React.FC<Props> = ({
         details: `Both festivals qualify film for Academy consideration upon competitive selection.`,
       },
       style: {
-        background: '#0E1124',
-        color: '#F59E0B',
-        border: '1.5px solid #F59E0B',
+        background: 'var(--color-darkroom-surface)',
+        color: 'var(--color-accent-gold)',
+        border: '1.5px solid var(--color-accent-gold)',
         borderRadius: '10px',
         padding: '10px 12px',
         width: 180,
@@ -211,8 +211,8 @@ export const VersusDecisionTree: React.FC<Props> = ({
       id: 'e-b-dual',
       source: 'node-fest-b',
       target: 'outcome-dual',
-      style: { stroke: '#F59E0B', strokeWidth: 1.2 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: '#F59E0B' },
+      style: { stroke: 'var(--color-accent-gold)', strokeWidth: 1.2 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'var(--color-accent-gold)' },
     });
 
     return { nodes: rawNodes, edges: rawEdges };

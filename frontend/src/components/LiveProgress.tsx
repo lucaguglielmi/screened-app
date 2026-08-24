@@ -290,7 +290,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
 
           {/* Animated Gradient Active Fill Rail */}
           <motion.div
-            className="absolute left-8 top-1/2 -translate-y-1/2 h-1 bg-gradient-to-r from-midnight-royal via-tool-diligence to-emerald-400 rounded-full z-0 shadow-sm shadow-[#00D29E]/50"
+            className="absolute left-8 top-1/2 -translate-y-1/2 h-1 bg-gradient-to-r from-midnight-royal via-tool-diligence to-emerald-400 rounded-full z-0 shadow-sm shadow-[var(--color-tool-diligence)]/50"
             initial={{ width: 0 }}
             animate={{ width: `${Math.max(5, Math.min(100, progressPercent))}%` }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -324,9 +324,9 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
                   <button
                     className={`relative flex items-center justify-center transition-all duration-200 cursor-pointer rounded-2xl ${
                       state === 'ACTIVE'
-                        ? 'size-11 sm:size-12 bg-gradient-to-tr from-tool-diligence to-emerald-400 text-slate-950 shadow-xl shadow-[#00D29E]/40 ring-4 ring-tool-diligence/30 scale-110'
+                        ? 'size-11 sm:size-12 bg-gradient-to-tr from-tool-diligence to-emerald-400 text-slate-950 shadow-xl shadow-[var(--color-tool-diligence)]/40 ring-4 ring-tool-diligence/30 scale-110'
                         : state === 'COMPLETED'
-                          ? 'size-9 sm:size-10 bg-tool-diligence/20 border border-tool-diligence/60 text-tool-diligence shadow-md shadow-[#00D29E]/20 hover:scale-105 hover:bg-tool-diligence/30'
+                          ? 'size-9 sm:size-10 bg-tool-diligence/20 border border-tool-diligence/60 text-tool-diligence shadow-md shadow-[var(--color-tool-diligence)]/20 hover:scale-105 hover:bg-tool-diligence/30'
                           : 'size-9 sm:size-10 bg-darkroom-surface border border-darkroom-border text-slate-400 hover:text-slate-200 hover:border-slate-500 hover:scale-105'
                     } ${isSelected ? 'ring-2 ring-tool-diligence' : isInspected && state !== 'ACTIVE' ? 'ring-2 ring-indigo-400/60 border-indigo-400' : ''}`}
                     title={`${step.stepNumber}. ${step.name}`}
@@ -414,7 +414,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
             transition={{ duration: 0.2 }}
             className={`p-5 rounded-2xl border transition-all ${
               activeStepState === 'ACTIVE'
-                ? 'bg-gradient-to-br from-darkroom-card to-darkroom-surface border-tool-diligence/40 shadow-lg shadow-[#00D29E]/10'
+                ? 'bg-gradient-to-br from-darkroom-card to-darkroom-surface border-tool-diligence/40 shadow-lg shadow-[var(--color-tool-diligence)]/10'
                 : activeStepState === 'COMPLETED'
                   ? 'bg-darkroom-card border-darkroom-border'
                   : 'bg-darkroom-surface border-darkroom-border'
@@ -425,7 +425,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
                 <div
                   className={`size-10 rounded-xl flex items-center justify-center shrink-0 ${
                     activeStepState === 'ACTIVE'
-                      ? 'bg-tool-diligence text-slate-950 shadow-md shadow-[#00D29E]/30'
+                      ? 'bg-tool-diligence text-slate-950 shadow-md shadow-[var(--color-tool-diligence)]/30'
                       : activeStepState === 'COMPLETED'
                         ? 'bg-tool-diligence/20 text-tool-diligence border border-tool-diligence/40'
                         : 'bg-darkroom-card text-slate-400 border border-darkroom-border'

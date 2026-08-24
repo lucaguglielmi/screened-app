@@ -51,43 +51,9 @@ Every year, independent filmmakers spend thousands of pounds on festival submiss
 ## 🏗️ Multi-Agent Architecture
 
 Screened operates an orchestrated pipeline of specialized autonomous agents using **Vertex AI (Gemini 2.5 Pro & Gemini 2.5 Flash)** and the **Parallel Search API**:
-
-```text
-                               [ Filmmaker Query / Upload ]
-                                            │
-                                            ▼
-┌──────────────────────────────────────────────────────────────────────────────────────────┐
-│                             Orchestrator (Google ADK)                                    │
-│                                                                                          │
-│ ┌────────────────────────┐    ┌────────────────────────┐    ┌────────────────────────┐   │
-│ │ Producer Desk Agent    │───▶│ Disambiguator Agent    │───▶│ Planner Agent          │   │
-│ │ (LlmAgent)             │    │ (Cloud Tasks)          │    │ (LlmAgent)             │   │
-│ └────────────────────────┘    └────────────────────────┘    └────────────────────────┘   │
-│                                                                        │                 │
-│                                           ┌────────────────────────────┘                 │
-│                                           ▼                                              │
-│                               [ Google Cloud Tasks Queue ]                               │
-│                                           │                                              │
-│                                           ▼                                              │
-│                               ┌───────────────────────┐                                  │
-│                               │ Deep Vetting (Parallel)│                                 │
-│                               │  - FestivalAgent       │                                 │
-│                               │  - OrganizerAgent      │                                 │
-│                               │  - ParticipantsAgent   │                                 │
-│                               └───────────┬───────────┘                                  │
-│                                           │                                              │
-│                                           ▼                                              │
-│                               ┌───────────────────────┐                                  │
-│                               │ Analysis & Drafting    │                                 │
-│                               │  - ClaimExtractorAgent │                                 │
-│                               │  - ContradictionAgent  │                                 │
-│                               │  - ReportWriterAgent   │                                 │
-│                               └───────────────────────┘                                  │
-└───────────────────────────────────────────┬──────────────────────────────────────────────┘
-                                            │
-                                            ▼
-                            [ Evidence Dossier UI / Export ]
-```
+<p align="center">
+  <img src="frontend/public/assets/architecture-gcp.svg" alt="Screened Multi-Agent Architecture" width="100%" />
+</p>
 
 ---
 

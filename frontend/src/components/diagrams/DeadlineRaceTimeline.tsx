@@ -26,9 +26,9 @@ export const DeadlineRaceTimeline: React.FC<Props> = ({
         fee: '$75',
       },
       style: {
-        background: '#141834',
-        color: '#F8F9FC',
-        border: '1.5px solid #00D29E',
+        background: 'var(--color-darkroom-card)',
+        color: 'var(--color-white)',
+        border: '1.5px solid var(--color-tool-diligence)',
         borderRadius: '12px',
         padding: '10px 14px',
         width: 170,
@@ -46,9 +46,9 @@ export const DeadlineRaceTimeline: React.FC<Props> = ({
         fee: '$60',
       },
       style: {
-        background: '#141834',
-        color: '#F8F9FC',
-        border: '1.5px solid #8B5CF6',
+        background: 'var(--color-darkroom-card)',
+        color: 'var(--color-white)',
+        border: '1.5px solid var(--color-royal-violet)',
         borderRadius: '12px',
         padding: '10px 14px',
         width: 170,
@@ -66,9 +66,9 @@ export const DeadlineRaceTimeline: React.FC<Props> = ({
         role: 'Selection Verdict',
       },
       style: {
-        background: '#1D1A38',
-        color: '#F59E0B',
-        border: '2px solid #F59E0B',
+        background: 'var(--color-darkroom-card)',
+        color: 'var(--color-accent-gold)',
+        border: '2px solid var(--color-accent-gold)',
         borderRadius: '12px',
         padding: '10px 14px',
         width: 180,
@@ -86,9 +86,9 @@ export const DeadlineRaceTimeline: React.FC<Props> = ({
         role: 'Selection Verdict',
       },
       style: {
-        background: '#141834',
-        color: '#00D29E',
-        border: '1.5px solid #00D29E',
+        background: 'var(--color-darkroom-card)',
+        color: 'var(--color-tool-diligence)',
+        border: '1.5px solid var(--color-tool-diligence)',
         borderRadius: '12px',
         padding: '10px 14px',
         width: 180,
@@ -102,8 +102,8 @@ export const DeadlineRaceTimeline: React.FC<Props> = ({
       source: 'm1',
       target: 'm2',
       label: '+35 Days',
-      style: { stroke: '#9499B8', strokeWidth: 1.2 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: '#9499B8' },
+      style: { stroke: 'var(--color-midnight-border)', strokeWidth: 1.2 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'var(--color-midnight-border)' },
     });
 
     rawEdges.push({
@@ -112,8 +112,8 @@ export const DeadlineRaceTimeline: React.FC<Props> = ({
       target: 'm3',
       label: 'Deliberation',
       animated: true,
-      style: { stroke: '#F59E0B', strokeWidth: 1.5 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: '#F59E0B' },
+      style: { stroke: 'var(--color-accent-gold)', strokeWidth: 1.5 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'var(--color-accent-gold)' },
     });
 
     rawEdges.push({
@@ -121,8 +121,8 @@ export const DeadlineRaceTimeline: React.FC<Props> = ({
       source: 'm3',
       target: 'm4',
       label: 'Rollover',
-      style: { stroke: '#00D29E', strokeWidth: 1.2 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: '#00D29E' },
+      style: { stroke: 'var(--color-tool-diligence)', strokeWidth: 1.2 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'var(--color-tool-diligence)' },
     });
 
     return { nodes: rawNodes, edges: rawEdges };

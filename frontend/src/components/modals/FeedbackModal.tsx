@@ -188,7 +188,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
         {/* Modal Body */}
         {isSubmitted ? (
           <div className="p-8 text-center space-y-6 animate-fade-in">
-            <div className="size-16 mx-auto rounded-full bg-tool-diligence/20 text-tool-diligence flex items-center justify-center shadow-lg shadow-[#00D29E]/20 animate-bounce">
+            <div className="size-16 mx-auto rounded-full bg-tool-diligence/20 text-tool-diligence flex items-center justify-center shadow-lg shadow-[var(--color-tool-diligence)]/20 animate-bounce">
               <CheckCircle2 className="size-8" />
             </div>
 

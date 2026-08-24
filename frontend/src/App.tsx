@@ -644,7 +644,7 @@ export default function App() {
                       <button
                         type="submit"
                         disabled={loading || !query.trim()}
-                        className="px-6 py-3 rounded-xl bg-tool-diligence hover:bg-tool-diligence-hover disabled:opacity-40 text-slate-950 font-bold text-base flex items-center justify-center gap-2 transition-all shadow-lg shadow-[#00D29E]/20 shrink-0 cursor-pointer"
+                        className="px-6 py-3 rounded-xl bg-tool-diligence hover:bg-tool-diligence-hover disabled:opacity-40 text-slate-950 font-bold text-base flex items-center justify-center gap-2 transition-all shadow-lg shadow-[var(--color-tool-diligence)]/20 shrink-0 cursor-pointer"
                       >
                         <ShieldCheck className="size-5 text-slate-950" />
                         <span>Start Due Diligence</span>

@@ -142,7 +142,7 @@ export const MiniScoutCard: React.FC<MiniScoutCardProps> = ({ args, onLaunch }) 
           <div className="pt-2 flex items-center justify-end gap-2">
             <button
               onClick={handleProceedToReview}
-              className="inline-flex items-center gap-2 rounded-xl bg-tool-scout hover:bg-tool-scout-hover px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-[#F43F5E]/30 transition-all hover:brightness-110 active:scale-95 cursor-pointer font-mono"
+              className="inline-flex items-center gap-2 rounded-xl bg-tool-scout hover:bg-tool-scout-hover px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-[var(--color-tool-scout)]/30 transition-all hover:brightness-110 active:scale-95 cursor-pointer font-mono"
             >
               <span>Review Opportunity Strategy (Stage 2)</span>
               <ArrowRight className="size-4" />
@@ -218,7 +218,7 @@ export const MiniScoutCard: React.FC<MiniScoutCardProps> = ({ args, onLaunch }) 
             <button
               type="button"
               onClick={handleLaunch}
-              className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-tool-scout hover:bg-tool-scout-hover px-5 py-2.5 text-xs font-mono font-bold text-white shadow-md shadow-[#F43F5E]/30 transition-all hover:brightness-110 active:scale-95 cursor-pointer"
+              className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-tool-scout hover:bg-tool-scout-hover px-5 py-2.5 text-xs font-mono font-bold text-white shadow-md shadow-[var(--color-tool-scout)]/30 transition-all hover:brightness-110 active:scale-95 cursor-pointer"
             >
               <span>Launch Opportunity Scout & Open Workspace</span>
               <ArrowRight className="size-4" />

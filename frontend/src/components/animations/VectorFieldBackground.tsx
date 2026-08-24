@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 
 export interface LivingBackgroundProps {
-  primaryColor?: string; // Soft cinema crimson / coral (default: '#E11D48')
-  secondaryColor?: string; // Royal indigo / violet (default: '#4338CA')
-  accentColor?: string; // Warm amber / gold ember (default: '#F59E0B')
+  primaryColor?: string; // Soft cinema crimson / coral (default: 'var(--color-tool-scout)')
+  secondaryColor?: string; // Royal indigo / violet (default: 'var(--color-deep-indigo)')
+  accentColor?: string; // Warm amber / gold ember (default: 'var(--color-accent-gold)')
   speed?: number; // Fluid drift speed (default: 0.45)
   organicScale?: number; // Spread & size of the living fluid membrane (default: 1.0)
   opacity?: number; // Base opacity (default: 0.35)
@@ -31,9 +31,9 @@ interface Mote {
 import { useReducedMotion } from '../../utils/motionTokens';
 
 export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
-  primaryColor = '#E11D48',
-  secondaryColor = '#3B82F6',
-  accentColor = '#F59E0B',
+  primaryColor = 'var(--color-tool-scout)',
+  secondaryColor = 'var(--color-accent-blue)',
+  accentColor = 'var(--color-accent-gold)',
   speed = 0.4,
   organicScale = 1.0,
   opacity = 0.32,

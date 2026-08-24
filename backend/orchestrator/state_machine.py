@@ -10,6 +10,13 @@ import traceback
 import json
 
 try:
+    from opentelemetry import trace
+    from opentelemetry.propagate import inject
+except ImportError:
+    trace = None
+    inject = None
+
+try:
     from google.cloud import tasks_v2
     tasks_client = tasks_v2.CloudTasksClient()
     PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT", "")
@@ -73,11 +80,15 @@ def enqueue_task(path: str, payload: dict, fallback_task_func, *args):
             worker_url = os.environ.get("WORKER_URL", "http://localhost:8000")
             url = f"{worker_url}{path}"
             
+            headers = {"Content-type": "application/json"}
+            if inject:
+                inject(headers)
+                
             task = {
                 "http_request": {
                     "http_method": tasks_v2.HttpMethod.POST,
                     "url": url,
-                    "headers": {"Content-type": "application/json"},
+                    "headers": headers,
                     "body": json.dumps(payload).encode(),
                 }
             }
@@ -199,7 +210,13 @@ class Orchestrator:
             )
 
         except Exception as e:
-            logger.exception(f"Disambiguation error for {inv_id}: {e}")
+            if trace:
+                span = trace.get_current_span()
+                if span and span.is_recording():
+                    span.record_exception(e)
+                    from opentelemetry.trace.status import Status, StatusCode
+                    span.set_status(Status(StatusCode.ERROR, str(e)))
+            logger.error(f"Disambiguation error for {inv_id}: {e}", extra={"json_fields": {"fallbackPath": "disambiguation_pipeline"}}, exc_info=True)
             await broadcaster.emit(
                 investigation_id=inv_id,
                 event_type=EventType.ERROR,
@@ -491,7 +508,13 @@ class Orchestrator:
                         domain_atomic_claims.append(claim)
                         claims.append(claim)
                     except Exception as e:
-                        logger.exception(f"Error parsing claim: {e}")
+                        if trace:
+                            span = trace.get_current_span()
+                            if span and span.is_recording():
+                                span.record_exception(e)
+                                from opentelemetry.trace.status import Status, StatusCode
+                                span.set_status(Status(StatusCode.ERROR, str(e)))
+                        logger.error(f"Error parsing claim: {e}", extra={"json_fields": {"fallbackPath": "claim_assembly"}}, exc_info=True)
 
                 # Fetch basis URLs to get content hash and verify snippets
                 basis_urls = [b.get("url") for b in domain_basis_list if isinstance(b, dict) and b.get("url")]
@@ -600,7 +623,13 @@ class Orchestrator:
             )
 
         except Exception as e:
-            logger.exception(f"Pipeline execution failed for {investigation_id}: {e}")
+            if trace:
+                span = trace.get_current_span()
+                if span and span.is_recording():
+                    span.record_exception(e)
+                    from opentelemetry.trace.status import Status, StatusCode
+                    span.set_status(Status(StatusCode.ERROR, str(e)))
+            logger.error(f"Pipeline execution failed for {investigation_id}: {e}", extra={"json_fields": {"fallbackPath": "full_research_pipeline"}}, exc_info=True)
             inv_data = await db.get_investigation(investigation_id) or {}
             inv_data["status"] = InvestigationStatus.FAILED.value
             await db.save_investigation(investigation_id, inv_data)

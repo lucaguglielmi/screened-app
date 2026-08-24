@@ -101,7 +101,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
             <div>
               <div className="flex items-center justify-between pb-5 border-b border-darkroom-border">
                 <div className="flex items-center gap-3">
-                  <div className="size-9 rounded-xl bg-midnight-royal flex items-center justify-center text-white font-serif font-bold text-lg shadow-md shadow-[#2018E6]/50">
+                  <div className="size-9 rounded-xl bg-midnight-royal flex items-center justify-center text-white font-serif font-bold text-lg shadow-md shadow-[var(--color-midnight-royal)]/50">
                     S
                   </div>
                   <div>
@@ -155,7 +155,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                   onClick={() => handleSelect('CONVERSATIONAL_DESK')}
                   className={`w-full p-3.5 rounded-2xl flex items-center gap-3.5 transition-all text-left cursor-pointer ${
                     activeTool === 'CONVERSATIONAL_DESK'
-                      ? 'bg-darkroom-card border border-midnight-royal/80 text-white shadow-lg shadow-[#2018E6]/20'
+                      ? 'bg-darkroom-card border border-midnight-royal/80 text-white shadow-lg shadow-[var(--color-midnight-royal)]/20'
                       : 'bg-darkroom-surface hover:bg-darkroom-card border border-darkroom-border text-slate-300'
                   }`}
                 >
@@ -179,7 +179,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                   onClick={() => handleSelect('DUE_DILIGENCE')}
                   className={`w-full p-3.5 rounded-2xl flex items-center gap-3.5 transition-all text-left cursor-pointer ${
                     activeTool === 'DUE_DILIGENCE'
-                      ? 'bg-darkroom-card border border-tool-diligence/80 text-white shadow-lg shadow-[#00D29E]/20'
+                      ? 'bg-darkroom-card border border-tool-diligence/80 text-white shadow-lg shadow-[var(--color-tool-diligence)]/20'
                       : 'bg-darkroom-surface hover:bg-darkroom-card border border-darkroom-border text-slate-300'
                   }`}
                 >
@@ -205,7 +205,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                   onClick={() => handleSelect('OPPORTUNITY_SCOUT')}
                   className={`w-full p-3.5 rounded-2xl flex items-center gap-3.5 transition-all text-left cursor-pointer ${
                     activeTool === 'OPPORTUNITY_SCOUT'
-                      ? 'bg-darkroom-card border border-tool-scout/80 text-white shadow-lg shadow-[#F43F5E]/20'
+                      ? 'bg-darkroom-card border border-tool-scout/80 text-white shadow-lg shadow-[var(--color-tool-scout)]/20'
                       : 'bg-darkroom-surface hover:bg-darkroom-card border border-darkroom-border text-slate-300'
                   }`}
                 >

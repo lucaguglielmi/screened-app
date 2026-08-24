@@ -46,3 +46,14 @@ The main AI interface is **Mission Control**. Individual tools each possess thei
 - The **Design Playground** includes an `ArchitecturePage.tsx` component which tracks the system's live architecture (e.g. backend states, databases, AI pipelines).
 - Whenever you make architectural changes, add new databases, implement new caching layers, or change deployment patterns, you **MUST** update `frontend/src/components/playground/ArchitecturePage.tsx` to reflect the new architecture.
 - **Agent Tree Parity:** You must ensure the `/api/architecture/agent-tree` endpoint accurately reflects the live state of the ADK agent tree. Any modification to backend agents or the orchestrator must update the endpoint's walker logic.
+
+---
+
+## 6. Structured Logging & Agent-Readable Diagnostics Protocol
+
+When writing backend logs for investigations, fallbacks, or orchestration events:
+- Use structured JSON logging (`extra={"json_fields": {...}}`).
+- Mandatory fields: `investigationId`, `agent`, `phase`, `outcome`, `fallbackPath`, `durationMs`, `tokens`.
+- A named fallback identifier (e.g. `disambiguation_pipeline`, `claim_assembly`) MUST be recorded at each substitution site.
+- Never log secrets or user content.
+- Diagnostic Runbook: Maintain agent queryable JSON outputs for errors grouped by trace ID.

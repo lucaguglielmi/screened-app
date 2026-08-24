@@ -89,7 +89,7 @@ export const MiniDueDiligence: React.FC<MiniDueDiligenceProps> = ({ args, onLaun
         <div className="pt-3 flex items-center justify-end gap-2 border-t border-darkroom-border">
           <button
             onClick={handleLaunch}
-            className="inline-flex items-center gap-2 rounded-xl bg-tool-diligence hover:bg-tool-diligence-hover px-6 py-3 text-base font-bold text-slate-950 shadow-md shadow-[#00D29E]/30 transition-all hover:brightness-110 active:scale-95 cursor-pointer"
+            className="inline-flex items-center gap-2 rounded-xl bg-tool-diligence hover:bg-tool-diligence-hover px-6 py-3 text-base font-bold text-slate-950 shadow-md shadow-[var(--color-tool-diligence)]/30 transition-all hover:brightness-110 active:scale-95 cursor-pointer"
           >
             <span>Launch Full Due Diligence</span>
             <ArrowRight className="size-4" />

@@ -160,7 +160,7 @@ export const EntityConfirmation: React.FC<Props> = ({ candidates, query, onConfi
           <button
             onClick={handleSubmit}
             disabled={loading || !customName.trim()}
-            className="px-6 py-3 rounded-xl bg-tool-diligence hover:bg-tool-diligence-hover disabled:opacity-50 text-slate-950 font-bold text-base flex items-center gap-2 transition-all shadow-md shadow-[#00D29E]/20 cursor-pointer"
+            className="px-6 py-3 rounded-xl bg-tool-diligence hover:bg-tool-diligence-hover disabled:opacity-50 text-slate-950 font-bold text-base flex items-center gap-2 transition-all shadow-md shadow-[var(--color-tool-diligence)]/20 cursor-pointer"
           >
             <span>Confirm & Launch Research</span>
             <ArrowRight className="size-4" />

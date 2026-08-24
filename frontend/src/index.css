@@ -13,58 +13,58 @@
   --font-mono: 'Spline Sans Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   /* Ink & Light Theme Tokens */
-  --color-paper-bg: #f8f9fb;
-  --color-paper-surface: #ffffff;
-  --color-paper-card: #f1f4f9;
+  --color-paper-bg: var(--color-white);
+  --color-paper-surface: var(--color-white);
+  --color-paper-card: var(--color-white);
   --color-paper-border: transparent;
-  --color-paper-text: #1c1917;
-  --color-paper-muted: #64748b;
+  --color-paper-text: var(--color-white);
+  --color-paper-muted: var(--color-white);
 
   /* Midnight Darkroom Theme Tokens (Palette 1) */
-  --color-darkroom-bg: #070913;
-  --color-darkroom-surface: #0e1124;
-  --color-darkroom-card: #141834;
-  --color-darkroom-border: #22274c;
-  --color-darkroom-text: #f8f9fc;
-  --color-darkroom-muted: #9499b8;
+  --color-darkroom-bg: var(--color-midnight-base);
+  --color-darkroom-surface: var(--color-darkroom-surface);
+  --color-darkroom-card: var(--color-darkroom-card);
+  --color-darkroom-border: var(--color-midnight-border);
+  --color-darkroom-text: var(--color-white);
+  --color-darkroom-muted: var(--color-midnight-border);
 
   /* Palette 1 Extended Swatches */
-  --color-midnight-void: #05050a;
-  --color-midnight-bg: #070913;
-  --color-midnight-surface: #0e1124;
-  --color-midnight-card: #141834;
-  --color-midnight-border: #22274c;
-  --color-midnight-indigo: #1e124a;
-  --color-midnight-violet: #2e107d;
-  --color-midnight-royal: #2018e6;
+  --color-midnight-void: var(--color-void);
+  --color-midnight-bg: var(--color-midnight-base);
+  --color-midnight-surface: var(--color-darkroom-surface);
+  --color-midnight-card: var(--color-darkroom-card);
+  --color-midnight-border: var(--color-midnight-border);
+  --color-midnight-indigo: var(--color-deep-indigo);
+  --color-midnight-violet: var(--color-royal-violet);
+  --color-midnight-royal: var(--color-midnight-royal);
   --color-midnight-glow: rgba(32, 24, 230, 0.25);
 
   /* Palette 2 Tool Swatches */
-  --color-tool-diligence: #00d29e;
-  --color-tool-diligence-hover: #00b887;
+  --color-tool-diligence: var(--color-tool-diligence);
+  --color-tool-diligence-hover: var(--color-white);
   --color-tool-diligence-glow: rgba(0, 210, 158, 0.25);
 
-  --color-tool-scout: #f43f5e;
-  --color-tool-scout-hover: #e11d48;
+  --color-tool-scout: var(--color-tool-scout);
+  --color-tool-scout-hover: var(--color-tool-scout);
   --color-tool-scout-glow: rgba(244, 63, 94, 0.25);
 
-  --color-tool-ocean: #0e86b3;
-  --color-tool-petrol: #0a3343;
+  --color-tool-ocean: var(--color-accent-blue);
+  --color-tool-petrol: var(--color-white);
 
   /* Accent Desk Royal Blue (Palette 1 Primary) */
-  --color-indigo-accent: #2018e6;
+  --color-indigo-accent: var(--color-midnight-royal);
   --color-indigo-glow: rgba(32, 24, 230, 0.2);
 
   /* Claim State Colors */
-  --color-state-corroborated: #00d29e;
-  --color-state-supported: #0e86b3;
-  --color-state-disputed: #f59e0b;
-  --color-state-unverified: #6b7280;
+  --color-state-corroborated: var(--color-tool-diligence);
+  --color-state-supported: var(--color-accent-blue);
+  --color-state-disputed: var(--color-accent-gold);
+  --color-state-unverified: var(--color-white);
 
   /* Claim Kind Colors */
-  --color-kind-fact: #0e86b3;
-  --color-kind-allegation: #f43f5e;
-  --color-kind-opinion: #8b5cf6;
+  --color-kind-fact: var(--color-accent-blue);
+  --color-kind-allegation: var(--color-tool-scout);
+  --color-kind-opinion: var(--color-royal-violet);
 }
 
 :root {
@@ -301,21 +301,21 @@ body {
 
 .dark .bg-darkroom-surface,
 .dark .dark\:bg-darkroom-surface {
-  background-color: #0e1124 !important;
+  background-color: var(--color-darkroom-surface) !important;
   opacity: 1 !important;
 }
 
 .dark .bg-darkroom-card,
 .dark .dark\:bg-darkroom-card {
-  background-color: #141834 !important;
+  background-color: var(--color-darkroom-card) !important;
   opacity: 1 !important;
 }
 
 /* Print Stylesheet for Dossier Export */
 @media print {
   body {
-    background: #ffffff !important;
-    color: #1c1917 !important;
+    background: var(--color-white) !important;
+    color: var(--color-white) !important;
   }
   header,
   footer,
@@ -334,15 +334,15 @@ body {
   .bg-paper-card,
   .dark\:bg-darkroom-surface,
   .dark\:bg-darkroom-card {
-    background: #ffffff !important;
-    border-color: #e6e4dd !important;
+    background: var(--color-white) !important;
+    border-color: var(--color-white) !important;
   }
   .text-paper-text,
   .dark\:text-darkroom-text {
-    color: #1c1917 !important;
+    color: var(--color-white) !important;
   }
   .text-paper-muted,
   .dark\:text-darkroom-muted {
-    color: #57534e !important;
+    color: var(--color-white) !important;
   }
 }

@@ -33,9 +33,9 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
         icon: 'festival',
       },
       style: {
-        background: '#0E1124',
-        color: '#FFFFFF',
-        border: '2px solid #2018E6',
+        background: 'var(--color-darkroom-surface)',
+        color: 'var(--color-white)',
+        border: '2px solid var(--color-midnight-royal)',
         borderRadius: '16px',
         padding: '12px 18px',
         width: 240,
@@ -56,9 +56,9 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
         details: `Autonomous DNS and domain provenance inspection confirmed active domain for ${festivalName}.`,
       },
       style: {
-        background: '#141834',
-        color: '#F8F9FC',
-        border: '1.5px solid #00D29E',
+        background: 'var(--color-darkroom-card)',
+        color: 'var(--color-white)',
+        border: '1.5px solid var(--color-tool-diligence)',
         borderRadius: '12px',
         padding: '10px 14px',
         width: 200,
@@ -71,8 +71,8 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
       source: 'root-entity',
       target: 'node-domain',
       animated: true,
-      style: { stroke: '#00D29E', strokeWidth: 1.5 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: '#00D29E' },
+      style: { stroke: 'var(--color-tool-diligence)', strokeWidth: 1.5 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'var(--color-tool-diligence)' },
     });
 
     // 3. Legal Registry / Companies House Node
@@ -88,9 +88,9 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
           : 'Verified active corporate entity registration with verified filing records.',
       },
       style: {
-        background: '#141834',
-        color: '#F8F9FC',
-        border: hasDisputes ? '1.5px solid #F43F5E' : '1.5px solid #00D29E',
+        background: 'var(--color-darkroom-card)',
+        color: 'var(--color-white)',
+        border: hasDisputes ? '1.5px solid var(--color-tool-scout)' : '1.5px solid var(--color-tool-diligence)',
         borderRadius: '12px',
         padding: '10px 14px',
         width: 220,
@@ -103,8 +103,8 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
       source: 'root-entity',
       target: 'node-registry',
       animated: hasDisputes,
-      style: { stroke: hasDisputes ? '#F43F5E' : '#00D29E', strokeWidth: 1.5 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: hasDisputes ? '#F43F5E' : '#00D29E' },
+      style: { stroke: hasDisputes ? 'var(--color-tool-scout)' : 'var(--color-tool-diligence)', strokeWidth: 1.5 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: hasDisputes ? 'var(--color-tool-scout)' : 'var(--color-tool-diligence)' },
     });
 
     // 4. Physical Venue Screening Leases Node
@@ -120,9 +120,9 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
           : 'Physical auditorium confirmed via press archives and venue programming listings.',
       },
       style: {
-        background: '#141834',
-        color: '#F8F9FC',
-        border: hasDisputes ? '1.5px solid #F43F5E' : '1.5px solid #00D29E',
+        background: 'var(--color-darkroom-card)',
+        color: 'var(--color-white)',
+        border: hasDisputes ? '1.5px solid var(--color-tool-scout)' : '1.5px solid var(--color-tool-diligence)',
         borderRadius: '12px',
         padding: '10px 14px',
         width: 220,
@@ -135,8 +135,8 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
       source: 'root-entity',
       target: 'node-venue',
       animated: hasDisputes,
-      style: { stroke: hasDisputes ? '#F43F5E' : '#00D29E', strokeWidth: 1.5 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: hasDisputes ? '#F43F5E' : '#00D29E' },
+      style: { stroke: hasDisputes ? 'var(--color-tool-scout)' : 'var(--color-tool-diligence)', strokeWidth: 1.5 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: hasDisputes ? 'var(--color-tool-scout)' : 'var(--color-tool-diligence)' },
     });
 
     // 5. Atomic Claim Leaf Nodes
@@ -157,9 +157,9 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
           details: `Source: ${claim.evidence?.[0]?.sourceDomain || 'Trade Archive'}. Quoted Excerpt: "${claim.evidence?.[0]?.exactExcerpt || ''}"`,
         },
         style: {
-          background: '#0E1124',
-          color: '#E2E8F0',
-          border: isClaimDisputed ? '1px solid #F43F5E' : '1px solid #0E86B3',
+          background: 'var(--color-darkroom-surface)',
+          color: 'var(--color-text-secondary)',
+          border: isClaimDisputed ? '1px solid var(--color-tool-scout)' : '1px solid var(--color-accent-blue)',
           borderRadius: '10px',
           padding: '8px 12px',
           width: 190,
@@ -175,8 +175,8 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
         id: `e-${parentId}-claim-${claim.id}`,
         source: parentId,
         target: `claim-${claim.id}`,
-        style: { stroke: isClaimDisputed ? '#F43F5E' : '#0E86B3', strokeWidth: 1.2 },
-        markerEnd: { type: MarkerType.ArrowClosed, color: isClaimDisputed ? '#F43F5E' : '#0E86B3' },
+        style: { stroke: isClaimDisputed ? 'var(--color-tool-scout)' : 'var(--color-accent-blue)', strokeWidth: 1.2 },
+        markerEnd: { type: MarkerType.ArrowClosed, color: isClaimDisputed ? 'var(--color-tool-scout)' : 'var(--color-accent-blue)' },
       });
     });
 

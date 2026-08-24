@@ -167,7 +167,7 @@ export const UpdateNotifier: React.FC = () => {
           <button
             onClick={handleRefresh}
             disabled={isRefreshing}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-tool-diligence hover:bg-tool-diligence-hover text-slate-950 text-xs font-semibold transition-all shadow-md shadow-[#00D29E]/20 cursor-pointer active:scale-95 disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-tool-diligence hover:bg-tool-diligence-hover text-slate-950 text-xs font-semibold transition-all shadow-md shadow-[var(--color-tool-diligence)]/20 cursor-pointer active:scale-95 disabled:opacity-50"
           >
             <RefreshCw className={`size-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
             <span>{isRefreshing ? 'Refreshing...' : 'Refresh'}</span>

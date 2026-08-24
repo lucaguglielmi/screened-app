@@ -11,23 +11,23 @@ import { VectorFieldBackground } from '../animations/VectorFieldBackground';
 import { soundEffects } from '../../utils/audio';
 
 const UI_PALETTE_1 = [
-  { name: 'Void Black', hex: '#05050A', role: 'Deepest backdrop canvas', text: '#FFFFFF' },
-  { name: 'Midnight Base', hex: '#070913', role: 'Primary dark background', text: '#FFFFFF' },
+  { name: 'Void Black', hex: 'var(--color-void)', role: 'Deepest backdrop canvas', text: 'var(--color-white)' },
+  { name: 'Midnight Base', hex: 'var(--color-midnight-base)', role: 'Primary dark background', text: 'var(--color-white)' },
   {
     name: 'Midnight Surface',
-    hex: '#0E1124',
+    hex: 'var(--color-darkroom-surface)',
     role: 'Panels, navigation rails, cards',
-    text: '#FFFFFF',
+    text: 'var(--color-white)',
   },
-  { name: 'Midnight Card', hex: '#141731', role: 'Elevated interactive cards', text: '#FFFFFF' },
-  { name: 'Midnight Border', hex: '#22274C', role: 'Subtle borders and dividers', text: '#FFFFFF' },
-  { name: 'Deep Indigo', hex: '#1E124A', role: 'Accent containers and badges', text: '#FFFFFF' },
-  { name: 'Royal Violet', hex: '#2E107D', role: 'Glowing ambient highlights', text: '#FFFFFF' },
+  { name: 'Midnight Card', hex: 'var(--color-darkroom-card)', role: 'Elevated interactive cards', text: 'var(--color-white)' },
+  { name: 'Midnight Border', hex: 'var(--color-midnight-border)', role: 'Subtle borders and dividers', text: 'var(--color-white)' },
+  { name: 'Deep Indigo', hex: 'var(--color-deep-indigo)', role: 'Accent containers and badges', text: 'var(--color-white)' },
+  { name: 'Royal Violet', hex: 'var(--color-royal-violet)', role: 'Glowing ambient highlights', text: 'var(--color-white)' },
   {
     name: 'Royal Desk Blue',
-    hex: '#2018E6',
+    hex: 'var(--color-midnight-royal)',
     role: 'The Desk brand primary (default)',
-    text: '#FFFFFF',
+    text: 'var(--color-white)',
   },
 ];
 
@@ -35,7 +35,7 @@ const TOOL_PALETTE_2 = [
   {
     tool: 'The Desk (AI Executive)',
     colorName: 'Royal Desk Blue (Palette 1)',
-    hex: '#2018E6',
+    hex: 'var(--color-midnight-royal)',
     role: 'Conversational agent, default site-wide brand, chat bubbles',
     icon: Sparkles,
     badgeBg: 'bg-midnight-royal/20',
@@ -45,7 +45,7 @@ const TOOL_PALETTE_2 = [
   {
     tool: 'Due Diligence',
     colorName: 'Mint / Emerald Teal',
-    hex: '#00D29E',
+    hex: 'var(--color-tool-diligence)',
     role: 'Multi-agent cinema investigation, trade registries, evidence dossiers',
     icon: ShieldCheck,
     badgeBg: 'bg-tool-diligence/20',
@@ -55,7 +55,7 @@ const TOOL_PALETTE_2 = [
   {
     tool: 'Opportunity Scout',
     colorName: 'Coral Rose / Watermelon',
-    hex: '#F43F5E',
+    hex: 'var(--color-tool-scout)',
     role: 'Film slate matching, deadline calendars, qualifying submission strategy',
     icon: Compass,
     badgeBg: 'bg-tool-scout/20',
@@ -68,7 +68,7 @@ export const DesignTokensLab: React.FC = () => {
   const [copiedHex, setCopiedHex] = useState<string | null>(null);
 
   // Vector field interactive state
-  const [vfColor, setVfColor] = useState('#E11D48');
+  const [vfColor, setVfColor] = useState('var(--color-tool-scout)');
   const [vfSpeed, setVfSpeed] = useState(0.6);
   const [vfAmplitude, setVfAmplitude] = useState(0.24);
   const [vfSpacing, setVfSpacing] = useState(28);
@@ -284,7 +284,7 @@ export const DesignTokensLab: React.FC = () => {
           <div className="space-y-2">
             <label className="text-xs font-mono text-slate-400 uppercase">Needle Glow Color</label>
             <div className="flex items-center gap-2">
-              {['#E11D48', '#FF2A55', '#2018E6', '#00D29E', '#A855F7'].map((c) => (
+              {['var(--color-tool-scout)', 'var(--color-tool-scout)', 'var(--color-midnight-royal)', 'var(--color-tool-diligence)', 'var(--color-royal-violet)'].map((c) => (
                 <button
                   key={c}
                   onClick={() => setVfColor(c)}

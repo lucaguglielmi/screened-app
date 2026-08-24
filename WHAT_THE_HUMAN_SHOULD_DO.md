@@ -14,6 +14,10 @@ Whenever the user asks *"what's next?"* or *"what should we work on?"*, the assi
 | **HUMAN-03** | **Grant Databases** | Review initial curated list of UK/International film grants (BFI Filmmaking Fund, Screen Scotland, Tribeca All Access, Sundance Documentary Fund) for seed data in the Grant Tool. | `COMPLETED` [2026-08-24] - Deep review complete. Added Hubert Bals Fund and Cinereach to the master list. Approved. | Phase 1 (Grant Intake Tool) |
 | **HUMAN-04** | **PII Masking Thresholds** | Review the PII masking rules in `13_DATA_PROTECTION_PII_MIDDLEWARE_SPEC.md` before approving execution. | `HOLD FOR LATER` | Final Phase |
 | **HUMAN-05** | **Video Pitch & Demo** | Once all UI tools and playground tabs are finalized, record the 3-minute hackathon demo video following the script in `09-DEMO-VIDEO-NOTES.md`. | `PENDING`| Hackathon Submission |
+| **HUMAN-06** | **OTel Verification** | Ensure OpenTelemetry integration points map exactly to the actual ADK agent trace identifiers in production. | `PENDING` | Phase 1 (Observability) |
+| **HUMAN-07** | **Cloud Tasks Config** | Provision Cloud Tasks queue via `gcloud tasks queues create screened-tasks --location=europe-west2`. | `PENDING` | Phase 2 (Orchestration) |
+| **HUMAN-08** | **Architecture Page** | Ensure the new graphical architecture diagram accurately aligns with the frontend `ArchitecturePage.tsx` live visualizer. | `PENDING` | Phase 4 (Submission) |
+| **HUMAN-09** | **GA4 Properties** | Update GA4 properties inside the Google Analytics console to create custom dimensions matching our new tracking schema. | `PENDING` | Phase 4 (Submission) |
 
 ---
 

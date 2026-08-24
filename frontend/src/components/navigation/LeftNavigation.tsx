@@ -71,10 +71,10 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
       <div className="flex flex-col items-center gap-4 w-full">
         <button
           onClick={() => handleSelectTool('CONVERSATIONAL_DESK')}
-          className="relative group p-2.5 rounded-2xl bg-gradient-to-b from-midnight-royal/25 to-midnight-indigo/20 border border-midnight-royal/40 hover:border-midnight-royal/80 shadow-lg shadow-[#2018E6]/20 transition-all cursor-pointer"
+          className="relative group p-2.5 rounded-2xl bg-gradient-to-b from-midnight-royal/25 to-midnight-indigo/20 border border-midnight-royal/40 hover:border-midnight-royal/80 shadow-lg shadow-[var(--color-midnight-royal)]/20 transition-all cursor-pointer"
           title="Screened Home"
         >
-          <div className="size-7 sm:size-8 rounded-xl bg-midnight-royal flex items-center justify-center text-white font-serif font-bold text-lg shadow-md shadow-[#2018E6]/50">
+          <div className="size-7 sm:size-8 rounded-xl bg-midnight-royal flex items-center justify-center text-white font-serif font-bold text-lg shadow-md shadow-[var(--color-midnight-royal)]/50">
             S
           </div>
           <span className="sr-only">Screened</span>
@@ -91,7 +91,7 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
             onMouseLeave={() => setActiveTooltip(null)}
             className={`relative p-3 rounded-2xl transition-all cursor-pointer ${
               activeTool === 'CONVERSATIONAL_DESK'
-                ? 'bg-midnight-royal text-white shadow-lg shadow-[#2018E6]/40 ring-1 ring-indigo-400/40'
+                ? 'bg-midnight-royal text-white shadow-lg shadow-[var(--color-midnight-royal)]/40 ring-1 ring-indigo-400/40'
                 : 'hover:bg-darkroom-surface text-slate-400 hover:text-slate-100'
             }`}
             title="Mission Control"
@@ -226,7 +226,7 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
           >
             <GripVertical className="size-4 text-slate-600 group-hover:text-slate-400 shrink-0" />
 
-            <div className="size-11 rounded-2xl bg-gradient-to-tr from-tool-diligence to-tool-diligence-hover flex items-center justify-center text-slate-950 shadow-lg shadow-[#00D29E]/30 shrink-0 group-hover:scale-105 transition-transform">
+            <div className="size-11 rounded-2xl bg-gradient-to-tr from-tool-diligence to-tool-diligence-hover flex items-center justify-center text-slate-950 shadow-lg shadow-[var(--color-tool-diligence)]/30 shrink-0 group-hover:scale-105 transition-transform">
               <ShieldCheck className="size-6 text-slate-950" />
             </div>
 
@@ -256,7 +256,7 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
           >
             <GripVertical className="size-4 text-slate-600 group-hover:text-slate-400 shrink-0" />
 
-            <div className="size-11 rounded-2xl bg-gradient-to-tr from-tool-scout via-tool-scout to-orange-500 flex items-center justify-center text-white shadow-lg shadow-[#F43F5E]/30 shrink-0 group-hover:scale-105 transition-transform">
+            <div className="size-11 rounded-2xl bg-gradient-to-tr from-tool-scout via-tool-scout to-orange-500 flex items-center justify-center text-white shadow-lg shadow-[var(--color-tool-scout)]/30 shrink-0 group-hover:scale-105 transition-transform">
               <Compass className="size-6 text-white" />
             </div>
 

@@ -194,7 +194,7 @@ export const OpportunityCard: React.FC<Props> = ({ opportunity, onDeepScreen }) 
 
         <button
           onClick={() => onDeepScreen(opportunity.name)}
-          className="px-4 py-2.5 rounded-xl bg-tool-diligence hover:bg-tool-diligence-hover text-slate-950 font-bold text-xs font-mono flex items-center gap-2 transition-all shadow-md shadow-[#00D29E]/20 cursor-pointer"
+          className="px-4 py-2.5 rounded-xl bg-tool-diligence hover:bg-tool-diligence-hover text-slate-950 font-bold text-xs font-mono flex items-center gap-2 transition-all shadow-md shadow-[var(--color-tool-diligence)]/20 cursor-pointer"
         >
           <ShieldCheck className="size-4 text-slate-950" />
           <span>Deep Screen</span>

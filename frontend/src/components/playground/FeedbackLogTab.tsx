@@ -289,7 +289,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({ onOpenFeedbackMo
                   <th className="py-3.5 px-4 font-semibold">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#181D3D] text-slate-200">
+              <tbody className="divide-y divide-[var(--color-midnight-border)] text-slate-200">
                 {filteredFeedbacks.map((item) => {
                   const catConfig = CATEGORY_MAP[item.category] || CATEGORY_MAP.GENERAL;
                   const statusConfig = STATUS_MAP[item.status] || STATUS_MAP.RECEIVED;

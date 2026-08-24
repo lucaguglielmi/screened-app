@@ -29,9 +29,9 @@ export const OverlapVennFlow: React.FC<Props> = ({
           'Award winners across eligible competition categories at both festivals qualify for Oscar consideration.',
       },
       style: {
-        background: '#1D1A38',
-        color: '#F59E0B',
-        border: '2px solid #F59E0B',
+        background: 'var(--color-darkroom-card)',
+        color: 'var(--color-accent-gold)',
+        border: '2px solid var(--color-accent-gold)',
         borderRadius: '16px',
         padding: '14px 18px',
         width: 240,
@@ -50,9 +50,9 @@ export const OverlapVennFlow: React.FC<Props> = ({
         details: 'Recognised by the British Academy Film Awards for UK Debut & Shorts categories.',
       },
       style: {
-        background: '#141834',
-        color: '#00D29E',
-        border: '1.5px solid #00D29E',
+        background: 'var(--color-darkroom-card)',
+        color: 'var(--color-tool-diligence)',
+        border: '1.5px solid var(--color-tool-diligence)',
         borderRadius: '14px',
         padding: '12px 16px',
         width: 220,
@@ -70,9 +70,9 @@ export const OverlapVennFlow: React.FC<Props> = ({
         details: 'Direct pipeline to US distribution sales agencies and BIFA discovery longlists.',
       },
       style: {
-        background: '#141834',
-        color: '#8B5CF6',
-        border: '1.5px solid #8B5CF6',
+        background: 'var(--color-darkroom-card)',
+        color: 'var(--color-royal-violet)',
+        border: '1.5px solid var(--color-royal-violet)',
         borderRadius: '14px',
         padding: '12px 16px',
         width: 220,
@@ -88,9 +88,9 @@ export const OverlapVennFlow: React.FC<Props> = ({
         label: 'Accreditation & Industry Honor Scope',
       },
       style: {
-        background: '#0E1124',
-        color: '#FFFFFF',
-        border: '1.5px solid #2018E6',
+        background: 'var(--color-darkroom-surface)',
+        color: 'var(--color-white)',
+        border: '1.5px solid var(--color-midnight-royal)',
         borderRadius: '12px',
         padding: '8px 16px',
         width: 200,
@@ -102,24 +102,24 @@ export const OverlapVennFlow: React.FC<Props> = ({
       id: 'e-top-shared',
       source: 'top-summary',
       target: 'shared-honors',
-      style: { stroke: '#F59E0B', strokeWidth: 1.5 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: '#F59E0B' },
+      style: { stroke: 'var(--color-accent-gold)', strokeWidth: 1.5 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'var(--color-accent-gold)' },
     });
 
     rawEdges.push({
       id: 'e-top-a',
       source: 'top-summary',
       target: 'fest-a-exclusive',
-      style: { stroke: '#00D29E', strokeWidth: 1.2 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: '#00D29E' },
+      style: { stroke: 'var(--color-tool-diligence)', strokeWidth: 1.2 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'var(--color-tool-diligence)' },
     });
 
     rawEdges.push({
       id: 'e-top-b',
       source: 'top-summary',
       target: 'fest-b-exclusive',
-      style: { stroke: '#8B5CF6', strokeWidth: 1.2 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: '#8B5CF6' },
+      style: { stroke: 'var(--color-royal-violet)', strokeWidth: 1.2 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'var(--color-royal-violet)' },
     });
 
     return { nodes: rawNodes, edges: rawEdges };

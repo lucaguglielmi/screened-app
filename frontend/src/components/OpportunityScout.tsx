@@ -219,7 +219,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
               onClick={() => setProfile({ ...profile, neverReleased: !profile.neverReleased })}
               className={`size-5 rounded-lg flex items-center justify-center transition-all ${
                 profile.neverReleased
-                  ? 'bg-tool-scout text-white shadow-md shadow-[#F43F5E]/30'
+                  ? 'bg-tool-scout text-white shadow-md shadow-[var(--color-tool-scout)]/30'
                   : 'bg-darkroom-card group-hover:bg-darkroom-border'
               }`}
             >
@@ -253,7 +253,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
                     onClick={() => handlePremiereGoalToggle(goal.id as PremiereGoal)}
                     className={`px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-all cursor-pointer ${
                       active
-                        ? 'bg-tool-scout text-white shadow-md shadow-[#F43F5E]/30 scale-102'
+                        ? 'bg-tool-scout text-white shadow-md shadow-[var(--color-tool-scout)]/30 scale-102'
                         : 'bg-darkroom-card text-slate-300 hover:bg-darkroom-border hover:text-white'
                     }`}
                   >
@@ -283,7 +283,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
                     onClick={() => handleRegionToggle(region.id)}
                     className={`px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-all cursor-pointer ${
                       active
-                        ? 'bg-tool-scout text-white shadow-md shadow-[#F43F5E]/30 scale-102'
+                        ? 'bg-tool-scout text-white shadow-md shadow-[var(--color-tool-scout)]/30 scale-102'
                         : 'bg-darkroom-card text-slate-300 hover:bg-darkroom-border hover:text-white'
                     }`}
                   >
@@ -300,7 +300,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
           <button
             type="submit"
             disabled={loading || !isFormValid}
-            className="w-full py-4 rounded-2xl bg-gradient-to-r from-tool-scout to-tool-scout-hover hover:brightness-110 disabled:opacity-40 text-white font-bold text-base flex items-center justify-center gap-2.5 transition-all shadow-xl shadow-[#F43F5E]/30 cursor-pointer active:scale-[0.99]"
+            className="w-full py-4 rounded-2xl bg-gradient-to-r from-tool-scout to-tool-scout-hover hover:brightness-110 disabled:opacity-40 text-white font-bold text-base flex items-center justify-center gap-2.5 transition-all shadow-xl shadow-[var(--color-tool-scout)]/30 cursor-pointer active:scale-[0.99]"
           >
             {loading ? (
               <>

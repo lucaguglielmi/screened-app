@@ -62,7 +62,7 @@ export const ScreenedFlowCanvas: React.FC<ScreenedFlowCanvasProps> = ({
         proOptions={{ hideAttribution: true }}
         colorMode="dark"
       >
-        <Background variant={BackgroundVariant.Dots} gap={16} size={1.2} color="#1A2044" />
+        <Background variant={BackgroundVariant.Dots} gap={16} size={1.2} color="var(--color-midnight-base)" />
         {showControls && (
           <Controls className="!bg-darkroom-surface !border-none !rounded-xl !shadow-xl !text-slate-300 [&>button]:!bg-darkroom-card [&>button]:!border-none [&>button]:!text-slate-300 hover:[&>button]:!bg-darkroom-card hover:[&>button]:!text-white" />
         )}
@@ -71,12 +71,12 @@ export const ScreenedFlowCanvas: React.FC<ScreenedFlowCanvasProps> = ({
             className="!bg-darkroom-surface !border-none !rounded-xl !shadow-xl !overflow-hidden hidden sm:block"
             nodeColor={(node) => {
               if (node.data?.status === 'CORROBORATED' || node.data?.status === 'VERIFIED')
-                return '#00D29E';
+                return 'var(--color-tool-diligence)';
               if (node.data?.status === 'DISPUTED' || node.data?.status === 'CONTRADICTED')
-                return '#F43F5E';
+                return 'var(--color-tool-scout)';
               if (node.data?.status === 'SUPPORTED' || node.data?.status === 'CAUTION')
-                return '#0E86B3';
-              return '#2018E6';
+                return 'var(--color-accent-blue)';
+              return 'var(--color-midnight-royal)';
             }}
             maskColor="rgba(7, 9, 19, 0.75)"
           />

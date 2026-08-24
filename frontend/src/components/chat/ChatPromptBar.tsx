@@ -422,7 +422,7 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
           <button
             type="submit"
             disabled={isLoading || (!input.trim() && !attachedFile)}
-            className="flex h-10 w-10 items-center justify-center rounded-xl bg-midnight-royal hover:bg-midnight-royal text-white shadow-md shadow-[#2018E6]/30 transition-all hover:brightness-110 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shrink-0"
+            className="flex h-10 w-10 items-center justify-center rounded-xl bg-midnight-royal hover:bg-midnight-royal text-white shadow-md shadow-[var(--color-midnight-royal)]/30 transition-all hover:brightness-110 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shrink-0"
             title="Send message"
             aria-label="Send message"
           >
