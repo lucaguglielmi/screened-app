@@ -40,6 +40,7 @@ import { AnimatedEE } from './components/animations/AnimatedEE';
 import { UpdateNotifier } from './components/common/UpdateNotifier';
 import { isSoundMuted, setSoundMuted, playSuccessChime } from './utils/audio';
 import { track } from './utils/analytics';
+import { piiVault } from './utils/pii';
 
 export default function App() {
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
@@ -299,7 +300,7 @@ export default function App() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          query: subjectQuery.trim(),
+          query: piiVault.mask(subjectQuery.trim()),
           optionalUrl: optionalUrl.trim() || undefined,
           intent: 'Vet before submitting',
         }),
@@ -310,7 +311,10 @@ export default function App() {
         throw new Error(data.detail || `Server error (${res.status})`);
       }
 
-      const inv: Investigation = await res.json();
+      const rawInv: Investigation = await res.json();
+      const invString = JSON.stringify(rawInv);
+      const unmaskedInvString = piiVault.unmask(invString);
+      const inv: Investigation = JSON.parse(unmaskedInvString);
       setInvestigation(inv);
       saveRecentInvestigation(inv.id);
     } catch (err: any) {

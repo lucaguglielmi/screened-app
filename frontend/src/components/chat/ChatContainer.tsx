@@ -8,6 +8,7 @@ import { CapabilitiesModal } from '../modals/CapabilitiesModal';
 import { AboutScreenedModal } from '../modals/AboutScreenedModal';
 import { FeedbackModal } from '../modals/FeedbackModal';
 import { soundEffects } from '../../utils/audio';
+import { piiVault } from '../../utils/pii';
 import { TextLink } from '../ui/TextLink';
 import { MessageSquare } from 'lucide-react';
 
@@ -85,7 +86,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: userText,
+          message: piiVault.mask(userText),
           conversationHistory: messages,
           attachedFileName,
           attachedFileContent,
@@ -144,7 +145,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
                     msg.id === assistantMsgId
                       ? {
                           ...msg,
-                          content: assistantContent,
+                          content: piiVault.unmask(assistantContent),
                           toolCall: detectedToolCall,
                           followUpProbe: detectedFollowUpProbe,
                         }
