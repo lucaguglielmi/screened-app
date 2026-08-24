@@ -9,6 +9,7 @@ import traceback
 import traceback
 import json
 
+logger = logging.getLogger("screened.orchestrator.state_machine")
 try:
     from opentelemetry import trace
     from opentelemetry.propagate import inject
@@ -69,7 +70,6 @@ from backend.agents.producer_desk import ProducerDeskAgent
 from backend.orchestrator.session_service import FirestoreSessionService
 from backend.orchestrator.adk_bridge import pump_adk_events
 
-logger = logging.getLogger("screened.orchestrator.state_machine")
 
 USE_ADK = os.getenv("USE_ADK", "true").lower() == "true"
 
