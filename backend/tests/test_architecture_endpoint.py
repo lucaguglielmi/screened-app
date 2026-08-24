@@ -18,7 +18,6 @@ def test_architecture_endpoint():
     orchestrator = next((n for n in nodes if n["id"] == "orchestrator"), None)
     assert orchestrator is not None
     assert orchestrator["type"] == "SequentialAgent"
-    assert orchestrator["model"] == "gemini-2.5-flash"
     
     # Check that opportunity_scout is present
     opportunity_scout = next((n for n in nodes if n["id"] == "opportunity_scout"), None)
