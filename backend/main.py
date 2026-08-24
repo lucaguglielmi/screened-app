@@ -65,14 +65,22 @@ app = FastAPI(
 if settings.environment == "production":
     allowed_origins = [
         "https://screened-pludf2u7yq-nw.a.run.app",
-        "https://screened.app"
+        "https://screened.app",
+        "https://screened-hackathon.web.app",
+        "https://screened-hackathon.firebaseapp.com"
     ]
+    allow_origin_regex = r"https://screened-hackathon--.*\.web\.app"
 else:
-    allowed_origins = ["*"]
+    allowed_origins = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173"
+    ]
+    allow_origin_regex = None
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
+    allow_origin_regex=allow_origin_regex,
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
@@ -226,7 +234,7 @@ async def resume_investigation(investigation_id: str, request: Request):
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         logger.error(f"Failed to resume investigation: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail="Internal server error while resuming investigation")
 
 
 @app.post("/api/investigations/{investigation_id}/confirm-entity")
@@ -243,7 +251,7 @@ async def confirm_entity(investigation_id: str, req: ConfirmEntityRequest, reque
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
         logger.error(f"Failed to confirm entity: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail="Internal server error while confirming entity")
 
 
 @app.get("/api/investigations/{investigation_id}/events")
@@ -293,7 +301,7 @@ async def analyze_document_endpoint(req: DocumentAnalysisRequest, request: Reque
         return await producer_desk_agent.analyze_document(req)
     except Exception as e:
         logger.error(f"Document analysis endpoint failed: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail="Internal server error during document analysis")
 
 
 # --- Milestone M4: Opportunity Scout Endpoint ---
@@ -307,8 +315,8 @@ async def scout_festival_opportunities(req: ScoutRequest, request: Request):
         response = await opportunity_scout.scout_opportunities(req.profile)
         return response
     except Exception as e:
-        logger.error(f"Opportunity scout API failed: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"Opportunity scout failed: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Internal server error during opportunity scouting")
 
 
 # --- Milestone M3: Sandbox Outreach & Action Approval Endpoints ---
@@ -379,7 +387,7 @@ async def approve_outreach_inquiry(investigation_id: str, req: ApproveOutreachRe
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         logger.error(f"Approval failed: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail="Internal server error while processing approval")
 
 
 @app.get("/api/investigations/{investigation_id}/export")
@@ -465,8 +473,8 @@ async def test_walking_skeleton_pipeline(request: TestPipelineRequest):
         )
 
     except Exception as e:
-        logger.error(f"Walking skeleton pipeline failed: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"Test pipeline failed: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Internal server error during test pipeline execution")
 
 
 @app.get("/api/investigations/{investigation_id}/deep-vetting", response_model=DeepVettingReport)
@@ -567,20 +575,38 @@ async def submit_feedback(req: FeedbackCreateRequest, request: Request):
 @app.get("/api/architecture/agent-tree")
 async def get_agent_tree():
     """Returns the multi-agent orchestration architecture for UI visualization."""
-    return {
-        "nodes": [
-            {"id": "orchestrator", "type": "SequentialAgent", "label": "Screened Orchestrator", "model": "gemini-2.5-flash"},
-            {"id": "planner", "type": "LlmAgent", "label": "Investigation Planner", "model": "gemini-2.5-flash", "parent": "orchestrator"},
-            {"id": "domain_research", "type": "ParallelAgent", "label": "Domain Research Execution", "model": "gemini-2.5-flash", "parent": "orchestrator"},
-            {"id": "festival_research", "type": "LlmAgent", "label": "Festival Analysis", "model": "gemini-2.5-flash", "parent": "domain_research"},
-            {"id": "venue_research", "type": "LlmAgent", "label": "Venue Footprint", "model": "gemini-2.5-flash", "parent": "domain_research"},
-            {"id": "organizer_research", "type": "LlmAgent", "label": "Organizer History", "model": "gemini-2.5-flash", "parent": "domain_research"},
-            {"id": "deep_vetting", "type": "ParallelAgent", "label": "360° Deep Vetting", "model": "gemini-2.5-pro", "parent": "orchestrator"},
-            {"id": "producer_desk", "type": "LlmAgent", "label": "Producer Desk", "model": "gemini-2.5-flash", "parent": "orchestrator"},
-            {"id": "opportunity_scout", "type": "LlmAgent", "label": "Opportunity Scout", "model": "gemini-2.5-flash", "parent": "orchestrator"},
-            {"id": "outreach_drafter", "type": "LlmAgent", "label": "Outreach Drafter", "model": "gemini-2.5-flash", "parent": "orchestrator"}
-        ]
-    }
+    from backend.orchestrator.state_machine import build_root_agent
+    root_agent = build_root_agent()
+    
+    nodes = []
+    
+    def walk_agent(agent, parent_id=None):
+        node = {
+            "id": agent.name,
+            "type": agent.__class__.__name__,
+            "label": getattr(agent, "description", None) or agent.name,
+        }
+        
+        if hasattr(agent, "model") and agent.model:
+            node["model"] = agent.model
+            
+        if hasattr(agent, "output_key") and agent.output_key:
+            node["output_key"] = agent.output_key
+            
+        if hasattr(agent, "tools") and agent.tools:
+            node["tools"] = [getattr(t, "name", str(t)) for t in agent.tools]
+            
+        if parent_id:
+            node["parent"] = parent_id
+            
+        nodes.append(node)
+        
+        if hasattr(agent, "sub_agents") and agent.sub_agents:
+            for sub in agent.sub_agents:
+                walk_agent(sub, agent.name)
+                
+    walk_agent(root_agent)
+    return {"nodes": nodes}
 
 
 # Mount Frontend static files if built

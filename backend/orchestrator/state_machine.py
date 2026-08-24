@@ -62,6 +62,16 @@ class Orchestrator:
         self.contradiction_analyst = ContradictionAnalystAgent(self.gemini)
         self.deep_vetting = DeepVettingAgent(self.gemini)
         self.report_writer = ReportWriterAgent(self.gemini)
+        
+        # Track running tasks to prevent duplicate execution and allow cancellation on disconnect
+        self._running_tasks: Dict[str, asyncio.Task] = {}
+
+    def cancel_task(self, investigation_id: str):
+        """Cancel the background task if no clients are connected."""
+        task = self._running_tasks.get(investigation_id)
+        if task and not task.done():
+            logger.info(f"Cancelling background task for {investigation_id} due to disconnect.")
+            task.cancel()
 
     async def start_investigation(
         self,
@@ -99,7 +109,8 @@ class Orchestrator:
         )
 
         # Run Disambiguation asynchronously in background or immediate
-        asyncio.create_task(self._run_disambiguation(inv_id, query, optional_url))
+        task = asyncio.create_task(self._run_disambiguation(inv_id, query, optional_url))
+        self._running_tasks[inv_id] = task
 
         return inv_data
 
@@ -162,7 +173,8 @@ class Orchestrator:
         )
 
         # Launch research pipeline in background task
-        asyncio.create_task(self._execute_full_research_pipeline(investigation_id, entity, inv_data.get("intent", "Vet before submitting")))
+        task = asyncio.create_task(self._execute_full_research_pipeline(investigation_id, entity, inv_data.get("intent", "Vet before submitting")))
+        self._running_tasks[investigation_id] = task
 
         return inv_data
 
@@ -183,14 +195,21 @@ class Orchestrator:
             message=f"Resuming investigation from status: {status}",
         )
 
+        task = self._running_tasks.get(investigation_id)
+        if task and not task.done():
+            logger.info(f"Investigation {investigation_id} is already running.")
+            return inv_data
+
         if inv_data.get("confirmedEntity"):
             entity = CandidateEntity(**inv_data["confirmedEntity"])
             intent = inv_data.get("intent", "Vet before submitting")
-            asyncio.create_task(self._execute_full_research_pipeline(investigation_id, entity, intent))
+            task = asyncio.create_task(self._execute_full_research_pipeline(investigation_id, entity, intent))
+            self._running_tasks[investigation_id] = task
         else:
             query = inv_data.get("query", "")
             optional_url = inv_data.get("optionalUrl")
-            asyncio.create_task(self._run_disambiguation(investigation_id, query, optional_url))
+            task = asyncio.create_task(self._run_disambiguation(investigation_id, query, optional_url))
+            self._running_tasks[investigation_id] = task
 
         return inv_data
 
@@ -500,3 +519,61 @@ class Orchestrator:
 
 
 orchestrator = Orchestrator()
+
+def build_root_agent():
+    """Factory to build the ADK SequentialAgent representing the system architecture."""
+    from google.adk.agents import SequentialAgent, ParallelAgent, LlmAgent
+    
+    # 1. Planner
+    from backend.agents.planner import create_planner_adk_agent
+    planner = create_planner_adk_agent(
+        entity_name="Stub", location="Stub", official_website="Stub", intent="Stub"
+    )
+    
+    # 2. Domain Agents
+    from backend.agents.domain_agents import create_domain_agent
+    festival_agent = create_domain_agent("FESTIVAL", "stub", {})
+    festival_agent.name = "festival_research"
+    organizer_agent = create_domain_agent("ORGANIZER", "stub", {})
+    organizer_agent.name = "organizer_research"
+    participants_agent = create_domain_agent("PARTICIPANTS", "stub", {})
+    participants_agent.name = "participants_research"
+    
+    domain_research = ParallelAgent(
+        name="domain_research",
+        description="Domain Research Execution",
+        sub_agents=[festival_agent, organizer_agent, participants_agent]
+    )
+    
+    # 3. Deep Vetting
+    deep_vetting = ParallelAgent(
+        name="deep_vetting",
+        description="360° Deep Vetting",
+        sub_agents=[
+            LlmAgent(name="corporate_identity", description="Inspect company registration", model="gemini-2.5-pro"),
+            LlmAgent(name="domain_forensics", description="Inspect domain registration history", model="gemini-2.5-pro"),
+            LlmAgent(name="venue_reality", description="Cross-check physical theater leases", model="gemini-2.5-pro"),
+            LlmAgent(name="jury_laurels", description="Factually assess Festival Directors", model="gemini-2.5-pro"),
+            LlmAgent(name="rules_plagiarism", description="Check if submission rules are unique", model="gemini-2.5-pro"),
+        ]
+    )
+    
+    # 4. Other Agents
+    producer_desk = LlmAgent(name="producer_desk", description="Producer Desk", model="gemini-2.5-flash")
+    opportunity_scout = LlmAgent(name="opportunity_scout", description="Opportunity Scout", model="gemini-2.5-flash")
+    outreach_drafter = LlmAgent(name="outreach_drafter", description="Outreach Drafter", model="gemini-2.5-flash")
+    
+    root = SequentialAgent(
+        name="orchestrator",
+        description="Screened Orchestrator",
+        sub_agents=[
+            planner,
+            domain_research,
+            deep_vetting,
+            producer_desk,
+            opportunity_scout,
+            outreach_drafter
+        ]
+    )
+    
+    return root

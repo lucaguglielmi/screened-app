@@ -32,5 +32,24 @@ class ClaimExtractorAgent:
             )
             all_claims.extend(claims)
 
-        logger.info(f"Total extracted and verified claims across all domains: {len(all_claims)}")
-        return all_claims
+        # Deduplicate claims with identical statements
+        unique_claims = {}
+        for claim in all_claims:
+            # Normalize statement for comparison
+            normalized_stmt = claim.statement.strip().lower()
+            if normalized_stmt in unique_claims:
+                # Merge evidence
+                existing_claim = unique_claims[normalized_stmt]
+                
+                # Keep a set of existing evidence hashes or source URLs to avoid duplicate evidence too
+                existing_urls = {ev.sourceUrl for ev in existing_claim.evidence}
+                for ev in claim.evidence:
+                    if ev.sourceUrl not in existing_urls:
+                        existing_claim.evidence.append(ev)
+                        existing_urls.add(ev.sourceUrl)
+            else:
+                unique_claims[normalized_stmt] = claim
+
+        deduped = list(unique_claims.values())
+        logger.info(f"Total extracted claims: {len(all_claims)}, after deduplication: {len(deduped)}")
+        return deduped

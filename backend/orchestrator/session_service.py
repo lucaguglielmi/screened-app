@@ -100,3 +100,9 @@ class FirestoreSessionService(BaseSessionService):
         })
         
         return ev
+
+    async def save_session(self, session: Session) -> None:
+        """Saves the session state directly, avoiding ADK's event-only mutation requirement."""
+        await db.save_investigation(session.id, {
+            "state": session.state
+        })

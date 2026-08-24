@@ -14,6 +14,7 @@ async def parallel_task_run(
     objective: str,
     queries: list[str],
     processor: str = "core",
+    source_policy: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """
     Function Tool for ADK LlmAgents to execute a Parallel Task.
@@ -47,18 +48,22 @@ async def parallel_task_run(
         class TaskOutput(BaseModel):
             claims: List[TaskClaim]
             
-        task_run = await client.task_run.create(
-            input=task_input,
-            processor=processor,
-            enable_events=True,
-            metadata={"investigation_id": investigation_id, "domain": domain},
-            task_spec={
+        kwargs = {
+            "input": task_input,
+            "processor": processor,
+            "enable_events": True,
+            "metadata": {"investigation_id": investigation_id, "domain": domain},
+            "task_spec": {
                 "output_schema": {
                     "type": "json",
                     "json_schema": TaskOutput.model_json_schema()
                 }
             }
-        )
+        }
+        if source_policy:
+            kwargs["source_policy"] = source_policy
+            
+        task_run = await client.task_run.create(**kwargs)
         
         task_run_id = task_run.id
         
@@ -67,7 +72,7 @@ async def parallel_task_run(
             if hasattr(event, "message") and event.message:
                 await broadcaster.emit(
                     investigation_id=investigation_id,
-                    event_type=EventType.SEARCH_STARTED,
+                    event_type=EventType.TASK_RUN_PROGRESS,
                     agent_name=f"Task-{domain}",
                     message=event.message
                 )

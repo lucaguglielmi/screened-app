@@ -31,6 +31,8 @@ class EventType(str, Enum):
     DOSSIER_READY = "DOSSIER_READY"
     WATCHDOG_ESCALATION = "WATCHDOG_ESCALATION"
     WATCH_EVENT_RECEIVED = "WATCH_EVENT_RECEIVED"
+    TASK_RUN_PROGRESS = "TASK_RUN_PROGRESS"
+    TASK_RUN_SOURCE_STATS = "TASK_RUN_SOURCE_STATS"
     ERROR = "ERROR"
 
 
@@ -74,6 +76,9 @@ class EventBroadcaster:
                 self._listeners[investigation_id].remove(queue)
                 if not self._listeners[investigation_id]:
                     del self._listeners[investigation_id]
+                    # No more active clients listening to this SSE, cancel any running background tasks
+                    from backend.orchestrator.state_machine import orchestrator
+                    orchestrator.cancel_task(investigation_id)
             except ValueError:
                 pass
 

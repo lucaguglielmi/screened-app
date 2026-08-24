@@ -479,7 +479,10 @@ Return a strict JSON object with:
         try:
             from google.adk.agents import LlmAgent
             from google.adk.tools import FunctionTool
+            from google.adk.runners import Runner
+            from backend.orchestrator.session_service import FirestoreSessionService
             from backend.tools.parallel_task import parallel_task_run
+            from google.genai import types
 
             agent = LlmAgent(
                 name="producer_desk",
@@ -495,9 +498,38 @@ Return a strict JSON object with:
                 ]
             )
             
+            # Since producer_desk is stateless in the current model, we use a single turn session
+            import uuid
+            session_id = str(uuid.uuid4())
+            runner = Runner(
+                agent=agent,
+                app_name="screened",
+                session_service=FirestoreSessionService()
+            )
+            
             run_req_prompt = f"User Message: {user_message}\n\nProvide a concise 1-2 sentence response and specify the tool parameters."
-            run_res = await agent.run_async(prompt=run_req_prompt)
-            response_text = run_res.output if hasattr(run_res, "output") and run_res.output else ""
+            new_msg = types.Content(role="user", parts=[types.Part.from_text(text=run_req_prompt)])
+            
+            response_text = ""
+            async for event in runner.run_async(user_id="default_user", session_id=session_id, new_message=new_msg):
+                # Collect text from any MODEL events that have a delta
+                if event.type == "MODEL_DELTA" and hasattr(event, "data") and event.data:
+                    for p in event.data.parts:
+                        if hasattr(p, "text") and p.text:
+                            response_text += p.text
+
+            if not response_text:
+                session_service = FirestoreSessionService()
+                session = await session_service.get_session(app_name="screened", user_id="default_user", session_id=session_id)
+                if session and session.events:
+                    # Find the last text output from the model
+                    for ev in reversed(session.events):
+                        if ev.type in ("MODEL_TURN", "AGENT_TURN") and hasattr(ev, "data") and ev.data:
+                            for p in ev.data.parts:
+                                if hasattr(p, "text") and p.text:
+                                    response_text += p.text
+                            if response_text:
+                                break
             
             # If doc_result is present, we might override tool_call with standard extracted info if it didn't naturally call it.
             if doc_result and not tool_call:

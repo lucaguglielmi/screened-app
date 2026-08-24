@@ -7,12 +7,19 @@ from google.genai import types
 # Force dummy API key so Google LLM doesn't crash on init during tests
 os.environ["GEMINI_API_KEY"] = "dummy-offline-key"
 
+# Mock the genai client at import time so that backend imports don't crash before fixtures run.
+mock_genai_patcher = patch("google.genai.Client")
+mock_client_class = mock_genai_patcher.start()
+
+# Provide a default mock instance
+mock_instance = MagicMock()
+mock_instance.vertexai = False
+mock_client_class.return_value = mock_instance
+
 @pytest.fixture(autouse=True)
 def mock_genai_client():
-    """Mock the genai client for all tests to run offline."""
-    with patch("google.genai.Client") as mock_client:
-        mock_instance = MagicMock()
-        mock_instance.vertexai = False
+    """Configure the mock genai client for tests to run offline."""
+    global mock_instance
         
         mock_plan = {
             "festivalName": "Aldergate Film Festival",
@@ -57,6 +64,5 @@ def mock_genai_client():
         mock_aio.models.generate_content.return_value = mock_response
         
         mock_instance.aio = mock_aio
-        mock_client.return_value = mock_instance
-        yield mock_client
+        yield mock_client_class
 
