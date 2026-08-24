@@ -445,13 +445,19 @@ export default function App() {
 
   return (
     <div
-      className={`relative min-h-screen flex flex-row ${activeTool === 'DESIGN_PLAYGROUND' ? 'bg-paper-surface dark:bg-darkroom-surface' : 'bg-paper-bg dark:bg-darkroom-bg'} text-paper-text dark:text-darkroom-text selection:bg-indigo-500/20 antialiased overflow-x-hidden`}
+      className={`relative min-h-screen flex flex-row ${
+        activeTool === 'DESIGN_PLAYGROUND'
+          ? 'bg-paper-surface dark:bg-darkroom-surface'
+          : activeTool === 'WHY_SCREENED'
+            ? 'bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100'
+            : 'bg-paper-bg dark:bg-darkroom-bg text-paper-text dark:text-darkroom-text'
+      } selection:bg-indigo-500/20 antialiased overflow-x-hidden`}
     >
       {/* Live System Update Notifier */}
       <UpdateNotifier />
 
       {/* Global Organic Morphing Mesh Gradient Background */}
-      {activeTool !== 'DESIGN_PLAYGROUND' && (
+      {activeTool !== 'DESIGN_PLAYGROUND' && activeTool !== 'WHY_SCREENED' && (
         <VectorFieldBackground className="fixed inset-0 pointer-events-none z-0" />
       )}
 
