@@ -426,7 +426,11 @@ export default function App() {
   };
 
   const handleDeepScreen = (festivalName: string, sourceTool: 'chat' | 'scout' | 'command_palette') => {
-    handleReset();
+    setInvestigation(null);
+    setEvents([]);
+    setError(null);
+    setOutreachDraft(null);
+    setIsOutreachOpen(false);
     setActiveTool('DUE_DILIGENCE');
     setQuery(festivalName);
     handleStartInvestigation(festivalName, `${sourceTool}_deep_screen` as any);

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import { CompareFestivalsArgs } from '../../../types/chat';
 import { soundEffects } from '../../../utils/audio';
-import { VersusDecisionTree } from '../../diagrams/VersusDecisionTree';
-import { OverlapVennFlow } from '../../diagrams/OverlapVennFlow';
+const VersusDecisionTree = lazy(() => import('../../diagrams/VersusDecisionTree').then(m => ({ default: m.VersusDecisionTree })));
+const OverlapVennFlow = lazy(() => import('../../diagrams/OverlapVennFlow').then(m => ({ default: m.OverlapVennFlow })));
 import { GitBranch, Award, ChevronDown, ChevronUp, Swords } from 'lucide-react';
 
 interface MiniCompareArenaProps {
@@ -152,34 +152,36 @@ export const MiniCompareArena: React.FC<MiniCompareArenaProps> = ({ args, onSele
       </div>
 
       {/* Mounted Diagrams */}
-      {activeDiagram === 'DECISION_TREE' && (
-        <div className="pt-2 animate-fade-in">
-          <VersusDecisionTree
-            festivalA={{
-              name: festA,
-              entryFee: '£55',
-              premierePolicy: 'UK Premiere Preferred',
-              accreditation: ['BAFTA Qualifying', 'BIFA Qualifying'],
-              notificationDate: 'Aug 15',
-              ratingScore: 92,
-            }}
-            festivalB={{
-              name: festB,
-              entryFee: '£30',
-              premierePolicy: 'No Premiere Restrictions',
-              accreditation: ['Indie Circuit Match'],
-              notificationDate: 'Oct 01',
-              ratingScore: 78,
-            }}
-          />
-        </div>
-      )}
+      <Suspense fallback={<div className="p-4 text-center text-xs text-slate-500 animate-pulse">Loading diagram engine...</div>}>
+        {activeDiagram === 'DECISION_TREE' && (
+          <div className="pt-2 animate-fade-in">
+            <VersusDecisionTree
+              festivalA={{
+                name: festA,
+                entryFee: '£55',
+                premierePolicy: 'UK Premiere Preferred',
+                accreditation: ['BAFTA Qualifying', 'BIFA Qualifying'],
+                notificationDate: 'Aug 15',
+                ratingScore: 92,
+              }}
+              festivalB={{
+                name: festB,
+                entryFee: '£30',
+                premierePolicy: 'No Premiere Restrictions',
+                accreditation: ['Indie Circuit Match'],
+                notificationDate: 'Oct 01',
+                ratingScore: 78,
+              }}
+            />
+          </div>
+        )}
 
-      {activeDiagram === 'ACCREDITATION' && (
-        <div className="pt-2 animate-fade-in">
-          <OverlapVennFlow festAName={festA} festBName={festB} />
-        </div>
-      )}
+        {activeDiagram === 'ACCREDITATION' && (
+          <div className="pt-2 animate-fade-in">
+            <OverlapVennFlow festAName={festA} festBName={festB} />
+          </div>
+        )}
+      </Suspense>
     </div>
   );
 };

@@ -14,7 +14,7 @@
  * ============================================================================
  */
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, lazy, Suspense } from 'react';
 import {
   AtomicClaim,
   CandidateEntity,
@@ -30,7 +30,7 @@ import { DetailDial } from './DetailDial';
 import { CitationPopover } from './CitationPopover';
 import { CredibilityRadar } from './CredibilityRadar';
 import { DeepVettingMatrix } from './investigation/DeepVettingMatrix';
-import { EntityProvenanceGraph } from './diagrams/EntityProvenanceGraph';
+const EntityProvenanceGraph = lazy(() => import('./diagrams/EntityProvenanceGraph').then(m => ({ default: m.EntityProvenanceGraph })));
 import { playDialClick, soundEffects } from '../utils/audio';
 import {
   FileText,
@@ -637,7 +637,9 @@ export const EvidenceDossier: React.FC<Props> = ({
           {/* React Flow Interactive Diagram (Rendered in Balanced & Full Evidence modes) */}
           {(normalizedDensity === 'BALANCED' || normalizedDensity === 'FULL_EVIDENCE') && (
             <div className="p-6 rounded-3xl bg-paper-surface dark:bg-darkroom-surface shadow-2xl space-y-4">
-              <EntityProvenanceGraph dossier={dossierAdapter} />
+              <Suspense fallback={<div className="p-4 text-center text-xs text-slate-500 animate-pulse">Loading provenance graph...</div>}>
+                <EntityProvenanceGraph dossier={dossierAdapter} />
+              </Suspense>
             </div>
           )}
 
