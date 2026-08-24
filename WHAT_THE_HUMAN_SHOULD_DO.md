@@ -18,6 +18,8 @@ Whenever the user asks *"what's next?"* or *"what should we work on?"*, the assi
 | **HUMAN-07** | **Cloud Tasks Config** | Provision Cloud Tasks queue via `gcloud tasks queues create screened-tasks --location=europe-west2`. | `COMPLETED` [2026-08-24] - Queue provisioned successfully via gcloud CLI. | Phase 2 (Orchestration) |
 | **HUMAN-08** | **Architecture Page** | Ensure the new graphical architecture diagram accurately aligns with the frontend `ArchitecturePage.tsx` live visualizer. | `COMPLETED` [2026-08-24] - Added PII and Telemetry layers. | Phase 4 (Submission) |
 | **HUMAN-09** | **GA4 Properties** | Update GA4 properties inside the Google Analytics console to create custom dimensions matching our new tracking schema. | `COMPLETED` [2026-08-24] - Created new property and added custom dimensions manually. | Phase 4 (Submission) |
+| **HUMAN-10** | **Diagnostics Token** | Provision the `DIAGNOSTICS_TOKEN` secret in Secret Manager and map it to the Cloud Run deployment. Without this, `/api/diagnostics` will perpetually return 404 in production. | `PENDING` | Operations |
+| **HUMAN-11** | **IAM Grants for Telemetry** | Grant the necessary IAM roles for Cloud Trace, Cloud Logging, and Error Reporting to the Cloud Run service account to enable the observability stack. | `PENDING` | Operations |
 
 ---
 

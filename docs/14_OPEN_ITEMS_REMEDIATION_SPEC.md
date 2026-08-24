@@ -1,108 +1,98 @@
 # 🔎 14. Verification Remediation Spec (Open Items)
 
-> **Document Version**: 1.0.0
+> **Document Version**: 1.1.0
 > **Target System**: Screened — Agentic Cinema Due Diligence
 > **Status**: Proposed for Implementation
 
-This document outlines the reality of the codebase relative to the Open Items Review, confirming significant gaps between the application's presented behavior, its documentation, and its actual execution. It serves as the remediation plan.
+This document outlines the required engineering tasks to align the application's implementation with its documented architecture, testing standards, and presentation requirements.
+
+---
+
+## Execution Order
+To ensure unblocked development, the following sequence is required:
+1. **Fix `state_machine.py` `Runner.run_async` payload** (unblocks the ADK orchestration layer).
+2. **Fix `FirestoreSessionService` memory-merge** (unblocks the local test suite).
+3. **Execute remaining tasks** across UI, Security, Presentation, and Operations.
 
 ---
 
 ## 1. Pipeline Execution & ADK Integration
-**Findings:**
-The ADK-based pipeline is fundamentally broken and relies on silent fallbacks.
-- The `PlannerAgent` fails due to missing `new_message` arguments in `Runner.run_async` (`state_machine.py:372`).
-- Domain `LlmAgent`s lack a `model` configuration (`domain_agents.py:43`).
-- `OpportunityScout` imports non-existent ADK modules (`google.adk.sessions.memory`), uses incorrect event schemas, and unconditionally degrades to a Gemini fallback.
-- `state_machine.py` and `adk_bridge.py` reference undefined enums (`QuestionCategory.BACKGROUND`, `Stance.SUPPORTING`, `EventType.SEARCH_STARTED`, `EventType.SEARCH_COMPLETED`).
-- `SourceRecord` is used but not imported in `main.py`, crashing `/api/investigations/{id}/deep-vetting` on cache misses.
-- Agent failures are silently swallowed, allowing degraded fallbacks to run without failing the overarching pipeline visibly.
 
-**Remediation:**
-- Fix `Runner.run_async` invocations to include `new_message` as `types.Content`.
-- Explicitly define models for domain `LlmAgent`s.
-- Correct ADK memory imports and event types in `OpportunityScout`.
-- Add missing enum values to `models.py` and `events.py`.
-- Import `SourceRecord` in `main.py`.
-- Implement a `STRICT_MODE` environment variable to bypass `try/except` fallbacks during testing.
+**Tasks to Complete:**
+- The `PlannerAgent` requires `new_message` arguments in `Runner.run_async` (`state_machine.py:372`) to execute correctly.
+- Domain `LlmAgent`s require an explicit `model` configuration (`domain_agents.py:43`).
+- `OpportunityScout` requires updated ADK memory imports and corrected event schemas.
+- Ensure all enum values referenced by `state_machine.py` and `adk_bridge.py` (`QuestionCategory.BACKGROUND`, `Stance.SUPPORTING`, `EventType.SEARCH_STARTED`, `EventType.SEARCH_COMPLETED`) are defined in `models.py` and `events.py`.
+- Import `SourceRecord` in `main.py` to support caching for `/api/investigations/{id}/deep-vetting`.
+- Introduce a `STRICT_MODE` environment variable to ensure exceptions bubble up during testing, rather than executing alternative fallback paths.
+
+**Acceptance Check:**
+- Run `STRICT_MODE=true python -m pytest tests/test_end_to_end.py`. The pipeline must execute via ADK classes without triggering the `except` fallback handlers.
 
 ## 2. Test Suite Validity
-**Findings:**
-Tests are passing against the fallback paths, not the ADK pipeline.
-- `FirestoreSessionService` in memory mode destructively overwrites dictionaries instead of merging (`firestore.py:41`), breaking local end-to-end tests.
-- 100% test pass claims are inaccurate; the ADK integration is currently crashing the pipeline.
-- `conftest.py` applies mocks *after* module singletons instantiate, causing the singletons to bypass mocks or fall back gracefully.
 
-**Remediation:**
-- Fix memory mode in `FirestoreSessionService` to perform a dictionary merge (`dict.update()`).
-- Reorganize test initialization so module singletons utilize mocked ADK clients correctly.
-- Fix broken end-to-end assertions.
+**Tasks to Complete:**
+- Update `FirestoreSessionService` in memory mode to perform a dictionary merge (`dict.update()`) rather than overwriting existing records.
+- Reorganize test initialization in `conftest.py` so that module singletons utilize mocked ADK clients.
+- Update end-to-end test assertions to reflect the intended ADK pipeline execution outputs.
+
+**Acceptance Check:**
+- Run `pytest`. All tests must pass, and the memory-mode data store must retain pipeline progress state between steps.
 
 ## 3. Core User Flow & UI
-**Findings:**
-- `handleDeepScreen` in `App.tsx` calls `handleReset()` *after* setting the active tool to `DUE_DILIGENCE`. React state batching throws the user back to `CONVERSATIONAL_DESK`, meaning the user never sees the live pipeline.
-- No light mode testing was performed; color tokens are largely missing for it.
-- Frontend chunks exceed 500kB (React + Motion), requiring dynamic imports for faster TTI.
 
-**Remediation:**
-- Reorder state updates in `handleDeepScreen` to navigate properly.
-- Lock the app to dark mode (`dark` class on html/body) or implement missing light mode tokens.
-- Add code-splitting (`React.lazy`) for heavy UI components (e.g., flow diagrams).
+**Tasks to Complete:**
+- Adjust `handleDeepScreen` in `App.tsx` so state updates navigate the user to the active pipeline view rather than returning to `CONVERSATIONAL_DESK`.
+- Resolve the hardcoded `darkroom-*` utility classes. While `index.css` provides a full `paper-*` palette for light mode, the literal migration applied static `darkroom-*` classes throughout the components, breaking the `paper-x dark:darkroom-x` pattern. Update components to utilize the responsive switching pattern.
+- Implement code-splitting (`React.lazy`) for heavy UI components (e.g., framer-motion flow diagrams) to reduce initial chunk size.
+
+**Acceptance Check:**
+- Toggle the OS or browser to light mode and verify the application renders using the `paper-*` palette across all routes.
 
 ## 4. Public Exposure & Security
-**Findings:**
-- `GET /api/feedback` leaks seeded PII (full names and emails).
-- Webhook endpoints (`webhooks.py`) do not validate timestamp age, allowing indefinite replay attacks.
-- Webhook signature mismatches log the *expected* HMAC, leaking valid signatures to logs.
-- `POST /api/investigations/batch` accepts unbounded lists, creating a DoS vector.
-- Exceptions (`ValueError`) are returned as `detail=str(e)` to the client, exposing internal implementation details.
-- No rate limiting on token usage or concurrency bounds exist for expensive `/api/investigations` endpoints.
 
-**Remediation:**
-- Remove PII from `FeedbackItem` responses or restrict the endpoint to authenticated admins.
-- Add timestamp expiration checks (e.g., 5 mins) to webhooks.
-- Remove `expected_signature` from warning logs.
-- Enforce maximum array lengths (e.g., 20) on batch endpoints.
-- Sanitize HTTP 400/500 `detail` responses.
-- Implement concurrency locks or token quotas for LLM endpoints.
+**Tasks to Complete:**
+- Update `GET /api/feedback` to either exclude PII (names and emails) from `FeedbackItem` responses or restrict access to authenticated administrators.
+- Implement timestamp expiration checks (e.g., 5-minute window) for webhook endpoints in `webhooks.py`.
+- Remove the `expected_signature` value from webhook validation warning logs.
+- Enforce array length limits (e.g., maximum 20 items) on `POST /api/investigations/batch`.
+- Sanitize `detail` messages in HTTP 400/500 exception handlers to abstract internal implementation details.
+- Implement concurrency limits or token quotas on resource-intensive LLM endpoints.
 
-## 5. Fabricated Presentation
-**Findings:**
-The application fabricates data to appear functional:
-- The Deep Vetting Matrix displays a highly detailed preview fixture (Raindance Film Festival) if the real report fails or is missing, with no "SAMPLE" label.
-- The "Audit SHA-256 Digest" simply maps the festival name characters to hex and pads to 64 chars. It is not a cryptographic hash.
-- `WhyScreened.tsx` quotes and statistics are hardcoded and fabricated.
-- "Aldergate Film Festival" is a fictional entity presented as a real suggestion.
-- The Demo Video script relies on UI states that currently only render via these fabrications.
+**Acceptance Check:**
+- Send a request to `GET /api/feedback` as an unauthenticated user and verify that email addresses are not present in the payload.
 
-**Remediation:**
-- Add explicit "PREVIEW DATA" banners to all fallback fixtures.
-- Compute a real SHA-256 hash of the investigation dossier JSON in `DetailDial.tsx`.
-- Disclaim or replace fabricated quotes in `WhyScreened.tsx`.
-- Clearly demarcate "Aldergate Film Festival" as a test/demo entity.
+## 5. Data Presentation
+
+**Tasks to Complete:**
+- Update the Deep Vetting Matrix to display explicit "PREVIEW DATA" or "SAMPLE" banners when rendering fallback fixtures (e.g., the Raindance Film Festival placeholder).
+- Modify `deep_vetting.py` (`_get_fallback_dimensions`) to indicate fallback status rather than returning `VERIFIED_AUTHENTIC` states with static registry citations.
+- Update `DetailDial.tsx` to compute a cryptographic SHA-256 hash of the investigation dossier JSON, replacing the padded hex string generation.
+- Remove seeded feedback entries in `main.py` (fictional names and emails) that currently render as user testimonials.
+- Update `WhyScreened.tsx` to utilize dynamic or properly disclaimed statistics and quotes.
+- Mark "Aldergate Film Festival" explicitly as a test/demo entity across the application.
+
+**Acceptance Check:**
+- Load a pipeline without an active report and verify that the UI explicitly labels the displayed matrix as "PREVIEW DATA".
 
 ## 6. Operations & Deployment
-**Findings:**
-- Webhooks are sent to `screened-hackathon.a.run.app`, but the app is hosted at `screened-pludf2u7yq-nw.a.run.app`.
-- Deployment scripts (`deploy.sh`, `deploy.yml`) fail to inject new environment variables (`DIAGNOSTICS_TOKEN`, `VITE_GA4_MEASUREMENT_ID`, etc.) and IAM roles.
-- The GitHub deploy workflow does not depend on test success.
-- `smoke.sh` hits `/api/test-pipeline`, which returns 403 Forbidden in production.
-- Cloud Tasks falls back silently to `asyncio` if misconfigured, risking background task termination on Cloud Run scale-to-zero.
 
-**Remediation:**
-- Correct the `base_url` resolution in `monitor_tools.py` to use the actual production host.
-- Update deployment scripts to include all required environment variables and secrets.
-- Block deployment if tests fail (`needs: test` in Actions).
-- Create a dedicated staging environment for `smoke.sh` or use an admin token to bypass the 403.
-- Enforce Cloud Tasks configuration and fail loudly if omitted, to avoid silent data loss.
+**Tasks to Complete:**
+- Configure `base_url` resolution in `monitor_tools.py` to target the correct production host (`screened-pludf2u7yq-nw.a.run.app`).
+- Update deployment scripts (`deploy.sh`, `deploy.yml`) to inject required environment variables (`DIAGNOSTICS_TOKEN`, `VITE_GA4_MEASUREMENT_ID`, `TASK_QUEUE_NAME`) and apply necessary IAM roles.
+- Add a dependency step in the GitHub deploy workflow to require successful test execution (`needs: test`).
+- Configure a staging environment or an admin token override for `smoke.sh` to bypass the 403 Forbidden check on `/api/test-pipeline`.
+- Require explicit Cloud Tasks configuration during deployment, preventing fallback to unmanaged asyncio tasks.
 
-## 7. Documentation Discrepancies
-**Findings:**
-- Claims of "100% Verifiable Evidence" and "never hallucinated evidence" in DEVPOST and README contradict the UI fixtures and fallback behavior.
-- `SPEC_PARALLEL_ADK_EVIDENCE_ENGINE.md` is outdated regarding the current partial ADK implementation.
-- `13_DATA_PROTECTION_PII_MIDDLEWARE_SPEC.md` does not exist, yet `WHAT_THE_HUMAN_SHOULD_DO.md` claims it is completed via a client-side sanitizer.
+**Acceptance Check:**
+- Run `deploy.sh` and verify that the Cloud Run service successfully provisions with `DIAGNOSTICS_TOKEN` present in its environment variables.
 
-**Remediation:**
-- Align the README and Devpost submission with reality (remove "never hallucinated" claims until the UI stops faking data).
-- Update the ADK spec to reflect current implementation status.
-- Remove or correct the reference to the missing PII middleware spec.
+## 7. Documentation Updates
+
+**Tasks to Complete:**
+- Update the README and DEVPOST_SUBMISSION to align descriptions of evidence verification with the intended behavior of the ADK integration.
+- Update `SPEC_PARALLEL_ADK_EVIDENCE_ENGINE.md` to accurately reflect the current implementation phase.
+- Remove or correct the reference to `13_DATA_PROTECTION_PII_MIDDLEWARE_SPEC.md`, ensuring all PII handling documentation accurately describes the implemented client-side approach.
+
+**Acceptance Check:**
+- Verify that a `grep` for "13_DATA_PROTECTION_PII_MIDDLEWARE_SPEC.md" across the repository returns no active requirement links.
