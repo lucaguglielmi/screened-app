@@ -311,7 +311,7 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
         }}
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
-        className="relative flex flex-col sm:flex-row items-stretch sm:items-center rounded-2xl border border-[#22274C] bg-[#0E1124]/95 shadow-2xl backdrop-blur-xl focus-within:border-[#2018E6]/80 focus-within:ring-2 focus-within:ring-[#2018E6]/20 transition-all p-2 gap-2"
+        className="relative flex flex-col sm:flex-row items-stretch sm:items-center rounded-2xl bg-[#0E1124] shadow-2xl transition-all p-2 gap-2"
       >
         <input
           type="file"
@@ -332,7 +332,7 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
             type="button"
             title="Attach a file or photo"
             onClick={() => fileInputRef.current?.click()}
-            className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#141A3B] hover:bg-[#1D2554] border border-[#27326B] hover:border-indigo-500/60 text-indigo-300 hover:text-white transition-all cursor-pointer shadow-sm shrink-0"
+            className="flex items-center justify-center size-10 rounded-xl bg-[#141834] hover:bg-[#1C224B] text-slate-300 hover:text-white transition-all cursor-pointer shadow-sm shrink-0"
           >
             <Plus className="size-4" />
           </button>

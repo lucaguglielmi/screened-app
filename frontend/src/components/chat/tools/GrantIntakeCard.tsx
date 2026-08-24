@@ -58,14 +58,16 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
     }
 
     // Supported document
-    soundEffects.playClick();
+    soundEffects.playSuccess();
+    const sizeInKb = Math.round(file.size / 1024);
     setAttachedFile({
       name: file.name,
-      size: `${(file.size / 1024).toFixed(1)} KB`,
+      size: sizeInKb > 1024 ? `${(sizeInKb / 1024).toFixed(1)} MB` : `${sizeInKb} KB`,
     });
   };
 
   const handleProceedToReview = () => {
+    if (!projectTitle.trim()) return;
     soundEffects.playClick();
     setStep('REVIEW');
   };
@@ -80,20 +82,20 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full max-w-2xl bg-[#0B0F19] border border-[#1E2545] rounded-2xl p-5 shadow-xl space-y-4 my-2 text-zinc-100"
+      className="w-full max-w-2xl bg-[#0E1124] rounded-2xl p-6 shadow-2xl space-y-4 my-2 text-zinc-100"
     >
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-zinc-800/80 pb-3">
-        <div className="flex items-center space-x-2.5">
-          <div className="w-8 h-8 rounded-lg bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400">
-            <Coins className="w-4 h-4" />
+      <div className="flex items-center justify-between pb-3">
+        <div className="flex items-center space-x-3">
+          <div className="w-9 h-9 rounded-xl bg-blue-600/20 flex items-center justify-center text-blue-400">
+            <Coins className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center space-x-2">
               <span className="text-xs font-mono font-semibold tracking-wider text-blue-400 uppercase">
                 Film Grant & Sponsor Match
               </span>
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 font-mono">
+              <span className="text-[10px] px-2 py-0.5 rounded-md bg-blue-500/15 text-blue-400 font-mono font-semibold">
                 {step === 'REQUIREMENTS' ? 'Stage 1: Intake' : 'Stage 2: Review'}
               </span>
             </div>
@@ -116,14 +118,14 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
               value={projectTitle}
               onChange={(e) => setProjectTitle(e.target.value)}
               placeholder="e.g. Echoes of the Humber"
-              className="w-full bg-midnight border border-zinc-700/70 rounded-lg px-3 py-2 text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:border-blue-500"
+              className="w-full bg-[#141834] rounded-xl px-3.5 py-2.5 text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:bg-[#1A2046]"
             />
           </div>
 
           {/* Budget & Funding Needed Sliders */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             {/* Total Budget Slider */}
-            <div className="space-y-1.5 bg-[#151B2E] p-3 rounded-xl">
+            <div className="space-y-2 bg-[#141834] p-4 rounded-xl">
               <div className="flex justify-between items-center">
                 <span className="text-zinc-400 font-mono">Total Estimated Budget</span>
                 <span className="font-bold text-blue-400 font-mono">£{budgetTier.toLocaleString()}</span>
@@ -135,7 +137,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
                 step={5000}
                 value={budgetTier}
                 onChange={(e) => setBudgetTier(Number(e.target.value))}
-                className="w-full h-1.5 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
+                className="w-full h-1.5 bg-[#0E1124] rounded-lg appearance-none cursor-pointer accent-blue-500"
               />
               <div className="flex justify-between text-[10px] text-zinc-500 font-mono">
                 <span>£5k (Micro)</span>
@@ -144,7 +146,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
             </div>
 
             {/* Funding Gap Needed Slider */}
-            <div className="space-y-1.5 bg-[#151B2E] p-3 rounded-xl">
+            <div className="space-y-2 bg-[#141834] p-4 rounded-xl">
               <div className="flex justify-between items-center">
                 <span className="text-zinc-400 font-mono">Grant Funding Needed</span>
                 <span className="font-bold text-emerald-400 font-mono">£{fundingNeeded.toLocaleString()}</span>
@@ -156,7 +158,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
                 step={1000}
                 value={fundingNeeded}
                 onChange={(e) => setFundingNeeded(Number(e.target.value))}
-                className="w-full h-1.5 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                className="w-full h-1.5 bg-[#0E1124] rounded-lg appearance-none cursor-pointer accent-emerald-500"
               />
               <div className="flex justify-between text-[10px] text-zinc-500 font-mono">
                 <span>£2k (Dev)</span>
@@ -172,29 +174,29 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
               <select
                 value={filmmakerRegion}
                 onChange={(e) => setFilmmakerRegion(e.target.value)}
-                className="w-full bg-midnight border border-zinc-700/70 rounded-lg px-2.5 py-2 text-white text-xs focus:outline-none focus:border-blue-500 cursor-pointer"
+                className="w-full bg-[#141834] rounded-xl px-3 py-2.5 text-white text-xs focus:outline-none focus:bg-[#1A2046] cursor-pointer"
               >
                 <option value="UK & Northern Ireland">United Kingdom & NI (BFI/Lottery Focus)</option>
                 <option value="Screen Scotland">Scotland (Screen Scotland Focus)</option>
                 <option value="Creative Wales">Wales (Ffilm Cymru Focus)</option>
                 <option value="European Union">European Union (Eurimages / Creative Europe)</option>
-                <option value="North America">North America (Sundance / Tribeca / Jerome)</option>
-                <option value="Global">Worldwide / International</option>
+                <option value="North America">North America (Sundance / Film Independent)</option>
+                <option value="International / Worldwide">International Worldwide</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-zinc-400 font-mono mb-1">Current Production Stage</label>
+              <label className="block text-zinc-400 font-mono mb-1">Production Stage</label>
               <select
                 value={productionStage}
                 onChange={(e) => setProductionStage(e.target.value)}
-                className="w-full bg-midnight border border-zinc-700/70 rounded-lg px-2.5 py-2 text-white text-xs focus:outline-none focus:border-blue-500 cursor-pointer"
+                className="w-full bg-[#141834] rounded-xl px-3 py-2.5 text-white text-xs focus:outline-none focus:bg-[#1A2046] cursor-pointer"
               >
-                <option value="Early Treatment / Development">Early Treatment / Script Development</option>
-                <option value="Pre-Production & Packaging">Pre-Production & Packaging</option>
-                <option value="Principal Photography">Principal Photography / Production</option>
-                <option value="Post-Production & Finishing">Post-Production & Finishing Funds</option>
-                <option value="Festival Distribution & Marketing">Festival Distribution & P&A Marketing</option>
+                <option value="Development & Scriptwriting">Development & Scriptwriting</option>
+                <option value="Early Pre-Production">Early Pre-Production</option>
+                <option value="Production">Production & Principal Photography</option>
+                <option value="Post-Production & Completion">Post-Production & Completion Funds</option>
+                <option value="Distribution & Festival Travel">Distribution & Festival Travel</option>
               </select>
             </div>
           </div>
@@ -206,7 +208,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
               onDragOver={(e) => e.preventDefault()}
               onDrop={handleFileDrop}
               onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-zinc-700/80 hover:border-blue-500/50 bg-[#151B2E] hover:bg-[#1E2545] rounded-xl p-3 text-center cursor-pointer transition-all flex flex-col items-center justify-center space-y-1"
+              className="bg-[#141834] hover:bg-[#181D3D] rounded-xl p-4 text-center cursor-pointer transition-all flex flex-col items-center justify-center space-y-1"
             >
               <input
                 ref={fileInputRef}
@@ -224,7 +226,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
                 </div>
               ) : (
                 <>
-                  <UploadCloud className="w-5 h-5 text-zinc-500" />
+                  <UploadCloud className="w-5 h-5 text-blue-400" />
                   <p className="text-zinc-300 font-medium text-xs">
                     Drop PDF synopsis, treatment or deck, or <span className="text-blue-400">browse</span>
                   </p>
@@ -240,7 +242,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
-                  className="mt-2 p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-start space-x-2 text-amber-300 text-xs"
+                  className="mt-2 p-3 rounded-xl bg-amber-500/20 flex items-start space-x-2 text-amber-300 text-xs"
                 >
                   <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                   <div className="space-y-0.5">
@@ -256,7 +258,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
           <div className="pt-2">
             <button
               onClick={handleProceedToReview}
-              className="w-full flex items-center justify-center space-x-2 py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs font-mono shadow-lg shadow-blue-950/50 hover:shadow-blue-600/30 transition-all group cursor-pointer"
+              className="w-full flex items-center justify-center space-x-2 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs font-mono shadow-lg shadow-blue-950/50 hover:shadow-blue-600/30 transition-all group cursor-pointer"
             >
               <span>Review Grant Strategy (Stage 2)</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -272,8 +274,8 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
           animate={{ opacity: 1, scale: 1 }}
           className="space-y-4"
         >
-          <div className="p-4 rounded-xl bg-[#0F1D35] border border-blue-900 space-y-2.5 text-xs">
-            <div className="flex items-center justify-between border-b border-blue-800 pb-2">
+          <div className="p-4 rounded-xl bg-[#141834] space-y-2.5 text-xs">
+            <div className="flex items-center justify-between pb-2">
               <span className="font-mono font-bold text-blue-400 uppercase tracking-wider">
                 Stage 2: Funding Search Strategy Ready
               </span>
@@ -301,20 +303,20 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
               </div>
             </div>
 
-            <div className="pt-2 border-t border-blue-500/20">
+            <div className="pt-2">
               <span className="text-zinc-400 font-mono block mb-1">Target Funding Providers:</span>
               <div className="flex flex-wrap gap-1.5">
-                <span className="px-2 py-0.5 rounded bg-midnight border border-zinc-700 text-zinc-200 text-[11px]">
+                <span className="px-2.5 py-1 rounded-lg bg-[#0E1124] text-zinc-200 text-[11px]">
                   ✓ BFI Filmmaking Fund
                 </span>
-                <span className="px-2 py-0.5 rounded bg-midnight border border-zinc-700 text-zinc-200 text-[11px]">
+                <span className="px-2.5 py-1 rounded-lg bg-[#0E1124] text-zinc-200 text-[11px]">
                   ✓ National Lottery Good Causes
                 </span>
-                <span className="px-2 py-0.5 rounded bg-midnight border border-zinc-700 text-zinc-200 text-[11px]">
+                <span className="px-2.5 py-1 rounded-lg bg-[#0E1124] text-zinc-200 text-[11px]">
                   ✓ Regional Match Schemes ({filmmakerRegion})
                 </span>
                 {attachedFile && (
-                  <span className="px-2 py-0.5 rounded bg-blue-900/60 border border-blue-500/40 text-blue-300 text-[11px]">
+                  <span className="px-2.5 py-1 rounded-lg bg-blue-900/60 text-blue-300 text-[11px]">
                     ✓ OCR Treatment Synced ({attachedFile.name})
                   </span>
                 )}
@@ -330,14 +332,14 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({
                 soundEffects.playClick();
                 setStep('REQUIREMENTS');
               }}
-              className="px-4 py-2.5 rounded-xl border border-zinc-700 bg-midnight hover:bg-surface text-xs font-mono text-zinc-300 hover:text-white transition-colors cursor-pointer"
+              className="px-4 py-2.5 rounded-xl bg-[#141834] hover:bg-[#1A2046] text-xs font-mono text-zinc-300 hover:text-white transition-colors cursor-pointer"
             >
               ‹ Edit Parameters
             </button>
             <button
               type="button"
               onClick={handleLaunch}
-              className="flex-1 flex items-center justify-center space-x-2 py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs font-mono shadow-lg shadow-blue-950/50 hover:shadow-blue-600/30 transition-all group cursor-pointer"
+              className="flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs font-mono shadow-lg shadow-blue-950/50 hover:shadow-blue-600/30 transition-all group cursor-pointer"
             >
               <Sparkles className="w-4 h-4 text-blue-200" />
               <span>Discover Matching Public Grants</span>

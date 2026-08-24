@@ -20,6 +20,10 @@ async def receive_parallel_webhook(
     if not x_parallel_signature or not x_parallel_timestamp:
         raise HTTPException(status_code=400, detail="Missing signature headers")
 
+    if settings.environment == "production" and settings.parallel_webhook_secret == "dev-webhook-secret":
+        logger.error("Refusing to verify webhook with dev secret in production.")
+        raise HTTPException(status_code=500, detail="Configuration error")
+
     payload = await request.body()
     
     # Reconstruct the signed payload

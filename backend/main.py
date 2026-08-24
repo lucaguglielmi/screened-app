@@ -62,11 +62,19 @@ app = FastAPI(
 )
 
 # CORS configuration
+if settings.environment == "production":
+    allowed_origins = [
+        "https://screened-pludf2u7yq-nw.a.run.app",
+        "https://screened.app"
+    ]
+else:
+    allowed_origins = ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -192,7 +200,8 @@ async def get_investigation(investigation_id: str):
     return inv
 
 @app.post("/api/investigations/batch")
-async def get_investigation_batch(investigation_ids: list[str]):
+@limiter.limit("30/minute")
+async def get_investigation_batch(investigation_ids: list[str], request: Request):
     """Retrieve summaries for multiple investigations (e.g. for History sidebar)."""
     results = []
     for inv_id in investigation_ids:
@@ -207,7 +216,8 @@ async def get_investigation_batch(investigation_ids: list[str]):
 
 
 @app.post("/api/investigations/{investigation_id}/resume")
-async def resume_investigation(investigation_id: str):
+@limiter.limit("10/minute")
+async def resume_investigation(investigation_id: str, request: Request):
     """Resume a failed or interrupted investigation."""
     try:
         inv = await orchestrator.resume_investigation(investigation_id)
@@ -220,7 +230,8 @@ async def resume_investigation(investigation_id: str):
 
 
 @app.post("/api/investigations/{investigation_id}/confirm-entity")
-async def confirm_entity(investigation_id: str, req: ConfirmEntityRequest):
+@limiter.limit("10/minute")
+async def confirm_entity(investigation_id: str, req: ConfirmEntityRequest, request: Request):
     """Confirm disambiguated entity and launch parallel 3-domain research core."""
     try:
         inv = await orchestrator.confirm_entity(
@@ -275,7 +286,8 @@ async def chat_with_producer_desk(req: ChatRequest, request: Request):
 
 
 @app.post("/api/chat/analyze-doc", response_model=DocumentAnalysisResult)
-async def analyze_document_endpoint(req: DocumentAnalysisRequest):
+@limiter.limit("10/minute")
+async def analyze_document_endpoint(req: DocumentAnalysisRequest, request: Request):
     """Analyzes an uploaded script, synopsis, treatment, or invitation email."""
     try:
         return await producer_desk_agent.analyze_document(req)
@@ -302,7 +314,8 @@ async def scout_festival_opportunities(req: ScoutRequest, request: Request):
 # --- Milestone M3: Sandbox Outreach & Action Approval Endpoints ---
 
 @app.post("/api/investigations/{investigation_id}/outreach/draft", response_model=OutreachDraft)
-async def draft_outreach_inquiry(investigation_id: str, req: DraftOutreachRequest):
+@limiter.limit("10/minute")
+async def draft_outreach_inquiry(investigation_id: str, req: DraftOutreachRequest, request: Request):
     """Draft a verification inquiry for a specific unverified claim or dispute."""
     inv = await db.get_investigation(investigation_id)
     if not inv:
@@ -344,7 +357,8 @@ async def draft_outreach_inquiry(investigation_id: str, req: DraftOutreachReques
 
 
 @app.post("/api/investigations/{investigation_id}/outreach/approve", response_model=OutreachDraft)
-async def approve_outreach_inquiry(investigation_id: str, req: ApproveOutreachRequest):
+@limiter.limit("10/minute")
+async def approve_outreach_inquiry(investigation_id: str, req: ApproveOutreachRequest, request: Request):
     """Verify exact SHA-256 payload hash and execute simulated sandbox delivery."""
     try:
         draft = await approval_service.approve_and_sandbox_send(
@@ -400,6 +414,9 @@ async def export_investigation_dossier(investigation_id: str):
 @app.post("/api/test-pipeline", response_model=TestPipelineResponse)
 async def test_walking_skeleton_pipeline(request: TestPipelineRequest):
     """Walking skeleton test endpoint executing live Parallel Search + Gemini claim extraction."""
+    if settings.environment == "production":
+        raise HTTPException(status_code=403, detail="Test pipeline disabled in production")
+    
     start_time = time.time()
     subject = request.festivalName.strip()
     if not subject:
@@ -532,18 +549,38 @@ async def get_all_feedback():
 
 
 @app.post("/api/feedback", response_model=FeedbackItem)
-async def submit_feedback(request: FeedbackCreateRequest):
+@limiter.limit("10/minute")
+async def submit_feedback(req: FeedbackCreateRequest, request: Request):
     """Submit new filmmaker user feedback."""
     item = FeedbackItem(
-        rating=request.rating,
-        category=request.category,
-        comment=request.comment,
-        authorName=request.authorName or "Anonymous Filmmaker",
-        authorEmail=request.authorEmail,
+        rating=req.rating,
+        category=req.category,
+        comment=req.comment,
+        authorName=req.authorName or "Anonymous Filmmaker",
+        authorEmail=req.authorEmail,
     )
     await db.save_feedback_item(item)
     logger.info(f"New filmmaker feedback received: rating={item.rating}, cat={item.category}")
     return item
+
+
+@app.get("/api/architecture/agent-tree")
+async def get_agent_tree():
+    """Returns the multi-agent orchestration architecture for UI visualization."""
+    return {
+        "nodes": [
+            {"id": "orchestrator", "type": "SequentialAgent", "label": "Screened Orchestrator", "model": "gemini-2.5-flash"},
+            {"id": "planner", "type": "LlmAgent", "label": "Investigation Planner", "model": "gemini-2.5-flash", "parent": "orchestrator"},
+            {"id": "domain_research", "type": "ParallelAgent", "label": "Domain Research Execution", "model": "gemini-2.5-flash", "parent": "orchestrator"},
+            {"id": "festival_research", "type": "LlmAgent", "label": "Festival Analysis", "model": "gemini-2.5-flash", "parent": "domain_research"},
+            {"id": "venue_research", "type": "LlmAgent", "label": "Venue Footprint", "model": "gemini-2.5-flash", "parent": "domain_research"},
+            {"id": "organizer_research", "type": "LlmAgent", "label": "Organizer History", "model": "gemini-2.5-flash", "parent": "domain_research"},
+            {"id": "deep_vetting", "type": "ParallelAgent", "label": "360° Deep Vetting", "model": "gemini-2.5-pro", "parent": "orchestrator"},
+            {"id": "producer_desk", "type": "LlmAgent", "label": "Producer Desk", "model": "gemini-2.5-flash", "parent": "orchestrator"},
+            {"id": "opportunity_scout", "type": "LlmAgent", "label": "Opportunity Scout", "model": "gemini-2.5-flash", "parent": "orchestrator"},
+            {"id": "outreach_drafter", "type": "LlmAgent", "label": "Outreach Drafter", "model": "gemini-2.5-flash", "parent": "orchestrator"}
+        ]
+    }
 
 
 # Mount Frontend static files if built

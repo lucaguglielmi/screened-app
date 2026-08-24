@@ -51,9 +51,9 @@ class ParallelExtractTool:
                         if ev.sourceUrl == url:
                             norm_excerpt = normalize_whitespace(ev.exactExcerpt)
                             if norm_excerpt and norm_excerpt not in norm_full:
-                                # Fail verification
-                                # (In a real implementation, we'd update a status field on ev)
-                                pass
+                                ev.verificationStatus = "UNVERIFIED_EXCERPT"
+                            else:
+                                ev.verificationStatus = "VERIFIED_MATCH"
                                 
                     if full_content:
                         provenance[url] = {

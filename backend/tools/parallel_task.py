@@ -53,7 +53,10 @@ async def parallel_task_run(
             enable_events=True,
             metadata={"investigation_id": investigation_id, "domain": domain},
             task_spec={
-                "output_schema": TaskOutput.model_json_schema()
+                "output_schema": {
+                    "type": "json",
+                    "json_schema": TaskOutput.model_json_schema()
+                }
             }
         )
         
@@ -73,10 +76,11 @@ async def parallel_task_run(
         res = await client.task_run.result(task_run_id)
         
         # Parse the structured output
-        output_claims = res.output.get("claims", []) if isinstance(res.output, dict) else (getattr(res.output, "claims", []) if res.output else [])
+        out = res.output
+        output_claims = (out.content or {}).get("claims", []) if out else []
         
         # In a real impl, we'd serialize basis to dicts
-        basis = res.basis if hasattr(res, "basis") else []
+        basis = [b.model_dump() for b in (out.basis or [])] if out else []
         
         return {"claims": output_claims, "basis": basis}
         

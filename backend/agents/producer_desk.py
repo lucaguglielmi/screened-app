@@ -21,6 +21,7 @@ from backend.models import (
     InteractiveFollowUpProbe,
 )
 from backend.services.gemini_client import GeminiClient
+from backend.tools.parallel_task import parallel_task_run
 
 logger = logging.getLogger("screened.agents.producer_desk")
 
@@ -386,16 +387,140 @@ Return a strict JSON object with:
                 yield event
             return
 
-        try:
-            # Call Vertex AI Gemini with structured prompt (gemini-2.5-flash is available in europe-west2)
-            response = self.gemini.client.models.generate_content(
-                model="gemini-2.5-flash",
-                contents=prompt,
+        tool_call = None
+
+        def configure_due_diligence(festival_name: str, preflight_summary: str, optional_url: str = None, city_country: str = None, suspected_concerns: list = None, user_context: list = None) -> str:
+            """Configures a deep-dive multi-agent credibility investigation for a specific film festival or cinema entity."""
+            nonlocal tool_call
+            tool_call = ChatToolCall(
+                toolName=ToolCallType.CONFIGURE_DUE_DILIGENCE,
+                args=DueDiligenceToolArgs(
+                    festival_name=festival_name,
+                    optional_url=optional_url,
+                    city_country=city_country,
+                    suspected_concerns=suspected_concerns or [],
+                    user_context=user_context or [],
+                    preflight_summary=preflight_summary
+                ).model_dump()
             )
+            return "SUCCESS: Tool call scheduled."
 
-            response_text = response.text if hasattr(response, "text") and response.text else str(response)
+        def configure_opportunity_scout(film_title: str, format: str, genre: str, strategy_rationale: str, runtime_minutes: int = 15, premiere_goal: str = "WORLD_PREMIERE", budget_tier: str = "Micro (< £50k)", target_regions: list = None) -> str:
+            """Prepares a tailored festival submission roadmap and scouts upcoming qualifying deadlines for a specific film profile."""
+            nonlocal tool_call
+            try:
+                fmt = FilmFormat(format)
+            except:
+                fmt = FilmFormat.SHORT
+            try:
+                pg = PremiereGoal(premiere_goal)
+            except:
+                pg = PremiereGoal.WORLD_PREMIERE
 
-            # Scrub any raw Python/JSON code blocks if Gemini accidentally included them
+            tool_call = ChatToolCall(
+                toolName=ToolCallType.CONFIGURE_OPPORTUNITY_SCOUT,
+                args=OpportunityScoutToolArgs(
+                    film_title=film_title,
+                    format=fmt,
+                    genre=genre,
+                    runtime_minutes=runtime_minutes,
+                    premiere_goal=pg,
+                    budget_tier=budget_tier,
+                    target_regions=target_regions or [],
+                    strategy_rationale=strategy_rationale
+                ).model_dump()
+            )
+            return "SUCCESS: Tool call scheduled."
+
+        def compare_festivals_arena(festival_a: str, festival_b: str, verdict_summary: str, key_comparison_vectors: list = None) -> str:
+            """Renders a side-by-side comparison matrix between two film festivals evaluating fee vs prestige, audience reach, and accreditation."""
+            nonlocal tool_call
+            tool_call = ChatToolCall(
+                toolName=ToolCallType.COMPARE_FESTIVALS_ARENA,
+                args=CompareFestivalsToolArgs(
+                    festival_a=festival_a,
+                    festival_b=festival_b,
+                    key_comparison_vectors=key_comparison_vectors or [],
+                    verdict_summary=verdict_summary
+                ).model_dump()
+            )
+            return "SUCCESS: Tool call scheduled."
+            
+        def configure_grant_scout(project_title: str, grant_strategy_summary: str, grant_category: str = "DEVELOPMENT_AND_PRODUCTION", target_amount: str = "£25,000", production_stage: str = "Production", filmmaker_region: str = "UK & Europe") -> str:
+            """Configures public grant and film funding match search for a project."""
+            nonlocal tool_call
+            tool_call = ChatToolCall(
+                toolName=ToolCallType.CONFIGURE_GRANT_SCOUT,
+                args=GrantScoutToolArgs(
+                    project_title=project_title,
+                    grant_category=grant_category,
+                    target_amount=target_amount,
+                    production_stage=production_stage,
+                    filmmaker_region=filmmaker_region,
+                    grant_strategy_summary=grant_strategy_summary
+                ).model_dump()
+            )
+            return "SUCCESS: Tool call scheduled."
+            
+        def analyze_invitation_email(festival_claimed: str, initial_verdict: str, sender_domain: str = "unknown.com", fee_waiver_offered: bool = False) -> str:
+            """Analyzes an unsolicited festival invitation or laurel email for predatory signals."""
+            nonlocal tool_call
+            tool_call = ChatToolCall(
+                toolName=ToolCallType.ANALYZE_INVITATION_EMAIL,
+                args=InvitationEmailToolArgs(
+                    festival_claimed=festival_claimed,
+                    sender_domain=sender_domain,
+                    fee_waiver_offered=fee_waiver_offered,
+                    initial_verdict=initial_verdict
+                ).model_dump()
+            )
+            return "SUCCESS: Tool call scheduled."
+
+        try:
+            from google.adk.agents import LlmAgent
+            from google.adk.tools import FunctionTool
+            from backend.tools.parallel_task import parallel_task_run
+
+            agent = LlmAgent(
+                name="producer_desk",
+                model="gemini-2.5-flash",
+                instruction=PRODUCER_DESK_SYSTEM_PROMPT,
+                tools=[
+                    FunctionTool(configure_due_diligence),
+                    FunctionTool(configure_opportunity_scout),
+                    FunctionTool(compare_festivals_arena),
+                    FunctionTool(configure_grant_scout),
+                    FunctionTool(analyze_invitation_email),
+                    FunctionTool(parallel_task_run)
+                ]
+            )
+            
+            run_req_prompt = f"User Message: {user_message}\n\nProvide a concise 1-2 sentence response and specify the tool parameters."
+            run_res = await agent.run_async(prompt=run_req_prompt)
+            response_text = run_res.output if hasattr(run_res, "output") and run_res.output else ""
+            
+            # If doc_result is present, we might override tool_call with standard extracted info if it didn't naturally call it.
+            if doc_result and not tool_call:
+                # Force inference
+                if doc_result.detectedKind == DocumentAnalysisKind.INVITATION_EMAIL:
+                    analyze_invitation_email(
+                        festival_claimed=doc_result.festivalClaimed or "Claimed Festival",
+                        initial_verdict=doc_result.recommendedAction or doc_result.extractedSummary,
+                        sender_domain=doc_result.senderDomain or "festival-communications.org",
+                        fee_waiver_offered=bool(doc_result.feeWaiverOffered)
+                    )
+                elif doc_result.detectedKind == DocumentAnalysisKind.SCRIPT_TREATMENT:
+                    configure_opportunity_scout(
+                        film_title=doc_result.filmTitle or "Untitled Project",
+                        format=doc_result.format.value if doc_result.format else "SHORT",
+                        genre=doc_result.genre or "Drama",
+                        strategy_rationale=f"Tailored roadmap generated from '{doc_result.filmTitle}' ({doc_result.genre}, {doc_result.runtimeMinutes} min). Targeting qualifying festivals matching this tone.",
+                        runtime_minutes=doc_result.runtimeMinutes or 15,
+                        premiere_goal=doc_result.suggestedPremiereGoal.value if doc_result.suggestedPremiereGoal else "WORLD_PREMIERE",
+                        budget_tier=doc_result.budgetTier or "Micro (< £50k)",
+                        target_regions=["UK & Europe", "North America"]
+                    )
+
             import re
             cleaned_text = re.sub(r"```python[\s\S]*?```", "", response_text)
             cleaned_text = re.sub(r"```json[\s\S]*?```", "", cleaned_text)
@@ -407,16 +532,12 @@ Return a strict JSON object with:
             if not cleaned_text:
                 cleaned_text = response_text
 
-            # Enforce conciseness: keep first 2 sentences if response is overly long
             sentences = [s.strip() for s in re.split(r'(?<=[.!?])\s+', cleaned_text) if s.strip()]
             if len(sentences) > 3:
                 cleaned_text = " ".join(sentences[:2])
 
-            # Check if response contains tool invocation or formulate one
-            tool_call = self._extract_or_infer_tool_call(user_message, response_text, doc_result)
             follow_up_probe = self._generate_follow_up_probe(user_message, tool_call, doc_result)
 
-            # Stream response in chunks
             words = cleaned_text.split(" ")
             for i in range(0, len(words), 4):
                 chunk = " ".join(words[i:i+4]) + " "

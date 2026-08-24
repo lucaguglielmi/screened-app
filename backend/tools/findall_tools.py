@@ -28,9 +28,11 @@ async def findall_search(
         # P-05: We use entity_search instead of create for simple direct searches if possible,
         # but the spec says `findall.create / entity_search from FilmProfile`. 
         result = await client.beta.findall.create(
-            intent=intent,
-            criteria=criteria_fields,
-            schemas={}
+            entity_type="organization",
+            generator="search",
+            match_conditions=criteria_fields,
+            match_limit=5,
+            objective=intent
         )
         # Parse the result or return it raw
         # The result might be a pydantic model in the SDK, let's just return a dict

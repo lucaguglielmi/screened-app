@@ -5,7 +5,10 @@ import {
   MessageSquare, 
   Send, 
   CheckCircle2, 
-  Loader2
+  Loader2,
+  CheckCircle,
+  HelpCircle,
+  XCircle
 } from 'lucide-react';
 import { soundEffects, playSuccessChime } from '../../utils/audio';
 
@@ -15,21 +18,41 @@ interface FeedbackModalProps {
   onViewFeedbackLog?: () => void;
 }
 
-const CATEGORIES = [
-  { id: 'ACCURACY', label: 'Forensic Accuracy', emoji: '🔍' },
-  { id: 'RECOMMENDATIONS', label: 'Grant Matching', emoji: '💰' },
-  { id: 'CHAT_INTELLIGENCE', label: 'Mission Control AI', emoji: '🧠' },
-  { id: 'UI_DESIGN', label: 'UI & Aesthetics', emoji: '🎨' },
-  { id: 'FEATURE_REQUEST', label: 'Feature Request', emoji: '💡' },
-  { id: 'GENERAL', label: 'General', emoji: '🎬' },
+type GoalStatus = 'YES' | 'PARTIALLY' | 'NO';
+
+const GOAL_OPTIONS: { id: GoalStatus; label: string; sublabel: string; rating: number; icon: React.ReactNode; color: string }[] = [
+  { 
+    id: 'YES', 
+    label: 'Yes, completely', 
+    sublabel: 'Found what I needed',
+    rating: 5, 
+    icon: <CheckCircle className="size-4 text-[#00D29E]" />,
+    color: 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300'
+  },
+  { 
+    id: 'PARTIALLY', 
+    label: 'Partially', 
+    sublabel: 'Still exploring',
+    rating: 3, 
+    icon: <HelpCircle className="size-4 text-amber-400" />,
+    color: 'border-amber-500/40 bg-amber-500/10 text-amber-300'
+  },
+  { 
+    id: 'NO', 
+    label: 'Not yet', 
+    sublabel: 'Encountered blockers',
+    rating: 1, 
+    icon: <XCircle className="size-4 text-rose-400" />,
+    color: 'border-rose-500/40 bg-rose-500/10 text-rose-300'
+  },
 ];
 
 const RATING_LABELS: Record<number, string> = {
-  1: 'Needs Work',
-  2: 'Fair',
-  3: 'Good Experience',
-  4: 'Great Intelligence',
-  5: 'Exceptional & Protective!',
+  1: 'Encountered blockers / Needs work',
+  2: 'Fair experience',
+  3: 'Partially completed my goal',
+  4: 'Great experience, found helpful info',
+  5: 'Completed my goal with excellence!',
 };
 
 export const FeedbackModal: React.FC<FeedbackModalProps> = ({
@@ -37,9 +60,9 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
   onClose,
   onViewFeedbackLog,
 }) => {
+  const [goalStatus, setGoalStatus] = useState<GoalStatus>('YES');
   const [rating, setRating] = useState<number>(5);
   const [hoverRating, setHoverRating] = useState<number | null>(null);
-  const [category, setCategory] = useState<string>('GENERAL');
   const [comment, setComment] = useState<string>('');
   const [authorName, setAuthorName] = useState<string>('');
   const [authorEmail, setAuthorEmail] = useState<string>('');
@@ -59,10 +82,16 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
 
   if (!isOpen) return null;
 
+  const handleSelectGoal = (option: typeof GOAL_OPTIONS[0]) => {
+    soundEffects.playClick();
+    setGoalStatus(option.id);
+    setRating(option.rating);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!comment.trim()) {
-      setError('Please provide a brief thought or suggestion before submitting.');
+      setError('Please provide a brief thought or detail about your goal.');
       return;
     }
 
@@ -70,13 +99,14 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
     setError(null);
 
     try {
+      const goalPrefix = `[Goal Completed: ${goalStatus}] `;
       const res = await fetch('/api/feedback', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           rating,
-          category,
-          comment: comment.trim(),
+          category: 'GOAL_FEEDBACK',
+          comment: `${goalPrefix}${comment.trim()}`,
           authorName: authorName.trim() || undefined,
           authorEmail: authorEmail.trim() || undefined,
         }),
@@ -100,8 +130,8 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
     setComment('');
     setAuthorName('');
     setAuthorEmail('');
+    setGoalStatus('YES');
     setRating(5);
-    setCategory('GENERAL');
     onClose();
   };
 
@@ -118,20 +148,20 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
         }}
       />
 
-      {/* Modal Dialog Card */}
-      <div className="relative z-10 w-full max-w-xl flex flex-col rounded-3xl bg-[#090C19] border border-[#22274C] shadow-2xl shadow-indigo-950/60 overflow-hidden text-slate-100 animate-scale-up">
+      {/* Modal Dialog Card: Solid Opaque, Borderless */}
+      <div className="relative z-10 w-full max-w-lg flex flex-col rounded-3xl bg-[#0E1124] shadow-2xl shadow-black/90 overflow-hidden text-slate-100 animate-scale-up">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-[#1D2244] bg-[#0C1024]">
+        <div className="flex items-center justify-between px-6 py-5 bg-[#141834]">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+            <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-400">
               <MessageSquare className="size-5" />
             </div>
             <div>
               <h2 className="font-serif text-lg font-bold text-white tracking-tight">
-                Filmmaker Feedback & Ideas
+                Filmmaker Feedback
               </h2>
               <p className="text-xs text-slate-400 font-mono">
-                Help us improve Screened for indie cinema creators
+                Tell us how Screened worked for you
               </p>
             </div>
           </div>
@@ -141,7 +171,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
               soundEffects.playClick();
               onClose();
             }}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-[#1A1F45] transition-colors cursor-pointer"
+            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-[#1E244E] transition-colors cursor-pointer"
             aria-label="Close modal"
           >
             <X className="size-5" />
@@ -151,7 +181,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
         {/* Modal Body */}
         {isSubmitted ? (
           <div className="p-8 text-center space-y-6 animate-fade-in">
-            <div className="size-16 mx-auto rounded-full bg-[#00D29E]/20 border border-[#00D29E]/40 text-[#00D29E] flex items-center justify-center shadow-lg shadow-[#00D29E]/20 animate-bounce">
+            <div className="size-16 mx-auto rounded-full bg-[#00D29E]/20 text-[#00D29E] flex items-center justify-center shadow-lg shadow-[#00D29E]/20 animate-bounce">
               <CheckCircle2 className="size-8" />
             </div>
 
@@ -160,7 +190,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                 Thank You, Filmmaker!
               </h3>
               <p className="text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
-                Your feedback has been logged directly into our intelligence registry. You can inspect all community submissions in the Design Playground feedback log.
+                Your feedback helps us refine the intelligence engine and festival verification tools for creators worldwide.
               </p>
             </div>
 
@@ -173,9 +203,9 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                     onClose();
                     onViewFeedbackLog();
                   }}
-                  className="px-4 py-2.5 rounded-xl bg-[#1A1F45] hover:bg-[#252C63] text-indigo-300 text-xs font-mono border border-[#2F3775] transition-colors cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl bg-[#141834] hover:bg-[#1A2046] text-indigo-300 text-xs font-mono transition-colors cursor-pointer"
                 >
-                  View Feedback Log Tab →
+                  View Feedback Log →
                 </button>
               )}
               <button
@@ -188,18 +218,45 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
             </div>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-5 text-sm">
+          <form onSubmit={handleSubmit} className="p-6 sm:p-7 space-y-5 text-sm">
             {error && (
-              <div className="p-3.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs">
+              <div className="p-3.5 rounded-xl bg-rose-500/20 text-rose-300 text-xs font-mono">
                 {error}
               </div>
             )}
 
-            {/* 1. Star Rating */}
-            <div className="space-y-2 text-center">
-              <label className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold block">
-                How is your experience with Screened?
+            {/* 1. Main Goal Question */}
+            <div className="space-y-3">
+              <label className="text-sm font-semibold text-white block text-center">
+                Did you manage to complete your goal today?
               </label>
+
+              {/* Goal Quick Select Buttons */}
+              <div className="grid grid-cols-3 gap-2.5">
+                {GOAL_OPTIONS.map((option) => {
+                  const isSelected = goalStatus === option.id;
+                  return (
+                    <button
+                      key={option.id}
+                      type="button"
+                      onClick={() => handleSelectGoal(option)}
+                      className={`p-3 rounded-2xl transition-all flex flex-col items-center justify-center text-center gap-1.5 cursor-pointer ${
+                        isSelected
+                          ? `${option.color} ring-2 ring-indigo-500/60 shadow-lg scale-102`
+                          : 'bg-[#141834] text-slate-300 hover:bg-[#1C224B] hover:text-white'
+                      }`}
+                    >
+                      {option.icon}
+                      <span className="text-xs font-semibold leading-tight">{option.label}</span>
+                      <span className="text-[10px] text-slate-400 font-mono hidden sm:inline">{option.sublabel}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* 2. Star Rating (Subtle secondary) */}
+            <div className="space-y-1.5 text-center pt-1">
               <div className="flex items-center justify-center gap-2">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
@@ -210,13 +267,16 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                     onClick={() => {
                       soundEffects.playClick();
                       setRating(star);
+                      if (star >= 4) setGoalStatus('YES');
+                      else if (star === 3) setGoalStatus('PARTIALLY');
+                      else setGoalStatus('NO');
                     }}
-                    className="p-1.5 transition-transform hover:scale-125 focus:outline-none cursor-pointer"
+                    className="p-1 transition-transform hover:scale-125 focus:outline-none cursor-pointer"
                   >
                     <Star
-                      className={`size-7 transition-colors ${
+                      className={`size-6 transition-colors ${
                         star <= activeRating
-                          ? 'fill-amber-400 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]'
+                          ? 'fill-amber-400 text-amber-400 drop-shadow-[0_0_6px_rgba(251,191,36,0.4)]'
                           : 'text-slate-600 hover:text-slate-400'
                       }`}
                     />
@@ -228,51 +288,24 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
               </span>
             </div>
 
-            {/* 2. Category Pills */}
-            <div className="space-y-2 pt-2">
-              <label className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold block">
-                Topic Area
-              </label>
-              <div className="flex flex-wrap gap-2">
-                {CATEGORIES.map((cat) => (
-                  <button
-                    key={cat.id}
-                    type="button"
-                    onClick={() => {
-                      soundEffects.playClick();
-                      setCategory(cat.id);
-                    }}
-                    className={`px-3.5 py-1.5 rounded-xl text-xs font-mono transition-all flex items-center gap-1.5 cursor-pointer ${
-                      category === cat.id
-                        ? 'bg-[#2018E6] text-white shadow-md shadow-indigo-950'
-                        : 'bg-[#04060E] text-slate-300 hover:bg-[#0E132A] hover:text-white'
-                    }`}
-                  >
-                    <span>{cat.emoji}</span>
-                    <span>{cat.label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* 3. Textarea */}
-            <div className="space-y-2">
+            {/* 3. Detailed Textarea */}
+            <div className="space-y-2 pt-1">
               <label className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold flex justify-between">
-                <span>What can we do better?</span>
-                <span className="text-slate-400 font-normal">Required</span>
+                <span>Tell us more about your experience:</span>
+                <span className="text-slate-500 font-normal">Required</span>
               </label>
               <textarea
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                placeholder="Share your thoughts, missing film grants, accuracy feedback, or feature ideas..."
-                rows={4}
-                className="w-full px-4 py-3 rounded-2xl bg-[#04060E] border border-transparent focus:border-indigo-500 text-slate-100 placeholder-slate-500 text-sm focus:outline-none transition-colors resize-none leading-relaxed"
+                placeholder="What festival or goal were you working on? What went well or what can we improve?"
+                rows={3}
+                className="w-full px-4 py-3 rounded-xl bg-[#141834] text-slate-100 placeholder-slate-500 text-sm focus:bg-[#1A2046] focus:outline-none transition-colors resize-none leading-relaxed"
                 required
               />
             </div>
 
             {/* 4. Optional Author & Email */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1">
                 <label className="text-[11px] font-mono text-slate-400">Your Name (Optional)</label>
                 <input
@@ -280,7 +313,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                   value={authorName}
                   onChange={(e) => setAuthorName(e.target.value)}
                   placeholder="e.g. Maya Lin (Director)"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#04060E] border border-transparent focus:border-indigo-500 text-slate-100 placeholder-slate-500 text-xs focus:outline-none transition-colors"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#141834] text-slate-100 placeholder-slate-500 text-xs focus:bg-[#1A2046] focus:outline-none transition-colors"
                 />
               </div>
               <div className="space-y-1">
@@ -290,13 +323,13 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                   value={authorEmail}
                   onChange={(e) => setAuthorEmail(e.target.value)}
                   placeholder="director@indiefilm.org"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#04060E] border border-transparent focus:border-indigo-500 text-slate-100 placeholder-slate-500 text-xs focus:outline-none transition-colors"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#141834] text-slate-100 placeholder-slate-500 text-xs focus:bg-[#1A2046] focus:outline-none transition-colors"
                 />
               </div>
             </div>
 
             {/* Submit Action */}
-            <div className="pt-3 border-t border-[#1D2244] flex items-center justify-between gap-3">
+            <div className="pt-2 flex items-center justify-between gap-3">
               <button
                 type="button"
                 onClick={() => {
@@ -311,7 +344,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
               <button
                 type="submit"
                 disabled={isSubmitting || !comment.trim()}
-                className="px-6 py-2.5 rounded-xl bg-[#2018E6] hover:bg-[#322CE8] disabled:opacity-50 text-white font-bold text-xs font-mono transition-all flex items-center gap-2 shadow-lg shadow-indigo-950/60 cursor-pointer"
+                className="px-6 py-2.5 rounded-xl bg-[#2018E6] hover:bg-[#322CE8] disabled:opacity-40 text-white font-bold text-xs font-mono transition-all flex items-center gap-2 shadow-lg shadow-indigo-950/60 cursor-pointer active:scale-95"
               >
                 {isSubmitting ? (
                   <>

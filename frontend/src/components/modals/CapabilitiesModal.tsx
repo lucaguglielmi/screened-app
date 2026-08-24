@@ -10,7 +10,8 @@ import {
   Sparkles,
   ArrowRight,
   FileText,
-  Info
+  Info,
+  Activity
 } from 'lucide-react';
 import { soundEffects } from '../../utils/audio';
 
@@ -149,6 +150,23 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
       ],
       searchExamples: [
         { label: 'Multi-Year Forensic Check', promptText: 'Run a deep multi-year forensic scan on Aldergate Film Festival examining alumni and domain history.' }
+      ]
+    },
+    {
+      id: 'continuous-monitoring',
+      title: 'Continuous Monitoring & Alerts',
+      badge: 'Background Watch',
+      badgeColor: 'text-cyan-400 bg-cyan-500/10',
+      icon: Activity,
+      iconColor: 'text-cyan-400',
+      summary: 'Set autonomous watchlists and drift checks to monitor festivals for changes in deadlines, fees, or leadership.',
+      tags: [
+        { label: 'Drift Detection', info: 'Detects changes in festival rules, fees, and submission deadlines over time.' },
+        { label: 'Autonomous Watchlists', info: 'Registers festivals into a continuous background monitoring list.' },
+        { label: 'Alert Dispatch', info: 'Dispatches notifications when monitored festivals show significant rule changes.' }
+      ],
+      searchExamples: [
+        { label: 'Monitor Raindance', promptText: 'Add Raindance Film Festival to my watchlist and monitor for fee changes.' }
       ]
     }
   ];

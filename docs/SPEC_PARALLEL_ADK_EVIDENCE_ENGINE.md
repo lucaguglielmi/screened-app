@@ -425,7 +425,7 @@ Webhook endpoint signature-verified and rate-limited (existing `slowapi`); no fu
 | **Phase 5** (1–2 days) | P-06 Festival Watch; Task Group re-vetting; README/steering final pass; optional M6 Agent Engine evaluation | Watch states in gallery; §9.6 docs complete; stale README claims fixed | Live "watch" demo moment; docs judge-proof |
 | **Phase 6** (2 days) | §15 Submission readiness: demo mode, endpoint hardening, case studies, video, Devpost | H-01 checklist 100% green | Judge's first five minutes are flawless |
 
-**Calendar anchoring (deadline: Tue 9 Sep 2026, 23:00 GMT+2):** starting 24 Aug, Phases 1–5 land by **Thu 4 Sep** (code freeze for features), Phase 6 case studies + hardening by **Fri 5 Sep**, demo video recorded **Sat–Sun 6–7 Sep** (per H-06 beat sheet), Devpost submitted **Mon 8 Sep** — a full buffer day before the deadline. If schedule slips, cut from the bottom: P-06 Festival Watch degrades to the Monitor demo in the Playground only; P-05 FindAll falls back to §8.2's flagged Search path. **Never cut Phase 6** — an un-demoable feature is worth zero points.
+
 
 ---
 

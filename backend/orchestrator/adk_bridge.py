@@ -51,7 +51,7 @@ def make_agent_callbacks(investigation_id: str):
     Returns callbacks for LlmAgent/SequentialAgent/ParallelAgent 
     to bridge to our broadcaster.
     """
-    async def before_agent(agent_name: str, **kwargs):
+    async def before_agent(agent_name: str, context: Any, **kwargs):
         await broadcaster.emit(
             investigation_id=investigation_id,
             event_type=EventType.PLANNING_STARTED, # Map properly based on agent_name later
@@ -59,16 +59,26 @@ def make_agent_callbacks(investigation_id: str):
             message=f"Agent {agent_name} starting..."
         )
 
-    async def after_agent(agent_name: str, **kwargs):
+    async def after_agent(agent_name: str, context: Any, **kwargs):
         pass
         
     return before_agent, after_agent
 
 def make_tool_callbacks(investigation_id: str):
-    async def before_tool(tool_name: str, **kwargs):
-        pass
-    async def after_tool(tool_name: str, **kwargs):
-        pass
+    async def before_tool(tool_name: str, context: Any, **kwargs):
+        await broadcaster.emit(
+            investigation_id=investigation_id,
+            event_type=EventType.SEARCH_STARTED,
+            agent_name="Parallel Tool",
+            message=f"Executing tool {tool_name}..."
+        )
+    async def after_tool(tool_name: str, context: Any, **kwargs):
+        await broadcaster.emit(
+            investigation_id=investigation_id,
+            event_type=EventType.SEARCH_COMPLETED,
+            agent_name="Parallel Tool",
+            message=f"Completed tool {tool_name}."
+        )
     return before_tool, after_tool
 
 def offline_model_callback(agent_name: str, **kwargs):

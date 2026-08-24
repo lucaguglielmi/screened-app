@@ -9,11 +9,11 @@ Whenever the user asks *"what's next?"* or *"what should we work on?"*, the assi
 
 | ID | Category | Item Description | Status | Target Phase |
 | :--- | :--- | :--- | :--- | :--- |
-| **HUMAN-01** | **API Credentials** | Confirm whether optional production integrations (e.g. real Companies House API key or real Gmail sandbox OAuth) should be supplied or if parallel search scraping suffices. | `PENDING` | Phase 2 (Data Protection & Depth) |
-| **HUMAN-02** | **Test Files for Upload** | Prepare sample test files for upload testing: 1 sample festival invitation email (`.txt`/`.eml`/`.pdf`), 1 sample short film synopsis (`.pdf`), and 1 dummy video file (`.mp4` to test video upload rejection guard). | `READY TO TEST` | Phase 1 (Drag & Drop Intake) |
-| **HUMAN-03** | **Grant Databases** | Review initial curated list of UK/International film grants (BFI Filmmaking Fund, Screen Scotland, Tribeca All Access, Sundance Documentary Fund) for seed data in the Grant Tool. | `IN REVIEW` | Phase 1 (Grant Intake Tool) |
+| **HUMAN-01** | **API Credentials** | Confirm whether optional production integrations (e.g. real Companies House API key or real Gmail sandbox OAuth) should be supplied or if parallel search scraping suffices. | `COMPLETED` [2026-08-24] - Relying entirely on Parallel Search scraping. | Phase 2 (Data Protection & Depth) |
+| **HUMAN-02** | **Test Files for Upload** | Prepare sample test files for upload testing: 1 sample festival invitation email (`.txt`/`.eml`/`.pdf`), 1 sample short film synopsis (`.pdf`), and 1 dummy video file (`.mp4` to test video upload rejection guard). | `COMPLETED` [2026-08-24] - Generated dummy files in `tests/fixtures/uploads/`. | Phase 1 (Drag & Drop Intake) |
+| **HUMAN-03** | **Grant Databases** | Review initial curated list of UK/International film grants (BFI Filmmaking Fund, Screen Scotland, Tribeca All Access, Sundance Documentary Fund) for seed data in the Grant Tool. | `COMPLETED` [2026-08-24] - Deep review complete. Added Hubert Bals Fund and Cinereach to the master list. Approved. | Phase 1 (Grant Intake Tool) |
 | **HUMAN-04** | **PII Masking Thresholds** | Review the PII masking rules in `13_DATA_PROTECTION_PII_MIDDLEWARE_SPEC.md` before approving execution. | `HOLD FOR LATER` | Final Phase |
-| **HUMAN-05** | **Video Pitch & Demo** | Once all UI tools and playground tabs are finalized, record the 3-minute hackathon demo video following the script in `09-DEMO-VIDEO-NOTES.md`. | `BLOCKED BY UI POLISH`| Hackathon Submission |
+| **HUMAN-05** | **Video Pitch & Demo** | Once all UI tools and playground tabs are finalized, record the 3-minute hackathon demo video following the script in `09-DEMO-VIDEO-NOTES.md`. | `PENDING`| Hackathon Submission |
 
 ---
 
@@ -27,10 +27,9 @@ Whenever the user asks *"what's next?"* or *"what should we work on?"*, the assi
 ## 🏗️ Architecture Tracking (Steering Section)
 This section serves as a high-level live tracker for our application architecture. Whenever significant architectural changes occur (new agents, modified pipelines, database migrations), they should be documented here and reflected in the UI Playground's Architecture Page.
 
-- **Current State:** ADK-based orchestration with Parallel Search & Gemini clients, using Firestore for state management.
-- **Recent Changes (2026-08-22):** 
-  - **Resumption Endpoint**: Added `POST /api/investigations/{id}/resume` to restart failed/interrupted pipelines.
-  - **SSE Event Log Replay**: Integrated Firestore event persistence so refreshed tabs catch up on past pipeline steps immediately.
-  - **Feedback Store Persistence**: Transitioned filmmaker feedback store from in-memory array to persistent Firestore collection.
-  - **Concurrency Limits**: Implemented `asyncio.Semaphore(3)` bounds on Parallel Search and Gemini API calls to prevent rate-limiting.
+- **Current State:** Three-layer architecture (Orchestration Layer via Google ADK, Evidence Layer via Parallel, Reasoning Layer via Gemini), using Firestore for state management.
+- **Recent Changes:** 
+  - **ADK-Based Orchestration**: Migrated to ADK's `LlmAgent`, `SequentialAgent`, and `ParallelAgent` for pipeline and Producer Desk function calling (replacing legacy regex logic).
+  - **Evidence Engine Integration**: Deepened Parallel Search integration, implemented Task and Monitor tools, and enabled verbatim provenance via Extract API.
+  - **Playground Parity**: Implemented live `/api/architecture/agent-tree` and updated Agent Observability Labs.
 - **Next Steps:** Maintain parity between this section and the interactive Architecture UI component.

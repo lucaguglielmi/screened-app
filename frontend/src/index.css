@@ -1,4 +1,6 @@
 @import "tailwindcss";
+/* React Flow v12 Core Styles */
+@import "@xyflow/react/dist/style.css";
 
 /* Font imports */
 @import "@fontsource/fraunces/latin.css";
@@ -11,18 +13,18 @@
   --font-mono: "Spline Sans Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   /* Ink & Light Theme Tokens */
-  --color-paper-bg: #FBFBFA;
+  --color-paper-bg: #F8F9FB;
   --color-paper-surface: #FFFFFF;
-  --color-paper-card: #F4F3EF;
-  --color-paper-border: #E6E4DD;
+  --color-paper-card: #F1F4F9;
+  --color-paper-border: transparent;
   --color-paper-text: #1C1917;
-  --color-paper-muted: #78716C;
+  --color-paper-muted: #64748B;
 
   /* Midnight Darkroom Theme Tokens (Palette 1) */
   --color-darkroom-bg: #070913;
   --color-darkroom-surface: #0E1124;
-  --color-darkroom-card: #141731;
-  --color-darkroom-border: #22274C;
+  --color-darkroom-card: #141834;
+  --color-darkroom-border: transparent;
   --color-darkroom-text: #F8F9FC;
   --color-darkroom-muted: #9499B8;
 
@@ -30,8 +32,8 @@
   --color-midnight-void: #05050A;
   --color-midnight-bg: #070913;
   --color-midnight-surface: #0E1124;
-  --color-midnight-card: #141731;
-  --color-midnight-border: #22274C;
+  --color-midnight-card: #141834;
+  --color-midnight-border: transparent;
   --color-midnight-indigo: #1E124A;
   --color-midnight-violet: #2E107D;
   --color-midnight-royal: #2018E6;
@@ -250,6 +252,36 @@ body {
   animation: softTwinkle 2.4s ease-in-out infinite;
 }
 
+/* Solid Opaque Screened Cards & Surfaces (No background bleed-through, No border clutter) */
+.screened-card,
+.screened-surface {
+  background-color: var(--color-darkroom-surface);
+  border: none !important;
+  border-radius: 1.5rem;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+  opacity: 1 !important;
+}
+
+.screened-subcard,
+.screened-input {
+  background-color: var(--color-darkroom-card);
+  border: none !important;
+  border-radius: 0.75rem;
+  opacity: 1 !important;
+}
+
+.dark .bg-darkroom-surface,
+.dark .dark\:bg-darkroom-surface {
+  background-color: #0E1124 !important;
+  opacity: 1 !important;
+}
+
+.dark .bg-darkroom-card,
+.dark .dark\:bg-darkroom-card {
+  background-color: #141834 !important;
+  opacity: 1 !important;
+}
+
 /* Print Stylesheet for Dossier Export */
 @media print {
   body {
@@ -278,4 +310,5 @@ body {
     color: #57534E !important;
   }
 }
+
 

@@ -12,6 +12,7 @@ from backend.models import (
     SourceRecord,
     VettingSignalStatus,
 )
+from backend.orchestrator.events import EventType, broadcaster
 from backend.services.gemini_client import GeminiClient
 
 logger = logging.getLogger("screened.agents.deep_vetting")
@@ -101,7 +102,7 @@ Return a JSON object conforming strictly to the output schema.
                     model="gemini-2.5-flash",
                     instruction=reducer_instruction,
                     output_schema=DeepVettingReport,
-                    output_key="report"
+                    output_key="deep_vetting_report"
                 )
             ]
         )
@@ -121,16 +122,23 @@ Return a JSON object conforming strictly to the output schema.
             if not session:
                 await session_service.create_session(app_name="screened", user_id="default_user", session_id=investigation_id)
 
-            final_report = None
             async for step in runner.run_async(user_id="default_user", session_id=investigation_id, new_message=content_msg):
-                if step.data and hasattr(step.data, "report"):
-                    final_report = step.data.report
-            
-            if final_report and isinstance(final_report, DeepVettingReport):
-                return final_report
+                pass
+                
+            session = await session_service.get_session(app_name="screened", user_id="default_user", session_id=investigation_id)
+            if session:
+                final_report_data = session.state.get("deep_vetting_report")
+                if final_report_data:
+                    return DeepVettingReport.model_validate(final_report_data)
                 
         except Exception as e:
             logger.error(f"DeepVettingAgent ADK execution failed: {e}. Generating deterministic fallback.", exc_info=True)
+            await broadcaster.emit(
+                investigation_id=investigation_id,
+                event_type=EventType.ERROR,
+                agent_name="DeepVettingAgent",
+                message=f"Deep vetting ADK failed. Using fallback report. Error: {str(e)}"
+            )
 
         fallback_dims = self._get_fallback_dimensions(festival_name, optional_url)
         return DeepVettingReport(
@@ -138,6 +146,7 @@ Return a JSON object conforming strictly to the output schema.
             overallAuthenticityScore=78,
             totalFlags=1,
             dimensions=fallback_dims,
+            degraded=True
         )
 
     def _get_fallback_dimensions(self, festival_name: str, optional_url: Optional[str] = None) -> List[DeepVettingDimension]:

@@ -18,7 +18,8 @@
   <a href="https://github.com/lucaguglielmi/screened-app">
     <img src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" />
   </a>
-  <img src="https://img.shields.io/badge/Tests-15_Passed_100%25-10B981?style=for-the-badge&logo=pytest&logoColor=white" alt="Test Status" />
+  <img src="https://img.shields.io/badge/Tests-29_Passed_100%25-10B981?style=for-the-badge&logo=pytest&logoColor=white" alt="Test Status" />
+  <img src="https://img.shields.io/badge/Diagrams-React_Flow_v12-6366F1?style=for-the-badge&logo=react&logoColor=white" alt="React Flow Diagrams" />
   <img src="https://img.shields.io/badge/License-Apache_2.0-818CF8?style=for-the-badge&logo=apache&logoColor=white" alt="License" />
 </p>
 
@@ -52,73 +53,37 @@ Every year, independent filmmakers spend thousands of pounds on festival submiss
 Screened operates an orchestrated pipeline of specialized autonomous agents using **Vertex AI (Gemini 2.5 Pro & Gemini 2.5 Flash)** and the **Parallel Search API**:
 
 ```
-                       [ Filmmaker Prompt / PDF Drop ]
-                                     │
-                                     ▼
-┌──────────────────────────────────────────────────────────────────────────┐
-│ 1. Producer Desk Agent (Gemini 2.5 Pro Function Calling)                 │
-│    - Autonomous intent classifier & executive conversational advisor     │
-│    - Dispatches: configure_due_diligence / configure_opportunity_scout  │
-│    - Mounts interactive Generative Mini-UIs directly in chat stream      │
-└────────────────────────────────────┬─────────────────────────────────────┘
-                                     │ [ 1-Click Launch Trigger ]
-                                     ▼
-┌──────────────────────────────────────────────────────────────────────────┐
-│ 2. Disambiguator Agent (Gemini 2.5 Flash + Parallel Search)              │
-│    - Resolves entity names, cities, founded years & domains              │
-│    - Renders interactive Candidate Cards for human confirmation          │
-└────────────────────────────────────┬─────────────────────────────────────┘
-                                     │ [ User Confirms Entity ]
-                                     ▼
-┌──────────────────────────────────────────────────────────────────────────┐
-│ 3. Planner Agent (Gemini 2.5 Pro)                                        │
-│    - Formulates deep investigation queries across 3 core domains         │
-└────────────────────────────────────┬─────────────────────────────────────┘
-                                     │
-               ┌─────────────────────┼─────────────────────┐
-               ▼                     ▼                     ▼
-┌──────────────────────────┐ ┌────────────────┐ ┌──────────────────────────┐
-│ 4. Festival Agent        │ │5. Organizer Ag.│ │ 6. Participants Agent    │
-│    (Parallel Search)     │ │(Parallel Search│ │    (Parallel Search)     │
-│   Venues, Fees, Dates    │ │ Companies, Past│ │   Filmmaker Feedback,    │
-│   & Screening Formats    │ │ Track Records  │ │   Community Disputes     │
-└──────────────┬───────────┘ └───────┬────────┘ └──────────┬───────────────┘
-               └─────────────────────┼─────────────────────┘
-                                     │
-                                     ▼
-┌──────────────────────────────────────────────────────────────────────────┐
-│ 7. Claim Extractor Agent (Verbatim Substring Matching)                   │
-│    - Extracts atomic claims (FACT, ALLEGATION, OPINION)                  │
-│    - Classifies source tiers (Tier 1: Registry, Tier 2: Trade)           │
-│    - Enforces verbatim exact excerpt verification invariant              │
-└────────────────────────────────────┬─────────────────────────────────────┘
-                                     │
-               ┌─────────────────────┴─────────────────────┐
-               ▼                                           ▼
-┌─────────────────────────────────────────┐ ┌──────────────────────────────┐
-│ 8. Contradiction Analyst Agent          │ │ 9. Report Writer Agent       │
-│    - Reconciles conflicting claims      │ │    - Executive overview      │
-│    - Side-by-side dispute comparison    │ │    - 3-domain narrative      │
-│    - 4-Vector Credibility Radar score   │ │    - Action checklist        │
-└────────────────────┬────────────────────┘ └──────────────┬───────────────┘
-                     └───────────────────┬─────────────────┘
-                                         │
-                                         ▼
-┌──────────────────────────────────────────────────────────────────────────┐
-│ 10. Detail Dial & Evidence Dossier (React 19 + Tailwind v4)              │
-│     - 3-Level Density: Summary · Standard · Raw Evidence                 │
-│     - Hover/Click Citation Popovers with exact source excerpts           │
-│     - Live in-dossier claim search & formatted Print/PDF export          │
-└────────────────────────────────────┬─────────────────────────────────────┘
-                                     │
-               ┌─────────────────────┴─────────────────────┐
-               ▼                                           ▼
-┌─────────────────────────────────────────┐ ┌──────────────────────────────┐
-│ 11. Outreach Drafter & Approval Gate    │ │ 12. Opportunity Scout        │
-│     - Drafts inquiries to organizers    │ │     - Film profile matcher   │
-│     - Cryptographic SHA-256 seal        │ │     - .ics Calendar export   │
-│     - Safe simulated sandbox delivery   │ │     - Accreditation tooltips │
-└─────────────────────────────────────────┘ └──────────────────────────────┘
+                               [ Filmmaker Query / Upload ]
+                                            │
+                                            ▼
+┌──────────────────────────────────────────────────────────────────────────────────────────┐
+│                             Orchestrator (Google ADK)                                    │
+│                                                                                          │
+│ ┌────────────────────────┐    ┌────────────────────────┐    ┌────────────────────────┐   │
+│ │ Producer Desk Agent    │───▶│ Disambiguator Agent    │───▶│ Planner Agent          │   │
+│ │ (LlmAgent)             │    │ (SequentialAgent)      │    │ (LlmAgent)             │   │
+│ └────────────────────────┘    └────────────────────────┘    └────────────────────────┘   │
+│                                                                        │                 │
+│                                           ┌────────────────────────────┘                 │
+│                                           ▼                                              │
+│                               ┌───────────────────────┐                                  │
+│                               │ Deep Vetting (Parallel)│                                 │
+│                               │  - FestivalAgent       │                                 │
+│                               │  - OrganizerAgent      │                                 │
+│                               │  - ParticipantsAgent   │                                 │
+│                               └───────────┬───────────┘                                  │
+│                                           │                                              │
+│                                           ▼                                              │
+│                               ┌───────────────────────┐                                  │
+│                               │ Analysis & Drafting    │                                 │
+│                               │  - ClaimExtractorAgent │                                 │
+│                               │  - ContradictionAgent  │                                 │
+│                               │  - ReportWriterAgent   │                                 │
+│                               └───────────────────────┘                                  │
+└───────────────────────────────────────────┬──────────────────────────────────────────────┘
+                                            │
+                                            ▼
+                            [ Evidence Dossier UI / Export ]
 ```
 
 ---
@@ -133,12 +98,19 @@ Screened operates an orchestrated pipeline of specialized autonomous agents usin
   - **`MiniCompareArena`**: Side-by-side head-to-head match-up card (e.g., *Raindance vs LIFF*).
 - **1-Click Workspace Transition**: Seamlessly launches full research pipelines with pre-populated parameters.
 
-### 2. The Detail Dial (Interactive Density Control)
-- **`Summary`**: High-level synthesis for quick executive review, domain summaries, and dispute highlights.
-- **`Standard`**: Atomic claims categorized by subject with kind (Fact, Allegation, Opinion) and verification status badges.
-- **`Raw Evidence`**: Deep-dive display exposing verbatim quoted substrings, publication dates, source tiers, and SHA-256 provenance hashes.
+### 2. 4-Tier Magic Toolbar ("How Much Data Do You Want To See?")
+- **`1. Simplified`**: Executive brief for quick 10-second verdict, 4-Vector Radar, and top 3 takeaways. Zero clutter.
+- **`2. Balanced`**: Producer digest featuring the **React Flow Entity Provenance Graph**, 3-domain narrative syntheses, and actionable filmmaker checklist.
+- **`3. Full Evidence`**: Forensic investigative deep dive displaying verbatim quoted substrings, publication dates, source tiers (Tier 1 Registry, Tier 2 Trade, Tier 3 Forum), and side-by-side contradiction panels.
+- **`4. I am not human`**: Machine & AI ingestion mode rendering raw JSON-LD schemas and uncompressed plain-text dumps with 1-click token copy.
+- **Dedicated Export Actions**: **`🚀 Send to Antigravity`** (copies structured agent context to clipboard) and **`📥 Download data as .md file`** (instant client-side `.md` dossier export).
 
-### 3. Credibility & Transparency Radar
+### 3. Interactive React Flow Diagram Suite (`@xyflow/react` v12)
+- **`EntityProvenanceGraph`**: Due Diligence search graph connecting Target Entity → Official Domain → UK Companies House → Physical Theater Leases → Directors → Corroborated Claims with interactive click-to-cite popovers.
+- **`VersusDecisionTree`**: Interactive comparison decision tree with dynamic priority switches (*Max Prestige vs Low Fee ROI vs Premiere Protection*) dynamically re-routing the optimal submission path.
+- **`OverlapVennFlow` & `DeadlineRaceTimeline`**: Visualizing shared accreditation honours (BAFTA, BIFA, Oscars) and deadline collision schedules.
+
+### 4. Credibility & Transparency Radar
 - 4-vector breakdown gauge evaluating:
   - **Screening Venue** (*Physical Leases vs Unlisted Streaming*)
   - **Fee & Prize Structure** (*Clear Fees vs Trophy Markups*)
@@ -146,24 +118,24 @@ Screened operates an orchestrated pipeline of specialized autonomous agents usin
   - **Community Feedback** (*Verified Filmmaker Accounts*)
 - Dynamically calculated transparency index score out of 100 with color-coded confidence badges.
 
-### 4. Exact-Payload Action Approval with SHA-256 Integrity
+### 5. Exact-Payload Action Approval with SHA-256 Integrity
 - Before any inquiry email is drafted to festival organizers, the system computes `sha256(recipient + subject + body + claim_id)`.
 - The user reviews the exact payload in the **Action Approval Gate Modal**.
 - Execution runs in **Sandbox Mode** with cryptographic audit logging in Cloud Firestore.
 
-### 5. Opportunity Scout with `.ics` Calendar Export & Accreditation Tooltips
+### 6. Opportunity Scout with `.ics` Calendar Export & Accreditation Tooltips
 - Filmmakers enter their project profile (*Short, Feature, Documentary*, genre, runtime, budget tier).
 - Screened discovers open call-for-entries, deadline schedules, and qualification badges (*BAFTA*, *BIFA*, *Oscars*, *FIAPF*).
 - **`.ics` Calendar Generator**: 1-click export of deadlines with automatic reminders into Google Calendar / Apple Calendar.
 
-### 6. Why Screened: Measured Baseline Matrix & Empirical Research
+### 7. Why Screened: Measured Baseline Matrix & Empirical Research
 - Direct comparison matrix of **Manual Due Diligence (3–5 Hours, £0–£180 in lost fees, zero cryptographic audit)** vs **Screened Autonomous Pipeline (< 45 Seconds, 100% quoted substring audit, zero fees at risk)**.
 - Features 4 documented empirical fraud themes from independent UK filmmakers (*Fee Without Screening*, *Laurel Mills*, *Phantom Venues*, *Ghost Organizers*).
 
-### 7. Global Command Palette (`⌘K` / `Ctrl+K`)
+### 8. Global Command Palette (`⌘K` / `Ctrl+K`)
 - Instant keyboard-driven workspace teleportation, festival candidate jump-searches, theme toggles, audio controls, and export triggers accessible from anywhere.
 
-### 8. Interactive Design Playground & Agent Observability Lab
+### 9. Interactive Design Playground & Agent Observability Lab
 - A dedicated visual component studio to review, test, state-cycle, and modify all chat bubbles, loaders, and mini-app cards with a live **Token Stream Simulator** and **OpenTelemetry Agent Span Visualizer**.
 
 ---
@@ -172,7 +144,8 @@ Screened operates an orchestrated pipeline of specialized autonomous agents usin
 
 | Layer | Component | Description |
 | :--- | :--- | :--- |
-| **Search Engine** | `ParallelSearchTool` (`parallel-web` Python SDK) | Real-time web discovery across trade registries, press archives, and forums |
+| **Evidence Engine** | **Parallel Domain** | 6-Capability Matrix: Search, Extract (Verbatim), Task API, FindAll, Monitor (Drift), Task Groups |
+| **Orchestration** | **Google ADK** | `ParallelAgent`, `SequentialAgent`, `LlmAgent` orchestrating workflows |
 | **Agent Intelligence** | Vertex AI (`google-genai` SDK) | Gemini 2.5 Pro (Function Calling & Synthesis) + Gemini 2.5 Flash (Disambiguation) |
 | **Backend API** | FastAPI + Uvicorn + Pydantic v2 | High-performance asynchronous REST & Server-Sent Events (SSE) |
 | **Database** | Google Cloud Firestore (Native) | Real-time investigation state, audit trail, and cached source hash ledger |
@@ -195,14 +168,18 @@ PYTHONPATH=. .venv/bin/pytest tests/
 ```
 
 ### Test Results Summary:
-- `tests/test_chat.py`: Producer Desk agent & Gemini Function Calling tools (4/4 passed)
-- `tests/test_backend.py`: Healthz probe & test pipeline validation (2/2 passed)
+- `tests/test_chat.py`: Producer Desk agent & Gemini Function Calling tools (6/6 passed)
+- `tests/test_deep_vetting.py`: 360° Forensic Deep Vetting ADK synthesis (2/2 passed)
+- `tests/test_document_analysis.py`: PDF dossier extraction & contradiction detection (3/3 passed)
+- `tests/test_interactive_followup.py`: Multi-turn conversational follow-up questions (2/2 passed)
+- `tests/test_monitor_watch.py`: Autonomous watchlists, notification dispatch & drift checks (3/3 passed)
+- `tests/test_backend.py`: Healthz probe & test pipeline validation (4/4 passed)
 - `tests/test_end_to_end.py`: Asynchronous multi-agent investigation lifecycle (1/1 passed)
 - `tests/test_export.py`: Archival Markdown export & SHA-256 digest seal (1/1 passed)
 - `tests/test_multi_agent.py`: Disambiguator, Planner, and API routes (3/3 passed)
 - `tests/test_outreach.py`: SHA-256 payload hashing & sandbox approval verification (2/2 passed)
 - `tests/test_scout.py`: FilmProfile validation & `/api/scout` opportunity discovery (2/2 passed)
-- **Total: 15 / 15 tests passed (100%)**
+- **Total: 29 / 29 tests passed (100%)**
 
 ---
 
@@ -241,6 +218,23 @@ PYTHONPATH=. .venv/bin/uvicorn backend.main:app --host 127.0.0.1 --port 8000 --r
 ```
 
 Open your browser at **`http://127.0.0.1:8000`** to start investigating!
+
+---
+
+## 🔍 Where the Partner APIs are Called
+
+To verify hackathon compliance, here is exactly where the Partner APIs are invoked in the codebase:
+
+| Service | Feature | File & Function |
+| :--- | :--- | :--- |
+| **Parallel** | Search & Extract | `backend/tools/parallel_extract.py` (`ParallelExtractTool`) |
+| **Parallel** | Task API | `backend/tools/parallel_task.py` (`parallel_task_run`) |
+| **Parallel** | FindAll | `backend/tools/findall_tools.py` (`OpportunityScoutTool`) |
+| **Parallel** | Monitor | `backend/tools/monitor_tools.py` (`FestivalWatchTool`) |
+| **Google Cloud** | ADK Orchestration | `backend/orchestrator/state_machine.py` (`Orchestrator`) |
+| **Google Cloud** | ADK Agents | `backend/agents/producer_desk.py`, `backend/agents/deep_vetting.py` |
+| **Google Cloud** | Gemini 2.5 Pro / Flash | Orchestrated via `LlmAgent` in all agent modules |
+| **Google Cloud** | Firestore & Secrets | `backend/db/firestore.py`, `backend/config.py` |
 
 ---
 

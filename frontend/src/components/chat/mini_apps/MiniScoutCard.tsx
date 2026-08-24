@@ -36,23 +36,23 @@ export const MiniScoutCard: React.FC<MiniScoutCardProps> = ({ args, onLaunch }) 
   };
 
   return (
-    <div className="w-full max-w-full overflow-hidden box-border my-3 p-5 rounded-2xl border border-[#22274C] bg-[#0C1024] shadow-xl transition-all hover:border-[#F43F5E]/60 text-slate-100">
+    <div className="w-full max-w-full overflow-hidden box-border my-3 p-6 rounded-2xl bg-[#0E1124] shadow-2xl text-slate-100">
       {/* Header */}
-      <div className="flex items-center justify-between gap-2 border-b border-[#F43F5E]/20 pb-3 mb-4">
+      <div className="flex items-center justify-between gap-2 pb-3 mb-4">
         <div className="flex items-center gap-3">
-          <div className="size-8 rounded-xl bg-[#F43F5E]/20 text-[#F43F5E] flex items-center justify-center font-bold border border-[#F43F5E]/40">
+          <div className="size-9 rounded-xl bg-[#F43F5E]/20 text-[#F43F5E] flex items-center justify-center font-bold">
             <Compass className="size-5" />
           </div>
           <div>
             <h4 className="text-base font-bold uppercase tracking-wider text-[#F43F5E]">
               Film Slate Strategy & Circuit Matcher
             </h4>
-            <p className="text-sm text-slate-400 font-mono">
+            <p className="text-xs text-slate-400 font-mono">
               {step === 'REQUIREMENTS' ? 'Stage 1: Slate Requirements Intake' : 'Stage 2: Circuit Plan Review'}
             </p>
           </div>
         </div>
-        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-semibold bg-[#F43F5E]/15 text-[#F43F5E] border border-[#F43F5E]/30">
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-mono font-semibold bg-[#F43F5E]/15 text-[#F43F5E]">
           Opportunity Scout
         </span>
       </div>
@@ -62,21 +62,21 @@ export const MiniScoutCard: React.FC<MiniScoutCardProps> = ({ args, onLaunch }) 
         <div className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-sm font-semibold text-slate-300 mb-1.5">Project Title</label>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5 font-mono">Project Title</label>
               <input
                 type="text"
                 value={filmTitle}
                 onChange={(e) => setFilmTitle(e.target.value)}
-                className="w-full rounded-xl bg-[#04060E] border border-transparent focus:border-[#F43F5E] px-3.5 py-2 text-white font-medium focus:outline-none text-base"
+                className="w-full rounded-xl bg-[#141834] px-3.5 py-2.5 text-white font-medium focus:outline-none focus:bg-[#1A2046] text-sm"
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-slate-300 mb-1.5">Format & Genre</label>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5 font-mono">Format & Genre</label>
               <div className="flex gap-2">
                 <select
                   value={format}
                   onChange={(e) => setFormat(e.target.value as FilmFormat)}
-                  className="w-1/2 rounded-xl bg-[#04060E] border border-transparent focus:border-[#F43F5E] px-3 py-2 text-white text-base cursor-pointer"
+                  className="w-1/2 rounded-xl bg-[#141834] px-3 py-2.5 text-white text-sm cursor-pointer focus:outline-none focus:bg-[#1A2046]"
                 >
                   <option value="SHORT">Short</option>
                   <option value="FEATURE">Feature</option>
@@ -87,14 +87,14 @@ export const MiniScoutCard: React.FC<MiniScoutCardProps> = ({ args, onLaunch }) 
                   type="text"
                   value={genre}
                   onChange={(e) => setGenre(e.target.value)}
-                  className="w-1/2 rounded-xl bg-[#04060E] border border-transparent focus:border-[#F43F5E] px-3 py-2 text-white text-base"
+                  className="w-1/2 rounded-xl bg-[#141834] px-3 py-2.5 text-white text-sm focus:outline-none focus:bg-[#1A2046]"
                 />
               </div>
             </div>
           </div>
 
           {args.strategy_rationale && (
-            <div className="rounded-xl bg-[#04060E] p-3 text-slate-200 text-sm leading-relaxed">
+            <div className="rounded-xl bg-[#141834] p-3 text-slate-200 text-xs leading-relaxed">
               <span className="font-bold text-[#F43F5E]">Positioning Angle: </span>
               {args.strategy_rationale}
             </div>
@@ -102,22 +102,22 @@ export const MiniScoutCard: React.FC<MiniScoutCardProps> = ({ args, onLaunch }) 
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-sm font-semibold text-slate-300 mb-1.5">Runtime (minutes)</label>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5 font-mono">Runtime (minutes)</label>
               <input
                 type="number"
                 min={1}
                 max={240}
                 value={runtime}
                 onChange={(e) => setRuntime(parseInt(e.target.value) || 15)}
-                className="w-full rounded-xl bg-[#04060E] border border-transparent focus:border-[#F43F5E] px-3.5 py-2 text-white text-base"
+                className="w-full rounded-xl bg-[#141834] px-3.5 py-2.5 text-white text-sm focus:outline-none focus:bg-[#1A2046]"
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-slate-300 mb-1.5">Budget Category</label>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5 font-mono">Budget Category</label>
               <select
                 value={budgetTier}
                 onChange={(e) => setBudgetTier(e.target.value)}
-                className="w-full rounded-xl bg-[#04060E] border border-transparent focus:border-[#F43F5E] px-3.5 py-2 text-white text-base cursor-pointer"
+                className="w-full rounded-xl bg-[#141834] px-3.5 py-2.5 text-white text-sm cursor-pointer focus:outline-none focus:bg-[#1A2046]"
               >
                 <option value="Micro (< £50k)">Micro (&lt; £50k)</option>
                 <option value="Low (< £250k)">Low (&lt; £250k)</option>
@@ -128,10 +128,10 @@ export const MiniScoutCard: React.FC<MiniScoutCardProps> = ({ args, onLaunch }) 
           </div>
 
           {/* Stage 1 Action Trigger */}
-          <div className="pt-2 flex items-center justify-end gap-2 border-t border-[#1F254E]">
+          <div className="pt-2 flex items-center justify-end gap-2">
             <button
               onClick={handleProceedToReview}
-              className="inline-flex items-center gap-2 rounded-xl bg-[#F43F5E] hover:bg-[#E11D48] px-5 py-2.5 text-sm font-bold text-white shadow-md shadow-[#F43F5E]/30 transition-all hover:brightness-110 active:scale-95 cursor-pointer font-mono"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#F43F5E] hover:bg-[#E11D48] px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-[#F43F5E]/30 transition-all hover:brightness-110 active:scale-95 cursor-pointer font-mono"
             >
               <span>Review Opportunity Strategy (Stage 2)</span>
               <ArrowRight className="size-4" />

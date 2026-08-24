@@ -87,20 +87,20 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full max-w-2xl bg-[#0B0F19] border border-[#1E2545] rounded-2xl p-5 shadow-xl space-y-4 my-2 text-zinc-100"
+      className="w-full max-w-2xl bg-[#0E1124] rounded-2xl p-6 shadow-2xl space-y-4 my-2 text-zinc-100"
     >
       {/* Header Badge */}
-      <div className="flex items-center justify-between border-b border-zinc-800/80 pb-3">
-        <div className="flex items-center space-x-2.5">
-          <div className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-            <ShieldCheck className="w-4 h-4" />
+      <div className="flex items-center justify-between pb-3">
+        <div className="flex items-center space-x-3">
+          <div className="w-9 h-9 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+            <ShieldCheck className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center space-x-2">
               <span className="text-xs font-mono font-semibold tracking-wider text-emerald-400 uppercase">
                 Due Diligence Intake
               </span>
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono">
+              <span className="text-[10px] px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-400 font-mono font-semibold">
                 Active Probe
               </span>
             </div>
@@ -126,7 +126,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
                   value={festivalName}
                   onChange={(e) => setFestivalName(e.target.value)}
                   placeholder="e.g. Raindance Film Festival"
-                  className="w-full bg-midnight border border-zinc-700/70 rounded-lg px-3 py-2 text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:border-emerald-500"
+                  className="w-full bg-[#141834] rounded-xl px-3.5 py-2.5 text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:bg-[#1A2046]"
                 />
               </div>
             </div>
@@ -146,12 +146,12 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
                 }}
                 onFocus={() => setShowLocationSuggestions(true)}
                 placeholder="e.g. London, United Kingdom"
-                className="w-full bg-midnight border border-zinc-700/70 rounded-lg px-3 py-2 text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:border-emerald-500"
+                className="w-full bg-[#141834] rounded-xl px-3.5 py-2.5 text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:bg-[#1A2046]"
               />
 
               {/* Location Suggestions Dropdown */}
               {showLocationSuggestions && cityCountry && filteredLocations.length > 0 && (
-                <div className="absolute left-0 right-0 top-full mt-1 bg-surface border border-zinc-700 rounded-lg shadow-xl z-20 max-h-36 overflow-y-auto">
+                <div className="absolute left-0 right-0 top-full mt-1 bg-[#0E1124] rounded-xl shadow-2xl z-20 max-h-36 overflow-y-auto p-1">
                   {filteredLocations.slice(0, 5).map((loc) => (
                     <button
                       key={loc}
@@ -160,7 +160,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
                         setCityCountry(loc);
                         setShowLocationSuggestions(false);
                       }}
-                      className="w-full text-left px-3 py-1.5 hover:bg-emerald-500/20 hover:text-emerald-300 text-zinc-300 text-xs transition-colors flex items-center space-x-1.5"
+                      className="w-full text-left px-3 py-2 hover:bg-[#141834] hover:text-emerald-300 text-zinc-300 text-xs rounded-lg transition-colors flex items-center space-x-1.5 cursor-pointer"
                     >
                       <MapPin className="w-3 h-3 text-emerald-400 shrink-0" />
                       <span>{loc}</span>
@@ -182,7 +182,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
               value={websiteUrl}
               onChange={(e) => setWebsiteUrl(e.target.value)}
               placeholder="https://festival-official-site.org"
-              className="w-full bg-midnight border border-zinc-700/70 rounded-lg px-3 py-2 text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:border-emerald-500"
+              className="w-full bg-[#141834] rounded-xl px-3.5 py-2.5 text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:bg-[#1A2046]"
             />
           </div>
 
@@ -193,10 +193,10 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
               <button
                 type="button"
                 onClick={() => setTalkedToSomeone(!talkedToSomeone)}
-                className={`flex items-center space-x-2 p-2 rounded-lg text-left transition-all cursor-pointer ${
+                className={`flex items-center space-x-2.5 p-3 rounded-xl text-left transition-all cursor-pointer ${
                   talkedToSomeone
-                    ? 'bg-[#0E2822] border border-emerald-900 text-emerald-300 font-medium'
-                    : 'bg-[#151B2E] border border-[#1E2545] text-zinc-300 hover:bg-[#1E2545]'
+                    ? 'bg-[#0E2822] text-emerald-300 font-semibold'
+                    : 'bg-[#141834] text-zinc-300 hover:bg-[#1C224B]'
                 }`}
               >
                 {talkedToSomeone ? <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" /> : <Square className="w-4 h-4 text-zinc-500 shrink-0" />}
@@ -206,10 +206,10 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
               <button
                 type="button"
                 onClick={() => setWasInvited(!wasInvited)}
-                className={`flex items-center space-x-2 p-2 rounded-lg text-left transition-all cursor-pointer ${
+                className={`flex items-center space-x-2.5 p-3 rounded-xl text-left transition-all cursor-pointer ${
                   wasInvited
-                    ? 'bg-[#0E2822] border border-emerald-900 text-emerald-300 font-medium'
-                    : 'bg-[#151B2E] border border-[#1E2545] text-zinc-300 hover:bg-[#1E2545]'
+                    ? 'bg-[#0E2822] text-emerald-300 font-semibold'
+                    : 'bg-[#141834] text-zinc-300 hover:bg-[#1C224B]'
                 }`}
               >
                 {wasInvited ? <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" /> : <Square className="w-4 h-4 text-zinc-500 shrink-0" />}
@@ -219,10 +219,10 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
               <button
                 type="button"
                 onClick={() => setReceivedEmail(!receivedEmail)}
-                className={`flex items-center space-x-2 p-2 rounded-lg text-left transition-all cursor-pointer ${
+                className={`flex items-center space-x-2.5 p-3 rounded-xl text-left transition-all cursor-pointer ${
                   receivedEmail
-                    ? 'bg-[#0E2822] border border-emerald-900 text-emerald-300 font-medium'
-                    : 'bg-[#151B2E] border border-[#1E2545] text-zinc-300 hover:bg-[#1E2545]'
+                    ? 'bg-[#0E2822] text-emerald-300 font-semibold'
+                    : 'bg-[#141834] text-zinc-300 hover:bg-[#1C224B]'
                 }`}
               >
                 {receivedEmail ? <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" /> : <Square className="w-4 h-4 text-zinc-500 shrink-0" />}
@@ -232,10 +232,10 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
               <button
                 type="button"
                 onClick={() => setWaiverOffered(!waiverOffered)}
-                className={`flex items-center space-x-2 p-2 rounded-lg text-left transition-all cursor-pointer ${
+                className={`flex items-center space-x-2.5 p-3 rounded-xl text-left transition-all cursor-pointer ${
                   waiverOffered
-                    ? 'bg-[#0E2822] border border-emerald-900 text-emerald-300 font-medium'
-                    : 'bg-[#151B2E] border border-[#1E2545] text-zinc-300 hover:bg-[#1E2545]'
+                    ? 'bg-[#0E2822] text-emerald-300 font-semibold'
+                    : 'bg-[#141834] text-zinc-300 hover:bg-[#1C224B]'
                 }`}
               >
                 {waiverOffered ? <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" /> : <Square className="w-4 h-4 text-zinc-500 shrink-0" />}
@@ -245,10 +245,10 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
               <button
                 type="button"
                 onClick={() => setAlreadyPaid(!alreadyPaid)}
-                className={`flex items-center space-x-2 p-2 rounded-lg text-left transition-all cursor-pointer ${
+                className={`flex items-center space-x-2.5 p-3 rounded-xl text-left transition-all cursor-pointer ${
                   alreadyPaid
-                    ? 'bg-[#0E2822] border border-emerald-900 text-emerald-300 font-medium'
-                    : 'bg-[#151B2E] border border-[#1E2545] text-zinc-300 hover:bg-[#1E2545]'
+                    ? 'bg-[#0E2822] text-emerald-300 font-semibold'
+                    : 'bg-[#141834] text-zinc-300 hover:bg-[#1C224B]'
                 }`}
               >
                 {alreadyPaid ? <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" /> : <Square className="w-4 h-4 text-zinc-500 shrink-0" />}
@@ -258,10 +258,10 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
               <button
                 type="button"
                 onClick={() => setAdvertisedCinemaVenue(!advertisedCinemaVenue)}
-                className={`flex items-center space-x-2 p-2 rounded-lg text-left transition-all cursor-pointer ${
+                className={`flex items-center space-x-2.5 p-3 rounded-xl text-left transition-all cursor-pointer ${
                   advertisedCinemaVenue
-                    ? 'bg-[#0E2822] border border-emerald-900 text-emerald-300 font-medium'
-                    : 'bg-[#151B2E] border border-[#1E2545] text-zinc-300 hover:bg-[#1E2545]'
+                    ? 'bg-[#0E2822] text-emerald-300 font-semibold'
+                    : 'bg-[#141834] text-zinc-300 hover:bg-[#1C224B]'
                 }`}
               >
                 {advertisedCinemaVenue ? <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" /> : <Square className="w-4 h-4 text-zinc-500 shrink-0" />}
@@ -277,14 +277,14 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                className="p-3.5 rounded-xl bg-[#151B2E] border border-emerald-900 space-y-2.5 overflow-hidden text-xs"
+                className="p-4 rounded-2xl bg-[#141834] space-y-3 overflow-hidden text-xs"
               >
-                <div className="flex items-center space-x-2 text-emerald-400 font-mono text-[11px]">
-                  <AlertCircle className="w-3.5 h-3.5" />
+                <div className="flex items-center space-x-2 text-emerald-400 font-mono text-xs">
+                  <AlertCircle className="w-4 h-4" />
                   <span>Follow-Up Probe: Interaction Intelligence</span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-zinc-400 mb-1 flex items-center space-x-1">
                       <UserCheck className="w-3 h-3 text-emerald-400" />
@@ -295,7 +295,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
                       value={contactName}
                       onChange={(e) => setContactName(e.target.value)}
                       placeholder="e.g. Program Director Alex Mercer"
-                      className="w-full bg-void border border-zinc-700 rounded-lg px-2.5 py-1.5 text-white placeholder:text-zinc-500 focus:outline-none focus:border-emerald-500 text-xs"
+                      className="w-full bg-[#0E1124] rounded-xl px-3 py-2 text-white placeholder:text-zinc-500 focus:outline-none text-xs"
                     />
                   </div>
 
@@ -309,7 +309,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
                       value={contactPhone}
                       onChange={(e) => setContactPhone(e.target.value)}
                       placeholder="+44 7700 900077"
-                      className="w-full bg-void border border-zinc-700 rounded-lg px-2.5 py-1.5 text-white placeholder:text-zinc-500 focus:outline-none focus:border-emerald-500 text-xs"
+                      className="w-full bg-[#0E1124] rounded-xl px-3 py-2 text-white placeholder:text-zinc-500 focus:outline-none text-xs"
                     />
                   </div>
                 </div>
@@ -324,7 +324,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({
                     value={emailSnippet}
                     onChange={(e) => setEmailSnippet(e.target.value)}
                     placeholder="Paste the invitation message or waiver code..."
-                    className="w-full bg-void border border-zinc-700 rounded-lg px-2.5 py-1.5 text-white placeholder:text-zinc-500 focus:outline-none focus:border-emerald-500 text-xs font-mono"
+                    className="w-full bg-[#0E1124] rounded-xl px-3 py-2 text-white placeholder:text-zinc-500 focus:outline-none text-xs font-mono"
                   />
                 </div>
               </motion.div>

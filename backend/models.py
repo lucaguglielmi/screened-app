@@ -2,7 +2,7 @@
 from datetime import datetime, timezone
 from enum import Enum
 from typing import Any, Dict, List, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 import uuid
 
 
@@ -57,6 +57,8 @@ class VerificationStatus(str, Enum):
     SUPPORTED = "SUPPORTED"
     DISPUTED = "DISPUTED"
     UNVERIFIED = "UNVERIFIED"
+    VERIFIED_MATCH = "VERIFIED_MATCH"
+    UNVERIFIED_EXCERPT = "UNVERIFIED_EXCERPT"
 
 
 class Stance(str, Enum):
@@ -130,6 +132,7 @@ class ClaimEvidence(BaseModel):
     stance: Stance
     exactExcerpt: str
     note: Optional[str] = None
+    verificationStatus: Optional[VerificationStatus] = None
 
 
 class AtomicClaim(BaseModel):
@@ -175,6 +178,7 @@ class DeepVettingReport(BaseModel):
     totalFlags: int = 0
     dimensions: List[DeepVettingDimension] = Field(default_factory=list)
     generatedAt: str = Field(default_factory=get_current_iso)
+    degraded: bool = False
 
 
 class OutreachDraft(BaseModel):
@@ -378,6 +382,13 @@ class DocumentAnalysisRequest(BaseModel):
     fileBase64: Optional[str] = None
     mimeType: Optional[str] = Field(None, max_length=100)
 
+    @field_validator("mimeType")
+    @classmethod
+    def validate_mime_type(cls, v: Optional[str]) -> Optional[str]:
+        if v and not (v.startswith("text/") or v == "application/pdf"):
+            raise ValueError("Only text and PDF files are allowed.")
+        return v
+
 
 class ChatRequest(BaseModel):
     message: str = Field(..., max_length=3000)
@@ -386,6 +397,13 @@ class ChatRequest(BaseModel):
     attachedFileContent: Optional[str] = Field(None, max_length=500000)
     attachedFileBase64: Optional[str] = None
     attachedFileMimeType: Optional[str] = Field(None, max_length=100)
+
+    @field_validator("attachedFileMimeType")
+    @classmethod
+    def validate_attached_mime_type(cls, v: Optional[str]) -> Optional[str]:
+        if v and not (v.startswith("text/") or v == "application/pdf"):
+            raise ValueError("Only text and PDF files are allowed.")
+        return v
 
 
 class FeedbackCategory(str, Enum):

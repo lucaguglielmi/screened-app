@@ -9,7 +9,7 @@ Whenever the user asks:
 
 You **MUST ALWAYS**:
 1. Check `WHAT_THE_HUMAN_SHOULD_DO.md` for any pending decisions, test assets, or actions required from the user.
-2. Review all active specs in `RESEARCH/antigravity-plan/` (especially Specs 12, 13, 14, 15) to list unfinished/in-flight specs and completed ones.
+2. Review all active specs in `docs/` (especially `docs/SPEC_PARALLEL_ADK_EVIDENCE_ENGINE.md`) to list unfinished/in-flight specs and completed ones.
 3. If any spec is fully concluded, ask the human creator if they wish to mark it completed or archive it.
 4. Add 2–3 concise, high-value ideas of your own (keep them short; only expand if the user asks for more).
 
@@ -45,3 +45,4 @@ The main AI interface is **Mission Control**. Individual tools each possess thei
 ## 5. Architecture Page Upkeep
 - The **Design Playground** includes an `ArchitecturePage.tsx` component which tracks the system's live architecture (e.g. backend states, databases, AI pipelines).
 - Whenever you make architectural changes, add new databases, implement new caching layers, or change deployment patterns, you **MUST** update `frontend/src/components/playground/ArchitecturePage.tsx` to reflect the new architecture.
+- **Agent Tree Parity:** You must ensure the `/api/architecture/agent-tree` endpoint accurately reflects the live state of the ADK agent tree. Any modification to backend agents or the orchestrator must update the endpoint's walker logic.

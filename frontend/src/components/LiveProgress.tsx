@@ -224,7 +224,7 @@ export const LiveProgress: React.FC<Props> = ({
       className="max-w-4xl mx-auto space-y-6"
     >
       {/* 1. Header Banner */}
-      <div className="p-6 sm:p-7 rounded-3xl bg-[#0E1124]/90 backdrop-blur-xl border border-[#22274C] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 shadow-2xl shadow-black/80 relative overflow-hidden">
+      <div className="p-6 sm:p-7 rounded-3xl bg-[#0E1124] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 shadow-2xl shadow-black/80 relative overflow-hidden">
         {/* Glow ambient accent behind header */}
         <div className="absolute -right-20 -top-20 size-60 rounded-full bg-[#2018E6]/20 blur-3xl pointer-events-none" />
         <div className="absolute -left-20 -bottom-20 size-60 rounded-full bg-[#00D29E]/10 blur-3xl pointer-events-none" />
@@ -243,7 +243,7 @@ export const LiveProgress: React.FC<Props> = ({
         </div>
 
         <div className="flex flex-col sm:items-end gap-2 z-10 shrink-0">
-          <div className="px-4 py-1.5 rounded-xl bg-[#00D29E]/15 border border-[#00D29E]/30 text-[#00D29E] text-xs font-mono font-semibold flex items-center gap-2">
+          <div className="px-4 py-1.5 rounded-xl bg-[#00D29E]/15 text-[#00D29E] text-xs font-mono font-semibold flex items-center gap-2">
             <span className="size-2 rounded-full bg-[#00D29E] animate-pulse" />
             <span>State: {status}</span>
           </div>
@@ -254,10 +254,10 @@ export const LiveProgress: React.FC<Props> = ({
       </div>
 
       {/* 2. THE SINGLE NEAT TIMELINE */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-[#0E1124]/90 backdrop-blur-xl border border-[#22274C] shadow-2xl shadow-black/80 space-y-6 relative">
+      <div className="p-6 sm:p-8 rounded-3xl bg-[#0E1124] shadow-2xl shadow-black/80 space-y-6 relative">
         
         {/* Timeline Header Subtitle */}
-        <div className="flex items-center justify-between border-b border-[#1B2042] pb-4">
+        <div className="flex items-center justify-between pb-2">
           <div className="flex items-center gap-2">
             <Cpu className="size-4 text-indigo-400" />
             <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300">
@@ -492,8 +492,8 @@ export const LiveProgress: React.FC<Props> = ({
       </div>
 
       {/* 4. Live SSE Activity Stream Console */}
-      <div className="rounded-3xl bg-[#0E1124]/90 backdrop-blur-xl border border-[#22274C] overflow-hidden shadow-2xl shadow-black/80">
-        <div className="p-4 sm:px-6 border-b border-[#1B2042] flex items-center justify-between">
+      <div className="rounded-3xl bg-[#0E1124] overflow-hidden shadow-2xl shadow-black/80">
+        <div className="p-4 sm:px-6 flex items-center justify-between">
           <span className="font-mono text-xs uppercase tracking-wider text-slate-300 flex items-center gap-2 font-semibold">
             <span className="size-2 rounded-full bg-[#00D29E] animate-pulse" />
             <Terminal className="size-3.5 text-indigo-400" />

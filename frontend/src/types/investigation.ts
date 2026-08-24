@@ -6,7 +6,14 @@ export type VerificationStatus = 'CORROBORATED' | 'SUPPORTED' | 'DISPUTED' | 'UN
 
 export type Stance = 'SUPPORTS' | 'CONTRADICTS' | 'MENTIONS';
 
-export type DetailDensity = 'SUMMARY' | 'STANDARD' | 'EVIDENCE';
+export type DetailDensity = 
+  | 'SIMPLIFIED' 
+  | 'BALANCED' 
+  | 'FULL_EVIDENCE' 
+  | 'MACHINE_AI_INGESTION'
+  | 'SUMMARY'
+  | 'STANDARD'
+  | 'EVIDENCE';
 
 export type ApprovalStatus = 'PENDING_APPROVAL' | 'APPROVED' | 'REJECTED' | 'EXECUTED_SANDBOX';
 
@@ -98,6 +105,70 @@ export interface DossierReport {
   participantFeedback: string;
   unresolvedQuestions: string[];
   filmmakerChecklist: string[];
+}
+
+export interface TransparencyMetric {
+  score: number;
+  status: 'HIGH' | 'MEDIUM' | 'LOW';
+  notes: string;
+}
+
+export interface EvidenceDossier {
+  id: string;
+  investigationId: string;
+  festivalName: string;
+  officialDomain?: string;
+  reportSummary: string;
+  festivalDomainSummary?: string;
+  organizerDomainSummary?: string;
+  participantsDomainSummary?: string;
+  fitDomainSummary?: string;
+  contradictions?: Array<{
+    id: string;
+    claimA: { statement: string; status?: string; claimKind?: string; researchDomain?: string };
+    claimB: { statement: string; status?: string; claimKind?: string; researchDomain?: string };
+    reconciliationNote?: string;
+    domain?: string;
+  }>;
+  atomicClaims?: AtomicClaim[];
+  transparencyIndex?: {
+    score: number;
+    confidenceLevel: string;
+    breakdown?: {
+      screeningVenue?: TransparencyMetric;
+      feeStructure?: TransparencyMetric;
+      organizerTrackRecord?: TransparencyMetric;
+      participantFeedback?: TransparencyMetric;
+    };
+  };
+  sources?: Array<{
+    id: string;
+    domain: string;
+    url: string;
+    title: string;
+    sourceTier: number;
+    extractedClaimsCount?: number;
+  }>;
+  overallRisk?: string;
+  recommendedAction?: string;
+  generatedAt?: string;
+}
+
+export interface DiagramGraphPayload {
+  nodes: Array<{
+    id: string;
+    type: string;
+    data: Record<string, any>;
+    position: { x: number; y: number };
+  }>;
+  edges: Array<{
+    id: string;
+    source: string;
+    target: string;
+    label?: string;
+    animated?: boolean;
+    style?: React.CSSProperties;
+  }>;
 }
 
 export interface OutreachDraft {

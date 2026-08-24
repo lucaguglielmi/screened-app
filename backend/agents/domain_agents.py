@@ -9,6 +9,8 @@ from google.adk.agents import LlmAgent
 from google.adk.tools import FunctionTool
 from backend.orchestrator.session_service import FirestoreSessionService
 from google.adk.runners import Runner
+from google.genai import types
+from backend.orchestrator.events import EventType, broadcaster
 
 logger = logging.getLogger("screened.agents.domain_agents")
 
@@ -29,9 +31,10 @@ def create_domain_agent(domain: str, investigation_id: str, entity_info: Dict[st
         
         # Save to session so we can retrieve it
         session_service = FirestoreSessionService()
-        session = await session_service.get_session("screened", "default_user", investigation_id)
-        session.state[f"{domain}_result"] = result
-        await session_service.save_session(session)
+        session = await session_service.get_session(app_name="screened", user_id="default_user", session_id=investigation_id)
+        if session:
+            session.state[f"{domain}_result"] = result
+            await session_service.save_session(session)
         
         return result
         
@@ -43,24 +46,27 @@ def create_domain_agent(domain: str, investigation_id: str, entity_info: Dict[st
         tools=[task_tool]
     )
 
-async def _run_domain_agent(domain: ResearchDomain, plan: DomainPlan, investigation_id: str, entity_info: Dict[str, Any]) -> dict:
+async def _run_domain_agent(domain: ResearchDomain, plan: DomainPlan, investigation_id: str, entity_info: Dict[str, Any], session_service: FirestoreSessionService) -> dict:
     agent = create_domain_agent(domain.value, investigation_id, entity_info)
     runner = Runner(
         agent=agent,
         app_name="screened",
-        session_service=FirestoreSessionService()
+        session_service=session_service
     )
     
     # We pump the runner stream to trigger tools (the tool itself streams to SSE)
-    async for _ in runner.run_async(user_id="default_user", session_id=investigation_id, prompt=f"Extract claims for objective: {plan.objective} with queries: {plan.searchQueries}"):
+    prompt_text = f"Extract claims for objective: {plan.objective} with queries: {plan.searchQueries}"
+    new_msg = types.Content(role="user", parts=[types.Part.from_text(text=prompt_text)])
+    async for _ in runner.run_async(user_id="default_user", session_id=investigation_id, new_message=new_msg):
         pass
         
     # The output of the agent should be the claims, but we can also just fetch the state.
     # For now, return what we can. We will integrate this in the state machine.
     # Assuming the tool call populates the session state
-    session_service = FirestoreSessionService()
-    session = await session_service.get_session("screened", "default_user", investigation_id)
-    return session.state.get(f"{domain.value}_result", {"claims": [], "basis": []})
+    session = await session_service.get_session(app_name="screened", user_id="default_user", session_id=investigation_id)
+    if session:
+        return session.state.get(f"{domain.value}_result", {"claims": [], "basis": []})
+    return {"claims": [], "basis": []}
 
 
 async def run_parallel_domain_agents(
@@ -70,15 +76,28 @@ async def run_parallel_domain_agents(
 ) -> dict:
     """Execute all three domain research agents concurrently via ADK LlmAgent."""
     
-    f_task = _run_domain_agent(ResearchDomain.FESTIVAL, plans[ResearchDomain.FESTIVAL], investigation_id, entity_info)
-    o_task = _run_domain_agent(ResearchDomain.ORGANIZER, plans[ResearchDomain.ORGANIZER], investigation_id, entity_info)
-    p_task = _run_domain_agent(ResearchDomain.PARTICIPANTS, plans[ResearchDomain.PARTICIPANTS], investigation_id, entity_info)
+    session_service = FirestoreSessionService()
+    f_task = _run_domain_agent(ResearchDomain.FESTIVAL, plans[ResearchDomain.FESTIVAL], investigation_id, entity_info, session_service)
+    o_task = _run_domain_agent(ResearchDomain.ORGANIZER, plans[ResearchDomain.ORGANIZER], investigation_id, entity_info, session_service)
+    p_task = _run_domain_agent(ResearchDomain.PARTICIPANTS, plans[ResearchDomain.PARTICIPANTS], investigation_id, entity_info, session_service)
 
     f_res, o_res, p_res = await asyncio.gather(f_task, o_task, p_task, return_exceptions=True)
+    
+    async def process_res(domain: ResearchDomain, res: Any) -> dict:
+        if isinstance(res, Exception):
+            logger.error(f"Domain agent {domain.value} failed: {res}", exc_info=res)
+            await broadcaster.emit(
+                investigation_id=investigation_id,
+                event_type=EventType.ERROR,
+                agent_name=f"{domain.value}Agent",
+                message=f"Research failed for {domain.value}: {str(res)}"
+            )
+            return {}
+        return res if isinstance(res, dict) else {}
 
     results = {
-        ResearchDomain.FESTIVAL: f_res if isinstance(f_res, dict) else {},
-        ResearchDomain.ORGANIZER: o_res if isinstance(o_res, dict) else {},
-        ResearchDomain.PARTICIPANTS: p_res if isinstance(p_res, dict) else {},
+        ResearchDomain.FESTIVAL: await process_res(ResearchDomain.FESTIVAL, f_res),
+        ResearchDomain.ORGANIZER: await process_res(ResearchDomain.ORGANIZER, o_res),
+        ResearchDomain.PARTICIPANTS: await process_res(ResearchDomain.PARTICIPANTS, p_res),
     }
     return results

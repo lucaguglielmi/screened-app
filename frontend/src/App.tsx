@@ -582,46 +582,45 @@ export default function App() {
                 <div className="space-y-12">
                   {/* Hero */}
                   <section className="text-center max-w-2xl mx-auto space-y-3 pt-4">
-                    <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-paper-text dark:text-darkroom-text">
+                    <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
                       Investigate before you submit.
                     </h1>
-                    <p className="text-base text-paper-muted dark:text-darkroom-muted leading-relaxed">
+                    <p className="text-base text-slate-400 leading-relaxed">
                       Autonomous multi-agent research across trade registries, press archives, and participant accounts. Transparent, cited facts — no blackbox scores.
                     </p>
                   </section>
 
-                  {/* Search Intake Box */}
+                  {/* Search Intake Box: Solid Opaque, Borderless */}
                   <section className="max-w-2xl mx-auto space-y-4">
                     <form 
                       onSubmit={(e) => { e.preventDefault(); handleStartInvestigation(query); }}
-                      className="p-2.5 rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border shadow-xs flex flex-col sm:flex-row gap-2.5 transition-colors"
+                      className="p-2 rounded-2xl bg-[#0E1124] shadow-2xl shadow-black/80 flex flex-col sm:flex-row gap-2 transition-all"
                     >
                       <div className="relative flex-1 flex items-center">
-                        <Search className="size-5 absolute left-3.5 text-paper-muted dark:text-darkroom-muted" />
+                        <Search className="size-5 absolute left-3.5 text-slate-400" />
                         <input
                           ref={searchInputRef}
                           type="text"
                           value={query}
                           onChange={(e) => setQuery(e.target.value)}
                           placeholder="Enter festival name (e.g. Raindance, Aldergate, Sundance)..."
-                          className="w-full pl-11 pr-4 py-3 bg-transparent text-base text-paper-text dark:text-darkroom-text placeholder-paper-muted dark:placeholder-darkroom-muted focus:outline-none"
+                          className="w-full pl-11 pr-4 py-3 bg-transparent text-base text-white placeholder-slate-500 focus:outline-none"
                           disabled={loading}
                         />
                       </div>
                       <button
                         type="submit"
                         disabled={loading || !query.trim()}
-                        className="px-6 py-3 rounded-xl bg-[#00D29E] hover:bg-[#00B887] disabled:opacity-50 text-slate-950 font-bold text-base flex items-center justify-center gap-2 transition-all shadow-md shrink-0 cursor-pointer"
+                        className="px-6 py-3 rounded-xl bg-[#00D29E] hover:bg-[#00B887] disabled:opacity-40 text-slate-950 font-bold text-base flex items-center justify-center gap-2 transition-all shadow-lg shadow-[#00D29E]/20 shrink-0 cursor-pointer"
                       >
                         <ShieldCheck className="size-5 text-slate-950" />
                         <span>Start Due Diligence</span>
                       </button>
                     </form>
 
-
                     {/* Recent Searches Pills */}
                     {recentSearches.length > 0 && (
-                      <div className="flex items-center justify-center gap-2 text-sm text-paper-muted dark:text-darkroom-muted flex-wrap">
+                      <div className="flex items-center justify-center gap-2 text-sm text-slate-400 flex-wrap pt-1">
                         <span className="inline-flex items-center gap-1 font-mono text-xs">
                           <History className="size-3.5" /> Recent:
                         </span>
@@ -630,7 +629,7 @@ export default function App() {
                             key={name}
                             type="button"
                             onClick={() => { setQuery(name); handleStartInvestigation(name); }}
-                            className="px-3 py-1 rounded-lg bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border hover:border-indigo-500 dark:hover:border-indigo-500 transition-colors cursor-pointer text-xs"
+                            className="px-3.5 py-1.5 rounded-xl bg-[#0E1124] text-slate-300 hover:text-white hover:bg-[#141834] transition-all cursor-pointer text-xs font-mono shadow-md"
                           >
                             {name}
                           </button>
@@ -638,8 +637,6 @@ export default function App() {
                       </div>
                     )}
                   </section>
-
-
                 </div>
               )}
 

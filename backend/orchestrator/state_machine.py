@@ -306,7 +306,9 @@ class Orchestrator:
                 domain_atomic_claims = []
                 domain_evidence_list = []
                 
-                for raw_claim in domain_claims_list:
+                from backend.tools.parallel_extract import normalize_whitespace
+
+                for i, raw_claim in enumerate(domain_claims_list):
                     try:
                         claim = AtomicClaim(
                             investigationId=investigation_id,
@@ -318,26 +320,55 @@ class Orchestrator:
                             evidence=[]
                         )
                         
-                        # Mock mapping for the hackathon
+                        # Real mapping for the hackathon
+                        # Find the matching FieldBasis entry (by field name, like "claims[i].statement" or similar)
+                        matching_basis = None
                         for b in domain_basis_list:
-                            if isinstance(b, dict) and b.get("url"):
+                            field_name = b.get("field", "")
+                            if f"[{i}]" in field_name or f".{i}." in field_name:
+                                matching_basis = b
+                                break
+                                
+                        if matching_basis:
+                            citations = matching_basis.get("citations", [])
+                            for cit in citations:
+                                if not isinstance(cit, dict) or not cit.get("url"):
+                                    continue
+                                
+                                exact_excerpts = cit.get("excerpts", [])
+                                # Take the first exactExcerpt if available
+                                exact_excerpt = exact_excerpts[0] if exact_excerpts else raw_claim.get("statement", "")[:50]
+                                
+                                # Verbatim substring check
+                                statement = raw_claim.get("statement", "")
+                                norm_excerpt = normalize_whitespace(exact_excerpt)
+                                norm_statement = normalize_whitespace(statement)
+                                
+                                evidence_status = VerificationStatus.UNVERIFIED_EXCERPT
+                                if norm_excerpt and norm_excerpt in norm_statement:
+                                    evidence_status = VerificationStatus.VERIFIED_MATCH
+                                    
+                                # Since status is on the claim, if ANY evidence matches, we can upgrade claim status
+                                if evidence_status == VerificationStatus.VERIFIED_MATCH:
+                                    claim.status = VerificationStatus.VERIFIED_MATCH
+                                    
                                 evidence = ClaimEvidence(
                                     sourceId=str(uuid.uuid4()),
-                                    sourceUrl=b.get("url"),
-                                    sourceTitle=b.get("title", "Unknown Source"),
+                                    sourceUrl=cit.get("url"),
+                                    sourceTitle=cit.get("title", "Unknown Source"),
                                     stance=Stance.SUPPORTING,
-                                    exactExcerpt=raw_claim.get("statement", "")[:50]
+                                    exactExcerpt=exact_excerpt
                                 )
                                 claim.evidence.append(evidence)
                                 domain_evidence_list.append(evidence)
                                 
-                                # Add to all_sources for deep vetting
+                                # Rebuild SourceRecord persistence
                                 all_sources.append(SourceRecord(
                                     id=evidence.sourceId,
                                     investigationId=investigation_id,
                                     url=evidence.sourceUrl,
                                     title=evidence.sourceTitle,
-                                    publishedDate=datetime.now(timezone.utc).isoformat(),
+                                    publishedDate=cit.get("publish_date"),
                                     relevanceScore=1.0,
                                     domainAuthority=0.8,
                                     contentHash="mock_hash"

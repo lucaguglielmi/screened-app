@@ -31,12 +31,12 @@ export const OpportunityCard: React.FC<Props> = ({
             <span 
               onMouseEnter={() => setShowTooltip('BAFTA')}
               onMouseLeave={() => setShowTooltip(null)}
-              className="px-2.5 py-1 rounded-full text-xs font-mono bg-amber-500/15 text-amber-300 border border-amber-500/30 font-semibold cursor-help inline-flex items-center gap-1.5"
+              className="px-2.5 py-1 rounded-lg text-xs font-mono bg-[#141834] text-amber-300 font-semibold cursor-help inline-flex items-center gap-1.5 hover:bg-[#1A2046] transition-colors"
             >
               BAFTA Qualifying <Info className="size-3 opacity-70" />
             </span>
             {showTooltip === 'BAFTA' && (
-              <div className="absolute bottom-full left-0 mb-1.5 z-30 p-2.5 w-56 rounded-xl bg-[#141731] text-slate-100 text-xs font-sans shadow-xl border border-[#22274C] pointer-events-none">
+              <div className="absolute bottom-full left-0 mb-2 z-30 p-3 w-56 rounded-2xl bg-[#070913] text-slate-200 text-xs font-sans shadow-2xl pointer-events-none">
                 Screening here qualifies UK short films and debuts for British Academy Film Awards consideration.
               </div>
             )}
@@ -48,12 +48,12 @@ export const OpportunityCard: React.FC<Props> = ({
             <span 
               onMouseEnter={() => setShowTooltip('BIFA')}
               onMouseLeave={() => setShowTooltip(null)}
-              className="px-2.5 py-1 rounded-full text-xs font-mono bg-purple-500/15 text-purple-300 border border-purple-500/30 font-semibold cursor-help inline-flex items-center gap-1.5"
+              className="px-2.5 py-1 rounded-lg text-xs font-mono bg-[#141834] text-purple-300 font-semibold cursor-help inline-flex items-center gap-1.5 hover:bg-[#1A2046] transition-colors"
             >
               BIFA Qualifying <Info className="size-3 opacity-70" />
             </span>
             {showTooltip === 'BIFA' && (
-              <div className="absolute bottom-full left-0 mb-1.5 z-30 p-2.5 w-56 rounded-xl bg-[#141731] text-slate-100 text-xs font-sans shadow-xl border border-[#22274C] pointer-events-none">
+              <div className="absolute bottom-full left-0 mb-2 z-30 p-3 w-56 rounded-2xl bg-[#070913] text-slate-200 text-xs font-sans shadow-2xl pointer-events-none">
                 Recognized on the British Independent Film Awards qualifying festival list.
               </div>
             )}
@@ -65,12 +65,12 @@ export const OpportunityCard: React.FC<Props> = ({
             <span 
               onMouseEnter={() => setShowTooltip('OSCAR')}
               onMouseLeave={() => setShowTooltip(null)}
-              className="px-2.5 py-1 rounded-full text-xs font-mono bg-yellow-500/15 text-yellow-300 border border-yellow-500/30 font-semibold cursor-help inline-flex items-center gap-1.5"
+              className="px-2.5 py-1 rounded-lg text-xs font-mono bg-[#141834] text-yellow-300 font-semibold cursor-help inline-flex items-center gap-1.5 hover:bg-[#1A2046] transition-colors"
             >
               Oscar Qualifying <Info className="size-3 opacity-70" />
             </span>
             {showTooltip === 'OSCAR' && (
-              <div className="absolute bottom-full left-0 mb-1.5 z-30 p-2.5 w-56 rounded-xl bg-[#141731] text-slate-100 text-xs font-sans shadow-xl border border-[#22274C] pointer-events-none">
+              <div className="absolute bottom-full left-0 mb-2 z-30 p-3 w-56 rounded-2xl bg-[#070913] text-slate-200 text-xs font-sans shadow-2xl pointer-events-none">
                 Award winners in eligible categories qualify for Academy Awards nomination voting without commercial theatrical run.
               </div>
             )}
@@ -82,19 +82,19 @@ export const OpportunityCard: React.FC<Props> = ({
             <span 
               onMouseEnter={() => setShowTooltip('FIAPF')}
               onMouseLeave={() => setShowTooltip(null)}
-              className="px-2.5 py-1 rounded-full text-xs font-mono bg-blue-500/15 text-blue-300 border border-blue-500/30 font-semibold cursor-help inline-flex items-center gap-1.5"
+              className="px-2.5 py-1 rounded-lg text-xs font-mono bg-[#141834] text-blue-300 font-semibold cursor-help inline-flex items-center gap-1.5 hover:bg-[#1A2046] transition-colors"
             >
               FIAPF Accredited <Info className="size-3 opacity-70" />
             </span>
             {showTooltip === 'FIAPF' && (
-              <div className="absolute bottom-full left-0 mb-1.5 z-30 p-2.5 w-56 rounded-xl bg-[#141731] text-slate-100 text-xs font-sans shadow-xl border border-[#22274C] pointer-events-none">
+              <div className="absolute bottom-full left-0 mb-2 z-30 p-3 w-56 rounded-2xl bg-[#070913] text-slate-200 text-xs font-sans shadow-2xl pointer-events-none">
                 Regulated by the International Federation of Film Producers Associations for global standard compliance.
               </div>
             )}
           </div>
         );
       default:
-        return <span className="px-2.5 py-1 rounded-full text-xs font-mono bg-slate-500/15 text-slate-300 border border-slate-500/30">Indie Circuit</span>;
+        return <span className="px-2.5 py-1 rounded-lg text-xs font-mono bg-[#141834] text-slate-300 font-medium">Indie Circuit</span>;
     }
   };
 
@@ -109,25 +109,25 @@ export const OpportunityCard: React.FC<Props> = ({
   };
 
   return (
-    <div className="p-6 rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border hover:border-[#F43F5E]/50 transition-all flex flex-col justify-between gap-4 shadow-sm">
-      <div className="space-y-3.5">
+    <div className="p-6 sm:p-7 rounded-3xl bg-[#0E1124] shadow-2xl shadow-black/80 flex flex-col justify-between gap-5 transition-all hover:bg-[#11152E]">
+      <div className="space-y-4">
         {/* Top Info */}
         <div className="flex items-start justify-between gap-2">
           <div>
-            <h3 className="font-serif text-xl font-bold text-paper-text dark:text-darkroom-text">
+            <h3 className="font-serif text-xl font-bold text-white">
               {opportunity.name}
             </h3>
-            <div className="flex items-center gap-1.5 text-sm font-mono text-paper-muted dark:text-darkroom-muted mt-1">
+            <div className="flex items-center gap-1.5 text-xs font-mono text-slate-400 mt-1">
               <MapPin className="size-3.5 text-[#F43F5E]" />
               <span>{opportunity.cityCountry}</span>
             </div>
           </div>
 
-          <div className="text-right">
-            <div className="text-sm font-bold text-paper-text dark:text-darkroom-text font-mono">
+          <div className="text-right shrink-0">
+            <div className="text-sm font-bold text-white font-mono">
               {opportunity.feeEstimate}
             </div>
-            <div className="text-xs font-mono text-paper-muted dark:text-darkroom-muted">
+            <div className="text-[11px] font-mono text-slate-400">
               Estimated Entry
             </div>
           </div>
@@ -141,19 +141,19 @@ export const OpportunityCard: React.FC<Props> = ({
         </div>
 
         {/* Deadline Banner with Add to Calendar */}
-        <div className="p-3 rounded-xl bg-neutral-100 dark:bg-black/40 flex items-center justify-between text-sm gap-2">
-          <span className="font-mono text-paper-muted dark:text-darkroom-muted flex items-center gap-1.5">
+        <div className="p-3.5 rounded-2xl bg-[#141834] flex items-center justify-between text-xs gap-2">
+          <span className="font-mono text-slate-400 flex items-center gap-2">
             <Calendar className="size-4 text-[#F43F5E]" />
             <span>{opportunity.deadlineTier}:</span>
           </span>
-          <div className="flex items-center gap-2.5">
-            <span className="font-bold text-paper-text dark:text-darkroom-text font-mono">
+          <div className="flex items-center gap-3">
+            <span className="font-bold text-white font-mono text-sm">
               {opportunity.nextDeadline}
             </span>
             <button
               onClick={handleDownloadCalendar}
               title="Add deadline to Calendar (.ics)"
-              className="p-1.5 rounded-lg text-paper-muted dark:text-darkroom-muted hover:text-[#F43F5E] hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-[#1E244E] transition-colors cursor-pointer"
             >
               <Download className="size-4" />
             </button>
@@ -162,33 +162,33 @@ export const OpportunityCard: React.FC<Props> = ({
 
         {/* Strategic Fit Rationale */}
         <div className="space-y-1.5">
-          <div className="text-xs font-mono uppercase font-semibold text-paper-muted dark:text-darkroom-muted">
+          <div className="text-[11px] font-mono uppercase font-semibold text-slate-400">
             Strategic Fit Rationale:
           </div>
-          <p className="text-base text-paper-text dark:text-darkroom-text leading-relaxed">
+          <p className="text-sm text-slate-300 leading-relaxed">
             {opportunity.strategicFitRationale}
           </p>
         </div>
 
         {/* Eligibility Notes */}
         {opportunity.eligibilityNotes && (
-          <div className="text-sm text-paper-muted dark:text-darkroom-muted flex items-start gap-2 border-t border-paper-border dark:border-darkroom-border pt-2.5">
-            <AlertCircle className="size-4 text-amber-500 shrink-0 mt-0.5" />
+          <div className="text-xs text-amber-300/90 flex items-start gap-2 pt-1 font-mono">
+            <AlertCircle className="size-4 text-amber-400 shrink-0 mt-0.5" />
             <span>{opportunity.eligibilityNotes}</span>
           </div>
         )}
       </div>
 
       {/* Footer Actions */}
-      <div className="flex items-center justify-between border-t border-paper-border dark:border-darkroom-border pt-4 gap-2">
+      <div className="flex items-center justify-between pt-2 gap-2">
         {opportunity.officialDomain ? (
           <a
             href={`https://${opportunity.officialDomain}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm font-mono text-indigo-500 hover:underline inline-flex items-center gap-1"
+            className="text-xs font-mono text-indigo-400 hover:text-indigo-300 inline-flex items-center gap-1 transition-colors"
           >
-            Website <ExternalLink className="size-3.5" />
+            Official Site <ExternalLink className="size-3" />
           </a>
         ) : (
           <span />
@@ -196,7 +196,7 @@ export const OpportunityCard: React.FC<Props> = ({
 
         <button
           onClick={() => onDeepScreen(opportunity.name)}
-          className="px-4 py-2 rounded-xl bg-[#00D29E] hover:bg-[#00B887] text-slate-950 font-bold text-sm flex items-center gap-2 transition-all shadow-md shadow-[#00D29E]/20 cursor-pointer"
+          className="px-4 py-2.5 rounded-xl bg-[#00D29E] hover:bg-[#00B887] text-slate-950 font-bold text-xs font-mono flex items-center gap-2 transition-all shadow-md shadow-[#00D29E]/20 cursor-pointer"
         >
           <ShieldCheck className="size-4 text-slate-950" />
           <span>Deep Screen</span>
