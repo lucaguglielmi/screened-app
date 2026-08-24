@@ -46,6 +46,26 @@ export const ArchitecturePage: React.FC = () => {
             Durable queues for resilient background investigation tasks. Integrates with Parallel Search SDK for external domain intelligence and Gemini for structured extraction.
           </p>
         </div>
+
+        <div className="p-4 rounded-xl bg-darkroom-card space-y-2">
+          <div className="flex items-center space-x-2 text-emerald-400 font-bold font-mono">
+            <Shield className="w-4 h-4" />
+            <span>PII Masking & Vault Middleware</span>
+          </div>
+          <p className="text-zinc-300">
+            Client-side data protection layer. Replaces sensitive information (Emails, Phone Numbers) with reversible tokens before payloads reach external LLM endpoints.
+          </p>
+        </div>
+
+        <div className="p-4 rounded-xl bg-darkroom-card space-y-2 col-span-1 md:col-span-2">
+          <div className="flex items-center space-x-2 text-rose-400 font-bold font-mono">
+            <Workflow className="w-4 h-4" />
+            <span>OpenTelemetry, Cloud Logging & GA4</span>
+          </div>
+          <p className="text-zinc-300">
+            Full-stack observability. Maps internal ADK agent traces to production Cloud Trace, structured Cloud Logging, Error Reporting, and GA4 product analytics.
+          </p>
+        </div>
       </div>
     </section>
   );
