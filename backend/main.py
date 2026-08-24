@@ -15,6 +15,7 @@ from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
+from fastapi import Header
 
 from backend.config import settings
 from backend.routers import webhooks
@@ -70,6 +71,32 @@ app = FastAPI(
 
 import collections
 recent_spans = collections.deque(maxlen=50)
+recent_errors = collections.deque(maxlen=50)
+fallbacks_fired = collections.deque(maxlen=50)
+
+class DiagnosticsLogHandler(logging.Handler):
+    def emit(self, record):
+        if record.levelno >= logging.ERROR:
+            recent_errors.appendleft({
+                "at": datetime.fromtimestamp(record.created, timezone.utc).isoformat(),
+                "logger": record.name,
+                "type": getattr(record, "levelname", "ERROR"),
+                "message": record.getMessage(),
+                "traceId": getattr(record, "traceId", None),
+                "count": 1
+            })
+        fallback = getattr(record, "fallbackPath", None)
+        if fallback:
+            fallbacks_fired.appendleft({
+                "path": fallback,
+                "count": 1,
+                "lastAt": datetime.fromtimestamp(record.created, timezone.utc).isoformat(),
+                "lastReason": record.getMessage()
+            })
+
+diag_handler = DiagnosticsLogHandler()
+logging.getLogger().addHandler(diag_handler)
+
 
 try:
     from opentelemetry import trace
@@ -232,6 +259,69 @@ async def get_version_info():
         media_type="application/json",
         headers=NO_CACHE_HEADERS,
     )
+
+
+@app.get("/api/diagnostics")
+async def get_diagnostics(authorization: str = Header(None)):
+    diag_token = os.getenv("DIAGNOSTICS_TOKEN")
+    if not diag_token or authorization != f"Bearer {diag_token}":
+        raise HTTPException(status_code=404, detail="Not found")
+
+    return {
+        "generatedAt": datetime.now(timezone.utc).isoformat(),
+        "service": {
+            "version": settings.app_version,
+            "commitSha": os.getenv("COMMIT_SHA", "dev"),
+            "environment": settings.environment,
+            "instanceId": os.getenv("K_REVISION", "local"),
+            "uptimeSeconds": 0
+        },
+        "config": {
+            "useAdk": True,
+            "parallelConfigured": bool(settings.parallel_api_key),
+            "tracingEnabled": True,
+            "strictMode": False
+        },
+        "recentErrors": list(recent_errors),
+        "recentSpans": [{
+            "traceId": format(span.context.trace_id, "032x"),
+            "name": span.name,
+            "service": "screened",
+            "durationMs": (span.end_time - span.start_time) // 1000000 if span.end_time and span.start_time else 0,
+            "status": span.status.status_code.name if span.status else "OK",
+            "tokens": span.attributes.get("tokens") if span.attributes else None
+        } for span in recent_spans],
+        "fallbacksFired": list(fallbacks_fired),
+        "counters": {
+            "investigationsStarted": 0,
+            "investigationsFailed": 0,
+            "parallelCalls": 0,
+            "geminiCalls": 0,
+            "sseClients": 0
+        }
+    }
+
+
+class TaskDisambiguatePayload(BaseModel):
+    investigation_id: str
+    query: str
+    optional_url: Optional[str] = None
+
+class TaskPipelinePayload(BaseModel):
+    investigation_id: str
+    entity: dict
+    intent: str
+
+@app.post("/api/internal/tasks/disambiguate")
+async def task_disambiguate(payload: TaskDisambiguatePayload, request: Request):
+    await orchestrator._run_disambiguation(payload.investigation_id, payload.query, payload.optional_url)
+    return {"status": "ok"}
+
+@app.post("/api/internal/tasks/pipeline")
+async def task_pipeline(payload: TaskPipelinePayload, request: Request):
+    entity = CandidateEntity(**payload.entity)
+    await orchestrator._execute_full_research_pipeline(payload.investigation_id, entity, payload.intent)
+    return {"status": "ok"}
 
 
 

@@ -39,7 +39,7 @@ import { VectorFieldBackground } from './components/animations/VectorFieldBackgr
 import { AnimatedEE } from './components/animations/AnimatedEE';
 import { UpdateNotifier } from './components/common/UpdateNotifier';
 import { isSoundMuted, setSoundMuted, playSuccessChime } from './utils/audio';
-import { trackEvent } from './utils/AnalyticsService';
+import { track } from './utils/analytics';
 
 export default function App() {
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
@@ -270,13 +270,30 @@ export default function App() {
     }
   };
 
-  const handleStartInvestigation = async (subjectQuery: string) => {
+  const handleStartInvestigation = async (
+    subjectQuery: string,
+    entryPoint: 'search_form' | 'starter_chip' | 'command_palette' | 'chat_deep_screen' | 'scout_deep_screen' | 'command_palette_deep_screen'
+  ) => {
     if (!subjectQuery.trim()) return;
     setLoading(true);
     setError(null);
     setEvents([]);
     saveRecentSearch(subjectQuery.trim());
-    trackEvent('pipeline_start', { query: subjectQuery.trim() });
+    
+    if (entryPoint.endsWith('_deep_screen')) {
+      const sourceTool = entryPoint.replace('_deep_screen', '') as 'chat' | 'scout' | 'command_palette';
+      track('deep_screen_launched', {
+        source_tool: sourceTool,
+        query_length: subjectQuery.trim().length,
+        target_provided: !!subjectQuery.trim(),
+      });
+    } else {
+      track('investigation_started', {
+        entry_point: entryPoint as 'search_form' | 'starter_chip' | 'command_palette',
+        query_length: subjectQuery.trim().length,
+        has_optional_url: !!optionalUrl.trim(),
+      });
+    }
     try {
       const res = await fetch('/api/investigations', {
         method: 'POST',
@@ -359,7 +376,6 @@ export default function App() {
   const handleApproveOutreach = async (draftId: string, payloadHash: string) => {
     if (!investigation) return;
     setOutreachLoading(true);
-    trackEvent('outreach_approved', { draftId, payloadHash });
     try {
       const res = await fetch(`/api/investigations/${investigation.id}/outreach/approve`, {
         method: 'POST',
@@ -387,6 +403,11 @@ export default function App() {
 
   const handleExport = () => {
     if (!investigation) return;
+    track('dossier_exported', {
+      investigation_id: investigation.id,
+      export_format: 'markdown',
+      claim_count: investigation.claims?.length || 0,
+    });
     window.open(`/api/investigations/${investigation.id}/export`, '_blank');
   };
 
@@ -399,16 +420,11 @@ export default function App() {
     setActiveTool('CONVERSATIONAL_DESK');
   };
 
-  const handleDeepScreen = (festivalName: string) => {
-    import('./utils/AnalyticsService').then(({ trackEvent }) => {
-      if (festivalName.toLowerCase().includes('aldergate')) {
-        trackEvent('demo_mode_active', { festival_name: festivalName });
-      }
-    });
+  const handleDeepScreen = (festivalName: string, sourceTool: 'chat' | 'scout' | 'command_palette') => {
     setActiveTool('DUE_DILIGENCE');
     setQuery(festivalName);
     handleReset();
-    handleStartInvestigation(festivalName);
+    handleStartInvestigation(festivalName, `${sourceTool}_deep_screen` as any);
   };
 
   const handleScoutLaunch = (profile: FilmProfile) => {
@@ -561,7 +577,7 @@ export default function App() {
           {/* View 1: Conversational Producer Desk (Home) */}
           {activeTool === 'CONVERSATIONAL_DESK' && (
             <ChatContainer
-              onLaunchDueDiligence={handleDeepScreen}
+              onLaunchDueDiligence={(q) => handleDeepScreen(q, 'chat')}
               onLaunchOpportunityScout={handleScoutLaunch}
               onNavigateToPlaygroundFeedback={() => setActiveTool('DESIGN_PLAYGROUND')}
               onOpenKeyboardHelp={() => setIsKeyboardHelpOpen(true)}
@@ -574,7 +590,7 @@ export default function App() {
           {/* View 3: Opportunity Scout */}
           {activeTool === 'OPPORTUNITY_SCOUT' && (
             <OpportunityScout
-              onDeepScreen={handleDeepScreen}
+              onDeepScreen={(q) => handleDeepScreen(q, 'scout')}
               initialProfile={initialScoutProfile}
             />
           )}
@@ -609,7 +625,7 @@ export default function App() {
                     <form
                       onSubmit={(e) => {
                         e.preventDefault();
-                        handleStartInvestigation(query);
+                        handleStartInvestigation(query, 'search_form');
                       }}
                       className="p-2 rounded-2xl bg-darkroom-surface shadow-2xl shadow-black/80 flex flex-col sm:flex-row gap-2 transition-all"
                     >
@@ -647,7 +663,7 @@ export default function App() {
                             type="button"
                             onClick={() => {
                               setQuery(name);
-                              handleStartInvestigation(name);
+                              handleStartInvestigation(name, 'starter_chip');
                             }}
                             className="px-3.5 py-1.5 rounded-xl bg-darkroom-surface text-slate-300 hover:text-white hover:bg-darkroom-card transition-all cursor-pointer text-xs font-mono shadow-md"
                           >
@@ -732,7 +748,7 @@ export default function App() {
           isOpen={isCommandPaletteOpen}
           onClose={() => setIsCommandPaletteOpen(false)}
           onSelectTool={setActiveTool}
-          onSearchFestival={handleDeepScreen}
+          onSearchFestival={(q) => handleDeepScreen(q, 'command_palette')}
         />
 
         {/* Outreach Sandbox Approval Modal */}

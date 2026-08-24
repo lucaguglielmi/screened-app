@@ -40,11 +40,10 @@ export const ArchitecturePage: React.FC = () => {
         <div className="p-4 rounded-xl bg-darkroom-card space-y-2">
           <div className="flex items-center space-x-2 text-purple-400 font-bold font-mono">
             <Shield className="w-4 h-4" />
-            <span>Parallel Search & Gemini Clients</span>
+            <span>Google Cloud Tasks & Parallel SDK</span>
           </div>
           <p className="text-zinc-300">
-            Integrates with Parallel Search SDK for external domain intelligence and Vertex AI for
-            structured extraction, bounded by asyncio concurrency limits.
+            Durable queues for resilient background investigation tasks. Integrates with Parallel Search SDK for external domain intelligence and Gemini for structured extraction.
           </p>
         </div>
       </div>

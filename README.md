@@ -52,7 +52,7 @@ Every year, independent filmmakers spend thousands of pounds on festival submiss
 
 Screened operates an orchestrated pipeline of specialized autonomous agents using **Vertex AI (Gemini 2.5 Pro & Gemini 2.5 Flash)** and the **Parallel Search API**:
 
-```
+```text
                                [ Filmmaker Query / Upload ]
                                             │
                                             ▼
@@ -61,10 +61,13 @@ Screened operates an orchestrated pipeline of specialized autonomous agents usin
 │                                                                                          │
 │ ┌────────────────────────┐    ┌────────────────────────┐    ┌────────────────────────┐   │
 │ │ Producer Desk Agent    │───▶│ Disambiguator Agent    │───▶│ Planner Agent          │   │
-│ │ (LlmAgent)             │    │ (SequentialAgent)      │    │ (LlmAgent)             │   │
+│ │ (LlmAgent)             │    │ (Cloud Tasks)          │    │ (LlmAgent)             │   │
 │ └────────────────────────┘    └────────────────────────┘    └────────────────────────┘   │
 │                                                                        │                 │
 │                                           ┌────────────────────────────┘                 │
+│                                           ▼                                              │
+│                               [ Google Cloud Tasks Queue ]                               │
+│                                           │                                              │
 │                                           ▼                                              │
 │                               ┌───────────────────────┐                                  │
 │                               │ Deep Vetting (Parallel)│                                 │
@@ -145,7 +148,7 @@ Screened operates an orchestrated pipeline of specialized autonomous agents usin
 | Layer | Component | Description |
 | :--- | :--- | :--- |
 | **Evidence Engine** | **Parallel Domain** | 6-Capability Matrix: Search, Extract (Verbatim), Task API, FindAll, Monitor (Drift), Task Groups |
-| **Orchestration** | **Google ADK** | `ParallelAgent`, `SequentialAgent`, `LlmAgent` orchestrating workflows |
+| **Orchestration** | **Cloud Tasks & ADK** | Durable queues, `ParallelAgent`, `SequentialAgent`, `LlmAgent` orchestrating workflows |
 | **Agent Intelligence** | Vertex AI (`google-genai` SDK) | Gemini 2.5 Pro (Function Calling & Synthesis) + Gemini 2.5 Flash (Disambiguation) |
 | **Backend API** | FastAPI + Uvicorn + Pydantic v2 | High-performance asynchronous REST & Server-Sent Events (SSE) |
 | **Database** | Google Cloud Firestore (Native) | Real-time investigation state, audit trail, and cached source hash ledger |

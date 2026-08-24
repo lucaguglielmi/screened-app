@@ -6,6 +6,24 @@ from datetime import datetime, timezone
 import uuid
 import os
 import traceback
+import traceback
+import json
+
+try:
+    from google.cloud import tasks_v2
+    tasks_client = tasks_v2.CloudTasksClient()
+    PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT", "")
+    LOCATION = os.environ.get("GOOGLE_CLOUD_LOCATION", "")
+    TASKS_QUEUE = os.environ.get("CLOUD_TASKS_QUEUE", "screened-tasks")
+    if PROJECT and LOCATION:
+        QUEUE_PATH = tasks_client.queue_path(PROJECT, LOCATION, TASKS_QUEUE)
+    else:
+        QUEUE_PATH = None
+    OIDC_SERVICE_ACCOUNT = os.environ.get("OIDC_SERVICE_ACCOUNT_EMAIL", "")
+except Exception as e:
+    tasks_client = None
+    QUEUE_PATH = None
+    logger.warning(f"Could not initialize Cloud Tasks client: {e}")
 
 from google.adk.runners import Runner
 
@@ -47,6 +65,35 @@ from backend.orchestrator.adk_bridge import pump_adk_events
 logger = logging.getLogger("screened.orchestrator.state_machine")
 
 USE_ADK = os.getenv("USE_ADK", "true").lower() == "true"
+
+def enqueue_task(path: str, payload: dict, fallback_task_func, *args):
+    """Enqueues a task to Cloud Tasks, or falls back to asyncio."""
+    if tasks_client and QUEUE_PATH:
+        try:
+            worker_url = os.environ.get("WORKER_URL", "http://localhost:8000")
+            url = f"{worker_url}{path}"
+            
+            task = {
+                "http_request": {
+                    "http_method": tasks_v2.HttpMethod.POST,
+                    "url": url,
+                    "headers": {"Content-type": "application/json"},
+                    "body": json.dumps(payload).encode(),
+                }
+            }
+            if OIDC_SERVICE_ACCOUNT:
+                task["http_request"]["oidc_token"] = {"service_account_email": OIDC_SERVICE_ACCOUNT}
+                
+            tasks_client.create_task(request={"parent": QUEUE_PATH, "task": task})
+            return None
+        except Exception as e:
+            logger.warning(f"Cloud Tasks enqueue failed: {e}", extra={"fallbackPath": path})
+    else:
+        logger.warning("Cloud Tasks not configured", extra={"fallbackPath": path})
+        
+    # Fallback to asyncio
+    return asyncio.create_task(fallback_task_func(*args))
+
 
 class Orchestrator:
     """Coordinates multi-agent execution and manages investigation lifecycle."""
@@ -109,8 +156,20 @@ class Orchestrator:
         )
 
         # Run Disambiguation asynchronously in background or immediate
-        task = asyncio.create_task(self._run_disambiguation(inv_id, query, optional_url))
-        self._running_tasks[inv_id] = task
+        task = enqueue_task(
+            "/api/internal/tasks/disambiguate",
+            {
+                "investigation_id": inv_id,
+                "query": query,
+                "optional_url": optional_url
+            },
+            self._run_disambiguation,
+            inv_id,
+            query,
+            optional_url
+        )
+        if task:
+            self._running_tasks[inv_id] = task
 
         return inv_data
 
@@ -173,8 +232,20 @@ class Orchestrator:
         )
 
         # Launch research pipeline in background task
-        task = asyncio.create_task(self._execute_full_research_pipeline(investigation_id, entity, inv_data.get("intent", "Vet before submitting")))
-        self._running_tasks[investigation_id] = task
+        task = enqueue_task(
+            "/api/internal/tasks/pipeline",
+            {
+                "investigation_id": investigation_id,
+                "entity": entity.model_dump(),
+                "intent": inv_data.get("intent", "Vet before submitting")
+            },
+            self._execute_full_research_pipeline,
+            investigation_id,
+            entity,
+            inv_data.get("intent", "Vet before submitting")
+        )
+        if task:
+            self._running_tasks[investigation_id] = task
 
         return inv_data
 
@@ -203,13 +274,37 @@ class Orchestrator:
         if inv_data.get("confirmedEntity"):
             entity = CandidateEntity(**inv_data["confirmedEntity"])
             intent = inv_data.get("intent", "Vet before submitting")
-            task = asyncio.create_task(self._execute_full_research_pipeline(investigation_id, entity, intent))
-            self._running_tasks[investigation_id] = task
+            task = enqueue_task(
+                "/api/internal/tasks/pipeline",
+                {
+                    "investigation_id": investigation_id,
+                    "entity": entity.model_dump(),
+                    "intent": intent
+                },
+                self._execute_full_research_pipeline,
+                investigation_id,
+                entity,
+                intent
+            )
+            if task:
+                self._running_tasks[investigation_id] = task
         else:
             query = inv_data.get("query", "")
             optional_url = inv_data.get("optionalUrl")
-            task = asyncio.create_task(self._run_disambiguation(investigation_id, query, optional_url))
-            self._running_tasks[investigation_id] = task
+            task = enqueue_task(
+                "/api/internal/tasks/disambiguate",
+                {
+                    "investigation_id": investigation_id,
+                    "query": query,
+                    "optional_url": optional_url
+                },
+                self._run_disambiguation,
+                investigation_id,
+                query,
+                optional_url
+            )
+            if task:
+                self._running_tasks[investigation_id] = task
 
         return inv_data
 
