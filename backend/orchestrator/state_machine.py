@@ -13,9 +13,11 @@ logger = logging.getLogger("screened.orchestrator.state_machine")
 try:
     from opentelemetry import trace
     from opentelemetry.propagate import inject
+    tracer = trace.get_tracer(__name__)
 except ImportError:
     trace = None
     inject = None
+    tracer = None
 
 try:
     from google.cloud import tasks_v2
@@ -193,7 +195,14 @@ class Orchestrator:
                 message="Scanning web footprint to verify festival identity and avoid mix-ups...",
             )
 
-            candidates = await self.disambiguator.disambiguate(query, optional_url)
+            if tracer:
+                with tracer.start_as_current_span("DisambiguatorAgent.disambiguate") as span:
+                    span.set_attribute("screened.query", query)
+                    if optional_url:
+                        span.set_attribute("screened.optional_url", optional_url)
+                    candidates = await self.disambiguator.disambiguate(query, optional_url)
+            else:
+                candidates = await self.disambiguator.disambiguate(query, optional_url)
 
             inv_data = await db.get_investigation(inv_id) or {}
             inv_data["status"] = InvestigationStatus.AWAITING_ENTITY_CONFIRMATION.value
@@ -341,6 +350,11 @@ class Orchestrator:
                 message="Generating domain research questions for Festival, Organizer, and Participants...",
             )
 
+            if tracer:
+                planner_span = tracer.start_as_current_span("PlannerAgent.create_plan")
+                planner_span.__enter__()
+                planner_span.set_attribute("screened.entity_name", entity.name)
+
             if USE_ADK:
                 logger.info("Using ADK for Planner Agent")
                 runner = Runner(
@@ -380,6 +394,9 @@ class Orchestrator:
             else:
                 plan = await self.planner.create_plan(entity, intent)
 
+            if tracer:
+                planner_span.__exit__(None, None, None)
+
             await broadcaster.emit(
                 investigation_id=investigation_id,
                 event_type=EventType.PLAN_READY,
@@ -399,11 +416,19 @@ class Orchestrator:
                 message="Launching FestivalAgent, OrganizerAgent, and ParticipantsAgent concurrently via Parallel Search API...",
             )
 
-            domain_claims_raw = await run_parallel_domain_agents(
-                plans=plan.domains,
-                investigation_id=investigation_id,
-                entity_info=entity.model_dump()
-            )
+            if tracer:
+                with tracer.start_as_current_span("run_parallel_domain_agents") as span:
+                    domain_claims_raw = await run_parallel_domain_agents(
+                        plans=plan.domains,
+                        investigation_id=investigation_id,
+                        entity_info=entity.model_dump()
+                    )
+            else:
+                domain_claims_raw = await run_parallel_domain_agents(
+                    plans=plan.domains,
+                    investigation_id=investigation_id,
+                    entity_info=entity.model_dump()
+                )
 
             # We can't save 'all_sources' directly anymore since we get claims back.
             # So we skip saving sources and directly proceed to Claim Assembly.
@@ -429,6 +454,10 @@ class Orchestrator:
             extract_tool = ParallelExtractTool()
 
             all_sources = []
+            
+            if tracer:
+                claim_span = tracer.start_as_current_span("ClaimAssembler.assemble")
+                claim_span.__enter__()
             for domain_enum, domain_result in domain_claims_raw.items():
                 domain_claims_list = domain_result.get("claims", [])
                 domain_basis_list = domain_result.get("basis", [])
@@ -521,6 +550,10 @@ class Orchestrator:
                 if basis_urls:
                     await extract_tool.extract_and_verify(basis_urls, domain_evidence_list)
 
+            if tracer:
+                claim_span.set_attribute("screened.claims_extracted", len(claims))
+                claim_span.__exit__(None, None, None)
+                
             await db.save_claims(investigation_id, claims)
 
             await broadcaster.emit(
