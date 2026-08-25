@@ -22,37 +22,38 @@
 
   /* Midnight Darkroom Theme Tokens (Palette 1) */
   --color-darkroom-bg: var(--color-midnight-base);
-  --color-darkroom-surface: var(--color-darkroom-surface);
-  --color-darkroom-card: var(--color-darkroom-card);
+  --color-darkroom-surface: var(--color-midnight-surface);
+  --color-darkroom-card: var(--color-midnight-card);
   --color-darkroom-border: var(--color-midnight-border);
   --color-darkroom-text: var(--color-white);
   --color-darkroom-muted: var(--color-midnight-border);
 
   /* Palette 1 Extended Swatches */
-  --color-midnight-void: #020408;
-  --color-midnight-bg: #070B14;
-  --color-midnight-surface: #0E1424;
-  --color-midnight-card: #151D30;
-  --color-midnight-border: #1E293B;
-  --color-midnight-indigo: #4338CA;
-  --color-midnight-violet: #6D28D9;
-  --color-midnight-royal: #312E81;
+  --color-midnight-void: #05050A;
+  --color-midnight-base: #070913;
+  --color-midnight-bg: #070913;
+  --color-midnight-surface: #0E1124;
+  --color-midnight-card: #141731;
+  --color-midnight-border: #22274C;
+  --color-midnight-indigo: #1E124A;
+  --color-midnight-violet: #2E107D;
+  --color-midnight-royal: #2018E6;
   --color-midnight-glow: rgba(32, 24, 230, 0.25);
 
   /* Palette 2 Tool Swatches */
-  --color-tool-diligence: #10B981; /* Emerald Green */
+  --color-tool-diligence: #00D29E;
   --color-tool-diligence-hover: #FFFFFF;
-  --color-tool-diligence-glow: rgba(16, 185, 129, 0.25);
+  --color-tool-diligence-glow: rgba(0, 210, 158, 0.25);
 
-  --color-tool-scout: #0EA5E9; /* Sky Blue */
-  --color-tool-scout-hover: #38BDF8; /* Lighter Sky Blue */
-  --color-tool-scout-glow: rgba(14, 165, 233, 0.25);
+  --color-tool-scout: #F43F5E;
+  --color-tool-scout-hover: #FB7185;
+  --color-tool-scout-glow: rgba(244, 63, 94, 0.25);
 
   --color-tool-ocean: #3B82F6;
   --color-tool-petrol: #FFFFFF;
 
   /* Accent Desk Royal Blue (Palette 1 Primary) */
-  --color-indigo-accent: #312E81;
+  --color-indigo-accent: #2018E6;
   --color-indigo-glow: rgba(32, 24, 230, 0.2);
 
   /* Extra Colors */
