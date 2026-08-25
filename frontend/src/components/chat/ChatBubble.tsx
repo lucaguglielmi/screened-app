@@ -222,7 +222,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
                   </button>
 
                   {/* Tooltip */}
-                  <div className="absolute bottom-full left-0 mb-2 w-64 p-3 rounded-xl bg-darkroom-surface border border-indigo-500/40 text-slate-100 text-xs shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50">
+                  <div className="absolute bottom-full left-0 mb-2 w-64 p-3 rounded-xl bg-darkroom-surface border border-indigo-500/40 text-slate-100 text-xs shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 pointer-events-none z-50">
                     <div className="font-semibold text-indigo-300 mb-1">
                       Upload Document
                     </div>

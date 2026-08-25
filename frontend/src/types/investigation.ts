@@ -110,6 +110,7 @@ export interface DossierReport {
   participantFeedback: string;
   unresolvedQuestions: string[];
   filmmakerChecklist: string[];
+  keyPersons?: string[];
 }
 
 export interface TransparencyMetric {
@@ -236,6 +237,16 @@ export interface ActivityEvent {
 export type VettingSignalStatus =
   'VERIFIED_AUTHENTIC' | 'INFORMATIONAL' | 'AMBER_WARNING' | 'RED_FLAG' | 'INCONCLUSIVE';
 
+export interface KeyPerson {
+  name: string;
+  roles: string[];
+  companies: string[];
+  associatedFestivals: string[];
+  isFestivalMillSuspect: boolean;
+  hasDistributionOverlap: boolean;
+  notes: string;
+}
+
 export interface DeepVettingDimension {
   id: string;
   dimensionKey: string;
@@ -254,6 +265,8 @@ export interface DeepVettingReport {
   overallAuthenticityScore: number;
   totalFlags: number;
   dimensions: DeepVettingDimension[];
+  keyPersonnel?: KeyPerson[];
+  disclaimer?: string;
   generatedAt: string;
 }
 

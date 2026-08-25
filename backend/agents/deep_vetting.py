@@ -28,14 +28,14 @@ from backend.tools.source_tiers import (
     CORPORATE_IDENTITY_DOMAINS,
     DOMAIN_FORENSICS_DOMAINS,
     VENUE_REALITY_DOMAINS,
-    JURY_LAURELS_DOMAINS
+    PERSONNEL_DOSSIER_DOMAINS
 )
 
 DIMENSIONS = [
-    {"key": "CORPORATE_REGISTRY", "name": "corporate_identity", "desc": "Inspect company registration, entity active status, incorporation date vs claimed edition history.", "include_domains": CORPORATE_IDENTITY_DOMAINS},
+    {"key": "CORPORATE_REGISTRY", "name": "corporate_identity", "desc": "Inspect company registration, entity active status, incorporate date vs claimed edition history, explicitly search for company officers, names, appointment dates, and their other active directorships.", "include_domains": CORPORATE_IDENTITY_DOMAINS},
     {"key": "DOMAIN_PROVENANCE", "name": "domain_forensics", "desc": "Inspect domain registration history, longevity vs claimed heritage, website provenance.", "include_domains": DOMAIN_FORENSICS_DOMAINS},
     {"key": "VENUE_CORROBORATION", "name": "venue_reality", "desc": "Cross-check physical theater leases, cinema screening spaces, and event schedules.", "include_domains": VENUE_REALITY_DOMAINS},
-    {"key": "PERSONNEL_DOSSIER", "name": "jury_laurels", "desc": "Factually assess Festival Directors, Programmers, and Jury Members from public cinema credits.", "include_domains": JURY_LAURELS_DOMAINS},
+    {"key": "PERSONNEL_DOSSIER", "name": "personnel_dossier", "desc": "Factually assess Festival Directors, Programmers, and Jury Members. Check if they run multiple other festivals (Festival Mills) or own/operate distribution and consulting companies targeting filmmakers.", "include_domains": PERSONNEL_DOSSIER_DOMAINS},
     {"key": "BOILERPLATE_PLAGIARISM", "name": "rules_plagiarism", "desc": "Check if submission rules, fee policies, or waiver texts are unique or cloned from known laurel mills.", "include_domains": None},
 ]
 
@@ -100,7 +100,9 @@ class DeepVettingAgent:
 You are the Chief Investigative Forensic Analyst for Screened.
 Synthesize the parallel dimension analyses into a final deep vetting report for {festival_name}.
 Focus on these 5 dimensions: CORPORATE_REGISTRY, DOMAIN_PROVENANCE, VENUE_CORROBORATION, PERSONNEL_DOSSIER, BOILERPLATE_PLAGIARISM.
+Aggregate the "Festival Mill" and "Consulting Overlap" findings into prominent RED_FLAG or AMBER_WARNING signals.
 Fill in the other 2 (ALUMNI_FOOTPRINT, IMAGE_PROVENANCE) with INCONCLUSIVE or INFORMATIONAL defaults.
+Ensure you populate the keyPersonnel array with extracted information about directors, officers, programmers and jury.
 Return a JSON object conforming strictly to the output schema.
 """
 

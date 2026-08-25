@@ -181,8 +181,11 @@ export const DetailDial: React.FC<Props> = ({ density, onChange, dossier }) => {
     setTimeout(() => setDownloadingMd(false), 1500);
   };
 
+  const modeValues: DetailDensity[] = ['SIMPLIFIED', 'BALANCED', 'FULL_EVIDENCE', 'MACHINE_AI_INGESTION'];
+  const currentIndex = modeValues.indexOf(activeMode) !== -1 ? modeValues.indexOf(activeMode) : 1;
+
   return (
-    <div className="w-full rounded-3xl bg-darkroom-surface p-4 sm:p-5 shadow-2xl space-y-4">
+    <div className="w-full rounded-3xl bg-darkroom-surface p-4 sm:p-5 shadow-2xl space-y-6">
       {/* Top Header: Exact user prompt and Action Buttons */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="flex items-center gap-2.5">
@@ -235,43 +238,36 @@ export const DetailDial: React.FC<Props> = ({ density, onChange, dossier }) => {
         </div>
       </div>
 
-      {/* 4-Tier Segmented Mode Selector Rail */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
-        {modeOptions.map((opt) => {
-          const isSelected = activeMode === opt.value;
-          const Icon = opt.icon;
-
-          return (
-            <button
-              key={opt.value}
-              type="button"
+      {/* Slider Bar */}
+      <div className="px-2">
+        <input 
+          type="range"
+          min="0"
+          max="3"
+          step="1"
+          value={currentIndex}
+          onChange={(e) => {
+            soundEffects.playClick();
+            onChange(modeValues[parseInt(e.target.value, 10)]);
+          }}
+          className="w-full h-2 bg-darkroom-card rounded-lg appearance-none cursor-pointer accent-indigo-500"
+        />
+        <div className="flex justify-between mt-3 text-xs font-mono">
+          {modeOptions.map((opt, idx) => (
+            <div 
+              key={opt.value} 
+              className={`flex flex-col items-center gap-1 w-1/4 text-center cursor-pointer ${idx === currentIndex ? 'text-indigo-400 font-bold' : 'text-slate-400 hover:text-slate-200'}`}
               onClick={() => {
                 soundEffects.playClick();
                 onChange(opt.value);
               }}
-              className={`p-3 sm:p-3.5 rounded-2xl text-left transition-all cursor-pointer flex flex-col justify-between gap-1.5 ${
-                isSelected
-                  ? `${opt.activeClass} scale-102`
-                  : 'bg-darkroom-card text-slate-300 hover:bg-paper-border hover:bg-darkroom-border hover:text-white'
-              }`}
             >
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <Icon className="size-4 shrink-0" />
-                  <span className="text-xs font-bold font-mono tracking-tight">
-                    {opt.stepNumber}. {opt.label}
-                  </span>
-                </div>
-                {isSelected && <span className="size-2 rounded-full bg-white animate-pulse" />}
-              </div>
-              <p
-                className={`text-[10px] font-mono leading-tight ${isSelected ? 'text-white/85' : 'text-slate-400'}`}
-              >
-                {opt.sublabel}
-              </p>
-            </button>
-          );
-        })}
+              <opt.icon className={`size-4 ${idx === currentIndex ? 'text-indigo-400' : 'text-slate-500'}`} />
+              <span className="hidden sm:inline">{opt.label}</span>
+              <span className="inline sm:hidden text-[10px]">{opt.stepNumber}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

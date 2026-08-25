@@ -10,7 +10,8 @@ TIER_1_DOMAINS = {
     "hollywoodreporter.com",
     "screendaily.com",
     "deadline.com",
-    "imdb.com"
+    "imdb.com",
+    "opencorporates.com"
 }
 
 # Tier 3: Anonymous forums, social platforms, blog comments
@@ -28,7 +29,8 @@ TIER_3_DOMAINS = {
 CORPORATE_IDENTITY_DOMAINS = [
     "companieshouse.gov.uk",
     "gov.uk",
-    "find-and-update.company-information.service.gov.uk"
+    "find-and-update.company-information.service.gov.uk",
+    "opencorporates.com"
 ]
 
 DOMAIN_FORENSICS_DOMAINS = [
@@ -44,12 +46,13 @@ VENUE_REALITY_DOMAINS = [
     "yelp.com"
 ]
 
-JURY_LAURELS_DOMAINS = [
+PERSONNEL_DOSSIER_DOMAINS = [
     "variety.com",
     "hollywoodreporter.com",
     "screendaily.com",
     "deadline.com",
-    "imdb.com"
+    "imdb.com",
+    "linkedin.com"
 ]
 
 def determine_source_tier(domain: str) -> int:

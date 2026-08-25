@@ -54,15 +54,16 @@ import {
   Check,
   Search,
   Mail,
-  Fingerprint,
   Bot,
   Code,
+  User,
+  Fingerprint,
 } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface Props {
   entity: CandidateEntity;
-  dossier: DossierReport;
+  dossier?: DossierReport;
   claims: AtomicClaim[];
   sources: SourceRecord[];
   disputes: DisputeRecord[];
@@ -108,6 +109,7 @@ export const EvidenceDossier: React.FC<Props> = ({
   };
 
   const handleCopySummary = () => {
+    if (!dossier) return;
     const text = `# ${entity.name} — Screened Due-Diligence Summary\n\n${dossier.executiveSummary}\n\n## Action Checklist:\n${dossier.filmmakerChecklist.map((c, i) => `${i + 1}. ${c}`).join('\n')}\n\nGenerated with Screened (Agentic Cinema Due-Diligence)`;
     navigator.clipboard.writeText(text);
     setCopiedSummary(true);
@@ -125,10 +127,10 @@ export const EvidenceDossier: React.FC<Props> = ({
       investigationId: entity.id || 'inv-001',
       festivalName: entity.name,
       officialDomain: entity.officialDomain || '',
-      reportSummary: dossier.executiveSummary,
-      festivalDomainSummary: dossier.festivalOverview,
-      organizerDomainSummary: dossier.organizerProfile,
-      participantsDomainSummary: dossier.participantFeedback,
+      reportSummary: dossier?.executiveSummary || '',
+      festivalDomainSummary: dossier?.festivalOverview || '',
+      organizerDomainSummary: dossier?.organizerProfile || '',
+      participantsDomainSummary: dossier?.participantFeedback || '',
       fitDomainSummary: '',
       contradictions: disputes.map((d, i) => ({
         id: `c-${i}`,
@@ -191,9 +193,9 @@ export const EvidenceDossier: React.FC<Props> = ({
         transparencyScore: 85,
         overallRisk: disputes.length > 0 ? 'MEDIUM' : 'LOW',
       },
-      executiveSynthesis: dossier.executiveSummary,
-      filmmakerChecklist: dossier.filmmakerChecklist,
-      unresolvedQuestions: dossier.unresolvedQuestions,
+      executiveSynthesis: dossier?.executiveSummary || '',
+      filmmakerChecklist: dossier?.filmmakerChecklist || [],
+      unresolvedQuestions: dossier?.unresolvedQuestions || [],
       contradictions: disputes.map((d) => ({
         topic: d.pointOfContention || 'Dispute',
         narrative: d.guidance || 'Under investigation',
@@ -229,6 +231,8 @@ export const EvidenceDossier: React.FC<Props> = ({
     text += `TRANSPARENCY SCORE: 85 / 100\n`;
     text += `OVERALL RISK ASSESSMENT: ${disputes.length > 0 ? 'MEDIUM' : 'LOW'}\n`;
     text += `AUDIT TIMESTAMP: ${new Date().toISOString()}\n\n`;
+
+    if (!dossier) return text;
 
     text += `--- EXECUTIVE SUMMARY ---\n${dossier.executiveSummary}\n\n`;
 
@@ -383,54 +387,34 @@ export const EvidenceDossier: React.FC<Props> = ({
       animate={{ opacity: 1, y: 0 }}
       className="max-w-5xl mx-auto space-y-6"
     >
-      {/* Top Profile & Header Card */}
-      <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-5">
+      {/* Sticky Top Profile & Header Card */}
+      <div className="sticky top-4 z-40 bg-darkroom-bg/90 backdrop-blur-md p-6 rounded-3xl shadow-2xl space-y-5 border border-darkroom-border">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-paper-card border-darkroom-card pb-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-400">
               <FileText className="size-4" />
-              <span>Evidence Dossier Report</span>
+              <span>Evidence Dossier</span>
             </div>
             <h1 className="font-serif text-2xl sm:text-3xl font-semibold text-white">
               {entity.name}
             </h1>
-            <div className="flex items-center gap-4 text-xs font-mono text-slate-400 pt-1 flex-wrap">
-              {entity.cityCountry && (
-                <span className="inline-flex items-center gap-1">
-                  <MapPin className="size-3 text-indigo-400" /> {entity.cityCountry}
-                </span>
-              )}
-              {entity.foundedYear && (
-                <span className="inline-flex items-center gap-1">
-                  <Calendar className="size-3 text-indigo-400" /> Est. {entity.foundedYear}
-                </span>
-              )}
-              {entity.officialDomain && (
-                <a
-                  href={`https://${entity.officialDomain}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-indigo-400 hover:underline"
-                >
-                  <Globe className="size-3" /> {entity.officialDomain}
-                </a>
-              )}
-            </div>
           </div>
 
           <div className="flex items-center gap-2 flex-wrap no-print">
-            <button
-              onClick={handleCopySummary}
-              className="px-3.5 py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-medium text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer"
-              title="Copy executive summary to clipboard"
-            >
-              {copiedSummary ? (
-                <Check className="size-3.5 text-emerald-400" />
-              ) : (
-                <Copy className="size-3.5" />
-              )}
-              <span>{copiedSummary ? 'Copied!' : 'Copy Summary'}</span>
-            </button>
+            {dossier && (
+              <button
+                onClick={handleCopySummary}
+                className="px-3.5 py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-medium text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer"
+                title="Copy executive summary to clipboard"
+              >
+                {copiedSummary ? (
+                  <Check className="size-3.5 text-emerald-400" />
+                ) : (
+                  <Copy className="size-3.5" />
+                )}
+                <span>{copiedSummary ? 'Copied!' : 'Copy Summary'}</span>
+              </button>
+            )}
             <button
               onClick={handlePrint}
               className="px-3.5 py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-medium text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer"
@@ -449,28 +433,67 @@ export const EvidenceDossier: React.FC<Props> = ({
             </button>
             <button
               onClick={onNewInvestigation}
-              className="px-3.5 py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-medium text-slate-200 transition-colors cursor-pointer"
+              className="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium transition-colors flex items-center gap-1.5 cursor-pointer shadow-md"
             >
-              New Search
+              <Search className="size-3.5" />
+              <span>New Screen</span>
             </button>
           </div>
         </div>
+        
+        {/* Top Facts */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+          {entity.cityCountry && (
+            <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-darkroom-surface border border-darkroom-border">
+              <MapPin className="size-4 text-indigo-400 shrink-0" />
+              <div className="flex flex-col">
+                <span className="text-[10px] text-slate-400 uppercase tracking-wider font-mono">Location</span>
+                <span className="text-sm font-semibold text-white">{entity.cityCountry}</span>
+              </div>
+            </div>
+          )}
+          {entity.foundedYear && (
+            <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-darkroom-surface border border-darkroom-border">
+              <Calendar className="size-4 text-emerald-400 shrink-0" />
+              <div className="flex flex-col">
+                <span className="text-[10px] text-slate-400 uppercase tracking-wider font-mono">Est. Year</span>
+                <span className="text-sm font-semibold text-white">{entity.foundedYear}</span>
+              </div>
+            </div>
+          )}
+          {entity.officialDomain && (
+            <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-darkroom-surface border border-darkroom-border">
+              <Globe className="size-4 text-blue-400 shrink-0" />
+              <div className="flex flex-col overflow-hidden">
+                <span className="text-[10px] text-slate-400 uppercase tracking-wider font-mono">Official Web</span>
+                <a
+                  href={`https://${entity.officialDomain}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-semibold text-white hover:text-blue-300 truncate"
+                >
+                  {entity.officialDomain}
+                </a>
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* Claim Metric Strip */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center">
-          <div className="p-3 rounded-2xl bg-darkroom-card">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center pt-2">
+          <div className="p-3 rounded-2xl bg-darkroom-surface border border-darkroom-border">
             <div className="text-[10px] font-mono uppercase text-slate-400">Facts</div>
             <div className="text-base font-semibold text-blue-400">{factsCount}</div>
           </div>
-          <div className="p-3 rounded-2xl bg-darkroom-card">
+          <div className="p-3 rounded-2xl bg-darkroom-surface border border-darkroom-border">
             <div className="text-[10px] font-mono uppercase text-slate-400">Allegations</div>
             <div className="text-base font-semibold text-rose-400">{allegationsCount}</div>
           </div>
-          <div className="p-3 rounded-2xl bg-darkroom-card">
+          <div className="p-3 rounded-2xl bg-darkroom-surface border border-darkroom-border">
             <div className="text-[10px] font-mono uppercase text-slate-400">Corroborated</div>
             <div className="text-base font-semibold text-emerald-400">{corroboratedCount}</div>
           </div>
-          <div className="p-3 rounded-2xl bg-darkroom-card">
+          <div className="p-3 rounded-2xl bg-darkroom-surface border border-darkroom-border">
             <div className="text-[10px] font-mono uppercase text-slate-400">Disputes</div>
             <div className="text-base font-semibold text-amber-400">{disputes.length}</div>
           </div>
@@ -515,14 +538,20 @@ export const EvidenceDossier: React.FC<Props> = ({
               : `7 Forensic Inspection Vectors`}
           </span>
         </div>
+
+        {/* 🎛️ 4-Tier Magic Toolbar ("How much data do you want to see?") */}
+        <div className="no-print pt-2">
+          <DetailDial density={density} onChange={handleDensityChange} dossier={dossierAdapter} />
+        </div>
       </div>
 
-      {/* 🎛️ 4-Tier Magic Toolbar ("How much data do you want to see?") */}
-      <div className="no-print">
-        <DetailDial density={density} onChange={handleDensityChange} dossier={dossierAdapter} />
-      </div>
-
-      {activeTab === 'FORENSIC_VETTING' ? (
+      {!dossier ? (
+        <div className="p-16 text-center text-slate-500 animate-pulse font-mono text-sm bg-darkroom-surface rounded-3xl border border-darkroom-card shadow-2xl">
+          <FileText className="size-8 mx-auto mb-4 opacity-50 text-indigo-400" />
+          <div className="text-white font-serif text-xl mb-2">Synthesizing Dossier...</div>
+          Loading deep vetting results, claims, and AI findings.
+        </div>
+      ) : activeTab === 'FORENSIC_VETTING' ? (
         <DeepVettingMatrix report={deepVetting} festivalName={entity.name} />
       ) : normalizedDensity === 'MACHINE_AI_INGESTION' ? (
         /* ==================================================================== */
@@ -633,6 +662,26 @@ export const EvidenceDossier: React.FC<Props> = ({
               {dossier.executiveSummary}
             </p>
           </div>
+
+          {/* Key Persons (All Human Modes) */}
+          {dossier.keyPersons && dossier.keyPersons.length > 0 && (
+            <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4 border border-darkroom-card">
+              <div className="text-xs font-mono uppercase tracking-wider text-indigo-400 flex items-center justify-between">
+                <span>Key Individuals & Entities</span>
+              </div>
+              <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-200/80 font-sans leading-relaxed">
+                <strong>Disclaimer:</strong> This is an automated tool. The associations of these key persons should be verified manually as the tool can make mistakes.
+              </div>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+                {dossier.keyPersons.map((person, idx) => (
+                  <li key={idx} className="flex items-center gap-2 p-3 rounded-xl bg-darkroom-bg text-sm text-slate-200">
+                    <User className="size-4 text-indigo-400 shrink-0" />
+                    <span className="truncate">{person}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {/* React Flow Interactive Diagram (Rendered in Balanced & Full Evidence modes) */}
           {(normalizedDensity === 'BALANCED' || normalizedDensity === 'FULL_EVIDENCE') && (

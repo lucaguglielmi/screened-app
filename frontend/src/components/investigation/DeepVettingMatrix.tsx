@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { DeepVettingReport, VettingSignalStatus } from '../../types/investigation';
 import { soundEffects } from '../../utils/audio';
+import { PersonnelNetworkDiagram } from '../diagrams/PersonnelNetworkDiagram';
 
 interface DeepVettingMatrixProps {
   report?: DeepVettingReport;
@@ -154,6 +155,27 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
         riskWeight: 'LOW',
       },
     ],
+    keyPersonnel: [
+      {
+        name: 'Elliot Grove',
+        roles: ['Founder', 'Festival Director'],
+        companies: ['RAINDANCE FILM FESTIVAL LIMITED'],
+        associatedFestivals: ['Raindance Film Festival'],
+        isFestivalMillSuspect: false,
+        hasDistributionOverlap: false,
+        notes: 'Founder of Raindance Film Festival and BIFA.'
+      },
+      {
+        name: 'David Martinez',
+        roles: ['Senior Programmer'],
+        companies: ['MARTINEZ CONSULTING LLC'],
+        associatedFestivals: ['Raindance Film Festival', 'Independent Shorts Awards'],
+        isFestivalMillSuspect: true,
+        hasDistributionOverlap: true,
+        notes: 'Flagged for multiple festival associations and consulting overlap.'
+      }
+    ],
+    disclaimer: 'This is an automated tool and should be manually reviewed as the AI tool can be wrong.'
   };
 
   const getDimensionIcon = (key: string) => {
@@ -350,10 +372,23 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
           </div>
 
           <span className="text-xs text-zinc-500 font-mono">
-            Showing {filteredDimensions.length} of 7 vectors
+            Showing {filteredDimensions.length} of {activeReport.dimensions.length} vectors
           </span>
         </div>
       </div>
+
+      {/* Disclaimer Banner */}
+      {activeReport.disclaimer && (
+        <div className="px-4 py-3 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-3">
+          <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+          <div>
+            <h4 className="text-sm font-bold text-amber-400">Automated AI Vetting Note</h4>
+            <p className="text-xs text-amber-200/70 mt-1 leading-relaxed">
+              {activeReport.disclaimer}
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* 7 Dimension Cards List */}
       <div className="space-y-3">
@@ -483,6 +518,18 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
           );
         })}
       </div>
+
+      {/* Personnel Network Diagram */}
+      {activeReport.keyPersonnel && activeReport.keyPersonnel.length > 0 && (
+        <div className="pt-6">
+          <h3 className="text-lg font-bold text-white font-serif mb-2">Key Personnel & Entity Network</h3>
+          <p className="text-xs text-zinc-400 mb-4">
+            Visualizing connections between individuals, their corporate directorships, and associated festivals. 
+            Risk flags are highlighted in red.
+          </p>
+          <PersonnelNetworkDiagram keyPersonnel={activeReport.keyPersonnel} />
+        </div>
+      )}
     </div>
   );
 };

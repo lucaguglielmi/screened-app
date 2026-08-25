@@ -19,6 +19,7 @@ class DossierReport(BaseModel):
     participantFeedback: str
     unresolvedQuestions: List[str] = Field(default_factory=list)
     filmmakerChecklist: List[str] = Field(default_factory=list)
+    keyPersons: List[str] = Field(default_factory=list)
 
 
 class ReportWriterAgent:
@@ -77,6 +78,10 @@ CRITICAL EDITORIAL RULES:
 2. Never use banned emotional words (like 'scam', 'fraudulent', 'legit', 'fake').
 3. Focus on verifiable facts: venue confirmations, fee policies, refund terms, organizer legal entities, and community reports.
 4. Clearly distinguish corroborated facts from unverified claims or disputed points.
+5. Do not hallucinate. Use only the provided JSON evidence payload.
+6. Extract any key organizers, directors, or prominent individuals associated with the festival from the evidence into a list of strings formatted as 'Name - Role' (e.g. 'John Doe - Festival Director'). If none are found, return an empty list.
+
+Keep the tone neutral, forensic, and entirely factual. Avoid hyperbole or marketing language.
 
 Return a JSON object conforming to this schema:
 {{

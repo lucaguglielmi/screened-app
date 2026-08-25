@@ -283,7 +283,7 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
             >
               <div className="flex items-center gap-2">
                 <Sparkles className="size-3.5 group-hover:text-indigo-400" />
-                <span>start chat</span>
+                <span>back to main chat</span>
               </div>
               <span className="text-[10px] text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity">Esc</span>
             </button>

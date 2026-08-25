@@ -10,7 +10,6 @@ import {
   Sparkles,
   ArrowRight,
   FileText,
-  Info,
   Activity,
   CheckCircle2,
 } from 'lucide-react';
@@ -350,7 +349,6 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
             {/* Scrollable Domain Cards Container */}
             <div className="flex-1 overflow-y-auto pr-1.5 py-4 space-y-4">
               {domains.map((domain) => {
-                const DomainIcon = domain.icon;
                 return (
                   <div
                     key={domain.id}
