@@ -57,12 +57,11 @@ jobs:
           SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
           IMAGE_TAG="europe-west2-docker.pkg.dev/${PROJECT_ID}/screened-app/screened:${SHORT_SHA}"
 
-          echo "🚀 Building container image via Cloud Build: ${IMAGE_TAG}..."
-          gcloud builds submit \
-            --project="${PROJECT_ID}" \
-            --tag="${IMAGE_TAG}" \
-            --suppress-logs \
-            .
+          echo "🚀 Building container image locally with Docker..."
+          gcloud auth configure-docker europe-west2-docker.pkg.dev --quiet
+          docker build -t "${IMAGE_TAG}" .
+          echo "🚀 Pushing container image to Artifact Registry..."
+          docker push "${IMAGE_TAG}"
 
           echo "🚀 Applying IAM Roles..."
           PROJECT_NUMBER=$(gcloud projects describe "${PROJECT_ID}" --format="value(projectNumber)")
