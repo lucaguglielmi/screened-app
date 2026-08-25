@@ -61,11 +61,12 @@ export const ScrambleText: React.FC<ScrambleTextProps> = ({ text, className }) =
 
   return (
     <span 
-      className={className} 
+      className={`relative inline-block ${className || ''}`} 
       onMouseEnter={() => setIsHovered(true)} 
       onMouseLeave={() => setIsHovered(false)}
     >
-      {displayText}
+      <span className="invisible">{text}</span>
+      <span className="absolute inset-0 left-0 text-left whitespace-nowrap">{displayText}</span>
     </span>
   );
 };

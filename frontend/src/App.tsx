@@ -38,6 +38,7 @@ const DesignPlayground = lazy(() => import('./components/playground/DesignPlaygr
 const EntityConfirmation = lazy(() => import('./components/EntityConfirmation').then(m => ({ default: m.EntityConfirmation })));
 import { VectorFieldBackground } from './components/animations/VectorFieldBackground';
 import { AnimatedEE } from './components/animations/AnimatedEE';
+import { ScrambleText } from './components/animations/ScrambleText';
 import { UpdateNotifier } from './components/common/UpdateNotifier';
 import { isSoundMuted, setSoundMuted, playSuccessChime } from './utils/audio';
 import { track } from './utils/analytics';
@@ -582,9 +583,16 @@ export default function App() {
               {!investigation && (
                 <div className="space-y-12">
                   {/* Hero */}
-                  <section className="text-center max-w-2xl mx-auto space-y-3 pt-4">
-                    <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
-                      Investigate before you submit.
+                  <section className="text-center max-w-2xl mx-auto space-y-6 pt-4">
+                    <div className="flex justify-center items-center gap-2 mb-4">
+                      <span className="font-serif text-6xl sm:text-7xl lg:text-8xl font-black tracking-normal text-white flex items-center">
+                        Scr
+                        <AnimatedEE />
+                        ned
+                      </span>
+                    </div>
+                    <h1 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
+                      <ScrambleText text="Investigate before you submit." />
                     </h1>
                     <p className="text-base text-slate-400 leading-relaxed">
                       Autonomous multi-agent research across trade registries, press archives, and
