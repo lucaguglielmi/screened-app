@@ -11,14 +11,7 @@ import {
 } from 'lucide-react';
 import { soundEffects } from '../../utils/audio';
 import { QuestionsCategoryModal } from '../modals/QuestionsCategoryModal';
-
-interface AttachedFileState {
-  name: string;
-  content?: string;
-  base64?: string;
-  mimeType: string;
-  size: number;
-}
+import { useFileUpload, AttachedFileState } from '../../hooks/useFileUpload';
 
 interface ChatPromptBarProps {
   onSendMessage: (
@@ -42,6 +35,15 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
   const fileInputRef = useRef<HTMLInputElement>(null);
   const recognitionRef = useRef<any>(null);
   const latestTranscriptRef = useRef<string>('');
+
+  const { processFile } = useFileUpload({
+    onFileProcessed: (fileData) => {
+      setAttachedFile(fileData);
+    },
+    onError: (msg) => {
+      setVideoGuardWarning(msg);
+    }
+  });
 
   const handleSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -152,124 +154,6 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
       stopRecording();
     } else {
       startRecording();
-    }
-  };
-
-  const processFile = (file: File) => {
-    setVideoGuardWarning(null);
-    const fileNameLower = file.name.toLowerCase();
-
-    // Security check: block executables, scripts, and potentially malicious files
-    const dangerousExtensions = [
-      '.exe',
-      '.bat',
-      '.sh',
-      '.js',
-      '.vbs',
-      '.cmd',
-      '.scr',
-      '.msi',
-      '.pif',
-      '.application',
-      '.ps1',
-    ];
-    if (dangerousExtensions.some((ext) => fileNameLower.endsWith(ext))) {
-      soundEffects.playCaution();
-      setVideoGuardWarning('Security Alert: This file type is not allowed.');
-      return;
-    }
-
-    const videoExtensions = ['.mp4', '.mov', '.avi', '.mkv', '.webm', '.m4v', '.wmv'];
-
-    // Check for video file attempt
-    if (
-      videoExtensions.some((ext) => fileNameLower.endsWith(ext)) ||
-      file.type.startsWith('video/')
-    ) {
-      soundEffects.playCaution();
-      setVideoGuardWarning(
-        'Video analysis is coming soon! Please drop your script, synopsis, treatment, or email for now.',
-      );
-      return;
-    }
-
-    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
-    if (file.size > MAX_FILE_SIZE) {
-      soundEffects.playCaution();
-      setVideoGuardWarning('Security Alert: File is too large. Please upload files under 10MB.');
-      return;
-    }
-
-    const mimeType =
-      file.type || (fileNameLower.endsWith('.pdf') ? 'application/pdf' : 'text/plain');
-
-    if (mimeType.startsWith('image/')) {
-      // Image cropping/resizing via Canvas
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target?.result as string;
-        const img = new Image();
-        img.onload = () => {
-          const MAX_DIMENSION = 1024;
-          let width = img.width;
-          let height = img.height;
-
-          if (width > height && width > MAX_DIMENSION) {
-            height *= MAX_DIMENSION / width;
-            width = MAX_DIMENSION;
-          } else if (height > MAX_DIMENSION) {
-            width *= MAX_DIMENSION / height;
-            height = MAX_DIMENSION;
-          }
-
-          const canvas = document.createElement('canvas');
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-
-          if (ctx) {
-            ctx.drawImage(img, 0, 0, width, height);
-            const dataUrl = canvas.toDataURL(mimeType, 0.8);
-            const base64Data = dataUrl.split(',')[1];
-            setAttachedFile({
-              name: file.name,
-              base64: base64Data,
-              mimeType,
-              size: file.size,
-            });
-            soundEffects.playClick();
-          }
-        };
-        img.src = result;
-      };
-      reader.readAsDataURL(file);
-    } else if (mimeType.startsWith('application/pdf')) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target?.result as string;
-        const base64Data = result.split(',')[1] || result;
-        setAttachedFile({
-          name: file.name,
-          base64: base64Data,
-          mimeType,
-          size: file.size,
-        });
-        soundEffects.playClick();
-      };
-      reader.readAsDataURL(file);
-    } else {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const content = e.target?.result as string;
-        setAttachedFile({
-          name: file.name,
-          content: content || `[Extracted text from ${file.name}]`,
-          mimeType,
-          size: file.size,
-        });
-        soundEffects.playClick();
-      };
-      reader.readAsText(file);
     }
   };
 

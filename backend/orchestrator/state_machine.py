@@ -356,8 +356,8 @@ class Orchestrator:
             )
 
             if tracer:
-                planner_span = tracer.start_as_current_span("PlannerAgent.create_plan")
-                planner_span.__enter__()
+                planner_span_cm = tracer.start_as_current_span("PlannerAgent.create_plan")
+                planner_span = planner_span_cm.__enter__()
                 planner_span.set_attribute("screened.entity_name", entity.name)
 
             if USE_ADK:
@@ -406,7 +406,7 @@ class Orchestrator:
                 plan = await self.planner.create_plan(entity, intent)
 
             if tracer:
-                planner_span.__exit__(None, None, None)
+                planner_span_cm.__exit__(None, None, None)
 
             await broadcaster.emit(
                 investigation_id=investigation_id,

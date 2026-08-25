@@ -261,7 +261,8 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
               message={msg}
               onLaunchDueDiligence={onLaunchDueDiligence}
               onLaunchOpportunityScout={onLaunchOpportunityScout}
-              onLaunchCustomPrompt={handleSendMessage}
+              onLaunchCustomPrompt={(text) => handleSendMessage(text)}
+              onFileUpload={(fileData) => handleSendMessage(`Please review the attached document: ${fileData.name}`, fileData.name, fileData.content, fileData.base64, fileData.mimeType, fileData.size)}
               onAvatarClick={() => {
                 soundEffects.playClick();
                 setIsAboutModalOpen(true);

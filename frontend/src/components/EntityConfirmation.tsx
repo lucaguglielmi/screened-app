@@ -61,7 +61,7 @@ export const EntityConfirmation: React.FC<Props> = ({ candidates, query, onConfi
           <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-darkroom-text">
             Confirm Festival Identity
           </h2>
-          <p className="text-base text-darkroom-muted leading-relaxed">
+          <p className="text-base text-slate-400 leading-relaxed">
             To prevent false-identity mixing, please verify which entity you want Screened to
             investigate.
           </p>
@@ -93,11 +93,11 @@ export const EntityConfirmation: React.FC<Props> = ({ candidates, query, onConfi
                     )}
                   </div>
 
-                  <p className="text-base text-darkroom-muted leading-relaxed">
+                  <p className="text-base text-slate-300 leading-relaxed">
                     {c.descriptor || 'Identified through Parallel Search.'}
                   </p>
 
-                  <div className="flex items-center gap-4 text-sm font-mono text-darkroom-muted pt-1">
+                  <div className="flex items-center gap-4 text-sm font-mono text-slate-400 pt-1">
                     {c.cityCountry && (
                       <span className="inline-flex items-center gap-1.5">
                         <MapPin className="size-3.5 text-tool-diligence" /> {c.cityCountry}
@@ -121,12 +121,12 @@ export const EntityConfirmation: React.FC<Props> = ({ candidates, query, onConfi
 
         {/* Optional field refinement */}
         <div className="p-5 rounded-2xl bg-darkroom-card border border-darkroom-border space-y-3.5 text-sm">
-          <div className="font-mono uppercase font-semibold text-darkroom-muted text-xs">
+          <div className="font-mono uppercase font-semibold text-slate-300 text-xs">
             Target Identity Parameters
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-mono text-darkroom-muted mb-1.5">
+              <label className="block text-xs font-mono text-slate-400 mb-1.5">
                 Canonical Name
               </label>
               <input
@@ -137,7 +137,7 @@ export const EntityConfirmation: React.FC<Props> = ({ candidates, query, onConfi
               />
             </div>
             <div>
-              <label className="block text-xs font-mono text-darkroom-muted mb-1.5">
+              <label className="block text-xs font-mono text-slate-400 mb-1.5">
                 Official Website Domain
               </label>
               <input
@@ -153,7 +153,7 @@ export const EntityConfirmation: React.FC<Props> = ({ candidates, query, onConfi
 
         {/* Action Button */}
         <div className="flex items-center justify-between pt-2">
-          <span className="text-sm font-mono text-darkroom-muted flex items-center gap-1.5">
+          <span className="text-sm font-mono text-slate-400 flex items-center gap-1.5">
             <ShieldAlert className="size-4 text-amber-500" /> Exact match verified
           </span>
 

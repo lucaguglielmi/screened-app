@@ -275,41 +275,27 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
             </div>
           </button>
 
-          {/* Section: Why Screened Exists */}
-          <div className="pt-2 border-t border-darkroom-border">
-            <button
-              onClick={() => handleSelectTool('WHY_SCREENED')}
-              className={`w-full p-2.5 rounded-2xl flex items-center gap-3 transition-all text-left group cursor-pointer ${
-                activeTool === 'WHY_SCREENED'
-                  ? 'bg-darkroom-card border border-indigo-500/50'
-                  : 'hover:bg-darkroom-card border border-transparent'
-              }`}
-            >
-              <div className="size-9 rounded-xl bg-midnight-royal/20 text-indigo-400 flex items-center justify-center shrink-0 border border-midnight-royal/40">
-                <Scale className="size-4.5" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h4 className="text-sm font-semibold text-white group-hover:text-indigo-300">
-                  Why Screened Exists
-                </h4>
-                <p className="text-xs text-slate-400 line-clamp-1">
-                  Problem synthesis & empirical research
-                </p>
-              </div>
-            </button>
-          </div>
-
-          {/* Quick Hub Option: Mission Control */}
-          <div className="pt-1.5 border-t border-darkroom-border">
+          {/* Simple Footer Links */}
+          <div className="pt-4 mt-2 border-t border-darkroom-border flex flex-col gap-3 px-1">
             <button
               onClick={() => handleSelectTool('CONVERSATIONAL_DESK')}
-              className="w-full px-3 py-2 rounded-xl flex items-center justify-between text-xs font-mono text-slate-400 hover:text-indigo-300 hover:bg-darkroom-card transition-colors cursor-pointer"
+              className="flex items-center justify-between text-xs font-mono text-slate-400 hover:text-indigo-300 transition-colors cursor-pointer group"
             >
               <div className="flex items-center gap-2">
-                <Sparkles className="size-3.5 text-indigo-400" />
-                <span>Return to Mission Control (Main Interface)</span>
+                <Sparkles className="size-3.5 group-hover:text-indigo-400" />
+                <span>start chat</span>
               </div>
-              <span className="text-[10px] text-slate-500">Esc to close</span>
+              <span className="text-[10px] text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity">Esc</span>
+            </button>
+            
+            <button
+              onClick={() => handleSelectTool('WHY_SCREENED')}
+              className="flex items-center justify-between text-xs font-mono text-slate-400 hover:text-indigo-300 transition-colors cursor-pointer group"
+            >
+              <div className="flex items-center gap-2">
+                <Scale className="size-3.5 group-hover:text-indigo-400" />
+                <span>why screened exists</span>
+              </div>
             </button>
           </div>
         </div>

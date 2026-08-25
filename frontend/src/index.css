@@ -19,7 +19,7 @@
   --color-darkroom-card: var(--color-midnight-card);
   --color-darkroom-border: var(--color-midnight-border);
   --color-darkroom-text: var(--color-white);
-  --color-darkroom-muted: var(--color-midnight-border);
+  --color-darkroom-muted: #94a3b8;
 
   /* Palette 1 Extended Swatches */
   --color-midnight-void: #05050A;

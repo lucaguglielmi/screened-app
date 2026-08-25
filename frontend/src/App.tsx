@@ -197,15 +197,32 @@ export default function App() {
         setEvents((prev) => [...prev, activityEvent]);
 
         if (activityEvent.eventType === 'CANDIDATES_FOUND' && activityEvent.details?.candidates) {
-          setInvestigation((prev) =>
-            prev
-              ? {
-                  ...prev,
-                  status: 'AWAITING_ENTITY_CONFIRMATION',
-                  candidates: activityEvent.details.candidates,
-                }
-              : null,
-          );
+          const candidates = activityEvent.details.candidates;
+          if (candidates.length === 1) {
+            fetch(`/api/investigations/${investigation.id}/confirm-entity`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(candidates[0]),
+            })
+              .then((res) => {
+                if (res.ok) return res.json();
+                throw new Error('Auto-confirm failed');
+              })
+              .then((updatedInv) => {
+                setInvestigation(updatedInv);
+              })
+              .catch((err) => console.error(err));
+          } else {
+            setInvestigation((prev) =>
+              prev
+                ? {
+                    ...prev,
+                    status: 'AWAITING_ENTITY_CONFIRMATION',
+                    candidates: candidates,
+                  }
+                : null,
+            );
+          }
         } else if (activityEvent.eventType === 'DOSSIER_READY') {
           playSuccessChime();
           fetchInvestigation(investigation.id);

@@ -12,6 +12,7 @@ import {
   FileText,
   Info,
   Activity,
+  CheckCircle2,
 } from 'lucide-react';
 import { soundEffects } from '../../utils/audio';
 
@@ -56,13 +57,13 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
   const domains: CapabilityDomainData[] = [
     {
       id: 'due-diligence',
-      title: 'Festival Due Diligence',
+      title: 'Vet Festivals to Avoid Scams',
       badge: 'Core Investigation',
       badgeColor: 'text-emerald-400 bg-emerald-500/10',
       icon: Search,
       iconColor: 'text-emerald-400',
       summary:
-        'Autonomous background checks cross-examining cinema leases, registry filings, and entry fees.',
+        'Protect your budget. We automatically cross-check venue leases and business registries to make sure the festival is legitimate.',
       tags: [
         {
           label: 'Venue Lease Tracing',
@@ -109,13 +110,13 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
     },
     {
       id: 'opportunity-scout',
-      title: 'Opportunity Scout & Circuit Strategy',
+      title: 'Find the Best Festivals for Your Film',
       badge: 'Distribution Match',
       badgeColor: 'text-rose-400 bg-rose-500/10',
       icon: Compass,
       iconColor: 'text-rose-400',
       summary:
-        'Custom submission calendar tailored to your film’s format, genre, runtime, and premiere goals.',
+        'Stop guessing where to submit. Get a custom festival strategy tailored to your film’s runtime, genre, and premiere goals.',
       tags: [
         {
           label: 'Circuit Matching',
@@ -157,12 +158,12 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
     },
     {
       id: 'grants-funding',
-      title: 'Film Grants & Public Schemes',
+      title: 'Discover Film Grants & Funding',
       badge: 'Public Funding',
       badgeColor: 'text-blue-400 bg-blue-500/10',
       icon: Coins,
       iconColor: 'text-blue-400',
-      summary: 'Scouts public film funds, development schemes, and regional non-dilutive awards.',
+      summary: 'Find money to make your film. We track public funds, development schemes, and grants that match your project.',
       tags: [
         {
           label: 'BFI & National Lottery',
@@ -196,13 +197,13 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
     },
     {
       id: 'script-intake',
-      title: 'Script & Invitation Document Intake',
+      title: 'Upload Any Document',
       badge: 'Multimodal OCR',
       badgeColor: 'text-purple-400 bg-purple-500/10',
       icon: FileText,
       iconColor: 'text-purple-400',
       summary:
-        'Drag and drop PDF scripts, treatments, or invitation emails for instant autonomous extraction.',
+        'Just drop your script, treatment, or a festival invitation email, and we’ll instantly extract the details to build your strategy.',
       tags: [
         {
           label: 'PDF Treatment Parsing',
@@ -230,13 +231,13 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
     },
     {
       id: 'deep-vetting',
-      title: 'Deep Multi-Year Vetting',
+      title: 'Deep Background Checks',
       badge: 'Multi-Edition Forensic',
       badgeColor: 'text-amber-400 bg-amber-500/10',
       icon: ShieldCheck,
       iconColor: 'text-amber-400',
       summary:
-        '7-dimension multi-year forensic examination evaluating domain longevity, boilerplate rules, and alumni.',
+        'We dig into a festival’s history, checking if their website age, past winners, and rules actually make sense.',
       tags: [
         {
           label: 'Image Reverse Tracing',
@@ -265,13 +266,13 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
     },
     {
       id: 'continuous-monitoring',
-      title: 'Continuous Monitoring & Alerts',
+      title: 'Monitor Upcoming Deadlines',
       badge: 'Background Watch',
       badgeColor: 'text-cyan-400 bg-cyan-500/10',
       icon: Activity,
       iconColor: 'text-cyan-400',
       summary:
-        'Set autonomous watchlists and drift checks to monitor festivals for changes in deadlines, fees, or leadership.',
+        'Never miss an early-bird deadline. We keep an eye on your target festivals and alert you before fees go up or rules change.',
       tags: [
         {
           label: 'Drift Detection',
@@ -356,38 +357,23 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
                     className="p-4 sm:p-5 rounded-2xl bg-midnight-void transition-all space-y-3.5"
                   >
                     {/* Domain Header */}
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                      <div className="flex items-center gap-2.5">
-                        <div className={`p-2 rounded-xl bg-white/[0.04] ${domain.iconColor}`}>
-                          <DomainIcon className="size-4.5" />
-                        </div>
-                        <h3 className="text-base sm:text-lg font-bold text-white">
-                          {domain.title}
-                        </h3>
-                      </div>
-                      <span
-                        className={`px-2.5 py-0.5 rounded-full text-xs font-mono ${domain.badgeColor} w-fit`}
-                      >
-                        {domain.badge}
-                      </span>
+                    <div className="flex flex-col gap-1.5 pb-2">
+                      <h3 className="text-2xl font-serif font-bold text-white tracking-tight">
+                        {domain.title}
+                      </h3>
+                      <p className="text-base text-slate-300 leading-relaxed">{domain.summary}</p>
                     </div>
 
-                    {/* Summary (Readable 16px font) */}
-                    <p className="text-base text-slate-300 leading-relaxed">{domain.summary}</p>
-
                     {/* Capability Tags Grid with Interactive Hover Tooltips */}
-                    <div className="space-y-1.5">
-                      <span className="text-xs font-mono uppercase tracking-wider text-slate-400 block">
-                        Capabilities (hover for details)
-                      </span>
-                      <div className="flex flex-wrap gap-2">
+                    <div className="space-y-2">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         {domain.tags.map((tag, idx) => {
                           const isHovered =
                             activeHoverTag?.id === domain.id && activeHoverTag?.index === idx;
                           return (
                             <div
                               key={idx}
-                              className="relative"
+                              className="relative flex"
                               onMouseEnter={() => {
                                 soundEffects.playClick();
                                 setActiveHoverTag({ id: domain.id, index: idx });
@@ -396,10 +382,10 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
                             >
                               <button
                                 type="button"
-                                className="px-3 py-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-sm text-slate-200 hover:text-white transition-all flex items-center gap-1.5 cursor-help"
+                                className="p-3 w-full rounded-xl bg-white/[0.03] border border-white/[0.08] hover:bg-white/[0.06] hover:border-white/[0.15] text-sm text-slate-200 hover:text-white transition-all flex items-start gap-2.5 cursor-help text-left"
                               >
-                                <span>{tag.label}</span>
-                                <Info className="size-3 text-slate-400 shrink-0" />
+                                <CheckCircle2 className="size-4.5 text-emerald-400 shrink-0 mt-0.5" />
+                                <span className="font-medium leading-snug">{tag.label}</span>
                               </button>
 
                               {/* Interactive Hover Tooltip */}

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Search, Coins, MailWarning, GitCompare, Compass } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { Search, Coins, MailWarning, GitCompare, Compass, UploadCloud } from 'lucide-react';
 import { ChatMessage } from '../../types/chat';
 import { FilmProfile } from '../../types/investigation';
 import { MiniScoutCard } from './mini_apps/MiniScoutCard';
@@ -9,6 +9,7 @@ import { GrantIntakeCard } from './tools/GrantIntakeCard';
 import { InvitationEmailCard } from './tools/InvitationEmailCard';
 import { AgentAvatar } from './AgentAvatar';
 import { soundEffects } from '../../utils/audio';
+import { useFileUpload, AttachedFileState } from '../../hooks/useFileUpload';
 
 const ACTION_TABS = [
   { label: 'Research a festival', icon: Search, query: 'I want to research a film festival' },
@@ -36,6 +37,7 @@ interface ChatBubbleProps {
   onLaunchOpportunityScout: (profile: FilmProfile) => void;
   onLaunchCustomPrompt?: (promptText: string) => void;
   onAvatarClick?: () => void;
+  onFileUpload?: (file: AttachedFileState) => void;
 }
 
 export const ChatBubble: React.FC<ChatBubbleProps> = ({
@@ -44,7 +46,48 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
   onLaunchOpportunityScout,
   onLaunchCustomPrompt,
   onAvatarClick,
+  onFileUpload,
 }) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [dragActive, setDragActive] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  const { processFile, isProcessing } = useFileUpload({
+    onFileProcessed: (file) => {
+      setUploadError(null);
+      if (onFileUpload) onFileUpload(file);
+    },
+    onError: (msg) => {
+      setUploadError(msg);
+    }
+  });
+
+  const handleDrag = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === 'dragenter' || e.type === 'dragover') {
+      setDragActive(true);
+    } else if (e.type === 'dragleave') {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      processFile(e.dataTransfer.files[0]);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    if (e.target.files && e.target.files[0]) {
+      processFile(e.target.files[0]);
+    }
+  };
+
   const isUser = message.role === 'user';
 
   // Format markdown snippets safely (bold, lists, code)
@@ -149,7 +192,46 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
               <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider block">
                 Quick Actions:
               </span>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 items-center">
+                
+                {/* Upload Square Box */}
+                <div 
+                  className="group relative"
+                  onDragEnter={handleDrag}
+                  onDragLeave={handleDrag}
+                  onDragOver={handleDrag}
+                  onDrop={handleDrop}
+                >
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleChange}
+                    className="hidden"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-dashed text-slate-300 hover:text-white transition-all text-xs font-mono cursor-pointer shadow-sm active:scale-95 h-full ${
+                      dragActive 
+                        ? 'border-indigo-400 bg-indigo-500/10' 
+                        : 'border-slate-500/40 bg-darkroom-card hover:bg-midnight-royal hover:border-slate-400'
+                    }`}
+                  >
+                    <UploadCloud className={`size-3.5 shrink-0 ${dragActive ? 'text-indigo-400' : 'text-slate-400 group-hover:text-indigo-300'}`} />
+                    <span>{isProcessing ? 'Processing...' : 'or drag any document to start'}</span>
+                  </button>
+
+                  {/* Tooltip */}
+                  <div className="absolute bottom-full left-0 mb-2 w-64 p-3 rounded-xl bg-darkroom-surface border border-indigo-500/40 text-slate-100 text-xs shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50">
+                    <div className="font-semibold text-indigo-300 mb-1">
+                      Upload Document
+                    </div>
+                    <p className="text-slate-300 leading-relaxed font-sans">
+                      You can start your search by uploading any document: An E-mail invitation, a festival prospect, your notes.
+                    </p>
+                  </div>
+                </div>
+
                 {ACTION_TABS.map((tab, idx) => {
                   const Icon = tab.icon;
                   return (
@@ -170,6 +252,11 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
                   );
                 })}
               </div>
+              {uploadError && (
+                <div className="text-xs text-rose-400 mt-1 animate-pulse">
+                  {uploadError}
+                </div>
+              )}
             </div>
           )}
 

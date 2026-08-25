@@ -675,8 +675,8 @@ async def get_all_feedback():
     """Retrieve all submitted filmmaker feedback items without PII."""
     items = await db.get_all_feedback_items()
     for item in items:
-        item.authorName = None
-        item.authorEmail = None
+        item["authorName"] = None
+        item["authorEmail"] = None
     return items
 
 
