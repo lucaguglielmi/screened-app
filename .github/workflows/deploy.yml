@@ -63,12 +63,6 @@ jobs:
           echo "🚀 Pushing container image to Artifact Registry..."
           docker push "${IMAGE_TAG}"
 
-          echo "🚀 Applying IAM Roles..."
-          PROJECT_NUMBER=$(gcloud projects describe "${PROJECT_ID}" --format="value(projectNumber)")
-          gcloud projects add-iam-policy-binding "${PROJECT_ID}" \
-            --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" \
-            --role="roles/cloudtasks.enqueuer" >/dev/null 2>&1 || true
-
           echo "🚀 Deploying container to Cloud Run..."
           gcloud run deploy "${SERVICE_NAME}" \
             --project="${PROJECT_ID}" \
