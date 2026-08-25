@@ -5,6 +5,7 @@ import { ChatBubble } from './ChatBubble';
 import { ChatPromptBar } from './ChatPromptBar';
 import { motion } from 'motion/react';
 import { ScrambleText } from '../animations/ScrambleText';
+import { AnimatedEE } from '../animations/AnimatedEE';
 import { AgentThinkingPill } from './AgentThinkingPill';
 import { CapabilitiesModal } from '../modals/CapabilitiesModal';
 import { AboutScreenedModal } from '../modals/AboutScreenedModal';
@@ -218,6 +219,13 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
       <div className="relative z-10 flex-1 overflow-y-auto pr-2 space-y-4">
         {/* Hero Header Area with Dirty Film Celluloid Glitch, Spacing & What Does It Do Link */}
         <div className="relative flex flex-col items-center justify-center my-5 sm:my-7 py-2 text-center select-none">
+          <div className="flex justify-center items-center gap-2 mb-4">
+            <span className="font-serif text-6xl sm:text-7xl lg:text-8xl font-black tracking-normal text-white flex items-center">
+              Scr
+              <AnimatedEE />
+              ned
+            </span>
+          </div>
           <motion.h1 
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0, scale: [1, 1.02, 1] }}
@@ -226,7 +234,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
               y: { duration: 0.8, ease: "easeOut" },
               scale: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.8 } 
             }}
-            className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white font-serif mb-3 flex flex-wrap items-center justify-center gap-x-3 sm:gap-x-4 cursor-default"
+            className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white font-sans mb-3 flex flex-wrap items-center justify-center gap-x-3 sm:gap-x-4 cursor-default"
           >
             <span className="animate-cinema-glitch text-transparent bg-clip-text bg-gradient-to-r from-zinc-100 via-stone-200 to-zinc-300">
               Cinema
