@@ -513,7 +513,7 @@ export default function App() {
               {/* Sound Effect Toggle Button (M) */}
               <button
                 onClick={toggleSound}
-                className={`p-2 rounded-xl border transition-all cursor-pointer text-xs font-mono flex items-center gap-1.5 ${
+                className={`p-2 rounded-xl border transition-all cursor-pointer text-xs font-mono flex items-center justify-center ${
                   soundMuted
                     ? 'bg-paper-surface dark:bg-darkroom-surface border-paper-border dark:border-darkroom-border text-slate-400 hover:text-slate-200'
                     : 'bg-paper-card dark:bg-darkroom-card border-indigo-500/40 text-indigo-300 hover:border-indigo-400 shadow-sm'
@@ -525,15 +525,12 @@ export default function App() {
                 ) : (
                   <Volume2 className="size-4 text-indigo-400" />
                 )}
-                <span className="hidden xl:inline text-[9px] px-1 py-0.5 rounded bg-paper-border dark:bg-darkroom-border text-slate-400 border border-paper-border dark:border-darkroom-border">
-                  M
-                </span>
               </button>
 
               {/* Light / Dark Mode Toggle Button (T) */}
               <button
                 onClick={toggleTheme}
-                className="p-2 rounded-xl bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-card dark:hover:bg-darkroom-card text-slate-400 hover:text-amber-300 border border-paper-border dark:border-darkroom-border hover:border-amber-400/40 transition-colors cursor-pointer text-xs font-mono flex items-center gap-1.5"
+                className="p-2 rounded-xl bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-card dark:hover:bg-darkroom-card text-slate-400 hover:text-amber-300 border border-paper-border dark:border-darkroom-border hover:border-amber-400/40 transition-colors cursor-pointer text-xs font-mono flex items-center justify-center"
                 title={
                   theme === 'dark'
                     ? 'Switch to Light Mode (Press T)'
@@ -545,21 +542,15 @@ export default function App() {
                 ) : (
                   <Moon className="size-4 text-indigo-400" />
                 )}
-                <span className="hidden xl:inline text-[9px] px-1 py-0.5 rounded bg-paper-border dark:bg-darkroom-border text-slate-400 border border-paper-border dark:border-darkroom-border">
-                  T
-                </span>
               </button>
 
               {/* Keyboard Shortcuts Quick Helper Hint */}
               <button
                 onClick={() => setIsKeyboardHelpOpen(true)}
-                className="hidden md:flex p-2 items-center gap-1.5 rounded-xl bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-card dark:hover:bg-darkroom-card text-slate-400 hover:text-indigo-300 border border-paper-border dark:border-darkroom-border hover:border-indigo-500/40 transition-all cursor-pointer text-xs font-mono"
+                className="hidden md:flex p-2 items-center justify-center rounded-xl bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-card dark:hover:bg-darkroom-card text-slate-400 hover:text-indigo-300 border border-paper-border dark:border-darkroom-border hover:border-indigo-500/40 transition-all cursor-pointer text-xs font-mono"
                 title="Keyboard Shortcuts Cheat Sheet (Press ?)"
               >
                 <Keyboard className="size-4 text-indigo-400" />
-                <kbd className="hidden xl:inline text-[10px] px-1 py-0.5 rounded bg-paper-border dark:bg-darkroom-border text-indigo-300 border border-paper-border dark:border-darkroom-border font-bold font-mono">
-                  ?
-                </kbd>
               </button>
 
               {/* Mobile Menu Drawer Button */}
