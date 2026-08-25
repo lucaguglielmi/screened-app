@@ -1,6 +1,13 @@
 import React, { useRef, useState } from 'react';
 import { Search, Coins, MailWarning, GitCompare, Compass, UploadCloud } from 'lucide-react';
-import { ChatMessage } from '../../types/chat';
+import {
+  ChatMessage,
+  DueDiligenceArgs,
+  OpportunityScoutArgs,
+  CompareFestivalsArgs,
+  GrantScoutArgs,
+  InvitationEmailArgs,
+} from '../../types/chat';
 import { FilmProfile } from '../../types/investigation';
 import { MiniScoutCard } from './mini_apps/MiniScoutCard';
 import { MiniCompareArena } from './mini_apps/MiniCompareArena';
@@ -299,28 +306,28 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
             <div className="mt-3">
               {message.toolCall.toolName === 'configure_due_diligence' && (
                 <FestivalIntakeCard
-                  args={message.toolCall.args as any}
+                  args={message.toolCall.args as unknown as DueDiligenceArgs}
                   onLaunch={onLaunchDueDiligence}
                 />
               )}
 
               {message.toolCall.toolName === 'configure_opportunity_scout' && (
                 <MiniScoutCard
-                  args={message.toolCall.args as any}
+                  args={message.toolCall.args as unknown as OpportunityScoutArgs}
                   onLaunch={onLaunchOpportunityScout}
                 />
               )}
 
               {message.toolCall.toolName === 'compare_festivals_arena' && (
                 <MiniCompareArena
-                  args={message.toolCall.args as any}
+                  args={message.toolCall.args as unknown as CompareFestivalsArgs}
                   onSelectFestival={(name) => onLaunchDueDiligence(name)}
                 />
               )}
 
               {message.toolCall.toolName === 'configure_grant_scout' && (
                 <GrantIntakeCard
-                  args={message.toolCall.args as any}
+                  args={message.toolCall.args as unknown as GrantScoutArgs}
                   onLaunchSearch={(query) => {
                     if (onLaunchCustomPrompt) {
                       onLaunchCustomPrompt(query);
@@ -333,7 +340,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
 
               {message.toolCall.toolName === 'analyze_invitation_email' && (
                 <InvitationEmailCard
-                  args={message.toolCall.args as any}
+                  args={message.toolCall.args as unknown as InvitationEmailArgs}
                   onLaunchInvestigation={(name) => onLaunchDueDiligence(name)}
                 />
               )}

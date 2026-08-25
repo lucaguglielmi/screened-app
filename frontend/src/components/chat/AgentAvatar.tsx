@@ -34,23 +34,23 @@ export const AgentAvatar: React.FC<AgentAvatarProps> = ({
 
   const [hasRecentlyLoaded, setHasRecentlyLoaded] = useState(false);
   const wasThinkingRef = useRef(isThinking);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (isThinking) {
       wasThinkingRef.current = true;
-      setHasRecentlyLoaded(false);
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
     } else if (wasThinkingRef.current) {
-      setHasRecentlyLoaded(true);
-      timeoutRef.current = setTimeout(() => {
+      const showTimer = setTimeout(() => {
+        setHasRecentlyLoaded(true);
+      }, 0);
+      const hideTimer = setTimeout(() => {
         setHasRecentlyLoaded(false);
         wasThinkingRef.current = false;
       }, 6000);
+      return () => {
+        clearTimeout(showTimer);
+        clearTimeout(hideTimer);
+      };
     }
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
   }, [isThinking]);
 
   const isActive = isThinking || hasRecentlyLoaded;

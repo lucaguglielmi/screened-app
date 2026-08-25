@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   MessageSquare,
   Star,
@@ -82,7 +82,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({ onOpenFeedbackMo
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
 
-  const fetchFeedback = async () => {
+  const fetchFeedback = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -90,16 +90,19 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({ onOpenFeedbackMo
       if (!res.ok) throw new Error('Failed to fetch feedback logs.');
       const data = await res.json();
       setFeedbacks(data);
-    } catch (err: any) {
-      setError(err?.message || 'Error loading feedback items.');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error loading feedback items.');
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    fetchFeedback();
-  }, []);
+    const timer = setTimeout(() => {
+      fetchFeedback();
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [fetchFeedback]);
 
   const filteredFeedbacks = feedbacks.filter((item) => {
     const matchesCat = selectedCategory === 'ALL' || item.category === selectedCategory;

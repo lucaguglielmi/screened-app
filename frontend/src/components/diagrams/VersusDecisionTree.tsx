@@ -19,12 +19,19 @@ interface Props {
 
 type StrategyPriority = 'PRESTIGE' | 'COST_ROI' | 'PREMIERE_PROTECTION';
 
+interface DecisionNodeData {
+  label?: string;
+  role?: string;
+  details?: string;
+  [key: string]: unknown;
+}
+
 export const VersusDecisionTree: React.FC<Props> = ({
   festivalA = {
     name: 'Sundance Film Festival',
     entryFee: '$110',
-    premierePolicy: 'World Premiere Required for Competition',
-    accreditation: ['Academy Qualifying', 'BAFTA Recognised', 'FIAPF Spec'],
+    premierePolicy: 'World Premiere Strongly Favoured',
+    accreditation: ['Academy Qualifying', 'BAFTA Recognised', 'FIAPF A-List'],
     notificationDate: 'Dec 08',
     ratingScore: 94,
   },
@@ -38,7 +45,7 @@ export const VersusDecisionTree: React.FC<Props> = ({
   },
 }) => {
   const [priority, setPriority] = useState<StrategyPriority>('PRESTIGE');
-  const [selectedNode, setSelectedNode] = useState<any | null>(null);
+  const [selectedNode, setSelectedNode] = useState<DecisionNodeData | null>(null);
 
   const { nodes, edges } = useMemo(() => {
     const rawNodes: Node[] = [];

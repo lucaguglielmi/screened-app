@@ -5,7 +5,9 @@ let audioCtx: AudioContext | null = null;
 function getAudioContext(): AudioContext | null {
   if (typeof window === 'undefined') return null;
   if (!audioCtx) {
-    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    const AudioContextClass =
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
     if (AudioContextClass) {
       audioCtx = new AudioContextClass();
     }
@@ -47,7 +49,7 @@ export const playDialClick = () => {
 
     osc.start();
     osc.stop(ctx.currentTime + 0.04);
-  } catch (e) {
+  } catch {
     // Ignore audio errors
   }
 };
@@ -75,7 +77,7 @@ export const playSuccessChime = () => {
       osc.start(ctx.currentTime + i * 0.06);
       osc.stop(ctx.currentTime + i * 0.06 + 0.3);
     });
-  } catch (e) {
+  } catch {
     // Ignore audio errors
   }
 };
@@ -103,7 +105,7 @@ export const playCautionTone = () => {
       osc.start(ctx.currentTime + i * 0.08);
       osc.stop(ctx.currentTime + i * 0.08 + 0.15);
     });
-  } catch (e) {
+  } catch {
     // Ignore audio errors
   }
 };

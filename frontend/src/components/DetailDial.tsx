@@ -144,7 +144,7 @@ export const DetailDial: React.FC<Props> = ({ density, onChange, dossier }) => {
 
     if (dossier?.contradictions && dossier.contradictions.length > 0) {
       mdContent += `## Active Contradictions & Disputed Claims\n\n`;
-      dossier.contradictions.forEach((c: any, idx: number) => {
+      dossier.contradictions.forEach((c, idx: number) => {
         mdContent += `### Dispute ${idx + 1}: ${c.claimA?.statement || 'Point A'}\n`;
         mdContent += `- **Contradicting Point**: ${c.claimB?.statement || 'Point B'}\n`;
         mdContent += `- **Analysis**: ${c.reconciliationNote || 'Under review'}\n\n`;

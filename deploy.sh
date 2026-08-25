@@ -36,12 +36,24 @@ gcloud artifacts repositories create screened-app \
 echo "Building container image with Cloud Build..."
 gcloud builds submit --project="${PROJECT_ID}" --tag="${IMAGE_TAG}" .
 
-# 3. Apply IAM Roles (Cloud Tasks Enqueuer for async agents)
-echo "Granting roles/cloudtasks.enqueuer to default compute service account..."
+# 3. Apply IAM Roles (Cloud Tasks Enqueuer & Observability / Telemetry)
+echo "Ensuring required IAM roles are granted to compute service account..."
 PROJECT_NUMBER=$(gcloud projects describe "${PROJECT_ID}" --format="value(projectNumber)")
-gcloud projects add-iam-policy-binding "${PROJECT_ID}" \
-  --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" \
-  --role="roles/cloudtasks.enqueuer" >/dev/null 2>&1 || true
+SA_EMAIL="${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
+
+REQUIRED_ROLES=(
+  "roles/cloudtasks.enqueuer"
+  "roles/cloudtrace.agent"
+  "roles/logging.logWriter"
+  "roles/errorreporting.writer"
+  "roles/monitoring.metricWriter"
+)
+
+for ROLE in "${REQUIRED_ROLES[@]}"; do
+  gcloud projects add-iam-policy-binding "${PROJECT_ID}" \
+    --member="serviceAccount:${SA_EMAIL}" \
+    --role="${ROLE}" >/dev/null 2>&1 || true
+done
 
 # 4. Deploy to Cloud Run
 echo "Deploying container to Cloud Run..."
@@ -51,8 +63,8 @@ gcloud run deploy "${SERVICE_NAME}" \
   --region="${REGION}" \
   --platform=managed \
   --allow-unauthenticated \
-  --set-env-vars="GOOGLE_CLOUD_PROJECT=${PROJECT_ID},GOOGLE_CLOUD_LOCATION=${REGION},ENVIRONMENT=production,COMMIT_SHA=${SHORT_SHA},DIAGNOSTICS_TOKEN=${DIAGNOSTICS_TOKEN},VITE_GA4_MEASUREMENT_ID=${VITE_GA4_MEASUREMENT_ID},TASK_QUEUE_NAME=${TASK_QUEUE_NAME}" \
-  --set-secrets="PARALLEL_API_KEY=parallel-api-key:latest,SESSION_SIGNING_KEY=session-signing-key:latest" \
+  --set-env-vars="GOOGLE_CLOUD_PROJECT=${PROJECT_ID},GOOGLE_CLOUD_LOCATION=${REGION},ENVIRONMENT=production,COMMIT_SHA=${SHORT_SHA},VITE_GA4_MEASUREMENT_ID=${VITE_GA4_MEASUREMENT_ID},TASK_QUEUE_NAME=${TASK_QUEUE_NAME}" \
+  --set-secrets="PARALLEL_API_KEY=parallel-api-key:latest,SESSION_SIGNING_KEY=session-signing-key:latest,DIAGNOSTICS_TOKEN=diagnostics-token:latest,PARALLEL_WEBHOOK_SECRET=parallel-webhook-secret:latest" \
   --memory=1Gi \
   --cpu=1 \
   --min-instances=0 \

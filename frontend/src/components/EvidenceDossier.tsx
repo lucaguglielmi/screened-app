@@ -292,12 +292,14 @@ export const EvidenceDossier: React.FC<Props> = ({
   // Synchronous in-memory exposure for AI agents and scrapers
   useEffect(() => {
     try {
-      (window as any).__SCREENED_INTEL__ = {
+      (window as unknown as { __SCREENED_INTEL__?: unknown }).__SCREENED_INTEL__ = {
         jsonLd: aiIngestionPayload,
         rawText: rawPlainTextDossier,
         timestamp: new Date().toISOString(),
       };
-    } catch (e) {}
+    } catch {
+      // Ignore window assignment errors in non-browser environments
+    }
   }, [aiIngestionPayload, rawPlainTextDossier]);
 
   const handleCopyAiPayload = () => {

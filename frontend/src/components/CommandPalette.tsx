@@ -32,9 +32,12 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
   useEffect(() => {
     if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 50);
-      setSearch('');
-      setSelectedIndex(0);
+      const timer = setTimeout(() => {
+        inputRef.current?.focus();
+        setSearch('');
+        setSelectedIndex(0);
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [isOpen]);
 

@@ -141,12 +141,13 @@ except Exception as e:
 # CORS configuration
 if settings.environment == "production":
     allowed_origins = [
+        "https://screened-786241671474.europe-west2.run.app",
         "https://screened-pludf2u7yq-nw.a.run.app",
         "https://screened.app",
         "https://screened-hackathon.web.app",
         "https://screened-hackathon.firebaseapp.com"
     ]
-    allow_origin_regex = r"https://screened-hackathon--.*\.web\.app"
+    allow_origin_regex = r"https://(screened-hackathon--.*\.web\.app|screened-.*\.europe-west2\.run\.app)"
 else:
     allowed_origins = [
         "http://localhost:5173",

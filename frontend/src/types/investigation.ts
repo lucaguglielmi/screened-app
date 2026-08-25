@@ -164,7 +164,7 @@ export interface DiagramGraphPayload {
   nodes: Array<{
     id: string;
     type: string;
-    data: Record<string, any>;
+    data: Record<string, unknown>;
     position: { x: number; y: number };
   }>;
   edges: Array<{
@@ -231,7 +231,10 @@ export interface ActivityEvent {
   eventType: string;
   agentName: string;
   message: string;
-  details?: any;
+  details?: {
+    candidates?: CandidateEntity[];
+    [key: string]: unknown;
+  };
 }
 
 export type VettingSignalStatus =

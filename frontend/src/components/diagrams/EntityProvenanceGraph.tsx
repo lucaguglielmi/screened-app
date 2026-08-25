@@ -9,8 +9,18 @@ interface Props {
   onSelectClaim?: (claimId: string) => void;
 }
 
+interface ProvenanceNodeData {
+  label?: string;
+  sublabel?: string;
+  status?: string;
+  role?: string;
+  details?: string;
+  claimId?: string;
+  [key: string]: unknown;
+}
+
 export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim }) => {
-  const [selectedNodeData, setSelectedNodeData] = useState<any | null>(null);
+  const [selectedNodeData, setSelectedNodeData] = useState<ProvenanceNodeData | null>(null);
   const [filterMode, setFilterMode] = useState<'ALL' | 'VERIFIED' | 'DISPUTES'>('ALL');
 
   const festivalName = dossier.festivalName || 'Target Entity';
@@ -225,14 +235,14 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
 
         <div className="flex items-center gap-1.5 p-1 rounded-xl bg-darkroom-card text-xs">
           {[
-            { id: 'ALL', label: 'Complete Graph' },
-            { id: 'VERIFIED', label: 'Verified Nodes' },
-            { id: 'DISPUTES', label: 'Disputes Only' },
+            { id: 'ALL' as const, label: 'Complete Graph' },
+            { id: 'VERIFIED' as const, label: 'Verified Nodes' },
+            { id: 'DISPUTES' as const, label: 'Disputes Only' },
           ].map((mode) => (
             <button
               key={mode.id}
               type="button"
-              onClick={() => setFilterMode(mode.id as any)}
+              onClick={() => setFilterMode(mode.id)}
               className={`px-3 py-1 rounded-lg font-mono text-xs transition-all cursor-pointer ${
                 filterMode === mode.id
                   ? 'bg-midnight-royal text-white font-semibold shadow-xs'

@@ -7,8 +7,6 @@ export default function VersionAlertBanner() {
   useEffect(() => {
     if (typeof __BUILD_TIME__ === 'undefined') return;
 
-    let intervalId: number;
-
     const checkVersion = async () => {
       try {
         const res = await fetch(`/version.json?t=${Date.now()}`);
@@ -20,14 +18,14 @@ export default function VersionAlertBanner() {
         if (data.buildTime && data.buildTime !== __BUILD_TIME__) {
           setHasNewVersion(true);
         }
-      } catch (err) {
+      } catch {
         // Ignore fetch errors (e.g., offline)
       }
     };
 
     // Check immediately on mount, and then every 2 minutes
     checkVersion();
-    intervalId = window.setInterval(checkVersion, 2 * 60 * 1000);
+    const intervalId = window.setInterval(checkVersion, 2 * 60 * 1000);
 
     // Also check when the user switches tabs back to the app
     const onFocus = () => checkVersion();

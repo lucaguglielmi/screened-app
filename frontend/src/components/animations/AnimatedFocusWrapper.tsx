@@ -12,7 +12,7 @@ interface AnimatedFocusWrapperProps {
 export const AnimatedFocusWrapper: React.FC<AnimatedFocusWrapperProps> = ({ 
   children,
   className = '',
-  focusColor = '#818cf8', // Tailwind indigo-400
+  focusColor = 'var(--color-indigo-400, rgb(129, 140, 248))', // Tailwind indigo-400
   borderRadius = 12,
   strokeWidth = 2,
   duration = 0.4

@@ -92,8 +92,8 @@ export const FunkyCursor: React.FC = () => {
               top: `${position.y}px`,
               width: '28px',
               height: '28px',
-              fill: '#FFFF00',
-              stroke: '#222222',
+              fill: 'var(--color-yellow-400, rgb(255, 255, 0))',
+              stroke: 'var(--color-slate-900, rgb(34, 34, 34))',
               strokeWidth: '1.5px',
               filter: 'drop-shadow(2px 2px 2px rgba(0,0,0,0.4))'
             }}

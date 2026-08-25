@@ -57,7 +57,7 @@ export interface InvitationEmailArgs {
 export interface ChatToolCall {
   id: string;
   toolName: ToolCallType;
-  args: Record<string, any>;
+  args: Record<string, unknown>;
 }
 
 export interface DocumentAnalysisResult {

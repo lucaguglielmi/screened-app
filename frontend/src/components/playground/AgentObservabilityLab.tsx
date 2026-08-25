@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Activity, Cpu, AlertTriangle, Clock, Coins, ShieldCheck, RefreshCw } from 'lucide-react';
 import { fetchRecentTraces, SpanTrace } from '../../utils/observability';
 
@@ -6,19 +6,24 @@ export const AgentObservabilityLab: React.FC = () => {
   const [traces, setTraces] = useState<SpanTrace[]>([]);
   const [selectedSpan, setSelectedSpan] = useState<SpanTrace | null>(null);
 
-  const fetchTraces = async () => {
+  const fetchTraces = useCallback(async () => {
     const data = await fetchRecentTraces();
     setTraces(data);
-    if (data.length > 0 && !selectedSpan) {
-      setSelectedSpan(data[0]);
+    if (data.length > 0) {
+      setSelectedSpan((prev) => prev || data[0]);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    fetchTraces();
+    const timer = setTimeout(() => {
+      fetchTraces();
+    }, 0);
     const interval = setInterval(fetchTraces, 3000); // 3s polling per spec
-    return () => clearInterval(interval);
-  }, []);
+    return () => {
+      clearTimeout(timer);
+      clearInterval(interval);
+    };
+  }, [fetchTraces]);
 
   const totalDuration = traces.reduce((acc, t) => acc + t.durationMs, 0);
   const totalTokens = traces.reduce((acc, t) => acc + (t.tokens || 0), 0);

@@ -22,7 +22,7 @@ gcloud run deploy "${SERVICE_NAME}" \
   --region "${REGION}" \
   --allow-unauthenticated \
   --set-env-vars GOOGLE_GENAI_USE_VERTEXAI=TRUE,GOOGLE_CLOUD_PROJECT="${PROJECT_ID}",GOOGLE_CLOUD_LOCATION="${REGION}" \
-  --set-secrets PARALLEL_API_KEY=parallel-api-key:latest,SESSION_SIGNING_KEY=session-signing-key:latest \
+  --set-secrets PARALLEL_API_KEY=parallel-api-key:latest,SESSION_SIGNING_KEY=session-signing-key:latest,DIAGNOSTICS_TOKEN=diagnostics-token:latest,PARALLEL_WEBHOOK_SECRET=parallel-webhook-secret:latest \
   --no-cpu-throttling \
   --min-instances 1 \
   --max-instances 3 \

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, lazy, Suspense } from 'react';
+import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
 import {
   Search,
   AlertTriangle,
@@ -163,7 +163,7 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const saveRecentSearch = (term: string) => {
+  const saveRecentSearch = useCallback((term: string) => {
     setRecentSearches((prev) => {
       const updated = [term, ...prev.filter((t) => t.toLowerCase() !== term.toLowerCase())].slice(
         0,
@@ -172,9 +172,9 @@ export default function App() {
       localStorage.setItem('screened_recent_searches', JSON.stringify(updated));
       return updated;
     });
-  };
+  }, []);
 
-  const saveRecentInvestigation = (id: string) => {
+  const saveRecentInvestigation = useCallback((id: string) => {
     try {
       const saved = localStorage.getItem('screened_investigation_ids');
       const prevIds: string[] = saved ? JSON.parse(saved) : [];
@@ -185,13 +185,34 @@ export default function App() {
     } catch {
       // ignore
     }
-  };
+  }, []);
+
+  const fetchInvestigation = useCallback(
+    async (id: string) => {
+      try {
+        const res = await fetch(`/api/investigations/${id}`);
+        if (res.ok) {
+          const data: Investigation = await res.json();
+          setInvestigation(data);
+          saveRecentInvestigation(data.id);
+          if (data.confirmedEntity?.name) {
+            saveRecentSearch(data.confirmedEntity.name);
+          }
+        }
+      } catch (e) {
+        console.error('Failed to fetch investigation:', e);
+      }
+    },
+    [saveRecentInvestigation, saveRecentSearch],
+  );
 
   // SSE Subscription
   useEffect(() => {
     if (!investigation?.id) return;
+    const invId = investigation.id;
+    const invQuery = investigation.query;
 
-    const eventSource = new EventSource(`/api/investigations/${investigation.id}/events`);
+    const eventSource = new EventSource(`/api/investigations/${invId}/events`);
 
     eventSource.onmessage = (event) => {
       try {
@@ -211,10 +232,10 @@ export default function App() {
           );
         } else if (activityEvent.eventType === 'DOSSIER_READY') {
           playSuccessChime();
-          fetchInvestigation(investigation.id);
+          fetchInvestigation(invId);
           if ('Notification' in window && Notification.permission === 'granted') {
             new Notification('Screened', {
-              body: `Investigation for ${investigation.query} is complete.`,
+              body: `Investigation for ${invQuery} is complete.`,
               icon: '/icon.svg',
             });
           }
@@ -241,23 +262,7 @@ export default function App() {
     return () => {
       eventSource.close();
     };
-  }, [investigation?.id]);
-
-  const fetchInvestigation = async (id: string) => {
-    try {
-      const res = await fetch(`/api/investigations/${id}`);
-      if (res.ok) {
-        const data: Investigation = await res.json();
-        setInvestigation(data);
-        saveRecentInvestigation(data.id);
-        if (data.confirmedEntity?.name) {
-          saveRecentSearch(data.confirmedEntity.name);
-        }
-      }
-    } catch (e) {
-      console.error('Failed to fetch investigation:', e);
-    }
-  };
+  }, [investigation?.id, investigation?.query, fetchInvestigation]);
 
   const handleStartInvestigation = async (
     subjectQuery: string,
@@ -305,8 +310,8 @@ export default function App() {
       const inv: Investigation = JSON.parse(unmaskedInvString);
       setInvestigation(inv);
       saveRecentInvestigation(inv.id);
-    } catch (err: any) {
-      setError(err.message || 'Failed to initiate investigation.');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to initiate investigation.');
     } finally {
       setLoading(false);
     }
@@ -330,8 +335,8 @@ export default function App() {
 
       const updatedInv: Investigation = await res.json();
       setInvestigation(updatedInv);
-    } catch (err: any) {
-      setError(err.message || 'Failed to confirm entity.');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to confirm entity.');
     } finally {
       setLoading(false);
     }
@@ -358,8 +363,8 @@ export default function App() {
       const draft: OutreachDraft = await res.json();
       setOutreachDraft(draft);
       setIsOutreachOpen(true);
-    } catch (err: any) {
-      setError(err.message || 'Failed to draft outreach inquiry.');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to draft outreach inquiry.');
     } finally {
       setOutreachLoading(false);
     }
@@ -386,8 +391,8 @@ export default function App() {
 
       const updatedDraft: OutreachDraft = await res.json();
       setOutreachDraft(updatedDraft);
-    } catch (err: any) {
-      setError(err.message || 'Approval failed.');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Approval failed.');
     } finally {
       setOutreachLoading(false);
     }
@@ -420,7 +425,11 @@ export default function App() {
     setIsOutreachOpen(false);
     setActiveTool('DUE_DILIGENCE');
     setQuery(festivalName);
-    handleStartInvestigation(festivalName, `${sourceTool}_deep_screen` as any);
+    const entryPoint = `${sourceTool}_deep_screen` as
+      | 'chat_deep_screen'
+      | 'scout_deep_screen'
+      | 'command_palette_deep_screen';
+    handleStartInvestigation(festivalName, entryPoint);
   };
 
   const handleScoutLaunch = (profile: FilmProfile) => {

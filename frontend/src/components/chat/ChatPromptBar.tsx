@@ -13,6 +13,27 @@ import { soundEffects } from '../../utils/audio';
 import { QuestionsCategoryModal } from '../modals/QuestionsCategoryModal';
 import { useFileUpload, AttachedFileState } from '../../hooks/useFileUpload';
 
+interface SpeechRecognitionInstance {
+  lang: string;
+  interimResults: boolean;
+  continuous: boolean;
+  onstart: (() => void) | null;
+  onresult: ((event: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void) | null;
+  onerror: ((event: { error: string }) => void) | null;
+  onend: (() => void) | null;
+  start: () => void;
+  stop: () => void;
+}
+
+interface SpeechRecognitionConstructor {
+  new (): SpeechRecognitionInstance;
+}
+
+interface WindowWithSpeech extends Window {
+  SpeechRecognition?: SpeechRecognitionConstructor;
+  webkitSpeechRecognition?: SpeechRecognitionConstructor;
+}
+
 interface ChatPromptBarProps {
   onSendMessage: (
     message: string,
@@ -33,7 +54,7 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
   const [isQuestionsModalOpen, setIsQuestionsModalOpen] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
   const latestTranscriptRef = useRef<string>('');
 
   const { processFile } = useFileUpload({
@@ -66,8 +87,8 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
   };
 
   const startRecording = () => {
-    const SpeechRecognitionClass =
-      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const win = typeof window !== 'undefined' ? (window as unknown as WindowWithSpeech) : null;
+    const SpeechRecognitionClass = win?.SpeechRecognition || win?.webkitSpeechRecognition;
     if (!SpeechRecognitionClass) {
       soundEffects.playCaution();
       setVideoGuardWarning(
@@ -89,7 +110,7 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
         soundEffects.playClick();
       };
 
-      recognition.onresult = (event: any) => {
+      recognition.onresult = (event) => {
         let currentTranscript = '';
         for (let i = 0; i < event.results.length; i++) {
           currentTranscript += event.results[i][0].transcript;
@@ -100,7 +121,7 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
         }
       };
 
-      recognition.onerror = (event: any) => {
+      recognition.onerror = (event) => {
         console.warn('Speech recognition error:', event.error);
         setIsRecording(false);
         if (event.error === 'not-allowed') {

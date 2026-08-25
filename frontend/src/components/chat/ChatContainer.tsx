@@ -1,5 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ChatMessage, ChatStreamEvent, ChatToolCall } from '../../types/chat';
+import {
+  ChatMessage,
+  ChatStreamEvent,
+  ChatToolCall,
+  InteractiveFollowUpProbe,
+} from '../../types/chat';
 import { FilmProfile } from '../../types/investigation';
 import { ChatBubble } from './ChatBubble';
 import { ChatPromptBar } from './ChatPromptBar';
@@ -110,7 +115,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
 
       let assistantContent = '';
       let detectedToolCall: ChatToolCall | undefined = undefined;
-      let detectedFollowUpProbe: any = undefined;
+      let detectedFollowUpProbe: InteractiveFollowUpProbe | undefined = undefined;
       const assistantMsgId = String(Date.now() + 1);
 
       // Create placeholder assistant message

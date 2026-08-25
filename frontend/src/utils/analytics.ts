@@ -24,12 +24,17 @@ export type AnalyticsEvent =
       };
     };
 
+interface GtagWindow extends Window {
+  gtag?: (command: string, eventName: string, params: Record<string, unknown>) => void;
+}
+
 export const track = <T extends AnalyticsEvent['event']>(
   eventName: T,
   params: Extract<AnalyticsEvent, { event: T }>['params']
 ) => {
-  if (typeof window !== 'undefined' && (window as any).gtag) {
-    (window as any).gtag('event', eventName, params);
+  const win = typeof window !== 'undefined' ? (window as unknown as GtagWindow) : null;
+  if (win?.gtag) {
+    win.gtag('event', eventName, params as Record<string, unknown>);
   } else {
     // Fallback for development/testing
     console.debug(`[Analytics Event] ${eventName}`, params);

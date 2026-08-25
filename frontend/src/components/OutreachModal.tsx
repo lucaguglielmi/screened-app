@@ -14,19 +14,19 @@ interface Props {
 }
 
 export const OutreachModal: React.FC<Props> = ({ draft, isOpen, onClose, onApprove, loading }) => {
+  const [prevDraftId, setPrevDraftId] = useState<string | null>(null);
   const [executed, setExecuted] = useState(false);
   const [recipientEmail, setRecipientEmail] = useState(draft?.recipientEmail || '');
   const [subject, setSubject] = useState(draft?.subject || '');
   const [body, setBody] = useState(draft?.body || '');
 
-  React.useEffect(() => {
-    if (draft) {
-      setRecipientEmail(draft.recipientEmail);
-      setSubject(draft.subject);
-      setBody(draft.body);
-      setExecuted(draft.status === 'EXECUTED_SANDBOX');
-    }
-  }, [draft]);
+  if (draft && draft.id !== prevDraftId) {
+    setPrevDraftId(draft.id);
+    setRecipientEmail(draft.recipientEmail);
+    setSubject(draft.subject);
+    setBody(draft.body);
+    setExecuted(draft.status === 'EXECUTED_SANDBOX');
+  }
 
   if (!isOpen || !draft) return null;
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import {
   Menu,
@@ -28,6 +28,8 @@ interface MobileNavigationProps {
   onOpenCommandPalette: () => void;
 }
 
+const subscribe = () => () => {};
+
 export const MobileNavigation: React.FC<MobileNavigationProps> = ({
   activeTool,
   onChange,
@@ -37,11 +39,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
   onOpenCommandPalette,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const isMounted = useSyncExternalStore(subscribe, () => true, () => false);
 
   // Lock body scroll when drawer is open
   useEffect(() => {
@@ -323,7 +321,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
       </button>
 
       {/* Render Mobile Drawer via Portal into document.body */}
-      {mounted && typeof document !== 'undefined' && createPortal(drawerContent, document.body)}
+      {isMounted && typeof document !== 'undefined' && createPortal(drawerContent, document.body)}
     </>
   );
 };

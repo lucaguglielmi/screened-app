@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { FilmProfile, PremiereGoal, ScoutResponse } from '../types/investigation';
+import React, { useState, useEffect, useCallback } from 'react';
+import { FilmProfile, PremiereGoal, ScoutResponse, FestivalOpportunity } from '../types/investigation';
 import { OpportunityCard } from './OpportunityCard';
 import { Upload, Loader2, Compass, Check } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -10,6 +10,7 @@ interface Props {
 }
 
 export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile }) => {
+  const [prevInitialProfile, setPrevInitialProfile] = useState<FilmProfile | undefined>(initialProfile);
   const [profile, setProfile] = useState<FilmProfile>(
     () =>
       initialProfile || {
@@ -23,6 +24,11 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
       },
   );
 
+  if (initialProfile && initialProfile !== prevInitialProfile) {
+    setPrevInitialProfile(initialProfile);
+    setProfile(initialProfile);
+  }
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [scoutResult, setScoutResult] = useState<ScoutResponse | null>(null);
@@ -30,14 +36,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
 
   const [isDragging, setIsDragging] = useState(false);
 
-  React.useEffect(() => {
-    if (initialProfile) {
-      setProfile(initialProfile);
-      executeScout(initialProfile);
-    }
-  }, [initialProfile]);
-
-  const executeScout = async (targetProfile: FilmProfile) => {
+  const executeScout = useCallback(async (targetProfile: FilmProfile) => {
     setLoading(true);
     setError(null);
     try {
@@ -49,12 +48,21 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
       if (!res.ok) throw new Error('Scout request failed');
       const data: ScoutResponse = await res.json();
       setScoutResult(data);
-    } catch (err: any) {
-      setError(err.message || 'Failed to scout opportunities');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to scout opportunities');
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (initialProfile) {
+      const timer = setTimeout(() => {
+        executeScout(initialProfile);
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+  }, [initialProfile, executeScout]);
 
   const handleScout = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,7 +70,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
   };
 
   const filteredOpportunities =
-    scoutResult?.opportunities.filter((opp: any) => {
+    scoutResult?.opportunities.filter((opp: FestivalOpportunity) => {
       if (filterTag === 'ALL') return true;
       if (filterTag === 'BAFTA') return opp.accreditationTags.includes('BAFTA_QUALIFYING');
       if (filterTag === 'ACADEMY') return opp.accreditationTags.includes('ACADEMY_QUALIFYING');
@@ -371,7 +379,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
 
           {/* Opportunities Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {filteredOpportunities.map((opp: any) => (
+            {filteredOpportunities.map((opp: FestivalOpportunity) => (
               <OpportunityCard key={opp.id} opportunity={opp} onDeepScreen={onDeepScreen} />
             ))}
           </div>

@@ -126,8 +126,8 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
 
       setIsSubmitted(true);
       playSuccessChime();
-    } catch (err: any) {
-      setError(err?.message || 'Failed to submit feedback.');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to submit feedback.');
     } finally {
       setIsSubmitting(false);
     }

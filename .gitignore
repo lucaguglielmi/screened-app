@@ -32,6 +32,7 @@ __pycache__/
 *$py.class
 .venv/
 venv/
+venv*/
 ENV/
 env/
 *.egg-info/
@@ -39,12 +40,20 @@ env/
 .coverage
 htmlcov/
 
-# Environment & Local secrets
+# Secrets, Credentials & Local configs
 .env
 .env*.local
 .env.development.local
 .env.test.local
 .env.production.local
+*.pem
+*.key
+*.p12
+*.crt
+*service_account*.json
+*service-account*.json
+*credentials*.json
+.gcloud/
 
 # External planning & contest intelligence (strictly excluded from submission repo)
 RESEARCH/

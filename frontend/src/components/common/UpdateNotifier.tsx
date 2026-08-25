@@ -19,6 +19,31 @@ export const UpdateNotifier: React.FC = () => {
   const currentBuildTime = typeof __BUILD_TIME__ !== 'undefined' ? __BUILD_TIME__ : '';
   const currentCommitSha = typeof __COMMIT_SHA__ !== 'undefined' ? __COMMIT_SHA__ : '';
 
+  const evaluateVersion = useCallback((serverData: VersionInfo) => {
+    if (!serverData) return;
+
+    // Check if remote commit or build time differs from current client bundle
+    const hasDifferentCommit =
+      currentCommitSha &&
+      serverData.commitSha &&
+      serverData.commitSha !== 'dev' &&
+      serverData.commitSha !== currentCommitSha;
+
+    const hasNewerBuildTime =
+      currentBuildTime && serverData.buildTime && serverData.buildTime !== currentBuildTime;
+
+    if (hasDifferentCommit || hasNewerBuildTime) {
+      setRemoteVersion(serverData);
+      setUpdateAvailable(true);
+      // Play a soft notification chime if not muted
+      try {
+        soundEffects.playCaution();
+      } catch {
+        // Ignore audio playback error
+      }
+    }
+  }, [currentBuildTime, currentCommitSha]);
+
   const checkForUpdate = useCallback(async () => {
     try {
       // Use cache-busting timestamp param to ensure direct network fetch
@@ -43,30 +68,7 @@ export const UpdateNotifier: React.FC = () => {
     } catch {
       // Silent error handling for offline/network blips
     }
-  }, [currentBuildTime, currentCommitSha]);
-
-  const evaluateVersion = (serverData: VersionInfo) => {
-    if (!serverData) return;
-
-    // Check if remote commit or build time differs from current client bundle
-    const hasDifferentCommit =
-      currentCommitSha &&
-      serverData.commitSha &&
-      serverData.commitSha !== 'dev' &&
-      serverData.commitSha !== currentCommitSha;
-
-    const hasNewerBuildTime =
-      currentBuildTime && serverData.buildTime && serverData.buildTime !== currentBuildTime;
-
-    if (hasDifferentCommit || hasNewerBuildTime) {
-      setRemoteVersion(serverData);
-      setUpdateAvailable(true);
-      // Play a soft notification chime if not muted
-      try {
-        soundEffects.playCaution();
-      } catch {}
-    }
-  };
+  }, [evaluateVersion]);
 
   useEffect(() => {
     // Initial check after 5 seconds
