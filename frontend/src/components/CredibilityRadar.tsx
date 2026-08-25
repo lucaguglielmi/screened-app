@@ -109,25 +109,25 @@ export const CredibilityRadar: React.FC<Props> = ({ claims, disputes }) => {
   );
 
   return (
-    <div className="p-6 rounded-2xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border space-y-5">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-paper-border dark:border-darkroom-border pb-3">
+    <div className="p-6 rounded-2xl bg-darkroom-surface border border-darkroom-border space-y-5">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-darkroom-border pb-3">
         <div className="flex items-center gap-2">
-          <Sparkles className="size-4 text-indigo-600 dark:text-indigo-400" />
-          <span className="font-mono text-xs uppercase tracking-wider text-paper-text dark:text-darkroom-text font-semibold">
+          <Sparkles className="size-4 text-indigo-600 text-indigo-400" />
+          <span className="font-mono text-xs uppercase tracking-wider text-darkroom-text font-semibold">
             Evidence-Based Transparency Radar
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-xs font-mono text-paper-muted dark:text-darkroom-muted">
+          <span className="text-xs font-mono text-darkroom-muted">
             Overall Index:
           </span>
           <span
             className={`text-sm font-mono font-bold px-2 py-0.5 rounded-full ${
               overallTransparency >= 75
-                ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20'
+                ? 'bg-emerald-500/10 text-emerald-600 text-emerald-400 border border-emerald-500/20'
                 : overallTransparency >= 50
-                  ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20'
-                  : 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20'
+                  ? 'bg-amber-500/10 text-amber-600 text-amber-400 border border-amber-500/20'
+                  : 'bg-rose-500/10 text-rose-600 text-rose-400 border border-rose-500/20'
             }`}
           >
             {overallTransparency}/100
@@ -141,20 +141,20 @@ export const CredibilityRadar: React.FC<Props> = ({ claims, disputes }) => {
           return (
             <div
               key={idx}
-              className="p-3.5 rounded-xl bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border space-y-2.5"
+              className="p-3.5 rounded-xl bg-darkroom-card border border-darkroom-border space-y-2.5"
             >
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-xs font-medium text-paper-text dark:text-darkroom-text">
+                <div className="flex items-center gap-2 text-xs font-medium text-darkroom-text">
                   <Icon className="size-3.5 text-indigo-500" />
                   <span>{dim.name}</span>
                 </div>
-                <span className="font-mono text-xs font-semibold text-paper-text dark:text-darkroom-text">
+                <span className="font-mono text-xs font-semibold text-darkroom-text">
                   {dim.score}%
                 </span>
               </div>
 
               {/* Progress Bar */}
-              <div className="w-full h-1.5 rounded-full bg-paper-border dark:bg-darkroom-border overflow-hidden">
+              <div className="w-full h-1.5 rounded-full bg-paper-border bg-darkroom-border overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all duration-700 ${
                     dim.score >= 70
@@ -171,8 +171,8 @@ export const CredibilityRadar: React.FC<Props> = ({ claims, disputes }) => {
                 <span
                   className={`inline-flex items-center gap-1 ${
                     dim.isRisk
-                      ? 'text-rose-600 dark:text-rose-400'
-                      : 'text-paper-muted dark:text-darkroom-muted'
+                      ? 'text-rose-600 text-rose-400'
+                      : 'text-darkroom-muted'
                   }`}
                 >
                   {dim.isRisk ? (

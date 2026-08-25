@@ -46,7 +46,7 @@ export const MiniDueDiligence: React.FC<MiniDueDiligenceProps> = ({ args, onLaun
               type="text"
               value={festivalName}
               onChange={(e) => setFestivalName(e.target.value)}
-              className="w-full rounded-xl bg-paper-bg dark:bg-darkroom-bg border border-transparent focus:border-tool-diligence px-3.5 py-2.5 text-white font-medium focus:outline-none text-base"
+              className="w-full rounded-xl bg-darkroom-bg border border-transparent focus:border-tool-diligence px-3.5 py-2.5 text-white font-medium focus:outline-none text-base"
               placeholder="e.g. Raindance Film Festival"
             />
           </div>
@@ -58,14 +58,14 @@ export const MiniDueDiligence: React.FC<MiniDueDiligenceProps> = ({ args, onLaun
               type="text"
               value={optionalUrl}
               onChange={(e) => setOptionalUrl(e.target.value)}
-              className="w-full rounded-xl bg-paper-bg dark:bg-darkroom-bg border border-transparent focus:border-tool-diligence px-3.5 py-2.5 text-white font-medium focus:outline-none text-base"
+              className="w-full rounded-xl bg-darkroom-bg border border-transparent focus:border-tool-diligence px-3.5 py-2.5 text-white font-medium focus:outline-none text-base"
               placeholder="e.g. https://festival.org"
             />
           </div>
         </div>
 
         {args.preflight_summary && (
-          <div className="rounded-xl bg-paper-bg dark:bg-darkroom-bg p-3.5 text-slate-200 text-base leading-relaxed">
+          <div className="rounded-xl bg-darkroom-bg p-3.5 text-slate-200 text-base leading-relaxed">
             <span className="font-bold text-tool-diligence">Agent Rationale: </span>
             {args.preflight_summary}
           </div>
@@ -86,7 +86,7 @@ export const MiniDueDiligence: React.FC<MiniDueDiligenceProps> = ({ args, onLaun
           </div>
         </div>
 
-        <div className="pt-3 flex items-center justify-end gap-2 border-t border-paper-border dark:border-darkroom-border">
+        <div className="pt-3 flex items-center justify-end gap-2 border-t border-darkroom-border">
           <button
             onClick={handleLaunch}
             className="inline-flex items-center gap-2 rounded-xl bg-tool-diligence hover:bg-tool-diligence-hover px-6 py-3 text-base font-bold text-slate-950 shadow-md shadow-[var(--color-tool-diligence)]/30 transition-all hover:brightness-110 active:scale-95 cursor-pointer"

@@ -125,12 +125,12 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
       {/* Film Profile Intake Form: Solid Opaque Card, No Borders */}
       <form
         onSubmit={handleScout}
-        className="p-7 sm:p-9 rounded-3xl bg-paper-surface dark:bg-darkroom-surface shadow-2xl shadow-black/80 space-y-6"
+        className="p-7 sm:p-9 rounded-3xl bg-darkroom-surface shadow-2xl shadow-black/80 space-y-6"
       >
         {/* Minimalist Dropzone */}
         <div
           className={`rounded-2xl p-6 text-center transition-all cursor-pointer ${
-            isDragging ? 'bg-paper-card dark:bg-darkroom-card' : 'bg-paper-card dark:bg-darkroom-card hover:bg-paper-card dark:hover:bg-darkroom-card'
+            isDragging ? 'bg-darkroom-card' : 'bg-darkroom-card hover:bg-darkroom-card'
           }`}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
@@ -157,7 +157,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
               value={profile.title}
               onChange={(e) => setProfile({ ...profile, title: e.target.value })}
               placeholder="e.g. Echoes of Daylight"
-              className="w-full px-4 py-3 rounded-xl bg-paper-card dark:bg-darkroom-card text-base text-white placeholder-slate-500 focus:bg-paper-border dark:focus:bg-darkroom-border focus:outline-none transition-colors"
+              className="w-full px-4 py-3 rounded-xl bg-darkroom-card text-base text-white placeholder-slate-500 focus:bg-paper-border focus:bg-darkroom-border focus:outline-none transition-colors"
               required
             />
           </div>
@@ -172,7 +172,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
               value={profile.year}
               onChange={(e) => setProfile({ ...profile, year: e.target.value })}
               placeholder="2026"
-              className="w-full px-4 py-3 rounded-xl bg-paper-card dark:bg-darkroom-card text-base text-white placeholder-slate-500 focus:bg-paper-border dark:focus:bg-darkroom-border focus:outline-none transition-colors"
+              className="w-full px-4 py-3 rounded-xl bg-darkroom-card text-base text-white placeholder-slate-500 focus:bg-paper-border focus:bg-darkroom-border focus:outline-none transition-colors"
               required
             />
           </div>
@@ -187,7 +187,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
               value={profile.genre}
               onChange={(e) => setProfile({ ...profile, genre: e.target.value })}
               placeholder="e.g. Sci-Fi, Drama, Documentary"
-              className="w-full px-4 py-3 rounded-xl bg-paper-card dark:bg-darkroom-card text-base text-white placeholder-slate-500 focus:bg-paper-border dark:focus:bg-darkroom-border focus:outline-none transition-colors"
+              className="w-full px-4 py-3 rounded-xl bg-darkroom-card text-base text-white placeholder-slate-500 focus:bg-paper-border focus:bg-darkroom-border focus:outline-none transition-colors"
               required
             />
           </div>
@@ -206,7 +206,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
                 setProfile({ ...profile, runtimeMinutes: parseInt(e.target.value) || 0 })
               }
               placeholder="15"
-              className="w-full px-4 py-3 rounded-xl bg-paper-card dark:bg-darkroom-card text-base text-white placeholder-slate-500 focus:bg-paper-border dark:focus:bg-darkroom-border focus:outline-none transition-colors"
+              className="w-full px-4 py-3 rounded-xl bg-darkroom-card text-base text-white placeholder-slate-500 focus:bg-paper-border focus:bg-darkroom-border focus:outline-none transition-colors"
               required
             />
           </div>
@@ -220,7 +220,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
               className={`size-5 rounded-lg flex items-center justify-center transition-all ${
                 profile.neverReleased
                   ? 'bg-tool-scout text-white shadow-md shadow-[var(--color-tool-scout)]/30'
-                  : 'bg-paper-card dark:bg-darkroom-card group-hover:bg-paper-border dark:group-hover:bg-darkroom-border'
+                  : 'bg-darkroom-card group-hover:bg-paper-border group-hover:bg-darkroom-border'
               }`}
             >
               {profile.neverReleased && <Check className="size-3.5 stroke-[3]" />}
@@ -254,7 +254,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
                     className={`px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-all cursor-pointer ${
                       active
                         ? 'bg-tool-scout text-white shadow-md shadow-[var(--color-tool-scout)]/30 scale-102'
-                        : 'bg-paper-card dark:bg-darkroom-card text-slate-300 hover:bg-paper-border dark:hover:bg-darkroom-border hover:text-white'
+                        : 'bg-darkroom-card text-slate-300 hover:bg-paper-border hover:bg-darkroom-border hover:text-white'
                     }`}
                   >
                     {goal.label}
@@ -284,7 +284,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
                     className={`px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-all cursor-pointer ${
                       active
                         ? 'bg-tool-scout text-white shadow-md shadow-[var(--color-tool-scout)]/30 scale-102'
-                        : 'bg-paper-card dark:bg-darkroom-card text-slate-300 hover:bg-paper-border dark:hover:bg-darkroom-border hover:text-white'
+                        : 'bg-darkroom-card text-slate-300 hover:bg-paper-border hover:bg-darkroom-border hover:text-white'
                     }`}
                   >
                     {region.label}
@@ -329,7 +329,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
           className="space-y-6 pt-2"
         >
           {/* Strategy Roadmap Narrative: Solid Opaque Card */}
-          <div className="p-7 sm:p-8 rounded-3xl bg-paper-surface dark:bg-darkroom-surface shadow-2xl shadow-black/80 space-y-3">
+          <div className="p-7 sm:p-8 rounded-3xl bg-darkroom-surface shadow-2xl shadow-black/80 space-y-3">
             <div className="text-xs font-mono font-semibold uppercase tracking-wider text-tool-scout flex items-center gap-2">
               <Compass className="size-4" />
               <span>Strategy Roadmap: {scoutResult.filmTitle}</span>
@@ -347,7 +347,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
               opportunities in {scoutResult.durationSeconds}s
             </div>
 
-            <div className="flex items-center gap-1.5 p-1.5 rounded-xl bg-paper-surface dark:bg-darkroom-surface text-xs shadow-lg">
+            <div className="flex items-center gap-1.5 p-1.5 rounded-xl bg-darkroom-surface text-xs shadow-lg">
               {[
                 { id: 'ALL', label: 'All Calls' },
                 { id: 'BAFTA', label: 'BAFTA' },

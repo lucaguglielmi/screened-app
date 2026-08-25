@@ -139,10 +139,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-150">
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-xl rounded-3xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border shadow-2xl shadow-black/90 overflow-hidden space-y-0 text-slate-200"
+        className="w-full max-w-xl rounded-3xl bg-darkroom-surface border border-darkroom-border shadow-2xl shadow-black/90 overflow-hidden space-y-0 text-slate-200"
       >
         {/* Search Input Bar */}
-        <div className="flex items-center gap-3 px-5 py-4 border-b border-paper-border dark:border-darkroom-border bg-paper-bg dark:bg-darkroom-bg">
+        <div className="flex items-center gap-3 px-5 py-4 border-b border-darkroom-border bg-darkroom-bg">
           <Search className="size-5 text-indigo-400 shrink-0" />
           <input
             ref={inputRef}
@@ -156,13 +156,13 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             placeholder="Type a command or festival to investigate..."
             className="w-full bg-transparent text-base text-white placeholder-slate-500 focus:outline-none"
           />
-          <div className="flex items-center gap-1.5 text-[11px] font-mono text-slate-500 bg-paper-card dark:bg-darkroom-card px-2 py-0.5 rounded-md border border-paper-border dark:border-darkroom-border">
+          <div className="flex items-center gap-1.5 text-[11px] font-mono text-slate-500 bg-darkroom-card px-2 py-0.5 rounded-md border border-darkroom-border">
             <Command className="size-3" />
             <span>K</span>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg hover:bg-paper-border dark:hover:bg-darkroom-border text-slate-400 hover:text-white transition-colors cursor-pointer"
+            className="p-1 rounded-lg hover:bg-paper-border hover:bg-darkroom-border text-slate-400 hover:text-white transition-colors cursor-pointer"
           >
             <X className="size-4" />
           </button>
@@ -176,7 +176,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                 onSearchFestival(search.trim());
                 onClose();
               }}
-              className="p-3 rounded-2xl bg-paper-card dark:bg-darkroom-card hover:bg-paper-border dark:hover:bg-darkroom-border border border-tool-diligence/30 flex items-center justify-between cursor-pointer transition-colors"
+              className="p-3 rounded-2xl bg-darkroom-card hover:bg-paper-border hover:bg-darkroom-border border border-tool-diligence/30 flex items-center justify-between cursor-pointer transition-colors"
             >
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-xl bg-tool-diligence/20 text-tool-diligence">
@@ -205,13 +205,13 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                 onMouseEnter={() => setSelectedIndex(idx)}
                 className={`p-3 rounded-2xl flex items-center justify-between cursor-pointer transition-all ${
                   isSelected
-                    ? 'bg-paper-card dark:bg-darkroom-card border border-indigo-500/40 text-white'
-                    : 'hover:bg-paper-surface dark:hover:bg-darkroom-surface text-slate-300 border border-transparent'
+                    ? 'bg-darkroom-card border border-indigo-500/40 text-white'
+                    : 'hover:bg-darkroom-surface text-slate-300 border border-transparent'
                 }`}
               >
                 <div className="flex items-center gap-3">
                   <div
-                    className={`p-2 rounded-xl bg-paper-bg dark:bg-darkroom-bg border border-paper-border dark:border-darkroom-border ${item.iconColor}`}
+                    className={`p-2 rounded-xl bg-darkroom-bg border border-darkroom-border ${item.iconColor}`}
                   >
                     <Icon className="size-4" />
                   </div>
@@ -238,7 +238,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         </div>
 
         {/* Footer shortcuts */}
-        <div className="px-5 py-2.5 bg-paper-bg dark:bg-darkroom-bg border-t border-paper-border dark:border-darkroom-border flex items-center justify-between text-[11px] font-mono text-slate-500">
+        <div className="px-5 py-2.5 bg-darkroom-bg border-t border-darkroom-border flex items-center justify-between text-[11px] font-mono text-slate-500">
           <span>Navigate with ↑ ↓ • Enter to execute • Esc to dismiss</span>
           <button
             className="flex items-center gap-1.5 hover:text-white transition-colors cursor-pointer"

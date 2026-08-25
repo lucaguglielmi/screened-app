@@ -37,7 +37,7 @@ export const MiniScoutCard: React.FC<MiniScoutCardProps> = ({ args, onLaunch }) 
   };
 
   return (
-    <div className="w-full max-w-full overflow-hidden box-border my-3 p-6 rounded-2xl bg-paper-surface dark:bg-darkroom-surface shadow-2xl text-slate-100">
+    <div className="w-full max-w-full overflow-hidden box-border my-3 p-6 rounded-2xl bg-darkroom-surface shadow-2xl text-slate-100">
       {/* Header */}
       <div className="flex items-center justify-between gap-2 pb-3 mb-4">
         <div className="flex items-center gap-3">
@@ -72,7 +72,7 @@ export const MiniScoutCard: React.FC<MiniScoutCardProps> = ({ args, onLaunch }) 
                 type="text"
                 value={filmTitle}
                 onChange={(e) => setFilmTitle(e.target.value)}
-                className="w-full rounded-xl bg-paper-card dark:bg-darkroom-card px-3.5 py-2.5 text-white font-medium focus:outline-none focus:bg-paper-border dark:focus:bg-darkroom-border text-sm"
+                className="w-full rounded-xl bg-darkroom-card px-3.5 py-2.5 text-white font-medium focus:outline-none focus:bg-paper-border focus:bg-darkroom-border text-sm"
               />
             </div>
             <div>
@@ -83,7 +83,7 @@ export const MiniScoutCard: React.FC<MiniScoutCardProps> = ({ args, onLaunch }) 
                 <select
                   value={format}
                   onChange={(e) => setFormat(e.target.value as FilmFormat)}
-                  className="w-1/2 rounded-xl bg-paper-card dark:bg-darkroom-card px-3 py-2.5 text-white text-sm cursor-pointer focus:outline-none focus:bg-paper-border dark:focus:bg-darkroom-border"
+                  className="w-1/2 rounded-xl bg-darkroom-card px-3 py-2.5 text-white text-sm cursor-pointer focus:outline-none focus:bg-paper-border focus:bg-darkroom-border"
                 >
                   <option value="SHORT">Short</option>
                   <option value="FEATURE">Feature</option>
@@ -94,14 +94,14 @@ export const MiniScoutCard: React.FC<MiniScoutCardProps> = ({ args, onLaunch }) 
                   type="text"
                   value={genre}
                   onChange={(e) => setGenre(e.target.value)}
-                  className="w-1/2 rounded-xl bg-paper-card dark:bg-darkroom-card px-3 py-2.5 text-white text-sm focus:outline-none focus:bg-paper-border dark:focus:bg-darkroom-border"
+                  className="w-1/2 rounded-xl bg-darkroom-card px-3 py-2.5 text-white text-sm focus:outline-none focus:bg-paper-border focus:bg-darkroom-border"
                 />
               </div>
             </div>
           </div>
 
           {args.strategy_rationale && (
-            <div className="rounded-xl bg-paper-card dark:bg-darkroom-card p-3 text-slate-200 text-xs leading-relaxed">
+            <div className="rounded-xl bg-darkroom-card p-3 text-slate-200 text-xs leading-relaxed">
               <span className="font-bold text-tool-scout">Positioning Angle: </span>
               {args.strategy_rationale}
             </div>
@@ -118,7 +118,7 @@ export const MiniScoutCard: React.FC<MiniScoutCardProps> = ({ args, onLaunch }) 
                 max={240}
                 value={runtime}
                 onChange={(e) => setRuntime(parseInt(e.target.value) || 15)}
-                className="w-full rounded-xl bg-paper-card dark:bg-darkroom-card px-3.5 py-2.5 text-white text-sm focus:outline-none focus:bg-paper-border dark:focus:bg-darkroom-border"
+                className="w-full rounded-xl bg-darkroom-card px-3.5 py-2.5 text-white text-sm focus:outline-none focus:bg-paper-border focus:bg-darkroom-border"
               />
             </div>
             <div>
@@ -128,7 +128,7 @@ export const MiniScoutCard: React.FC<MiniScoutCardProps> = ({ args, onLaunch }) 
               <select
                 value={budgetTier}
                 onChange={(e) => setBudgetTier(e.target.value)}
-                className="w-full rounded-xl bg-paper-card dark:bg-darkroom-card px-3.5 py-2.5 text-white text-sm cursor-pointer focus:outline-none focus:bg-paper-border dark:focus:bg-darkroom-border"
+                className="w-full rounded-xl bg-darkroom-card px-3.5 py-2.5 text-white text-sm cursor-pointer focus:outline-none focus:bg-paper-border focus:bg-darkroom-border"
               >
                 <option value="Micro (< £50k)">Micro (&lt; £50k)</option>
                 <option value="Low (< £250k)">Low (&lt; £250k)</option>
@@ -154,8 +154,8 @@ export const MiniScoutCard: React.FC<MiniScoutCardProps> = ({ args, onLaunch }) 
       {/* STAGE 2: REVIEW & LAUNCH CONFIRMATION UI (Redirects to Opportunity Scout Workspace) */}
       {step === 'REVIEW' && (
         <div className="space-y-4">
-          <div className="p-4 rounded-xl bg-paper-surface dark:bg-darkroom-surface border border-paper-card dark:border-darkroom-card space-y-2.5 text-xs">
-            <div className="flex items-center justify-between border-b border-paper-card dark:border-darkroom-card pb-2">
+          <div className="p-4 rounded-xl bg-darkroom-surface border border-paper-card border-darkroom-card space-y-2.5 text-xs">
+            <div className="flex items-center justify-between border-b border-paper-card border-darkroom-card pb-2">
               <span className="font-mono font-bold text-tool-scout uppercase tracking-wider">
                 Stage 2: Slate Strategy Parameters Ready
               </span>

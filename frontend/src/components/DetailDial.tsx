@@ -182,7 +182,7 @@ export const DetailDial: React.FC<Props> = ({ density, onChange, dossier }) => {
   };
 
   return (
-    <div className="w-full rounded-3xl bg-paper-surface dark:bg-darkroom-surface p-4 sm:p-5 shadow-2xl space-y-4">
+    <div className="w-full rounded-3xl bg-darkroom-surface p-4 sm:p-5 shadow-2xl space-y-4">
       {/* Top Header: Exact user prompt and Action Buttons */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="flex items-center gap-2.5">
@@ -205,7 +205,7 @@ export const DetailDial: React.FC<Props> = ({ density, onChange, dossier }) => {
           <button
             type="button"
             onClick={handleSendToAntigravity}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-paper-card dark:bg-darkroom-card hover:bg-paper-card dark:hover:bg-darkroom-card text-xs font-mono text-indigo-300 hover:text-white transition-all shadow-md cursor-pointer group active:scale-95"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-mono text-indigo-300 hover:text-white transition-all shadow-md cursor-pointer group active:scale-95"
             title="Send structured data to Antigravity agent clipboard"
           >
             {copiedAntigravity ? (
@@ -226,7 +226,7 @@ export const DetailDial: React.FC<Props> = ({ density, onChange, dossier }) => {
             type="button"
             onClick={handleDownloadMarkdown}
             disabled={downloadingMd}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-paper-card dark:bg-darkroom-card hover:bg-paper-card dark:hover:bg-darkroom-card text-xs font-mono text-slate-200 hover:text-white transition-all shadow-md cursor-pointer group active:scale-95"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-mono text-slate-200 hover:text-white transition-all shadow-md cursor-pointer group active:scale-95"
             title="Download full due diligence evidence as a Markdown (.md) document"
           >
             <Download className="size-3.5 text-slate-400 group-hover:text-emerald-400 transition-colors" />
@@ -252,7 +252,7 @@ export const DetailDial: React.FC<Props> = ({ density, onChange, dossier }) => {
               className={`p-3 sm:p-3.5 rounded-2xl text-left transition-all cursor-pointer flex flex-col justify-between gap-1.5 ${
                 isSelected
                   ? `${opt.activeClass} scale-102`
-                  : 'bg-paper-card dark:bg-darkroom-card text-slate-300 hover:bg-paper-border dark:hover:bg-darkroom-border hover:text-white'
+                  : 'bg-darkroom-card text-slate-300 hover:bg-paper-border hover:bg-darkroom-border hover:text-white'
               }`}
             >
               <div className="flex items-center justify-between gap-2">

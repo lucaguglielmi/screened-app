@@ -314,10 +314,10 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 10 }}
             transition={{ duration: 0.18 }}
-            className="relative w-full max-w-3xl max-h-[88vh] rounded-3xl bg-paper-bg dark:bg-darkroom-bg border border-paper-border dark:border-darkroom-border shadow-2xl p-5 sm:p-7 flex flex-col text-slate-100 z-10 overflow-hidden"
+            className="relative w-full max-w-3xl max-h-[88vh] rounded-3xl bg-darkroom-bg border border-darkroom-border shadow-2xl p-5 sm:p-7 flex flex-col text-slate-100 z-10 overflow-hidden"
           >
             {/* Header */}
-            <div className="flex items-start justify-between pb-4 border-b border-paper-border dark:border-darkroom-border">
+            <div className="flex items-start justify-between pb-4 border-b border-darkroom-border">
               <div>
                 <div className="flex items-center gap-2">
                   <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-500/20 text-indigo-400 text-sm">
@@ -339,7 +339,7 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
                   soundEffects.playClick();
                   onClose();
                 }}
-                className="p-2 rounded-xl bg-paper-card dark:bg-darkroom-card hover:bg-paper-border dark:hover:bg-darkroom-border border border-paper-border dark:border-darkroom-border text-slate-400 hover:text-white transition-colors cursor-pointer"
+                className="p-2 rounded-xl bg-darkroom-card hover:bg-paper-border hover:bg-darkroom-border border border-darkroom-border text-slate-400 hover:text-white transition-colors cursor-pointer"
                 title="Close"
               >
                 <X className="size-5" />
@@ -410,7 +410,7 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
                                     animate={{ opacity: 1, y: 0, scale: 1 }}
                                     exit={{ opacity: 0, y: 4, scale: 0.95 }}
                                     transition={{ duration: 0.12 }}
-                                    className="absolute bottom-full left-0 mb-2 w-64 p-3 rounded-xl bg-paper-surface dark:bg-darkroom-surface border border-indigo-500/40 text-slate-100 text-xs shadow-2xl z-50 pointer-events-none"
+                                    className="absolute bottom-full left-0 mb-2 w-64 p-3 rounded-xl bg-darkroom-surface border border-indigo-500/40 text-slate-100 text-xs shadow-2xl z-50 pointer-events-none"
                                   >
                                     <div className="font-semibold text-indigo-300 mb-1 flex items-center gap-1">
                                       <span>⚡ {tag.label}</span>
@@ -448,7 +448,7 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
             </div>
 
             {/* Modal Footer */}
-            <div className="pt-3 border-t border-paper-border dark:border-darkroom-border flex items-center justify-between text-xs font-mono text-slate-400">
+            <div className="pt-3 border-t border-darkroom-border flex items-center justify-between text-xs font-mono text-slate-400">
               <span>Screened Autonomous Intelligence</span>
               <button
                 type="button"

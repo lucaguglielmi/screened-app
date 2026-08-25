@@ -40,9 +40,9 @@ export const AboutScreenedModal: React.FC<AboutScreenedModalProps> = ({
       />
 
       {/* Modal Dialog Card */}
-      <div className="relative z-10 w-full max-w-2xl max-h-[90vh] flex flex-col rounded-3xl bg-paper-bg dark:bg-darkroom-bg border border-paper-border dark:border-darkroom-border shadow-2xl shadow-indigo-950/60 overflow-hidden text-slate-100 animate-scale-up">
+      <div className="relative z-10 w-full max-w-2xl max-h-[90vh] flex flex-col rounded-3xl bg-darkroom-bg border border-darkroom-border shadow-2xl shadow-indigo-950/60 overflow-hidden text-slate-100 animate-scale-up">
         {/* Header with Sherlock Cinema Avatar & Close */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-paper-border dark:border-darkroom-border bg-paper-surface dark:bg-darkroom-surface">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-darkroom-border bg-darkroom-surface">
           <div className="flex items-center gap-3.5">
             <AgentAvatar size="md" isInteractive={false} />
             <div>
@@ -65,7 +65,7 @@ export const AboutScreenedModal: React.FC<AboutScreenedModalProps> = ({
               soundEffects.playClick();
               onClose();
             }}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-paper-border dark:hover:bg-darkroom-border transition-colors cursor-pointer"
+            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-paper-border hover:bg-darkroom-border transition-colors cursor-pointer"
             aria-label="Close modal"
           >
             <X className="size-5" />
@@ -75,7 +75,7 @@ export const AboutScreenedModal: React.FC<AboutScreenedModalProps> = ({
         {/* Scrollable Body Content (16px base font for maximum readability) */}
         <div className="p-6 sm:p-8 overflow-y-auto space-y-6 text-base leading-relaxed text-slate-200">
           {/* Mission Hero Banner */}
-          <div className="p-5 rounded-2xl bg-paper-bg dark:bg-darkroom-bg space-y-2">
+          <div className="p-5 rounded-2xl bg-darkroom-bg space-y-2">
             <div className="flex items-center gap-2 text-xs font-mono text-indigo-300 uppercase tracking-wider font-semibold">
               <ShieldCheck className="size-4 text-tool-diligence" />
               Forensic Protection for Indie Cinema
@@ -94,7 +94,7 @@ export const AboutScreenedModal: React.FC<AboutScreenedModalProps> = ({
             </h3>
 
             {/* Pillar 1: Parallel Web Crawling */}
-            <div className="p-4 rounded-2xl bg-paper-bg dark:bg-darkroom-bg flex gap-4 items-start">
+            <div className="p-4 rounded-2xl bg-darkroom-bg flex gap-4 items-start">
               <div className="p-2.5 rounded-xl bg-indigo-500/20 text-indigo-400 shrink-0 mt-0.5">
                 <Search className="size-5" />
               </div>
@@ -112,7 +112,7 @@ export const AboutScreenedModal: React.FC<AboutScreenedModalProps> = ({
             </div>
 
             {/* Pillar 2: Deterministic Corroboration */}
-            <div className="p-4 rounded-2xl bg-paper-bg dark:bg-darkroom-bg flex gap-4 items-start">
+            <div className="p-4 rounded-2xl bg-darkroom-bg flex gap-4 items-start">
               <div className="p-2.5 rounded-xl bg-tool-diligence/20 text-tool-diligence shrink-0 mt-0.5">
                 <Scale className="size-5" />
               </div>
@@ -130,7 +130,7 @@ export const AboutScreenedModal: React.FC<AboutScreenedModalProps> = ({
             </div>
 
             {/* Pillar 3: Non-Dilutive Grant Roadmaps */}
-            <div className="p-4 rounded-2xl bg-paper-bg dark:bg-darkroom-bg flex gap-4 items-start">
+            <div className="p-4 rounded-2xl bg-darkroom-bg flex gap-4 items-start">
               <div className="p-2.5 rounded-xl bg-rose-500/20 text-rose-400 shrink-0 mt-0.5">
                 <Sparkles className="size-5" />
               </div>
@@ -148,7 +148,7 @@ export const AboutScreenedModal: React.FC<AboutScreenedModalProps> = ({
           </div>
 
           {/* Quick Summary Highlights */}
-          <div className="p-4 rounded-2xl bg-paper-bg dark:bg-darkroom-bg grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs font-mono text-slate-300">
+          <div className="p-4 rounded-2xl bg-darkroom-bg grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs font-mono text-slate-300">
             <div className="flex items-center gap-2">
               <CheckCircle2 className="size-4 text-tool-diligence" />
               <span>Zero Blackbox Scores</span>
@@ -177,7 +177,7 @@ export const AboutScreenedModal: React.FC<AboutScreenedModalProps> = ({
         </div>
 
         {/* Footer Navigation Actions */}
-        <div className="px-6 py-4 border-t border-paper-border dark:border-darkroom-border bg-paper-surface dark:bg-darkroom-surface flex items-center justify-between gap-3">
+        <div className="px-6 py-4 border-t border-darkroom-border bg-darkroom-surface flex items-center justify-between gap-3">
           <span className="text-xs text-slate-400 font-mono hidden sm:inline">
             Screened Cinema Intelligence v1.0
           </span>
@@ -189,7 +189,7 @@ export const AboutScreenedModal: React.FC<AboutScreenedModalProps> = ({
                   onClose();
                   onNavigateToDiligence();
                 }}
-                className="px-4 py-2 rounded-xl bg-paper-border dark:bg-darkroom-border hover:bg-paper-border dark:hover:bg-darkroom-border text-slate-200 text-xs font-mono border border-paper-border dark:border-darkroom-border transition-all cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-paper-border bg-darkroom-border hover:bg-paper-border hover:bg-darkroom-border text-slate-200 text-xs font-mono border border-darkroom-border transition-all cursor-pointer"
               >
                 Due Diligence Workspace
               </button>

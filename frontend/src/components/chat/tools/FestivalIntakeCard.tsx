@@ -85,7 +85,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full max-w-2xl bg-paper-surface dark:bg-darkroom-surface rounded-2xl p-6 shadow-2xl space-y-4 my-2 text-zinc-100"
+      className="w-full max-w-2xl bg-darkroom-surface rounded-2xl p-6 shadow-2xl space-y-4 my-2 text-zinc-100"
     >
       {/* Header Badge */}
       <div className="flex items-center justify-between pb-3">
@@ -126,7 +126,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
                   value={festivalName}
                   onChange={(e) => setFestivalName(e.target.value)}
                   placeholder="e.g. Raindance Film Festival"
-                  className="w-full bg-paper-card dark:bg-darkroom-card rounded-xl px-3.5 py-2.5 text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:bg-paper-border dark:focus:bg-darkroom-border"
+                  className="w-full bg-darkroom-card rounded-xl px-3.5 py-2.5 text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:bg-paper-border focus:bg-darkroom-border"
                 />
               </div>
             </div>
@@ -146,12 +146,12 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
                 }}
                 onFocus={() => setShowLocationSuggestions(true)}
                 placeholder="e.g. London, United Kingdom"
-                className="w-full bg-paper-card dark:bg-darkroom-card rounded-xl px-3.5 py-2.5 text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:bg-paper-border dark:focus:bg-darkroom-border"
+                className="w-full bg-darkroom-card rounded-xl px-3.5 py-2.5 text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:bg-paper-border focus:bg-darkroom-border"
               />
 
               {/* Location Suggestions Dropdown */}
               {showLocationSuggestions && cityCountry && filteredLocations.length > 0 && (
-                <div className="absolute left-0 right-0 top-full mt-1 bg-paper-surface dark:bg-darkroom-surface rounded-xl shadow-2xl z-20 max-h-36 overflow-y-auto p-1">
+                <div className="absolute left-0 right-0 top-full mt-1 bg-darkroom-surface rounded-xl shadow-2xl z-20 max-h-36 overflow-y-auto p-1">
                   {filteredLocations.slice(0, 5).map((loc) => (
                     <button
                       key={loc}
@@ -160,7 +160,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
                         setCityCountry(loc);
                         setShowLocationSuggestions(false);
                       }}
-                      className="w-full text-left px-3 py-2 hover:bg-paper-card dark:hover:bg-darkroom-card hover:text-emerald-300 text-zinc-300 text-xs rounded-lg transition-colors flex items-center space-x-1.5 cursor-pointer"
+                      className="w-full text-left px-3 py-2 hover:bg-darkroom-card hover:text-emerald-300 text-zinc-300 text-xs rounded-lg transition-colors flex items-center space-x-1.5 cursor-pointer"
                     >
                       <MapPin className="w-3 h-3 text-emerald-400 shrink-0" />
                       <span>{loc}</span>
@@ -182,7 +182,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
               value={websiteUrl}
               onChange={(e) => setWebsiteUrl(e.target.value)}
               placeholder="https://festival-official-site.org"
-              className="w-full bg-paper-card dark:bg-darkroom-card rounded-xl px-3.5 py-2.5 text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:bg-paper-border dark:focus:bg-darkroom-border"
+              className="w-full bg-darkroom-card rounded-xl px-3.5 py-2.5 text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:bg-paper-border focus:bg-darkroom-border"
             />
           </div>
 
@@ -197,8 +197,8 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
                 onClick={() => setTalkedToSomeone(!talkedToSomeone)}
                 className={`flex items-center space-x-2.5 p-3 rounded-xl text-left transition-all cursor-pointer ${
                   talkedToSomeone
-                    ? 'bg-paper-surface dark:bg-darkroom-surface text-emerald-300 font-semibold'
-                    : 'bg-paper-card dark:bg-darkroom-card text-zinc-300 hover:bg-paper-border dark:hover:bg-darkroom-border'
+                    ? 'bg-darkroom-surface text-emerald-300 font-semibold'
+                    : 'bg-darkroom-card text-zinc-300 hover:bg-paper-border hover:bg-darkroom-border'
                 }`}
               >
                 {talkedToSomeone ? (
@@ -214,8 +214,8 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
                 onClick={() => setWasInvited(!wasInvited)}
                 className={`flex items-center space-x-2.5 p-3 rounded-xl text-left transition-all cursor-pointer ${
                   wasInvited
-                    ? 'bg-paper-surface dark:bg-darkroom-surface text-emerald-300 font-semibold'
-                    : 'bg-paper-card dark:bg-darkroom-card text-zinc-300 hover:bg-paper-border dark:hover:bg-darkroom-border'
+                    ? 'bg-darkroom-surface text-emerald-300 font-semibold'
+                    : 'bg-darkroom-card text-zinc-300 hover:bg-paper-border hover:bg-darkroom-border'
                 }`}
               >
                 {wasInvited ? (
@@ -231,8 +231,8 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
                 onClick={() => setReceivedEmail(!receivedEmail)}
                 className={`flex items-center space-x-2.5 p-3 rounded-xl text-left transition-all cursor-pointer ${
                   receivedEmail
-                    ? 'bg-paper-surface dark:bg-darkroom-surface text-emerald-300 font-semibold'
-                    : 'bg-paper-card dark:bg-darkroom-card text-zinc-300 hover:bg-paper-border dark:hover:bg-darkroom-border'
+                    ? 'bg-darkroom-surface text-emerald-300 font-semibold'
+                    : 'bg-darkroom-card text-zinc-300 hover:bg-paper-border hover:bg-darkroom-border'
                 }`}
               >
                 {receivedEmail ? (
@@ -248,8 +248,8 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
                 onClick={() => setWaiverOffered(!waiverOffered)}
                 className={`flex items-center space-x-2.5 p-3 rounded-xl text-left transition-all cursor-pointer ${
                   waiverOffered
-                    ? 'bg-paper-surface dark:bg-darkroom-surface text-emerald-300 font-semibold'
-                    : 'bg-paper-card dark:bg-darkroom-card text-zinc-300 hover:bg-paper-border dark:hover:bg-darkroom-border'
+                    ? 'bg-darkroom-surface text-emerald-300 font-semibold'
+                    : 'bg-darkroom-card text-zinc-300 hover:bg-paper-border hover:bg-darkroom-border'
                 }`}
               >
                 {waiverOffered ? (
@@ -265,8 +265,8 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
                 onClick={() => setAlreadyPaid(!alreadyPaid)}
                 className={`flex items-center space-x-2.5 p-3 rounded-xl text-left transition-all cursor-pointer ${
                   alreadyPaid
-                    ? 'bg-paper-surface dark:bg-darkroom-surface text-emerald-300 font-semibold'
-                    : 'bg-paper-card dark:bg-darkroom-card text-zinc-300 hover:bg-paper-border dark:hover:bg-darkroom-border'
+                    ? 'bg-darkroom-surface text-emerald-300 font-semibold'
+                    : 'bg-darkroom-card text-zinc-300 hover:bg-paper-border hover:bg-darkroom-border'
                 }`}
               >
                 {alreadyPaid ? (
@@ -282,8 +282,8 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
                 onClick={() => setAdvertisedCinemaVenue(!advertisedCinemaVenue)}
                 className={`flex items-center space-x-2.5 p-3 rounded-xl text-left transition-all cursor-pointer ${
                   advertisedCinemaVenue
-                    ? 'bg-paper-surface dark:bg-darkroom-surface text-emerald-300 font-semibold'
-                    : 'bg-paper-card dark:bg-darkroom-card text-zinc-300 hover:bg-paper-border dark:hover:bg-darkroom-border'
+                    ? 'bg-darkroom-surface text-emerald-300 font-semibold'
+                    : 'bg-darkroom-card text-zinc-300 hover:bg-paper-border hover:bg-darkroom-border'
                 }`}
               >
                 {advertisedCinemaVenue ? (
@@ -303,7 +303,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                className="p-4 rounded-2xl bg-paper-card dark:bg-darkroom-card space-y-3 overflow-hidden text-xs"
+                className="p-4 rounded-2xl bg-darkroom-card space-y-3 overflow-hidden text-xs"
               >
                 <div className="flex items-center space-x-2 text-emerald-400 font-mono text-xs">
                   <AlertCircle className="w-4 h-4" />
@@ -321,7 +321,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
                       value={contactName}
                       onChange={(e) => setContactName(e.target.value)}
                       placeholder="e.g. Program Director Alex Mercer"
-                      className="w-full bg-paper-surface dark:bg-darkroom-surface rounded-xl px-3 py-2 text-white placeholder:text-zinc-500 focus:outline-none text-xs"
+                      className="w-full bg-darkroom-surface rounded-xl px-3 py-2 text-white placeholder:text-zinc-500 focus:outline-none text-xs"
                     />
                   </div>
 
@@ -335,7 +335,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
                       value={contactPhone}
                       onChange={(e) => setContactPhone(e.target.value)}
                       placeholder="+44 7700 900077"
-                      className="w-full bg-paper-surface dark:bg-darkroom-surface rounded-xl px-3 py-2 text-white placeholder:text-zinc-500 focus:outline-none text-xs"
+                      className="w-full bg-darkroom-surface rounded-xl px-3 py-2 text-white placeholder:text-zinc-500 focus:outline-none text-xs"
                     />
                   </div>
                 </div>
@@ -351,7 +351,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
                       value={emailSnippet}
                       onChange={(e) => setEmailSnippet(e.target.value)}
                       placeholder="Paste the invitation message or waiver code..."
-                      className="w-full bg-paper-surface dark:bg-darkroom-surface rounded-xl px-3 py-2 text-white placeholder:text-zinc-500 focus:outline-none text-xs font-mono"
+                      className="w-full bg-darkroom-surface rounded-xl px-3 py-2 text-white placeholder:text-zinc-500 focus:outline-none text-xs font-mono"
                     />
                   </AnimatedFocusWrapper>
                 </div>
@@ -380,7 +380,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
           animate={{ opacity: 1, scale: 1 }}
           className="space-y-4"
         >
-          <div className="p-4 rounded-xl bg-paper-surface dark:bg-darkroom-surface border border-emerald-900 space-y-2.5 text-xs">
+          <div className="p-4 rounded-xl bg-darkroom-surface border border-emerald-900 space-y-2.5 text-xs">
             <div className="flex items-center justify-between border-b border-emerald-800 pb-2">
               <span className="font-mono font-bold text-emerald-400 uppercase tracking-wider">
                 Stage 2: Investigation Parameters Ready

@@ -7,8 +7,6 @@ import {
   ShieldCheck,
   Compass,
   Palette,
-  Moon,
-  Sun,
   Volume2,
   VolumeX,
   Search,
@@ -24,8 +22,6 @@ import { soundEffects } from '../../utils/audio';
 interface MobileNavigationProps {
   activeTool: ActiveTool;
   onChange: (tool: ActiveTool) => void;
-  theme: 'dark' | 'light';
-  onToggleTheme: () => void;
   soundMuted: boolean;
   onToggleSound: () => void;
   onOpenKeyboardHelp: () => void;
@@ -35,8 +31,6 @@ interface MobileNavigationProps {
 export const MobileNavigation: React.FC<MobileNavigationProps> = ({
   activeTool,
   onChange,
-  theme,
-  onToggleTheme,
   soundMuted,
   onToggleSound,
   onOpenKeyboardHelp,
@@ -95,11 +89,11 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 26, stiffness: 280 }}
-            className="fixed inset-y-0 right-0 w-full max-w-sm h-[100dvh] bg-paper-bg dark:bg-darkroom-bg border-l border-paper-border dark:border-darkroom-border shadow-2xl p-6 flex flex-col justify-between overflow-y-auto text-slate-200"
+            className="fixed inset-y-0 right-0 w-full max-w-sm h-[100dvh] bg-darkroom-bg border-l border-darkroom-border shadow-2xl p-6 flex flex-col justify-between overflow-y-auto text-slate-200"
           >
             {/* Top Bar inside Drawer */}
             <div>
-              <div className="flex items-center justify-between pb-5 border-b border-paper-border dark:border-darkroom-border">
+              <div className="flex items-center justify-between pb-5 border-b border-darkroom-border">
                 <div className="flex items-center gap-3">
                   <div className="size-9 rounded-xl bg-midnight-royal flex items-center justify-center text-white font-serif font-bold text-lg shadow-md shadow-[var(--color-midnight-royal)]/50">
                     S
@@ -116,7 +110,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
-                  className="p-2 rounded-xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border text-slate-400 hover:text-white transition-colors cursor-pointer"
+                  className="p-2 rounded-xl bg-darkroom-surface border border-darkroom-border text-slate-400 hover:text-white transition-colors cursor-pointer"
                   aria-label="Close menu"
                 >
                   <X className="size-5" />
@@ -131,13 +125,13 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                     setIsOpen(false);
                     onOpenCommandPalette();
                   }}
-                  className="w-full py-3 px-4 rounded-2xl bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-card dark:hover:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-left flex items-center justify-between text-base text-slate-300 transition-colors cursor-pointer"
+                  className="w-full py-3 px-4 rounded-2xl bg-darkroom-surface hover:bg-darkroom-card border border-darkroom-border text-left flex items-center justify-between text-base text-slate-300 transition-colors cursor-pointer"
                 >
                   <div className="flex items-center gap-3">
                     <Search className="size-5 text-indigo-400" />
                     <span>Quick Search (⌘K)</span>
                   </div>
-                  <span className="text-xs font-mono px-2 py-0.5 rounded bg-paper-border dark:bg-darkroom-border text-slate-400 border border-paper-border dark:border-darkroom-border">
+                  <span className="text-xs font-mono px-2 py-0.5 rounded bg-paper-border bg-darkroom-border text-slate-400 border border-darkroom-border">
                     ⌘K
                   </span>
                 </button>
@@ -155,8 +149,8 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                   onClick={() => handleSelect('CONVERSATIONAL_DESK')}
                   className={`w-full p-3.5 rounded-2xl flex items-center gap-3.5 transition-all text-left cursor-pointer ${
                     activeTool === 'CONVERSATIONAL_DESK'
-                      ? 'bg-paper-card dark:bg-darkroom-card border border-midnight-royal/80 text-white shadow-lg shadow-[var(--color-midnight-royal)]/20'
-                      : 'bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-card dark:hover:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-slate-300'
+                      ? 'bg-darkroom-card border border-midnight-royal/80 text-white shadow-lg shadow-[var(--color-midnight-royal)]/20'
+                      : 'bg-darkroom-surface hover:bg-darkroom-card border border-darkroom-border text-slate-300'
                   }`}
                 >
                   <div className="size-10 rounded-xl bg-midnight-royal flex items-center justify-center text-white shadow-md shrink-0">
@@ -179,8 +173,8 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                   onClick={() => handleSelect('DUE_DILIGENCE')}
                   className={`w-full p-3.5 rounded-2xl flex items-center gap-3.5 transition-all text-left cursor-pointer ${
                     activeTool === 'DUE_DILIGENCE'
-                      ? 'bg-paper-card dark:bg-darkroom-card border border-tool-diligence/80 text-white shadow-lg shadow-[var(--color-tool-diligence)]/20'
-                      : 'bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-card dark:hover:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-slate-300'
+                      ? 'bg-darkroom-card border border-tool-diligence/80 text-white shadow-lg shadow-[var(--color-tool-diligence)]/20'
+                      : 'bg-darkroom-surface hover:bg-darkroom-card border border-darkroom-border text-slate-300'
                   }`}
                 >
                   <div className="size-10 rounded-xl bg-gradient-to-tr from-tool-diligence to-tool-diligence-hover flex items-center justify-center text-slate-950 shadow-md shrink-0">
@@ -205,8 +199,8 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                   onClick={() => handleSelect('OPPORTUNITY_SCOUT')}
                   className={`w-full p-3.5 rounded-2xl flex items-center gap-3.5 transition-all text-left cursor-pointer ${
                     activeTool === 'OPPORTUNITY_SCOUT'
-                      ? 'bg-paper-card dark:bg-darkroom-card border border-tool-scout/80 text-white shadow-lg shadow-[var(--color-tool-scout)]/20'
-                      : 'bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-card dark:hover:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-slate-300'
+                      ? 'bg-darkroom-card border border-tool-scout/80 text-white shadow-lg shadow-[var(--color-tool-scout)]/20'
+                      : 'bg-darkroom-surface hover:bg-darkroom-card border border-darkroom-border text-slate-300'
                   }`}
                 >
                   <div className="size-10 rounded-xl bg-gradient-to-tr from-tool-scout via-tool-scout to-orange-500 flex items-center justify-center text-white shadow-md shrink-0">
@@ -267,25 +261,8 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
             </div>
 
             {/* Bottom Utilities Row (Theme & Sound as Icons) */}
-            <div className="pt-4 mt-6 border-t border-paper-border dark:border-darkroom-border flex items-center justify-between">
+            <div className="pt-4 mt-6 border-t border-darkroom-border flex items-center justify-between">
               <div className="flex items-center space-x-2">
-                {/* Theme Icon Button */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    soundEffects.playClick();
-                    onToggleTheme();
-                  }}
-                  className="p-2.5 rounded-xl bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-card dark:hover:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-slate-300 hover:text-white transition-colors cursor-pointer"
-                  title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
-                  aria-label="Toggle theme"
-                >
-                  {theme === 'dark' ? (
-                    <Sun className="size-4 text-amber-400" />
-                  ) : (
-                    <Moon className="size-4 text-indigo-400" />
-                  )}
-                </button>
 
                 {/* Sound Icon Button */}
                 <button
@@ -294,7 +271,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                     soundEffects.playClick();
                     onToggleSound();
                   }}
-                  className="p-2.5 rounded-xl bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-card dark:hover:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-slate-300 hover:text-white transition-colors cursor-pointer"
+                  className="p-2.5 rounded-xl bg-darkroom-surface hover:bg-darkroom-card border border-darkroom-border text-slate-300 hover:text-white transition-colors cursor-pointer"
                   title={soundMuted ? 'Unmute Sound Effects' : 'Mute Sound Effects'}
                   aria-label="Toggle sound"
                 >
@@ -313,7 +290,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                   setIsOpen(false);
                   onOpenKeyboardHelp();
                 }}
-                className="p-2.5 rounded-xl bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-card dark:hover:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-slate-300 hover:text-white transition-colors cursor-pointer"
+                className="p-2.5 rounded-xl bg-darkroom-surface hover:bg-darkroom-card border border-darkroom-border text-slate-300 hover:text-white transition-colors cursor-pointer"
                 title="Keyboard Shortcuts (?)"
                 aria-label="Keyboard Shortcuts"
               >
@@ -336,7 +313,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
           setIsOpen(!isOpen);
         }}
         aria-label="Open Navigation Menu"
-        className="md:hidden p-2 rounded-xl bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-card dark:hover:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer transition-colors"
+        className="md:hidden p-2 rounded-xl bg-darkroom-surface hover:bg-darkroom-card border border-darkroom-border text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer transition-colors"
       >
         {isOpen ? (
           <X className="size-5 text-indigo-400" />

@@ -53,7 +53,7 @@ export const StarterPromptChips: React.FC<StarterPromptChipsProps> = ({ onSelect
               soundEffects.playClick();
               onSelectPrompt(item.prompt);
             }}
-            className="flex items-start gap-3.5 p-4 text-left rounded-2xl bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-card dark:hover:bg-darkroom-card transition-all group cursor-pointer shadow-xl"
+            className="flex items-start gap-3.5 p-4 text-left rounded-2xl bg-darkroom-surface hover:bg-darkroom-card transition-all group cursor-pointer shadow-xl"
           >
             <span className="text-2xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
               {item.icon}

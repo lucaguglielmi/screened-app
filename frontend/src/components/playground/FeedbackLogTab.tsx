@@ -122,7 +122,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({ onOpenFeedbackMo
   return (
     <div className="space-y-8 animate-fade-in text-slate-100 select-none">
       {/* Tab Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-paper-border dark:border-darkroom-border pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-darkroom-border pb-6">
         <div className="flex items-center gap-3">
           <div className="p-3 rounded-2xl bg-indigo-500/20 border border-indigo-500/40 text-indigo-400">
             <MessageSquare className="size-6" />
@@ -145,7 +145,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({ onOpenFeedbackMo
               fetchFeedback();
             }}
             disabled={loading}
-            className="px-3.5 py-2 rounded-xl bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-card dark:hover:bg-darkroom-card text-slate-300 border border-paper-border dark:border-darkroom-border text-xs font-mono flex items-center gap-2 transition-colors cursor-pointer"
+            className="px-3.5 py-2 rounded-xl bg-darkroom-surface hover:bg-darkroom-card text-slate-300 border border-darkroom-border text-xs font-mono flex items-center gap-2 transition-colors cursor-pointer"
           >
             <RefreshCw className={`size-3.5 ${loading ? 'animate-spin' : ''}`} />
             <span>Refresh</span>
@@ -169,7 +169,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({ onOpenFeedbackMo
       {/* Analytics Metric Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Metric 1 */}
-        <div className="p-5 rounded-2xl bg-paper-bg dark:bg-darkroom-bg shadow-lg space-y-1">
+        <div className="p-5 rounded-2xl bg-darkroom-bg shadow-lg space-y-1">
           <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 block">
             Total Submissions
           </span>
@@ -178,7 +178,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({ onOpenFeedbackMo
         </div>
 
         {/* Metric 2 */}
-        <div className="p-5 rounded-2xl bg-paper-bg dark:bg-darkroom-bg shadow-lg space-y-1">
+        <div className="p-5 rounded-2xl bg-darkroom-bg shadow-lg space-y-1">
           <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 block">
             Avg Satisfaction Rating
           </span>
@@ -190,7 +190,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({ onOpenFeedbackMo
         </div>
 
         {/* Metric 3 */}
-        <div className="p-5 rounded-2xl bg-paper-bg dark:bg-darkroom-bg shadow-lg space-y-1">
+        <div className="p-5 rounded-2xl bg-darkroom-bg shadow-lg space-y-1">
           <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 block">
             Accuracy & Vetting
           </span>
@@ -199,7 +199,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({ onOpenFeedbackMo
         </div>
 
         {/* Metric 4 */}
-        <div className="p-5 rounded-2xl bg-paper-bg dark:bg-darkroom-bg shadow-lg space-y-1">
+        <div className="p-5 rounded-2xl bg-darkroom-bg shadow-lg space-y-1">
           <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 block">
             Roadmap Requests
           </span>
@@ -209,7 +209,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({ onOpenFeedbackMo
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="p-4 rounded-2xl bg-paper-surface dark:bg-darkroom-surface flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="p-4 rounded-2xl bg-darkroom-surface flex flex-col md:flex-row items-center justify-between gap-4">
         {/* Search */}
         <div className="relative w-full md:w-80">
           <Search className="size-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -218,7 +218,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({ onOpenFeedbackMo
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search feedback by text or author..."
-            className="w-full pl-10 pr-4 py-2 rounded-xl bg-paper-bg dark:bg-darkroom-bg border border-paper-border dark:border-darkroom-border text-xs font-mono text-slate-100 placeholder-slate-400 focus:outline-none focus:border-indigo-500"
+            className="w-full pl-10 pr-4 py-2 rounded-xl bg-darkroom-bg border border-darkroom-border text-xs font-mono text-slate-100 placeholder-slate-400 focus:outline-none focus:border-indigo-500"
           />
         </div>
 
@@ -245,7 +245,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({ onOpenFeedbackMo
               className={`px-2.5 py-1 rounded-lg text-xs font-mono whitespace-nowrap transition-colors cursor-pointer border ${
                 selectedCategory === cat
                   ? 'bg-midnight-royal text-white border-indigo-400'
-                  : 'bg-paper-bg dark:bg-darkroom-bg text-slate-300 border-paper-border dark:border-darkroom-border hover:border-midnight-violet'
+                  : 'bg-darkroom-bg text-slate-300 border-darkroom-border hover:border-midnight-violet'
               }`}
             >
               {cat === 'ALL' ? 'All Logs' : CATEGORY_MAP[cat]?.label || cat}
@@ -255,7 +255,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({ onOpenFeedbackMo
       </div>
 
       {/* Main Feedback Data Table */}
-      <div className="rounded-3xl bg-paper-bg dark:bg-darkroom-bg shadow-2xl overflow-hidden">
+      <div className="rounded-3xl bg-darkroom-bg shadow-2xl overflow-hidden">
         {loading ? (
           <div className="p-16 text-center space-y-3">
             <Loader2 className="size-8 animate-spin mx-auto text-indigo-400" />
@@ -280,7 +280,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({ onOpenFeedbackMo
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="border-b border-paper-border dark:border-darkroom-border bg-paper-surface dark:bg-darkroom-surface text-slate-400 font-mono uppercase text-[11px] tracking-wider">
+                <tr className="border-b border-darkroom-border bg-darkroom-surface text-slate-400 font-mono uppercase text-[11px] tracking-wider">
                   <th className="py-3.5 px-4 font-semibold">Rating</th>
                   <th className="py-3.5 px-4 font-semibold">Category</th>
                   <th className="py-3.5 px-6 font-semibold">Comment & Suggestions</th>
@@ -302,7 +302,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({ onOpenFeedbackMo
                   });
 
                   return (
-                    <tr key={item.id} className="hover:bg-paper-surface dark:hover:bg-darkroom-surface transition-colors">
+                    <tr key={item.id} className="hover:bg-darkroom-surface transition-colors">
                       {/* Rating Stars */}
                       <td className="py-4 px-4 whitespace-nowrap">
                         <div className="flex items-center gap-1 text-amber-400">

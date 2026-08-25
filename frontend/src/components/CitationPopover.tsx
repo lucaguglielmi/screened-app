@@ -30,9 +30,9 @@ export const CitationPopover: React.FC<Props> = ({ evidence, sourceTier = 2 }) =
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute left-0 bottom-full mb-2 w-80 sm:w-96 p-4 rounded-xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border shadow-xl z-50 space-y-2.5 text-xs">
-            <div className="flex items-center justify-between border-b border-paper-border dark:border-darkroom-border pb-2">
-              <span className="font-mono text-[10px] uppercase px-1.5 py-0.5 rounded bg-neutral-500/10 text-neutral-600 dark:text-neutral-400">
+          <div className="absolute left-0 bottom-full mb-2 w-80 sm:w-96 p-4 rounded-xl bg-darkroom-surface border border-darkroom-border shadow-xl z-50 space-y-2.5 text-xs">
+            <div className="flex items-center justify-between border-b border-darkroom-border pb-2">
+              <span className="font-mono text-[10px] uppercase px-1.5 py-0.5 rounded bg-neutral-500/10 text-neutral-600 text-neutral-400">
                 Tier {sourceTier} • {evidence.sourceDomain}
               </span>
               {evidence.sourceUrl && (
@@ -40,24 +40,24 @@ export const CitationPopover: React.FC<Props> = ({ evidence, sourceTier = 2 }) =
                   href={evidence.sourceUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center gap-1 font-mono text-[11px]"
+                  className="text-indigo-600 text-indigo-400 hover:underline inline-flex items-center gap-1 font-mono text-[11px]"
                 >
                   Visit <ExternalLink className="size-3" />
                 </a>
               )}
             </div>
 
-            <div className="font-medium text-paper-text dark:text-darkroom-text">
+            <div className="font-medium text-darkroom-text">
               {evidence.sourceTitle || evidence.sourceDomain}
             </div>
 
-            <blockquote className="p-2.5 rounded-lg bg-paper-card dark:bg-darkroom-card text-paper-muted dark:text-darkroom-muted italic border-l-2 border-indigo-500 text-[11px] leading-relaxed">
+            <blockquote className="p-2.5 rounded-lg bg-darkroom-card text-darkroom-muted italic border-l-2 border-indigo-500 text-[11px] leading-relaxed">
               "{evidence.exactExcerpt}"
             </blockquote>
 
             {evidence.note && (
-              <div className="text-[11px] text-paper-muted dark:text-darkroom-muted">
-                <span className="font-semibold text-paper-text dark:text-darkroom-text">
+              <div className="text-[11px] text-darkroom-muted">
+                <span className="font-semibold text-darkroom-text">
                   Relevance:{' '}
                 </span>
                 {evidence.note}

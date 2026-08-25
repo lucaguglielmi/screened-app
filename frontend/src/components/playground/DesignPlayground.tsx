@@ -90,9 +90,9 @@ export const DesignPlayground: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-paper-card dark:bg-darkroom-card text-zinc-100 pb-12 w-full">
+    <div className="min-h-screen bg-darkroom-card text-zinc-100 pb-12 w-full">
       {/* Full-width Header & Nav Bar */}
-      <div className="w-full bg-paper-card dark:bg-darkroom-card border-b border-indigo-900/50 shadow-md mb-8">
+      <div className="w-full bg-darkroom-card border-b border-indigo-900/50 shadow-md mb-8">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4">
           <div>
             <div className="flex items-center gap-2">
@@ -196,7 +196,7 @@ export const DesignPlayground: React.FC = () => {
             </div>
 
             {/* 2-STAGE TOOL PATTERN ARCHITECTURAL BLUEPRINT */}
-            <div className="p-4 rounded-xl bg-paper-card dark:bg-darkroom-card space-y-2">
+            <div className="p-4 rounded-xl bg-darkroom-card space-y-2">
               <div className="flex items-center space-x-2 text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">
                 <span>Standard 2-Stage Generative Tool Lifecycle Architecture</span>
               </div>
@@ -328,7 +328,7 @@ export const DesignPlayground: React.FC = () => {
               </button>
             </div>
 
-            <div className="p-4 rounded-xl bg-paper-surface dark:bg-darkroom-surface flex justify-center">
+            <div className="p-4 rounded-xl bg-darkroom-surface flex justify-center">
               {activeToolSubtab === 'FESTIVAL' && (
                 <div className="w-full max-w-2xl">
                   <span className="text-[11px] font-mono text-emerald-400 uppercase tracking-wider block mb-2">
@@ -457,7 +457,7 @@ export const DesignPlayground: React.FC = () => {
                     Feature: Interactive Multi-Step Follow-Up Probes & Document Intake (Branch A +
                     B)
                   </span>
-                  <div className="p-4 rounded-xl bg-paper-card dark:bg-darkroom-card/90 space-y-3">
+                  <div className="p-4 rounded-xl bg-darkroom-card/90 space-y-3">
                     <div className="flex items-center gap-2 text-xs font-semibold text-indigo-300">
                       <span className="text-amber-400 text-sm">✦</span>
                       <span>Interactive Follow-Up Probes (1-Click Filmmaker Action Chips)</span>
@@ -496,7 +496,7 @@ export const DesignPlayground: React.FC = () => {
                             soundEffects.playClick();
                             addLog(`[Probe Click] Prompt: "${opt.promptText}" (${opt.badge})`);
                           }}
-                          className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-paper-border dark:bg-darkroom-border hover:bg-midnight-royal border border-midnight-violet hover:border-tool-ocean text-xs font-medium text-slate-200 hover:text-white transition-all shadow-sm cursor-pointer"
+                          className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-paper-border bg-darkroom-border hover:bg-midnight-royal border border-midnight-violet hover:border-tool-ocean text-xs font-medium text-slate-200 hover:text-white transition-all shadow-sm cursor-pointer"
                         >
                           <span className="px-1.5 py-0.5 rounded bg-indigo-500/20 group-hover:bg-white/20 text-[10px] font-mono text-indigo-300 group-hover:text-white">
                             {opt.badge}
@@ -704,7 +704,7 @@ export const DesignPlayground: React.FC = () => {
         )}
 
         {/* Interactive Activity & Event Log Drawer */}
-        <div className="p-4 rounded-2xl bg-paper-surface dark:bg-darkroom-surface text-xs font-mono text-zinc-300">
+        <div className="p-4 rounded-2xl bg-darkroom-surface text-xs font-mono text-zinc-300">
           <div className="flex items-center justify-between pb-2 border-b border-zinc-800 mb-2">
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />

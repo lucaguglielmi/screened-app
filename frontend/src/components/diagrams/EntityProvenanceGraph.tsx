@@ -223,7 +223,7 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
           </span>
         </div>
 
-        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-paper-card dark:bg-darkroom-card text-xs">
+        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-darkroom-card text-xs">
           {[
             { id: 'ALL', label: 'Complete Graph' },
             { id: 'VERIFIED', label: 'Verified Nodes' },
@@ -255,7 +255,7 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
 
       {/* Node Context Inspector Pill / Callout */}
       {selectedNodeData && (
-        <div className="p-4 rounded-2xl bg-paper-card dark:bg-darkroom-card text-xs space-y-1.5 animate-fade-in shadow-xl">
+        <div className="p-4 rounded-2xl bg-darkroom-card text-xs space-y-1.5 animate-fade-in shadow-xl">
           <div className="flex items-center justify-between gap-2">
             <span className="font-bold text-white font-serif text-sm">
               {selectedNodeData.label}

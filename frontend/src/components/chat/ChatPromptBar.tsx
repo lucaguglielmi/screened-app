@@ -285,7 +285,7 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
     <div className="w-full max-w-4xl mx-auto relative space-y-2">
       {/* Drag & Drop overlay */}
       {isDragging && (
-        <div className="absolute inset-0 z-30 flex items-center justify-center rounded-2xl border-2 border-dashed border-midnight-royal bg-paper-bg dark:bg-darkroom-bg/95 backdrop-blur-md">
+        <div className="absolute inset-0 z-30 flex items-center justify-center rounded-2xl border-2 border-dashed border-midnight-royal bg-darkroom-bg/95 backdrop-blur-md">
           <div className="text-center text-indigo-300">
             <Sparkles className="size-8 mx-auto text-midnight-royal animate-bounce" />
             <p className="mt-2 text-base font-semibold">
@@ -336,7 +336,7 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
         }}
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
-        className="relative flex flex-col sm:flex-row items-stretch sm:items-center rounded-2xl bg-paper-surface dark:bg-darkroom-surface shadow-2xl transition-all p-2 gap-2"
+        className="relative flex flex-col sm:flex-row items-stretch sm:items-center rounded-2xl bg-darkroom-surface shadow-2xl transition-all p-2 gap-2"
       >
         <input
           type="file"
@@ -357,7 +357,7 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
             type="button"
             title="Attach a file or photo"
             onClick={() => fileInputRef.current?.click()}
-            className="flex items-center justify-center size-10 rounded-xl bg-paper-card dark:bg-darkroom-card hover:bg-paper-border dark:hover:bg-darkroom-border text-slate-300 hover:text-white transition-all cursor-pointer shadow-sm shrink-0"
+            className="flex items-center justify-center size-10 rounded-xl bg-darkroom-card hover:bg-paper-border hover:bg-darkroom-border text-slate-300 hover:text-white transition-all cursor-pointer shadow-sm shrink-0"
           >
             <Plus className="size-4" />
           </button>
@@ -402,7 +402,7 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
             className={`flex h-10 items-center justify-center rounded-xl transition-all cursor-pointer shrink-0 ${
               isRecording
                 ? 'px-3 gap-1.5 bg-rose-500/20 border border-rose-500/60 text-rose-300 shadow-md shadow-rose-950 animate-pulse'
-                : 'w-10 bg-midnight/80 hover:bg-paper-card dark:hover:bg-darkroom-card border border-zinc-700 hover:border-indigo-500/50 text-zinc-300 hover:text-white'
+                : 'w-10 bg-midnight/80 hover:bg-darkroom-card border border-zinc-700 hover:border-indigo-500/50 text-zinc-300 hover:text-white'
             }`}
           >
             {isRecording ? (

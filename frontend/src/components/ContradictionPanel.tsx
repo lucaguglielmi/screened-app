@@ -12,13 +12,13 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
   }
 
   return (
-    <div className="p-6 rounded-2xl bg-amber-500/5 dark:bg-amber-500/10 border border-amber-500/20 space-y-6">
+    <div className="p-6 rounded-2xl bg-amber-500/5 bg-amber-500/10 border border-amber-500/20 space-y-6">
       <div className="flex items-center justify-between border-b border-amber-500/20 pb-3">
-        <div className="flex items-center gap-2 text-sm font-mono uppercase tracking-wider text-amber-600 dark:text-amber-400">
+        <div className="flex items-center gap-2 text-sm font-mono uppercase tracking-wider text-amber-600 text-amber-400">
           <Scale className="size-4.5" />
           <span>Factual Contradictions & Direct Disputes ({disputes.length})</span>
         </div>
-        <span className="text-xs font-mono text-amber-600/80 dark:text-amber-400/80">
+        <span className="text-xs font-mono text-amber-600/80 text-amber-400/80">
           Side-by-side evidence comparison
         </span>
       </div>
@@ -27,14 +27,14 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
         {disputes.map((dispute, idx) => (
           <div
             key={dispute.id || idx}
-            className="p-4 rounded-xl bg-paper-surface dark:bg-darkroom-surface border border-amber-500/30 space-y-4 shadow-sm"
+            className="p-4 rounded-xl bg-darkroom-surface border border-amber-500/30 space-y-4 shadow-sm"
           >
             <div className="flex items-start justify-between gap-4">
               <div>
-                <span className="font-mono text-[10px] uppercase px-2 py-0.5 rounded bg-amber-500/20 text-amber-700 dark:text-amber-300">
+                <span className="font-mono text-[10px] uppercase px-2 py-0.5 rounded bg-amber-500/20 text-amber-700 text-amber-300">
                   {dispute.category}
                 </span>
-                <h3 className="font-serif font-semibold text-base text-paper-text dark:text-darkroom-text mt-1.5">
+                <h3 className="font-serif font-semibold text-base text-darkroom-text mt-1.5">
                   {dispute.pointOfContention}
                 </h3>
               </div>
@@ -43,11 +43,11 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
             {/* Split Comparison Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Claim A */}
-              <div className="p-3.5 rounded-lg bg-neutral-100 dark:bg-black/40 space-y-2">
-                <div className="text-[11px] font-mono uppercase text-blue-600 dark:text-blue-400 font-semibold flex items-center gap-1.5">
+              <div className="p-3.5 rounded-lg bg-neutral-100 bg-black/40 space-y-2">
+                <div className="text-[11px] font-mono uppercase text-blue-600 text-blue-400 font-semibold flex items-center gap-1.5">
                   <span>Position A</span>
                 </div>
-                <div className="text-xs font-medium text-paper-text dark:text-darkroom-text">
+                <div className="text-xs font-medium text-darkroom-text">
                   "{dispute.claimA}"
                 </div>
 
@@ -56,7 +56,7 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
                     {dispute.evidenceA.map((ev, eIdx) => (
                       <div
                         key={eIdx}
-                        className="border-l-2 border-blue-500/50 pl-2 text-paper-muted dark:text-darkroom-muted"
+                        className="border-l-2 border-blue-500/50 pl-2 text-darkroom-muted"
                       >
                         <div className="italic">"{ev.exactExcerpt}"</div>
                         {ev.sourceUrl && (
@@ -64,7 +64,7 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
                             href={ev.sourceUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center gap-1 mt-0.5"
+                            className="text-indigo-600 text-indigo-400 hover:underline inline-flex items-center gap-1 mt-0.5"
                           >
                             Source: {ev.sourceTitle || ev.sourceDomain}{' '}
                             <ExternalLink className="size-2.5" />
@@ -77,11 +77,11 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
               </div>
 
               {/* Claim B */}
-              <div className="p-3.5 rounded-lg bg-neutral-100 dark:bg-black/40 space-y-2">
-                <div className="text-[11px] font-mono uppercase text-rose-600 dark:text-rose-400 font-semibold flex items-center gap-1.5">
+              <div className="p-3.5 rounded-lg bg-neutral-100 bg-black/40 space-y-2">
+                <div className="text-[11px] font-mono uppercase text-rose-600 text-rose-400 font-semibold flex items-center gap-1.5">
                   <span>Position B (Opposing)</span>
                 </div>
-                <div className="text-xs font-medium text-paper-text dark:text-darkroom-text">
+                <div className="text-xs font-medium text-darkroom-text">
                   "{dispute.claimB}"
                 </div>
 
@@ -90,7 +90,7 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
                     {dispute.evidenceB.map((ev, eIdx) => (
                       <div
                         key={eIdx}
-                        className="border-l-2 border-rose-500/50 pl-2 text-paper-muted dark:text-darkroom-muted"
+                        className="border-l-2 border-rose-500/50 pl-2 text-darkroom-muted"
                       >
                         <div className="italic">"{ev.exactExcerpt}"</div>
                         {ev.sourceUrl && (
@@ -98,7 +98,7 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
                             href={ev.sourceUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center gap-1 mt-0.5"
+                            className="text-indigo-600 text-indigo-400 hover:underline inline-flex items-center gap-1 mt-0.5"
                           >
                             Source: {ev.sourceTitle || ev.sourceDomain}{' '}
                             <ExternalLink className="size-2.5" />
@@ -112,8 +112,8 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
             </div>
 
             {/* Guidance for Filmmaker */}
-            <div className="p-3 rounded-lg bg-amber-500/10 text-xs text-amber-800 dark:text-amber-200 flex items-start gap-2">
-              <AlertTriangle className="size-4 shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
+            <div className="p-3 rounded-lg bg-amber-500/10 text-xs text-amber-800 text-amber-200 flex items-start gap-2">
+              <AlertTriangle className="size-4 shrink-0 mt-0.5 text-amber-600 text-amber-400" />
               <div>
                 <span className="font-semibold font-mono uppercase text-[10px]">
                   Filmmaker Recommendation:{' '}

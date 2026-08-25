@@ -157,9 +157,9 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
       />
 
       {/* Modal Dialog Card: Solid Opaque, Borderless */}
-      <div className="relative z-10 w-full max-w-lg flex flex-col rounded-3xl bg-paper-surface dark:bg-darkroom-surface shadow-2xl shadow-black/90 overflow-hidden text-slate-100 animate-scale-up">
+      <div className="relative z-10 w-full max-w-lg flex flex-col rounded-3xl bg-darkroom-surface shadow-2xl shadow-black/90 overflow-hidden text-slate-100 animate-scale-up">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 bg-paper-card dark:bg-darkroom-card">
+        <div className="flex items-center justify-between px-6 py-5 bg-darkroom-card">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-400">
               <MessageSquare className="size-5" />
@@ -179,7 +179,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
               soundEffects.playClick();
               onClose();
             }}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-paper-border dark:hover:bg-darkroom-border transition-colors cursor-pointer"
+            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-paper-border hover:bg-darkroom-border transition-colors cursor-pointer"
             aria-label="Close modal"
           >
             <X className="size-5" />
@@ -210,7 +210,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                     onClose();
                     onViewFeedbackLog();
                   }}
-                  className="px-4 py-2.5 rounded-xl bg-paper-card dark:bg-darkroom-card hover:bg-paper-border dark:hover:bg-darkroom-border text-indigo-300 text-xs font-mono transition-colors cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl bg-darkroom-card hover:bg-paper-border hover:bg-darkroom-border text-indigo-300 text-xs font-mono transition-colors cursor-pointer"
                 >
                   View Feedback Log →
                 </button>
@@ -250,7 +250,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                       className={`p-3 rounded-2xl transition-all flex flex-col items-center justify-center text-center gap-1.5 cursor-pointer ${
                         isSelected
                           ? `${option.color} ring-2 ring-indigo-500/60 shadow-lg scale-102`
-                          : 'bg-paper-card dark:bg-darkroom-card text-slate-300 hover:bg-paper-border dark:hover:bg-darkroom-border hover:text-white'
+                          : 'bg-darkroom-card text-slate-300 hover:bg-paper-border hover:bg-darkroom-border hover:text-white'
                       }`}
                     >
                       {option.icon}
@@ -309,7 +309,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                   onChange={(e) => setComment(e.target.value)}
                   placeholder="What festival or goal were you working on? What went well or what can we improve?"
                   rows={3}
-                  className="w-full px-4 py-3 rounded-xl bg-paper-card dark:bg-darkroom-card text-slate-100 placeholder-slate-500 text-sm focus:bg-paper-border dark:focus:bg-darkroom-border focus:outline-none transition-colors resize-none leading-relaxed"
+                  className="w-full px-4 py-3 rounded-xl bg-darkroom-card text-slate-100 placeholder-slate-500 text-sm focus:bg-paper-border focus:bg-darkroom-border focus:outline-none transition-colors resize-none leading-relaxed"
                   required
                 />
               </AnimatedFocusWrapper>
@@ -324,7 +324,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                   value={authorName}
                   onChange={(e) => setAuthorName(e.target.value)}
                   placeholder="e.g. Maya Lin (Director)"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-paper-card dark:bg-darkroom-card text-slate-100 placeholder-slate-500 text-xs focus:bg-paper-border dark:focus:bg-darkroom-border focus:outline-none transition-colors"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-darkroom-card text-slate-100 placeholder-slate-500 text-xs focus:bg-paper-border focus:bg-darkroom-border focus:outline-none transition-colors"
                 />
               </div>
               <div className="space-y-1">
@@ -336,7 +336,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                   value={authorEmail}
                   onChange={(e) => setAuthorEmail(e.target.value)}
                   placeholder="director@indiefilm.org"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-paper-card dark:bg-darkroom-card text-slate-100 placeholder-slate-500 text-xs focus:bg-paper-border dark:focus:bg-darkroom-border focus:outline-none transition-colors"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-darkroom-card text-slate-100 placeholder-slate-500 text-xs focus:bg-paper-border focus:bg-darkroom-border focus:outline-none transition-colors"
                 />
               </div>
             </div>

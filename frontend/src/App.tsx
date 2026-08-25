@@ -8,8 +8,6 @@ import {
   Scale,
   Volume2,
   VolumeX,
-  Sun,
-  Moon,
   Keyboard,
 } from 'lucide-react';
 
@@ -46,12 +44,6 @@ import { track } from './utils/analytics';
 import { piiVault } from './utils/pii';
 
 export default function App() {
-  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
-    const saved = localStorage.getItem('screened_theme');
-    if (saved === 'dark') return saved;
-    return 'dark'; // Force dark mode for the Midnight Darkroom UI
-  });
-
   const [soundMuted, setSoundMutedState] = useState<boolean>(() => isSoundMuted());
   const [isKeyboardHelpOpen, setIsKeyboardHelpOpen] = useState(false);
   const [isFunkyCursorEnabled, setIsFunkyCursorEnabled] = useState(false);
@@ -88,18 +80,6 @@ export default function App() {
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    localStorage.setItem('screened_theme', theme);
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
-  };
 
   const toggleSound = () => {
     setSoundMutedState((prev) => {
@@ -167,8 +147,6 @@ export default function App() {
         setIsKeyboardHelpOpen((prev) => !prev);
       } else if (e.key.toLowerCase() === 'f') {
         setIsFunkyCursorEnabled((prev) => !prev);
-      } else if (e.key.toLowerCase() === 't') {
-        toggleTheme();
       } else if (e.key.toLowerCase() === 'm') {
         toggleSound();
       } else if (e.key === 'Escape') {
@@ -452,8 +430,8 @@ export default function App() {
     <div
       className={`relative min-h-screen flex flex-row ${
         activeTool === 'DESIGN_PLAYGROUND'
-          ? 'bg-paper-surface dark:bg-darkroom-surface'
-          : 'bg-paper-bg dark:bg-moving-dark-gradient text-paper-text dark:text-darkroom-text'
+          ? 'bg-darkroom-surface'
+          : 'bg-moving-dark-gradient text-darkroom-text'
       } selection:bg-indigo-500/20 antialiased overflow-x-hidden`}
     >
       {/* Live System Update Notifier */}
@@ -471,12 +449,12 @@ export default function App() {
       <div className="flex-1 flex flex-col min-w-0 min-h-screen overflow-y-auto">
         {/* Top Header Bar */}
         <header
-          className={`border-b border-paper-border dark:border-darkroom-border ${activeTool === 'DESIGN_PLAYGROUND' ? 'bg-paper-surface dark:bg-darkroom-surface' : 'bg-paper-surface/80 dark:bg-darkroom-surface/80 backdrop-blur'} sticky top-0 z-30 transition-colors no-print`}
+          className={`border-b border-darkroom-border ${activeTool === 'DESIGN_PLAYGROUND' ? 'bg-darkroom-surface' : 'bg-darkroom-surface/80 backdrop-blur'} sticky top-0 z-30 transition-colors no-print`}
         >
           <div className="px-4 sm:px-6 md:px-8 h-16 flex items-center justify-between gap-4">
             <div onClick={handleReset} className="flex items-center gap-3 cursor-pointer shrink-0">
               <div className="flex items-center gap-2.5">
-                <span className="font-serif text-2xl font-black tracking-normal text-paper-text dark:text-darkroom-text flex items-center">
+                <span className="font-serif text-2xl font-black tracking-normal text-darkroom-text flex items-center">
                   Scr
                   <AnimatedEE />
                   ned
@@ -490,12 +468,12 @@ export default function App() {
               {/* Quick Search / Command Palette (⌘K) */}
               <button
                 onClick={() => setIsCommandPaletteOpen(true)}
-                className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-card dark:hover:bg-darkroom-card text-slate-400 hover:text-slate-200 border border-paper-border dark:border-darkroom-border transition-colors cursor-pointer text-xs font-mono"
+                className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-darkroom-surface hover:bg-darkroom-card text-slate-400 hover:text-slate-200 border border-darkroom-border transition-colors cursor-pointer text-xs font-mono"
                 title="Command Palette (⌘K)"
               >
                 <Search className="size-3.5 text-indigo-400" />
                 <span>Search or jump to...</span>
-                <span className="flex items-center gap-0.5 text-[10px] bg-paper-border dark:bg-darkroom-border text-slate-400 px-1.5 py-0.5 rounded border border-paper-border dark:border-darkroom-border">
+                <span className="flex items-center gap-0.5 text-[10px] bg-paper-border bg-darkroom-border text-slate-400 px-1.5 py-0.5 rounded border border-darkroom-border">
                   <CommandIcon className="size-2.5" /> K
                 </span>
               </button>
@@ -503,7 +481,7 @@ export default function App() {
               {/* History Button */}
               <button
                 onClick={() => setIsHistoryOpen(true)}
-                className="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-card dark:hover:bg-darkroom-card text-slate-400 hover:text-indigo-300 border border-paper-border dark:border-darkroom-border hover:border-indigo-500/40 transition-colors cursor-pointer text-xs font-mono flex items-center gap-1.5"
+                className="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-darkroom-surface hover:bg-darkroom-card text-slate-400 hover:text-indigo-300 border border-darkroom-border hover:border-indigo-500/40 transition-colors cursor-pointer text-xs font-mono flex items-center gap-1.5"
                 title="View Past Searches"
               >
                 <History className="size-4 text-indigo-400" />
@@ -515,8 +493,8 @@ export default function App() {
                 onClick={toggleSound}
                 className={`p-2 rounded-xl border transition-all cursor-pointer text-xs font-mono flex items-center justify-center ${
                   soundMuted
-                    ? 'bg-paper-surface dark:bg-darkroom-surface border-paper-border dark:border-darkroom-border text-slate-400 hover:text-slate-200'
-                    : 'bg-paper-card dark:bg-darkroom-card border-indigo-500/40 text-indigo-300 hover:border-indigo-400 shadow-sm'
+                    ? 'bg-darkroom-surface border-darkroom-border text-slate-400 hover:text-slate-200'
+                    : 'bg-darkroom-card border-indigo-500/40 text-indigo-300 hover:border-indigo-400 shadow-sm'
                 }`}
                 title={soundMuted ? 'Unmute Audio (Press M)' : 'Mute Audio (Press M)'}
               >
@@ -527,27 +505,11 @@ export default function App() {
                 )}
               </button>
 
-              {/* Light / Dark Mode Toggle Button (T) */}
-              <button
-                onClick={toggleTheme}
-                className="p-2 rounded-xl bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-card dark:hover:bg-darkroom-card text-slate-400 hover:text-amber-300 border border-paper-border dark:border-darkroom-border hover:border-amber-400/40 transition-colors cursor-pointer text-xs font-mono flex items-center justify-center"
-                title={
-                  theme === 'dark'
-                    ? 'Switch to Light Mode (Press T)'
-                    : 'Switch to Dark Mode (Press T)'
-                }
-              >
-                {theme === 'dark' ? (
-                  <Sun className="size-4 text-amber-400" />
-                ) : (
-                  <Moon className="size-4 text-indigo-400" />
-                )}
-              </button>
 
               {/* Keyboard Shortcuts Quick Helper Hint */}
               <button
                 onClick={() => setIsKeyboardHelpOpen(true)}
-                className="hidden md:flex p-2 items-center justify-center rounded-xl bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-card dark:hover:bg-darkroom-card text-slate-400 hover:text-indigo-300 border border-paper-border dark:border-darkroom-border hover:border-indigo-500/40 transition-all cursor-pointer text-xs font-mono"
+                className="hidden md:flex p-2 items-center justify-center rounded-xl bg-darkroom-surface hover:bg-darkroom-card text-slate-400 hover:text-indigo-300 border border-darkroom-border hover:border-indigo-500/40 transition-all cursor-pointer text-xs font-mono"
                 title="Keyboard Shortcuts Cheat Sheet (Press ?)"
               >
                 <Keyboard className="size-4 text-indigo-400" />
@@ -557,8 +519,6 @@ export default function App() {
               <MobileNavigation
                 activeTool={activeTool}
                 onChange={setActiveTool}
-                theme={theme}
-                onToggleTheme={toggleTheme}
                 soundMuted={soundMuted}
                 onToggleSound={toggleSound}
                 onOpenKeyboardHelp={() => setIsKeyboardHelpOpen(true)}
@@ -574,7 +534,7 @@ export default function App() {
         >
           {/* Error Notification */}
           {error && (
-            <div className="max-w-3xl mx-auto p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-base flex items-center gap-3">
+            <div className="max-w-3xl mx-auto p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-600 text-rose-400 text-base flex items-center gap-3">
               <AlertTriangle className="size-5 shrink-0" />
               <div>{error}</div>
             </div>
@@ -639,7 +599,7 @@ export default function App() {
                         e.preventDefault();
                         handleStartInvestigation(query, 'search_form');
                       }}
-                      className="p-2 rounded-2xl bg-paper-surface dark:bg-darkroom-surface shadow-2xl shadow-black/80 flex flex-col sm:flex-row gap-2 transition-all"
+                      className="p-2 rounded-2xl bg-darkroom-surface shadow-2xl shadow-black/80 flex flex-col sm:flex-row gap-2 transition-all"
                     >
                       <div className="relative flex-1 flex items-center">
                         <Search className="size-5 absolute left-3.5 text-slate-400" />
@@ -677,7 +637,7 @@ export default function App() {
                               setQuery(name);
                               handleStartInvestigation(name, 'starter_chip');
                             }}
-                            className="px-3.5 py-1.5 rounded-xl bg-paper-surface dark:bg-darkroom-surface text-slate-300 hover:text-white hover:bg-paper-card dark:hover:bg-darkroom-card transition-all cursor-pointer text-xs font-mono shadow-md"
+                            className="px-3.5 py-1.5 rounded-xl bg-darkroom-surface text-slate-300 hover:text-white hover:bg-darkroom-card transition-all cursor-pointer text-xs font-mono shadow-md"
                           >
                             {name}
                           </button>
@@ -793,7 +753,7 @@ export default function App() {
         />
 
         {/* Footer */}
-        <footer className="border-t border-paper-border dark:border-darkroom-border py-6 text-center text-sm text-paper-muted dark:text-darkroom-muted no-print mt-auto">
+        <footer className="border-t border-darkroom-border py-6 text-center text-sm text-darkroom-muted no-print mt-auto">
           <div className="max-w-6xl mx-auto px-4 space-y-2">
             <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
               <span>Screened — Built natively with Google ADK & Parallel Search API</span>

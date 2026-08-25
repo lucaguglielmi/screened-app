@@ -232,7 +232,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
   return (
     <div className="space-y-6">
       {/* Top Banner: Authenticity Radar & Health Metrics */}
-      <div className="p-6 rounded-2xl bg-gradient-to-r from-darkroom-surface via-darkroom-bg to-darkroom-surface border border-paper-border dark:border-darkroom-border shadow-xl">
+      <div className="p-6 rounded-2xl bg-gradient-to-r from-darkroom-surface via-darkroom-bg to-darkroom-surface border border-darkroom-border shadow-xl">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="flex items-center space-x-2">
@@ -368,8 +368,8 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
               transition={{ duration: 0.2, delay: idx * 0.04 }}
               className={`rounded-2xl border transition-all ${
                 isExpanded
-                  ? 'bg-paper-surface dark:bg-darkroom-surface border-indigo-500/60 shadow-lg shadow-indigo-500/10'
-                  : 'bg-paper-bg dark:bg-darkroom-bg border-paper-border dark:border-darkroom-border hover:border-midnight-violet'
+                  ? 'bg-darkroom-surface border-indigo-500/60 shadow-lg shadow-indigo-500/10'
+                  : 'bg-darkroom-bg border-darkroom-border hover:border-midnight-violet'
               }`}
             >
               {/* Collapsed Header */}

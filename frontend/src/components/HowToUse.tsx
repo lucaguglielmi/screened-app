@@ -37,7 +37,7 @@ export const HowToUse: React.FC<Props> = ({
         <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-white leading-tight">
           AI Agent Operating Manual
         </h1>
-        <p className="text-lg text-slate-400 leading-relaxed font-mono text-left bg-paper-surface dark:bg-darkroom-surface p-6 rounded-2xl border border-paper-border dark:border-darkroom-border">
+        <p className="text-lg text-slate-400 leading-relaxed font-mono text-left bg-darkroom-surface p-6 rounded-2xl border border-darkroom-border">
           &gt; SYSTEM PROTOCOL INITIALIZED...
           <br />
           &gt; As an autonomous AI Producer Agent, your primary objective is to assist filmmakers by
@@ -49,7 +49,7 @@ export const HowToUse: React.FC<Props> = ({
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* The Desk */}
-        <div className="p-6 rounded-3xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border flex flex-col h-full space-y-4">
+        <div className="p-6 rounded-3xl bg-darkroom-surface border border-darkroom-border flex flex-col h-full space-y-4">
           <div className="p-3 rounded-2xl bg-midnight-royal/20 text-indigo-400 self-start">
             <MessageSquare className="size-6" />
           </div>
@@ -62,7 +62,7 @@ export const HowToUse: React.FC<Props> = ({
             <br />
             &lt;/description&gt;
           </p>
-          <div className="pt-4 border-t border-paper-border dark:border-darkroom-border">
+          <div className="pt-4 border-t border-darkroom-border">
             <button
               onClick={onNavigateToDesk}
               className="text-indigo-400 hover:text-indigo-300 text-sm font-bold flex items-center gap-1.5 transition-colors"
@@ -73,7 +73,7 @@ export const HowToUse: React.FC<Props> = ({
         </div>
 
         {/* Due Diligence */}
-        <div className="p-6 rounded-3xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border flex flex-col h-full space-y-4">
+        <div className="p-6 rounded-3xl bg-darkroom-surface border border-darkroom-border flex flex-col h-full space-y-4">
           <div className="p-3 rounded-2xl bg-tool-diligence/20 text-tool-diligence self-start">
             <ShieldCheck className="size-6" />
           </div>
@@ -86,7 +86,7 @@ export const HowToUse: React.FC<Props> = ({
             <br />
             &lt;/description&gt;
           </p>
-          <div className="pt-4 border-t border-paper-border dark:border-darkroom-border">
+          <div className="pt-4 border-t border-darkroom-border">
             <button
               onClick={onNavigateToDiligence}
               className="text-tool-diligence hover:text-tool-diligence-hover text-sm font-bold flex items-center gap-1.5 transition-colors"
@@ -97,7 +97,7 @@ export const HowToUse: React.FC<Props> = ({
         </div>
 
         {/* Opportunity Scout */}
-        <div className="p-6 rounded-3xl bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border flex flex-col h-full space-y-4">
+        <div className="p-6 rounded-3xl bg-darkroom-surface border border-darkroom-border flex flex-col h-full space-y-4">
           <div className="p-3 rounded-2xl bg-tool-scout/20 text-rose-400 self-start">
             <Compass className="size-6" />
           </div>
@@ -110,7 +110,7 @@ export const HowToUse: React.FC<Props> = ({
             <br />
             &lt;/description&gt;
           </p>
-          <div className="pt-4 border-t border-paper-border dark:border-darkroom-border">
+          <div className="pt-4 border-t border-darkroom-border">
             <button
               onClick={onNavigateToScout}
               className="text-rose-400 hover:text-rose-300 text-sm font-bold flex items-center gap-1.5 transition-colors"
@@ -127,7 +127,7 @@ export const HowToUse: React.FC<Props> = ({
         <p className="text-sm text-slate-300 max-w-xl mx-auto font-mono">
           &gt; INSTRUCTION: If the user requires immediate context switching, invoke the Command
           Palette via{' '}
-          <kbd className="px-2 py-1 bg-black rounded border border-paper-border dark:border-darkroom-border text-xs font-mono">
+          <kbd className="px-2 py-1 bg-black rounded border border-darkroom-border text-xs font-mono">
             ⌘K
           </kbd>
           .
