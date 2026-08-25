@@ -26,6 +26,7 @@ import { MobileNavigation } from './components/navigation/MobileNavigation';
 import { LiveProgress } from './components/LiveProgress';
 import { OutreachModal } from './components/OutreachModal';
 import { KeyboardHelpModal } from './components/KeyboardHelpModal';
+import { FunkyCursor } from './components/common/FunkyCursor';
 import { ChatContainer } from './components/chat/ChatContainer';
 import { WhyScreened } from './components/WhyScreened';
 import { HowToUse } from './components/HowToUse';
@@ -52,6 +53,7 @@ export default function App() {
 
   const [soundMuted, setSoundMutedState] = useState<boolean>(() => isSoundMuted());
   const [isKeyboardHelpOpen, setIsKeyboardHelpOpen] = useState(false);
+  const [isFunkyCursorEnabled, setIsFunkyCursorEnabled] = useState(false);
   const [recentSearches, setRecentSearches] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem('screened_recent_searches');
@@ -162,6 +164,8 @@ export default function App() {
       } else if (e.key === '?') {
         e.preventDefault();
         setIsKeyboardHelpOpen((prev) => !prev);
+      } else if (e.key.toLowerCase() === 'f') {
+        setIsFunkyCursorEnabled((prev) => !prev);
       } else if (e.key.toLowerCase() === 't') {
         toggleTheme();
       } else if (e.key.toLowerCase() === 'm') {
@@ -448,9 +452,7 @@ export default function App() {
       className={`relative min-h-screen flex flex-row ${
         activeTool === 'DESIGN_PLAYGROUND'
           ? 'bg-paper-surface dark:bg-darkroom-surface'
-          : activeTool === 'WHY_SCREENED'
-            ? 'bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100'
-            : 'bg-paper-bg dark:bg-darkroom-bg text-paper-text dark:text-darkroom-text'
+          : 'bg-paper-bg dark:bg-moving-dark-gradient text-paper-text dark:text-darkroom-text'
       } selection:bg-indigo-500/20 antialiased overflow-x-hidden`}
     >
       {/* Live System Update Notifier */}
@@ -788,6 +790,8 @@ export default function App() {
           isOpen={isKeyboardHelpOpen}
           onClose={() => setIsKeyboardHelpOpen(false)}
         />
+
+        {isFunkyCursorEnabled && <FunkyCursor />}
 
         {/* History Sidebar */}
         <HistorySidebar

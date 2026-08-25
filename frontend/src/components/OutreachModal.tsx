@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { OutreachDraft } from '../types/investigation';
 import { Mail, Send, ShieldCheck, X, CheckCircle2, Loader2, Lock } from 'lucide-react';
+import { AnimatedFocusWrapper } from './animations/AnimatedFocusWrapper';
 
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -113,12 +114,14 @@ export const OutreachModal: React.FC<Props> = ({ draft, isOpen, onClose, onAppro
               <label className="font-mono text-[11px] uppercase text-paper-muted dark:text-darkroom-muted">
                 Email Message Body
               </label>
-              <textarea
-                value={body}
-                readOnly
-                rows={6}
-                className="w-full px-3.5 py-2.5 rounded-lg bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-paper-text dark:text-darkroom-text font-sans text-xs focus:outline-none leading-relaxed resize-none"
-              />
+              <AnimatedFocusWrapper borderRadius={8}>
+                <textarea
+                  value={body}
+                  readOnly
+                  rows={6}
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-paper-card dark:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-paper-text dark:text-darkroom-text font-sans text-xs focus:outline-none leading-relaxed resize-none"
+                />
+              </AnimatedFocusWrapper>
             </div>
 
             {/* Cryptographic SHA-256 Hash Display */}

@@ -27,6 +27,7 @@ Whenever the user asks *"what's next?"* or *"what should we work on?"*, the assi
 1. When an item is resolved by the human, mark it `COMPLETED [YYYY-MM-DD]`.
 2. If new human tasks emerge during implementation (e.g. verifying external accounts, providing custom logos), add them here immediately.
 3. On every *"what's next?"* query, check if any completed items can be archived and summarize the remaining ones.
+4. **Deploy Verification**: Always check deployment logs and verify the deployed application on the live URL (`https://screened-pludf2u7yq-nw.a.run.app`) after any deployment task.
 
 ---
 

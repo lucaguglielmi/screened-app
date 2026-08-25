@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { DueDiligenceArgs } from '../../../types/chat';
 import { soundEffects } from '../../../utils/audio';
+import { AnimatedFocusWrapper } from '../../animations/AnimatedFocusWrapper';
 
 interface FestivalIntakeCardProps {
   args: DueDiligenceArgs;
@@ -344,13 +345,15 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
                     <Mail className="w-3 h-3 text-emerald-400" />
                     <span>Paste Email Text / Invitation Snippet (Optional)</span>
                   </label>
-                  <textarea
-                    rows={2}
-                    value={emailSnippet}
-                    onChange={(e) => setEmailSnippet(e.target.value)}
-                    placeholder="Paste the invitation message or waiver code..."
-                    className="w-full bg-paper-surface dark:bg-darkroom-surface rounded-xl px-3 py-2 text-white placeholder:text-zinc-500 focus:outline-none text-xs font-mono"
-                  />
+                  <AnimatedFocusWrapper borderRadius={12}>
+                    <textarea
+                      rows={2}
+                      value={emailSnippet}
+                      onChange={(e) => setEmailSnippet(e.target.value)}
+                      placeholder="Paste the invitation message or waiver code..."
+                      className="w-full bg-paper-surface dark:bg-darkroom-surface rounded-xl px-3 py-2 text-white placeholder:text-zinc-500 focus:outline-none text-xs font-mono"
+                    />
+                  </AnimatedFocusWrapper>
                 </div>
               </motion.div>
             )}

@@ -11,6 +11,7 @@ import {
   XCircle,
 } from 'lucide-react';
 import { soundEffects, playSuccessChime } from '../../utils/audio';
+import { AnimatedFocusWrapper } from '../animations/AnimatedFocusWrapper';
 
 interface FeedbackModalProps {
   isOpen: boolean;
@@ -302,14 +303,16 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                 <span>Tell us more about your experience:</span>
                 <span className="text-slate-500 font-normal">Required</span>
               </label>
-              <textarea
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                placeholder="What festival or goal were you working on? What went well or what can we improve?"
-                rows={3}
-                className="w-full px-4 py-3 rounded-xl bg-paper-card dark:bg-darkroom-card text-slate-100 placeholder-slate-500 text-sm focus:bg-paper-border dark:focus:bg-darkroom-border focus:outline-none transition-colors resize-none leading-relaxed"
-                required
-              />
+              <AnimatedFocusWrapper borderRadius={12}>
+                <textarea
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  placeholder="What festival or goal were you working on? What went well or what can we improve?"
+                  rows={3}
+                  className="w-full px-4 py-3 rounded-xl bg-paper-card dark:bg-darkroom-card text-slate-100 placeholder-slate-500 text-sm focus:bg-paper-border dark:focus:bg-darkroom-border focus:outline-none transition-colors resize-none leading-relaxed"
+                  required
+                />
+              </AnimatedFocusWrapper>
             </div>
 
             {/* 4. Optional Author & Email */}

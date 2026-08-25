@@ -3,6 +3,8 @@ import { ChatMessage, ChatStreamEvent, ChatToolCall } from '../../types/chat';
 import { FilmProfile } from '../../types/investigation';
 import { ChatBubble } from './ChatBubble';
 import { ChatPromptBar } from './ChatPromptBar';
+import { motion } from 'motion/react';
+import { ScrambleText } from '../animations/ScrambleText';
 import { AgentThinkingPill } from './AgentThinkingPill';
 import { CapabilitiesModal } from '../modals/CapabilitiesModal';
 import { AboutScreenedModal } from '../modals/AboutScreenedModal';
@@ -214,13 +216,21 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
     <div className="relative flex flex-col h-[calc(100vh-5.5rem)] max-w-5xl mx-auto px-4 py-2 overflow-hidden">
       {/* Hero Header Area with Dirty Film Celluloid Glitch, Spacing & What Does It Do Link */}
       <div className="relative z-10 flex flex-col items-center justify-center my-5 sm:my-7 py-2 text-center select-none">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white font-serif mb-3 transition-all flex flex-wrap items-center justify-center gap-x-3 sm:gap-x-4">
+        <motion.h1 
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0, scale: [1, 1.02, 1] }}
+          transition={{ 
+            opacity: { duration: 0.8 },
+            y: { duration: 0.8, ease: "easeOut" },
+            scale: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.8 } 
+          }}
+          className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white font-serif mb-3 flex flex-wrap items-center justify-center gap-x-3 sm:gap-x-4 cursor-default"
+        >
           <span className="animate-cinema-glitch text-transparent bg-clip-text bg-gradient-to-r from-zinc-100 via-stone-200 to-zinc-300">
             Cinema
           </span>
-          <span className="animate-word-shift-2 text-zinc-100">Due</span>
-          <span className="animate-word-shift-3 text-zinc-300">diligence</span>
-        </h1>
+          <ScrambleText text="Due diligence" className="text-zinc-100" />
+        </motion.h1>
         <TextLink
           variant="primary"
           size="xs"

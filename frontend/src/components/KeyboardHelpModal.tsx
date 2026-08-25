@@ -9,6 +9,7 @@ import {
   ShieldCheck,
   Compass,
   Scale,
+  MousePointer2,
 } from 'lucide-react';
 import { soundEffects } from '../utils/audio';
 
@@ -33,6 +34,7 @@ export const KeyboardHelpModal: React.FC<Props> = ({ isOpen, onClose }) => {
         { key: '?', description: 'Open / Close this Keyboard Shortcuts modal', icon: Keyboard },
         { key: 'T', description: 'Toggle Dark / Light Cinema Mode', icon: Sun },
         { key: 'M', description: 'Mute / Unmute Audio Sound Effects', icon: Volume2 },
+        { key: 'F', description: 'Toggle Funky Cursor', icon: MousePointer2 },
         { key: 'Esc', description: 'Dismiss modals, popovers, or active input' },
       ],
     },
