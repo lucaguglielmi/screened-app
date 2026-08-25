@@ -31,6 +31,7 @@ import { WhyScreened } from './components/WhyScreened';
 import { HowToUse } from './components/HowToUse';
 import { CommandPalette } from './components/CommandPalette';
 import { HistorySidebar } from './components/HistorySidebar';
+import VersionAlertBanner from './components/VersionAlertBanner';
 
 const EvidenceDossier = lazy(() => import('./components/EvidenceDossier').then(m => ({ default: m.EvidenceDossier })));
 const OpportunityScout = lazy(() => import('./components/OpportunityScout').then(m => ({ default: m.OpportunityScout })));
@@ -430,13 +431,15 @@ export default function App() {
   const currentStatus = investigation?.status || 'DRAFT';
 
   return (
-    <div
-      className={`relative min-h-screen flex flex-row ${
-        activeTool === 'DESIGN_PLAYGROUND'
-          ? 'bg-darkroom-surface'
-          : 'bg-moving-dark-gradient text-darkroom-text'
-      } selection:bg-indigo-500/20 antialiased overflow-x-hidden`}
-    >
+    <div className="min-h-screen flex flex-col font-sans selection:bg-indigo-500/20 antialiased overflow-x-hidden text-darkroom-text">
+      <VersionAlertBanner />
+      <div
+        className={`relative flex-1 flex flex-row ${
+          activeTool === 'DESIGN_PLAYGROUND'
+            ? 'bg-darkroom-surface'
+            : 'bg-moving-dark-gradient'
+        }`}
+      >
       {/* Live System Update Notifier */}
       <UpdateNotifier />
 
@@ -792,6 +795,7 @@ export default function App() {
           </div>
         </footer>
       </div>
+    </div>
     </div>
   );
 }
