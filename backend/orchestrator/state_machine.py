@@ -695,8 +695,9 @@ class Orchestrator:
 orchestrator = Orchestrator()
 
 def build_root_agent():
-    """Factory to build the ADK SequentialAgent representing the system architecture."""
-    from google.adk.agents import SequentialAgent, ParallelAgent, LlmAgent
+    """Factory to build the ADK Workflow representing the system architecture."""
+    from google.adk.workflow import Workflow, Edge, START
+    from google.adk.agents import LlmAgent
     
     # 1. Planner
     from backend.agents.planner import create_planner_adk_agent
@@ -713,22 +714,32 @@ def build_root_agent():
     participants_agent = create_domain_agent("PARTICIPANTS", "stub", {})
     participants_agent.name = "participants_research"
     
-    domain_research = ParallelAgent(
+    domain_research = Workflow(
         name="domain_research",
         description="Domain Research Execution",
-        sub_agents=[festival_agent, organizer_agent, participants_agent]
+        edges=[
+            Edge(from_node=START, to_node=festival_agent),
+            Edge(from_node=START, to_node=organizer_agent),
+            Edge(from_node=START, to_node=participants_agent)
+        ]
     )
     
     # 3. Deep Vetting
-    deep_vetting = ParallelAgent(
+    ci = LlmAgent(name="corporate_identity", description="Inspect company registration", model="gemini-2.5-pro")
+    df = LlmAgent(name="domain_forensics", description="Inspect domain registration history", model="gemini-2.5-pro")
+    vr = LlmAgent(name="venue_reality", description="Cross-check physical theater leases", model="gemini-2.5-pro")
+    jl = LlmAgent(name="jury_laurels", description="Factually assess Festival Directors", model="gemini-2.5-pro")
+    rp = LlmAgent(name="rules_plagiarism", description="Check if submission rules are unique", model="gemini-2.5-pro")
+
+    deep_vetting = Workflow(
         name="deep_vetting",
         description="360° Deep Vetting",
-        sub_agents=[
-            LlmAgent(name="corporate_identity", description="Inspect company registration", model="gemini-2.5-pro"),
-            LlmAgent(name="domain_forensics", description="Inspect domain registration history", model="gemini-2.5-pro"),
-            LlmAgent(name="venue_reality", description="Cross-check physical theater leases", model="gemini-2.5-pro"),
-            LlmAgent(name="jury_laurels", description="Factually assess Festival Directors", model="gemini-2.5-pro"),
-            LlmAgent(name="rules_plagiarism", description="Check if submission rules are unique", model="gemini-2.5-pro"),
+        edges=[
+            Edge(from_node=START, to_node=ci),
+            Edge(from_node=START, to_node=df),
+            Edge(from_node=START, to_node=vr),
+            Edge(from_node=START, to_node=jl),
+            Edge(from_node=START, to_node=rp)
         ]
     )
     
@@ -737,16 +748,16 @@ def build_root_agent():
     opportunity_scout = LlmAgent(name="opportunity_scout", description="Opportunity Scout", model="gemini-2.5-flash")
     outreach_drafter = LlmAgent(name="outreach_drafter", description="Outreach Drafter", model="gemini-2.5-flash")
     
-    root = SequentialAgent(
+    root = Workflow(
         name="orchestrator",
         description="Screened Orchestrator",
-        sub_agents=[
-            planner,
-            domain_research,
-            deep_vetting,
-            producer_desk,
-            opportunity_scout,
-            outreach_drafter
+        edges=[
+            Edge(from_node=START, to_node=planner),
+            Edge(from_node=planner, to_node=domain_research),
+            Edge(from_node=domain_research, to_node=deep_vetting),
+            Edge(from_node=deep_vetting, to_node=producer_desk),
+            Edge(from_node=producer_desk, to_node=opportunity_scout),
+            Edge(from_node=opportunity_scout, to_node=outreach_drafter)
         ]
     )
     

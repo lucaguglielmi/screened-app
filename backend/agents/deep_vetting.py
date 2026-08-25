@@ -18,7 +18,7 @@ from backend.services.gemini_client import GeminiClient
 logger = logging.getLogger("screened.agents.deep_vetting")
 
 
-from google.adk.agents import ParallelAgent, LlmAgent
+from google.adk.agents import LlmAgent
 from google.adk.runners import Runner
 from google.adk.tools import FunctionTool
 from backend.orchestrator.session_service import FirestoreSessionService
@@ -106,21 +106,26 @@ Ensure you populate the keyPersonnel array with extracted information about dire
 Return a JSON object conforming strictly to the output schema.
 """
 
-        from google.adk.agents import SequentialAgent
-        vetting_agent = SequentialAgent(
+        from google.adk.workflow import Workflow, Edge, START
+        
+        dims_workflow = Workflow(
+            name="deep_vetting_dimensions",
+            edges=[Edge(from_node=START, to_node=a) for a in agents]
+        )
+        
+        scorer = LlmAgent(
+            name="vetting_scorer",
+            model="gemini-2.5-flash",
+            instruction=reducer_instruction,
+            output_schema=DeepVettingReport,
+            output_key="deep_vetting_report"
+        )
+        
+        vetting_agent = Workflow(
             name="deep_vetting_pipeline",
-            sub_agents=[
-                ParallelAgent(
-                    name="deep_vetting_dimensions",
-                    sub_agents=agents
-                ),
-                LlmAgent(
-                    name="vetting_scorer",
-                    model="gemini-2.5-flash",
-                    instruction=reducer_instruction,
-                    output_schema=DeepVettingReport,
-                    output_key="deep_vetting_report"
-                )
+            edges=[
+                Edge(from_node=START, to_node=dims_workflow),
+                Edge(from_node=dims_workflow, to_node=scorer)
             ]
         )
         

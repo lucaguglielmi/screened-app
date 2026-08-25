@@ -17,7 +17,7 @@ def test_architecture_endpoint():
     # Check that orchestrator is present
     orchestrator = next((n for n in nodes if n["id"] == "orchestrator"), None)
     assert orchestrator is not None
-    assert orchestrator["type"] == "SequentialAgent"
+    assert orchestrator["type"] == "Workflow"
     
     # Check that opportunity_scout is present
     opportunity_scout = next((n for n in nodes if n["id"] == "opportunity_scout"), None)
