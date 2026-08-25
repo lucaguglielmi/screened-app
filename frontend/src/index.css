@@ -122,9 +122,6 @@ body {
   animation: subtleGradientMove 15s ease infinite;
 }
 
-.bg-card-gradient {
-  background: linear-gradient(145deg, var(--color-darkroom-surface), var(--color-darkroom-card));
-}
 
 /* Custom scrollbars */
 ::-webkit-scrollbar {

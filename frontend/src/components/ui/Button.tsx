@@ -68,7 +68,7 @@ export const Button: React.FC<ButtonProps> = ({
   // Base Variant Styles
   const variantStyles: Record<ButtonVariant, string> = {
     primary:
-      'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-md shadow-blue-500/20 border border-blue-400/30 hover:border-blue-400/50',
+      'bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-500/20 border border-blue-400/30 hover:border-blue-400/50',
     secondary:
       'bg-paper-card dark:bg-darkroom-card hover:bg-paper-border dark:hover:bg-darkroom-border text-zinc-200 hover:text-white border border-paper-border dark:border-darkroom-border hover:border-midnight-violet',
     outline:
@@ -76,9 +76,9 @@ export const Button: React.FC<ButtonProps> = ({
     ghost:
       'bg-transparent hover:bg-zinc-800/40 text-zinc-400 hover:text-zinc-100 border border-transparent',
     danger:
-      'bg-gradient-to-r from-rose-600 to-red-700 hover:from-rose-500 hover:to-red-600 text-white shadow-md shadow-rose-900/30 border border-rose-500/30',
+      'bg-rose-600 hover:bg-rose-500 text-white shadow-md shadow-rose-900/30 border border-rose-500/30',
     accent:
-      'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-md shadow-emerald-900/30 border border-emerald-400/30',
+      'bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-900/30 border border-emerald-400/30',
     glass:
       'bg-zinc-900/60 hover:bg-zinc-850/80 text-zinc-100 backdrop-blur-md border border-zinc-700/60 hover:border-zinc-500/80 shadow-lg',
   };

@@ -76,7 +76,7 @@ export const DetailDial: React.FC<Props> = ({ density, onChange, dossier }) => {
       icon: Bot,
       badgeColor: 'bg-rose-500/20 text-rose-400',
       activeClass:
-        'bg-gradient-to-r from-tool-scout to-tool-scout-hover text-white shadow-lg shadow-rose-950/50',
+        'bg-tool-scout text-white shadow-lg shadow-rose-950/50',
     },
   ];
 

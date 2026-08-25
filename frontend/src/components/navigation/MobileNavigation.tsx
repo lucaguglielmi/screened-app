@@ -183,7 +183,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                       : 'bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-card dark:hover:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-slate-300'
                   }`}
                 >
-                  <div className="size-10 rounded-xl bg-gradient-to-tr from-tool-diligence to-tool-diligence-hover flex items-center justify-center text-slate-950 shadow-md shrink-0">
+                  <div className="size-10 rounded-xl bg-tool-diligence flex items-center justify-center text-slate-950 shadow-md shrink-0">
                     <ShieldCheck className="size-5 text-slate-950" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -209,7 +209,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                       : 'bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-card dark:hover:bg-darkroom-card border border-paper-border dark:border-darkroom-border text-slate-300'
                   }`}
                 >
-                  <div className="size-10 rounded-xl bg-gradient-to-tr from-tool-scout via-tool-scout to-orange-500 flex items-center justify-center text-white shadow-md shrink-0">
+                  <div className="size-10 rounded-xl bg-tool-scout flex items-center justify-center text-white shadow-md shrink-0">
                     <Compass className="size-5 text-white" />
                   </div>
                   <div className="flex-1 min-w-0">

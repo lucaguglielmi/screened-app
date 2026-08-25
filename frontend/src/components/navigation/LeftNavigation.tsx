@@ -71,7 +71,7 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
       <div className="flex flex-col items-center gap-4 w-full">
         <button
           onClick={() => handleSelectTool('CONVERSATIONAL_DESK')}
-          className="relative group p-2.5 rounded-2xl bg-gradient-to-b from-midnight-royal/25 to-midnight-indigo/20 border border-midnight-royal/40 hover:border-midnight-royal/80 shadow-lg shadow-[var(--color-midnight-royal)]/20 transition-all cursor-pointer"
+          className="relative group p-2.5 rounded-2xl bg-midnight-royal/25 border border-midnight-royal/40 hover:border-midnight-royal/80 shadow-lg shadow-[var(--color-midnight-royal)]/20 transition-all cursor-pointer"
           title="Screened Home"
         >
           <div className="size-7 sm:size-8 rounded-xl bg-midnight-royal flex items-center justify-center text-white font-serif font-bold text-lg shadow-md shadow-[var(--color-midnight-royal)]/50">
@@ -226,7 +226,7 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
           >
             <GripVertical className="size-4 text-slate-600 group-hover:text-slate-400 shrink-0" />
 
-            <div className="size-11 rounded-2xl bg-gradient-to-tr from-tool-diligence to-tool-diligence-hover flex items-center justify-center text-slate-950 shadow-lg shadow-[var(--color-tool-diligence)]/30 shrink-0 group-hover:scale-105 transition-transform">
+            <div className="size-11 rounded-2xl bg-tool-diligence flex items-center justify-center text-slate-950 shadow-lg shadow-[var(--color-tool-diligence)]/30 shrink-0 group-hover:scale-105 transition-transform">
               <ShieldCheck className="size-6 text-slate-950" />
             </div>
 
@@ -256,7 +256,7 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
           >
             <GripVertical className="size-4 text-slate-600 group-hover:text-slate-400 shrink-0" />
 
-            <div className="size-11 rounded-2xl bg-gradient-to-tr from-tool-scout via-tool-scout to-tool-scout-hover flex items-center justify-center text-white shadow-lg shadow-[var(--color-tool-scout)]/30 shrink-0 group-hover:scale-105 transition-transform">
+            <div className="size-11 rounded-2xl bg-tool-scout flex items-center justify-center text-white shadow-lg shadow-[var(--color-tool-scout)]/30 shrink-0 group-hover:scale-105 transition-transform">
               <Compass className="size-6 text-white" />
             </div>
 
