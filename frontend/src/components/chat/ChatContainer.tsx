@@ -214,38 +214,38 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
 
   return (
     <div className="relative flex flex-col h-[calc(100vh-5.5rem)] max-w-5xl mx-auto px-4 py-2 overflow-hidden">
-      {/* Hero Header Area with Dirty Film Celluloid Glitch, Spacing & What Does It Do Link */}
-      <div className="relative z-10 flex flex-col items-center justify-center my-5 sm:my-7 py-2 text-center select-none">
-        <motion.h1 
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0, scale: [1, 1.02, 1] }}
-          transition={{ 
-            opacity: { duration: 0.8 },
-            y: { duration: 0.8, ease: "easeOut" },
-            scale: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.8 } 
-          }}
-          className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white font-serif mb-3 flex flex-wrap items-center justify-center gap-x-3 sm:gap-x-4 cursor-default"
-        >
-          <span className="animate-cinema-glitch text-transparent bg-clip-text bg-gradient-to-r from-zinc-100 via-stone-200 to-zinc-300">
-            Cinema
-          </span>
-          <ScrambleText text="Due diligence" className="text-zinc-100" />
-        </motion.h1>
-        <TextLink
-          variant="primary"
-          size="xs"
-          iconType="help"
-          animatedIconContinuous
-          asButton
-          onActionClick={() => setIsCapabilitiesModalOpen(true)}
-          className="text-xs sm:text-sm tracking-wide"
-        >
-          What does it do?
-        </TextLink>
-      </div>
-
       {/* Scrollable Message Area */}
       <div className="relative z-10 flex-1 overflow-y-auto pr-2 space-y-4">
+        {/* Hero Header Area with Dirty Film Celluloid Glitch, Spacing & What Does It Do Link */}
+        <div className="relative flex flex-col items-center justify-center my-5 sm:my-7 py-2 text-center select-none">
+          <motion.h1 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0, scale: [1, 1.02, 1] }}
+            transition={{ 
+              opacity: { duration: 0.8 },
+              y: { duration: 0.8, ease: "easeOut" },
+              scale: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.8 } 
+            }}
+            className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white font-serif mb-3 flex flex-wrap items-center justify-center gap-x-3 sm:gap-x-4 cursor-default"
+          >
+            <span className="animate-cinema-glitch text-transparent bg-clip-text bg-gradient-to-r from-zinc-100 via-stone-200 to-zinc-300">
+              Cinema
+            </span>
+            <ScrambleText text="Due diligence" className="text-zinc-100" />
+          </motion.h1>
+          <TextLink
+            variant="primary"
+            size="xs"
+            iconType="help"
+            animatedIconContinuous
+            asButton
+            onActionClick={() => setIsCapabilitiesModalOpen(true)}
+            className="text-xs sm:text-sm tracking-wide"
+          >
+            What does it do?
+          </TextLink>
+        </div>
+
         <div className="pt-1">
           {messages.map((msg) => (
             <ChatBubble
