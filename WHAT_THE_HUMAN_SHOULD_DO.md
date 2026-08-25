@@ -27,9 +27,13 @@ Whenever the user asks *"what's next?"* or *"what should we work on?"*, the assi
 1. When an item is resolved by the human, mark it `COMPLETED [YYYY-MM-DD]`.
 2. If new human tasks emerge during implementation (e.g. verifying external accounts, providing custom logos), add them here immediately.
 3. On every *"what's next?"* query, check if any completed items can be archived and summarize the remaining ones.
-4. **Deploy Verification**: Always check deployment logs and verify the deployed application on the live URL (`https://screened-pludf2u7yq-nw.a.run.app`) after any deployment task.
-5. **Agent Commit Protocol [CRITICAL]**: The AI agent MUST run `git add . && git commit -m "..." && git push` at the conclusion of every session or when implementing significant changes. Do not leave untracked or uncommitted code behind, as the CI/CD pipeline requires a pushed commit to deploy to Cloud Run.
-6. **Test Failure Protocol**: If tests fail (e.g. during a session or when running the pre-commit hook), the AI agent MUST automatically investigate and fix the failing tests locally without asking for human permission.
+4. **Mandatory Release Protocol (Test, Merge to Main, Commit, Push, Deploy)**:
+   - **Test**: Run `npm --prefix frontend run build` and `PYTHONPATH=. ./venv2/bin/pytest -q`.
+   - **Fix**: Automatically investigate and resolve any test/build failures without waiting for permission.
+   - **Merge**: Ensure changes are merged cleanly into `main`.
+   - **Commit & Push**: Stage all changes (`git add .`), write a clear commit message, and push to `origin main`.
+   - **Deploy & Verify**: Run `./deploy.sh` to trigger Google Cloud Build and Cloud Run deployment, then verify the live URL (`https://screened-pludf2u7yq-nw.a.run.app`).
+
 
 ---
 

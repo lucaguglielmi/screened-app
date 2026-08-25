@@ -57,3 +57,24 @@ When writing backend logs for investigations, fallbacks, or orchestration events
 - A named fallback identifier (e.g. `disambiguation_pipeline`, `claim_assembly`) MUST be recorded at each substitution site.
 - Never log secrets or user content.
 - Diagnostic Runbook: Maintain agent queryable JSON outputs for errors grouped by trace ID.
+
+---
+
+## 7. Mandatory Release Pipeline Protocol (Test, Merge to Main, Commit, Push, Deploy)
+
+At the completion of any feature, bug fix, or work session, the AI agent MUST execute the full release sequence:
+
+1. **Run All Tests**:
+   - Frontend validation: `npm --prefix frontend run build` (tsc & Vite production bundle)
+   - Backend test suite: `PYTHONPATH=. ./venv2/bin/pytest -q`
+   - If any test or build fails, diagnose and resolve the issue immediately before moving forward.
+2. **Merge to Main**:
+   - If working on a feature branch, switch to and merge into `main` cleanly (`git checkout main && git merge <branch>`).
+3. **Commit & Push**:
+   - Stage all modified files (`git add .`).
+   - Create a clear, descriptive commit message detailing changes made.
+   - Push to `origin main` (`git push origin main`).
+4. **Deploy & Verify**:
+   - Trigger the deployment script `./deploy.sh` (which builds the image via Cloud Build and deploys to Cloud Run).
+   - Verify the deployment status and ensure the live production service at `https://screened-pludf2u7yq-nw.a.run.app` is healthy.
+

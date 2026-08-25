@@ -20,6 +20,31 @@ const BASE_SYMBOLS = [
 
 const EYES = ['👁️', '👀'];
 
+interface RayConfig {
+  angle: number;
+  color: string;
+  delay: number;
+  startDist: number;
+  endDist: number;
+  length: string;
+  width: string;
+}
+
+const RAYS: RayConfig[] = [
+  { angle: 0, color: 'bg-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.9)]', delay: 0, startDist: 0.48, endDist: 1.35, length: '0.38em', width: '0.07em' },
+  { angle: 30, color: 'bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]', delay: 0.15, startDist: 0.44, endDist: 1.25, length: '0.32em', width: '0.06em' },
+  { angle: 60, color: 'bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.9)]', delay: 0.3, startDist: 0.48, endDist: 1.4, length: '0.42em', width: '0.075em' },
+  { angle: 90, color: 'bg-indigo-400 shadow-[0_0_10px_rgba(129,140,248,0.9)]', delay: 0.1, startDist: 0.44, endDist: 1.3, length: '0.35em', width: '0.065em' },
+  { angle: 120, color: 'bg-rose-400 shadow-[0_0_10px_rgba(251,113,133,0.9)]', delay: 0.25, startDist: 0.48, endDist: 1.35, length: '0.4em', width: '0.07em' },
+  { angle: 150, color: 'bg-orange-400 shadow-[0_0_10px_rgba(251,146,60,0.9)]', delay: 0.05, startDist: 0.44, endDist: 1.25, length: '0.34em', width: '0.06em' },
+  { angle: 180, color: 'bg-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.9)]', delay: 0.2, startDist: 0.48, endDist: 1.38, length: '0.38em', width: '0.07em' },
+  { angle: 210, color: 'bg-teal-400 shadow-[0_0_10px_rgba(45,212,191,0.9)]', delay: 0.35, startDist: 0.44, endDist: 1.26, length: '0.32em', width: '0.06em' },
+  { angle: 240, color: 'bg-sky-400 shadow-[0_0_10px_rgba(56,189,248,0.9)]', delay: 0.12, startDist: 0.48, endDist: 1.36, length: '0.4em', width: '0.075em' },
+  { angle: 270, color: 'bg-violet-400 shadow-[0_0_10px_rgba(167,139,250,0.9)]', delay: 0.28, startDist: 0.44, endDist: 1.3, length: '0.35em', width: '0.065em' },
+  { angle: 300, color: 'bg-pink-400 shadow-[0_0_10px_rgba(244,114,182,0.9)]', delay: 0.08, startDist: 0.48, endDist: 1.42, length: '0.42em', width: '0.07em' },
+  { angle: 330, color: 'bg-lime-400 shadow-[0_0_10px_rgba(163,230,53,0.9)]', delay: 0.22, startDist: 0.44, endDist: 1.28, length: '0.34em', width: '0.06em' },
+];
+
 export interface AnimatedEEProps {
   forceHover?: boolean;
   eyesPattern?: boolean;
@@ -87,29 +112,45 @@ export const AnimatedEE: React.FC<AnimatedEEProps> = ({
       <AnimatePresence>
         {isHovered && (
           <>
-            {/* Confetti / Lines */}
-            {[...Array(8)].map((_, i) => (
-              <motion.div
-                key={`line-${i}`}
-                initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
-                animate={{
-                  opacity: [0, 1, 0],
-                  scale: [0.5, 1.5, 0.5],
-                  x: (Math.random() - 0.5) * 80,
-                  y: (Math.random() - 0.5) * 80,
-                }}
-                transition={{
-                  duration: slowAnimation ? 1.5 : 0.8,
-                  ease: 'easeOut',
-                  repeat: Infinity,
-                  repeatDelay: Math.random() * (slowAnimation ? 0.6 : 0.2),
-                }}
-                className={`absolute w-1 h-3 rounded-full z-0 pointer-events-none ${
-                  i % 3 === 0 ? 'bg-tool-diligence' : i % 3 === 1 ? 'bg-indigo-500' : 'bg-rose-500'
-                }`}
-                style={{ rotate: `${i * 45}deg` }}
-              />
-            ))}
+            {/* Radiant colorful burst rays that animate distinctly outside the icons */}
+            {RAYS.map((ray, i) => {
+              const rad = (ray.angle * Math.PI) / 180;
+              const startX = `${(Math.cos(rad) * ray.startDist).toFixed(3)}em`;
+              const endX = `${(Math.cos(rad) * ray.endDist).toFixed(3)}em`;
+              const startY = `${(Math.sin(rad) * ray.startDist).toFixed(3)}em`;
+              const endY = `${(Math.sin(rad) * ray.endDist).toFixed(3)}em`;
+
+              return (
+                <motion.div
+                  key={`ray-${i}`}
+                  initial={{
+                    opacity: 0,
+                    scale: 0.4,
+                    x: startX,
+                    y: startY,
+                  }}
+                  animate={{
+                    opacity: [0, 1, 0.9, 0],
+                    scale: [0.5, 1.25, 0.7],
+                    x: [startX, endX],
+                    y: [startY, endY],
+                  }}
+                  transition={{
+                    duration: slowAnimation ? 1.4 : 0.7,
+                    ease: 'easeOut',
+                    repeat: Infinity,
+                    delay: ray.delay * (slowAnimation ? 1.5 : 1),
+                    repeatDelay: slowAnimation ? 0.3 : 0.1,
+                  }}
+                  className={`absolute rounded-full pointer-events-none z-30 ${ray.color}`}
+                  style={{
+                    width: ray.width,
+                    height: ray.length,
+                    rotate: `${ray.angle + 90}deg`,
+                  }}
+                />
+              );
+            })}
           </>
         )}
       </AnimatePresence>
