@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@source "./src";
 /* React Flow v12 Core Styles */
 @import '@xyflow/react/dist/style.css';
 
