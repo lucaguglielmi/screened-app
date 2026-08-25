@@ -266,7 +266,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
       </div>
 
       {/* Persistent Bottom Prompt Bar with Action Pills */}
-      <div className="relative z-10 pt-2 pb-1 border-t border-zinc-800/80 mt-1">
+      <div className="relative z-10 pt-2 pb-1 mt-1">
         <ChatPromptBar onSendMessage={handleSendMessage} isLoading={isLoading} />
 
         {/* Centered Filmmaker Feedback Link */}

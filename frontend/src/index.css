@@ -365,3 +365,17 @@ body {
     color: var(--color-white) !important;
   }
 }
+
+@keyframes soft-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0px 0 rgba(79, 70, 229, 0);
+    border-color: rgba(63, 63, 70, 0.5); /* zinc-700/50 */
+  }
+  50% {
+    box-shadow: 0 0 20px 2px rgba(79, 70, 229, 0.4);
+    border-color: rgba(99, 102, 241, 0.5); /* indigo-500/50 */
+  }
+}
+.hover-soft-pulse:hover {
+  animation: soft-pulse 2s infinite ease-in-out;
+}

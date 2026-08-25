@@ -336,7 +336,7 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
         }}
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
-        className="relative flex flex-col sm:flex-row items-stretch sm:items-center rounded-2xl bg-darkroom-surface shadow-2xl transition-all p-2 gap-2"
+        className="relative flex flex-col sm:flex-row items-stretch sm:items-center rounded-3xl bg-darkroom-surface shadow-2xl transition-all duration-300 p-3 sm:p-4 gap-3 border border-zinc-700/50 hover-soft-pulse"
       >
         <input
           type="file"
@@ -357,9 +357,9 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
             type="button"
             title="Attach a file or photo"
             onClick={() => fileInputRef.current?.click()}
-            className="flex items-center justify-center size-10 rounded-xl bg-darkroom-card hover:bg-paper-border hover:bg-darkroom-border text-slate-300 hover:text-white transition-all cursor-pointer shadow-sm shrink-0"
+            className="flex items-center justify-center size-12 rounded-2xl bg-darkroom-card hover:bg-paper-border hover:bg-darkroom-border text-slate-300 hover:text-white transition-all cursor-pointer shadow-sm shrink-0"
           >
-            <Plus className="size-4" />
+            <Plus className="size-5" />
           </button>
 
           {/* Text Input */}
@@ -372,7 +372,7 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
                 ? 'Listening... Speak now...'
                 : 'Ask Mission Control, research a festival, or drop a script/treatment PDF...'
             }
-            className={`w-full bg-transparent px-2.5 py-2 text-base text-slate-100 placeholder-slate-400 focus:outline-none ${
+            className={`w-full bg-transparent px-3 py-3 text-base sm:text-lg text-slate-100 placeholder-slate-400 focus:outline-none ${
               isRecording ? 'placeholder-rose-300 animate-pulse' : ''
             }`}
           />
@@ -386,9 +386,9 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
               soundEffects.playClick();
               setIsQuestionsModalOpen(true);
             }}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-zinc-700 bg-midnight/80 hover:bg-surface text-xs font-mono text-zinc-300 hover:text-white hover:border-blue-500/50 transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-4 py-3 h-12 rounded-2xl border border-zinc-700 bg-midnight/80 hover:bg-surface text-sm font-mono text-zinc-300 hover:text-white hover:border-blue-500/50 transition-colors cursor-pointer"
           >
-            <HelpCircle className="size-3.5 text-blue-400" />
+            <HelpCircle className="size-4 text-blue-400" />
             <span className="hidden sm:inline">what can I ask</span>
             <span className="sm:hidden">help</span>
           </button>
@@ -399,22 +399,22 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
             onClick={toggleRecording}
             title={isRecording ? 'Listening... Click to stop & send' : 'Click to speak & auto-send'}
             aria-label={isRecording ? 'Stop voice recording' : 'Start voice recording'}
-            className={`flex h-10 items-center justify-center rounded-xl transition-all cursor-pointer shrink-0 ${
+            className={`flex h-12 items-center justify-center rounded-2xl transition-all cursor-pointer shrink-0 ${
               isRecording
-                ? 'px-3 gap-1.5 bg-rose-500/20 border border-rose-500/60 text-rose-300 shadow-md shadow-rose-950 animate-pulse'
-                : 'w-10 bg-midnight/80 hover:bg-darkroom-card border border-zinc-700 hover:border-indigo-500/50 text-zinc-300 hover:text-white'
+                ? 'px-4 gap-2 bg-rose-500/20 border border-rose-500/60 text-rose-300 shadow-md shadow-rose-950 animate-pulse'
+                : 'w-12 bg-midnight/80 hover:bg-darkroom-card border border-zinc-700 hover:border-indigo-500/50 text-zinc-300 hover:text-white'
             }`}
           >
             {isRecording ? (
               <>
-                <span className="relative flex h-2 w-2">
+                <span className="relative flex h-2.5 w-2.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
                 </span>
-                <Mic className="size-4 text-rose-400" />
+                <Mic className="size-5 text-rose-400" />
               </>
             ) : (
-              <Mic className="size-4 text-zinc-400 hover:text-indigo-300" />
+              <Mic className="size-5 text-zinc-400 hover:text-indigo-300" />
             )}
           </button>
 
@@ -422,14 +422,14 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
           <button
             type="submit"
             disabled={isLoading || (!input.trim() && !attachedFile)}
-            className="flex h-10 w-10 items-center justify-center rounded-xl bg-midnight-royal hover:bg-midnight-royal text-white shadow-md shadow-[var(--color-midnight-royal)]/30 transition-all hover:brightness-110 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shrink-0"
+            className="flex h-12 w-12 items-center justify-center rounded-2xl bg-midnight-royal hover:bg-midnight-royal text-white shadow-md shadow-[var(--color-midnight-royal)]/30 transition-all hover:brightness-110 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shrink-0"
             title="Send message"
             aria-label="Send message"
           >
             {isLoading ? (
-              <Loader2 className="size-4 animate-spin text-white" />
+              <Loader2 className="size-5 animate-spin text-white" />
             ) : (
-              <Send className="size-4 text-white -translate-x-0.5" />
+              <Send className="size-5 text-white -translate-x-0.5" />
             )}
           </button>
         </div>
