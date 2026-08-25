@@ -290,7 +290,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
 
           {/* Animated Gradient Active Fill Rail */}
           <motion.div
-            className="absolute left-8 top-1/2 -translate-y-1/2 h-1 bg-tool-diligence rounded-full z-0 shadow-sm shadow-[var(--color-tool-diligence)]/50"
+            className="absolute left-8 top-1/2 -translate-y-1/2 h-1 bg-gradient-to-r from-midnight-royal via-tool-diligence to-emerald-400 rounded-full z-0 shadow-sm shadow-[var(--color-tool-diligence)]/50"
             initial={{ width: 0 }}
             animate={{ width: `${Math.max(5, Math.min(100, progressPercent))}%` }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -324,7 +324,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
                   <button
                     className={`relative flex items-center justify-center transition-all duration-200 cursor-pointer rounded-2xl ${
                       state === 'ACTIVE'
-                        ? 'size-11 sm:size-12 bg-tool-diligence text-slate-950 shadow-xl shadow-[var(--color-tool-diligence)]/40 ring-4 ring-tool-diligence/30 scale-110'
+                        ? 'size-11 sm:size-12 bg-gradient-to-tr from-tool-diligence to-emerald-400 text-slate-950 shadow-xl shadow-[var(--color-tool-diligence)]/40 ring-4 ring-tool-diligence/30 scale-110'
                         : state === 'COMPLETED'
                           ? 'size-9 sm:size-10 bg-tool-diligence/20 border border-tool-diligence/60 text-tool-diligence shadow-md shadow-[var(--color-tool-diligence)]/20 hover:scale-105 hover:bg-tool-diligence/30'
                           : 'size-9 sm:size-10 bg-paper-surface dark:bg-darkroom-surface border border-paper-border dark:border-darkroom-border text-slate-400 hover:text-slate-200 hover:border-slate-500 hover:scale-105'
@@ -414,7 +414,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
             transition={{ duration: 0.2 }}
             className={`p-5 rounded-2xl border transition-all ${
               activeStepState === 'ACTIVE'
-                ? 'bg-darkroom-card border-tool-diligence/40 shadow-lg shadow-[var(--color-tool-diligence)]/10'
+                ? 'bg-gradient-to-br from-darkroom-card to-darkroom-surface border-tool-diligence/40 shadow-lg shadow-[var(--color-tool-diligence)]/10'
                 : activeStepState === 'COMPLETED'
                   ? 'bg-paper-card dark:bg-darkroom-card border-paper-border dark:border-darkroom-border'
                   : 'bg-paper-surface dark:bg-darkroom-surface border-paper-border dark:border-darkroom-border'

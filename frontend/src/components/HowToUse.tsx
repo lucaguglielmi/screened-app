@@ -122,7 +122,7 @@ export const HowToUse: React.FC<Props> = ({
       </div>
 
       {/* Quick Search Tip */}
-      <div className="p-6 rounded-3xl bg-darkroom-surface border border-indigo-500/30 text-center space-y-3">
+      <div className="p-6 rounded-3xl bg-gradient-to-br from-darkroom-surface to-darkroom-card border border-indigo-500/30 text-center space-y-3">
         <h3 className="text-lg font-bold text-white">Global Command Access</h3>
         <p className="text-sm text-slate-300 max-w-xl mx-auto font-mono">
           &gt; INSTRUCTION: If the user requires immediate context switching, invoke the Command

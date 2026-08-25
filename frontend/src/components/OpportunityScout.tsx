@@ -300,7 +300,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
           <button
             type="submit"
             disabled={loading || !isFormValid}
-            className="w-full py-4 rounded-2xl bg-tool-scout hover:bg-tool-scout-hover hover:brightness-110 disabled:opacity-40 text-white font-bold text-base flex items-center justify-center gap-2.5 transition-all shadow-xl shadow-[var(--color-tool-scout)]/30 cursor-pointer active:scale-[0.99]"
+            className="w-full py-4 rounded-2xl bg-gradient-to-r from-tool-scout to-tool-scout-hover hover:brightness-110 disabled:opacity-40 text-white font-bold text-base flex items-center justify-center gap-2.5 transition-all shadow-xl shadow-[var(--color-tool-scout)]/30 cursor-pointer active:scale-[0.99]"
           >
             {loading ? (
               <>

@@ -48,8 +48,8 @@ import { piiVault } from './utils/pii';
 export default function App() {
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     const saved = localStorage.getItem('screened_theme');
-    if (saved === 'dark' || saved === 'light') return saved;
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    if (saved === 'dark') return saved;
+    return 'dark'; // Force dark mode for the Midnight Darkroom UI
   });
 
   const [soundMuted, setSoundMutedState] = useState<boolean>(() => isSoundMuted());

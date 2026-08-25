@@ -75,7 +75,7 @@ export const AgentAvatar: React.FC<AgentAvatarProps> = ({
       {/* 1. PULSATING CIRCULAR WAVE RIPPLES (On Hover & Thinking) */}
       {/* ========================================================================= */}
       <span
-        className={`absolute inset-0 rounded-full bg-tool-ocean/50 blur-md pointer-events-none transition-all duration-700 ${
+        className={`absolute inset-0 rounded-full bg-gradient-to-tr from-tool-ocean/50 to-darkroom-muted/50 blur-md pointer-events-none transition-all duration-700 ${
           isActive
             ? 'animate-ping opacity-90'
             : 'opacity-0 group-hover:opacity-100 group-hover:scale-125'
@@ -115,7 +115,7 @@ export const AgentAvatar: React.FC<AgentAvatarProps> = ({
 
       {/* Inner Glowing Gradient Halo */}
       <span
-        className={`absolute inset-0.5 rounded-full bg-tool-ocean/60 blur-xs transition-all duration-700 ${
+        className={`absolute inset-0.5 rounded-full bg-gradient-to-br from-tool-ocean/60 to-darkroom-muted/60 blur-xs transition-all duration-700 ${
           isActive ? 'opacity-90' : 'opacity-0 group-hover:opacity-70 group-hover:scale-105'
         }`}
       />
@@ -124,7 +124,7 @@ export const AgentAvatar: React.FC<AgentAvatarProps> = ({
       {/* 3. CORE ORB: BRIGHT DUAL-COLOR GRADIENT & CLEAN ALL-WHITE CINEMA ICON */}
       {/* ========================================================================= */}
       <div
-        className={`relative z-10 size-full rounded-full bg-tool-ocean flex items-center justify-center shadow-lg shadow-blue-500/30 overflow-hidden transition-all duration-700 ${
+        className={`relative z-10 size-full rounded-full bg-gradient-to-tr from-tool-ocean to-darkroom-muted flex items-center justify-center shadow-lg shadow-blue-500/30 overflow-hidden transition-all duration-700 ${
           !isActive ? 'group-hover:scale-105 group-hover:animate-pulse' : 'scale-100'
         }`}
       >

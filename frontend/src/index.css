@@ -118,11 +118,14 @@ body {
 }
 
 .bg-moving-dark-gradient {
-  background: linear-gradient(135deg, var(--color-midnight-base), #0A101C, var(--color-midnight-base));
+  background: linear-gradient(135deg, var(--color-midnight-base), var(--color-midnight-surface), var(--color-midnight-base));
   background-size: 200% 200%;
   animation: subtleGradientMove 15s ease infinite;
 }
 
+.bg-card-gradient {
+  background: linear-gradient(145deg, var(--color-darkroom-surface), var(--color-darkroom-card));
+}
 
 /* Custom scrollbars */
 ::-webkit-scrollbar {

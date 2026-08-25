@@ -18,7 +18,7 @@ export const MiniDueDiligence: React.FC<MiniDueDiligenceProps> = ({ args, onLaun
   };
 
   return (
-    <div className="my-3 p-5 rounded-2xl border border-tool-diligence/30 bg-darkroom-surface shadow-xl backdrop-blur-md transition-all hover:border-tool-diligence/60">
+    <div className="my-3 p-5 rounded-2xl border border-tool-diligence/30 bg-gradient-to-br from-tool-diligence/10 via-darkroom-surface to-darkroom-bg shadow-xl backdrop-blur-md transition-all hover:border-tool-diligence/60">
       <div className="flex items-center justify-between gap-2 border-b border-tool-diligence/20 pb-3 mb-4">
         <div className="flex items-center gap-3">
           <div className="size-8 rounded-xl bg-tool-diligence/20 text-tool-diligence flex items-center justify-center font-bold border border-tool-diligence/40">

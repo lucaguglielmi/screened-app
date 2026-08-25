@@ -96,7 +96,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
         {/* Avatar */}
         <div className="shrink-0 mt-0.5">
           {isUser ? (
-            <div className="size-9 rounded-full bg-midnight-violet flex items-center justify-center text-sm font-bold text-white shadow-sm ring-1 ring-midnight-violet">
+            <div className="size-9 rounded-full bg-gradient-to-tr from-darkroom-border to-midnight-violet flex items-center justify-center text-sm font-bold text-white shadow-sm ring-1 ring-midnight-violet">
               👤
             </div>
           ) : (
