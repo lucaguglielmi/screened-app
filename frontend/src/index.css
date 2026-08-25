@@ -29,42 +29,48 @@
   --color-darkroom-muted: var(--color-midnight-border);
 
   /* Palette 1 Extended Swatches */
-  --color-midnight-void: var(--color-void);
-  --color-midnight-bg: var(--color-midnight-base);
-  --color-midnight-surface: var(--color-darkroom-surface);
-  --color-midnight-card: var(--color-darkroom-card);
-  --color-midnight-border: var(--color-midnight-border);
-  --color-midnight-indigo: var(--color-deep-indigo);
-  --color-midnight-violet: var(--color-royal-violet);
-  --color-midnight-royal: var(--color-midnight-royal);
+  --color-midnight-void: #020408;
+  --color-midnight-bg: #070B14;
+  --color-midnight-surface: #0E1424;
+  --color-midnight-card: #151D30;
+  --color-midnight-border: #1E293B;
+  --color-midnight-indigo: #4338CA;
+  --color-midnight-violet: #6D28D9;
+  --color-midnight-royal: #312E81;
   --color-midnight-glow: rgba(32, 24, 230, 0.25);
 
   /* Palette 2 Tool Swatches */
-  --color-tool-diligence: var(--color-tool-diligence);
-  --color-tool-diligence-hover: var(--color-white);
-  --color-tool-diligence-glow: rgba(0, 210, 158, 0.25);
+  --color-tool-diligence: #10B981; /* Emerald Green */
+  --color-tool-diligence-hover: #FFFFFF;
+  --color-tool-diligence-glow: rgba(16, 185, 129, 0.25);
 
-  --color-tool-scout: var(--color-tool-scout);
-  --color-tool-scout-hover: var(--color-tool-scout);
-  --color-tool-scout-glow: rgba(244, 63, 94, 0.25);
+  --color-tool-scout: #0EA5E9; /* Sky Blue */
+  --color-tool-scout-hover: #38BDF8; /* Lighter Sky Blue */
+  --color-tool-scout-glow: rgba(14, 165, 233, 0.25);
 
-  --color-tool-ocean: var(--color-accent-blue);
-  --color-tool-petrol: var(--color-white);
+  --color-tool-ocean: #3B82F6;
+  --color-tool-petrol: #FFFFFF;
 
   /* Accent Desk Royal Blue (Palette 1 Primary) */
-  --color-indigo-accent: var(--color-midnight-royal);
+  --color-indigo-accent: #312E81;
   --color-indigo-glow: rgba(32, 24, 230, 0.2);
 
+  /* Extra Colors */
+  --color-accent-blue: #3B82F6;
+  --color-accent-gold: #F59E0B;
+  --color-white: #FFFFFF;
+  --color-void: #020408;
+
   /* Claim State Colors */
-  --color-state-corroborated: var(--color-tool-diligence);
-  --color-state-supported: var(--color-accent-blue);
-  --color-state-disputed: var(--color-accent-gold);
-  --color-state-unverified: var(--color-white);
+  --color-state-corroborated: #10B981;
+  --color-state-supported: #3B82F6;
+  --color-state-disputed: #F59E0B;
+  --color-state-unverified: #FFFFFF;
 
   /* Claim Kind Colors */
-  --color-kind-fact: var(--color-accent-blue);
-  --color-kind-allegation: var(--color-tool-scout);
-  --color-kind-opinion: var(--color-royal-violet);
+  --color-kind-fact: #3B82F6;
+  --color-kind-allegation: #0EA5E9;
+  --color-kind-opinion: #6D28D9;
 }
 
 :root {
@@ -72,22 +78,6 @@
   font-size: 18px;
   line-height: 1.6;
   color-scheme: light dark;
-
-  /* Restored Dark Blue Theme Tokens */
-  --color-midnight-base: #070B14;
-  --color-darkroom-surface: #0E1424;
-  --color-darkroom-card: #151D30;
-  --color-midnight-border: #1E293B;
-  --color-white: #FFFFFF;
-  --color-void: #020408;
-  --color-deep-indigo: #4338CA;
-  --color-royal-violet: #6D28D9;
-  --color-midnight-royal: #312E81;
-  
-  --color-tool-diligence: #10B981; /* Emerald Green */
-  --color-tool-scout: #0EA5E9; /* Sky Blue instead of Red */
-  --color-accent-blue: #3B82F6;
-  --color-accent-gold: #F59E0B;
 }
 
 html {

@@ -245,7 +245,7 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
             </div>
           </button>
 
-          {/* Product 2: Opportunity Scout (Coral Rose) */}
+          {/* Product 2: Opportunity Scout (Coral Rose/Sky Blue) */}
           <button
             onClick={() => handleSelectTool('OPPORTUNITY_SCOUT')}
             className={`w-full p-3 rounded-2xl flex items-center gap-3.5 transition-all text-left group cursor-pointer ${
@@ -256,7 +256,7 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
           >
             <GripVertical className="size-4 text-slate-600 group-hover:text-slate-400 shrink-0" />
 
-            <div className="size-11 rounded-2xl bg-gradient-to-tr from-tool-scout via-tool-scout to-orange-500 flex items-center justify-center text-white shadow-lg shadow-[var(--color-tool-scout)]/30 shrink-0 group-hover:scale-105 transition-transform">
+            <div className="size-11 rounded-2xl bg-gradient-to-tr from-tool-scout via-tool-scout to-tool-scout-hover flex items-center justify-center text-white shadow-lg shadow-[var(--color-tool-scout)]/30 shrink-0 group-hover:scale-105 transition-transform">
               <Compass className="size-6 text-white" />
             </div>
 
