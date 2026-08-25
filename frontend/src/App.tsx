@@ -10,6 +10,7 @@ import {
   VolumeX,
   Sun,
   Moon,
+  Keyboard,
 } from 'lucide-react';
 
 import {
@@ -524,9 +525,6 @@ export default function App() {
                 ) : (
                   <Volume2 className="size-4 text-indigo-400" />
                 )}
-                <span className="hidden lg:inline text-[11px]">
-                  {soundMuted ? 'Muted' : 'Sound'}
-                </span>
                 <span className="hidden xl:inline text-[9px] px-1 py-0.5 rounded bg-paper-border dark:bg-darkroom-border text-slate-400 border border-paper-border dark:border-darkroom-border">
                   M
                 </span>
@@ -555,11 +553,11 @@ export default function App() {
               {/* Keyboard Shortcuts Quick Helper Hint */}
               <button
                 onClick={() => setIsKeyboardHelpOpen(true)}
-                className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-card dark:hover:bg-darkroom-card text-slate-400 hover:text-indigo-300 border border-paper-border dark:border-darkroom-border hover:border-indigo-500/40 transition-all cursor-pointer text-xs font-mono"
+                className="hidden md:flex p-2 items-center gap-1.5 rounded-xl bg-paper-surface dark:bg-darkroom-surface hover:bg-paper-card dark:hover:bg-darkroom-card text-slate-400 hover:text-indigo-300 border border-paper-border dark:border-darkroom-border hover:border-indigo-500/40 transition-all cursor-pointer text-xs font-mono"
                 title="Keyboard Shortcuts Cheat Sheet (Press ?)"
               >
-                <span>Shortcuts</span>
-                <kbd className="px-1.5 py-0.5 rounded bg-paper-border dark:bg-darkroom-border text-indigo-300 border border-paper-border dark:border-darkroom-border text-[10px] font-bold font-mono">
+                <Keyboard className="size-4 text-indigo-400" />
+                <kbd className="hidden xl:inline text-[10px] px-1 py-0.5 rounded bg-paper-border dark:bg-darkroom-border text-indigo-300 border border-paper-border dark:border-darkroom-border font-bold font-mono">
                   ?
                 </kbd>
               </button>
