@@ -4,7 +4,6 @@ import { FilmProfile } from '../../types/investigation';
 import { ChatBubble } from './ChatBubble';
 import { ChatPromptBar } from './ChatPromptBar';
 import { motion } from 'motion/react';
-import { ScrambleText } from '../animations/ScrambleText';
 import { AnimatedEE } from '../animations/AnimatedEE';
 import { AgentThinkingPill } from './AgentThinkingPill';
 import { CapabilitiesModal } from '../modals/CapabilitiesModal';
@@ -222,7 +221,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
           <div className="flex justify-center items-center gap-2 mb-4">
             <span className="font-serif text-6xl sm:text-7xl lg:text-8xl font-black tracking-normal text-white flex items-center">
               Scr
-              <AnimatedEE />
+              <AnimatedEE forceHover={true} eyesPattern={true} slowAnimation={true} />
               ned
             </span>
           </div>
@@ -236,10 +235,9 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
             }}
             className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white font-sans mb-3 flex flex-wrap items-center justify-center gap-x-3 sm:gap-x-4 cursor-default"
           >
-            <span className="animate-cinema-glitch text-transparent bg-clip-text bg-gradient-to-r from-zinc-100 via-stone-200 to-zinc-300">
-              Cinema
+            <span className="text-zinc-100">
+              Cinema Due diligence
             </span>
-            <ScrambleText text="Due diligence" className="text-zinc-100" />
           </motion.h1>
           <TextLink
             variant="primary"

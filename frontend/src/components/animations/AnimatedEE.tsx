@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 
-const SYMBOLS = [
+const BASE_SYMBOLS = [
   '🎬',
   '🎞️',
   '🍿',
@@ -16,29 +16,53 @@ const SYMBOLS = [
   '💰',
   '💵',
   '🪙',
-  '👁️',
-  '👀',
 ];
 
-export const AnimatedEE: React.FC = () => {
-  const [isHovered, setIsHovered] = useState(false);
+const EYES = ['👁️', '👀'];
+
+export interface AnimatedEEProps {
+  forceHover?: boolean;
+  eyesPattern?: boolean;
+  slowAnimation?: boolean;
+}
+
+export const AnimatedEE: React.FC<AnimatedEEProps> = ({ 
+  forceHover = false, 
+  eyesPattern = false, 
+  slowAnimation = false 
+}) => {
+  const [internalHover, setInternalHover] = useState(false);
   const [symbolIndex, setSymbolIndex] = useState(0);
+
+  const isHovered = internalHover || forceHover;
+
+  const currentSymbols = useMemo(() => {
+    if (!eyesPattern) {
+      return [...BASE_SYMBOLS, ...EYES];
+    }
+    const pattern = [];
+    for (let i = 0; i < BASE_SYMBOLS.length; i++) {
+      pattern.push(EYES[i % EYES.length]);
+      pattern.push(BASE_SYMBOLS[i]);
+    }
+    return pattern;
+  }, [eyesPattern]);
 
   useEffect(() => {
     let interval: number;
     if (isHovered) {
       interval = window.setInterval(() => {
-        setSymbolIndex((prev) => (prev + 1) % SYMBOLS.length);
-      }, 100);
+        setSymbolIndex((prev) => (prev + 1) % currentSymbols.length);
+      }, slowAnimation ? 400 : 100);
     }
     return () => clearInterval(interval);
-  }, [isHovered]);
+  }, [isHovered, currentSymbols.length, slowAnimation]);
 
   return (
     <span
       className="relative inline-flex items-center justify-center cursor-crosshair group w-[1em] h-[1em]"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={() => setInternalHover(true)}
+      onMouseLeave={() => setInternalHover(false)}
     >
       <span
         className={`relative z-10 transition-colors duration-300 group-hover:text-indigo-400 ${isHovered ? 'opacity-0' : 'opacity-100'}`}
@@ -51,12 +75,12 @@ export const AnimatedEE: React.FC = () => {
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: [0.8, 1.2, 0.8], rotate: [-15, 15, -15] }}
           transition={{
-            rotate: { repeat: Infinity, duration: 0.3, ease: 'easeInOut' },
-            scale: { repeat: Infinity, duration: 0.4, ease: 'easeInOut' },
+            rotate: { repeat: Infinity, duration: slowAnimation ? 1.2 : 0.3, ease: 'easeInOut' },
+            scale: { repeat: Infinity, duration: slowAnimation ? 1.6 : 0.4, ease: 'easeInOut' },
           }}
           className="absolute z-20 text-[0.8em]"
         >
-          {SYMBOLS[symbolIndex]}
+          {currentSymbols[symbolIndex]}
         </motion.span>
       )}
 
@@ -75,10 +99,10 @@ export const AnimatedEE: React.FC = () => {
                   y: (Math.random() - 0.5) * 80,
                 }}
                 transition={{
-                  duration: 0.8,
+                  duration: slowAnimation ? 1.5 : 0.8,
                   ease: 'easeOut',
                   repeat: Infinity,
-                  repeatDelay: Math.random() * 0.2,
+                  repeatDelay: Math.random() * (slowAnimation ? 0.6 : 0.2),
                 }}
                 className={`absolute w-1 h-3 rounded-full z-0 pointer-events-none ${
                   i % 3 === 0 ? 'bg-tool-diligence' : i % 3 === 1 ? 'bg-indigo-500' : 'bg-rose-500'

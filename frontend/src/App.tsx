@@ -48,6 +48,7 @@ export default function App() {
   const [soundMuted, setSoundMutedState] = useState<boolean>(() => isSoundMuted());
   const [isKeyboardHelpOpen, setIsKeyboardHelpOpen] = useState(false);
   const [isFunkyCursorEnabled, setIsFunkyCursorEnabled] = useState(false);
+  const [isNavLogoHovered, setIsNavLogoHovered] = useState(false);
   const [recentSearches, setRecentSearches] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem('screened_recent_searches');
@@ -454,14 +455,18 @@ export default function App() {
           className={`border-b border-darkroom-border ${activeTool === 'DESIGN_PLAYGROUND' ? 'bg-darkroom-surface' : 'bg-darkroom-surface/80 backdrop-blur'} sticky top-0 z-30 transition-colors no-print`}
         >
           <div className="px-4 sm:px-6 md:px-8 h-16 flex items-center justify-between gap-4">
-            <div onClick={handleReset} className="flex items-center gap-3 cursor-pointer shrink-0">
+            <div 
+              onClick={handleReset} 
+              onMouseEnter={() => setIsNavLogoHovered(true)}
+              onMouseLeave={() => setIsNavLogoHovered(false)}
+              className="flex items-center gap-3 cursor-pointer shrink-0 group"
+            >
               <div className="flex items-center gap-2.5">
                 <span className="font-serif text-2xl font-black tracking-normal text-darkroom-text flex items-center">
                   Scr
-                  <AnimatedEE />
+                  <AnimatedEE forceHover={isNavLogoHovered} />
                   ned
                 </span>
-                <span className="text-xl">✨</span>
               </div>
             </div>
 
@@ -588,7 +593,7 @@ export default function App() {
                     <div className="flex justify-center items-center gap-2 mb-4">
                       <span className="font-serif text-6xl sm:text-7xl lg:text-8xl font-black tracking-normal text-white flex items-center">
                         Scr
-                        <AnimatedEE />
+                        <AnimatedEE forceHover={true} eyesPattern={true} slowAnimation={true} />
                         ned
                       </span>
                     </div>
