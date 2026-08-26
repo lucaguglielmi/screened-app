@@ -72,6 +72,7 @@ jobs:
             --allow-unauthenticated \
             --update-env-vars="GOOGLE_CLOUD_PROJECT=${PROJECT_ID},GOOGLE_CLOUD_LOCATION=${REGION},ENVIRONMENT=production,COMMIT_SHA=${SHORT_SHA},VITE_GA4_MEASUREMENT_ID=${{ secrets.VITE_GA4_MEASUREMENT_ID }},TASK_QUEUE_NAME=${{ secrets.TASK_QUEUE_NAME }}" \
             --update-secrets="PARALLEL_API_KEY=parallel-api-key:latest,SESSION_SIGNING_KEY=session-signing-key:latest,PARALLEL_WEBHOOK_SECRET=parallel-webhook-secret:latest" \
+            --timeout=3600 \
             --memory=1Gi \
             --cpu=1 \
             --min-instances=1 \
