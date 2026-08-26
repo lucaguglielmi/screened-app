@@ -137,6 +137,21 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
       window.addEventListener('mouseleave', handleMouseLeave, { passive: true });
     }
 
+    const resolveColor = (c: string) => {
+      if (c.startsWith('var(')) {
+        const match = c.match(/var\((.*?)\)/);
+        if (match) {
+          const val = getComputedStyle(document.documentElement).getPropertyValue(match[1]).trim();
+          if (val) return val;
+        }
+      }
+      return c;
+    };
+
+    const resolvedPrimary = resolveColor(activePrimary);
+    const resolvedSecondary = resolveColor(secondaryColor);
+    const resolvedAccent = resolveColor(accentColor);
+
     const startTime = performance.now();
 
     const render = (time: number) => {
@@ -212,17 +227,17 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
       const gradIndigo = ctx.createRadialGradient(n2X, n2Y, n2R * 0.08, n2X, n2Y, n2R);
       gradIndigo.addColorStop(
         0,
-        `${secondaryColor}${Math.round(opacity * 0.7 * 255)
+        `${resolvedSecondary}${Math.round(opacity * 0.7 * 255)
           .toString(16)
           .padStart(2, '0')}`,
       );
       gradIndigo.addColorStop(
         0.45,
-        `${secondaryColor}${Math.round(opacity * 0.35 * 255)
+        `${resolvedSecondary}${Math.round(opacity * 0.35 * 255)
           .toString(16)
           .padStart(2, '0')}`,
       );
-      gradIndigo.addColorStop(0.85, `${secondaryColor}08`);
+      gradIndigo.addColorStop(0.85, `${resolvedSecondary}08`);
       gradIndigo.addColorStop(1, 'transparent');
 
       ctx.fillStyle = gradIndigo;
@@ -235,13 +250,13 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
       const node4Alpha = opacity * 0.35;
       gradNode4.addColorStop(
         0,
-        `${secondaryColor}${Math.round(node4Alpha * 255)
+        `${resolvedSecondary}${Math.round(node4Alpha * 255)
           .toString(16)
           .padStart(2, '0')}`,
       );
       gradNode4.addColorStop(
         0.5,
-        `${activePrimary}${Math.round(node4Alpha * 0.25 * 255)
+        `${resolvedPrimary}${Math.round(node4Alpha * 0.25 * 255)
           .toString(16)
           .padStart(2, '0')}`,
       );
@@ -261,19 +276,19 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
       const rubyAlpha = Math.min(1.0, opacity * (0.85 + mouseRippleGlow));
       gradRuby.addColorStop(
         0,
-        `${activePrimary}${Math.round(rubyAlpha * 255)
+        `${resolvedPrimary}${Math.round(rubyAlpha * 255)
           .toString(16)
           .padStart(2, '0')}`,
       );
       gradRuby.addColorStop(
         0.35,
-        `${activePrimary}${Math.round(rubyAlpha * 0.55 * 255)
+        `${resolvedPrimary}${Math.round(rubyAlpha * 0.55 * 255)
           .toString(16)
           .padStart(2, '0')}`,
       );
       gradRuby.addColorStop(
         0.7,
-        `${activePrimary}${Math.round(rubyAlpha * 0.15 * 255)
+        `${resolvedPrimary}${Math.round(rubyAlpha * 0.15 * 255)
           .toString(16)
           .padStart(2, '0')}`,
       );
@@ -289,17 +304,17 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
       const amberAlpha = opacity * 0.48;
       gradAmber.addColorStop(
         0,
-        `${accentColor}${Math.round(amberAlpha * 255)
+        `${resolvedAccent}${Math.round(amberAlpha * 255)
           .toString(16)
           .padStart(2, '0')}`,
       );
       gradAmber.addColorStop(
         0.4,
-        `${accentColor}${Math.round(amberAlpha * 0.25 * 255)
+        `${resolvedAccent}${Math.round(amberAlpha * 0.25 * 255)
           .toString(16)
           .padStart(2, '0')}`,
       );
-      gradAmber.addColorStop(0.8, `${accentColor}06`);
+      gradAmber.addColorStop(0.8, `${resolvedAccent}06`);
       gradAmber.addColorStop(1, 'transparent');
 
       ctx.fillStyle = gradAmber;
@@ -311,7 +326,7 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
       // A soft, living organic contour line that gently breathes and drifts across the fluid boundary
       ctx.globalCompositeOperation = 'lighter';
       const contourAlpha = opacity * 0.25;
-      ctx.strokeStyle = `${activePrimary}${Math.round(contourAlpha * 255)
+      ctx.strokeStyle = `${resolvedPrimary}${Math.round(contourAlpha * 255)
         .toString(16)
         .padStart(2, '0')}`;
       ctx.lineWidth = 1.5;
@@ -382,13 +397,13 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
         const cursorAlpha = opacity * 0.35 * m.influence;
         mouseGrad.addColorStop(
           0,
-          `${activePrimary}${Math.round(cursorAlpha * 255)
+          `${resolvedPrimary}${Math.round(cursorAlpha * 255)
             .toString(16)
             .padStart(2, '0')}`,
         );
         mouseGrad.addColorStop(
           0.5,
-          `${secondaryColor}${Math.round(cursorAlpha * 0.3 * 255)
+          `${resolvedSecondary}${Math.round(cursorAlpha * 0.3 * 255)
             .toString(16)
             .padStart(2, '0')}`,
         );
