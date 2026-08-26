@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { History, X, Search, Clock, ChevronRight } from 'lucide-react';
+import { History, X, Search, Clock, ChevronRight, Trash2 } from 'lucide-react';
 import { Investigation } from '../types/investigation';
+import { soundEffects } from '../utils/audio';
 
 interface Props {
   isOpen: boolean;
@@ -11,6 +12,16 @@ interface Props {
 export const HistorySidebar: React.FC<Props> = ({ isOpen, onClose, onSelectInvestigation }) => {
   const [investigations, setInvestigations] = useState<Investigation[]>([]);
   const [loading, setLoading] = useState(false);
+
+  const handleClearAll = () => {
+    soundEffects.playClick();
+    try {
+      localStorage.removeItem('screened_investigation_ids');
+    } catch {
+      // Ignore localStorage error
+    }
+    setInvestigations([]);
+  };
 
   useEffect(() => {
     if (!isOpen) return;
@@ -50,22 +61,44 @@ export const HistorySidebar: React.FC<Props> = ({ isOpen, onClose, onSelectInves
   return (
     <>
       <div
-        className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 transition-opacity"
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 transition-opacity"
         onClick={onClose}
       />
 
-      <aside className="fixed inset-y-0 right-0 w-full sm:w-96 bg-darkroom-surface border-l border-darkroom-border shadow-2xl z-50 flex flex-col animate-in slide-in-from-right duration-200">
-        <div className="p-4 border-b border-darkroom-border flex items-center justify-between">
+      <aside className="fixed inset-y-0 right-0 w-full sm:w-96 bg-midnight-surface/95 backdrop-blur-2xl border-l border-darkroom-border shadow-2xl z-50 flex flex-col animate-in slide-in-from-right duration-200">
+        <div className="p-4 border-b border-darkroom-border flex items-center justify-between bg-midnight-base/50">
           <div className="flex items-center gap-2">
-            <History className="size-5 text-indigo-500" />
-            <h2 className="font-semibold text-darkroom-text">Past Searches</h2>
+            <History className="size-4.5 text-indigo-400" />
+            <h2 className="font-semibold text-slate-100 text-sm font-mono tracking-tight">Past Searches</h2>
+            {investigations.length > 0 && (
+              <span className="text-[11px] px-2 py-0.5 rounded-full bg-midnight-royal border border-darkroom-border text-slate-400 font-mono">
+                {investigations.length}
+              </span>
+            )}
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 rounded-xl hover:bg-paper-bg hover:bg-darkroom-bg text-paper-muted hover:text-paper-text transition-colors cursor-pointer"
-          >
-            <X className="size-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            {investigations.length > 0 && (
+              <button
+                type="button"
+                onClick={handleClearAll}
+                className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-mono text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 border border-rose-500/20 transition-colors cursor-pointer active:scale-95"
+                title="Clear all past searches"
+              >
+                <Trash2 className="size-3.5" />
+                <span>Clear all</span>
+              </button>
+            )}
+            <button
+              onClick={() => {
+                soundEffects.playClick();
+                onClose();
+              }}
+              className="p-1.5 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition-colors cursor-pointer"
+              aria-label="Close"
+            >
+              <X className="size-5" />
+            </button>
+          </div>
         </div>
 
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
