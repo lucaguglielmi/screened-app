@@ -272,21 +272,21 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
         </div>
 
         {/* Timeline Horizontal Track */}
-        <div className="relative py-6 px-2 sm:px-6">
+        <div className="relative pt-2 pb-4 px-2 sm:px-6">
           {/* Background Connecting Rail */}
-          <div className="absolute left-8 right-8 top-1/2 -translate-y-1/2 h-1 bg-paper-border bg-darkroom-border rounded-full z-0" />
+          <div className="absolute left-10 sm:left-14 right-10 sm:right-14 top-8 -translate-y-1/2 h-1 bg-darkroom-border rounded-full z-0" />
 
           {/* Animated Gradient Active Fill Rail */}
           <motion.div
-            className="absolute left-8 top-1/2 -translate-y-1/2 h-1 bg-gradient-to-r from-midnight-royal via-tool-diligence to-emerald-400 rounded-full z-0 shadow-sm shadow-[var(--color-tool-diligence)]/50"
+            className="absolute left-10 sm:left-14 top-8 -translate-y-1/2 h-1 bg-gradient-to-r from-tool-diligence via-emerald-400 to-teal-300 rounded-full z-0 shadow-sm shadow-[var(--color-tool-diligence)]/50"
             initial={{ width: 0 }}
-            animate={{ width: `${Math.max(5, Math.min(100, progressPercent))}%` }}
+            animate={{ width: `${Math.max(2, Math.min(100, progressPercent))}%` }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
-            style={{ maxWidth: 'calc(100% - 4rem)' }}
+            style={{ maxWidth: 'calc(100% - 5.5rem)' }}
           />
 
           {/* Timeline Nodes Grid */}
-          <div className="relative z-10 flex items-center justify-between w-full">
+          <div className="relative z-10 flex items-start justify-between w-full">
             {TIMELINE_STEPS.map((step, idx) => {
               const state = getStepState(step, status);
               const isHovered = hoveredStepIndex === idx;
@@ -297,7 +297,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
               return (
                 <div
                   key={step.id}
-                  className="flex flex-col items-center relative group"
+                  className="flex flex-col items-center relative group w-16 sm:w-20 md:w-24 shrink-0"
                   onMouseEnter={() => {
                     soundEffects.playClick();
                     setHoveredStepIndex(idx);
@@ -308,49 +308,51 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
                     setSelectedStepIndex(idx === selectedStepIndex ? null : idx);
                   }}
                 >
-                  {/* Interactive Dot / Node */}
-                  <button
-                    className={`relative flex items-center justify-center transition-all duration-200 cursor-pointer rounded-2xl ${
-                      state === 'ACTIVE'
-                        ? 'size-11 sm:size-12 bg-gradient-to-tr from-tool-diligence to-emerald-400 text-slate-950 shadow-xl shadow-[var(--color-tool-diligence)]/40 ring-4 ring-tool-diligence/30 scale-110'
-                        : state === 'COMPLETED'
-                          ? 'size-9 sm:size-10 bg-tool-diligence/20 border border-tool-diligence/60 text-tool-diligence shadow-md shadow-[var(--color-tool-diligence)]/20 hover:scale-105 hover:bg-tool-diligence/30'
-                          : 'size-9 sm:size-10 bg-darkroom-surface border border-darkroom-border text-slate-400 hover:text-slate-200 hover:border-slate-500 hover:scale-105'
-                    } ${isSelected ? 'ring-2 ring-tool-diligence' : isInspected && state !== 'ACTIVE' ? 'ring-2 ring-indigo-400/60 border-indigo-400' : ''}`}
-                    title={`${step.stepNumber}. ${step.name}`}
-                  >
-                    {/* Active Ping Ripple */}
-                    {state === 'ACTIVE' && !reducedMotion && (
-                      <span className="absolute -inset-1.5 rounded-2xl bg-tool-diligence opacity-30 animate-ping pointer-events-none" />
-                    )}
-
-                    {/* Step Icon or Checkmark */}
-                    {state === 'COMPLETED' ? (
-                      <CheckCircle2 className="size-4.5 sm:size-5 text-tool-diligence" />
-                    ) : state === 'ACTIVE' ? (
-                      <Icon
-                        className={`size-5 sm:size-5.5 text-slate-950 ${reducedMotion ? '' : 'animate-pulse'}`}
-                      />
-                    ) : (
-                      <Icon className="size-4 sm:size-4.5" />
-                    )}
-
-                    {/* Step Number Small Badge */}
-                    <span
-                      className={`absolute -top-1.5 -right-1.5 size-4 rounded-full text-[9px] font-mono font-bold flex items-center justify-center shadow ${
+                  {/* Fixed-Height Centered Node Container */}
+                  <div className="h-12 flex items-center justify-center relative">
+                    <button
+                      className={`relative flex items-center justify-center transition-all duration-200 cursor-pointer rounded-2xl ${
                         state === 'ACTIVE'
-                          ? 'bg-slate-950 text-tool-diligence border border-tool-diligence'
+                          ? 'size-11 sm:size-12 bg-gradient-to-tr from-tool-diligence to-emerald-400 text-slate-950 shadow-xl shadow-[var(--color-tool-diligence)]/40 ring-4 ring-tool-diligence/30 scale-110'
                           : state === 'COMPLETED'
-                            ? 'bg-tool-diligence text-slate-950'
-                            : 'bg-darkroom-card text-slate-400 border border-darkroom-border'
-                      }`}
+                            ? 'size-9 sm:size-10 bg-tool-diligence/20 border border-tool-diligence/60 text-tool-diligence shadow-md shadow-[var(--color-tool-diligence)]/20 hover:scale-105 hover:bg-tool-diligence/30'
+                            : 'size-9 sm:size-10 bg-darkroom-surface border border-darkroom-border text-slate-400 hover:text-slate-200 hover:border-slate-500 hover:scale-105'
+                      } ${isSelected ? 'ring-2 ring-tool-diligence' : isInspected && state !== 'ACTIVE' ? 'ring-2 ring-indigo-400/60 border-indigo-400' : ''}`}
+                      title={`${step.stepNumber}. ${step.name}`}
                     >
-                      {step.stepNumber}
-                    </span>
-                  </button>
+                      {/* Active Ping Ripple */}
+                      {state === 'ACTIVE' && !reducedMotion && (
+                        <span className="absolute -inset-1.5 rounded-2xl bg-tool-diligence opacity-30 animate-ping pointer-events-none" />
+                      )}
+
+                      {/* Step Icon or Checkmark */}
+                      {state === 'COMPLETED' ? (
+                        <CheckCircle2 className="size-4.5 sm:size-5 text-tool-diligence" />
+                      ) : state === 'ACTIVE' ? (
+                        <Icon
+                          className={`size-5 sm:size-5.5 text-slate-950 ${reducedMotion ? '' : 'animate-pulse'}`}
+                        />
+                      ) : (
+                        <Icon className="size-4 sm:size-4.5" />
+                      )}
+
+                      {/* Step Number Small Badge */}
+                      <span
+                        className={`absolute -top-1.5 -right-1.5 size-4 rounded-full text-[9px] font-mono font-bold flex items-center justify-center shadow ${
+                          state === 'ACTIVE'
+                            ? 'bg-slate-950 text-tool-diligence border border-tool-diligence'
+                            : state === 'COMPLETED'
+                              ? 'bg-tool-diligence text-slate-950'
+                              : 'bg-darkroom-card text-slate-400 border border-darkroom-border'
+                        }`}
+                      >
+                        {step.stepNumber}
+                      </span>
+                    </button>
+                  </div>
 
                   {/* Node Label Below */}
-                  <div className="mt-3 flex flex-col items-center text-center select-none">
+                  <div className="mt-2 flex flex-col items-center text-center select-none">
                     <span
                       className={`text-[11px] sm:text-xs font-semibold font-mono tracking-tight transition-colors ${
                         state === 'ACTIVE'
