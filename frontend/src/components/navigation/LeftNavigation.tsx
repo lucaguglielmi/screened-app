@@ -161,35 +161,46 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
         </div>
 
         {/* Live Deployment Status Indicator */}
-        <div className="relative">
+        <div className="relative flex flex-col items-center">
           <div
             onMouseEnter={() => setActiveTooltip('Live Deployment')}
             onMouseLeave={() => setActiveTooltip(null)}
-            className="p-2 rounded-xl bg-darkroom-surface border border-darkroom-border flex items-center justify-center cursor-default group"
+            className="p-1.5 px-2 rounded-xl bg-darkroom-surface hover:bg-darkroom-card border border-darkroom-border flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors group"
+            title="Live Version Info"
           >
             <div className="relative flex items-center justify-center">
               <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-tool-diligence opacity-75" />
               <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-tool-diligence" />
             </div>
+            <span className="text-[9px] font-mono text-slate-400 group-hover:text-indigo-300 font-semibold tracking-tighter">
+              {typeof __COMMIT_SHA__ !== 'undefined' && __COMMIT_SHA__ !== 'unknown'
+                ? __COMMIT_SHA__.slice(0, 6)
+                : typeof __APP_VERSION__ !== 'undefined'
+                ? `v${__APP_VERSION__}`
+                : 'v0.1'}
+            </span>
           </div>
           {activeTooltip === 'Live Deployment' && (
-            <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-2 rounded-xl bg-darkroom-surface text-slate-100 text-xs font-mono whitespace-nowrap shadow-xl border border-darkroom-border z-50 pointer-events-none">
+            <div className="absolute left-full ml-3 bottom-0 px-3 py-2.5 rounded-xl bg-darkroom-surface text-slate-100 text-xs font-mono whitespace-nowrap shadow-2xl border border-darkroom-border z-50 pointer-events-none">
               <div className="flex items-center gap-1.5 text-tool-diligence font-semibold">
                 <Radio className="size-3" />
-                <span>Live Cloud Run</span>
+                <span>Live Deployment</span>
+              </div>
+              <div className="text-[11px] text-slate-300 mt-1">
+                Version: <span className="text-white font-bold">{typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : '0.1.0'}</span>
               </div>
               <div className="text-[11px] text-slate-400 mt-0.5">
                 Commit:{' '}
-                <span className="text-slate-200">
+                <span className="text-indigo-300 font-bold">
                   {typeof __COMMIT_SHA__ !== 'undefined' ? __COMMIT_SHA__ : 'dev'}
                 </span>
               </div>
               <div className="text-[10px] text-slate-500 mt-0.5">
                 Built:{' '}
                 {typeof __BUILD_TIME__ !== 'undefined'
-                  ? new Date(__BUILD_TIME__).toLocaleTimeString([], {
-                      hour: '2-digit',
-                      minute: '2-digit',
+                  ? new Date(__BUILD_TIME__).toLocaleString([], {
+                      dateStyle: 'short',
+                      timeStyle: 'short',
                     })
                   : 'local'}
               </div>

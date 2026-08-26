@@ -34,7 +34,10 @@ gcloud artifacts repositories create screened-app \
 
 # 2. Build image via Cloud Build
 echo "Building container image with Cloud Build..."
-gcloud builds submit --project="${PROJECT_ID}" --tag="${IMAGE_TAG}" .
+gcloud builds submit \
+  --project="${PROJECT_ID}" \
+  --substitutions=_COMMIT_SHA="${SHORT_SHA}",_BUILD_TIME="${BUILD_TIME}" \
+  --tag="${IMAGE_TAG}" .
 
 # 3. Apply IAM Roles (Cloud Tasks Enqueuer & Observability / Telemetry)
 echo "Ensuring required IAM roles are granted to compute service account..."

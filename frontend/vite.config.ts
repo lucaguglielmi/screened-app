@@ -14,8 +14,8 @@ try {
   commitSha = process.env.COMMIT_SHA || 'unknown';
 }
 
-const buildTime = new Date().toISOString();
-const appVersion = '0.1.0';
+const buildTime = process.env.BUILD_TIME || new Date().toISOString();
+const appVersion = process.env.APP_VERSION || '0.1.0';
 
 // Custom plugin to generate version.json on build and dev
 function versionGeneratorPlugin() {

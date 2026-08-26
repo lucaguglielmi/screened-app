@@ -1,7 +1,13 @@
 steps:
-  # Build the container image
+  # Build the container image with version build args
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'europe-west2-docker.pkg.dev/screened-hackathon/screened-app/screened:$COMMIT_SHA', '.']
+    args: [
+      'build',
+      '--build-arg', 'COMMIT_SHA=$COMMIT_SHA',
+      '--build-arg', 'APP_VERSION=0.1.0',
+      '-t', 'europe-west2-docker.pkg.dev/screened-hackathon/screened-app/screened:$COMMIT_SHA',
+      '.'
+    ]
   
   # Push the container image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'

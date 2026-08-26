@@ -59,7 +59,11 @@ jobs:
 
           echo "🚀 Building container image locally with Docker..."
           gcloud auth configure-docker europe-west2-docker.pkg.dev --quiet
-          docker build -t "${IMAGE_TAG}" .
+          docker build \
+            --build-arg COMMIT_SHA="${SHORT_SHA}" \
+            --build-arg BUILD_TIME="${BUILD_TIME}" \
+            --build-arg APP_VERSION="0.1.0" \
+            -t "${IMAGE_TAG}" .
           echo "🚀 Pushing container image to Artifact Registry..."
           docker push "${IMAGE_TAG}"
 
