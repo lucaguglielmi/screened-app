@@ -10,12 +10,14 @@ import {
   CheckCircle2,
   TrendingDown,
   Layers,
+  Command as CommandIcon,
 } from 'lucide-react';
 
 interface Props {
   onNavigateToDesk: () => void;
   onNavigateToDiligence: () => void;
   onNavigateToScout: () => void;
+  onOpenCommandPalette?: () => void;
 }
 
 const RESEARCH_THEMES = [
@@ -65,6 +67,7 @@ export const WhyScreened: React.FC<Props> = ({
   onNavigateToDesk,
   onNavigateToDiligence,
   onNavigateToScout,
+  onOpenCommandPalette,
 }) => {
   return (
     <div className="w-full min-h-screen bg-slate-50 bg-slate-950 text-slate-900 text-slate-100 px-4 py-12 sm:py-20 animate-fade-in">
@@ -292,6 +295,29 @@ export const WhyScreened: React.FC<Props> = ({
             </div>
           </div>
         </section>
+
+        {/* Footer / Provenance & Engine Summary */}
+        <footer className="pt-12 border-t border-slate-200 border-slate-800 text-center text-sm text-slate-500 space-y-3">
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs sm:text-sm">
+            <span className="font-medium text-slate-400">Screened — Built natively with Google ADK & Parallel Search API</span>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-xs font-mono">
+              <Scale className="size-3.5" />
+              <span>Why Screened exists</span>
+            </span>
+            {onOpenCommandPalette && (
+              <button
+                onClick={onOpenCommandPalette}
+                className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-indigo-300 transition-colors cursor-pointer underline font-mono"
+              >
+                <CommandIcon className="size-3.5" />
+                <span>Command Menu (⌘K)</span>
+              </button>
+            )}
+          </div>
+          <div className="text-xs text-slate-400 opacity-80">
+            All findings are cryptographically hashed and cited to verified web excerpts.
+          </div>
+        </footer>
       </div>
     </div>
   );

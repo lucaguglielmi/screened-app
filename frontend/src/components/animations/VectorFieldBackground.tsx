@@ -1,12 +1,13 @@
 import React, { useEffect, useRef } from 'react';
+import { useReducedMotion } from '../../utils/motionTokens';
 
 export interface LivingBackgroundProps {
-  primaryColor?: string; // Soft cinema crimson / coral (default: 'var(--color-tool-scout)')
-  secondaryColor?: string; // Royal indigo / violet (default: 'var(--color-deep-indigo)')
-  accentColor?: string; // Warm amber / gold ember (default: 'var(--color-accent-gold)')
-  speed?: number; // Fluid drift speed (default: 0.45)
+  primaryColor?: string; // Shade 1: Deep Midnight Navy (default: '#0a1936')
+  secondaryColor?: string; // Shade 2: Abyssal Deep Navy (default: '#040a17')
+  accentColor?: string; // Subtle complimentary dark navy (default: '#0d2248')
+  speed?: number; // Fluid drift speed (default: 0.35)
   organicScale?: number; // Spread & size of the living fluid membrane (default: 1.0)
-  opacity?: number; // Base opacity (default: 0.35)
+  opacity?: number; // Base opacity (default: 0.5)
   interactive?: boolean; // Smooth liquid ripple on mouse move (default: true)
   className?: string;
   // Backward-compatible props for playgrounds
@@ -28,15 +29,13 @@ interface Mote {
   phase: number;
 }
 
-import { useReducedMotion } from '../../utils/motionTokens';
-
 export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
-  primaryColor = 'var(--color-tool-scout)',
-  secondaryColor = 'var(--color-accent-blue)',
-  accentColor = 'var(--color-accent-gold)',
-  speed = 0.4,
+  primaryColor = '#0a1936',
+  secondaryColor = '#040a17',
+  accentColor = '#0d2248',
+  speed = 0.35,
   organicScale = 1.0,
-  opacity = 0.32,
+  opacity = 0.5,
   interactive = true,
   className = '',
   // Backward compatibility
@@ -72,16 +71,16 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
     let width = 0;
     let height = 0;
 
-    // Initialize floating light motes (like subtle cinema dust caught in light)
+    // Initialize floating light motes (subtle cold-white / icy blue dust)
     const motesCount = 28;
     const motes: Mote[] = Array.from({ length: motesCount }, () => ({
       x: Math.random(),
       y: Math.random(),
-      vx: (Math.random() - 0.5) * 0.00015,
-      vy: (Math.random() - 0.5) * 0.00012 - 0.00008, // gentle upward drift
-      size: 1.0 + Math.random() * 1.8,
-      baseAlpha: 0.15 + Math.random() * 0.35,
-      pulseSpeed: 0.5 + Math.random() * 1.2,
+      vx: (Math.random() - 0.5) * 0.00012,
+      vy: (Math.random() - 0.5) * 0.0001 - 0.00006, // gentle upward drift
+      size: 0.8 + Math.random() * 1.6,
+      baseAlpha: 0.12 + Math.random() * 0.28,
+      pulseSpeed: 0.4 + Math.random() * 1.0,
       phase: Math.random() * Math.PI * 2,
     }));
 
@@ -148,6 +147,31 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
       return c;
     };
 
+    const colorWithAlpha = (colorStr: string, alpha: number) => {
+      const clampedAlpha = Math.max(0, Math.min(1, alpha));
+      const resolved = resolveColor(colorStr);
+      if (resolved.startsWith('#')) {
+        const hex = resolved.replace('#', '');
+        let r = 0, g = 0, b = 0;
+        if (hex.length === 3) {
+          r = parseInt(hex[0] + hex[0], 16);
+          g = parseInt(hex[1] + hex[1], 16);
+          b = parseInt(hex[2] + hex[2], 16);
+        } else if (hex.length >= 6) {
+          r = parseInt(hex.substring(0, 2), 16);
+          g = parseInt(hex.substring(2, 4), 16);
+          b = parseInt(hex.substring(4, 6), 16);
+        }
+        return `rgba(${r}, ${g}, ${b}, ${clampedAlpha.toFixed(3)})`;
+      } else if (resolved.startsWith('rgb')) {
+        const match = resolved.match(/\d+/g);
+        if (match && match.length >= 3) {
+          return `rgba(${match[0]}, ${match[1]}, ${match[2]}, ${clampedAlpha.toFixed(3)})`;
+        }
+      }
+      return resolved;
+    };
+
     const resolvedPrimary = resolveColor(activePrimary);
     const resolvedSecondary = resolveColor(secondaryColor);
     const resolvedAccent = resolveColor(accentColor);
@@ -174,8 +198,8 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
       const diag = Math.sqrt(width * width + height * height);
       const baseScale = diag * 0.48 * organicScale;
 
-      // --- 1. DEFINING ORGANIC LIVING NODES (Harmonic Bioluminescent Fluid Bodies) ---
-      // Node 1: Primary Cinema Ruby/Rose Core (Breathing & drifting in Lissajous curve)
+      // --- 1. DEFINING ORGANIC LIVING NODES (Harmonic Dark Blue Fluid Bodies) ---
+      // Node 1: Primary Dark Blue Core (Breathing & drifting in Lissajous curve)
       const n1X =
         width * 0.52 +
         Math.sin(elapsed * 0.35) * width * 0.18 +
@@ -186,17 +210,17 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
         Math.sin(elapsed * 0.48) * height * 0.06;
       const n1R = baseScale * (0.85 + Math.sin(elapsed * 0.55) * 0.12);
 
-      // Node 2: Deep Midnight Indigo Ambient Swell (Counter-orbiting bottom left)
+      // Node 2: Abyssal Dark Navy Ambient Swell (Counter-orbiting bottom left)
       const n2X = width * 0.32 + Math.cos(elapsed * 0.42 + 1.2) * width * 0.16;
       const n2Y = height * 0.62 + Math.sin(elapsed * 0.38 + 0.8) * height * 0.14;
       const n2R = baseScale * (1.1 + Math.cos(elapsed * 0.45) * 0.15);
 
-      // Node 3: Warm Amber Ember Glow (Atmospheric light peak top right)
+      // Node 3: Complimentary Dark Blue Glow (Top right)
       const n3X = width * 0.68 + Math.sin(elapsed * 0.52 + 2.4) * width * 0.14;
       const n3Y = height * 0.32 + Math.cos(elapsed * 0.48 + 1.8) * height * 0.12;
       const n3R = baseScale * (0.65 + Math.sin(elapsed * 0.62) * 0.1);
 
-      // Node 4: Secondary Violet/Rose Tendril (Floating harmonic wave)
+      // Node 4: Secondary Dark Navy Tendril (Floating harmonic wave)
       const n4X = width * 0.45 + Math.cos(elapsed * 0.25 + 3.1) * width * 0.22;
       const n4Y = height * 0.56 + Math.sin(elapsed * 0.32 + 2.2) * height * 0.18;
       const n4R = baseScale * (0.9 + Math.cos(elapsed * 0.38) * 0.14);
@@ -213,7 +237,6 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
         const maxDist = diag * 0.45;
         if (dist < maxDist) {
           const force = (1 - dist / maxDist) * m.influence;
-          // Smooth liquid push & swirl
           mouseDisplaceX1 = (-dx / (dist || 1)) * force * 45;
           mouseDisplaceY1 = (-dy / (dist || 1)) * force * 45;
           mouseRippleGlow = force * 0.18;
@@ -223,21 +246,11 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
       ctx.save();
       ctx.globalCompositeOperation = 'screen';
 
-      // --- 3. LAYER 1: DEEP VELVET INDIGO / SAPPHIRE AMBIENCE (Background Foundation) ---
+      // --- 3. LAYER 1: DEEP ABYSSAL NAVY AMBIENCE (Background Foundation) ---
       const gradIndigo = ctx.createRadialGradient(n2X, n2Y, n2R * 0.08, n2X, n2Y, n2R);
-      gradIndigo.addColorStop(
-        0,
-        `${resolvedSecondary}${Math.round(opacity * 0.7 * 255)
-          .toString(16)
-          .padStart(2, '0')}`,
-      );
-      gradIndigo.addColorStop(
-        0.45,
-        `${resolvedSecondary}${Math.round(opacity * 0.35 * 255)
-          .toString(16)
-          .padStart(2, '0')}`,
-      );
-      gradIndigo.addColorStop(0.85, `${resolvedSecondary}08`);
+      gradIndigo.addColorStop(0, colorWithAlpha(resolvedSecondary, opacity * 0.8));
+      gradIndigo.addColorStop(0.45, colorWithAlpha(resolvedSecondary, opacity * 0.4));
+      gradIndigo.addColorStop(0.85, colorWithAlpha(resolvedSecondary, opacity * 0.1));
       gradIndigo.addColorStop(1, 'transparent');
 
       ctx.fillStyle = gradIndigo;
@@ -245,21 +258,11 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
       ctx.arc(n2X, n2Y, n2R, 0, Math.PI * 2);
       ctx.fill();
 
-      // --- 4. LAYER 2: SECONDARY VIOLET/ROSE HARMONIC WAVE (Node 4) ---
+      // --- 4. LAYER 2: SECONDARY DARK NAVY HARMONIC WAVE (Node 4) ---
       const gradNode4 = ctx.createRadialGradient(n4X, n4Y, n4R * 0.05, n4X, n4Y, n4R);
-      const node4Alpha = opacity * 0.35;
-      gradNode4.addColorStop(
-        0,
-        `${resolvedSecondary}${Math.round(node4Alpha * 255)
-          .toString(16)
-          .padStart(2, '0')}`,
-      );
-      gradNode4.addColorStop(
-        0.5,
-        `${resolvedPrimary}${Math.round(node4Alpha * 0.25 * 255)
-          .toString(16)
-          .padStart(2, '0')}`,
-      );
+      const node4Alpha = opacity * 0.5;
+      gradNode4.addColorStop(0, colorWithAlpha(resolvedSecondary, node4Alpha));
+      gradNode4.addColorStop(0.5, colorWithAlpha(resolvedPrimary, node4Alpha * 0.4));
       gradNode4.addColorStop(1, 'transparent');
 
       ctx.fillStyle = gradNode4;
@@ -267,31 +270,16 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
       ctx.arc(n4X, n4Y, n4R, 0, Math.PI * 2);
       ctx.fill();
 
-      // --- 5. LAYER 3: PRIMARY ORGANIC RUBY/CRIMSON MEMBRANE (The Living Body) ---
+      // --- 5. LAYER 3: PRIMARY MIDNIGHT NAVY MEMBRANE (The Living Body) ---
       const coreX = n1X + mouseDisplaceX1;
       const coreY = n1Y + mouseDisplaceY1;
       const coreR = n1R;
 
       const gradRuby = ctx.createRadialGradient(coreX, coreY, coreR * 0.05, coreX, coreY, coreR);
-      const rubyAlpha = Math.min(1.0, opacity * (0.85 + mouseRippleGlow));
-      gradRuby.addColorStop(
-        0,
-        `${resolvedPrimary}${Math.round(rubyAlpha * 255)
-          .toString(16)
-          .padStart(2, '0')}`,
-      );
-      gradRuby.addColorStop(
-        0.35,
-        `${resolvedPrimary}${Math.round(rubyAlpha * 0.55 * 255)
-          .toString(16)
-          .padStart(2, '0')}`,
-      );
-      gradRuby.addColorStop(
-        0.7,
-        `${resolvedPrimary}${Math.round(rubyAlpha * 0.15 * 255)
-          .toString(16)
-          .padStart(2, '0')}`,
-      );
+      const primaryAlpha = Math.min(1.0, opacity * (0.9 + mouseRippleGlow));
+      gradRuby.addColorStop(0, colorWithAlpha(resolvedPrimary, primaryAlpha));
+      gradRuby.addColorStop(0.35, colorWithAlpha(resolvedPrimary, primaryAlpha * 0.6));
+      gradRuby.addColorStop(0.7, colorWithAlpha(resolvedPrimary, primaryAlpha * 0.2));
       gradRuby.addColorStop(1, 'transparent');
 
       ctx.fillStyle = gradRuby;
@@ -299,22 +287,12 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
       ctx.arc(coreX, coreY, coreR, 0, Math.PI * 2);
       ctx.fill();
 
-      // --- 5. LAYER 3: WARM GOLD / AMBER ATMOSPHERIC EMBER ---
+      // --- 6. LAYER 4: COMPLIMENTARY DARK BLUE AMBIENT EMBER ---
       const gradAmber = ctx.createRadialGradient(n3X, n3Y, n3R * 0.05, n3X, n3Y, n3R);
-      const amberAlpha = opacity * 0.48;
-      gradAmber.addColorStop(
-        0,
-        `${resolvedAccent}${Math.round(amberAlpha * 255)
-          .toString(16)
-          .padStart(2, '0')}`,
-      );
-      gradAmber.addColorStop(
-        0.4,
-        `${resolvedAccent}${Math.round(amberAlpha * 0.25 * 255)
-          .toString(16)
-          .padStart(2, '0')}`,
-      );
-      gradAmber.addColorStop(0.8, `${resolvedAccent}06`);
+      const accentAlpha = opacity * 0.6;
+      gradAmber.addColorStop(0, colorWithAlpha(resolvedAccent, accentAlpha));
+      gradAmber.addColorStop(0.4, colorWithAlpha(resolvedAccent, accentAlpha * 0.35));
+      gradAmber.addColorStop(0.8, colorWithAlpha(resolvedAccent, accentAlpha * 0.08));
       gradAmber.addColorStop(1, 'transparent');
 
       ctx.fillStyle = gradAmber;
@@ -322,13 +300,10 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
       ctx.arc(n3X, n3Y, n3R, 0, Math.PI * 2);
       ctx.fill();
 
-      // --- 6. LAYER 4: MORPHING ORGANIC CONTOUR WAVE (Smooth Bezier Ribbons) ---
-      // A soft, living organic contour line that gently breathes and drifts across the fluid boundary
+      // --- 7. LAYER 5: MORPHING ORGANIC CONTOUR WAVE (Smooth Dark Blue Ribbons) ---
       ctx.globalCompositeOperation = 'lighter';
-      const contourAlpha = opacity * 0.25;
-      ctx.strokeStyle = `${resolvedPrimary}${Math.round(contourAlpha * 255)
-        .toString(16)
-        .padStart(2, '0')}`;
+      const contourAlpha = opacity * 0.3;
+      ctx.strokeStyle = colorWithAlpha(resolvedPrimary, contourAlpha);
       ctx.lineWidth = 1.5;
 
       const pointsCount = 12;
@@ -337,7 +312,6 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
 
       for (let i = 0; i < pointsCount; i++) {
         const theta = (i / pointsCount) * Math.PI * 2;
-        // Multi-frequency harmonic perturbation
         const harmonic =
           Math.sin(theta * 3 + elapsed * 1.2) * 0.14 +
           Math.cos(theta * 2 - elapsed * 0.8) * 0.1 +
@@ -365,7 +339,7 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
       ctx.closePath();
       ctx.stroke();
 
-      // --- 7. LAYER 5: FLOATING CINEMATIC PROJECTOR MOTES (Subtle Living Stardust) ---
+      // --- 8. LAYER 6: FLOATING SUBTLE PROJECTOR MOTES ---
       for (let i = 0; i < motes.length; i++) {
         const mote = motes[i];
         mote.x += mote.vx;
@@ -384,29 +358,19 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
         const pulse = 0.5 + 0.5 * Math.sin(elapsed * mote.pulseSpeed + mote.phase);
         const moteAlpha = opacity * mote.baseAlpha * pulse * 0.65;
 
-        ctx.fillStyle = `rgba(255, 255, 255, ${moteAlpha})`;
+        ctx.fillStyle = `rgba(200, 225, 255, ${moteAlpha.toFixed(3)})`;
         ctx.beginPath();
         ctx.arc(posX, posY, mote.size, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      // --- 8. LAYER 6: INTERACTIVE CURSOR LUMINESCENT HALO ---
+      // --- 9. LAYER 7: INTERACTIVE CURSOR LUMINESCENT HALO ---
       if (effectiveInteractive && m.active && m.influence > 0.02) {
         const mouseGlowRadius = 160 + m.velocity * 0.4;
         const mouseGrad = ctx.createRadialGradient(m.x, m.y, 4, m.x, m.y, mouseGlowRadius);
-        const cursorAlpha = opacity * 0.35 * m.influence;
-        mouseGrad.addColorStop(
-          0,
-          `${resolvedPrimary}${Math.round(cursorAlpha * 255)
-            .toString(16)
-            .padStart(2, '0')}`,
-        );
-        mouseGrad.addColorStop(
-          0.5,
-          `${resolvedSecondary}${Math.round(cursorAlpha * 0.3 * 255)
-            .toString(16)
-            .padStart(2, '0')}`,
-        );
+        const cursorAlpha = opacity * 0.45 * m.influence;
+        mouseGrad.addColorStop(0, colorWithAlpha(resolvedPrimary, cursorAlpha));
+        mouseGrad.addColorStop(0.5, colorWithAlpha(resolvedSecondary, cursorAlpha * 0.4));
         mouseGrad.addColorStop(1, 'transparent');
 
         ctx.fillStyle = mouseGrad;
@@ -417,8 +381,7 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
 
       ctx.restore();
 
-      // --- 9. CENTER CLARITY MASK (Gentle Vignette to ensure 100% content legibility) ---
-      // Soft radial darkening at the active center workspace
+      // --- 10. CENTER CLARITY MASK (Gentle Vignette in Deep Midnight Tone) ---
       ctx.save();
       const vignetteGrad = ctx.createRadialGradient(
         width * 0.5,
@@ -428,9 +391,9 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
         height * 0.48,
         width * 0.7,
       );
-      vignetteGrad.addColorStop(0, 'rgba(7, 9, 19, 0.20)');
-      vignetteGrad.addColorStop(0.65, 'rgba(7, 9, 19, 0.05)');
-      vignetteGrad.addColorStop(1, 'rgba(7, 9, 19, 0.0)');
+      vignetteGrad.addColorStop(0, 'rgba(4, 10, 23, 0.18)');
+      vignetteGrad.addColorStop(0.65, 'rgba(4, 10, 23, 0.05)');
+      vignetteGrad.addColorStop(1, 'rgba(4, 10, 23, 0.0)');
       ctx.fillStyle = vignetteGrad;
       ctx.fillRect(0, 0, width, height);
       ctx.restore();

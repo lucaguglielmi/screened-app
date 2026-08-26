@@ -15,13 +15,18 @@ Because LLM pipelines are non-deterministic and involve complex JSON schemas (e.
 * **Zero cost in CI/CD:** The real API is only hit once when a developer decides to update the cassette.
 * **Low maintenance:** You don't have to manually write massive mock JSON files for complex dossier structures. 
 
+## Scope & Decision
+* **Full Test Suite Rollout:** This Record & Replay strategy will NOT be limited to just the end-to-end integration test (`test_end_to_end.py`). It will be rolled out across **all unit tests and test modules** across the entire repository (replacing the blanket static mock in `conftest.py`).
+* **Tool Parity & Comprehensive Coverage:** Every single agent tool and agent pipeline must be exercised under this pattern with its own corresponding recorded cassette to ensure complete offline, deterministic, zero-cost test execution.
+
 ## Crucial Maintenance Rules
 * **Keep Cassettes Updated:** If the underlying implementation of a tool, agent, prompt, or response schema changes in the future, the tests MUST change too. You must delete the outdated cassette and re-record it (`pytest --record-mode=rewrite`) to ensure the recorded traffic matches the new architecture. 
-* **Complete Tool Coverage:** The end-to-end tests must exercise **every single tool we have**. We must ensure that a cassette captures the usage of all tools to prove they work seamlessly in the full pipeline.
+* **Complete Tool Coverage:** The test suite must exercise **every single tool we have**. We must ensure that cassettes capture the usage of all tools to prove they work seamlessly across both isolated unit tests and full pipelines.
 
 ## Implementation Steps (Pending)
 When we are ready to implement this, the following steps are required:
-1. Remove or conditionally bypass the aggressive blanket mock of `google.genai.Client` in `tests/conftest.py`.
-2. Configure VCR to filter out sensitive headers (`x-goog-api-key`, `authorization`) and ignore local requests (`http://test`, `localhost`).
-3. Apply `@pytest.mark.vcr` to all relevant integration and end-to-end tests.
-4. Run tests in record mode to generate initial cassettes for all tools.
+1. Remove the aggressive blanket mock of `google.genai.Client` in `tests/conftest.py`.
+2. Configure VCR globally in `tests/conftest.py` to filter out sensitive headers (`x-goog-api-key`, `authorization`), query params (`key`), and ignore local ASGI requests (`http://test`, `localhost`, `127.0.0.1`).
+3. Apply `@pytest.mark.vcr` across **all unit test files** (`test_backend.py`, `test_chat.py`, `test_deep_vetting.py`, `test_scout.py`, `test_outreach.py`, `test_document_analysis.py`, etc.) and integration tests (`test_end_to_end.py`).
+4. Run tests in record mode with a valid `GEMINI_API_KEY` to generate initial cassettes for every tool and agent.
+5. Verify in offline mode (dummy/unset API key) that all unit and integration tests pass cleanly via cassette replay with $0 API cost.

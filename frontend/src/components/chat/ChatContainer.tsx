@@ -218,9 +218,9 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
   };
 
   return (
-    <div className="relative flex flex-col h-[calc(100vh-5.5rem)] max-w-5xl mx-auto px-4 py-2 overflow-hidden">
+    <div className="relative flex flex-col flex-1 h-full min-h-0 w-full max-w-5xl mx-auto px-2 sm:px-4 overflow-hidden pb-safe">
       {/* Scrollable Message Area */}
-      <div className="relative z-10 flex-1 overflow-y-auto pr-2 space-y-4">
+      <div className="relative z-10 flex-1 min-h-0 overflow-y-auto pr-1 sm:pr-2 space-y-4">
         {/* Hero Header Area with Dirty Film Celluloid Glitch, Spacing & What Does It Do Link */}
         <div className="relative flex flex-col items-center justify-center my-5 sm:my-7 py-2 text-center select-none">
           <div className="flex justify-center items-center gap-2 mb-4">
@@ -278,7 +278,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
       </div>
 
       {/* Persistent Bottom Prompt Bar with Action Pills */}
-      <div className="relative z-10 pt-2 pb-1 mt-1">
+      <div className="relative z-10 pt-2 pb-1 mt-1 shrink-0">
         <ChatPromptBar onSendMessage={handleSendMessage} isLoading={isLoading} />
 
         {/* Centered Filmmaker Feedback Link */}

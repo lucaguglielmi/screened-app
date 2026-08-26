@@ -5,7 +5,6 @@ import {
   History,
   ShieldCheck,
   Command as CommandIcon,
-  Scale,
   Volume2,
   VolumeX,
   Keyboard,
@@ -440,10 +439,10 @@ export default function App() {
   const currentStatus = investigation?.status || 'DRAFT';
 
   return (
-    <div className="min-h-screen flex flex-col font-sans selection:bg-indigo-500/20 antialiased overflow-x-hidden text-darkroom-text">
+    <div className="min-h-screen min-h-[100dvh] flex flex-col font-sans selection:bg-indigo-500/20 antialiased overflow-x-hidden text-darkroom-text bg-moving-dark-gradient">
       <VersionAlertBanner />
       <div
-        className={`relative flex-1 flex flex-row ${
+        className={`relative flex-1 flex flex-row min-h-0 w-full ${
           activeTool === 'DESIGN_PLAYGROUND'
             ? 'bg-darkroom-surface'
             : 'bg-moving-dark-gradient'
@@ -460,11 +459,17 @@ export default function App() {
       {/* Left Vertical Navigation Rail & Expandable Flyout */}
       <LeftNavigation activeTool={activeTool} onChange={setActiveTool} />
 
-      {/* Main Scrollable Workspace Container */}
-      <div className="flex-1 flex flex-col min-w-0 min-h-screen overflow-y-auto">
+      {/* Main Workspace Container */}
+      <div
+        className={`flex-1 flex flex-col min-w-0 ${
+          activeTool === 'CONVERSATIONAL_DESK'
+            ? 'h-screen h-[100dvh] overflow-hidden'
+            : 'min-h-screen min-h-[100dvh] overflow-y-auto'
+        }`}
+      >
         {/* Top Header Bar */}
         <header
-          className={`border-b border-darkroom-border ${activeTool === 'DESIGN_PLAYGROUND' ? 'bg-darkroom-surface' : 'bg-darkroom-surface/80 backdrop-blur'} sticky top-0 z-30 transition-colors no-print`}
+          className={`border-b border-darkroom-border ${activeTool === 'DESIGN_PLAYGROUND' ? 'bg-darkroom-surface' : 'bg-darkroom-surface/80 backdrop-blur'} sticky top-0 z-30 transition-colors shrink-0 no-print`}
         >
           <div className="px-4 sm:px-6 md:px-8 h-16 flex items-center justify-between gap-4">
             <div 
@@ -549,7 +554,13 @@ export default function App() {
 
         {/* Main Workspace Area */}
         <main
-          className={`${activeTool === 'DESIGN_PLAYGROUND' ? '' : 'max-w-6xl px-4 sm:px-6 md:px-8 py-8 space-y-8'} mx-auto flex-1 w-full`}
+          className={`${
+            activeTool === 'DESIGN_PLAYGROUND'
+              ? 'w-full flex-1'
+              : activeTool === 'CONVERSATIONAL_DESK'
+              ? 'max-w-6xl w-full mx-auto flex-1 min-h-0 flex flex-col px-2 sm:px-4 md:px-6 py-2 overflow-hidden'
+              : 'max-w-6xl px-4 sm:px-6 md:px-8 py-8 space-y-8 mx-auto flex-1 w-full'
+          }`}
         >
           {/* Error Notification */}
           {error && (
@@ -592,6 +603,7 @@ export default function App() {
               onNavigateToDesk={() => setActiveTool('CONVERSATIONAL_DESK')}
               onNavigateToDiligence={() => setActiveTool('DUE_DILIGENCE')}
               onNavigateToScout={() => setActiveTool('OPPORTUNITY_SCOUT')}
+              onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
             />
           )}
 
@@ -777,32 +789,6 @@ export default function App() {
             setActiveTool('DUE_DILIGENCE');
           }}
         />
-
-        {/* Footer */}
-        <footer className="border-t border-darkroom-border py-6 text-center text-sm text-darkroom-muted no-print mt-auto">
-          <div className="max-w-6xl mx-auto px-4 space-y-2">
-            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
-              <span>Screened — Built natively with Google ADK & Parallel Search API</span>
-              <button
-                onClick={() => setActiveTool('WHY_SCREENED')}
-                className="underline hover:text-indigo-400 text-indigo-300 transition-colors cursor-pointer text-xs flex items-center gap-1"
-              >
-                <Scale className="size-3" />
-                <span>Why Screened exists</span>
-              </button>
-              <button
-                onClick={() => setIsCommandPaletteOpen(true)}
-                className="underline hover:text-indigo-400 transition-colors cursor-pointer text-xs flex items-center gap-1"
-              >
-                <CommandIcon className="size-3" />
-                <span>Command Menu (⌘K)</span>
-              </button>
-            </div>
-            <div className="text-xs opacity-75">
-              All findings are cryptographically hashed and cited to verified web excerpts.
-            </div>
-          </div>
-        </footer>
       </div>
     </div>
     </div>

@@ -22,17 +22,17 @@
   --color-darkroom-text: var(--color-white);
   --color-darkroom-muted: #94a3b8;
 
-  /* Palette 1 Extended Swatches */
-  --color-midnight-void: #05050A;
-  --color-midnight-base: #070913;
-  --color-midnight-bg: #070913;
-  --color-midnight-surface: #0E1124;
-  --color-midnight-card: #141731;
-  --color-midnight-border: #22274C;
-  --color-midnight-indigo: #1E124A;
-  --color-midnight-violet: #2E107D;
-  --color-midnight-royal: #2018E6;
-  --color-midnight-glow: rgba(32, 24, 230, 0.25);
+  /* Palette 1 Extended Swatches - Two Shades of Very Dark Blue */
+  --color-midnight-void: #020612;
+  --color-midnight-base: #040a17;
+  --color-midnight-bg: #040a17;
+  --color-midnight-surface: #0a1936;
+  --color-midnight-card: #0f2347;
+  --color-midnight-border: #1b3563;
+  --color-midnight-indigo: #0b1a38;
+  --color-midnight-violet: #10244c;
+  --color-midnight-royal: #1d4ed8;
+  --color-midnight-glow: rgba(29, 78, 216, 0.25);
 
   /* Palette 2 Tool Swatches */
   --color-tool-diligence: #00D29E;
@@ -77,17 +77,37 @@
 
 html {
   font-size: 18px;
+  background-color: var(--color-midnight-base);
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
+  min-height: 100dvh;
+  background-color: var(--color-midnight-base);
   font-size: 18px;
   line-height: 1.6;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background-color: var(--color-midnight-base);
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
 }
 
 .font-serif {
