@@ -706,8 +706,8 @@ export default function App() {
                 </div>
               )}
 
-              {/* State 1: Disambiguation in progress or Awaiting confirmation */}
-              {investigation && currentStatus === 'DISAMBIGUATING' && (
+              {/* State 1: Disambiguation in progress or Awaiting confirmation or Failed/Cancelled before confirmation */}
+              {investigation && ['DISAMBIGUATING', 'FAILED', 'CANCELLED'].includes(currentStatus) && !investigation.confirmedEntity && (
                 <LiveProgress
                   status={currentStatus}
                   events={events}
@@ -726,14 +726,21 @@ export default function App() {
                 </Suspense>
               )}
 
-              {/* State 2: Researching / Analyzing */}
+              {/* State 2: Researching / Analyzing or Failed/Cancelled after confirmation */}
               {investigation &&
                 [
                   'PLANNING',
                   'RESEARCHING',
                   'ANALYZING_CONTRADICTIONS',
                   'ASSEMBLING_DOSSIER',
-                ].includes(currentStatus) && (
+                ].includes(currentStatus) && investigation.confirmedEntity && (
+                  <LiveProgress
+                    status={currentStatus}
+                    events={events}
+                    festivalName={investigation.confirmedEntity?.name || investigation.query}
+                  />
+                )}
+              {investigation && ['FAILED', 'CANCELLED'].includes(currentStatus) && investigation.confirmedEntity && (
                   <LiveProgress
                     status={currentStatus}
                     events={events}
