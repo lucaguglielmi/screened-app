@@ -10,7 +10,7 @@ import {
   Plus,
 } from 'lucide-react';
 import { soundEffects } from '../../utils/audio';
-import { QuestionsCategoryModal } from '../modals/QuestionsCategoryModal';
+import { CapabilitiesModal } from '../modals/CapabilitiesModal';
 import { useFileUpload, AttachedFileState } from '../../hooks/useFileUpload';
 
 interface SpeechRecognitionInstance {
@@ -51,7 +51,7 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
   const [attachedFile, setAttachedFile] = useState<AttachedFileState | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [videoGuardWarning, setVideoGuardWarning] = useState<string | null>(null);
-  const [isQuestionsModalOpen, setIsQuestionsModalOpen] = useState(false);
+  const [isCapabilitiesModalOpen, setIsCapabilitiesModalOpen] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
@@ -289,7 +289,7 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
             type="button"
             onClick={() => {
               soundEffects.playClick();
-              setIsQuestionsModalOpen(true);
+              setIsCapabilitiesModalOpen(true);
             }}
             className="flex items-center gap-1.5 px-4 py-3 h-12 rounded-2xl border border-zinc-700 bg-midnight/80 hover:bg-surface text-sm font-mono text-zinc-300 hover:text-white hover:border-blue-500/50 transition-colors cursor-pointer"
           >
@@ -340,13 +340,13 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
         </div>
       </form>
 
-      {/* What Can I Ask Modal */}
-      <QuestionsCategoryModal
-        isOpen={isQuestionsModalOpen}
-        onClose={() => setIsQuestionsModalOpen(false)}
-        onSelectQuestion={(q) => {
-          setInput(q);
-          onSendMessage(q);
+      {/* What Can I Do / Capabilities Modal */}
+      <CapabilitiesModal
+        isOpen={isCapabilitiesModalOpen}
+        onClose={() => setIsCapabilitiesModalOpen(false)}
+        onSelectAction={(promptText) => {
+          setInput(promptText);
+          onSendMessage(promptText);
         }}
       />
     </div>
