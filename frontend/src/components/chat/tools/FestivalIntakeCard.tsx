@@ -380,56 +380,26 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
           animate={{ opacity: 1, scale: 1 }}
           className="space-y-4"
         >
-          <div className="p-4 rounded-xl bg-darkroom-surface border border-emerald-900 space-y-2.5 text-xs">
-            <div className="flex items-center justify-between border-b border-emerald-800 pb-2">
-              <span className="font-mono font-bold text-emerald-400 uppercase tracking-wider">
-                Stage 2: Investigation Parameters Ready
-              </span>
-              <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[10px]">
-                Redirect to Due Diligence
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-zinc-300">
-              <div>
-                <span className="text-zinc-500 font-mono block">Target Entity:</span>
-                <strong className="text-white text-sm">{festivalName}</strong>
+          <div className="p-5 rounded-xl bg-emerald-950/30 border border-emerald-900/50 space-y-3">
+            <div className="flex items-start space-x-3">
+              <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5">
+                <ShieldCheck className="w-4 h-4" />
               </div>
-              <div>
-                <span className="text-zinc-500 font-mono block">Jurisdiction:</span>
-                <span className="text-zinc-200">{cityCountry || 'Global / UK Priority'}</span>
-              </div>
-              <div>
-                <span className="text-zinc-500 font-mono block">Domain Source:</span>
-                <span className="text-zinc-200 truncate">
-                  {websiteUrl || 'Autonomous Discovery'}
-                </span>
-              </div>
-              <div>
-                <span className="text-zinc-500 font-mono block">Target Page:</span>
-                <span className="text-emerald-400 font-mono">Due Diligence Workspace</span>
-              </div>
-            </div>
-
-            <div className="pt-2 border-t border-emerald-500/20">
-              <span className="text-zinc-400 font-mono block mb-1">
-                Autonomous Inspection Directives:
-              </span>
-              <div className="flex flex-wrap gap-1.5">
-                <span className="px-2 py-0.5 rounded bg-midnight border border-zinc-700 text-zinc-200 text-[11px]">
-                  ✓ Municipal Theater Leases
-                </span>
-                <span className="px-2 py-0.5 rounded bg-midnight border border-zinc-700 text-zinc-200 text-[11px]">
-                  ✓ UK Companies House Registry
-                </span>
-                <span className="px-2 py-0.5 rounded bg-midnight border border-zinc-700 text-zinc-200 text-[11px]">
-                  ✓ Historical Fee Escalation
-                </span>
-                {hasFollowUpRequirement && (
-                  <span className="px-2 py-0.5 rounded bg-emerald-900/60 border border-emerald-500/40 text-emerald-300 text-[11px]">
-                    ✓ Outreach Forensics ({contactName || 'Staff'})
-                  </span>
-                )}
+              <div className="space-y-2">
+                <h4 className="text-sm font-semibold text-emerald-300 font-mono">
+                  Ready to investigate {festivalName}?
+                </h4>
+                <p className="text-xs text-zinc-300 leading-relaxed">
+                  When you press confirm, we will launch an autonomous multi-agent investigation to build a detailed due diligence dossier. This will include:
+                </p>
+                <ul className="text-xs text-zinc-400 space-y-1.5 list-disc list-inside ml-1">
+                  <li>Verification of physical cinema screening venues</li>
+                  <li>Cross-referencing organizer track records and company registries</li>
+                  <li>Historical analysis of entry fees and submission terms</li>
+                  {hasFollowUpRequirement && (
+                    <li className="text-emerald-400/80">Analysis of your direct interactions and outreach</li>
+                  )}
+                </ul>
               </div>
             </div>
           </div>
@@ -444,14 +414,14 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
               }}
               className="px-4 py-2.5 rounded-xl border border-zinc-700 bg-midnight hover:bg-surface text-xs font-mono text-zinc-300 hover:text-white transition-colors cursor-pointer"
             >
-              ‹ Edit Requirements
+              ‹ Back to Edit
             </button>
             <button
               type="button"
               onClick={handleLaunch}
               className="flex-1 flex items-center justify-center space-x-2 py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs font-mono shadow-lg shadow-emerald-950/50 hover:shadow-emerald-600/30 transition-all group cursor-pointer"
             >
-              <span>Launch Due Diligence & Open Workspace</span>
+              <span>Confirm & Start Investigation</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
             </button>
           </div>
