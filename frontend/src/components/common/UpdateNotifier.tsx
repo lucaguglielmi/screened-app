@@ -22,17 +22,25 @@ export const UpdateNotifier: React.FC = () => {
   const evaluateVersion = useCallback((serverData: VersionInfo) => {
     if (!serverData) return;
 
+    // Never show update notifications in local development
+    if (import.meta.env.DEV || currentCommitSha === 'dev' || !currentCommitSha) {
+      return;
+    }
+
     // Check if remote commit or build time differs from current client bundle
     const hasDifferentCommit =
       currentCommitSha &&
       serverData.commitSha &&
       serverData.commitSha !== 'dev' &&
+      serverData.commitSha !== 'unknown' &&
       serverData.commitSha !== currentCommitSha;
 
     const hasNewerBuildTime =
-      currentBuildTime && serverData.buildTime && serverData.buildTime !== currentBuildTime;
+      currentBuildTime &&
+      serverData.buildTime &&
+      serverData.buildTime !== currentBuildTime;
 
-    if (hasDifferentCommit || hasNewerBuildTime) {
+    if (hasDifferentCommit || (hasNewerBuildTime && serverData.commitSha !== 'dev')) {
       setRemoteVersion(serverData);
       setUpdateAvailable(true);
       // Play a soft notification chime if not muted
