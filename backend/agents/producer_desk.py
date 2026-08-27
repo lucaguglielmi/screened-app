@@ -501,10 +501,13 @@ Return a strict JSON object with:
             # Since producer_desk is stateless in the current model, we use a single turn session
             import uuid
             session_id = str(uuid.uuid4())
+            session_svc = FirestoreSessionService()
+            await session_svc.create_session(app_name="screened", user_id="default_user", session_id=session_id)
+            
             runner = Runner(
                 agent=agent,
                 app_name="screened",
-                session_service=FirestoreSessionService()
+                session_service=session_svc
             )
             
             run_req_prompt = f"User Message: {user_message}\n\nProvide a concise 1-2 sentence response and specify the tool parameters."
@@ -512,9 +515,9 @@ Return a strict JSON object with:
             
             response_text = ""
             async for event in runner.run_async(user_id="default_user", session_id=session_id, new_message=new_msg):
-                # Collect text from any MODEL events that have a delta
-                if event.type == "MODEL_DELTA" and hasattr(event, "data") and event.data:
-                    for p in event.data.parts:
+                # Collect text from any partial model events
+                if getattr(event, "partial", False) and hasattr(event, "content") and event.content:
+                    for p in event.content.parts:
                         if hasattr(p, "text") and p.text:
                             response_text += p.text
 
@@ -524,8 +527,9 @@ Return a strict JSON object with:
                 if session and session.events:
                     # Find the last text output from the model
                     for ev in reversed(session.events):
-                        if ev.type in ("MODEL_TURN", "AGENT_TURN") and hasattr(ev, "data") and ev.data:
-                            for p in ev.data.parts:
+                        author = getattr(ev, "author", None)
+                        if author in ("model", "agent", "producer_desk") and hasattr(ev, "content") and ev.content:
+                            for p in ev.content.parts:
                                 if hasattr(p, "text") and p.text:
                                     response_text += p.text
                             if response_text:
@@ -568,7 +572,10 @@ Return a strict JSON object with:
             if len(sentences) > 3:
                 cleaned_text = " ".join(sentences[:2])
 
-            follow_up_probe = self._generate_follow_up_probe(user_message, tool_call, doc_result)
+            if not tool_call:
+                inferred = self._extract_or_infer_tool_call(user_message, response_text, doc_result)
+                if inferred:
+                    tool_call = inferred
 
             words = cleaned_text.split(" ")
             for i in range(0, len(words), 4):
@@ -579,12 +586,6 @@ Return a strict JSON object with:
                 yield {
                     "type": "TOOL_CALL",
                     "toolCall": tool_call.model_dump()
-                }
-
-            if follow_up_probe:
-                yield {
-                    "type": "FOLLOW_UP_PROBE",
-                    "followUpProbe": follow_up_probe.model_dump()
                 }
 
             yield {"type": "DONE"}
@@ -905,7 +906,6 @@ Return a strict JSON object with:
     ) -> AsyncGenerator[Dict[str, Any], None]:
         """Offline simulation yielding concise, straight-to-the-point intelligence."""
         tool_call = self._extract_or_infer_tool_call(user_msg, "", doc_result)
-        follow_up_probe = self._generate_follow_up_probe(user_msg, tool_call, doc_result)
 
         if doc_result and doc_result.detectedKind == DocumentAnalysisKind.INVITATION_EMAIL:
             text = f"Analyzed email '{doc_result.fileName}'. Claimed festival: **{doc_result.festivalClaimed}**. Verification module prepared below."
@@ -946,12 +946,6 @@ Return a strict JSON object with:
             yield {
                 "type": "TOOL_CALL",
                 "toolCall": tool_call.model_dump()
-            }
-
-        if follow_up_probe:
-            yield {
-                "type": "FOLLOW_UP_PROBE",
-                "followUpProbe": follow_up_probe.model_dump()
             }
 
         yield {"type": "DONE"}
