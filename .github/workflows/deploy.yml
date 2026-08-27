@@ -67,6 +67,14 @@ jobs:
           echo "🚀 Pushing container image to Artifact Registry..."
           docker push "${IMAGE_TAG}"
 
+          echo "🚀 Fetching existing Cloud Run URL..."
+          URL=$(gcloud run services describe "${SERVICE_NAME}" --project="${PROJECT_ID}" --region="${REGION}" --format="value(status.url)" || echo "")
+          if [ -z "$URL" ]; then
+            echo "Service doesn't exist yet, using deterministic fallback..."
+            URL="https://screened-pludf2u7yq-nw.a.run.app"
+          fi
+          echo "Worker URL will be: ${URL}"
+
           echo "🚀 Deploying container to Cloud Run..."
           gcloud run deploy "${SERVICE_NAME}" \
             --project="${PROJECT_ID}" \
@@ -74,13 +82,11 @@ jobs:
             --region="${REGION}" \
             --platform=managed \
             --allow-unauthenticated \
-            --update-env-vars="GOOGLE_CLOUD_PROJECT=${PROJECT_ID},GOOGLE_CLOUD_LOCATION=${REGION},ENVIRONMENT=production,COMMIT_SHA=${SHORT_SHA},VITE_GA4_MEASUREMENT_ID=${{ secrets.VITE_GA4_MEASUREMENT_ID }},TASK_QUEUE_NAME=${{ secrets.TASK_QUEUE_NAME }}" \
+            --update-env-vars="GOOGLE_CLOUD_PROJECT=${PROJECT_ID},GOOGLE_CLOUD_LOCATION=${REGION},ENVIRONMENT=production,COMMIT_SHA=${SHORT_SHA},VITE_GA4_MEASUREMENT_ID=${{ secrets.VITE_GA4_MEASUREMENT_ID }},TASK_QUEUE_NAME=${{ secrets.TASK_QUEUE_NAME }},WORKER_URL=${URL}" \
             --update-secrets="PARALLEL_API_KEY=parallel-api-key:latest,SESSION_SIGNING_KEY=session-signing-key:latest,PARALLEL_WEBHOOK_SECRET=parallel-webhook-secret:latest" \
             --timeout=3600 \
             --memory=1Gi \
             --cpu=1 \
             --min-instances=1 \
             --max-instances=5
-
-          URL=$(gcloud run services describe "${SERVICE_NAME}" --project="${PROJECT_ID}" --region="${REGION}" --format="value(status.url)")
           echo "=== ✅ Live Deployment Ready: ${URL} ==="

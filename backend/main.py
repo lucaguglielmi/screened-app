@@ -329,11 +329,13 @@ class TaskPipelinePayload(BaseModel):
 
 @app.post("/api/internal/tasks/disambiguate")
 async def task_disambiguate(payload: TaskDisambiguatePayload, request: Request):
+    logger.info(f"Received Cloud Task for disambiguation: {payload.investigation_id}")
     await orchestrator._run_disambiguation(payload.investigation_id, payload.query, payload.optional_url)
     return {"status": "ok"}
 
 @app.post("/api/internal/tasks/pipeline")
 async def task_pipeline(payload: TaskPipelinePayload, request: Request):
+    logger.info(f"Received Cloud Task for full pipeline: {payload.investigation_id}")
     entity = CandidateEntity(**payload.entity)
     await orchestrator._execute_full_research_pipeline(payload.investigation_id, entity, payload.intent)
     return {"status": "ok"}

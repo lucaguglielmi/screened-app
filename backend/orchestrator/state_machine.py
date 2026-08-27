@@ -97,6 +97,7 @@ def enqueue_task(path: str, payload: dict, fallback_task_func, *args):
             if OIDC_SERVICE_ACCOUNT:
                 task["http_request"]["oidc_token"] = {"service_account_email": OIDC_SERVICE_ACCOUNT}
                 
+            logger.info(f"Enqueuing Cloud Task to {url} with OIDC: {bool(OIDC_SERVICE_ACCOUNT)}", extra={"task": task})
             tasks_client.create_task(request={"parent": QUEUE_PATH, "task": task})
             return None
         except Exception as e:
