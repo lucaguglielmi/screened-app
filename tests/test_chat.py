@@ -64,7 +64,7 @@ def test_chat_streaming_endpoint():
 
 
 @pytest.mark.asyncio
-async def test_generic_festival_intent_asks_supporting_questions():
+async def test_generic_festival_intent_shows_intake_card():
     req = ChatRequest(message="I want to research a film festival")
     events = []
     async for event in producer_desk_agent.process_chat(req):
@@ -73,17 +73,15 @@ async def test_generic_festival_intent_asks_supporting_questions():
     tool_events = [e for e in events if e.get("type") == "TOOL_CALL"]
     probe_events = [e for e in events if e.get("type") == "FOLLOW_UP_PROBE"]
 
-    # Must NOT call a tool with hardcoded festival
-    assert len(tool_events) == 0
-    # Must provide follow-up probe asking supporting questions
-    assert len(probe_events) == 1
-    probe = probe_events[0]["followUpProbe"]
-    assert "festival" in probe["question"].lower()
-    assert len(probe["options"]) > 0
+    # Must call a tool with empty festival to show Intake card
+    assert len(tool_events) == 1
+    assert tool_events[0]["toolCall"]["toolName"] == ToolCallType.CONFIGURE_DUE_DILIGENCE.value
+    # Must NOT provide follow-up probe
+    assert len(probe_events) == 0
 
 
 @pytest.mark.asyncio
-async def test_generic_grant_intent_asks_supporting_questions():
+async def test_generic_grant_intent_shows_intake_card():
     req = ChatRequest(message="Help me find film grants and funding opportunities")
     events = []
     async for event in producer_desk_agent.process_chat(req):
@@ -92,8 +90,7 @@ async def test_generic_grant_intent_asks_supporting_questions():
     tool_events = [e for e in events if e.get("type") == "TOOL_CALL"]
     probe_events = [e for e in events if e.get("type") == "FOLLOW_UP_PROBE"]
 
-    assert len(tool_events) == 0
-    assert len(probe_events) == 1
-    probe = probe_events[0]["followUpProbe"]
-    assert "funding" in probe["question"].lower() or "grant" in probe["question"].lower()
+    assert len(tool_events) == 1
+    assert tool_events[0]["toolCall"]["toolName"] == ToolCallType.CONFIGURE_GRANT_SCOUT.value
+    assert len(probe_events) == 0
 

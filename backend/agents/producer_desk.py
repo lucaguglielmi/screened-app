@@ -703,15 +703,66 @@ Return a strict JSON object with:
                     ).model_dump()
                 )
 
-        # Guard: If query is purely generic intent without specifics, do NOT invoke a tool
-        if (
-            self._is_generic_festival_intent(user_msg)
-            or self._is_generic_grant_intent(user_msg)
-            or self._is_generic_invitation_intent(user_msg)
-            or self._is_generic_compare_intent(user_msg)
-            or self._is_generic_scout_intent(user_msg)
-        ):
-            return None
+        # For generic intents, return a generic tool call instead of None to render the Intake cards
+        if self._is_generic_festival_intent(user_msg):
+            return ChatToolCall(
+                toolName=ToolCallType.CONFIGURE_DUE_DILIGENCE,
+                args=DueDiligenceToolArgs(
+                    festival_name="",
+                    suspected_concerns=["VENUE_LEGITIMACY", "FEE_TRANSPARENCY", "ORGANIZER_TRACK_RECORD"],
+                    preflight_summary="Prepare an autonomous 3-domain due diligence investigation across physical venues, organizer filings, and community feedback."
+                ).model_dump()
+            )
+            
+        if self._is_generic_grant_intent(user_msg):
+            return ChatToolCall(
+                toolName=ToolCallType.CONFIGURE_GRANT_SCOUT,
+                args=GrantScoutToolArgs(
+                    project_title="",
+                    grant_category="DEVELOPMENT_AND_PRODUCTION",
+                    target_amount="£25,000",
+                    production_stage="Production",
+                    filmmaker_region="UK & Europe",
+                    grant_strategy_summary="Target institutional public funding and regional film agency grants matching your production stage."
+                ).model_dump()
+            )
+            
+        if self._is_generic_invitation_intent(user_msg):
+            return ChatToolCall(
+                toolName=ToolCallType.ANALYZE_INVITATION_EMAIL,
+                args=InvitationEmailToolArgs(
+                    festival_claimed="",
+                    sender_domain="",
+                    fee_waiver_offered=False,
+                    initial_verdict="Verify whether this invitation originated from an official domain before submitting or paying fees."
+                ).model_dump()
+            )
+            
+        if self._is_generic_compare_intent(user_msg):
+            return ChatToolCall(
+                toolName=ToolCallType.COMPARE_FESTIVALS_ARENA,
+                args=CompareFestivalsToolArgs(
+                    festival_a="",
+                    festival_b="",
+                    key_comparison_vectors=["BAFTA/BIFA Qualification", "Physical Screening Venues", "Entry Fee Bracket"],
+                    verdict_summary="Head-to-head comparison on accreditation, prestige, and venue transparency."
+                ).model_dump()
+            )
+            
+        if self._is_generic_scout_intent(user_msg):
+            return ChatToolCall(
+                toolName=ToolCallType.CONFIGURE_OPPORTUNITY_SCOUT,
+                args=OpportunityScoutToolArgs(
+                    film_title="",
+                    format=FilmFormat.SHORT,
+                    genre="Drama",
+                    runtime_minutes=15,
+                    premiere_goal=PremiereGoal.WORLD_PREMIERE,
+                    budget_tier="Micro (< £50k)",
+                    target_regions=["UK & Europe", "North America"],
+                    strategy_rationale="Tailored roadmap targeting qualifying festivals."
+                ).model_dump()
+            )
 
         # Check for specific Grant & Funding intent with parameters
         if any(w in msg_lower for w in ["grant", "funding", "sponsor", "bfi film fund", "screen scotland", "match funding", "fellowship", "subsidies"]):
@@ -783,7 +834,9 @@ Return a strict JSON object with:
             elif "toronto" in msg_lower or "tiff" in msg_lower:
                 festival_name = "Toronto International Film Festival"
             else:
-                cleaned = re.sub(r"(tell me about|is|a|the|legit|scam|real|check|fees|for|\?|research|i want to|film|festival|festivals|due diligence|on)", "", user_msg, flags=re.IGNORECASE).strip()
+                cleaned = user_msg.replace("?", "")
+                cleaned = re.sub(r"\b(tell me about|is|a|an|the|legit|scam|real|check|fees|for|research|i want to|film|festival|festivals|due diligence|on)\b", "", cleaned, flags=re.IGNORECASE).strip()
+                cleaned = re.sub(r"\s+", " ", cleaned).strip()
                 if cleaned and len(cleaned) > 2 and cleaned.lower() not in ["festival", "festivals", "film", "films"]:
                     festival_name = cleaned.title()
 
@@ -843,264 +896,6 @@ Return a strict JSON object with:
         doc_result: Optional[DocumentAnalysisResult] = None
     ) -> Optional[InteractiveFollowUpProbe]:
         """Generates contextual multi-step follow-up dialogue options to probe filmmaker interactions."""
-        msg_lower = user_msg.lower()
-
-        # Generic Festival Intent -> Provide options to pick or type a festival
-        if self._is_generic_festival_intent(user_msg):
-            return InteractiveFollowUpProbe(
-                question="Which film festival would you like to investigate?",
-                options=[
-                    FollowUpOption(
-                        label="Raindance Film Festival (London, UK)",
-                        promptText="Is Raindance Film Festival legitimate? Check their BAFTA qualification and entry fees.",
-                        badge="Accredited"
-                    ),
-                    FollowUpOption(
-                        label="Sundance Film Festival (Utah, USA)",
-                        promptText="Is Sundance Film Festival worth the submission fee for an independent short?",
-                        badge="Major Premiere"
-                    ),
-                    FollowUpOption(
-                        label="Aesthetica Short Film Festival (York, UK)",
-                        promptText="Check Aesthetica Short Film Festival BAFTA qualification and entry fees.",
-                        badge="Shorts Circuit"
-                    ),
-                    FollowUpOption(
-                        label="Aldergate Film Festival (Bristol, UK)",
-                        promptText="Is Aldergate Film Festival legitimate or a scam? Check their physical screening leases.",
-                        badge="Scrutiny Alert"
-                    )
-                ]
-            )
-
-        # Generic Grant Intent -> Provide options for grant types
-        if self._is_generic_grant_intent(user_msg):
-            return InteractiveFollowUpProbe(
-                question="What type of film funding are you seeking?",
-                options=[
-                    FollowUpOption(
-                        label="Early Development & Script Funds",
-                        promptText="Find £10k early-stage development and script grants in the UK and Europe.",
-                        badge="Development"
-                    ),
-                    FollowUpOption(
-                        label="Production Match Grants (£25k - £100k)",
-                        promptText="Find £50k production grants and regional match funds for independent films.",
-                        badge="Production"
-                    ),
-                    FollowUpOption(
-                        label="BFI / National Lottery Funds",
-                        promptText="What are the active BFI Filmmaking Fund deadlines and criteria?",
-                        badge="Institutional"
-                    ),
-                    FollowUpOption(
-                        label="Documentary Production Grants",
-                        promptText="Find international documentary production and impact grants.",
-                        badge="Documentary"
-                    )
-                ]
-            )
-
-        # Generic Invitation Intent -> Provide options for email scenarios
-        if self._is_generic_invitation_intent(user_msg):
-            return InteractiveFollowUpProbe(
-                question="What did the invitation or laurel email state?",
-                options=[
-                    FollowUpOption(
-                        label="50% or 100% Submission Fee Waiver",
-                        promptText="Analyze a festival invitation offering a 50% submission fee waiver code.",
-                        badge="Waiver Code"
-                    ),
-                    FollowUpOption(
-                        label="Award Winner with Paid Trophy Fee",
-                        promptText="The email claims I won an award but asks for €150 for a physical trophy and certificate.",
-                        badge="Trophy Scrutiny"
-                    ),
-                    FollowUpOption(
-                        label="Unsolicited selection from online screener",
-                        promptText="I received an unsolicited email saying they found my film online and want me to submit.",
-                        badge="Outreach Check"
-                    )
-                ]
-            )
-
-        # Generic Compare Intent -> Provide head-to-head comparison pairings
-        if self._is_generic_compare_intent(user_msg):
-            return InteractiveFollowUpProbe(
-                question="Which two festivals would you like to compare?",
-                options=[
-                    FollowUpOption(
-                        label="Raindance vs Leeds International",
-                        promptText="Compare Raindance vs Leeds International Film Festival",
-                        badge="UK Circuit"
-                    ),
-                    FollowUpOption(
-                        label="Sundance vs Tribeca",
-                        promptText="Compare Sundance vs Tribeca for an independent documentary",
-                        badge="US Majors"
-                    ),
-                    FollowUpOption(
-                        label="Sheffield DocFest vs IDFA",
-                        promptText="Compare Sheffield DocFest vs IDFA",
-                        badge="Documentary"
-                    )
-                ]
-            )
-
-        # Generic Scout Strategy Intent -> Provide film profile options
-        if self._is_generic_scout_intent(user_msg):
-            return InteractiveFollowUpProbe(
-                question="What kind of project are you submitting?",
-                options=[
-                    FollowUpOption(
-                        label="Short Film (< 15 min, £250 budget)",
-                        promptText="I have a 15-minute sci-fi short looking for a UK premiere on a £250 budget",
-                        badge="Shorts Strategy"
-                    ),
-                    FollowUpOption(
-                        label="Feature Film (Seeking World Premiere)",
-                        promptText="I have an 85-minute independent drama feature seeking a World Premiere at Tier 1/2 festivals",
-                        badge="Feature Circuit"
-                    ),
-                    FollowUpOption(
-                        label="Documentary Short (Social Focus)",
-                        promptText="I have a 25-minute social documentary short looking for qualifying festival circuits",
-                        badge="Doc Circuit"
-                    )
-                ]
-            )
-
-        if doc_result and doc_result.detectedKind == DocumentAnalysisKind.SCRIPT_TREATMENT:
-            film_title = doc_result.filmTitle or "your project"
-            return InteractiveFollowUpProbe(
-                question=f"Next strategic actions for '{film_title}':",
-                options=[
-                    FollowUpOption(
-                        label="Scout Early Bird deadlines",
-                        promptText=f"Find upcoming Early Bird deadlines under £40 for {film_title}.",
-                        badge="Budget Tier"
-                    ),
-                    FollowUpOption(
-                        label="Filter BAFTA / Oscar qualifiers",
-                        promptText=f"Show only BAFTA and Academy Award qualifying festivals for {film_title}.",
-                        badge="Accreditation"
-                    ),
-                    FollowUpOption(
-                        label="Scan public production grants",
-                        promptText=f"Find public film grants and regional funds matching {film_title}.",
-                        badge="Grant Match"
-                    )
-                ]
-            )
-
-        if doc_result and doc_result.detectedKind == DocumentAnalysisKind.INVITATION_EMAIL:
-            fest_claimed = doc_result.festivalClaimed or "this festival"
-            return InteractiveFollowUpProbe(
-                question=f"Forensic verification checks for {fest_claimed}:",
-                options=[
-                    FollowUpOption(
-                        label="Check sender domain WHOIS",
-                        promptText=f"Perform deep domain provenance check on the sender domain for {fest_claimed}.",
-                        badge="Domain Forensics"
-                    ),
-                    FollowUpOption(
-                        label="Verify physical screening venue",
-                        promptText=f"Did {fest_claimed} lease a verified physical cinema?",
-                        badge="Venue Corroboration"
-                    ),
-                    FollowUpOption(
-                        label="Scrutinize trophy & certificate fees",
-                        promptText=f"Is it standard practice for {fest_claimed} to charge for physical awards?",
-                        badge="Fee Transparency"
-                    )
-                ]
-            )
-
-        if tool_call and tool_call.toolName == ToolCallType.CONFIGURE_DUE_DILIGENCE:
-            fest_name = tool_call.args.get("festival_name", "this festival")
-            return InteractiveFollowUpProbe(
-                question=f"Key follow-up probes for {fest_name}:",
-                options=[
-                    FollowUpOption(
-                        label="Received unsolicited email invite",
-                        promptText=f"I received an unsolicited invitation email from {fest_name} promising an award. Can you check its domain?",
-                        badge="Phishing / Scam Check"
-                    ),
-                    FollowUpOption(
-                        label="Checking physical cinema venue",
-                        promptText=f"Did {fest_name} lease a verified physical cinema or is it an online-only screening?",
-                        badge="Venue Corroboration"
-                    ),
-                    FollowUpOption(
-                        label="Review entry fee tiers",
-                        promptText=f"Are the entry fees for {fest_name} reasonable compared to BAFTA-qualifying circuits?",
-                        badge="Fee Transparency"
-                    )
-                ]
-            )
-
-        if tool_call and tool_call.toolName == ToolCallType.CONFIGURE_OPPORTUNITY_SCOUT:
-            film_title = tool_call.args.get("film_title", "your film")
-            return InteractiveFollowUpProbe(
-                question=f"Refine festival scouting strategy for '{film_title}':",
-                options=[
-                    FollowUpOption(
-                        label="Target BAFTA / Oscar qualifiers only",
-                        promptText=f"Filter only BAFTA and Academy Award qualifying festivals for {film_title}.",
-                        badge="Accreditation Filter"
-                    ),
-                    FollowUpOption(
-                        label="Early Bird budget optimization",
-                        promptText=f"What are the upcoming Early Bird submission deadlines under £40 for {film_title}?",
-                        badge="Budget Tier"
-                    ),
-                    FollowUpOption(
-                        label="UK & European premiere strategy",
-                        promptText=f"Recommend a UK & European premiere rollout strategy for {film_title}.",
-                        badge="Premiere Strategy"
-                    )
-                ]
-            )
-
-        if tool_call and tool_call.toolName == ToolCallType.CONFIGURE_GRANT_SCOUT:
-            return InteractiveFollowUpProbe(
-                question="Narrow film grant matching criteria:",
-                options=[
-                    FollowUpOption(
-                        label="Development & Script Grants",
-                        promptText="Show active early-stage development grants and script development funds.",
-                        badge="Development Stage"
-                    ),
-                    FollowUpOption(
-                        label="Production Match Funding",
-                        promptText="Find regional match funding and production grants in the UK/Europe.",
-                        badge="Production Stage"
-                    ),
-                    FollowUpOption(
-                        label="BFI & National Lottery Funds",
-                        promptText="What are the upcoming deadlines for the BFI Filmmaking Fund?",
-                        badge="Institutional Fund"
-                    )
-                ]
-            )
-
-        if tool_call and tool_call.toolName == ToolCallType.ANALYZE_INVITATION_EMAIL:
-            return InteractiveFollowUpProbe(
-                question="Investigate invitation authenticity:",
-                options=[
-                    FollowUpOption(
-                        label="Check sender domain WHOIS",
-                        promptText="Check if the sender domain was registered recently or associated with scam alerts.",
-                        badge="Domain Forensics"
-                    ),
-                    FollowUpOption(
-                        label="Verify laurel licensing fees",
-                        promptText="Is it standard practice for festivals to charge for physical trophies and laurels?",
-                        badge="Trophy Fee Scrutiny"
-                    )
-                ]
-            )
-
         return None
 
     async def _generate_fallback_response(
