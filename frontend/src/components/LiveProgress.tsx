@@ -13,6 +13,7 @@ import {
   Zap,
   Terminal,
   Cpu,
+  AlertTriangle,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useReducedMotion } from '../utils/motionTokens';
@@ -134,9 +135,10 @@ const TIMELINE_STEPS: TimelineStep[] = [
 function getStepState(
   step: TimelineStep,
   currentStatus: InvestigationStatus,
-): 'COMPLETED' | 'ACTIVE' | 'PENDING' {
+  lastActiveStatus?: InvestigationStatus
+): 'COMPLETED' | 'ACTIVE' | 'PENDING' | 'FAILED' {
   if (currentStatus === 'READY') return 'COMPLETED';
-
+  
   const statusOrder: InvestigationStatus[] = [
     'DRAFT',
     'DISAMBIGUATING',
@@ -148,15 +150,22 @@ function getStepState(
     'READY',
   ];
 
-  const currentIdx = statusOrder.indexOf(currentStatus);
+  // We determine what the "effective" status is for progress calculation
+  const effectiveStatus = (currentStatus === 'FAILED' || currentStatus === 'CANCELLED') 
+    ? (lastActiveStatus || 'DISAMBIGUATING') 
+    : currentStatus;
 
-  if (step.activeStatus.includes(currentStatus)) {
-    return 'ACTIVE';
-  }
-
-  // Find the highest status index associated with this step
+  const currentIdx = statusOrder.indexOf(effectiveStatus);
   const stepIndices = step.activeStatus.map((s) => statusOrder.indexOf(s));
   const maxStepIdx = Math.max(...stepIndices);
+
+  if (currentStatus === 'FAILED' && step.activeStatus.includes(effectiveStatus)) {
+    return 'FAILED';
+  }
+
+  if (step.activeStatus.includes(effectiveStatus) && currentStatus !== 'FAILED' && currentStatus !== 'CANCELLED') {
+    return 'ACTIVE';
+  }
 
   if (currentIdx > maxStepIdx) {
     return 'COMPLETED';
@@ -171,22 +180,42 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
   const [selectedStepIndex, setSelectedStepIndex] = useState<number | null>(null);
   const eventsEndRef = useRef<HTMLDivElement>(null);
 
+  // Compute last active status from events for FAILED states
+  const lastActiveStatus = useMemo(() => {
+    if (status !== 'FAILED' && status !== 'CANCELLED') return undefined;
+    
+    const statusMap: Record<string, InvestigationStatus> = {
+      DISAMBIGUATING: 'DISAMBIGUATING',
+      PLANNING_STARTED: 'PLANNING',
+      DOMAIN_SEARCH_STARTED: 'RESEARCHING',
+      CLAIMS_EXTRACTING: 'RESEARCHING',
+      CONTRADICTIONS_ANALYZING: 'ANALYZING_CONTRADICTIONS',
+      DOSSIER_SYNTHESIZING: 'ASSEMBLING_DOSSIER',
+    };
+    
+    for (let i = events.length - 1; i >= 0; i--) {
+      const s = statusMap[events[i].eventType];
+      if (s) return s;
+    }
+    return 'DISAMBIGUATING';
+  }, [status, events]);
+
   // Auto-select the active step on status change if user hasn't manually selected
   useEffect(() => {
-    const activeIdx = TIMELINE_STEPS.findIndex((s) => getStepState(s, status) === 'ACTIVE');
+    const activeIdx = TIMELINE_STEPS.findIndex((s) => getStepState(s, status, lastActiveStatus) === 'ACTIVE' || getStepState(s, status, lastActiveStatus) === 'FAILED');
     if (activeIdx !== -1 && selectedStepIndex === null) {
       // Keep focused on active
     }
-  }, [status, selectedStepIndex]);
+  }, [status, selectedStepIndex, lastActiveStatus]);
 
   useEffect(() => {
     eventsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [events]);
 
   // Compute overall progress percentage
-  const activeStepIdx = TIMELINE_STEPS.findIndex((s) => getStepState(s, status) === 'ACTIVE');
+  const activeStepIdx = TIMELINE_STEPS.findIndex((s) => getStepState(s, status, lastActiveStatus) === 'ACTIVE' || getStepState(s, status, lastActiveStatus) === 'FAILED');
   const completedCount = TIMELINE_STEPS.filter(
-    (s) => getStepState(s, status) === 'COMPLETED',
+    (s) => getStepState(s, status, lastActiveStatus) === 'COMPLETED',
   ).length;
 
   const progressPercent =
@@ -207,7 +236,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
           : 0;
 
   const activeStep = TIMELINE_STEPS[inspectedStepIndex] || TIMELINE_STEPS[0];
-  const activeStepState = getStepState(activeStep, status);
+  const activeStepState = getStepState(activeStep, status, lastActiveStatus);
 
   // Find latest events related to the inspected agent
   const relatedEvents = events.filter(
@@ -225,21 +254,29 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
       className="max-w-4xl mx-auto space-y-6"
     >
       {/* 1. Header Banner */}
-      <div className="p-6 sm:p-7 rounded-3xl bg-darkroom-surface flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 shadow-2xl shadow-black/80 relative overflow-hidden">
+      <div className={`p-6 sm:p-7 rounded-3xl bg-darkroom-surface flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 shadow-2xl shadow-black/80 relative overflow-hidden ${status === 'FAILED' ? 'border border-red-500/20' : ''}`}>
         {/* Glow ambient accent behind header */}
-        <div className="absolute -right-20 -top-20 size-60 rounded-full bg-midnight-royal/20 blur-3xl pointer-events-none" />
-        <div className="absolute -left-20 -bottom-20 size-60 rounded-full bg-tool-diligence/10 blur-3xl pointer-events-none" />
+        <div className={`absolute -right-20 -top-20 size-60 rounded-full blur-3xl pointer-events-none ${status === 'FAILED' ? 'bg-red-500/10' : 'bg-midnight-royal/20'}`} />
+        <div className={`absolute -left-20 -bottom-20 size-60 rounded-full blur-3xl pointer-events-none ${status === 'FAILED' ? 'bg-rose-500/5' : 'bg-tool-diligence/10'}`} />
 
         <div className="space-y-1.5 z-10 min-w-0">
-          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-tool-diligence">
-            <Loader2 className={`size-3.5 ${reducedMotion ? '' : 'animate-spin'}`} />
-            <span className="font-semibold">Autonomous Multi-Agent Pipeline Active</span>
+          <div className={`flex items-center gap-2 text-xs font-mono uppercase tracking-wider ${status === 'FAILED' ? 'text-red-400' : 'text-tool-diligence'}`}>
+            {status === 'FAILED' ? (
+              <AlertTriangle className="size-3.5" />
+            ) : (
+              <Loader2 className={`size-3.5 ${reducedMotion || status === 'READY' ? '' : 'animate-spin'}`} />
+            )}
+            <span className="font-semibold">
+              {status === 'FAILED' ? 'Investigation Halted' : status === 'READY' ? 'Investigation Complete' : 'Autonomous Multi-Agent Pipeline Active'}
+            </span>
           </div>
           <h2 className="font-serif text-2xl sm:text-3xl font-bold text-white tracking-tight truncate">
             Investigating {festivalName}
           </h2>
           <p className="text-sm sm:text-base text-slate-400 leading-relaxed max-w-2xl">
-            Executing live Parallel Search API calls and Gemini claim extraction across 3 domains.
+            {status === 'FAILED' 
+              ? 'A critical error was encountered during the pipeline execution.' 
+              : 'Executing live Parallel Search API calls and Gemini claim extraction across 3 domains.'}
           </p>
         </div>
 
@@ -314,20 +351,27 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
                       className={`relative flex items-center justify-center transition-all duration-200 cursor-pointer rounded-2xl ${
                         state === 'ACTIVE'
                           ? 'size-11 sm:size-12 bg-gradient-to-tr from-tool-diligence to-emerald-400 text-slate-950 shadow-xl shadow-[var(--color-tool-diligence)]/40 ring-4 ring-tool-diligence/30 scale-110'
-                          : state === 'COMPLETED'
-                            ? 'size-9 sm:size-10 bg-tool-diligence/20 border border-tool-diligence/60 text-tool-diligence shadow-md shadow-[var(--color-tool-diligence)]/20 hover:scale-105 hover:bg-tool-diligence/30'
-                            : 'size-9 sm:size-10 bg-darkroom-surface border border-darkroom-border text-slate-400 hover:text-slate-200 hover:border-slate-500 hover:scale-105'
-                      } ${isSelected ? 'ring-2 ring-tool-diligence' : isInspected && state !== 'ACTIVE' ? 'ring-2 ring-indigo-400/60 border-indigo-400' : ''}`}
+                          : state === 'FAILED'
+                            ? 'size-11 sm:size-12 bg-gradient-to-tr from-rose-500 to-red-400 text-slate-950 shadow-xl shadow-red-500/40 ring-4 ring-red-500/30 scale-110'
+                            : state === 'COMPLETED'
+                              ? 'size-9 sm:size-10 bg-tool-diligence/20 border border-tool-diligence/60 text-tool-diligence shadow-md shadow-[var(--color-tool-diligence)]/20 hover:scale-105 hover:bg-tool-diligence/30'
+                              : 'size-9 sm:size-10 bg-darkroom-surface border border-darkroom-border text-slate-400 hover:text-slate-200 hover:border-slate-500 hover:scale-105'
+                      } ${isSelected ? (state === 'FAILED' ? 'ring-2 ring-red-500' : 'ring-2 ring-tool-diligence') : isInspected && state !== 'ACTIVE' && state !== 'FAILED' ? 'ring-2 ring-indigo-400/60 border-indigo-400' : ''}`}
                       title={`${step.stepNumber}. ${step.name}`}
                     >
                       {/* Active Ping Ripple */}
                       {state === 'ACTIVE' && !reducedMotion && (
                         <span className="absolute -inset-1.5 rounded-2xl bg-tool-diligence opacity-30 animate-ping pointer-events-none" />
                       )}
+                      {state === 'FAILED' && !reducedMotion && (
+                        <span className="absolute -inset-1.5 rounded-2xl bg-red-500 opacity-30 animate-ping pointer-events-none" />
+                      )}
 
                       {/* Step Icon or Checkmark */}
                       {state === 'COMPLETED' ? (
                         <CheckCircle2 className="size-4.5 sm:size-5 text-tool-diligence" />
+                      ) : state === 'FAILED' ? (
+                        <AlertTriangle className="size-5 sm:size-5.5 text-slate-950" />
                       ) : state === 'ACTIVE' ? (
                         <Icon
                           className={`size-5 sm:size-5.5 text-slate-950 ${reducedMotion ? '' : 'animate-pulse'}`}
@@ -341,9 +385,11 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
                         className={`absolute -top-1.5 -right-1.5 size-4 rounded-full text-[9px] font-mono font-bold flex items-center justify-center shadow ${
                           state === 'ACTIVE'
                             ? 'bg-slate-950 text-tool-diligence border border-tool-diligence'
-                            : state === 'COMPLETED'
-                              ? 'bg-tool-diligence text-slate-950'
-                              : 'bg-darkroom-card text-slate-400 border border-darkroom-border'
+                            : state === 'FAILED'
+                              ? 'bg-slate-950 text-red-400 border border-red-500'
+                              : state === 'COMPLETED'
+                                ? 'bg-tool-diligence text-slate-950'
+                                : 'bg-darkroom-card text-slate-400 border border-darkroom-border'
                         }`}
                       >
                         {step.stepNumber}
@@ -357,9 +403,11 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
                       className={`text-[11px] sm:text-xs font-semibold font-mono tracking-tight transition-colors ${
                         state === 'ACTIVE'
                           ? 'text-tool-diligence font-bold'
-                          : state === 'COMPLETED'
-                            ? 'text-slate-200'
-                            : 'text-slate-400'
+                          : state === 'FAILED'
+                            ? 'text-red-400 font-bold'
+                            : state === 'COMPLETED'
+                              ? 'text-slate-200'
+                              : 'text-slate-400'
                       }`}
                     >
                       {step.shortLabel}
@@ -378,9 +426,11 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
                             ? reducedMotion
                               ? 'bg-tool-diligence'
                               : 'bg-tool-diligence animate-pulse'
-                            : state === 'COMPLETED'
-                              ? 'bg-tool-diligence'
-                              : 'bg-slate-500'
+                            : state === 'FAILED'
+                              ? 'bg-red-500 animate-pulse'
+                              : state === 'COMPLETED'
+                                ? 'bg-tool-diligence'
+                                : 'bg-slate-500'
                         }`}
                       />
                       <span className="font-semibold text-white">{step.name}</span>

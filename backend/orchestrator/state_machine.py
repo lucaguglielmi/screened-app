@@ -230,7 +230,20 @@ class Orchestrator:
                     span.record_exception(e)
                     from opentelemetry.trace.status import Status, StatusCode
                     span.set_status(Status(StatusCode.ERROR, str(e)))
-            logger.error(f"Disambiguation error for {inv_id}: {e}", extra={"json_fields": {"fallbackPath": "disambiguation_pipeline"}}, exc_info=True)
+                    span.set_attribute("screened.investigation_id", inv_id)
+                    span.set_attribute("screened.error_phase", "disambiguation")
+
+            logger.error(
+                f"Disambiguation error for {inv_id}: {e}", 
+                extra={
+                    "json_fields": {
+                        "fallbackPath": "disambiguation_pipeline",
+                        "investigation_id": inv_id,
+                        "error_type": type(e).__name__
+                    }
+                }, 
+                exc_info=True
+            )
             
             inv_data = await db.get_investigation(inv_id) or {}
             inv_data["status"] = InvestigationStatus.FAILED.value
@@ -684,7 +697,21 @@ class Orchestrator:
                     span.record_exception(e)
                     from opentelemetry.trace.status import Status, StatusCode
                     span.set_status(Status(StatusCode.ERROR, str(e)))
-            logger.error(f"Pipeline execution failed for {investigation_id}: {e}", extra={"json_fields": {"fallbackPath": "full_research_pipeline"}}, exc_info=True)
+                    span.set_attribute("screened.investigation_id", investigation_id)
+                    span.set_attribute("screened.error_phase", "full_research_pipeline")
+            
+            logger.error(
+                f"Pipeline execution failed for {investigation_id}: {e}", 
+                extra={
+                    "json_fields": {
+                        "fallbackPath": "full_research_pipeline",
+                        "investigation_id": investigation_id,
+                        "error_type": type(e).__name__
+                    }
+                }, 
+                exc_info=True
+            )
+            
             inv_data = await db.get_investigation(investigation_id) or {}
             inv_data["status"] = InvestigationStatus.FAILED.value
             await db.save_investigation(investigation_id, inv_data)

@@ -247,6 +247,9 @@ export default function App() {
           );
         } else if (activityEvent.eventType === 'DOSSIER_SYNTHESIZING') {
           setInvestigation((prev) => (prev ? { ...prev, status: 'ASSEMBLING_DOSSIER' } : null));
+        } else if (activityEvent.eventType === 'ERROR') {
+          setInvestigation((prev) => (prev ? { ...prev, status: 'FAILED' } : null));
+          setError(activityEvent.message || 'An error occurred during the investigation.');
         }
       } catch (e) {
         console.error('Failed to parse SSE event:', e);
