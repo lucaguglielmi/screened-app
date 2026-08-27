@@ -231,6 +231,11 @@ class Orchestrator:
                     from opentelemetry.trace.status import Status, StatusCode
                     span.set_status(Status(StatusCode.ERROR, str(e)))
             logger.error(f"Disambiguation error for {inv_id}: {e}", extra={"json_fields": {"fallbackPath": "disambiguation_pipeline"}}, exc_info=True)
+            
+            inv_data = await db.get_investigation(inv_id) or {}
+            inv_data["status"] = InvestigationStatus.FAILED.value
+            await db.save_investigation(inv_id, inv_data)
+
             await broadcaster.emit(
                 investigation_id=inv_id,
                 event_type=EventType.ERROR,
