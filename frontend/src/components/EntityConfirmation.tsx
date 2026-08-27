@@ -86,11 +86,13 @@ export const EntityConfirmation: React.FC<Props> = ({ candidates, query, onConfi
             return (
               <div
                 key={idx}
-                onClick={() => handleSelect(idx)}
-                className={`p-5 rounded-2xl border transition-all cursor-pointer flex items-start justify-between gap-4 ${
+                onClick={() => candidates.length > 1 && handleSelect(idx)}
+                className={`p-5 rounded-2xl border transition-all flex items-start justify-between gap-4 ${
+                  candidates.length > 1 ? 'cursor-pointer' : ''
+                } ${
                   isSelected
-                    ? 'border-tool-diligence bg-tool-diligence/10 border-tool-diligence bg-tool-diligence/10 shadow-md'
-                    : 'border-darkroom-border hover:border-neutral-400 hover:border-neutral-600'
+                    ? 'border-tool-diligence bg-tool-diligence/10 shadow-md'
+                    : 'border-darkroom-border hover:border-neutral-600'
                 }`}
               >
                 <div className="space-y-2 flex-1">
@@ -123,9 +125,11 @@ export const EntityConfirmation: React.FC<Props> = ({ candidates, query, onConfi
                   </div>
                 </div>
 
-                <div className="size-6 rounded-full border flex items-center justify-center shrink-0 mt-1 border-neutral-400 border-neutral-600">
-                  {isSelected && <div className="size-3 rounded-full bg-tool-diligence" />}
-                </div>
+                {candidates.length > 1 && (
+                  <div className="size-6 rounded-full border flex items-center justify-center shrink-0 mt-1 border-neutral-600">
+                    {isSelected && <div className="size-3 rounded-full bg-tool-diligence" />}
+                  </div>
+                )}
               </div>
             );
           })}
