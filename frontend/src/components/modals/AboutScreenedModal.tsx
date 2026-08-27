@@ -32,7 +32,7 @@ export const AboutScreenedModal: React.FC<AboutScreenedModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-8 animate-fade-in select-none">
       {/* Dark backdrop blur */}
       <div
-        className="absolute inset-0 bg-midnight-void/85 backdrop-blur-md transition-opacity"
+        className="absolute inset-0 bg-midnight-void/40 backdrop-blur-xl transition-opacity"
         onClick={() => {
           soundEffects.playClick();
           onClose();

@@ -305,7 +305,7 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/85 backdrop-blur-md"
+            className="fixed inset-0 bg-midnight-void/40 backdrop-blur-xl"
           />
 
           {/* Modal Content */}
@@ -314,7 +314,7 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 10 }}
             transition={{ duration: 0.18 }}
-            className="relative w-full max-w-3xl max-h-[88vh] rounded-3xl bg-darkroom-bg border border-darkroom-border shadow-2xl p-5 sm:p-7 flex flex-col text-slate-100 z-10 overflow-hidden"
+            className="relative w-full max-w-3xl max-h-[88vh] rounded-3xl bg-midnight-base border border-darkroom-border shadow-2xl p-5 sm:p-7 flex flex-col text-slate-100 z-10 overflow-hidden"
           >
             {/* Header */}
             <div className="flex items-start justify-between pb-4 border-b border-darkroom-border">
