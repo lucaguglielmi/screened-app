@@ -67,6 +67,18 @@ export const EntityConfirmation: React.FC<Props> = ({ candidates, query, onConfi
           </p>
         </div>
 
+        {candidates.some(c => c.descriptor?.includes('unverified web presence') || c.descriptor?.includes('General Festival Entity')) && (
+          <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-3 text-amber-500">
+            <ShieldAlert className="size-5 shrink-0 mt-0.5" />
+            <div className="space-y-1">
+              <h4 className="font-semibold text-sm">No Web Footprint Found</h4>
+              <p className="text-xs sm:text-sm text-amber-500/80 leading-relaxed">
+                We couldn't find any verified official presence for this festival during our initial search. You can still proceed, but the investigation may yield limited or inconclusive results if the festival has no digital history.
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Candidate options */}
         <div className="space-y-3.5 pt-2">
           {candidates.map((c, idx) => {
