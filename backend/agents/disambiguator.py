@@ -70,7 +70,7 @@ JSON Schema:
 ]
 """
         try:
-            response = self.gemini.client.models.generate_content(
+            response = await self.gemini.client.aio.models.generate_content(
                 model="gemini-2.5-flash",
                 contents=prompt,
                 config=types.GenerateContentConfig(
@@ -79,6 +79,9 @@ JSON Schema:
                 ),
             )
             raw_data = json.loads(response.text or "[]")
+            if isinstance(raw_data, dict):
+                raw_data = [raw_data]
+            
             candidates: List[CandidateEntity] = []
             source_ids = [s.id for s in sources]
 

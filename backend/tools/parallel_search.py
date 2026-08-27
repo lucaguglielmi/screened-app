@@ -42,12 +42,15 @@ class ParallelSearchTool:
         logger.info(f"Parallel Search single query: {query}")
         try:
             async with self._semaphore:
-                response = await self.async_client.search(
-                    search_queries=[query],
-                    objective=objective,
-                    mode=mode,
-                    advanced_settings=advanced_settings,
-                    session_id=session_id
+                response = await asyncio.wait_for(
+                    self.async_client.search(
+                        search_queries=[query],
+                        objective=objective,
+                        mode=mode,
+                        advanced_settings=advanced_settings,
+                        session_id=session_id
+                    ),
+                    timeout=30.0
                 )
             raw_results = getattr(response, "results", []) or []
             source_records: List[SourceRecord] = []
