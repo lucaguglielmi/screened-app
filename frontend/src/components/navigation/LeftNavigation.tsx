@@ -66,7 +66,7 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
   };
 
   return (
-    <aside className="sticky top-0 h-screen h-[100dvh] min-h-[100dvh] hidden md:flex flex-col items-center justify-between w-16 sm:w-20 py-5 sm:py-6 bg-darkroom-bg border-r border-darkroom-border select-none z-40 shrink-0 text-slate-300">
+    <aside className="fixed left-0 top-0 bottom-0 h-screen h-[100dvh] hidden md:flex flex-col items-center justify-between w-16 md:w-20 py-5 sm:py-6 bg-darkroom-bg border-r border-darkroom-border select-none z-40 shrink-0 text-slate-300">
       {/* Top Section: App Logo */}
       <div className="flex flex-col items-center gap-4 w-full">
         <button

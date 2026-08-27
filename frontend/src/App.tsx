@@ -478,7 +478,7 @@ export default function App() {
 
       {/* Main Workspace Container */}
       <div
-        className={`flex-1 flex flex-col min-w-0 ${
+        className={`flex-1 flex flex-col min-w-0 md:pl-16 lg:pl-20 ${
           activeTool === 'CONVERSATIONAL_DESK'
             ? 'h-screen h-[100dvh] overflow-hidden'
             : 'min-h-screen min-h-[100dvh] overflow-y-auto'
