@@ -254,13 +254,32 @@ export default function App() {
     };
 
     eventSource.onerror = () => {
-      // Auto reconnect
+      // Re-fetch current investigation status on connection glitch
+      fetchInvestigation(invId);
     };
 
+    // Fallback polling every 3s while investigation is active to guarantee state progression
+    const isActiveStatus = (st?: string) =>
+      st &&
+      [
+        'DISAMBIGUATING',
+        'PLANNING',
+        'RESEARCHING',
+        'ANALYZING_CONTRADICTIONS',
+        'ASSEMBLING_DOSSIER',
+      ].includes(st);
+
+    const pollInterval = setInterval(() => {
+      if (isActiveStatus(investigation?.status)) {
+        fetchInvestigation(invId);
+      }
+    }, 3000);
+
     return () => {
+      clearInterval(pollInterval);
       eventSource.close();
     };
-  }, [investigation?.id, investigation?.query, fetchInvestigation]);
+  }, [investigation?.id, investigation?.status, investigation?.query, fetchInvestigation]);
 
   const handleStartInvestigation = async (
     subjectQuery: string,

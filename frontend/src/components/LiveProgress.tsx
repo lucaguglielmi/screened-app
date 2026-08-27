@@ -402,15 +402,15 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className={`p-5 rounded-2xl border transition-all ${
+            className={`p-5 rounded-2xl transition-all ${
               activeStepState === 'ACTIVE'
-                ? 'bg-gradient-to-br from-darkroom-card to-darkroom-surface border-tool-diligence/40 shadow-lg shadow-[var(--color-tool-diligence)]/10'
+                ? 'bg-gradient-to-br from-darkroom-card to-darkroom-surface border border-tool-diligence/40 shadow-lg shadow-[var(--color-tool-diligence)]/10'
                 : activeStepState === 'COMPLETED'
-                  ? 'bg-darkroom-card border-darkroom-border'
-                  : 'bg-darkroom-surface border-darkroom-border'
+                  ? 'bg-darkroom-card border border-darkroom-border'
+                  : 'bg-darkroom-surface/40 border-2 border-dashed border-slate-700/80 shadow-inner'
             }`}
           >
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-darkroom-border pb-3.5">
+            <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b ${activeStepState === 'PENDING' ? 'border-dashed border-slate-700/60' : 'border-darkroom-border'}`}>
               <div className="flex items-center gap-3">
                 <div
                   className={`size-10 rounded-xl flex items-center justify-center shrink-0 ${
@@ -418,7 +418,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
                       ? 'bg-tool-diligence text-slate-950 shadow-md shadow-[var(--color-tool-diligence)]/30'
                       : activeStepState === 'COMPLETED'
                         ? 'bg-tool-diligence/20 text-tool-diligence border border-tool-diligence/40'
-                        : 'bg-darkroom-card text-slate-400 border border-darkroom-border'
+                        : 'bg-darkroom-card/50 text-slate-500 border border-dashed border-slate-600/70'
                   }`}
                 >
                   <activeStep.icon className="size-5" />
@@ -443,14 +443,14 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
                       ? `bg-tool-diligence/20 text-tool-diligence border border-tool-diligence/40 ${reducedMotion ? '' : 'animate-pulse'}`
                       : activeStepState === 'COMPLETED'
                         ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
-                        : 'bg-slate-800/60 text-slate-400 border border-slate-700/60'
+                        : 'bg-slate-800/40 text-slate-400 border border-dashed border-slate-600/60'
                   }`}
                 >
                   {activeStepState === 'ACTIVE' && (
                     <Loader2 className={`size-3 ${reducedMotion ? '' : 'animate-spin'}`} />
                   )}
                   {activeStepState === 'COMPLETED' && <CheckCircle2 className="size-3" />}
-                  <span>{activeStepState}</span>
+                  <span>{activeStepState === 'PENDING' ? 'PENDING (NOT STARTED)' : activeStepState}</span>
                 </span>
               </div>
             </div>
@@ -468,7 +468,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
                   <ul className="space-y-1">
                     {activeStep.details.map((detail, dIdx) => (
                       <li key={dIdx} className="flex items-start gap-2 text-xs text-slate-400">
-                        <ChevronRight className="size-3.5 text-tool-diligence shrink-0 mt-0.5" />
+                        <ChevronRight className={`size-3.5 shrink-0 mt-0.5 ${activeStepState === 'PENDING' ? 'text-slate-500' : 'text-tool-diligence'}`} />
                         <span>{detail}</span>
                       </li>
                     ))}
@@ -477,7 +477,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
               </div>
 
               {/* Right Col: Tools & Live Log Peek */}
-              <div className="p-3.5 rounded-xl bg-darkroom-bg border border-darkroom-border space-y-3 flex flex-col justify-between">
+              <div className={`p-3.5 rounded-xl border space-y-3 flex flex-col justify-between ${activeStepState === 'PENDING' ? 'bg-darkroom-bg/50 border-dashed border-slate-700/60' : 'bg-darkroom-bg border-darkroom-border'}`}>
                 <div>
                   <span className="text-[10px] font-mono uppercase tracking-wider text-indigo-400 font-semibold flex items-center gap-1.5">
                     <Zap className="size-3" />
@@ -487,7 +487,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
                     {activeStep.toolsUsed.map((tool, tIdx) => (
                       <span
                         key={tIdx}
-                        className="px-2 py-0.5 rounded-lg bg-darkroom-card text-[11px] font-mono text-slate-300 border border-darkroom-border"
+                        className={`px-2 py-0.5 rounded-lg text-[11px] font-mono ${activeStepState === 'PENDING' ? 'bg-darkroom-card/50 text-slate-400 border border-dashed border-slate-700/60' : 'bg-darkroom-card text-slate-300 border border-darkroom-border'}`}
                       >
                         {tool}
                       </span>
