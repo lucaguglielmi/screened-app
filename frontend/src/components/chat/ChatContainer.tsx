@@ -11,12 +11,10 @@ import { ChatPromptBar } from './ChatPromptBar';
 import { motion } from 'motion/react';
 import { AnimatedEE } from '../animations/AnimatedEE';
 import { AgentThinkingPill } from './AgentThinkingPill';
-import { CapabilitiesModal } from '../modals/CapabilitiesModal';
 import { AboutScreenedModal } from '../modals/AboutScreenedModal';
 import { FeedbackModal } from '../modals/FeedbackModal';
 import { soundEffects } from '../../utils/audio';
 import { piiVault } from '../../utils/pii';
-import { TextLink } from '../ui/TextLink';
 import { MessageSquare } from 'lucide-react';
 
 interface ChatContainerProps {
@@ -42,7 +40,6 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
   const [messages, setMessages] = useState<ChatMessage[]>([INITIAL_HARDCODED_MESSAGE]);
   const [isLoading, setIsLoading] = useState(false);
   const [thinkingMessage, setThinkingMessage] = useState<string | null>(null);
-  const [isCapabilitiesModalOpen, setIsCapabilitiesModalOpen] = useState(false);
   const [isAboutModalOpen, setIsAboutModalOpen] = useState(false);
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -244,17 +241,6 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
               Cinema Due diligence
             </span>
           </motion.h1>
-          <TextLink
-            variant="primary"
-            size="xs"
-            iconType="help"
-            animatedIconContinuous
-            asButton
-            onActionClick={() => setIsCapabilitiesModalOpen(true)}
-            className="text-xs sm:text-sm tracking-wide"
-          >
-            What does it do?
-          </TextLink>
         </div>
 
         <div className="pt-1">
@@ -296,13 +282,6 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
           </button>
         </div>
       </div>
-
-      {/* Capabilities Modal ("What does it do?") */}
-      <CapabilitiesModal
-        isOpen={isCapabilitiesModalOpen}
-        onClose={() => setIsCapabilitiesModalOpen(false)}
-        onSelectAction={(prompt) => handleSendMessage(prompt)}
-      />
 
       {/* About Screened Modal (Triggered by Avatar Click) */}
       <AboutScreenedModal
