@@ -486,8 +486,8 @@ class Orchestrator:
             all_sources = []
             
             if tracer:
-                claim_span = tracer.start_as_current_span("ClaimAssembler.assemble")
-                claim_span.__enter__()
+                claim_span_cm = tracer.start_as_current_span("ClaimAssembler.assemble")
+                claim_span = claim_span_cm.__enter__()
             for domain_enum, domain_result in domain_claims_raw.items():
                 domain_claims_list = domain_result.get("claims", [])
                 domain_basis_list = domain_result.get("basis", [])
@@ -585,7 +585,7 @@ class Orchestrator:
 
             if tracer:
                 claim_span.set_attribute("screened.claims_extracted", len(claims))
-                claim_span.__exit__(None, None, None)
+                claim_span_cm.__exit__(None, None, None)
                 
             await db.save_claims(investigation_id, claims)
 
