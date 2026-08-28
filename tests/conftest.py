@@ -7,6 +7,10 @@ from google.genai import types
 # Force dummy API key so Google LLM doesn't crash on init during tests
 os.environ["GEMINI_API_KEY"] = "dummy-offline-key"
 
+# Ensure tests always use in-memory database store and never write to live production Firestore
+from backend.db.firestore import db
+db.use_memory = True
+
 # Mock the genai client at import time so that backend imports don't crash before fixtures run.
 mock_genai_patcher = patch("google.genai.Client")
 mock_client_class = mock_genai_patcher.start()

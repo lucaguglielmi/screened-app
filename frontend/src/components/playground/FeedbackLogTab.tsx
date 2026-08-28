@@ -118,7 +118,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({ onOpenFeedbackMo
   const avgRating =
     totalCount > 0
       ? (feedbacks.reduce((acc, f) => acc + f.rating, 0) / totalCount).toFixed(1)
-      : '5.0';
+      : '—';
   const accuracyCount = feedbacks.filter((f) => f.category === 'ACCURACY').length;
   const featureCount = feedbacks.filter((f) => f.category === 'FEATURE_REQUEST').length;
 
@@ -163,7 +163,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({ onOpenFeedbackMo
               className="px-4 py-2 rounded-xl bg-midnight-royal hover:bg-midnight-royal text-white font-bold text-xs font-mono flex items-center gap-2 transition-all shadow-md shadow-indigo-950/50 cursor-pointer"
             >
               <Plus className="size-3.5" />
-              <span>Submit Test Feedback</span>
+              <span>Submit Feedback</span>
             </button>
           )}
         </div>
@@ -275,9 +275,16 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({ onOpenFeedbackMo
             </button>
           </div>
         ) : filteredFeedbacks.length === 0 ? (
-          <div className="p-16 text-center space-y-3">
-            <MessageSquare className="size-8 mx-auto text-slate-600" />
-            <p className="text-sm text-slate-400">No feedback items match your active filters.</p>
+          <div className="p-16 text-center space-y-2">
+            <MessageSquare className="size-8 mx-auto text-slate-600 mb-2" />
+            {feedbacks.length === 0 ? (
+              <>
+                <p className="text-sm text-slate-300 font-medium">No filmmaker feedback submitted yet.</p>
+                <p className="text-xs text-slate-500 font-mono">Feedback submitted via the chat and app will appear here in real time.</p>
+              </>
+            ) : (
+              <p className="text-sm text-slate-400">No feedback items match your active filters.</p>
+            )}
           </div>
         ) : (
           <div className="overflow-x-auto">
