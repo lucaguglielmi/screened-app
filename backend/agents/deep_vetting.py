@@ -109,11 +109,6 @@ Return a JSON object conforming strictly to the output schema.
 
         from google.adk.workflow import Workflow, Edge, START
         
-        dims_workflow = Workflow(
-            name="deep_vetting_dimensions",
-            edges=[Edge(from_node=START, to_node=a) for a in agents]
-        )
-        
         scorer = LlmAgent(
             name="vetting_scorer",
             model=get_adk_model("gemini-2.5-flash"),
@@ -121,13 +116,14 @@ Return a JSON object conforming strictly to the output schema.
             output_schema=DeepVettingReport,
             output_key="deep_vetting_report"
         )
+
+        edges = [Edge(from_node=START, to_node=a) for a in agents] + [
+            Edge(from_node=a, to_node=scorer) for a in agents
+        ]
         
         vetting_agent = Workflow(
             name="deep_vetting_pipeline",
-            edges=[
-                Edge(from_node=START, to_node=dims_workflow),
-                Edge(from_node=dims_workflow, to_node=scorer)
-            ]
+            edges=edges
         )
         
         session_service = FirestoreSessionService()
@@ -152,16 +148,18 @@ Return a JSON object conforming strictly to the output schema.
             if session:
                 final_report_data = session.state.get("deep_vetting_report")
                 if final_report_data:
-                    return DeepVettingReport.model_validate(final_report_data)
+                    if isinstance(final_report_data, DeepVettingReport):
+                        return final_report_data
+                    if isinstance(final_report_data, str):
+                        try:
+                            final_report_data = json.loads(final_report_data)
+                        except Exception:
+                            pass
+                    if isinstance(final_report_data, dict):
+                        return DeepVettingReport.model_validate(final_report_data)
                 
         except Exception as e:
             logger.exception(f"DeepVettingAgent ADK execution failed: {e}. Generating deterministic fallback.")
-            await broadcaster.emit(
-                investigation_id=investigation_id,
-                event_type=EventType.ERROR,
-                agent_name="DeepVettingAgent",
-                message=f"Deep vetting ADK failed. Using fallback report. Error: {str(e)}"
-            )
 
         fallback_dims = self._get_fallback_dimensions(festival_name, optional_url)
         return DeepVettingReport(
