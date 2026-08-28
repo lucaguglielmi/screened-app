@@ -9,6 +9,7 @@ export interface LivingBackgroundProps {
   organicScale?: number; // Spread & size of the living fluid membrane (default: 1.0)
   opacity?: number; // Base opacity (default: 0.5)
   interactive?: boolean; // Smooth liquid ripple on mouse move (default: true)
+  position?: 'fixed' | 'absolute';
   className?: string;
   // Backward-compatible props for playgrounds
   color?: string;
@@ -30,13 +31,14 @@ interface Mote {
 }
 
 export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
-  primaryColor = '#0a1936',
-  secondaryColor = '#040a17',
-  accentColor = '#0d2248',
+  primaryColor = 'var(--color-midnight-surface)',
+  secondaryColor = 'var(--color-midnight-base)',
+  accentColor = 'var(--color-midnight-card)',
   speed = 0.35,
   organicScale = 1.0,
   opacity = 0.5,
   interactive = true,
+  position = 'fixed',
   className = '',
   // Backward compatibility
   color,
@@ -421,10 +423,14 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
     effectiveInteractive,
   ]);
 
+  const isAbsolute = position === 'absolute' || className.includes('absolute');
+
   return (
     <div
       ref={containerRef}
-      className={`fixed inset-0 w-full h-full pointer-events-none overflow-hidden max-w-full z-0 select-none ${className}`}
+      className={`${
+        isAbsolute ? 'absolute' : 'fixed'
+      } inset-0 w-full h-full pointer-events-none overflow-hidden max-w-full z-0 select-none ${className}`}
       aria-hidden="true"
     >
       <canvas

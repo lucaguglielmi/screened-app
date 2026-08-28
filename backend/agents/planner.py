@@ -21,7 +21,7 @@ class DomainPlan(BaseModel):
 
 class InvestigationPlan(BaseModel):
     festivalName: str
-    domains: Dict[ResearchDomain, DomainPlan]
+    domains: Dict[str, DomainPlan]
 
 
 from backend.agents.adk_helpers import get_adk_model
@@ -111,11 +111,11 @@ Return a JSON object matching this schema:
             raw = json.loads(response.text or "{}")
             domains_data = raw.get("domains", {})
 
-            domain_plans: Dict[ResearchDomain, DomainPlan] = {}
+            domain_plans: Dict[str, DomainPlan] = {}
 
             # Parse FESTIVAL
             f_data = domains_data.get("FESTIVAL", {})
-            domain_plans[ResearchDomain.FESTIVAL] = DomainPlan(
+            domain_plans["FESTIVAL"] = DomainPlan(
                 domain=ResearchDomain.FESTIVAL,
                 objective=f_data.get("objective", f"Investigate venues, fees, and rules for {entity.name}"),
                 searchQueries=f_data.get("searchQueries", [
@@ -127,7 +127,7 @@ Return a JSON object matching this schema:
 
             # Parse ORGANIZER
             o_data = domains_data.get("ORGANIZER", {})
-            domain_plans[ResearchDomain.ORGANIZER] = DomainPlan(
+            domain_plans["ORGANIZER"] = DomainPlan(
                 domain=ResearchDomain.ORGANIZER,
                 objective=o_data.get("objective", f"Investigate legal entity and organizers for {entity.name}"),
                 searchQueries=o_data.get("searchQueries", [
@@ -139,7 +139,7 @@ Return a JSON object matching this schema:
 
             # Parse PARTICIPANTS
             p_data = domains_data.get("PARTICIPANTS", {})
-            domain_plans[ResearchDomain.PARTICIPANTS] = DomainPlan(
+            domain_plans["PARTICIPANTS"] = DomainPlan(
                 domain=ResearchDomain.PARTICIPANTS,
                 objective=p_data.get("objective", f"Investigate filmmaker feedback and attendee experience for {entity.name}"),
                 searchQueries=p_data.get("searchQueries", [
@@ -159,19 +159,19 @@ Return a JSON object matching this schema:
             return InvestigationPlan(
                 festivalName=entity.name,
                 domains={
-                    ResearchDomain.FESTIVAL: DomainPlan(
+                    "FESTIVAL": DomainPlan(
                         domain=ResearchDomain.FESTIVAL,
                         objective=f"Investigate festival profile for {entity.name}",
                         searchQueries=[f"{entity.name} submission fees venues awards"],
                         keyQuestions=["What are the physical venues and fee schedules?"],
                     ),
-                    ResearchDomain.ORGANIZER: DomainPlan(
+                    "ORGANIZER": DomainPlan(
                         domain=ResearchDomain.ORGANIZER,
                         objective=f"Investigate organizers for {entity.name}",
                         searchQueries=[f"{entity.name} legal entity director company"],
                         keyQuestions=["Who operates this festival?"],
                     ),
-                    ResearchDomain.PARTICIPANTS: DomainPlan(
+                    "PARTICIPANTS": DomainPlan(
                         domain=ResearchDomain.PARTICIPANTS,
                         objective=f"Investigate participant feedback for {entity.name}",
                         searchQueries=[f"{entity.name} reviews feedback complaints"],

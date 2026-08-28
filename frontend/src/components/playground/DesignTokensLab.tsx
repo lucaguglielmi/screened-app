@@ -259,6 +259,7 @@ export const DesignTokensLab: React.FC = () => {
         {/* Live Vector Field Container */}
         <div className="relative h-80 w-full rounded-3xl bg-darkroom-bg overflow-hidden shadow-2xl flex items-center justify-center">
           <VectorFieldBackground
+            position="absolute"
             color={vfColor}
             speed={vfSpeed}
             amplitude={vfAmplitude}

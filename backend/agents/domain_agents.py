@@ -79,9 +79,9 @@ async def run_parallel_domain_agents(
     """Execute all three domain research agents concurrently via ADK LlmAgent."""
     
     session_service = FirestoreSessionService()
-    f_task = _run_domain_agent(ResearchDomain.FESTIVAL, plans[ResearchDomain.FESTIVAL], investigation_id, entity_info, session_service)
-    o_task = _run_domain_agent(ResearchDomain.ORGANIZER, plans[ResearchDomain.ORGANIZER], investigation_id, entity_info, session_service)
-    p_task = _run_domain_agent(ResearchDomain.PARTICIPANTS, plans[ResearchDomain.PARTICIPANTS], investigation_id, entity_info, session_service)
+    f_task = _run_domain_agent(ResearchDomain.FESTIVAL, plans["FESTIVAL"], investigation_id, entity_info, session_service)
+    o_task = _run_domain_agent(ResearchDomain.ORGANIZER, plans["ORGANIZER"], investigation_id, entity_info, session_service)
+    p_task = _run_domain_agent(ResearchDomain.PARTICIPANTS, plans["PARTICIPANTS"], investigation_id, entity_info, session_service)
 
     f_res, o_res, p_res = await asyncio.gather(f_task, o_task, p_task, return_exceptions=True)
     
