@@ -343,14 +343,14 @@ export const DesignPlayground: React.FC = () => {
                 </div>
               </div>
 
-              {/* Avatar Size Matrix with Active State Simulator */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Avatar Size Matrix with Active State Simulator (3 Streamlined Sizes) */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                 {/* Size Small */}
-                <div className="p-5 rounded-2xl bg-midnight/90 flex flex-col items-center justify-center text-center space-y-3 border border-zinc-800/80">
-                  <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider font-semibold">
-                    Small (`sm`) - Chat Pill
+                <div className="p-6 rounded-2xl bg-midnight/90 flex flex-col items-center justify-center text-center space-y-3.5 border border-zinc-800/80">
+                  <span className="text-xs font-mono text-zinc-400 uppercase tracking-wider font-semibold">
+                    Small (`sm`) - 32px
                   </span>
-                  <div className="py-2">
+                  <div className="py-2 flex items-center justify-center">
                     <AgentAvatar
                       size="sm"
                       status={avatarSimStatus}
@@ -360,15 +360,15 @@ export const DesignPlayground: React.FC = () => {
                       }}
                     />
                   </div>
-                  <p className="text-[11px] text-zinc-400">Used in compact thinking pills and dense feeds.</p>
+                  <p className="text-xs text-zinc-400">Used in compact thinking pills and dense feeds.</p>
                 </div>
 
                 {/* Size Medium */}
-                <div className="p-5 rounded-2xl bg-midnight/90 flex flex-col items-center justify-center text-center space-y-3 border border-zinc-800/80">
-                  <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider font-semibold">
-                    Medium (`md`) - Message Bubble
+                <div className="p-6 rounded-2xl bg-midnight/90 flex flex-col items-center justify-center text-center space-y-3.5 border border-zinc-800/80">
+                  <span className="text-xs font-mono text-blue-300 uppercase tracking-wider font-semibold">
+                    Medium (`md`) - 44px (Standard)
                   </span>
-                  <div className="py-2">
+                  <div className="py-2 flex items-center justify-center">
                     <AgentAvatar
                       size="md"
                       status={avatarSimStatus}
@@ -378,15 +378,15 @@ export const DesignPlayground: React.FC = () => {
                       }}
                     />
                   </div>
-                  <p className="text-[11px] text-zinc-400">Default avatar for all agent message bubbles.</p>
+                  <p className="text-xs text-zinc-400">Default avatar for all agent message bubbles.</p>
                 </div>
 
                 {/* Size Large */}
-                <div className="p-5 rounded-2xl bg-midnight/90 flex flex-col items-center justify-center text-center space-y-3 border border-zinc-800/80">
-                  <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider font-semibold">
-                    Large (`lg`) - Header Hero
+                <div className="p-6 rounded-2xl bg-midnight/90 flex flex-col items-center justify-center text-center space-y-3.5 border border-zinc-800/80">
+                  <span className="text-xs font-mono text-indigo-300 uppercase tracking-wider font-semibold">
+                    Large (`lg`) - 64px
                   </span>
-                  <div className="py-2">
+                  <div className="py-2 flex items-center justify-center">
                     <AgentAvatar
                       size="lg"
                       status={avatarSimStatus}
@@ -396,25 +396,7 @@ export const DesignPlayground: React.FC = () => {
                       }}
                     />
                   </div>
-                  <p className="text-[11px] text-zinc-400">Prominent holographic lens sweeps & wide orbits.</p>
-                </div>
-
-                {/* Size Extra Large */}
-                <div className="p-5 rounded-2xl bg-midnight/90 flex flex-col items-center justify-center text-center space-y-3 border border-zinc-800/80">
-                  <span className="text-[10px] font-mono text-indigo-300 uppercase tracking-wider font-semibold">
-                    Extra Large (`xl`) - Modal Hero
-                  </span>
-                  <div className="py-2">
-                    <AgentAvatar
-                      size="xl"
-                      status={avatarSimStatus}
-                      onClick={() => {
-                        soundEffects.playSuccess();
-                        addLog('Clicked XL Avatar (modal trigger)');
-                      }}
-                    />
-                  </div>
-                  <p className="text-[11px] text-zinc-400">Full showcase display with all micro-motion physics.</p>
+                  <p className="text-xs text-zinc-400">Prominent hero display for modals and headers.</p>
                 </div>
               </div>
             </section>

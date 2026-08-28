@@ -5,6 +5,13 @@ import { soundEffects } from '../../utils/audio';
 export type AvatarStatus = 'idle' | 'hover' | 'active' | 'thinking' | 'loading' | 'writing' | 'streaming';
 
 export interface AgentAvatarProps {
+  /**
+   * Streamlined 3 standard sizes:
+   * - 'sm': 32px (Pills, compact feeds)
+   * - 'md': 44px (Default for chat bubbles, nav bars)
+   * - 'lg': 64px (Headers, modals, hero showcase)
+   * Backward compatible aliases: 'xs' -> 'sm', 'xl' -> 'lg'
+   */
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   isThinking?: boolean;
   isWriting?: boolean;
@@ -40,7 +47,7 @@ export const AgentAvatar: React.FC<AgentAvatarProps> = ({
       const hideTimer = setTimeout(() => {
         setHasRecentlyLoaded(false);
         wasThinkingRef.current = false;
-      }, 5000);
+      }, 4000);
       return () => {
         clearTimeout(showTimer);
         clearTimeout(hideTimer);
@@ -65,60 +72,40 @@ export const AgentAvatar: React.FC<AgentAvatarProps> = ({
 
   const isThinkingActive = currentStatus === 'thinking' || isThinking;
   const isWritingActive = currentStatus === 'writing' || isWriting || isStreaming;
-  const isHighEnergy = isThinkingActive || isWritingActive;
+  const isInteractiveActive = isHovered || isPressed || isThinkingActive || isWritingActive || hasRecentlyLoaded;
 
-  // Size configurations
+  // Normalized size configuration:
+  // All orbit rings, shockwaves, and the core orb stay strictly WITHIN the bounding box (zero negative insets).
+  const normalizedSize = size === 'xs' ? 'sm' : size === 'xl' ? 'lg' : size;
+
   const config = {
-    xs: {
-      wrapper: 'w-6 h-6',
-      iconSize: 12,
-      orbitInset1: '-inset-1',
-      orbitInset2: '-inset-0.5',
-      badgeSize: 'size-1.5',
-      badgeOffset: 'bottom-0 right-0',
-      strokeWidth: 1,
-    },
     sm: {
       wrapper: 'w-8 h-8',
-      iconSize: 15,
-      orbitInset1: '-inset-1.5',
-      orbitInset2: '-inset-0.5',
-      badgeSize: 'size-2',
-      badgeOffset: 'bottom-0 right-0',
-      strokeWidth: 1.25,
+      coreInset: 'p-1',
+      iconSize: 13,
+      strokeWidth: 1.2,
+      beaconSize: 'size-1.5',
     },
     md: {
       wrapper: 'w-11 h-11',
-      iconSize: 21,
-      orbitInset1: '-inset-2',
-      orbitInset2: '-inset-1',
-      badgeSize: 'size-2.5',
-      badgeOffset: 'bottom-0.5 right-0.5',
+      coreInset: 'p-1.5',
+      iconSize: 18,
       strokeWidth: 1.5,
+      beaconSize: 'size-2',
     },
     lg: {
-      wrapper: 'w-15 h-15',
-      iconSize: 28,
-      orbitInset1: '-inset-2.5',
-      orbitInset2: '-inset-1.5',
-      badgeSize: 'size-3',
-      badgeOffset: 'bottom-1 right-1',
-      strokeWidth: 1.75,
+      wrapper: 'w-16 h-16',
+      coreInset: 'p-2',
+      iconSize: 26,
+      strokeWidth: 1.8,
+      beaconSize: 'size-2.5',
     },
-    xl: {
-      wrapper: 'w-20 h-20',
-      iconSize: 38,
-      orbitInset1: '-inset-3.5',
-      orbitInset2: '-inset-2',
-      badgeSize: 'size-3.5',
-      badgeOffset: 'bottom-1.5 right-1.5',
-      strokeWidth: 2,
-    },
-  }[size];
+  }[normalizedSize];
 
-  // Rotation speeds for dual concentric orbit rings
-  const clockwiseDuration = isThinkingActive ? 2.2 : isWritingActive ? 4.2 : isHovered ? 6.5 : 14;
-  const counterClockwiseDuration = isThinkingActive ? 1.8 : isWritingActive ? 3.6 : isHovered ? 5.2 : 11;
+  // Rotation animation durations when active (hover, thinking, writing)
+  // When idle, duration is null/stopped (0 rotation).
+  const clockwiseDuration = isThinkingActive ? 2.0 : isWritingActive ? 3.8 : isHovered ? 5.5 : 0;
+  const counterClockwiseDuration = isThinkingActive ? 1.6 : isWritingActive ? 3.2 : isHovered ? 4.5 : 0;
 
   const handleClick = () => {
     if (!isInteractive) return;
@@ -152,251 +139,278 @@ export const AgentAvatar: React.FC<AgentAvatarProps> = ({
       }}
     >
       {/* ========================================================================= */}
-      {/* 1. PULSATING AMBIENT SHOCKWAVES & RIPPLES (On Hover, Thinking, Writing) */}
+      {/* 1. AMBIENT GLOW & SHOCKWAVES (Contained inside wrapper, active on hover/loading) */}
       {/* ========================================================================= */}
-      {/* Outer ambient glow halo */}
-      <motion.div
-        className="absolute -inset-3 rounded-full blur-lg pointer-events-none"
-        animate={{
-          scale: isThinkingActive ? [1, 1.35, 1] : isWritingActive ? [1, 1.2, 1] : isHovered ? 1.25 : [1, 1.08, 1],
-          opacity: isThinkingActive ? [0.6, 0.9, 0.6] : isWritingActive ? [0.5, 0.8, 0.5] : isHovered ? 0.75 : 0.35,
-          background: isThinkingActive
-            ? 'radial-gradient(circle, rgba(56, 189, 248, 0.45) 0%, rgba(99, 102, 241, 0.25) 60%, transparent 80%)'
-            : isWritingActive
-            ? 'radial-gradient(circle, rgba(52, 211, 153, 0.45) 0%, rgba(56, 189, 248, 0.25) 60%, transparent 80%)'
-            : 'radial-gradient(circle, rgba(99, 102, 241, 0.35) 0%, rgba(37, 99, 235, 0.2) 60%, transparent 80%)',
-        }}
-        transition={{
-          duration: isThinkingActive ? 1.6 : isWritingActive ? 2.2 : 4,
-          repeat: Infinity,
-          ease: 'easeInOut',
-        }}
-      />
-
-      {/* Rhythmic Expanding Pulse Ring (Thinking & Writing Shockwaves) */}
-      {isHighEnergy && (
-        <motion.span
-          className="absolute -inset-2 rounded-full border border-sky-400/40 pointer-events-none"
-          initial={{ scale: 0.9, opacity: 0.9 }}
-          animate={{ scale: [1, 1.6], opacity: [0.8, 0] }}
-          transition={{
-            duration: isThinkingActive ? 1.4 : 2.0,
-            repeat: Infinity,
-            ease: 'easeOut',
-          }}
-        />
-      )}
-
-      {/* Second Harmonic Echo Ripple */}
-      {isThinkingActive && (
-        <motion.span
-          className="absolute -inset-2 rounded-full border border-indigo-400/30 pointer-events-none"
-          initial={{ scale: 0.9, opacity: 0.8 }}
-          animate={{ scale: [1, 1.9], opacity: [0.7, 0] }}
-          transition={{
-            duration: 1.4,
-            delay: 0.5,
-            repeat: Infinity,
-            ease: 'easeOut',
-          }}
-        />
-      )}
-
-      {/* ========================================================================= */}
-      {/* 2. DUAL ROTATING ORBIT RINGS (Opposite Directions & Dynamic Speeds) */}
-      {/* ========================================================================= */}
-      {/* Outer Orbit Ring 1: Clockwise High-Tech Dashed Cinema Sprocket Ring */}
-      <motion.div
-        className={`absolute ${config.orbitInset1} pointer-events-none flex items-center justify-center`}
-        animate={{ rotate: 360 }}
-        transition={{
-          duration: clockwiseDuration,
-          repeat: Infinity,
-          ease: 'linear',
-        }}
-      >
-        <svg className="w-full h-full" viewBox="0 0 100 100" fill="none">
-          <circle
-            cx="50"
-            cy="50"
-            r="47"
-            stroke="url(#outer-avatar-gradient)"
-            strokeWidth={config.strokeWidth * 1.8}
-            strokeDasharray={isThinkingActive ? '6 4 14 4' : '10 6 22 6'}
-            strokeLinecap="round"
-            className="transition-all duration-500"
+      <AnimatePresence>
+        {isInteractiveActive && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{
+              opacity: isThinkingActive ? [0.4, 0.8, 0.4] : 0.6,
+              scale: isThinkingActive ? [0.95, 1.05, 0.95] : 1,
+            }}
+            exit={{ opacity: 0, scale: 0.85 }}
+            transition={{
+              duration: isThinkingActive ? 1.5 : 0.3,
+              repeat: isThinkingActive ? Infinity : 0,
+              ease: 'easeInOut',
+            }}
+            className="absolute inset-0 rounded-full bg-blue-500/25 blur-md pointer-events-none"
           />
-          <defs>
-            <linearGradient id="outer-avatar-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="var(--color-tool-ocean)" stopOpacity={isHighEnergy ? 1 : 0.8} />
-              <stop offset="40%" stopColor="var(--color-midnight-royal)" stopOpacity={isHighEnergy ? 0.9 : 0.6} />
-              <stop offset="70%" stopColor="var(--color-indigo-accent)" stopOpacity={isHighEnergy ? 0.7 : 0.3} />
-              <stop offset="100%" stopColor="var(--color-tool-ocean)" stopOpacity={isHighEnergy ? 0.9 : 0.7} />
-            </linearGradient>
-          </defs>
-        </svg>
-      </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* Inner Orbit Ring 2: Counter-Clockwise Dotted Segmented Aperture Ring */}
+      {/* ========================================================================= */}
+      {/* 2. DUAL CONCENTRIC ORBIT RINGS (Zero negative insets - fully contained) */}
+      {/* ========================================================================= */}
+      
+      {/* Outer Orbit Ring 1: Clockwise Dashed Cinema Sprocket Ring */}
       <motion.div
-        className={`absolute ${config.orbitInset2} pointer-events-none flex items-center justify-center`}
-        animate={{ rotate: -360 }}
-        transition={{
-          duration: counterClockwiseDuration,
-          repeat: Infinity,
-          ease: 'linear',
-        }}
+        className="absolute inset-0 pointer-events-none flex items-center justify-center"
+        animate={
+          clockwiseDuration > 0
+            ? { rotate: 360 }
+            : { rotate: 0 }
+        }
+        transition={
+          clockwiseDuration > 0
+            ? {
+                duration: clockwiseDuration,
+                repeat: Infinity,
+                ease: 'linear',
+              }
+            : { duration: 0.4, ease: 'easeOut' }
+        }
       >
-        <svg className="w-full h-full" viewBox="0 0 100 100" fill="none">
+        <svg className="w-full h-full p-0.5" viewBox="0 0 100 100" fill="none">
           <circle
             cx="50"
             cy="50"
             r="46"
-            stroke="url(#inner-avatar-gradient)"
-            strokeWidth={config.strokeWidth * 1.4}
-            strokeDasharray={isThinkingActive ? '3 3 8 3' : '4 6 12 6'}
+            stroke="url(#avatar-outer-orbit-grad)"
+            strokeWidth={config.strokeWidth * 1.5}
+            strokeDasharray={isThinkingActive ? '8 5 18 5' : isInteractiveActive ? '10 6 22 6' : '14 8'}
             strokeLinecap="round"
-            className="transition-all duration-500"
+            className="transition-all duration-300"
           />
           <defs>
-            <linearGradient id="inner-avatar-gradient" x1="100%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor={isWritingActive ? 'var(--color-tool-diligence)' : 'var(--color-tool-scout)'} stopOpacity={isHighEnergy ? 1 : 0.7} />
-              <stop offset="50%" stopColor="var(--color-tool-ocean)" stopOpacity={isHighEnergy ? 0.8 : 0.4} />
-              <stop offset="100%" stopColor={isWritingActive ? 'var(--color-tool-ocean)' : 'var(--color-tool-scout-hover)'} stopOpacity={isHighEnergy ? 0.9 : 0.6} />
+            <linearGradient id="avatar-outer-orbit-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="var(--color-tool-ocean)" stopOpacity={isInteractiveActive ? 1 : 0.85} />
+              <stop offset="50%" stopColor="var(--color-midnight-royal)" stopOpacity={isInteractiveActive ? 0.95 : 0.7} />
+              <stop offset="100%" stopColor="var(--color-tool-diligence)" stopOpacity={isInteractiveActive ? 0.9 : 0.6} />
+            </linearGradient>
+          </defs>
+        </svg>
+      </motion.div>
+
+      {/* Inner Orbit Ring 2: Counter-Clockwise Dotted Segmented Ring */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none flex items-center justify-center"
+        animate={
+          counterClockwiseDuration > 0
+            ? { rotate: -360 }
+            : { rotate: 0 }
+        }
+        transition={
+          counterClockwiseDuration > 0
+            ? {
+                duration: counterClockwiseDuration,
+                repeat: Infinity,
+                ease: 'linear',
+              }
+            : { duration: 0.4, ease: 'easeOut' }
+        }
+      >
+        <svg className="w-full h-full p-1" viewBox="0 0 100 100" fill="none">
+          <circle
+            cx="50"
+            cy="50"
+            r="45"
+            stroke="url(#avatar-inner-orbit-grad)"
+            strokeWidth={config.strokeWidth * 1.2}
+            strokeDasharray={isThinkingActive ? '4 4 10 4' : isInteractiveActive ? '5 7 14 7' : '8 10'}
+            strokeLinecap="round"
+            className="transition-all duration-300"
+          />
+          <defs>
+            <linearGradient id="avatar-inner-orbit-grad" x1="100%" y1="0%" x2="0%" y2="100%">
+              <stop
+                offset="0%"
+                stopColor={isWritingActive ? 'var(--color-tool-diligence)' : 'var(--color-tool-scout)'}
+                stopOpacity={isInteractiveActive ? 1 : 0.75}
+              />
+              <stop offset="60%" stopColor="var(--color-tool-ocean)" stopOpacity={isInteractiveActive ? 0.85 : 0.55} />
+              <stop
+                offset="100%"
+                stopColor={isWritingActive ? 'var(--color-tool-ocean)' : 'var(--color-tool-scout-hover)'}
+                stopOpacity={isInteractiveActive ? 0.9 : 0.6}
+              />
             </linearGradient>
           </defs>
         </svg>
       </motion.div>
 
       {/* ========================================================================= */}
-      {/* 3. CORE ORB: ORGANIC SWIRLING VORTEX & ARTICULATED CINEMA EMBLEM */}
+      {/* 3. CORE ORB: BRIGHT LUMINOUS SAPPHIRE CINEMA ORB & ARTICULATED CLAPPER */}
       {/* ========================================================================= */}
-      <motion.div
-        className="relative z-10 w-full h-full rounded-full overflow-hidden flex items-center justify-center shadow-lg shadow-black/60 border border-white/20"
-        animate={{
-          scale: isPressed ? 0.92 : isHovered ? 1.06 : [1, 1.025, 1],
-        }}
-        transition={{
-          scale: isPressed
-            ? { type: 'spring', stiffness: 600, damping: 20 }
-            : isHovered
-            ? { type: 'spring', stiffness: 400, damping: 25 }
-            : { duration: 3.5, repeat: Infinity, ease: 'easeInOut' },
-        }}
-        style={{
-          background: 'linear-gradient(135deg, var(--color-midnight-violet) 0%, var(--color-midnight-base) 50%, var(--color-midnight-royal) 100%)',
-        }}
-      >
-        {/* Organic Swirling Conic Vortex Layer */}
+      <div className={`w-full h-full ${config.coreInset} flex items-center justify-center`}>
         <motion.div
-          className="absolute -inset-1 opacity-70 pointer-events-none mix-blend-screen"
-          animate={{ rotate: isThinkingActive ? 360 : isWritingActive ? -360 : 360 }}
+          className="relative z-10 w-full h-full rounded-full overflow-hidden flex items-center justify-center shadow-md shadow-blue-950/50 border border-blue-400/40 ring-1 ring-white/20"
+          animate={{
+            scale: isPressed ? 0.92 : isHovered ? 1.05 : 1,
+          }}
           transition={{
-            duration: isThinkingActive ? 3 : isWritingActive ? 5 : 12,
-            repeat: Infinity,
-            ease: 'linear',
+            scale: isPressed
+              ? { type: 'spring', stiffness: 600, damping: 20 }
+              : isHovered
+              ? { type: 'spring', stiffness: 400, damping: 25 }
+              : { duration: 0.3, ease: 'easeOut' },
           }}
           style={{
+            // Brighter, rich cinema royal sapphire gradient (high visibility & vibrancy)
             background:
-              'conic-gradient(from 0deg, rgba(56, 189, 248, 0.6), rgba(99, 102, 241, 0.4), rgba(168, 85, 247, 0.5), rgba(52, 211, 153, 0.4), rgba(56, 189, 248, 0.6))',
+              'linear-gradient(135deg, var(--color-midnight-royal) 0%, var(--color-tool-ocean) 60%, var(--color-tool-diligence) 100%)',
           }}
-        />
-
-        {/* Deep dark center radial vignette for high-contrast emblem clarity */}
-        <div className="absolute inset-0.5 rounded-full bg-slate-950/70 backdrop-blur-[2px] pointer-events-none" />
-
-        {/* Dynamic Holographic Glass Light Sweep */}
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/35 to-transparent pointer-events-none"
-          initial={{ x: '-150%' }}
-          animate={
-            isHovered
-              ? { x: '150%' }
-              : isThinkingActive
-              ? { x: ['-150%', '150%'] }
-              : { x: '-150%' }
-          }
-          transition={{
-            duration: isHovered ? 0.7 : isThinkingActive ? 1.8 : 0.7,
-            repeat: isThinkingActive ? Infinity : 0,
-            repeatDelay: 0.8,
-            ease: 'easeInOut',
-          }}
-        />
-
-        {/* Articulated Cinema Clapperboard SVG Emblem */}
-        <div className="relative z-20 flex items-center justify-center drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
-          <svg
-            width={config.iconSize}
-            height={config.iconSize}
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="overflow-visible"
-          >
-            {/* Clapper Lower Base Box */}
-            <rect
-              x="3"
-              y="9"
-              width="18"
-              height="12"
-              rx="2.5"
-              fill="white"
-              fillOpacity={0.95}
-              stroke="white"
-              strokeWidth="0.5"
-            />
-            {/* Base Inner Accent Grid / Cinema Frame notches */}
-            <line x1="8" y1="13" x2="16" y2="13" stroke="var(--color-midnight-base)" strokeWidth="1.25" strokeLinecap="round" />
-            <line x1="8" y1="16.5" x2="13" y2="16.5" stroke="var(--color-midnight-base)" strokeWidth="1.25" strokeLinecap="round" />
-
-            {/* Articulated Top Clapper Arm (Tilts open -14deg on Hover/Active) */}
-            <motion.g
-              style={{ originX: '4px', originY: '9px' }}
-              animate={{
-                rotate: isPressed ? 0 : isHovered ? -14 : isThinkingActive ? [-12, -2, -12] : 0,
-              }}
-              transition={{
-                rotate: isThinkingActive
-                  ? { duration: 0.9, repeat: Infinity, ease: 'easeInOut' }
-                  : { type: 'spring', stiffness: 500, damping: 20 },
-              }}
-            >
-              {/* Clapper Stick */}
-              <rect x="3" y="4" width="18" height="4.5" rx="1.5" fill="white" stroke="var(--color-midnight-base)" strokeWidth="0.5" />
-              {/* Diagonal Zebra Stripes */}
-              <line x1="6.5" y1="4" x2="4.5" y2="8.5" stroke="var(--color-midnight-base)" strokeWidth="1.5" />
-              <line x1="11" y1="4" x2="9" y2="8.5" stroke="var(--color-midnight-base)" strokeWidth="1.5" />
-              <line x1="15.5" y1="4" x2="13.5" y2="8.5" stroke="var(--color-midnight-base)" strokeWidth="1.5" />
-              <line x1="20" y1="4" x2="18" y2="8.5" stroke="var(--color-midnight-base)" strokeWidth="1.5" />
-            </motion.g>
-          </svg>
-        </div>
-
-        {/* Live Active Status Indicator Beacon Dot */}
-        <AnimatePresence>
-          {(isHighEnergy || isHovered) && (
-            <motion.span
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0, opacity: 0 }}
-              className={`absolute ${config.badgeOffset} ${config.badgeSize} rounded-full ring-1.5 ring-slate-950 z-30 shadow-md ${
-                isThinkingActive
-                  ? 'bg-amber-400 shadow-amber-400/80'
-                  : isWritingActive
-                  ? 'bg-emerald-400 shadow-emerald-400/80'
-                  : 'bg-sky-400 shadow-sky-400/80'
-              }`}
-            >
-              <motion.span
-                className="absolute inset-0 rounded-full bg-inherit"
-                animate={{ scale: [1, 2], opacity: [0.8, 0] }}
-                transition={{ duration: 1.2, repeat: Infinity, ease: 'easeOut' }}
+        >
+          {/* Swirling Conic Highlight Layer (Active on hover/loading/writing) */}
+          <AnimatePresence>
+            {isInteractiveActive && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{
+                  opacity: 0.65,
+                  rotate: isThinkingActive ? 360 : isWritingActive ? -360 : 360,
+                }}
+                exit={{ opacity: 0 }}
+                transition={{
+                  opacity: { duration: 0.3 },
+                  rotate: {
+                    duration: isThinkingActive ? 2.5 : isWritingActive ? 4 : 8,
+                    repeat: Infinity,
+                    ease: 'linear',
+                  },
+                }}
+                className="absolute -inset-1 pointer-events-none mix-blend-overlay"
+                style={{
+                  background:
+                    'conic-gradient(from 0deg, rgba(255, 255, 255, 0.8), rgba(56, 189, 248, 0.5), rgba(99, 102, 241, 0.4), rgba(0, 210, 158, 0.6), rgba(255, 255, 255, 0.8))',
+                }}
               />
-            </motion.span>
-          )}
-        </AnimatePresence>
-      </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Dynamic Light Sweep across the lens on hover */}
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none"
+            initial={{ x: '-150%' }}
+            animate={
+              isHovered
+                ? { x: '150%' }
+                : isThinkingActive
+                ? { x: ['-150%', '150%'] }
+                : { x: '-150%' }
+            }
+            transition={{
+              duration: isHovered ? 0.6 : isThinkingActive ? 1.5 : 0.6,
+              repeat: isThinkingActive ? Infinity : 0,
+              repeatDelay: 0.6,
+              ease: 'easeInOut',
+            }}
+          />
+
+          {/* Articulated Cinema Clapperboard SVG Emblem */}
+          <div className="relative z-20 flex items-center justify-center drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]">
+            <svg
+              width={config.iconSize}
+              height={config.iconSize}
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="overflow-visible"
+            >
+              {/* Clapper Lower Base Box */}
+              <rect
+                x="3"
+                y="9"
+                width="18"
+                height="12"
+                rx="2.5"
+                fill="white"
+                fillOpacity={0.98}
+                stroke="white"
+                strokeWidth="0.5"
+              />
+              {/* Base Inner Accent Grid / Cinema Frame notches */}
+              <line
+                x1="8"
+                y1="13"
+                x2="16"
+                y2="13"
+                stroke="var(--color-midnight-base)"
+                strokeWidth="1.3"
+                strokeLinecap="round"
+              />
+              <line
+                x1="8"
+                y1="16.5"
+                x2="13"
+                y2="16.5"
+                stroke="var(--color-midnight-base)"
+                strokeWidth="1.3"
+                strokeLinecap="round"
+              />
+
+              {/* Articulated Top Clapper Arm (Tilts open -14deg on Hover/Active) */}
+              <motion.g
+                style={{ originX: '4px', originY: '9px' }}
+                animate={{
+                  rotate: isPressed ? 0 : isHovered ? -14 : isThinkingActive ? [-12, -2, -12] : 0,
+                }}
+                transition={{
+                  rotate: isThinkingActive
+                    ? { duration: 0.8, repeat: Infinity, ease: 'easeInOut' }
+                    : { type: 'spring', stiffness: 500, damping: 20 },
+                }}
+              >
+                {/* Clapper Stick */}
+                <rect
+                  x="3"
+                  y="4"
+                  width="18"
+                  height="4.5"
+                  rx="1.5"
+                  fill="white"
+                  stroke="var(--color-midnight-base)"
+                  strokeWidth="0.5"
+                />
+                {/* Diagonal Zebra Stripes */}
+                <line x1="6.5" y1="4" x2="4.5" y2="8.5" stroke="var(--color-midnight-base)" strokeWidth="1.5" />
+                <line x1="11" y1="4" x2="9" y2="8.5" stroke="var(--color-midnight-base)" strokeWidth="1.5" />
+                <line x1="15.5" y1="4" x2="13.5" y2="8.5" stroke="var(--color-midnight-base)" strokeWidth="1.5" />
+                <line x1="20" y1="4" x2="18" y2="8.5" stroke="var(--color-midnight-base)" strokeWidth="1.5" />
+              </motion.g>
+            </svg>
+          </div>
+
+          {/* Live Status Indicator Beacon (Active on thinking, writing, recently loaded) */}
+          <AnimatePresence>
+            {(isThinkingActive || isWritingActive || hasRecentlyLoaded) && (
+              <motion.span
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0, opacity: 0 }}
+                className={`absolute bottom-0.5 right-0.5 ${config.beaconSize} rounded-full ring-1 ring-white ${
+                  isThinkingActive
+                    ? 'bg-amber-400 animate-ping'
+                    : isWritingActive
+                    ? 'bg-emerald-400 animate-pulse'
+                    : 'bg-blue-400'
+                }`}
+              />
+            )}
+          </AnimatePresence>
+        </motion.div>
+      </div>
     </div>
   );
 };
