@@ -45,7 +45,6 @@ const COMMON_LOCATIONS = [
 ];
 
 export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, onLaunch }) => {
-  const [step, setStep] = useState<'REQUIREMENTS' | 'REVIEW'>('REQUIREMENTS');
   const [festivalName, setFestivalName] = useState(args.festival_name || '');
   const [cityCountry, setCityCountry] = useState(args.city_country || '');
   const [websiteUrl, setWebsiteUrl] = useState(args.optional_url || '');
@@ -66,11 +65,6 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
 
   const hasFollowUpRequirement = talkedToSomeone || wasInvited || receivedEmail;
 
-  const handleProceedToReview = () => {
-    if (!festivalName.trim()) return;
-    soundEffects.playClick();
-    setStep('REVIEW');
-  };
 
   const handleLaunch = () => {
     soundEffects.playSuccess();
@@ -111,8 +105,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
         </div>
       </div>
 
-      {/* STAGE 1: REQUIREMENTS GATHERING UI */}
-      {step === 'REQUIREMENTS' && (
+      {/* REQUIREMENTS GATHERING UI */}
         <div className="space-y-4">
           {/* Target Details Form */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
@@ -358,64 +351,20 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
             )}
           </AnimatePresence>
 
-          {/* Stage 1 Action Trigger */}
+          {/* Action Trigger */}
           <div className="pt-2">
             <button
-              onClick={handleProceedToReview}
+              onClick={handleLaunch}
               disabled={!festivalName.trim()}
               className="w-full flex items-center justify-center space-x-2 py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs font-mono shadow-lg shadow-emerald-950/50 hover:shadow-emerald-600/30 transition-all group disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
-              <span>Review Investigation Plan</span>
+              <span>Start Investigation</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
         </div>
-      )}
 
-      {/* STAGE 2: REVIEW & LAUNCH CONFIRMATION UI (Redirects to Due Diligence Workspace) */}
-      {step === 'REVIEW' && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            className="w-full max-w-md bg-darkroom-surface rounded-2xl shadow-2xl p-6 border border-darkroom-border space-y-5"
-          >
-            <div className="space-y-4 text-center">
-              <div className="mx-auto w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400">
-                <ShieldCheck className="w-6 h-6" />
-              </div>
-              <h4 className="text-xl font-bold text-white font-serif tracking-tight">
-                Investigate {festivalName}?
-              </h4>
-              <p className="text-sm text-zinc-300 leading-relaxed max-w-sm mx-auto">
-                Confirm to launch an autonomous multi-agent investigation to build a detailed due diligence dossier.
-              </p>
-            </div>
-            
-            {/* Action Buttons */}
-            <div className="flex flex-col gap-3 pt-2">
-              <button
-                type="button"
-                onClick={handleLaunch}
-                className="w-full flex items-center justify-center space-x-2 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm font-mono shadow-lg shadow-emerald-950/50 hover:shadow-emerald-600/30 transition-all group cursor-pointer"
-              >
-                <span>Confirm & Start Investigation</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  soundEffects.playClick();
-                  setStep('REQUIREMENTS');
-                }}
-                className="w-full py-3 rounded-xl border border-zinc-700 bg-midnight hover:bg-surface text-sm font-mono text-zinc-300 hover:text-white transition-colors cursor-pointer"
-              >
-                Cancel
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      )}
+
     </motion.div>
   );
 };

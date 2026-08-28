@@ -10,7 +10,6 @@ interface GrantIntakeCardProps {
 }
 
 export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args, onLaunchSearch }) => {
-  const [step, setStep] = useState<'REQUIREMENTS' | 'REVIEW'>('REQUIREMENTS');
   const [projectTitle, setProjectTitle] = useState(args.project_title || 'Untitled Project');
   const [budgetTier, setBudgetTier] = useState<number>(50000); // £50k
   const [fundingNeeded, setFundingNeeded] = useState<number>(25000); // £25k
@@ -65,11 +64,6 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args, onLaunch
     });
   };
 
-  const handleProceedToReview = () => {
-    if (!projectTitle.trim()) return;
-    soundEffects.playClick();
-    setStep('REVIEW');
-  };
 
   const handleLaunch = () => {
     soundEffects.playSuccess();
@@ -95,7 +89,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args, onLaunch
                 Film Grant & Sponsor Match
               </span>
               <span className="text-[10px] px-2 py-0.5 rounded-md bg-blue-500/15 text-blue-400 font-mono font-semibold">
-                {step === 'REQUIREMENTS' ? 'Stage 1: Intake' : 'Stage 2: Review'}
+                Intake
               </span>
             </div>
             <h3 className="text-base font-bold text-white font-serif">{projectTitle}</h3>
@@ -108,9 +102,8 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args, onLaunch
         </div>
       </div>
 
-      {/* STAGE 1: REQUIREMENTS GATHERING UI */}
-      {step === 'REQUIREMENTS' && (
-        <div className="space-y-4">
+      {/* REQUIREMENTS GATHERING UI */}
+      <div className="space-y-4">
           {/* Project Title Input */}
           <div className="text-xs">
             <label className="block text-zinc-400 font-mono mb-1">Project / Screenplay Title</label>
@@ -272,102 +265,19 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args, onLaunch
             </AnimatePresence>
           </div>
 
-          {/* Stage 1 Action Trigger */}
+          {/* Action Trigger */}
           <div className="pt-2">
             <button
-              onClick={handleProceedToReview}
+              onClick={handleLaunch}
               className="w-full flex items-center justify-center space-x-2 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs font-mono shadow-lg shadow-blue-950/50 hover:shadow-blue-600/30 transition-all group cursor-pointer"
             >
-              <span>Review Grant Strategy</span>
+              <span>Discover Matching Public Grants</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
         </div>
-      )}
 
-      {/* STAGE 2: REVIEW & LAUNCH CONFIRMATION UI */}
-      {step === 'REVIEW' && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="space-y-4"
-        >
-          <div className="p-4 rounded-xl bg-darkroom-card space-y-2.5 text-xs">
-            <div className="flex items-center justify-between pb-2">
-              <span className="font-mono font-bold text-blue-400 uppercase tracking-wider">
-                Stage 2: Funding Search Strategy Ready
-              </span>
-              <span className="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-mono text-[10px]">
-                Search Ready
-              </span>
-            </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-zinc-300">
-              <div>
-                <span className="text-zinc-500 font-mono block">Project Title:</span>
-                <strong className="text-white text-sm">{projectTitle}</strong>
-              </div>
-              <div>
-                <span className="text-zinc-500 font-mono block">Target Grant Need:</span>
-                <span className="text-emerald-400 font-mono font-bold">
-                  £{fundingNeeded.toLocaleString()} (of £{budgetTier.toLocaleString()})
-                </span>
-              </div>
-              <div>
-                <span className="text-zinc-500 font-mono block">Region / Scheme:</span>
-                <span className="text-zinc-200">{filmmakerRegion}</span>
-              </div>
-              <div>
-                <span className="text-zinc-500 font-mono block">Production Stage:</span>
-                <span className="text-zinc-200">{productionStage}</span>
-              </div>
-            </div>
-
-            <div className="pt-2">
-              <span className="text-zinc-400 font-mono block mb-1">Target Funding Providers:</span>
-              <div className="flex flex-wrap gap-1.5">
-                <span className="px-2.5 py-1 rounded-lg bg-darkroom-surface text-zinc-200 text-[11px]">
-                  ✓ BFI Filmmaking Fund
-                </span>
-                <span className="px-2.5 py-1 rounded-lg bg-darkroom-surface text-zinc-200 text-[11px]">
-                  ✓ National Lottery Good Causes
-                </span>
-                <span className="px-2.5 py-1 rounded-lg bg-darkroom-surface text-zinc-200 text-[11px]">
-                  ✓ Regional Match Schemes ({filmmakerRegion})
-                </span>
-                {attachedFile && (
-                  <span className="px-2.5 py-1 rounded-lg bg-blue-900/60 text-blue-300 text-[11px]">
-                    ✓ OCR Treatment Synced ({attachedFile.name})
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-2 pt-1">
-            <button
-              type="button"
-              onClick={() => {
-                soundEffects.playClick();
-                setStep('REQUIREMENTS');
-              }}
-              className="px-4 py-2.5 rounded-xl bg-darkroom-card hover:bg-paper-border hover:bg-darkroom-border text-xs font-mono text-zinc-300 hover:text-white transition-colors cursor-pointer"
-            >
-              ‹ Edit Parameters
-            </button>
-            <button
-              type="button"
-              onClick={handleLaunch}
-              className="flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs font-mono shadow-lg shadow-blue-950/50 hover:shadow-blue-600/30 transition-all group cursor-pointer"
-            >
-              <Sparkles className="w-4 h-4 text-blue-200" />
-              <span>Discover Matching Public Grants</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
-            </button>
-          </div>
-        </motion.div>
-      )}
     </motion.div>
   );
 };
