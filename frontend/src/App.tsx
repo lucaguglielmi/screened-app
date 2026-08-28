@@ -615,7 +615,7 @@ export default function App() {
           {activeTool === 'OPPORTUNITY_SCOUT' && (
             <Suspense fallback={<div className="p-8 text-center text-slate-500">Loading Scout...</div>}>
               <OpportunityScout
-                onDeepScreen={(q) => handleDeepScreen(q, 'scout')}
+                onDeepScreen={(q: string) => handleDeepScreen(q, 'scout')}
                 initialProfile={initialScoutProfile}
               />
             </Suspense>

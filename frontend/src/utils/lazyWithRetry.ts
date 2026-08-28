@@ -1,12 +1,13 @@
-import { lazy, ComponentType } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { lazy, ComponentType, LazyExoticComponent } from 'react';
 
 /**
  * Enhanced React.lazy wrapper that automatically catches chunk load errors (e.g. from new deployments)
  * and safely force-refreshes the page once to retrieve the new bundle assets.
  */
-export function lazyWithRetry<T extends ComponentType<Record<string, unknown>>>(
-  factory: () => Promise<{ default: T } | Record<string, unknown>>
-) {
+export function lazyWithRetry<T extends ComponentType<any>>(
+  factory: () => Promise<{ default: T } | { [key: string]: any }>
+): LazyExoticComponent<T> {
   return lazy(async () => {
     const pageHasBeenRefreshed = sessionStorage.getItem('chunk_retry_refreshed') === 'true';
 
