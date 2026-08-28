@@ -36,7 +36,7 @@ gcloud artifacts repositories create screened-app \
 echo "Building container image with Cloud Build..."
 gcloud builds submit \
   --project="${PROJECT_ID}" \
-  --substitutions=_COMMIT_SHA="${SHORT_SHA}",_BUILD_TIME="${BUILD_TIME}" \
+  --substitutions=_COMMIT_SHA="${SHORT_SHA}" \
   --tag="${IMAGE_TAG}" .
 
 # 3. Apply IAM Roles (Cloud Tasks Enqueuer & Observability / Telemetry)

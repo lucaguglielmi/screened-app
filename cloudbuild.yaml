@@ -42,7 +42,6 @@ steps:
 
 substitutions:
   _COMMIT_SHA: 'latest'
-  _BUILD_TIME: 'unknown'
 
 images:
   - 'europe-west2-docker.pkg.dev/screened-hackathon/screened-app/screened:$_COMMIT_SHA'
