@@ -201,7 +201,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                       : 'bg-darkroom-surface hover:bg-darkroom-card border border-darkroom-border text-slate-300'
                   }`}
                 >
-                  <div className="size-10 rounded-xl bg-gradient-to-tr from-tool-scout via-tool-scout to-orange-500 flex items-center justify-center text-white shadow-md shrink-0">
+                  <div className="size-10 rounded-xl bg-gradient-to-tr from-tool-scout via-tool-scout to-tool-scout-hover flex items-center justify-center text-white shadow-md shrink-0">
                     <Compass className="size-5 text-white" />
                   </div>
                   <div className="flex-1 min-w-0">

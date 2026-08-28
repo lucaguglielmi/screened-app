@@ -39,7 +39,7 @@ const TOOL_PALETTE_2 = [
   },
   {
     tool: 'Due Diligence',
-    colorName: 'Mint / Emerald Teal',
+    colorName: 'Bright Neon Mint (Palette 2)',
     hex: 'var(--color-tool-diligence)',
     role: 'Multi-agent cinema investigation, trade registries, evidence dossiers',
     icon: ShieldCheck,
@@ -49,7 +49,7 @@ const TOOL_PALETTE_2 = [
   },
   {
     tool: 'Opportunity Scout',
-    colorName: 'Coral Rose / Watermelon',
+    colorName: 'Bright Electric Purple / Violet (Palette 2)',
     hex: 'var(--color-tool-scout)',
     role: 'Film slate matching, deadline calendars, qualifying submission strategy',
     icon: Compass,
@@ -613,7 +613,7 @@ export const UiGalleryLab: React.FC = () => {
         <div>
           <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider font-mono flex items-center gap-2">
             <span>5. Organic Magnetic Vector Field Laboratory</span>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">
               Contained Card Preview
             </span>
           </h3>
@@ -674,7 +674,7 @@ export const UiGalleryLab: React.FC = () => {
               step={0.1}
               value={vfSpeed}
               onChange={(e) => setVfSpeed(parseFloat(e.target.value))}
-              className="w-full accent-rose-500 cursor-pointer"
+              className="w-full accent-purple-500 cursor-pointer"
             />
           </div>
 
@@ -690,7 +690,7 @@ export const UiGalleryLab: React.FC = () => {
               step={0.05}
               value={vfAmplitude}
               onChange={(e) => setVfAmplitude(parseFloat(e.target.value))}
-              className="w-full accent-rose-500 cursor-pointer"
+              className="w-full accent-purple-500 cursor-pointer"
             />
           </div>
 
@@ -706,7 +706,7 @@ export const UiGalleryLab: React.FC = () => {
               step={0.05}
               value={vfBlobCoverage}
               onChange={(e) => setVfBlobCoverage(parseFloat(e.target.value))}
-              className="w-full accent-rose-500 cursor-pointer"
+              className="w-full accent-purple-500 cursor-pointer"
             />
           </div>
 
@@ -722,7 +722,7 @@ export const UiGalleryLab: React.FC = () => {
               step={2}
               value={vfSpacing}
               onChange={(e) => setVfSpacing(parseInt(e.target.value))}
-              className="w-full accent-rose-500 cursor-pointer"
+              className="w-full accent-purple-500 cursor-pointer"
             />
           </div>
 
@@ -738,7 +738,7 @@ export const UiGalleryLab: React.FC = () => {
               step={1}
               value={vfLength}
               onChange={(e) => setVfLength(parseInt(e.target.value))}
-              className="w-full accent-rose-500 cursor-pointer"
+              className="w-full accent-purple-500 cursor-pointer"
             />
           </div>
 
@@ -754,7 +754,7 @@ export const UiGalleryLab: React.FC = () => {
               step={0.05}
               value={vfOpacity}
               onChange={(e) => setVfOpacity(parseFloat(e.target.value))}
-              className="w-full accent-rose-500 cursor-pointer"
+              className="w-full accent-purple-500 cursor-pointer"
             />
           </div>
         </div>

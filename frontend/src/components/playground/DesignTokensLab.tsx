@@ -44,7 +44,7 @@ const TOOL_PALETTE_2 = [
   },
   {
     tool: 'Due Diligence',
-    colorName: 'Mint / Emerald Teal',
+    colorName: 'Bright Neon Mint (Palette 2)',
     hex: 'var(--color-tool-diligence)',
     role: 'Multi-agent cinema investigation, trade registries, evidence dossiers',
     icon: ShieldCheck,
@@ -54,7 +54,7 @@ const TOOL_PALETTE_2 = [
   },
   {
     tool: 'Opportunity Scout',
-    colorName: 'Coral Rose / Watermelon',
+    colorName: 'Bright Electric Purple / Violet (Palette 2)',
     hex: 'var(--color-tool-scout)',
     role: 'Film slate matching, deadline calendars, qualifying submission strategy',
     icon: Compass,

@@ -35,13 +35,13 @@
   --color-midnight-glow: rgba(29, 78, 216, 0.25);
 
   /* Palette 2 Tool Swatches */
-  --color-tool-diligence: #00D29E;
-  --color-tool-diligence-hover: #FFFFFF;
-  --color-tool-diligence-glow: rgba(0, 210, 158, 0.25);
+  --color-tool-diligence: #10E599;
+  --color-tool-diligence-hover: #34D399;
+  --color-tool-diligence-glow: rgba(16, 229, 153, 0.25);
 
-  --color-tool-scout: #F43F5E;
-  --color-tool-scout-hover: #FB7185;
-  --color-tool-scout-glow: rgba(244, 63, 94, 0.25);
+  --color-tool-scout: #A855F7;
+  --color-tool-scout-hover: #C084FC;
+  --color-tool-scout-glow: rgba(168, 85, 247, 0.25);
 
   --color-tool-ocean: #3B82F6;
   --color-tool-petrol: #FFFFFF;
