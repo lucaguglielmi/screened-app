@@ -3,15 +3,15 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'build',
-      '--build-arg', 'COMMIT_SHA=$_COMMIT_SHA',
+      '--build-arg', 'COMMIT_SHA=${_COMMIT_SHA}',
       '--build-arg', 'APP_VERSION=0.1.0',
-      '-t', 'europe-west2-docker.pkg.dev/screened-hackathon/screened-app/screened:$_COMMIT_SHA',
+      '-t', 'europe-west2-docker.pkg.dev/screened-hackathon/screened-app/screened:${_COMMIT_SHA}',
       '.'
     ]
   
   # Push the container image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'europe-west2-docker.pkg.dev/screened-hackathon/screened-app/screened:$_COMMIT_SHA']
+    args: ['push', 'europe-west2-docker.pkg.dev/screened-hackathon/screened-app/screened:${_COMMIT_SHA}']
 
   # Deploy container image to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -21,7 +21,7 @@ steps:
       - 'deploy'
       - 'screened'
       - '--image'
-      - 'europe-west2-docker.pkg.dev/screened-hackathon/screened-app/screened:$_COMMIT_SHA'
+      - 'europe-west2-docker.pkg.dev/screened-hackathon/screened-app/screened:${_COMMIT_SHA}'
       - '--region'
       - 'europe-west2'
       - '--platform'
@@ -44,4 +44,4 @@ substitutions:
   _COMMIT_SHA: 'latest'
 
 images:
-  - 'europe-west2-docker.pkg.dev/screened-hackathon/screened-app/screened:$_COMMIT_SHA'
+  - 'europe-west2-docker.pkg.dev/screened-hackathon/screened-app/screened:${_COMMIT_SHA}'
