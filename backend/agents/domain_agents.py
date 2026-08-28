@@ -12,6 +12,7 @@ from google.adk.runners import Runner
 from google.genai import types
 from backend.orchestrator.events import EventType, broadcaster
 
+from backend.agents.adk_helpers import get_adk_model
 logger = logging.getLogger("screened.agents.domain_agents")
 
 
@@ -42,7 +43,7 @@ def create_domain_agent(domain: str, investigation_id: str, entity_info: Dict[st
     
     return LlmAgent(
         name=f"{domain}Agent",
-        model="gemini-2.5-flash",
+        model=get_adk_model("gemini-2.5-flash"),
         instruction=f"You are the {domain} Research Agent. Use the parallel_task_run tool to extract claims for your domain.",
         tools=[task_tool]
     )

@@ -31,6 +31,7 @@ class OpportunityScoutAgent:
         from google.adk.tools import FunctionTool
         from backend.tools.findall_tools import findall_search, findall_enrich
         from google.genai import types
+        from backend.agents.adk_helpers import get_adk_model
 
         search_tool = FunctionTool(findall_search)
         enrich_tool = FunctionTool(findall_enrich)
@@ -54,7 +55,7 @@ Generate a cohesive submission strategy roadmap and a list of structured opportu
 
         scout_agent = LlmAgent(
             name="scout",
-            model="gemini-2.5-flash",
+            model=get_adk_model("gemini-2.5-flash"),
             instruction=instruction,
             tools=[search_tool, enrich_tool],
             output_schema=ScoutResponse,

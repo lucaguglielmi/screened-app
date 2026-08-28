@@ -483,10 +483,11 @@ Return a strict JSON object with:
             from backend.orchestrator.session_service import FirestoreSessionService
             from backend.tools.parallel_task import parallel_task_run
             from google.genai import types
+            from backend.agents.adk_helpers import get_adk_model
 
             agent = LlmAgent(
                 name="producer_desk",
-                model="gemini-2.5-flash",
+                model=get_adk_model("gemini-2.5-flash"),
                 instruction=PRODUCER_DESK_SYSTEM_PROMPT,
                 tools=[
                     FunctionTool(configure_due_diligence),

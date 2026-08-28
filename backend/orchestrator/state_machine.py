@@ -731,6 +731,7 @@ def build_root_agent():
     """Factory to build the ADK Workflow representing the system architecture."""
     from google.adk.workflow import Workflow, Edge, START
     from google.adk.agents import LlmAgent
+    from backend.agents.adk_helpers import get_adk_model
     
     # 1. Planner
     from backend.agents.planner import create_planner_adk_agent
@@ -758,11 +759,11 @@ def build_root_agent():
     )
     
     # 3. Deep Vetting
-    ci = LlmAgent(name="corporate_identity", description="Inspect company registration", model="gemini-2.5-pro")
-    df = LlmAgent(name="domain_forensics", description="Inspect domain registration history", model="gemini-2.5-pro")
-    vr = LlmAgent(name="venue_reality", description="Cross-check physical theater leases", model="gemini-2.5-pro")
-    jl = LlmAgent(name="jury_laurels", description="Factually assess Festival Directors", model="gemini-2.5-pro")
-    rp = LlmAgent(name="rules_plagiarism", description="Check if submission rules are unique", model="gemini-2.5-pro")
+    ci = LlmAgent(name="corporate_identity", description="Inspect company registration", model=get_adk_model("gemini-2.5-pro"))
+    df = LlmAgent(name="domain_forensics", description="Inspect domain registration history", model=get_adk_model("gemini-2.5-pro"))
+    vr = LlmAgent(name="venue_reality", description="Cross-check physical theater leases", model=get_adk_model("gemini-2.5-pro"))
+    jl = LlmAgent(name="jury_laurels", description="Factually assess Festival Directors", model=get_adk_model("gemini-2.5-pro"))
+    rp = LlmAgent(name="rules_plagiarism", description="Check if submission rules are unique", model=get_adk_model("gemini-2.5-pro"))
 
     deep_vetting = Workflow(
         name="deep_vetting",
@@ -777,9 +778,9 @@ def build_root_agent():
     )
     
     # 4. Other Agents
-    producer_desk = LlmAgent(name="producer_desk", description="Producer Desk", model="gemini-2.5-flash")
-    opportunity_scout = LlmAgent(name="opportunity_scout", description="Opportunity Scout", model="gemini-2.5-flash")
-    outreach_drafter = LlmAgent(name="outreach_drafter", description="Outreach Drafter", model="gemini-2.5-flash")
+    producer_desk = LlmAgent(name="producer_desk", description="Producer Desk", model=get_adk_model("gemini-2.5-flash"))
+    opportunity_scout = LlmAgent(name="opportunity_scout", description="Opportunity Scout", model=get_adk_model("gemini-2.5-flash"))
+    outreach_drafter = LlmAgent(name="outreach_drafter", description="Outreach Drafter", model=get_adk_model("gemini-2.5-flash"))
     
     root = Workflow(
         name="orchestrator",

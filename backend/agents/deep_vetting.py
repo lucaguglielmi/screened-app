@@ -24,6 +24,7 @@ from google.adk.tools import FunctionTool
 from backend.orchestrator.session_service import FirestoreSessionService
 from backend.tools.parallel_task import parallel_task_run as _parallel_task_run
 
+from backend.agents.adk_helpers import get_adk_model
 from backend.tools.source_tiers import (
     CORPORATE_IDENTITY_DOMAINS,
     DOMAIN_FORENSICS_DOMAINS,
@@ -90,7 +91,7 @@ class DeepVettingAgent:
             agents.append(
                 LlmAgent(
                     name=dim["name"],
-                    model="gemini-2.5-flash",
+                    model=get_adk_model("gemini-2.5-flash"),
                     instruction=instruction,
                     tools=[tool]
                 )
@@ -115,7 +116,7 @@ Return a JSON object conforming strictly to the output schema.
         
         scorer = LlmAgent(
             name="vetting_scorer",
-            model="gemini-2.5-flash",
+            model=get_adk_model("gemini-2.5-flash"),
             instruction=reducer_instruction,
             output_schema=DeepVettingReport,
             output_key="deep_vetting_report"
