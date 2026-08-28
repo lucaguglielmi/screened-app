@@ -248,6 +248,7 @@ export default function App() {
         } else if (activityEvent.eventType === 'DOSSIER_SYNTHESIZING') {
           setInvestigation((prev) => (prev ? { ...prev, status: 'ASSEMBLING_DOSSIER' } : null));
         } else if (activityEvent.eventType === 'ERROR') {
+          console.error('Investigation Error Event Received:', activityEvent);
           setInvestigation((prev) => (prev ? { ...prev, status: 'FAILED' } : null));
           setError(activityEvent.message || 'An error occurred during the investigation.');
         }
@@ -331,6 +332,7 @@ export default function App() {
       setInvestigation(inv);
       saveRecentInvestigation(inv.id);
     } catch (err) {
+      console.error('Failed to initiate investigation:', err);
       setError(err instanceof Error ? err.message : 'Failed to initiate investigation.');
     } finally {
       setLoading(false);
