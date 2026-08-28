@@ -119,7 +119,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args, onLaunch
               value={projectTitle}
               onChange={(e) => setProjectTitle(e.target.value)}
               placeholder="e.g. Echoes of the Humber"
-              className="w-full bg-darkroom-card rounded-xl px-3.5 py-2.5 text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:bg-paper-border focus:bg-darkroom-border"
+              className="w-full bg-darkroom-card rounded-xl px-3.5 py-2.5 text-white text-base placeholder:text-zinc-500 focus:outline-none focus:bg-paper-border focus:bg-darkroom-border"
             />
           </div>
 
@@ -181,7 +181,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args, onLaunch
               <select
                 value={filmmakerRegion}
                 onChange={(e) => setFilmmakerRegion(e.target.value)}
-                className="w-full bg-darkroom-card rounded-xl px-3 py-2.5 text-white text-xs focus:outline-none focus:bg-paper-border focus:bg-darkroom-border cursor-pointer"
+                className="w-full bg-darkroom-card rounded-xl px-3 py-2.5 text-white text-base focus:outline-none focus:bg-paper-border focus:bg-darkroom-border cursor-pointer"
               >
                 <option value="UK & Northern Ireland">
                   United Kingdom & NI (BFI/Lottery Focus)
@@ -199,7 +199,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args, onLaunch
               <select
                 value={productionStage}
                 onChange={(e) => setProductionStage(e.target.value)}
-                className="w-full bg-darkroom-card rounded-xl px-3 py-2.5 text-white text-xs focus:outline-none focus:bg-paper-border focus:bg-darkroom-border cursor-pointer"
+                className="w-full bg-darkroom-card rounded-xl px-3 py-2.5 text-white text-base focus:outline-none focus:bg-paper-border focus:bg-darkroom-border cursor-pointer"
               >
                 <option value="Development & Scriptwriting">Development & Scriptwriting</option>
                 <option value="Early Pre-Production">Early Pre-Production</option>
@@ -278,7 +278,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args, onLaunch
               onClick={handleProceedToReview}
               className="w-full flex items-center justify-center space-x-2 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs font-mono shadow-lg shadow-blue-950/50 hover:shadow-blue-600/30 transition-all group cursor-pointer"
             >
-              <span>Review Grant Strategy (Stage 2)</span>
+              <span>Review Grant Strategy</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>

@@ -563,51 +563,44 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
       </div>
 
       {/* 4. Live SSE Activity Stream Console */}
-      <div className="rounded-3xl bg-darkroom-surface overflow-hidden shadow-2xl shadow-black/80">
-        <div className="p-4 sm:px-6 flex items-center justify-between">
-          <span className="font-mono text-xs uppercase tracking-wider text-slate-300 flex items-center gap-2 font-semibold">
-            <span
-              className={`size-2 rounded-full bg-tool-diligence ${reducedMotion ? '' : 'animate-pulse'}`}
-            />
-            <Terminal className="size-3.5 text-indigo-400" />
-            <span>Live Agent Event Log</span>
-          </span>
-          <span className="text-xs font-mono text-slate-400">{events.length} events recorded</span>
-        </div>
-
-        <div className="p-4 sm:p-5 max-h-60 overflow-y-auto space-y-2.5 text-xs font-mono bg-darkroom-bg/60">
-          {events.length === 0 ? (
-            <div className="text-slate-400 text-center py-6 text-xs font-mono flex flex-col items-center gap-2">
-              <Loader2
-                className={`size-4 text-indigo-400 ${reducedMotion ? '' : 'animate-spin'}`}
+      {events.length > 0 && (
+        <div className="rounded-3xl bg-darkroom-surface overflow-hidden shadow-2xl shadow-black/80">
+          <div className="p-4 sm:px-6 flex items-center justify-between">
+            <span className="font-mono text-xs uppercase tracking-wider text-slate-300 flex items-center gap-2 font-semibold">
+              <span
+                className={`size-2 rounded-full bg-tool-diligence ${reducedMotion ? '' : 'animate-pulse'}`}
               />
-              <span>Awaiting agent execution events...</span>
-            </div>
-          ) : (
-            events.map((evt, idx) => (
-              <div
-                key={idx}
-                className="flex items-start gap-2.5 leading-relaxed hover:bg-darkroom-surface/40 p-1 rounded-lg transition-colors"
-              >
-                <span className="text-slate-400 text-[11px] shrink-0 pt-0.5 font-mono">
-                  {evt.timestamp
-                    ? new Date(evt.timestamp).toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit',
-                      })
-                    : ''}
-                </span>
-                <span className="text-tool-diligence font-semibold shrink-0">
-                  [{evt.agentName}]
-                </span>
-                <span className="text-slate-200 flex-1 break-words">{evt.message}</span>
-              </div>
-            ))
-          )}
-          <div ref={eventsEndRef} />
+              <Terminal className="size-3.5 text-indigo-400" />
+              <span>Live Agent Event Log</span>
+            </span>
+            <span className="text-xs font-mono text-slate-400">{events.length} events recorded</span>
+          </div>
+
+          <div className="p-4 sm:p-5 max-h-60 overflow-y-auto space-y-2.5 text-xs font-mono bg-darkroom-bg/60">
+            {events.map((evt, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-start gap-2.5 leading-relaxed hover:bg-darkroom-surface/40 p-1 rounded-lg transition-colors"
+                >
+                  <span className="text-slate-400 text-[11px] shrink-0 pt-0.5 font-mono">
+                    {evt.timestamp
+                      ? new Date(evt.timestamp).toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          second: '2-digit',
+                        })
+                      : ''}
+                  </span>
+                  <span className="text-tool-diligence font-semibold shrink-0">
+                    [{evt.agentName}]
+                  </span>
+                  <span className="text-slate-200 flex-1 break-words">{evt.message}</span>
+                </div>
+              ))}
+            <div ref={eventsEndRef} />
+          </div>
         </div>
-      </div>
+      )}
     </motion.div>
   );
 };

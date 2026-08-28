@@ -108,7 +108,6 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
           </div>
         </div>
         <div className="text-right hidden sm:block">
-          <span className="text-[11px] text-zinc-400 font-mono">3-Domain Search</span>
         </div>
       </div>
 
@@ -126,7 +125,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
                   value={festivalName}
                   onChange={(e) => setFestivalName(e.target.value)}
                   placeholder="e.g. Raindance Film Festival"
-                  className="w-full bg-darkroom-card rounded-xl px-3.5 py-2.5 text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:bg-paper-border focus:bg-darkroom-border"
+                  className="w-full bg-darkroom-card rounded-xl px-3.5 py-2.5 text-white text-base placeholder:text-zinc-500 focus:outline-none focus:bg-paper-border focus:bg-darkroom-border"
                 />
               </div>
             </div>
@@ -146,7 +145,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
                 }}
                 onFocus={() => setShowLocationSuggestions(true)}
                 placeholder="e.g. London, United Kingdom"
-                className="w-full bg-darkroom-card rounded-xl px-3.5 py-2.5 text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:bg-paper-border focus:bg-darkroom-border"
+                className="w-full bg-darkroom-card rounded-xl px-3.5 py-2.5 text-white text-base placeholder:text-zinc-500 focus:outline-none focus:bg-paper-border focus:bg-darkroom-border"
               />
 
               {/* Location Suggestions Dropdown */}
@@ -182,7 +181,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
               value={websiteUrl}
               onChange={(e) => setWebsiteUrl(e.target.value)}
               placeholder="https://festival-official-site.org"
-              className="w-full bg-darkroom-card rounded-xl px-3.5 py-2.5 text-white text-xs placeholder:text-zinc-500 focus:outline-none focus:bg-paper-border focus:bg-darkroom-border"
+              className="w-full bg-darkroom-card rounded-xl px-3.5 py-2.5 text-white text-base placeholder:text-zinc-500 focus:outline-none focus:bg-paper-border focus:bg-darkroom-border"
             />
           </div>
 
@@ -195,10 +194,10 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
               <button
                 type="button"
                 onClick={() => setTalkedToSomeone(!talkedToSomeone)}
-                className={`flex items-center space-x-2.5 p-3 rounded-xl text-left transition-all cursor-pointer ${
+                className={`flex items-center space-x-2.5 py-1.5 text-left transition-all cursor-pointer ${
                   talkedToSomeone
-                    ? 'bg-darkroom-surface text-emerald-300 font-semibold'
-                    : 'bg-darkroom-card text-zinc-300 hover:bg-paper-border hover:bg-darkroom-border'
+                    ? 'text-emerald-300 font-semibold'
+                    : 'text-zinc-300 hover:text-white'
                 }`}
               >
                 {talkedToSomeone ? (
@@ -212,10 +211,10 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
               <button
                 type="button"
                 onClick={() => setWasInvited(!wasInvited)}
-                className={`flex items-center space-x-2.5 p-3 rounded-xl text-left transition-all cursor-pointer ${
+                className={`flex items-center space-x-2.5 py-1.5 text-left transition-all cursor-pointer ${
                   wasInvited
-                    ? 'bg-darkroom-surface text-emerald-300 font-semibold'
-                    : 'bg-darkroom-card text-zinc-300 hover:bg-paper-border hover:bg-darkroom-border'
+                    ? 'text-emerald-300 font-semibold'
+                    : 'text-zinc-300 hover:text-white'
                 }`}
               >
                 {wasInvited ? (
@@ -229,10 +228,10 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
               <button
                 type="button"
                 onClick={() => setReceivedEmail(!receivedEmail)}
-                className={`flex items-center space-x-2.5 p-3 rounded-xl text-left transition-all cursor-pointer ${
+                className={`flex items-center space-x-2.5 py-1.5 text-left transition-all cursor-pointer ${
                   receivedEmail
-                    ? 'bg-darkroom-surface text-emerald-300 font-semibold'
-                    : 'bg-darkroom-card text-zinc-300 hover:bg-paper-border hover:bg-darkroom-border'
+                    ? 'text-emerald-300 font-semibold'
+                    : 'text-zinc-300 hover:text-white'
                 }`}
               >
                 {receivedEmail ? (
@@ -246,10 +245,10 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
               <button
                 type="button"
                 onClick={() => setWaiverOffered(!waiverOffered)}
-                className={`flex items-center space-x-2.5 p-3 rounded-xl text-left transition-all cursor-pointer ${
+                className={`flex items-center space-x-2.5 py-1.5 text-left transition-all cursor-pointer ${
                   waiverOffered
-                    ? 'bg-darkroom-surface text-emerald-300 font-semibold'
-                    : 'bg-darkroom-card text-zinc-300 hover:bg-paper-border hover:bg-darkroom-border'
+                    ? 'text-emerald-300 font-semibold'
+                    : 'text-zinc-300 hover:text-white'
                 }`}
               >
                 {waiverOffered ? (
@@ -263,10 +262,10 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
               <button
                 type="button"
                 onClick={() => setAlreadyPaid(!alreadyPaid)}
-                className={`flex items-center space-x-2.5 p-3 rounded-xl text-left transition-all cursor-pointer ${
+                className={`flex items-center space-x-2.5 py-1.5 text-left transition-all cursor-pointer ${
                   alreadyPaid
-                    ? 'bg-darkroom-surface text-emerald-300 font-semibold'
-                    : 'bg-darkroom-card text-zinc-300 hover:bg-paper-border hover:bg-darkroom-border'
+                    ? 'text-emerald-300 font-semibold'
+                    : 'text-zinc-300 hover:text-white'
                 }`}
               >
                 {alreadyPaid ? (
@@ -280,10 +279,10 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
               <button
                 type="button"
                 onClick={() => setAdvertisedCinemaVenue(!advertisedCinemaVenue)}
-                className={`flex items-center space-x-2.5 p-3 rounded-xl text-left transition-all cursor-pointer ${
+                className={`flex items-center space-x-2.5 py-1.5 text-left transition-all cursor-pointer ${
                   advertisedCinemaVenue
-                    ? 'bg-darkroom-surface text-emerald-300 font-semibold'
-                    : 'bg-darkroom-card text-zinc-300 hover:bg-paper-border hover:bg-darkroom-border'
+                    ? 'text-emerald-300 font-semibold'
+                    : 'text-zinc-300 hover:text-white'
                 }`}
               >
                 {advertisedCinemaVenue ? (
@@ -321,7 +320,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
                       value={contactName}
                       onChange={(e) => setContactName(e.target.value)}
                       placeholder="e.g. Program Director Alex Mercer"
-                      className="w-full bg-darkroom-surface rounded-xl px-3 py-2 text-white placeholder:text-zinc-500 focus:outline-none text-xs"
+                      className="w-full bg-darkroom-surface rounded-xl px-3 py-2 text-white placeholder:text-zinc-500 focus:outline-none text-base"
                     />
                   </div>
 
@@ -335,7 +334,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
                       value={contactPhone}
                       onChange={(e) => setContactPhone(e.target.value)}
                       placeholder="+44 7700 900077"
-                      className="w-full bg-darkroom-surface rounded-xl px-3 py-2 text-white placeholder:text-zinc-500 focus:outline-none text-xs"
+                      className="w-full bg-darkroom-surface rounded-xl px-3 py-2 text-white placeholder:text-zinc-500 focus:outline-none text-base"
                     />
                   </div>
                 </div>
@@ -351,7 +350,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
                       value={emailSnippet}
                       onChange={(e) => setEmailSnippet(e.target.value)}
                       placeholder="Paste the invitation message or waiver code..."
-                      className="w-full bg-darkroom-surface rounded-xl px-3 py-2 text-white placeholder:text-zinc-500 focus:outline-none text-xs font-mono"
+                      className="w-full bg-darkroom-surface rounded-xl px-3 py-2 text-white placeholder:text-zinc-500 focus:outline-none text-base font-mono"
                     />
                   </AnimatedFocusWrapper>
                 </div>
@@ -366,7 +365,7 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
               disabled={!festivalName.trim()}
               className="w-full flex items-center justify-center space-x-2 py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs font-mono shadow-lg shadow-emerald-950/50 hover:shadow-emerald-600/30 transition-all group disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
-              <span>Review Investigation Plan (Stage 2)</span>
+              <span>Review Investigation Plan</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
@@ -375,57 +374,47 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
 
       {/* STAGE 2: REVIEW & LAUNCH CONFIRMATION UI (Redirects to Due Diligence Workspace) */}
       {step === 'REVIEW' && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="space-y-4"
-        >
-          <div className="p-5 rounded-xl bg-emerald-950/30 border border-emerald-900/50 space-y-3">
-            <div className="flex items-start space-x-3">
-              <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5">
-                <ShieldCheck className="w-4 h-4" />
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            className="w-full max-w-md bg-darkroom-surface rounded-2xl shadow-2xl p-6 border border-darkroom-border space-y-5"
+          >
+            <div className="space-y-4 text-center">
+              <div className="mx-auto w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+                <ShieldCheck className="w-6 h-6" />
               </div>
-              <div className="space-y-2">
-                <h4 className="text-sm font-semibold text-emerald-300 font-mono">
-                  Ready to investigate {festivalName}?
-                </h4>
-                <p className="text-xs text-zinc-300 leading-relaxed">
-                  When you press confirm, we will launch an autonomous multi-agent investigation to build a detailed due diligence dossier. This will include:
-                </p>
-                <ul className="text-xs text-zinc-400 space-y-1.5 list-disc list-inside ml-1">
-                  <li>Verification of physical cinema screening venues</li>
-                  <li>Cross-referencing organizer track records and company registries</li>
-                  <li>Historical analysis of entry fees and submission terms</li>
-                  {hasFollowUpRequirement && (
-                    <li className="text-emerald-400/80">Analysis of your direct interactions and outreach</li>
-                  )}
-                </ul>
-              </div>
+              <h4 className="text-xl font-bold text-white font-serif tracking-tight">
+                Investigate {festivalName}?
+              </h4>
+              <p className="text-sm text-zinc-300 leading-relaxed max-w-sm mx-auto">
+                Confirm to launch an autonomous multi-agent investigation to build a detailed due diligence dossier.
+              </p>
             </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-2 pt-1">
-            <button
-              type="button"
-              onClick={() => {
-                soundEffects.playClick();
-                setStep('REQUIREMENTS');
-              }}
-              className="px-4 py-2.5 rounded-xl border border-zinc-700 bg-midnight hover:bg-surface text-xs font-mono text-zinc-300 hover:text-white transition-colors cursor-pointer"
-            >
-              ‹ Back to Edit
-            </button>
-            <button
-              type="button"
-              onClick={handleLaunch}
-              className="flex-1 flex items-center justify-center space-x-2 py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs font-mono shadow-lg shadow-emerald-950/50 hover:shadow-emerald-600/30 transition-all group cursor-pointer"
-            >
-              <span>Confirm & Start Investigation</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
-            </button>
-          </div>
-        </motion.div>
+            
+            {/* Action Buttons */}
+            <div className="flex flex-col gap-3 pt-2">
+              <button
+                type="button"
+                onClick={handleLaunch}
+                className="w-full flex items-center justify-center space-x-2 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm font-mono shadow-lg shadow-emerald-950/50 hover:shadow-emerald-600/30 transition-all group cursor-pointer"
+              >
+                <span>Confirm & Start Investigation</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  soundEffects.playClick();
+                  setStep('REQUIREMENTS');
+                }}
+                className="w-full py-3 rounded-xl border border-zinc-700 bg-midnight hover:bg-surface text-sm font-mono text-zinc-300 hover:text-white transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+            </div>
+          </motion.div>
+        </div>
       )}
     </motion.div>
   );
