@@ -10,7 +10,6 @@ import {
   CheckCircle2,
   Loader2,
   ChevronRight,
-  Zap,
   Terminal,
   Cpu,
   AlertTriangle,
@@ -238,14 +237,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
   const activeStep = TIMELINE_STEPS[inspectedStepIndex] || TIMELINE_STEPS[0];
   const activeStepState = getStepState(activeStep, status, lastActiveStatus);
 
-  // Find latest events related to the inspected agent
-  const relatedEvents = events.filter(
-    (e) =>
-      e.agentName.toLowerCase().includes(activeStep.name.toLowerCase()) ||
-      activeStep.name.toLowerCase().includes(e.agentName.toLowerCase()) ||
-      (activeStep.id === 'parallel_agents' &&
-        (e.agentName.includes('Domain') || e.agentName.includes('Search'))),
-  );
+
 
   return (
     <motion.div
