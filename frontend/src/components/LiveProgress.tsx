@@ -286,7 +286,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
       </div>
 
       {/* 2. THE SINGLE NEAT TIMELINE */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-darkroom-surface shadow-2xl shadow-black/80 space-y-6 relative">
+      <div className="p-4 sm:p-6 md:p-8 rounded-3xl bg-darkroom-surface shadow-2xl shadow-black/80 space-y-4 sm:space-y-6 relative overflow-hidden">
         {/* Timeline Header Subtitle */}
         <div className="flex items-center justify-between pb-2">
           <div className="flex items-center gap-2">
@@ -300,22 +300,38 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
           </span>
         </div>
 
-        {/* Timeline Horizontal Track */}
-        <div className="relative pt-2 pb-4 px-2 sm:px-6">
-          {/* Background Connecting Rail */}
-          <div className="absolute left-10 sm:left-14 right-10 sm:right-14 top-8 -translate-y-1/2 h-1 bg-darkroom-border rounded-full z-0" />
+        {/* Mobile Compact Progress Bar */}
+        <div className="block md:hidden space-y-1.5 pt-1 pb-2">
+          <div className="flex items-center justify-between text-[11px] font-mono text-slate-400">
+            <span>Progress Track</span>
+            <span className="text-tool-diligence font-semibold">{progressPercent}%</span>
+          </div>
+          <div className="h-2 w-full bg-darkroom-bg rounded-full overflow-hidden border border-darkroom-border">
+            <motion.div
+              className="h-full bg-gradient-to-r from-tool-diligence via-emerald-400 to-teal-300 rounded-full shadow-sm shadow-[var(--color-tool-diligence)]/50"
+              initial={{ width: 0 }}
+              animate={{ width: `${Math.max(2, Math.min(100, progressPercent))}%` }}
+              transition={{ duration: 0.6, ease: 'easeOut' }}
+            />
+          </div>
+        </div>
 
-          {/* Animated Gradient Active Fill Rail */}
+        {/* Timeline Track - Desktop Horizontal, Mobile 3-Column Stack */}
+        <div className="relative pt-1 sm:pt-2 pb-2 sm:pb-4 px-1 sm:px-6">
+          {/* Background Connecting Rail (Desktop Only) */}
+          <div className="hidden md:block absolute left-10 sm:left-14 right-10 sm:right-14 top-8 -translate-y-1/2 h-1 bg-darkroom-border rounded-full z-0" />
+
+          {/* Animated Gradient Active Fill Rail (Desktop Only) */}
           <motion.div
-            className="absolute left-10 sm:left-14 top-8 -translate-y-1/2 h-1 bg-gradient-to-r from-tool-diligence via-emerald-400 to-teal-300 rounded-full z-0 shadow-sm shadow-[var(--color-tool-diligence)]/50"
+            className="hidden md:block absolute left-10 sm:left-14 top-8 -translate-y-1/2 h-1 bg-gradient-to-r from-tool-diligence via-emerald-400 to-teal-300 rounded-full z-0 shadow-sm shadow-[var(--color-tool-diligence)]/50"
             initial={{ width: 0 }}
             animate={{ width: `${Math.max(2, Math.min(100, progressPercent))}%` }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
             style={{ maxWidth: 'calc(100% - 5.5rem)' }}
           />
 
-          {/* Timeline Nodes Grid */}
-          <div className="relative z-10 flex items-start justify-between w-full">
+          {/* Timeline Nodes - 3x2 Grid Stack on Mobile, Flex on Desktop */}
+          <div className="relative z-10 grid grid-cols-3 gap-y-4 gap-x-2 w-full md:flex md:items-start md:justify-between">
             {TIMELINE_STEPS.map((step, idx) => {
               const state = getStepState(step, status);
               const isHovered = hoveredStepIndex === idx;
@@ -326,7 +342,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
               return (
                 <div
                   key={step.id}
-                  className="flex flex-col items-center relative group w-16 sm:w-20 md:w-24 shrink-0"
+                  className="flex flex-col items-center relative group w-full md:w-24 shrink-0"
                   onMouseEnter={() => {
                     soundEffects.playClick();
                     setHoveredStepIndex(idx);

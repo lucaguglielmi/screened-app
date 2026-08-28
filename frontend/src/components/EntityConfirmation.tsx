@@ -167,19 +167,19 @@ export const EntityConfirmation: React.FC<Props> = ({ candidates, query, onConfi
           </div>
         </div>
 
-        {/* Action Button */}
-        <div className="flex items-center justify-between pt-2">
-          <span className="text-sm font-mono text-slate-400 flex items-center gap-1.5">
-            <ShieldAlert className="size-4 text-amber-500" /> Exact match verified
+        {/* Action Button - Stacked on Mobile */}
+        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2 w-full">
+          <span className="text-xs sm:text-sm font-mono text-slate-400 flex items-center justify-center sm:justify-start gap-1.5 py-1">
+            <ShieldAlert className="size-4 text-amber-500 shrink-0" /> Exact match verified
           </span>
 
           <button
             onClick={handleSubmit}
             disabled={loading || !customName.trim()}
-            className="px-6 py-3 rounded-xl bg-tool-diligence hover:bg-tool-diligence-hover disabled:opacity-50 text-slate-950 font-bold text-base flex items-center gap-2 transition-all shadow-md shadow-[var(--color-tool-diligence)]/20 cursor-pointer"
+            className="w-full sm:w-auto justify-center px-6 py-3.5 sm:py-3 rounded-xl bg-tool-diligence hover:bg-tool-diligence-hover disabled:opacity-50 text-slate-950 font-bold text-base flex items-center gap-2 transition-all shadow-md shadow-[var(--color-tool-diligence)]/20 cursor-pointer active:scale-98"
           >
             <span>Confirm & Launch Research</span>
-            <ArrowRight className="size-4" />
+            <ArrowRight className="size-4 shrink-0" />
           </button>
         </div>
       </div>

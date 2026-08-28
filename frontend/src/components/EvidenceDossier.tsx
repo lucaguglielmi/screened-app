@@ -402,43 +402,43 @@ export const EvidenceDossier: React.FC<Props> = ({
             </h1>
           </div>
 
-          <div className="flex items-center gap-2 flex-wrap no-print">
+          <div className="grid grid-cols-2 sm:flex sm:items-center gap-2 w-full sm:w-auto no-print">
             {dossier && (
               <button
                 onClick={handleCopySummary}
-                className="px-3.5 py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-medium text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer"
+                className="px-3.5 py-2.5 sm:py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-medium text-slate-200 transition-colors flex items-center justify-center sm:justify-start gap-1.5 cursor-pointer w-full sm:w-auto"
                 title="Copy executive summary to clipboard"
               >
                 {copiedSummary ? (
-                  <Check className="size-3.5 text-emerald-400" />
+                  <Check className="size-3.5 text-emerald-400 shrink-0" />
                 ) : (
-                  <Copy className="size-3.5" />
+                  <Copy className="size-3.5 shrink-0" />
                 )}
-                <span>{copiedSummary ? 'Copied!' : 'Copy Summary'}</span>
+                <span className="truncate">{copiedSummary ? 'Copied!' : 'Copy Summary'}</span>
               </button>
             )}
             <button
               onClick={handlePrint}
-              className="px-3.5 py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-medium text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="px-3.5 py-2.5 sm:py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-medium text-slate-200 transition-colors flex items-center justify-center sm:justify-start gap-1.5 cursor-pointer w-full sm:w-auto"
               title="Print formatted dossier or save as PDF"
             >
-              <Printer className="size-3.5" />
-              <span>Print / PDF</span>
+              <Printer className="size-3.5 shrink-0" />
+              <span className="truncate">Print / PDF</span>
             </button>
             <button
               onClick={onExport}
-              className="px-3.5 py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-medium text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="px-3.5 py-2.5 sm:py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-medium text-slate-200 transition-colors flex items-center justify-center sm:justify-start gap-1.5 cursor-pointer w-full sm:w-auto"
               title="Download signed Markdown archive with SHA-256 seal"
             >
-              <Download className="size-3.5" />
-              <span>Export</span>
+              <Download className="size-3.5 shrink-0" />
+              <span className="truncate">Export</span>
             </button>
             <button
               onClick={onNewInvestigation}
-              className="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium transition-colors flex items-center gap-1.5 cursor-pointer shadow-md"
+              className="px-3.5 py-2.5 sm:py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium transition-colors flex items-center justify-center sm:justify-start gap-1.5 cursor-pointer shadow-md w-full sm:w-auto"
             >
-              <Search className="size-3.5" />
-              <span>New Screen</span>
+              <Search className="size-3.5 shrink-0" />
+              <span className="truncate">New Screen</span>
             </button>
           </div>
         </div>
@@ -503,19 +503,19 @@ export const EvidenceDossier: React.FC<Props> = ({
 
         {/* View Mode Switcher: Dossier vs 360° Forensic Matrix */}
         <div className="pt-3 border-t border-paper-card border-darkroom-card flex items-center justify-between flex-wrap gap-3 no-print">
-          <div className="flex items-center gap-2 p-1 rounded-2xl bg-darkroom-card">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 p-1 rounded-2xl bg-darkroom-card w-full sm:w-auto">
             <button
               onClick={() => {
                 playDialClick();
                 setActiveTab('DOSSIER');
               }}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-3.5 py-2 sm:py-1.5 rounded-xl text-xs font-mono font-medium transition-all flex items-center justify-center sm:justify-start gap-1.5 cursor-pointer w-full sm:w-auto ${
                 activeTab === 'DOSSIER'
                   ? 'bg-midnight-royal text-white shadow-xs font-bold'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
-              <FileText className="size-3.5" />
+              <FileText className="size-3.5 shrink-0" />
               <span>Due Diligence Intelligence</span>
             </button>
             <button
@@ -523,13 +523,13 @@ export const EvidenceDossier: React.FC<Props> = ({
                 playDialClick();
                 setActiveTab('FORENSIC_VETTING');
               }}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-3.5 py-2 sm:py-1.5 rounded-xl text-xs font-mono font-medium transition-all flex items-center justify-center sm:justify-start gap-1.5 cursor-pointer w-full sm:w-auto ${
                 activeTab === 'FORENSIC_VETTING'
                   ? 'bg-emerald-600 text-white shadow-xs font-bold'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
-              <Fingerprint className="size-3.5" />
+              <Fingerprint className="size-3.5 shrink-0" />
               <span>360° Forensic Matrix (7 Vectors)</span>
             </button>
           </div>
