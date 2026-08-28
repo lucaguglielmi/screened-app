@@ -14,7 +14,7 @@
  * ============================================================================
  */
 
-import React, { useState, useMemo, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useMemo, useEffect, useRef, lazy, Suspense } from 'react';
 import {
   AtomicClaim,
   CandidateEntity,
@@ -58,8 +58,9 @@ import {
   Code,
   User,
   Fingerprint,
+  Sparkles,
 } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface Props {
   entity: CandidateEntity;
@@ -92,6 +93,22 @@ export const EvidenceDossier: React.FC<Props> = ({
   const [copiedSummary, setCopiedSummary] = useState(false);
   const [copiedAiPayload, setCopiedAiPayload] = useState(false);
   const [copiedRawText, setCopiedRawText] = useState(false);
+  const [isActionsMenuOpen, setIsActionsMenuOpen] = useState(false);
+  const actionsMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (actionsMenuRef.current && !actionsMenuRef.current.contains(event.target as Node)) {
+        setIsActionsMenuOpen(false);
+      }
+    };
+    if (isActionsMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isActionsMenuOpen]);
 
   // Normalize density mode (routing logic for AI agents vs human readers)
   const normalizedDensity: DetailDensity =
@@ -402,48 +419,127 @@ export const EvidenceDossier: React.FC<Props> = ({
             </h1>
           </div>
 
-          <div className="grid grid-cols-2 sm:flex sm:items-center gap-2 w-full sm:w-auto no-print">
-            {dossier && (
+          <div className="flex items-center gap-2.5 w-full sm:w-auto no-print">
+            {/* Unified Dossier Actions Dropdown */}
+            <div className="relative flex-1 sm:flex-none" ref={actionsMenuRef}>
               <button
-                onClick={handleCopySummary}
-                className="px-3.5 py-2.5 sm:py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-medium text-slate-200 transition-colors flex items-center justify-center sm:justify-start gap-1.5 cursor-pointer w-full sm:w-auto"
-                title="Copy executive summary to clipboard"
+                onClick={() => {
+                  soundEffects.playClick();
+                  setIsActionsMenuOpen(!isActionsMenuOpen);
+                }}
+                className="w-full sm:w-auto px-4 py-2.5 sm:py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border text-xs font-mono font-medium text-slate-200 hover:text-white transition-all flex items-center justify-between sm:justify-center gap-2 cursor-pointer shadow-sm active:scale-95"
+                aria-expanded={isActionsMenuOpen}
               >
-                {copiedSummary ? (
-                  <Check className="size-3.5 text-emerald-400 shrink-0" />
-                ) : (
-                  <Copy className="size-3.5 shrink-0" />
-                )}
-                <span className="truncate">{copiedSummary ? 'Copied!' : 'Copy Summary'}</span>
+                <div className="flex items-center gap-2">
+                  <Sparkles className="size-3.5 text-indigo-400" />
+                  <span>Dossier Actions</span>
+                </div>
+                <ChevronDown className={`size-3.5 text-slate-400 transition-transform duration-200 ${isActionsMenuOpen ? 'rotate-180 text-white' : ''}`} />
               </button>
-            )}
+
+              {/* Dropdown Menu with Complete Action List */}
+              <AnimatePresence>
+                {isActionsMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                    transition={{ duration: 0.15, ease: 'easeOut' }}
+                    className="absolute right-0 top-full mt-2 w-72 p-1.5 rounded-2xl bg-darkroom-surface/98 backdrop-blur-xl border border-darkroom-border shadow-2xl shadow-black/80 z-50 space-y-1 font-sans text-xs"
+                  >
+                    {dossier && (
+                      <button
+                        onClick={() => {
+                          handleCopySummary();
+                          setIsActionsMenuOpen(false);
+                        }}
+                        className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                      >
+                        <div className="p-1.5 rounded-lg bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 group-hover:bg-indigo-500/25">
+                          {copiedSummary ? <Check className="size-3.5 text-emerald-400" /> : <Copy className="size-3.5" />}
+                        </div>
+                        <div className="flex flex-col min-w-0">
+                          <span className="font-semibold text-slate-100">{copiedSummary ? 'Copied to Clipboard!' : 'Copy Summary'}</span>
+                          <span className="text-[11px] text-slate-400 truncate">Executive summary & checklist</span>
+                        </div>
+                      </button>
+                    )}
+
+                    <button
+                      onClick={() => {
+                        handlePrint();
+                        setIsActionsMenuOpen(false);
+                      }}
+                      className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                    >
+                      <div className="p-1.5 rounded-lg bg-blue-500/15 border border-blue-500/30 text-blue-400 group-hover:bg-blue-500/25">
+                        <Printer className="size-3.5" />
+                      </div>
+                      <div className="flex flex-col min-w-0">
+                        <span className="font-semibold text-slate-100">Print / Save as PDF</span>
+                        <span className="text-[11px] text-slate-400 truncate">Printable clean dossier view</span>
+                      </div>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        onExport();
+                        setIsActionsMenuOpen(false);
+                      }}
+                      className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                    >
+                      <div className="p-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 group-hover:bg-emerald-500/25">
+                        <Download className="size-3.5" />
+                      </div>
+                      <div className="flex flex-col min-w-0">
+                        <span className="font-semibold text-slate-100">Export Signed Archive</span>
+                        <span className="text-[11px] text-slate-400 truncate">Markdown archive with SHA-256 seal</span>
+                      </div>
+                    </button>
+
+                    <div className="border-t border-darkroom-border my-1 pt-1" />
+
+                    <button
+                      onClick={() => {
+                        handleCopyAiPayload();
+                        setIsActionsMenuOpen(false);
+                      }}
+                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-darkroom-card text-slate-300 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                    >
+                      <Bot className="size-3.5 text-purple-400 ml-1.5" />
+                      <span className="text-xs font-mono">{copiedAiPayload ? 'Copied JSON-LD!' : 'Copy AI Graph (JSON-LD)'}</span>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        handleCopyRawText();
+                        setIsActionsMenuOpen(false);
+                      }}
+                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-darkroom-card text-slate-300 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                    >
+                      <Code className="size-3.5 text-slate-400 ml-1.5" />
+                      <span className="text-xs font-mono">{copiedRawText ? 'Copied Raw Text!' : 'Copy Plain Text Dump'}</span>
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Primary Action Button */}
             <button
-              onClick={handlePrint}
-              className="px-3.5 py-2.5 sm:py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-medium text-slate-200 transition-colors flex items-center justify-center sm:justify-start gap-1.5 cursor-pointer w-full sm:w-auto"
-              title="Print formatted dossier or save as PDF"
+              onClick={() => {
+                soundEffects.playClick();
+                onNewInvestigation();
+              }}
+              className="flex-1 sm:flex-none px-4 py-2.5 sm:py-2 rounded-xl bg-midnight-royal hover:brightness-110 text-white text-xs font-mono font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-indigo-950/60 active:scale-95 shrink-0"
             >
-              <Printer className="size-3.5 shrink-0" />
-              <span className="truncate">Print / PDF</span>
-            </button>
-            <button
-              onClick={onExport}
-              className="px-3.5 py-2.5 sm:py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-card text-xs font-medium text-slate-200 transition-colors flex items-center justify-center sm:justify-start gap-1.5 cursor-pointer w-full sm:w-auto"
-              title="Download signed Markdown archive with SHA-256 seal"
-            >
-              <Download className="size-3.5 shrink-0" />
-              <span className="truncate">Export</span>
-            </button>
-            <button
-              onClick={onNewInvestigation}
-              className="px-3.5 py-2.5 sm:py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium transition-colors flex items-center justify-center sm:justify-start gap-1.5 cursor-pointer shadow-md w-full sm:w-auto"
-            >
-              <Search className="size-3.5 shrink-0" />
-              <span className="truncate">New Screen</span>
+              <Search className="size-3.5" />
+              <span>New Screen</span>
             </button>
           </div>
         </div>
         
-        {/* Top Facts */}
+        {/* Top Facts - Standardized Icon Colors */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
           {entity.cityCountry && (
             <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-darkroom-surface border border-darkroom-border">
@@ -456,7 +552,7 @@ export const EvidenceDossier: React.FC<Props> = ({
           )}
           {entity.foundedYear && (
             <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-darkroom-surface border border-darkroom-border">
-              <Calendar className="size-4 text-emerald-400 shrink-0" />
+              <Calendar className="size-4 text-indigo-400 shrink-0" />
               <div className="flex flex-col">
                 <span className="text-[10px] text-slate-400 uppercase tracking-wider font-mono">Est. Year</span>
                 <span className="text-sm font-semibold text-white">{entity.foundedYear}</span>
@@ -465,14 +561,14 @@ export const EvidenceDossier: React.FC<Props> = ({
           )}
           {entity.officialDomain && (
             <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-darkroom-surface border border-darkroom-border">
-              <Globe className="size-4 text-blue-400 shrink-0" />
+              <Globe className="size-4 text-indigo-400 shrink-0" />
               <div className="flex flex-col overflow-hidden">
                 <span className="text-[10px] text-slate-400 uppercase tracking-wider font-mono">Official Web</span>
                 <a
                   href={`https://${entity.officialDomain}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm font-semibold text-white hover:text-blue-300 truncate"
+                  className="text-sm font-semibold text-white hover:text-indigo-300 truncate"
                 >
                   {entity.officialDomain}
                 </a>
