@@ -452,12 +452,12 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className={`p-5 rounded-2xl transition-all ${
+            className={`transition-all ${
               activeStepState === 'ACTIVE'
-                ? 'bg-gradient-to-br from-darkroom-card to-darkroom-surface border border-tool-diligence/40 shadow-lg shadow-[var(--color-tool-diligence)]/10'
+                ? ''
                 : activeStepState === 'COMPLETED'
-                  ? 'bg-darkroom-card border border-darkroom-border'
-                  : 'bg-darkroom-surface/40 border-2 border-dashed border-slate-700/80 shadow-inner'
+                  ? ''
+                  : 'p-5 rounded-2xl bg-darkroom-surface/40 border-2 border-dashed border-slate-700/80 shadow-inner'
             }`}
           >
             <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b ${activeStepState === 'PENDING' ? 'border-dashed border-slate-700/60' : 'border-darkroom-border'}`}>
@@ -506,56 +506,21 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
             </div>
 
             {/* Step Inner Working Description */}
-            <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Left 2 Cols: Description & Details */}
-              <div className="md:col-span-2 space-y-3">
-                <p className="text-sm text-slate-300 leading-relaxed">{activeStep.description}</p>
+            <div className="mt-4 space-y-3">
+              <p className="text-sm text-slate-300 leading-relaxed">{activeStep.description}</p>
 
-                <div className="space-y-1.5">
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold block">
-                    Key Execution Objectives:
-                  </span>
-                  <ul className="space-y-1">
-                    {activeStep.details.map((detail, dIdx) => (
-                      <li key={dIdx} className="flex items-start gap-2 text-xs text-slate-400">
-                        <ChevronRight className={`size-3.5 shrink-0 mt-0.5 ${activeStepState === 'PENDING' ? 'text-slate-500' : 'text-tool-diligence'}`} />
-                        <span>{detail}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
-              {/* Right Col: Tools & Live Log Peek */}
-              <div className={`p-3.5 rounded-xl border space-y-3 flex flex-col justify-between ${activeStepState === 'PENDING' ? 'bg-darkroom-bg/50 border-dashed border-slate-700/60' : 'bg-darkroom-bg border-darkroom-border'}`}>
-                <div>
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-indigo-400 font-semibold flex items-center gap-1.5">
-                    <Zap className="size-3" />
-                    <span>Engines & Tools</span>
-                  </span>
-                  <div className="flex flex-wrap gap-1.5 mt-2">
-                    {activeStep.toolsUsed.map((tool, tIdx) => (
-                      <span
-                        key={tIdx}
-                        className={`px-2 py-0.5 rounded-lg text-[11px] font-mono ${activeStepState === 'PENDING' ? 'bg-darkroom-card/50 text-slate-400 border border-dashed border-slate-700/60' : 'bg-darkroom-card text-slate-300 border border-darkroom-border'}`}
-                      >
-                        {tool}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Latest Event for this Agent */}
-                {relatedEvents.length > 0 && (
-                  <div className="pt-2 border-t border-paper-card border-darkroom-card">
-                    <span className="text-[10px] font-mono text-slate-400 block mb-1">
-                      Latest Activity:
-                    </span>
-                    <p className="text-xs font-mono text-emerald-300 line-clamp-2 leading-tight">
-                      "{relatedEvents[relatedEvents.length - 1].message}"
-                    </p>
-                  </div>
-                )}
+              <div className="space-y-1.5">
+                <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold block">
+                  Key Execution Objectives:
+                </span>
+                <ul className="space-y-1">
+                  {activeStep.details.map((detail, dIdx) => (
+                    <li key={dIdx} className="flex items-start gap-2 text-xs text-slate-400">
+                      <ChevronRight className={`size-3.5 shrink-0 mt-0.5 ${activeStepState === 'PENDING' ? 'text-slate-500' : 'text-tool-diligence'}`} />
+                      <span>{detail}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
           </motion.div>
