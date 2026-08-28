@@ -140,11 +140,16 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
     });
   };
 
+  const formattedTime = new Date(message.timestamp).toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
   return (
-    <div className={`flex w-full mb-6 ${isUser ? 'justify-end' : 'justify-start'} animate-fade-in`}>
-      <div className={`flex gap-3.5 max-w-3xl ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
-        {/* Avatar */}
-        <div className="shrink-0 mt-0.5">
+    <div className={`flex w-full mb-5 md:mb-6 ${isUser ? 'justify-end' : 'justify-start'} animate-fade-in`}>
+      <div className={`flex flex-col md:flex-row w-full md:max-w-3xl md:gap-3.5 ${isUser ? 'md:flex-row-reverse' : ''}`}>
+        {/* Desktop Avatar (Hidden on Mobile) */}
+        <div className="hidden md:block shrink-0 mt-0.5">
           {isUser ? (
             <div className="size-9 rounded-full bg-gradient-to-tr from-darkroom-border to-midnight-violet flex items-center justify-center text-sm font-bold text-white shadow-sm ring-1 ring-midnight-violet">
               👤
@@ -155,28 +160,54 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
         </div>
 
         {/* Message Content & Mini-UIs */}
-        <div className="flex-1 overflow-hidden">
-          {/* Header */}
+        <div className="w-full flex-1 overflow-hidden min-w-0">
+          {/* Mobile Header with Avatar on Top */}
+          {isUser ? (
+            <div className="flex md:hidden items-center justify-end gap-2 mb-2 w-full">
+              <div className="flex items-baseline gap-2 min-w-0">
+                <span className="text-[11px] text-slate-500 font-mono shrink-0">
+                  {formattedTime}
+                </span>
+                <span className="font-semibold text-xs text-slate-300 font-mono truncate">
+                  You
+                </span>
+              </div>
+              <div className="size-7 rounded-full bg-gradient-to-tr from-darkroom-border to-midnight-violet flex items-center justify-center text-xs font-bold text-white shadow-sm ring-1 ring-midnight-violet shrink-0">
+                👤
+              </div>
+            </div>
+          ) : (
+            <div className="flex md:hidden items-center gap-2 mb-2 w-full">
+              <AgentAvatar size="sm" onClick={onAvatarClick} />
+              <div className="flex items-baseline gap-2 min-w-0">
+                <span className="font-semibold text-xs text-slate-200 font-mono truncate">
+                  The Producer Desk
+                </span>
+                <span className="text-[11px] text-slate-500 font-mono shrink-0">
+                  {formattedTime}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Desktop Header */}
           <div
-            className={`flex items-center gap-2 mb-1.5 text-xs ${isUser ? 'justify-end' : 'justify-start'}`}
+            className={`hidden md:flex items-center gap-2 mb-1.5 text-xs ${isUser ? 'justify-end' : 'justify-start'}`}
           >
             <span className="font-semibold text-slate-300 font-mono">
               {isUser ? 'You' : 'The Producer Desk'}
             </span>
             <span className="text-xs text-slate-500 font-mono">
-              {new Date(message.timestamp).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-              })}
+              {formattedTime}
             </span>
           </div>
 
-          {/* Text Bubble */}
+          {/* Text Bubble - Full Width on Mobile */}
           <div
-            className={`rounded-2xl px-5 py-4 text-base leading-relaxed shadow-md ${
+            className={`w-full rounded-2xl px-4 py-3.5 sm:px-5 sm:py-4 text-base leading-relaxed shadow-md ${
               isUser
-                ? 'bg-paper-border bg-darkroom-border text-slate-100 rounded-tr-none border border-darkroom-border'
-                : 'bg-darkroom-surface text-slate-200 rounded-tl-none border border-darkroom-border'
+                ? 'bg-paper-border bg-darkroom-border text-slate-100 md:rounded-tr-none border border-darkroom-border'
+                : 'bg-darkroom-surface text-slate-200 md:rounded-tl-none border border-darkroom-border'
             }`}
           >
             {message.attachedFile && (
@@ -193,17 +224,17 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
             {formatContent(message.content)}
           </div>
 
-          {/* Quick Action Tabs (Under First Greeting Bubble) */}
+          {/* Quick Action Tabs (Under First Greeting Bubble) - Full Width on Mobile */}
           {message.id === 'initial-greeting-01' && (
-            <div className="mt-3 space-y-2">
+            <div className="mt-3.5 space-y-2.5 w-full">
               <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider block">
                 Quick Actions:
               </span>
-              <div className="flex items-stretch gap-2.5">
+              <div className="flex flex-col sm:flex-row items-stretch gap-2.5 w-full">
                 
-                {/* Upload Square Box (Spanning Both Rows with Transparent Background) */}
+                {/* Upload Box */}
                 <div 
-                  className="group relative shrink-0"
+                  className="group relative shrink-0 w-full sm:w-auto"
                   onDragEnter={handleDrag}
                   onDragLeave={handleDrag}
                   onDragOver={handleDrag}
@@ -218,14 +249,14 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className={`flex flex-col items-center justify-center text-center p-2 rounded-2xl border border-dashed text-slate-300 hover:text-white transition-all text-xs font-mono cursor-pointer shadow-sm active:scale-95 h-full aspect-square w-[80px] sm:w-[92px] ${
+                    className={`flex flex-row sm:flex-col items-center justify-center text-center p-3 sm:p-2 rounded-2xl border border-dashed text-slate-300 hover:text-white transition-all text-xs font-mono cursor-pointer shadow-sm active:scale-95 w-full sm:w-[92px] sm:aspect-square gap-2 sm:gap-0 ${
                       dragActive 
                         ? 'border-indigo-400 bg-indigo-500/15 text-indigo-200 shadow-indigo-500/20 shadow-md' 
                         : 'border-slate-500/40 hover:border-indigo-400/70 bg-transparent hover:bg-white/[0.03]'
                     }`}
                   >
-                    <UploadCloud className={`size-4.5 mb-1 shrink-0 ${dragActive ? 'text-indigo-400 animate-bounce' : 'text-slate-400 group-hover:text-indigo-300'}`} />
-                    <span className="text-[10px] leading-tight text-slate-400 group-hover:text-slate-200">
+                    <UploadCloud className={`size-4.5 sm:mb-1 shrink-0 ${dragActive ? 'text-indigo-400 animate-bounce' : 'text-slate-400 group-hover:text-indigo-300'}`} />
+                    <span className="text-[11px] sm:text-[10px] leading-tight text-slate-400 group-hover:text-slate-200">
                       {isProcessing ? 'Processing...' : 'or drag any document'}
                     </span>
                   </button>
@@ -242,7 +273,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
                 </div>
 
                 {/* Action Pills Grid */}
-                <div className="flex flex-wrap gap-2 items-center flex-1">
+                <div className="grid grid-cols-1 sm:flex sm:flex-wrap gap-2 w-full flex-1">
                   {ACTION_TABS.map((tab, idx) => {
                     const Icon = tab.icon;
                     return (
@@ -255,7 +286,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
                             onLaunchCustomPrompt(tab.query);
                           }
                         }}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-darkroom-card hover:bg-midnight-royal border border-darkroom-border text-slate-300 hover:text-white transition-all text-xs font-mono cursor-pointer shadow-sm active:scale-95"
+                        className="flex items-center gap-2 px-3.5 py-2.5 sm:py-1.5 rounded-xl bg-darkroom-card hover:bg-midnight-royal border border-darkroom-border text-slate-300 hover:text-white transition-all text-xs font-mono cursor-pointer shadow-sm active:scale-95 w-full sm:w-auto text-left"
                       >
                         <Icon className="size-3.5 text-indigo-400 group-hover:text-white shrink-0" />
                         <span>{tab.label}</span>

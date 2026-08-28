@@ -215,13 +215,13 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
   };
 
   return (
-    <div className="relative flex flex-col flex-1 h-full min-h-0 w-full max-w-5xl mx-auto px-2 sm:px-4 overflow-hidden pb-safe">
+    <div className="relative flex flex-col flex-1 h-full min-h-0 w-full max-w-5xl mx-auto px-1 sm:px-4 overflow-hidden pb-safe">
       {/* Scrollable Message Area */}
-      <div className="relative z-10 flex-1 min-h-0 overflow-y-auto pr-1 sm:pr-2 space-y-4">
-        {/* Hero Header Area with Dirty Film Celluloid Glitch, Spacing & What Does It Do Link */}
-        <div className="relative flex flex-col items-center justify-center my-5 sm:my-7 py-2 text-center select-none">
-          <div className="flex justify-center items-center gap-2 mb-4">
-            <span className="font-serif text-6xl sm:text-7xl lg:text-8xl font-black tracking-normal text-white flex items-center">
+      <div className="relative z-10 flex-1 min-h-0 overflow-y-auto px-1 sm:px-2 space-y-4">
+        {/* Hero Header Area with Dirty Film Celluloid Glitch, Spacing */}
+        <div className="relative flex flex-col items-center justify-center pt-2 sm:pt-4 my-3 sm:my-7 py-2 text-center select-none">
+          <div className="flex justify-center items-center gap-2 mb-3 sm:mb-4">
+            <span className="font-serif text-5xl sm:text-7xl lg:text-8xl font-black tracking-normal text-white flex items-center">
               Scr
               <AnimatedEE forceHover={true} eyesPattern={true} slowAnimation={true} />
               ned

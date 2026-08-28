@@ -582,7 +582,7 @@ export default function App() {
             activeTool === 'DESIGN_PLAYGROUND'
               ? 'w-full flex-1'
               : activeTool === 'CONVERSATIONAL_DESK'
-              ? 'max-w-6xl w-full mx-auto flex-1 min-h-0 flex flex-col px-2 sm:px-4 md:px-6 py-2 overflow-hidden'
+              ? 'max-w-6xl w-full mx-auto flex-1 min-h-0 flex flex-col px-1 sm:px-4 md:px-6 py-1 sm:py-2 overflow-hidden'
               : 'max-w-6xl px-4 sm:px-6 md:px-8 py-8 space-y-8 mx-auto flex-1 w-full'
           }`}
         >
