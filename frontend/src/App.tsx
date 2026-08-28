@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
+import { useState, useEffect, useCallback, useRef, Suspense } from 'react';
 import {
   Search,
   AlertTriangle,
@@ -31,10 +31,12 @@ import { HowToUse } from './components/HowToUse';
 import { CommandPalette } from './components/CommandPalette';
 import { HistorySidebar } from './components/HistorySidebar';
 
-const EvidenceDossier = lazy(() => import('./components/EvidenceDossier').then(m => ({ default: m.EvidenceDossier })));
-const OpportunityScout = lazy(() => import('./components/OpportunityScout').then(m => ({ default: m.OpportunityScout })));
-const DesignPlayground = lazy(() => import('./components/playground/DesignPlayground').then(m => ({ default: m.DesignPlayground })));
-const EntityConfirmation = lazy(() => import('./components/EntityConfirmation').then(m => ({ default: m.EntityConfirmation })));
+import { lazyWithRetry } from './utils/lazyWithRetry';
+
+const EvidenceDossier = lazyWithRetry(() => import('./components/EvidenceDossier').then(m => ({ default: m.EvidenceDossier })));
+const OpportunityScout = lazyWithRetry(() => import('./components/OpportunityScout').then(m => ({ default: m.OpportunityScout })));
+const DesignPlayground = lazyWithRetry(() => import('./components/playground/DesignPlayground').then(m => ({ default: m.DesignPlayground })));
+const EntityConfirmation = lazyWithRetry(() => import('./components/EntityConfirmation').then(m => ({ default: m.EntityConfirmation })));
 import { VectorFieldBackground } from './components/animations/VectorFieldBackground';
 import { AnimatedEE } from './components/animations/AnimatedEE';
 import { ScrambleText } from './components/animations/ScrambleText';

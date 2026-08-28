@@ -1,8 +1,9 @@
-import React, { useState, lazy, Suspense } from 'react';
+import React, { useState, Suspense } from 'react';
 import { CompareFestivalsArgs } from '../../../types/chat';
 import { soundEffects } from '../../../utils/audio';
-const VersusDecisionTree = lazy(() => import('../../diagrams/VersusDecisionTree').then(m => ({ default: m.VersusDecisionTree })));
-const OverlapVennFlow = lazy(() => import('../../diagrams/OverlapVennFlow').then(m => ({ default: m.OverlapVennFlow })));
+import { lazyWithRetry } from '../../../utils/lazyWithRetry';
+const VersusDecisionTree = lazyWithRetry(() => import('../../diagrams/VersusDecisionTree').then(m => ({ default: m.VersusDecisionTree })));
+const OverlapVennFlow = lazyWithRetry(() => import('../../diagrams/OverlapVennFlow').then(m => ({ default: m.OverlapVennFlow })));
 import { GitBranch, Award, ChevronDown, ChevronUp, Swords } from 'lucide-react';
 
 interface MiniCompareArenaProps {

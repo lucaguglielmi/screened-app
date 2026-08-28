@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Coins, FileText, UploadCloud, ArrowRight, AlertTriangle, Sparkles } from 'lucide-react';
+import { Coins, FileText, UploadCloud, ArrowRight, AlertTriangle } from 'lucide-react';
 import { GrantScoutArgs } from '../../../types/chat';
 import { soundEffects } from '../../../utils/audio';
 
