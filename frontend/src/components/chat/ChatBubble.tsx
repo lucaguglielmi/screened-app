@@ -108,7 +108,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
             {items.map((item, iIdx) => {
               const cleaned = item.replace(/^[-*]\s+/, '').replace(/^\d+\.\s+/, '');
               return (
-                <li key={iIdx} className="text-base leading-relaxed text-slate-200">
+                <li key={iIdx} className="text-sm md:text-base leading-relaxed text-slate-200">
                   {renderFormattedInline(cleaned)}
                 </li>
               );
@@ -118,7 +118,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
       }
 
       return (
-        <p key={pIdx} className="text-base leading-relaxed text-slate-200 mb-3 last:mb-0">
+        <p key={pIdx} className="text-sm md:text-base leading-relaxed text-slate-200 mb-3 last:mb-0">
           {renderFormattedInline(paragraph)}
         </p>
       );
