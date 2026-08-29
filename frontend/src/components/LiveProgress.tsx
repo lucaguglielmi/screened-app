@@ -373,8 +373,13 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, is
               {status === 'FAILED' ? 'Investigation Halted' : status === 'READY' ? 'Investigation Complete' : 'Autonomous Multi-Agent Pipeline Active'}
             </span>
           </div>
-          <h2 className="font-serif text-2xl sm:text-3xl font-bold text-white tracking-tight break-words">
-            Investigating {festivalName}
+          <h2 className="font-serif text-2xl sm:text-3xl font-bold text-white tracking-tight break-words flex items-center flex-wrap gap-2 sm:gap-3">
+            <span>Investigating {festivalName}</span>
+            {festivalName === 'Pinco Pallino Film Festival' && (
+              <span className="inline-flex items-center rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-sans font-medium text-amber-400 border border-amber-500/20 tracking-normal whitespace-nowrap mt-1 sm:mt-0">
+                Demo Only
+              </span>
+            )}
           </h2>
           <p className="text-sm sm:text-base text-slate-400 leading-relaxed max-w-2xl break-words">
             {status === 'FAILED' 

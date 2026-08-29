@@ -615,8 +615,13 @@ export const EvidenceDossier: React.FC<Props> = ({
                 <FileText className="size-4" />
                 <span>Evidence Dossier</span>
               </div>
-              <h1 className="font-serif text-2xl sm:text-3xl font-semibold text-white break-words">
-                {entity.name}
+              <h1 className="flex items-center flex-wrap gap-2 sm:gap-3 font-serif text-2xl sm:text-3xl font-semibold text-white break-words">
+                <span>{entity.name}</span>
+                {entity.name === 'Pinco Pallino Film Festival' && (
+                  <span className="inline-flex items-center rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-sans font-medium text-amber-400 border border-amber-500/20 tracking-normal whitespace-nowrap">
+                    Demo Only
+                  </span>
+                )}
               </h1>
             </div>
 
