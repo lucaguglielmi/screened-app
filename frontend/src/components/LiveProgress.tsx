@@ -317,9 +317,6 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, is
     }
   }, [status, events, selectedStepIndex, lastActiveStatus]);
 
-  useEffect(() => {
-    eventsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [events]);
 
   // Compute overall progress percentage
   const activeStepIdx = TIMELINE_STEPS.findIndex(
