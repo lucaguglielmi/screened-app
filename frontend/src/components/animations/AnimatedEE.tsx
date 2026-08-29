@@ -18,7 +18,7 @@ const BASE_SYMBOLS = [
   '🪙',
 ];
 
-const EYES = ['👁️', '👀'];
+const EYES = ['👀', '👀', 'ee'];
 
 interface RayConfig {
   angle: number;
