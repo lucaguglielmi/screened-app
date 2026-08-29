@@ -34,9 +34,16 @@ async def demo_sse_generator():
     """Generates a 20-second simulated live-progress SSE stream for the Demo Mode (5s per stage)."""
     
     def format_event(event_type: str, message: str, details: dict = None):
-        return f"data: {json.dumps({'id': 'evt_demo', 'investigationId': DEMO_INVESTIGATION_ID, 'timestamp': datetime.now(timezone.utc).isoformat(), 'eventType': event_type, 'agentName': 'DemoOrchestrator', 'message': message, 'details': details or {}})}
-
-"
+        payload = {
+            "id": "evt_demo",
+            "investigationId": DEMO_INVESTIGATION_ID,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "eventType": event_type,
+            "agentName": "DemoOrchestrator",
+            "message": message,
+            "details": details or {},
+        }
+        return f"data: {json.dumps(payload)}\n\n"
 
     # Stage 1: Planning (5s)
     yield format_event("PLANNING_STARTED", "Formulating parallel investigation strategy...")

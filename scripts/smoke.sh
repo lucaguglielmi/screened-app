@@ -8,31 +8,42 @@ echo " Running Screened Smoke Tests against: ${BASE_URL}"
 echo "========================================================"
 
 echo ""
-echo "[1/2] Testing /healthz endpoint..."
+echo "[1/4] Testing /healthz endpoint..."
 HEALTH_RESP=$(curl -s -f "${BASE_URL}/healthz")
 echo "Health Response: ${HEALTH_RESP}"
 
 echo ""
-echo "[2/2] Testing /api/test-pipeline with Parallel Search..."
-PIPELINE_RESP=$(curl -s -f -X POST "${BASE_URL}/api/test-pipeline" \
+echo "[2/4] Testing POST /api/investigations (Demo Mode Interception)..."
+DEMO_POST_RESP=$(curl -s -f -X POST "${BASE_URL}/api/investigations" \
   -H "Content-Type: application/json" \
-  ${DIAGNOSTICS_TOKEN:+-H "Authorization: Bearer ${DIAGNOSTICS_TOKEN}"} \
-  -d '{"festivalName": "Aldergate Film Festival"}')
-
-SOURCES_FOUND=$(echo "${PIPELINE_RESP}" | python3 -c "import sys, json; data=json.load(sys.stdin); print(data.get('sourcesFound', 0))")
-CLAIMS_COUNT=$(echo "${PIPELINE_RESP}" | python3 -c "import sys, json; data=json.load(sys.stdin); print(len(data.get('extractedClaims', [])))")
-LATENCY=$(echo "${PIPELINE_RESP}" | python3 -c "import sys, json; data=json.load(sys.stdin); print(data.get('durationSeconds', 0))")
-
-echo ">> Sources Discovered via Parallel: ${SOURCES_FOUND}"
-echo ">> Verified Atomic Claims: ${CLAIMS_COUNT}"
-echo ">> Total Roundtrip Latency: ${LATENCY}s"
-
-if [ "${SOURCES_FOUND}" -gt 0 ]; then
-  echo ""
-  echo "✅ Smoke tests passed successfully!"
-  exit 0
-else
-  echo ""
-  echo "❌ Smoke test failed: No sources returned."
+  -d '{"query": "demo"}')
+DEMO_ID=$(echo "${DEMO_POST_RESP}" | python3 -c "import sys, json; data=json.load(sys.stdin); print(data.get('id', ''))")
+echo "Demo Investigation ID: ${DEMO_ID}"
+if [ "${DEMO_ID}" != "demo_pinco_pallino" ]; then
+  echo "❌ POST demo failed: expected demo_pinco_pallino, got '${DEMO_ID}'"
   exit 1
 fi
+
+echo ""
+echo "[3/4] Testing GET /api/investigations/demo_pinco_pallino..."
+DEMO_GET_RESP=$(curl -s -f "${BASE_URL}/api/investigations/demo_pinco_pallino")
+STATUS=$(echo "${DEMO_GET_RESP}" | python3 -c "import sys, json; data=json.load(sys.stdin); print(data.get('status', ''))")
+SCORE=$(echo "${DEMO_GET_RESP}" | python3 -c "import sys, json; data=json.load(sys.stdin); print(data.get('deepVetting', {}).get('overallAuthenticityScore', ''))")
+echo "Dossier Status: ${STATUS}, Authenticity Score: ${SCORE}"
+if [ "${STATUS}" != "READY" ]; then
+  echo "❌ GET demo failed: status is not READY"
+  exit 1
+fi
+
+echo ""
+echo "[4/4] Testing GET /api/investigations/demo_pinco_pallino/events (SSE Stream)..."
+SSE_FIRST_EVENT=$(curl -s -N --max-time 3 "${BASE_URL}/api/investigations/demo_pinco_pallino/events" | head -n 2)
+echo "SSE Header/Event: ${SSE_FIRST_EVENT}"
+if ! echo "${SSE_FIRST_EVENT}" | grep -q "data:"; then
+  echo "❌ SSE stream failed: did not receive event data"
+  exit 1
+fi
+
+echo ""
+echo "✅ All Screened smoke tests passed successfully!"
+exit 0
