@@ -31,51 +31,48 @@ def get_demo_investigation():
     }
 
 async def demo_sse_generator():
-    """Generates a 18-second simulated live-progress SSE stream for the Demo Mode."""
+    """Generates a 20-second simulated live-progress SSE stream for the Demo Mode (5s per stage)."""
     
     def format_event(event_type: str, message: str, details: dict = None):
-        return f"data: {json.dumps({'id': 'evt_demo', 'investigationId': DEMO_INVESTIGATION_ID, 'timestamp': datetime.now(timezone.utc).isoformat(), 'eventType': event_type, 'agentName': 'DemoOrchestrator', 'message': message, 'details': details or {}})}\n\n"
+        return f"data: {json.dumps({'id': 'evt_demo', 'investigationId': DEMO_INVESTIGATION_ID, 'timestamp': datetime.now(timezone.utc).isoformat(), 'eventType': event_type, 'agentName': 'DemoOrchestrator', 'message': message, 'details': details or {}})}
 
-    # Step 1: Planning (0-3s)
+"
+
+    # Stage 1: Planning (5s)
     yield format_event("PLANNING_STARTED", "Formulating parallel investigation strategy...")
-    await asyncio.sleep(0.7)
+    await asyncio.sleep(1.5)
     yield format_event("PLANNING_STEP", "Identifying key domains: Corporate, Venue, Filmmaker Feedback...")
-    await asyncio.sleep(1.4)
-    
-    # Auto-confirm entity
+    await asyncio.sleep(2.0)
     yield format_event("PLANNING_STEP", "Found candidate entity.", {"candidates": get_demo_investigation()["candidates"]})
-    await asyncio.sleep(0.3)
+    await asyncio.sleep(1.5)
 
-    # Step 2: Researching (3-12s)
-    yield format_event("RESEARCHING_STARTED", "Dispatching sub-agents to verify claims...")
-    await asyncio.sleep(1.0)
-    
+    # Stage 2: Researching (5s)
+    yield format_event("DOMAIN_SEARCH_STARTED", "Dispatching sub-agents to verify claims...")
+    await asyncio.sleep(1.25)
     yield format_event("AGENT_UPDATE", "VenueAgent: Verified BFI Southbank private hire manifests.", {"agent": "VenueAgent"})
-    await asyncio.sleep(1.0)
-    
+    await asyncio.sleep(1.25)
     yield format_event("AGENT_UPDATE", "CorporateAgent: Found Companies House matches for key personnel.", {"agent": "CorporateAgent"})
-    await asyncio.sleep(1.4)
-    
+    await asyncio.sleep(1.25)
     yield format_event("AGENT_UPDATE", "SentimentAgent: Aggregating 42+ reviews from Reddit & TrustPilot.", {"agent": "SentimentAgent"})
-    await asyncio.sleep(1.0)
+    await asyncio.sleep(1.25)
 
+    # Stage 3: Analyzing (5s)
+    yield format_event("CONTRADICTIONS_ANALYZING", "Cross-referencing claims and calculating risk scores...")
+    await asyncio.sleep(1.5)
     yield format_event("AGENT_UPDATE", "VerificationAgent: Checking sponsor legitimacy with ARRI and Sony.", {"agent": "VerificationAgent"})
-    await asyncio.sleep(1.4)
-
-    # Step 3: Analysis (12-18s)
-    yield format_event("ANALYSIS_STARTED", "Cross-referencing claims and calculating risk scores...")
-    await asyncio.sleep(1.4)
-    
+    await asyncio.sleep(1.5)
     yield format_event("AGENT_UPDATE", "FraudAgent: Flagged conflict of interest anomaly in jury records.", {"agent": "FraudAgent"})
-    await asyncio.sleep(1.0)
-    
-    yield format_event("AGENT_UPDATE", "FraudAgent: Flagged fabricated sponsorships.", {"agent": "FraudAgent"})
-    await asyncio.sleep(1.0)
-    
-    yield format_event("AGENT_UPDATE", "SynthesisAgent: Finalizing evidence dossier...", {"agent": "SynthesisAgent"})
-    await asyncio.sleep(1.4)
+    await asyncio.sleep(2.0)
 
-    # Step 4: Complete
+    # Stage 4: Synthesizing (5s)
+    yield format_event("DOSSIER_SYNTHESIZING", "Assembling finalized evidence dossier...")
+    await asyncio.sleep(1.5)
+    yield format_event("AGENT_UPDATE", "FraudAgent: Flagged fabricated sponsorships.", {"agent": "FraudAgent"})
+    await asyncio.sleep(2.0)
+    yield format_event("AGENT_UPDATE", "SynthesisAgent: Reviewing final output for accuracy...", {"agent": "SynthesisAgent"})
+    await asyncio.sleep(1.5)
+
+    # Complete
     yield format_event("DOSSIER_READY", "Investigation complete. Generating final dossier.")
 
 
