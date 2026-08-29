@@ -103,40 +103,120 @@ def get_demo_full_dossier():
                 "pointOfContention": "Jury & Organizer Conflict of Interest",
                 "category": "JURY_AWARDS",
                 "claimA": "The festival claims an impartial, independent, blind-judging jury.",
-                "evidenceA": [{"url": "https://pincopallino.com/jury", "snippet": "Our independent jury evaluates all films blindly and without prejudice."}],
-                "claimB": "Records show 3 key organizers and jurors co-own Pallino Media Lab Ltd, aggressively upselling PR & distribution services to applicants.",
-                "evidenceB": [{"url": "https://find-and-update.company-information.service.gov.uk/company/13984712", "snippet": "Active Directors: A. Smith (Fest Dir), B. Jones (Jury Chair), C. Davis."}],
-                "guidance": "High Risk. Key personnel are cross-selling services to submitting filmmakers."
+                "evidenceA": [
+                    {
+                        "sourceId": "src_jury_rules",
+                        "sourceUrl": "https://pincopallino.com/jury",
+                        "sourceDomain": "pincopallino.com",
+                        "sourceTitle": "Pinco Pallino Rules & Regulations / Jury Charter",
+                        "stance": "SUPPORTS",
+                        "exactExcerpt": "Our independent jury evaluates all films blindly and without prejudice across all competition categories.",
+                        "snippet": "Our independent jury evaluates all films blindly and without prejudice across all competition categories."
+                    }
+                ],
+                "claimB": "Companies House records show 3 key organizers and jurors co-own Pallino Media Lab Ltd, aggressively upselling PR & distribution packages to applicants.",
+                "evidenceB": [
+                    {
+                        "sourceId": "src_ch_filing",
+                        "sourceUrl": "https://find-and-update.company-information.service.gov.uk/company/13984712",
+                        "sourceDomain": "gov.uk",
+                        "sourceTitle": "Companies House - Pallino Media Lab Ltd (13984712)",
+                        "stance": "CONTRADICTS",
+                        "exactExcerpt": "Active Officers & PSC: A. Smith (Festival Director), B. Jones (Jury Chair), C. Davis (Programmer). Nature of control: 75% or more shares with joint commercial consultancy rights.",
+                        "snippet": "Active Officers & PSC: A. Smith (Festival Director), B. Jones (Jury Chair), C. Davis (Programmer). Nature of control: 75% or more shares with joint commercial consultancy rights."
+                    }
+                ],
+                "guidance": "High Risk. Key festival personnel co-own an external consultancy actively monetizing and upselling distribution services to submitting filmmakers."
             },
             {
                 "id": "disp_fees",
                 "pointOfContention": "Aggressive Fee Escalation",
                 "category": "FEES_POLICY",
                 "claimA": "Early bird entry fee is advertised as a highly accessible £28.",
-                "evidenceA": [{"url": "https://filmfreeway.com/PincoPallino", "snippet": "Early Bird: £28 for all categories."}],
+                "evidenceA": [
+                    {
+                        "sourceId": "src_ff_fees",
+                        "sourceUrl": "https://filmfreeway.com/PincoPallinoFilmFestival",
+                        "sourceDomain": "filmfreeway.com",
+                        "sourceTitle": "FilmFreeway - Pinco Pallino Entry Fees",
+                        "stance": "SUPPORTS",
+                        "exactExcerpt": "Early Bird Deadline: £28 for all short film categories. Standard: £45.",
+                        "snippet": "Early Bird Deadline: £28 for all short film categories. Standard: £45."
+                    }
+                ],
                 "claimB": "Late fees spike aggressively to £85 in the final 10 days, accounting for 65% of their total annual revenue according to leaked financial summaries.",
-                "evidenceB": [{"url": "https://filmfreeway.com/PincoPallino", "snippet": "Extended Late Deadline: £85 (No waivers accepted)." }],
-                "guidance": "Medium Risk. The 200% price spike in the final 10 days is an extractive financial mechanism."
+                "evidenceB": [
+                    {
+                        "sourceId": "src_ff_late",
+                        "sourceUrl": "https://filmfreeway.com/PincoPallinoFilmFestival",
+                        "sourceDomain": "filmfreeway.com",
+                        "sourceTitle": "FilmFreeway - Extended Late Deadline Notice",
+                        "stance": "CONTRADICTS",
+                        "exactExcerpt": "Extended Late Deadline fee: £85 (Strictly no fee waivers, student discounts, or hardship exemptions granted in final 10 days).",
+                        "snippet": "Extended Late Deadline fee: £85 (Strictly no fee waivers, student discounts, or hardship exemptions granted in final 10 days)."
+                    }
+                ],
+                "guidance": "Medium Risk. The 200% price spike in the final 10 days is an extractive financial mechanism designed to harvest panic submissions."
             },
             {
                 "id": "disp_winner",
                 "pointOfContention": "Competitive Integrity & Repeat Winners",
                 "category": "JURY_AWARDS",
                 "claimA": "The festival claims to receive over 3,000 global submissions per cycle, boasting a hyper-competitive 1.2% acceptance rate.",
-                "evidenceA": [{"url": "https://pincopallino.com/about", "snippet": "With over 3,000 entries from 75 countries, securing a nomination is an elite achievement."}],
+                "evidenceA": [
+                    {
+                        "sourceId": "src_about_stats",
+                        "sourceUrl": "https://pincopallino.com/about",
+                        "sourceDomain": "pincopallino.com",
+                        "sourceTitle": "Pinco Pallino Official About & Submissions Statistics",
+                        "stance": "SUPPORTS",
+                        "exactExcerpt": "With over 3,000 entries from 75 countries annually, securing an official selection or laurel at Pinco Pallino is an elite international achievement.",
+                        "snippet": "With over 3,000 entries from 75 countries annually, securing an official selection or laurel at Pinco Pallino is an elite international achievement."
+                    }
+                ],
                 "claimB": "The same local director, Martin Sterling, won the 'Best International Short' award twice in a row (2024 and 2025).",
-                "evidenceB": [{"url": "https://imdb.com/festival/pincopallino/2025", "snippet": "Best International Short: 'Midnight Call' dir. Martin Sterling (also 2024 winner)."}],
-                "guidance": "High Risk. Given the claimed 3,000+ submissions, a back-to-back win by the same local director severely undermines competitive integrity."
+                "evidenceB": [
+                    {
+                        "sourceId": "src_imdb_awards",
+                        "sourceUrl": "https://www.imdb.com/event/ev0028912/2025/1",
+                        "sourceDomain": "imdb.com",
+                        "sourceTitle": "IMDb - Pinco Pallino London Awards 2024-2025",
+                        "stance": "CONTRADICTS",
+                        "exactExcerpt": "2025 Winner Best International Short: 'Midnight Call' directed by Martin Sterling (also awarded Best Short 2024 by the same jury panel).",
+                        "snippet": "2025 Winner Best International Short: 'Midnight Call' directed by Martin Sterling (also awarded Best Short 2024 by the same jury panel)."
+                    }
+                ],
+                "guidance": "High Risk. Given the claimed 3,000+ global submissions, consecutive back-to-back category wins by an insider associate severely undermine competitive legitimacy."
             },
             {
                 "id": "disp_sponsors",
                 "pointOfContention": "Fabricated Brand Partnerships",
                 "category": "ORGANIZER_TRACK_RECORD",
                 "claimA": "The festival lists Sony Cinema and ARRI as 'Official Platinum Sponsors'.",
-                "evidenceA": [{"url": "https://pincopallino.com/sponsors", "snippet": "Platinum Sponsors: Sony Cinema, ARRI, Blackmagic Design."}],
-                "claimB": "ARRI PR confirmed via Twitter they have no affiliation with the festival.",
-                "evidenceB": [{"url": "https://twitter.com/ARRIChannel/status/123456", "snippet": "@PincoPallinoFest is not an official ARRI partner. We have requested logo removal."}],
-                "guidance": "High Risk. Falsely claiming tier-1 industry sponsors is a classic indicator of a predatory festival model."
+                "evidenceA": [
+                    {
+                        "sourceId": "src_sponsors_page",
+                        "sourceUrl": "https://pincopallino.com/sponsors",
+                        "sourceDomain": "pincopallino.com",
+                        "sourceTitle": "Pinco Pallino Partners & Corporate Sponsorships",
+                        "stance": "SUPPORTS",
+                        "exactExcerpt": "Official Platinum Industry Partners: Sony Professional Cinema Solutions, ARRI Rental UK, Blackmagic Design.",
+                        "snippet": "Official Platinum Industry Partners: Sony Professional Cinema Solutions, ARRI Rental UK, Blackmagic Design."
+                    }
+                ],
+                "claimB": "ARRI PR confirmed via official public statement they have no affiliation with the festival.",
+                "evidenceB": [
+                    {
+                        "sourceId": "src_arri_statement",
+                        "sourceUrl": "https://twitter.com/ARRIChannel/status/17849120489",
+                        "sourceDomain": "twitter.com",
+                        "sourceTitle": "ARRI Channel Official Statement",
+                        "stance": "CONTRADICTS",
+                        "exactExcerpt": "@ARRIChannel: Pinco Pallino Film Festival is not an authorized ARRI partner or sponsored event. We have issued a formal notice requesting unauthorized logo removal.",
+                        "snippet": "@ARRIChannel: Pinco Pallino Film Festival is not an authorized ARRI partner or sponsored event. We have issued a formal notice requesting unauthorized logo removal."
+                    }
+                ],
+                "guidance": "High Risk. Falsely claiming tier-1 cinema camera manufacturer sponsorships is a deceptive marketing practice and a hallmark of predatory festivals."
             }
         ],
         

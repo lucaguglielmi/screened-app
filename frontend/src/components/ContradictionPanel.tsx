@@ -6,6 +6,48 @@ interface Props {
   disputes: DisputeRecord[];
 }
 
+interface FlexibleEvidence {
+  sourceId?: string;
+  sourceUrl?: string;
+  url?: string;
+  sourceDomain?: string;
+  domain?: string;
+  sourceTitle?: string;
+  title?: string;
+  exactExcerpt?: string;
+  snippet?: string;
+  exact_excerpt?: string;
+  quote?: string;
+  text?: string;
+}
+
+function resolveEvidence(ev: FlexibleEvidence) {
+  const quote =
+    ev.exactExcerpt ||
+    ev.snippet ||
+    ev.exact_excerpt ||
+    ev.quote ||
+    ev.text ||
+    '';
+  const url = ev.sourceUrl || ev.url || '';
+  let fallbackDomain = '';
+  if (url) {
+    try {
+      fallbackDomain = new URL(url).hostname;
+    } catch {
+      fallbackDomain = 'Source';
+    }
+  }
+  const title =
+    ev.sourceTitle ||
+    ev.sourceDomain ||
+    ev.title ||
+    ev.domain ||
+    fallbackDomain ||
+    'Source';
+  return { quote, url, title };
+}
+
 export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
   if (!disputes || disputes.length === 0) {
     return null;
@@ -52,26 +94,34 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
                 </div>
 
                 {dispute.evidenceA && dispute.evidenceA.length > 0 && (
-                  <div className="space-y-1.5 pt-1 text-[11px]">
-                    {dispute.evidenceA.map((ev, eIdx) => (
-                      <div
-                        key={eIdx}
-                        className="border-l-2 border-blue-500/50 pl-2 text-darkroom-muted"
-                      >
-                        <div className="italic">"{ev.exactExcerpt}"</div>
-                        {ev.sourceUrl && (
-                          <a
-                            href={ev.sourceUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-indigo-400 hover:underline inline-flex items-center gap-1 mt-0.5"
-                          >
-                            Source: {ev.sourceTitle || ev.sourceDomain}{' '}
-                            <ExternalLink className="size-2.5" />
-                          </a>
-                        )}
-                      </div>
-                    ))}
+                  <div className="space-y-2 pt-1 text-[11px]">
+                    {(dispute.evidenceA as FlexibleEvidence[]).map((ev, eIdx) => {
+                      const { quote, url, title } = resolveEvidence(ev);
+                      if (!quote && !url) return null;
+                      return (
+                        <div
+                          key={eIdx}
+                          className="border-l-2 border-blue-500/60 bg-blue-500/5 rounded-r-md px-2.5 py-1.5 text-darkroom-muted space-y-1"
+                        >
+                          {quote && (
+                            <div className="italic text-slate-200 font-sans text-xs">
+                              "{quote}"
+                            </div>
+                          )}
+                          {url && (
+                            <a
+                              href={url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-400 hover:text-blue-300 hover:underline inline-flex items-center gap-1 text-[10px] font-mono"
+                            >
+                              Source: {title}{' '}
+                              <ExternalLink className="size-2.5" />
+                            </a>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -86,26 +136,34 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
                 </div>
 
                 {dispute.evidenceB && dispute.evidenceB.length > 0 && (
-                  <div className="space-y-1.5 pt-1 text-[11px]">
-                    {dispute.evidenceB.map((ev, eIdx) => (
-                      <div
-                        key={eIdx}
-                        className="border-l-2 border-slate-500/50 pl-2 text-darkroom-muted"
-                      >
-                        <div className="italic">"{ev.exactExcerpt}"</div>
-                        {ev.sourceUrl && (
-                          <a
-                            href={ev.sourceUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-indigo-400 hover:underline inline-flex items-center gap-1 mt-0.5"
-                          >
-                            Source: {ev.sourceTitle || ev.sourceDomain}{' '}
-                            <ExternalLink className="size-2.5" />
-                          </a>
-                        )}
-                      </div>
-                    ))}
+                  <div className="space-y-2 pt-1 text-[11px]">
+                    {(dispute.evidenceB as FlexibleEvidence[]).map((ev, eIdx) => {
+                      const { quote, url, title } = resolveEvidence(ev);
+                      if (!quote && !url) return null;
+                      return (
+                        <div
+                          key={eIdx}
+                          className="border-l-2 border-slate-500/60 bg-slate-500/5 rounded-r-md px-2.5 py-1.5 text-darkroom-muted space-y-1"
+                        >
+                          {quote && (
+                            <div className="italic text-slate-200 font-sans text-xs">
+                              "{quote}"
+                            </div>
+                          )}
+                          {url && (
+                            <a
+                              href={url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-indigo-400 hover:text-indigo-300 hover:underline inline-flex items-center gap-1 text-[10px] font-mono"
+                            >
+                              Source: {title}{' '}
+                              <ExternalLink className="size-2.5" />
+                            </a>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
               </div>
