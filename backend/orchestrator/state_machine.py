@@ -19,17 +19,18 @@ except ImportError:
     inject = None
     tracer = None
 
+PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT", "")
+LOCATION = os.environ.get("GOOGLE_CLOUD_LOCATION", "")
+TASKS_QUEUE = os.environ.get("CLOUD_TASKS_QUEUE", "screened-tasks")
+OIDC_SERVICE_ACCOUNT = os.environ.get("OIDC_SERVICE_ACCOUNT_EMAIL", "")
+tasks_client = None
+QUEUE_PATH = None
+
 try:
     from google.cloud import tasks_v2
     tasks_client = tasks_v2.CloudTasksClient()
-    PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT", "")
-    LOCATION = os.environ.get("GOOGLE_CLOUD_LOCATION", "")
-    TASKS_QUEUE = os.environ.get("CLOUD_TASKS_QUEUE", "screened-tasks")
     if PROJECT and LOCATION:
         QUEUE_PATH = tasks_client.queue_path(PROJECT, LOCATION, TASKS_QUEUE)
-    else:
-        QUEUE_PATH = None
-    OIDC_SERVICE_ACCOUNT = os.environ.get("OIDC_SERVICE_ACCOUNT_EMAIL", "")
 except Exception as e:
     tasks_client = None
     QUEUE_PATH = None
@@ -86,9 +87,10 @@ def enqueue_task(path: str, payload: dict, fallback_task_func, *args):
             if inject:
                 inject(headers)
                 
+            http_method = tasks_v2.HttpMethod.POST if "tasks_v2" in globals() else 1
             task = {
                 "http_request": {
-                    "http_method": tasks_v2.HttpMethod.POST,
+                    "http_method": http_method,
                     "url": url,
                     "headers": headers,
                     "body": json.dumps(payload).encode(),
@@ -102,13 +104,17 @@ def enqueue_task(path: str, payload: dict, fallback_task_func, *args):
             return None
         except Exception as e:
             logger.warning(f"Cloud Tasks enqueue failed: {e}", extra={"fallbackPath": path})
+            if os.environ.get("ENVIRONMENT") == "production":
+                raise RuntimeError("Cloud Tasks configuration is required in production environments. Asyncio fallback is disabled.") from e
     else:
         logger.warning("Cloud Tasks not configured", extra={"fallbackPath": path})
         if os.environ.get("ENVIRONMENT") == "production":
             raise RuntimeError("Cloud Tasks configuration is required in production environments. Asyncio fallback is disabled.")
         
     # Fallback to asyncio
-    return asyncio.create_task(fallback_task_func(*args))
+    if fallback_task_func is not None:
+        return asyncio.create_task(fallback_task_func(*args))
+    return None
 
 
 class Orchestrator:
