@@ -544,7 +544,7 @@ export const EvidenceDossier: React.FC<Props> = ({
         );
       case 'ALLEGATION':
         return (
-          <span className="font-mono text-[10px] uppercase tracking-wider text-rose-400 font-semibold">
+          <span className="font-mono text-[10px] uppercase tracking-wider text-slate-400 font-semibold">
             ALLEGATION
           </span>
         );
@@ -782,7 +782,7 @@ export const EvidenceDossier: React.FC<Props> = ({
           </div>
           <div className="p-3 rounded-2xl bg-darkroom-surface border border-darkroom-border">
             <div className="text-[10px] font-mono uppercase text-slate-400">Allegations</div>
-            <div className="text-base font-semibold text-rose-400">{allegationsCount}</div>
+            <div className="text-base font-semibold text-slate-400">{allegationsCount}</div>
           </div>
           <div className="p-3 rounded-2xl bg-darkroom-surface border border-darkroom-border">
             <div className="text-[10px] font-mono uppercase text-slate-400">Corroborated</div>
@@ -861,13 +861,13 @@ export const EvidenceDossier: React.FC<Props> = ({
         <div className="space-y-5 animate-fade-in" data-density="MACHINE_AI_INGESTION">
           {/* Human Explanatory Banner */}
           <div className="p-4 sm:p-5 rounded-3xl bg-darkroom-card border-l-4 border-tool-scout shadow-2xl flex items-start gap-4">
-            <div className="size-10 rounded-2xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0">
+            <div className="size-10 rounded-2xl bg-slate-500/20 text-slate-400 flex items-center justify-center shrink-0">
               <Bot className="size-5" />
             </div>
             <div className="space-y-1">
               <h3 className="font-mono text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
                 <span>🤖 This is meant to be processed by AI</span>
-                <span className="px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 text-[10px] font-semibold">
+                <span className="px-2 py-0.5 rounded-full bg-slate-500/20 text-slate-300 text-[10px] font-semibold">
                   I Am Not Human Mode
                 </span>
               </h3>
@@ -928,7 +928,7 @@ export const EvidenceDossier: React.FC<Props> = ({
           <div className="rounded-3xl bg-darkroom-surface p-5 shadow-2xl space-y-3">
             <div className="flex items-center justify-between border-b border-paper-card border-darkroom-card pb-3 flex-wrap gap-2">
               <div className="flex items-center gap-2 font-mono text-xs text-slate-300">
-                <Code className="size-4 text-rose-400" />
+                <Code className="size-4 text-slate-400" />
                 <span>
                   JSON-LD Semantic Due Diligence Payload (
                   {JSON.stringify(aiIngestionPayload).length} bytes)

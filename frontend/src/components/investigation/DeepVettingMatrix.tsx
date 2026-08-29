@@ -217,9 +217,9 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
         );
       case 'RED_FLAG':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-rose-500/10 text-rose-400 border border-rose-500/30 animate-pulse">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
             <ShieldAlert className="w-3.5 h-3.5" />
-            Red Flag Alert
+            Review Recommended
           </span>
         );
       case 'INFORMATIONAL':
@@ -295,7 +295,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
 
             <div className="text-center">
               <div
-                className={`text-2xl font-black font-mono ${activeReport.totalFlags === 0 ? 'text-zinc-400' : 'text-rose-400'}`}
+                className={`text-2xl font-black font-mono ${activeReport.totalFlags === 0 ? 'text-zinc-400' : 'text-zinc-400'}`}
               >
                 {activeReport.totalFlags}
               </div>
@@ -343,7 +343,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
               }}
               className={`px-3 py-1 rounded-lg text-xs font-mono transition-colors ${
                 filter === 'ALERTS'
-                  ? 'bg-rose-600 text-white font-bold'
+                  ? 'bg-emerald-600 text-white font-bold'
                   : 'bg-black/30 text-zinc-400 hover:text-white'
               }`}
             >

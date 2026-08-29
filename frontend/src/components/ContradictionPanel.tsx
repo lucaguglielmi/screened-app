@@ -78,7 +78,7 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
 
               {/* Claim B */}
               <div className="p-3.5 rounded-lg bg-black/40 space-y-2">
-                <div className="text-[11px] font-mono uppercase text-rose-400 font-semibold flex items-center gap-1.5">
+                <div className="text-[11px] font-mono uppercase text-slate-400 font-semibold flex items-center gap-1.5">
                   <span>Position B (Opposing)</span>
                 </div>
                 <div className="text-xs font-medium text-darkroom-text">
@@ -90,7 +90,7 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
                     {dispute.evidenceB.map((ev, eIdx) => (
                       <div
                         key={eIdx}
-                        className="border-l-2 border-rose-500/50 pl-2 text-darkroom-muted"
+                        className="border-l-2 border-slate-500/50 pl-2 text-darkroom-muted"
                       >
                         <div className="italic">"{ev.exactExcerpt}"</div>
                         {ev.sourceUrl && (

@@ -124,10 +124,10 @@ export const CredibilityRadar: React.FC<Props> = ({ claims, disputes }) => {
           <span
             className={`text-sm font-mono font-bold px-2 py-0.5 rounded-full ${
               overallTransparency >= 75
-                ? 'bg-emerald-500/10 text-emerald-600 text-emerald-400 border border-emerald-500/20'
+                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                 : overallTransparency >= 50
-                  ? 'bg-amber-500/10 text-amber-600 text-amber-400 border border-amber-500/20'
-                  : 'bg-rose-500/10 text-rose-600 text-rose-400 border border-rose-500/20'
+                  ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                  : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
             }`}
           >
             {overallTransparency}/100
@@ -160,8 +160,8 @@ export const CredibilityRadar: React.FC<Props> = ({ claims, disputes }) => {
                     dim.score >= 70
                       ? 'bg-emerald-500'
                       : dim.score >= 50
-                        ? 'bg-amber-500'
-                        : 'bg-rose-500'
+                        ? 'bg-emerald-500'
+                        : 'bg-emerald-500'
                   }`}
                   style={{ width: `${dim.score}%` }}
                 />
@@ -170,13 +170,11 @@ export const CredibilityRadar: React.FC<Props> = ({ claims, disputes }) => {
               <div className="flex items-center justify-between text-[11px] font-mono">
                 <span
                   className={`inline-flex items-center gap-1 ${
-                    dim.isRisk
-                      ? 'text-rose-600 text-rose-400'
-                      : 'text-darkroom-muted'
+                    'text-darkroom-muted'
                   }`}
                 >
                   {dim.isRisk ? (
-                    <AlertTriangle className="size-3 shrink-0" />
+                    <AlertTriangle className="size-3 shrink-0 text-emerald-500" />
                   ) : (
                     <ShieldCheck className="size-3 shrink-0 text-emerald-500" />
                   )}
