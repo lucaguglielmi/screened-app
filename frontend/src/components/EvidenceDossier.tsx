@@ -546,7 +546,7 @@ export const EvidenceDossier: React.FC<Props> = ({
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 8, scale: 0.96 }}
                     transition={{ duration: 0.15, ease: 'easeOut' }}
-                    className="absolute right-0 top-full mt-2 w-72 p-1.5 rounded-2xl bg-darkroom-surface/98 backdrop-blur-xl border border-darkroom-border shadow-2xl shadow-black/80 z-50 space-y-1 font-sans text-xs"
+                    className="absolute left-0 sm:left-auto sm:right-0 top-full mt-2 w-[calc(100vw-3rem)] max-w-xs sm:w-72 p-1.5 rounded-2xl bg-darkroom-surface/98 backdrop-blur-xl border border-darkroom-border shadow-2xl shadow-black/80 z-50 space-y-1 font-sans text-xs"
                   >
                     {dossier && (
                       <button
