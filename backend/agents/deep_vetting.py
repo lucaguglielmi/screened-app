@@ -29,7 +29,8 @@ from backend.tools.source_tiers import (
     CORPORATE_IDENTITY_DOMAINS,
     DOMAIN_FORENSICS_DOMAINS,
     VENUE_REALITY_DOMAINS,
-    PERSONNEL_DOSSIER_DOMAINS
+    PERSONNEL_DOSSIER_DOMAINS,
+    sanitize_domain_list
 )
 
 DIMENSIONS = [
@@ -52,9 +53,13 @@ class DeepVettingAgent:
             entity_info = {"name": festival_name, "officialDomain": optional_url}
             source_policy = {}
             if dimension.get("include_domains"):
-                source_policy["include_domains"] = dimension["include_domains"]
+                cleaned_include = sanitize_domain_list(dimension["include_domains"])
+                if cleaned_include:
+                    source_policy["include_domains"] = cleaned_include
             if dimension["name"] == "rules_plagiarism" and optional_url:
-                source_policy["exclude_domains"] = [optional_url]
+                cleaned_exclude = sanitize_domain_list([optional_url])
+                if cleaned_exclude:
+                    source_policy["exclude_domains"] = cleaned_exclude
 
             result = await _parallel_task_run(
                 investigation_id=investigation_id,

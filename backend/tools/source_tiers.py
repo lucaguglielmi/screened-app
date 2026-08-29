@@ -30,7 +30,8 @@ CORPORATE_IDENTITY_DOMAINS = [
     "companieshouse.gov.uk",
     "gov.uk",
     "find-and-update.company-information.service.gov.uk",
-    "opencorporates.com"
+    "opencorporates.com",
+    "wikipedia.org"
 ]
 
 DOMAIN_FORENSICS_DOMAINS = [
@@ -42,8 +43,9 @@ DOMAIN_FORENSICS_DOMAINS = [
 
 VENUE_REALITY_DOMAINS = [
     "timeout.com",
-    "google.com/maps",
-    "yelp.com"
+    "google.com",
+    "yelp.com",
+    "tripadvisor.com"
 ]
 
 PERSONNEL_DOSSIER_DOMAINS = [
@@ -54,6 +56,27 @@ PERSONNEL_DOSSIER_DOMAINS = [
     "imdb.com",
     "linkedin.com"
 ]
+
+def sanitize_domain_list(domains: list[str]) -> list[str]:
+    """Sanitize domains to ensure only bare hostnames or extension prefixes are sent to Parallel API."""
+    from urllib.parse import urlparse
+    clean_domains = []
+    for d in domains:
+        if not d or not isinstance(d, str):
+            continue
+        d = d.strip().lower()
+        if d.startswith("http://") or d.startswith("https://"):
+            parsed = urlparse(d)
+            d = parsed.netloc
+        elif "/" in d:
+            d = d.split("/")[0]
+        if ":" in d:
+            d = d.split(":")[0]
+        if d.startswith("www."):
+            d = d[4:]
+        if d and d not in clean_domains:
+            clean_domains.append(d)
+    return clean_domains
 
 def determine_source_tier(domain: str) -> int:
     """Determine the credibility tier of a given domain (1=Highest, 2=Standard, 3=Low)."""
