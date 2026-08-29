@@ -354,7 +354,8 @@ async def create_investigation(req: CreateInvestigationRequest, request: Request
         raise HTTPException(status_code=400, detail="Festival query is required")
 
     # DEMO MODE INTERCEPTION
-    if query.lower() in ["demo", "demo mode", "/demo"]:
+    q_clean = query.lower().strip()
+    if q_clean in ["demo", "demo mode", "/demo"] or "pinco pallino" in q_clean or "pinco_pallino" in q_clean:
         from backend.demo_payloads import get_demo_investigation
         return get_demo_investigation()
 

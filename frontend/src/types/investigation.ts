@@ -282,11 +282,15 @@ export type VettingSignalStatus =
 export interface KeyPerson {
   name: string;
   roles: string[];
-  companies: string[];
-  associatedFestivals: string[];
-  isFestivalMillSuspect: boolean;
-  hasDistributionOverlap: boolean;
-  notes: string;
+  companies?: string[];
+  associatedFestivals?: string[];
+  isFestivalMillSuspect?: boolean;
+  hasDistributionOverlap?: boolean;
+  flags?: string[];
+  notes?: string;
+  avatarUrl?: string;
+  linkedinUrl?: string;
+  companiesHouseUrl?: string;
 }
 
 export interface DeepVettingDimension {

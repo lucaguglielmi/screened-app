@@ -22,6 +22,7 @@ import {
 import { DeepVettingReport, VettingSignalStatus } from '../../types/investigation';
 import { soundEffects } from '../../utils/audio';
 import { PersonnelNetworkDiagram } from '../diagrams/PersonnelNetworkDiagram';
+import { KeyPersonnelCardList } from './KeyPersonnelCardList';
 
 interface DeepVettingMatrixProps {
   report?: DeepVettingReport;
@@ -519,15 +520,22 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
         })}
       </div>
 
-      {/* Personnel Network Diagram */}
+      {/* Key Personnel Cards & Network Diagram */}
       {activeReport.keyPersonnel && activeReport.keyPersonnel.length > 0 && (
-        <div className="pt-6">
-          <h3 className="text-lg font-bold text-white font-serif mb-2">Key Personnel & Entity Network</h3>
-          <p className="text-xs text-zinc-400 mb-4">
-            Visualizing connections between individuals, their corporate directorships, and associated festivals. 
-            Risk flags are highlighted in red.
-          </p>
-          <PersonnelNetworkDiagram keyPersonnel={activeReport.keyPersonnel} />
+        <div className="pt-8 space-y-6">
+          <KeyPersonnelCardList
+            keyPersonnel={activeReport.keyPersonnel}
+            title="Key Personnel Forensic Dossier"
+            subtitle="Verified individuals, corporate directorships, and risk flags extracted across trade databases."
+          />
+
+          <div className="pt-4">
+            <h3 className="text-base font-bold text-white font-serif mb-1">Entity & Directorship Connection Network</h3>
+            <p className="text-xs text-slate-400 mb-4">
+              Interactive topological graph visualizing relationships between individuals, companies, and festivals.
+            </p>
+            <PersonnelNetworkDiagram keyPersonnel={activeReport.keyPersonnel} />
+          </div>
         </div>
       )}
     </div>

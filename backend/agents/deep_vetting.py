@@ -108,7 +108,18 @@ Synthesize the parallel dimension analyses into a final deep vetting report for 
 Focus on these 5 dimensions: CORPORATE_REGISTRY, DOMAIN_PROVENANCE, VENUE_CORROBORATION, PERSONNEL_DOSSIER, BOILERPLATE_PLAGIARISM.
 Aggregate the "Festival Mill" and "Consulting Overlap" findings into prominent RED_FLAG or AMBER_WARNING signals.
 Fill in the other 2 (ALUMNI_FOOTPRINT, IMAGE_PROVENANCE) with INCONCLUSIVE or INFORMATIONAL defaults.
-Ensure you populate the keyPersonnel array with extracted information about directors, officers, programmers and jury.
+Ensure you populate the keyPersonnel array with extracted information about directors, officers, programmers, and jury members. For each person include:
+- name: Full name
+- roles: List of roles (e.g. ['Festival Director', 'Founder'])
+- avatarUrl: Avatar URL if found or generated avatar placeholder
+- linkedinUrl: LinkedIn profile URL if identified or referenced in sources
+- companiesHouseUrl: Government registry / Companies House link if identified
+- companies: List of affiliated corporate entities or production companies
+- associatedFestivals: List of affiliated festivals
+- isFestivalMillSuspect: True if linked to mass-submission / laurel mill schemes
+- hasDistributionOverlap: True if commercial distribution/consulting service overlaps
+- flags: List of specific warning flags
+- notes: Detailed summary of forensic findings about this person
 Return a JSON object conforming strictly to the output schema.
 """
 

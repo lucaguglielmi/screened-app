@@ -175,10 +175,19 @@ class DeepVettingDimension(BaseModel):
 
 class KeyPerson(BaseModel):
     name: str
-    role: str
+    roles: List[str] = Field(default_factory=list)
+    role: Optional[str] = None
     appointmentDate: Optional[str] = None
+    companies: List[str] = Field(default_factory=list)
     otherDirectorships: List[str] = Field(default_factory=list)
+    associatedFestivals: List[str] = Field(default_factory=list)
     flags: List[str] = Field(default_factory=list)
+    isFestivalMillSuspect: bool = False
+    hasDistributionOverlap: bool = False
+    notes: str = ""
+    avatarUrl: Optional[str] = None
+    linkedinUrl: Optional[str] = None
+    companiesHouseUrl: Optional[str] = None
 
 
 class DeepVettingReport(BaseModel):

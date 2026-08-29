@@ -105,8 +105,8 @@ export const PersonnelNetworkDiagram: React.FC<Props> = ({ keyPersonnel }) => {
 
     // First, let's collect unique companies and festivals
     keyPersonnel.forEach(person => {
-      person.companies.forEach(c => companySet.add(c));
-      person.associatedFestivals.forEach(f => festivalSet.add(f));
+      (person.companies || []).forEach(c => companySet.add(c));
+      (person.associatedFestivals || []).forEach(f => festivalSet.add(f));
     });
 
     const companyArray = Array.from(companySet);
@@ -138,7 +138,7 @@ export const PersonnelNetworkDiagram: React.FC<Props> = ({ keyPersonnel }) => {
       });
       
       // Connect to companies
-      person.companies.forEach(company => {
+      (person.companies || []).forEach(company => {
          newEdges.push({
            id: `edge-${idx}-company-${company}`,
            source: `person-${idx}`,
@@ -151,7 +151,7 @@ export const PersonnelNetworkDiagram: React.FC<Props> = ({ keyPersonnel }) => {
       });
 
       // Connect to festivals
-      person.associatedFestivals.forEach(festival => {
+      (person.associatedFestivals || []).forEach(festival => {
          newEdges.push({
            id: `edge-${idx}-festival-${festival}`,
            source: `person-${idx}`,

@@ -30,6 +30,7 @@ import { DetailDial } from './DetailDial';
 import { CitationPopover } from './CitationPopover';
 import { CredibilityRadar } from './CredibilityRadar';
 import { DeepVettingMatrix } from './investigation/DeepVettingMatrix';
+import { KeyPersonnelCardList } from './investigation/KeyPersonnelCardList';
 const EntityProvenanceGraph = lazy(() => import('./diagrams/EntityProvenanceGraph').then(m => ({ default: m.EntityProvenanceGraph })));
 import { playDialClick, soundEffects } from '../utils/audio';
 import {
@@ -1082,6 +1083,17 @@ export const EvidenceDossier: React.FC<Props> = ({
                   {dossier.participantFeedback}
                 </p>
               </div>
+            </div>
+          )}
+
+          {/* Key Personnel & Leadership Intelligence */}
+          {deepVetting?.keyPersonnel && deepVetting.keyPersonnel.length > 0 && (
+            <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl border border-darkroom-border space-y-4" data-section-name="Key Personnel">
+              <KeyPersonnelCardList
+                keyPersonnel={deepVetting.keyPersonnel}
+                title="Key Personnel & Leadership Intelligence"
+                subtitle="Verified directors, jury members, and connected corporate entities evaluated for conflicts of interest."
+              />
             </div>
           )}
 

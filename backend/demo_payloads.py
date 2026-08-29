@@ -486,31 +486,43 @@ def get_demo_full_dossier():
             ],
             "keyPersonnel": [
                 {
-                    "name": "A. Smith",
+                    "name": "Arthur Smith",
                     "roles": ["Festival Director", "Co-Founder"],
+                    "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=ArthurSmith",
+                    "linkedinUrl": "https://www.linkedin.com/in/arthur-smith-cinema",
+                    "companiesHouseUrl": "https://find-and-update.company-information.service.gov.uk/company/13984712",
                     "companies": ["Pinco Pallino Film CIC", "Pallino Media Lab Ltd"],
-                    "associatedFestivals": ["Pinco Pallino"],
+                    "associatedFestivals": ["Pinco Pallino Film Festival", "Apex Short Film Arena"],
                     "isFestivalMillSuspect": True,
                     "hasDistributionOverlap": True,
-                    "notes": "Co-director of Pallino Media Lab, aggressively upselling DCP packaging. Subject of a 2022 insolvency proceeding."
+                    "flags": ["Distribution Upsell Overlap", "2022 Insolvency Notice", "Shell Entity Director"],
+                    "notes": "Co-director of Pallino Media Lab Ltd, aggressively upselling distribution packages to rejected applicants. Subject of a 2022 insolvency filing."
                 },
                 {
-                    "name": "B. Jones",
-                    "roles": ["Jury Chair"],
+                    "name": "Benjamin Jones",
+                    "roles": ["Jury Chair", "Senior Programmer"],
+                    "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=BenjaminJones",
+                    "linkedinUrl": "https://www.linkedin.com/in/benjamin-jones-jury",
+                    "companiesHouseUrl": "https://find-and-update.company-information.service.gov.uk/company/13984712",
                     "companies": ["IndiePitch Consulting", "Pallino Media Lab Ltd"],
-                    "associatedFestivals": [],
+                    "associatedFestivals": ["Pinco Pallino Film Festival"],
                     "isFestivalMillSuspect": False,
                     "hasDistributionOverlap": True,
-                    "notes": "Jury chair offering paid pitch consulting to submitters within 48 hours of their rejection."
+                    "flags": ["Paid Pitch Consulting Upsell", "Directorship Conflict with Director"],
+                    "notes": "Jury chair offering paid pitch consulting to submitters within 48 hours of their rejection. Shares directorship with Festival Director."
                 },
                 {
                     "name": "Martin Sterling",
-                    "roles": ["Repeat Winner"],
-                    "companies": ["Sterling Productions"],
-                    "associatedFestivals": ["Pinco Pallino"],
+                    "roles": ["Repeat Winner (2024 & 2025)", "Associate Producer"],
+                    "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=MartinSterling",
+                    "linkedinUrl": "https://www.linkedin.com/in/martin-sterling-director",
+                    "companiesHouseUrl": None,
+                    "companies": ["Sterling Productions Ltd"],
+                    "associatedFestivals": ["Pinco Pallino Film Festival"],
                     "isFestivalMillSuspect": False,
                     "hasDistributionOverlap": False,
-                    "notes": "Anomalous repeat winner of the top prize (2024, 2025) despite the festival's claimed 1.2% acceptance rate."
+                    "flags": ["Anomalous Consecutive Winner (2024, 2025)", "Family Tie to Jury Chair"],
+                    "notes": "Anomalous repeat winner of the top prize in consecutive years (2024, 2025) despite the claimed 1.2% selection rate. Reddit threads indicate familial relationship to Jury Chair."
                 }
             ],
             "generatedAt": now_iso

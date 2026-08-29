@@ -30,8 +30,8 @@ def create_planner_adk_agent(entity_name: str, location: str, official_website: 
     instruction = f"""
 You are the Lead Planning Agent for Screened.
 Your goal is to parse the user's intent regarding a specific film festival, and formulate a targeted research plan across three domains:
-1. FESTIVAL: Official entity information, venue realities, and historical editions.
-2. ORGANIZER: Corporate footprint, key personnel (directors, programmers, jury), and legal identity.
+1. FESTIVAL: Official entity information, venue realities, physical screening locations, and historical editions.
+2. ORGANIZER: Corporate footprint, key personnel (founders, directors, programmers, jury members), LinkedIn profile traces, Companies House / commercial registry filings, and potential conflicts of interest.
 3. PARTICIPANTS: Sentiments, allegations, fees, and alumni footprint.
 
 Entity: {entity_name}
@@ -39,7 +39,7 @@ Location: {location}
 Website: {official_website}
 User Intent: {intent}
 
-Return a detailed JSON adhering strictly to the `InvestigationPlan` schema. Ensure each domain has a specific objective and search queries tailored to the intent.
+Return a detailed JSON adhering strictly to the `InvestigationPlan` schema. Ensure each domain has a specific objective and search queries tailored to find key individuals, LinkedIn footprints, and verified corporate registrations.
     """
 
     return LlmAgent(
@@ -75,7 +75,7 @@ Filmmaker Intent: {intent}
 
 Generate specific Parallel Search queries and questions covering 360° forensic vetting:
 1. FESTIVAL domain (physical cinema screening venues, municipal manifests, submission fee tiers, original rules vs boilerplate text, awards)
-2. ORGANIZER domain (operating legal entity name, Companies House or registry filing status, domain WHOIS age, founders, festival director IMDb credentials)
+2. ORGANIZER domain (operating legal entity name, Companies House or registry filing status, founders, festival director names, programmer and jury identities, LinkedIn profile searches, IMDb credentials, and cross-company directorships)
 3. PARTICIPANTS domain (filmmaker alumni confirmations, Letterboxd/Reddit threads, attendee reviews, fee dispute complaints, selection rates)
 
 Return a JSON object matching this schema:
