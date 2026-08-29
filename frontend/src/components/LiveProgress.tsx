@@ -546,32 +546,36 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
               <Terminal className="size-3.5 text-indigo-400" />
               <span>Live Agent Event Log</span>
             </span>
-            <span className="text-xs font-mono text-slate-400">{events.length} events recorded</span>
+            <span className="text-xs font-mono text-slate-400">
+              {events.filter((evt, i, arr) => !i || arr[i - 1].message !== evt.message).length} events recorded
+            </span>
           </div>
 
           <div className="p-4 sm:p-5 max-h-60 overflow-y-auto space-y-2.5 text-xs font-mono bg-darkroom-bg/60">
-            {events.map((evt, idx) => (
-              <div
-                key={idx}
-                className="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-2.5 leading-relaxed hover:bg-darkroom-surface/40 p-2 sm:p-1 rounded-lg transition-colors border-b sm:border-b-0 border-darkroom-border/30 last:border-b-0"
-              >
-                <div className="flex items-center gap-2 shrink-0">
-                  <span className="text-slate-400 text-[11px] font-mono">
-                    {evt.timestamp
-                      ? new Date(evt.timestamp).toLocaleTimeString([], {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                          second: '2-digit',
-                        })
-                      : ''}
-                  </span>
-                  <span className="text-tool-diligence font-semibold text-xs">
-                    [{evt.agentName}]
-                  </span>
+            {events
+              .filter((evt, i, arr) => !i || arr[i - 1].message !== evt.message)
+              .map((evt, idx) => (
+                <div
+                  key={idx}
+                  className="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-2.5 leading-relaxed hover:bg-darkroom-surface/40 p-2 sm:p-1 rounded-lg transition-colors border-b sm:border-b-0 border-darkroom-border/30 last:border-b-0"
+                >
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="text-slate-400 text-[11px] font-mono">
+                      {evt.timestamp
+                        ? new Date(evt.timestamp).toLocaleTimeString([], {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
+                          })
+                        : ''}
+                    </span>
+                    <span className="text-tool-diligence font-semibold text-xs">
+                      [{evt.agentName}]
+                    </span>
+                  </div>
+                  <span className="text-slate-200 text-xs flex-1 break-words">{evt.message}</span>
                 </div>
-                <span className="text-slate-200 text-xs flex-1 break-words">{evt.message}</span>
-              </div>
-            ))}
+              ))}
             <div ref={eventsEndRef} />
           </div>
         </div>

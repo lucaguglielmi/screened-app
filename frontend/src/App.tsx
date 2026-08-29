@@ -240,18 +240,18 @@ export default function App() {
             });
           }
         } else if (activityEvent.eventType === 'PLANNING_STARTED') {
-          setInvestigation((prev) => (prev ? { ...prev, status: 'PLANNING' } : null));
+          setInvestigation((prev) => (prev && prev.status !== 'READY' ? { ...prev, status: 'PLANNING' } : prev));
         } else if (activityEvent.eventType === 'DOMAIN_SEARCH_STARTED') {
-          setInvestigation((prev) => (prev ? { ...prev, status: 'RESEARCHING' } : null));
+          setInvestigation((prev) => (prev && prev.status !== 'READY' ? { ...prev, status: 'RESEARCHING' } : prev));
         } else if (activityEvent.eventType === 'CONTRADICTIONS_ANALYZING') {
           setInvestigation((prev) =>
-            prev ? { ...prev, status: 'ANALYZING_CONTRADICTIONS' } : null,
+            prev && prev.status !== 'READY' ? { ...prev, status: 'ANALYZING_CONTRADICTIONS' } : prev,
           );
         } else if (activityEvent.eventType === 'DOSSIER_SYNTHESIZING') {
-          setInvestigation((prev) => (prev ? { ...prev, status: 'ASSEMBLING_DOSSIER' } : null));
+          setInvestigation((prev) => (prev && prev.status !== 'READY' ? { ...prev, status: 'ASSEMBLING_DOSSIER' } : prev));
         } else if (activityEvent.eventType === 'ERROR') {
           console.error('Investigation Error Event Received:', activityEvent);
-          setInvestigation((prev) => (prev ? { ...prev, status: 'FAILED' } : null));
+          setInvestigation((prev) => (prev && prev.status !== 'READY' ? { ...prev, status: 'FAILED' } : prev));
           setError(activityEvent.message || 'An error occurred during the investigation.');
         }
       } catch (e) {

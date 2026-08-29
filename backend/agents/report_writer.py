@@ -35,7 +35,24 @@ class ReportWriterAgent:
         sources: List[SourceRecord],
         disputes: List[DisputeRecord],
     ) -> DossierReport:
-        logger.info(f"Generating comprehensive dossier for: {entity.name}")
+        logger.info(f"Generating comprehensive dossier for: {entity.name} (claims: {len(claims)}, sources: {len(sources)})")
+
+        if not claims:
+            return DossierReport(
+                executiveSummary=f"No verified public records or claims could be corroborated for {entity.name}.",
+                festivalOverview="No verified physical venue, fee structure, or past edition records found in public archives.",
+                organizerProfile="No verifiable legal corporate entity or director profiles identified in public trade registers.",
+                participantFeedback="No filmmaker community reviews or past participant accounts discovered.",
+                unresolvedQuestions=[
+                    f"Verify official festival existence directly with local film commission or municipality in {entity.cityCountry or 'the region'}.",
+                    "Request direct proof of theatrical screening venues and past catalog archives from festival organizers.",
+                ],
+                filmmakerChecklist=[
+                    "Do not submit entry fees without independent verification of physical screening theater leases.",
+                    "Verify corporate registration in official government entity database.",
+                ],
+                keyPersons=[],
+            )
 
         claims_summary = [
             {
@@ -60,7 +77,7 @@ class ReportWriterAgent:
 
         prompt = f"""
 You are the Lead Report Writer for Screened, a cinema due-diligence workspace.
-Generate a structured, neutral, and evidence-grounded investigative dossier for a filmmaker evaluating this festival.
+Generate a structured, neutral, and strictly factual investigative dossier for a filmmaker evaluating this festival.
 
 Subject: {entity.name}
 Location: {entity.cityCountry or 'Not specified'}
@@ -76,21 +93,20 @@ Sources Count: {len(sources)}
 CRITICAL EDITORIAL RULES:
 1. Strict neutrality. Do not give an overall score or trust rating.
 2. Never use banned emotional words (like 'scam', 'fraudulent', 'legit', 'fake').
-3. Focus on verifiable facts: venue confirmations, fee policies, refund terms, organizer legal entities, and community reports.
-4. Clearly distinguish corroborated facts from unverified claims or disputed points.
-5. Do not hallucinate. Use only the provided JSON evidence payload.
-6. Extract any key organizers, directors, or prominent individuals associated with the festival from the evidence into a list of strings formatted as 'Name - Role' (e.g. 'John Doe - Festival Director'). If none are found, return an empty list.
-
-Keep the tone neutral, forensic, and entirely factual. Avoid hyperbole or marketing language.
+3. Focus purely on verifiable facts: venue confirmations, fee policies, refund terms, organizer legal entities, and verified dates.
+4. Keep all sections short, direct, and factual (1-2 concise paragraphs max).
+5. DO NOT add AI fluff, filler phrases (like 'Screened has conducted an exhaustive search...'), or speculative generalities.
+6. Extract key organizers, directors, or prominent individuals associated with the festival from the evidence into a list of strings formatted as 'Name - Role' (e.g. 'John Doe - Festival Director'). If none are found, return an empty list.
 
 Return a JSON object conforming to this schema:
 {{
-  "executiveSummary": "string (2-3 paragraphs providing an objective high-level synthesis)",
-  "festivalOverview": "string (1-2 paragraphs detailing venues, fees, format, and edition history)",
-  "organizerProfile": "string (1-2 paragraphs detailing operating entity, director track record, and registration)",
-  "participantFeedback": "string (1-2 paragraphs summarizing filmmaker discussions, feedback, and any reported concerns)",
-  "unresolvedQuestions": ["question 1 that remains unverified", "question 2"],
-  "filmmakerChecklist": ["actionable due-diligence item 1 before submitting (e.g. check venue box office)", "item 2"]
+  "executiveSummary": "string (1-2 concise paragraphs summarizing the factual ground truth)",
+  "festivalOverview": "string (1-2 concise paragraphs on venues, dates, fees, and editions)",
+  "organizerProfile": "string (1-2 concise paragraphs on legal entity, leadership, and registration)",
+  "participantFeedback": "string (1-2 concise paragraphs on community discussions and feedback)",
+  "unresolvedQuestions": ["factual question 1", "factual question 2"],
+  "filmmakerChecklist": ["actionable due-diligence step 1", "actionable step 2"],
+  "keyPersons": ["Name - Role"]
 }}
 """
         try:
@@ -99,30 +115,32 @@ Return a JSON object conforming to this schema:
                 contents=prompt,
                 config=types.GenerateContentConfig(
                     response_mime_type="application/json",
-                    temperature=0.2,
+                    temperature=0.1,
                 ),
             )
 
             raw = json.loads(response.text or "{}")
             return DossierReport(
                 executiveSummary=raw.get("executiveSummary", f"Investigation completed for {entity.name} with {len(claims)} verified claims."),
-                festivalOverview=raw.get("festivalOverview", "Festival profile details extracted from public records."),
-                organizerProfile=raw.get("organizerProfile", "Organizer details extracted from public filings."),
-                participantFeedback=raw.get("participantFeedback", "Participant accounts and community feedback analyzed."),
-                unresolvedQuestions=raw.get("unresolvedQuestions", ["Confirm physical venue directly with cinema box office."]),
+                festivalOverview=raw.get("festivalOverview", "Verified festival details compiled from public records."),
+                organizerProfile=raw.get("organizerProfile", "Verified organizer details compiled from public filings."),
+                participantFeedback=raw.get("participantFeedback", "Community feedback compiled from public discussions."),
+                unresolvedQuestions=raw.get("unresolvedQuestions", ["Confirm physical screening venue with cinema box office."]),
                 filmmakerChecklist=raw.get("filmmakerChecklist", [
                     "Verify premiere status requirements",
-                    "Check refund and cancellation clause in regulations",
-                    "Confirm screening format (DCP vs digital file)",
+                    "Check refund policy in official regulations",
+                    "Confirm screening format requirements",
                 ]),
+                keyPersons=raw.get("keyPersons", []),
             )
         except Exception as e:
             logger.exception(f"ReportWriter failed: {e}")
             return DossierReport(
-                executiveSummary=f"Investigation completed for {entity.name}. Extracted {len(claims)} claims across {len(sources)} sources.",
+                executiveSummary=f"Investigation completed for {entity.name}. Extracted {len(claims)} verified claims across {len(sources)} sources.",
                 festivalOverview="Festival details compiled from verified web excerpts.",
                 organizerProfile="Organizer details compiled from public records.",
                 participantFeedback="Community feedback compiled from public discussions.",
                 unresolvedQuestions=["Confirm physical screening dates."],
                 filmmakerChecklist=["Review festival rules and terms."],
+                keyPersons=[],
             )
