@@ -5,12 +5,12 @@ import {
   MapPin,
   CheckSquare,
   Square,
-  UserCheck,
-  Mail,
-  Phone,
+  
+  
+  
   AlertCircle,
   ArrowRight,
-  Globe,
+  Globe, ChevronDown,
 } from 'lucide-react';
 import { DueDiligenceArgs } from '../../../types/chat';
 import { soundEffects } from '../../../utils/audio';
@@ -50,20 +50,36 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
   const [websiteUrl, setWebsiteUrl] = useState(args.optional_url || '');
   const [showLocationSuggestions, setShowLocationSuggestions] = useState(false);
 
-  // Checkbox interactions
-  const [talkedToSomeone, setTalkedToSomeone] = useState(false);
-  const [wasInvited, setWasInvited] = useState(false);
-  const [receivedEmail, setReceivedEmail] = useState(false);
-  const [alreadyPaid, setAlreadyPaid] = useState(false);
-  const [advertisedCinemaVenue, setAdvertisedCinemaVenue] = useState(false);
-  const [waiverOffered, setWaiverOffered] = useState(false);
+  // Inquiry Checkboxes
+  const [selectedInquiries, setSelectedInquiries] = useState<string[]>([]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [clarificationText, setClarificationText] = useState('');
 
-  // Follow-up dynamic inputs
-  const [contactName, setContactName] = useState('');
-  const [emailSnippet, setEmailSnippet] = useState('');
-  const [contactPhone, setContactPhone] = useState('');
+  const INQUIRY_OPTIONS = [
+    'Talked to organizer / team member',
+    'Received email invitation',
+    'Offered discount / fee waiver',
+    'Already paid submission fee'
+  ];
 
-  const hasFollowUpRequirement = talkedToSomeone || wasInvited || receivedEmail;
+  const toggleInquiry = (opt: string) => {
+    if (selectedInquiries.includes(opt)) {
+      setSelectedInquiries(selectedInquiries.filter(o => o !== opt));
+    } else {
+      setSelectedInquiries([...selectedInquiries, opt]);
+    }
+  };
+
+  const hasFollowUpRequirement = selectedInquiries.length > 0;
+
+  const getClarificationPlaceholder = () => {
+    const prompts = [];
+    if (selectedInquiries.includes('Talked to organizer / team member')) prompts.push('Who did you talk to (name, title) and what did they say?');
+    if (selectedInquiries.includes('Received email invitation')) prompts.push('Please paste the email snippet or invitation text.');
+    if (selectedInquiries.includes('Offered discount / fee waiver')) prompts.push('What was the waiver code or discount amount?');
+    if (selectedInquiries.includes('Already paid submission fee')) prompts.push('How much did you pay and what was it for?');
+    return prompts.join('\n');
+  };
 
 
   const handleLaunch = () => {
@@ -179,113 +195,50 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
           </div>
 
           {/* Interactive Checkbox Matrix */}
-          <div className="space-y-2 text-xs">
+          <div className="space-y-2 text-xs relative">
             <label className="block text-zinc-400 font-mono">
               Check if any apply to your inquiry:
             </label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => setTalkedToSomeone(!talkedToSomeone)}
-                className={`flex items-center space-x-2.5 py-1.5 text-left transition-all cursor-pointer ${
-                  talkedToSomeone
-                    ? 'text-emerald-300 font-semibold'
-                    : 'text-zinc-300 hover:text-white'
-                }`}
-              >
-                {talkedToSomeone ? (
-                  <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" />
-                ) : (
-                  <Square className="w-4 h-4 text-zinc-500 shrink-0" />
-                )}
-                <span>I talked to a festival organizer / team member</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setWasInvited(!wasInvited)}
-                className={`flex items-center space-x-2.5 py-1.5 text-left transition-all cursor-pointer ${
-                  wasInvited
-                    ? 'text-emerald-300 font-semibold'
-                    : 'text-zinc-300 hover:text-white'
-                }`}
-              >
-                {wasInvited ? (
-                  <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" />
-                ) : (
-                  <Square className="w-4 h-4 text-zinc-500 shrink-0" />
-                )}
-                <span>I was invited to submit directly</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setReceivedEmail(!receivedEmail)}
-                className={`flex items-center space-x-2.5 py-1.5 text-left transition-all cursor-pointer ${
-                  receivedEmail
-                    ? 'text-emerald-300 font-semibold'
-                    : 'text-zinc-300 hover:text-white'
-                }`}
-              >
-                {receivedEmail ? (
-                  <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" />
-                ) : (
-                  <Square className="w-4 h-4 text-zinc-500 shrink-0" />
-                )}
-                <span>I received an email solicitation</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setWaiverOffered(!waiverOffered)}
-                className={`flex items-center space-x-2.5 py-1.5 text-left transition-all cursor-pointer ${
-                  waiverOffered
-                    ? 'text-emerald-300 font-semibold'
-                    : 'text-zinc-300 hover:text-white'
-                }`}
-              >
-                {waiverOffered ? (
-                  <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" />
-                ) : (
-                  <Square className="w-4 h-4 text-zinc-500 shrink-0" />
-                )}
-                <span>Offered discount / entry fee waiver</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setAlreadyPaid(!alreadyPaid)}
-                className={`flex items-center space-x-2.5 py-1.5 text-left transition-all cursor-pointer ${
-                  alreadyPaid
-                    ? 'text-emerald-300 font-semibold'
-                    : 'text-zinc-300 hover:text-white'
-                }`}
-              >
-                {alreadyPaid ? (
-                  <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" />
-                ) : (
-                  <Square className="w-4 h-4 text-zinc-500 shrink-0" />
-                )}
-                <span>I already paid submission / trophy fee</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setAdvertisedCinemaVenue(!advertisedCinemaVenue)}
-                className={`flex items-center space-x-2.5 py-1.5 text-left transition-all cursor-pointer ${
-                  advertisedCinemaVenue
-                    ? 'text-emerald-300 font-semibold'
-                    : 'text-zinc-300 hover:text-white'
-                }`}
-              >
-                {advertisedCinemaVenue ? (
-                  <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" />
-                ) : (
-                  <Square className="w-4 h-4 text-zinc-500 shrink-0" />
-                )}
-                <span>Advertised physical cinema theater</span>
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="w-full flex items-center justify-between bg-darkroom-surface border border-zinc-700/50 rounded-xl px-4 py-2.5 text-zinc-300 hover:text-white hover:border-zinc-600 transition-all focus:outline-none"
+            >
+              <span>{selectedInquiries.length > 0 ? `${selectedInquiries.length} selected` : 'Select criteria...'}</span>
+              <ChevronDown className="w-4 h-4 text-zinc-500" />
+            </button>
+            
+            <AnimatePresence>
+              {isDropdownOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -5 }}
+                  className="absolute z-10 w-full mt-2 py-2 bg-darkroom-card border border-darkroom-border rounded-xl shadow-2xl space-y-1"
+                >
+                  {INQUIRY_OPTIONS.map(opt => {
+                    const isSelected = selectedInquiries.includes(opt);
+                    return (
+                      <button
+                        key={opt}
+                        type="button"
+                        onClick={() => toggleInquiry(opt)}
+                        className={`w-full flex items-center space-x-3 px-4 py-2 text-left transition-colors ${
+                          isSelected ? 'text-emerald-300 bg-emerald-500/10' : 'text-zinc-300 hover:bg-darkroom-surface hover:text-white'
+                        }`}
+                      >
+                        {isSelected ? (
+                          <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" />
+                        ) : (
+                          <Square className="w-4 h-4 text-zinc-500 shrink-0" />
+                        )}
+                        <span>{opt}</span>
+                      </button>
+                    );
+                  })}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Dynamic Follow-Up Questions Section */}
@@ -295,55 +248,24 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                className="p-4 rounded-2xl bg-darkroom-card space-y-3 overflow-hidden text-xs"
+                className="p-4 rounded-2xl bg-darkroom-card space-y-3 overflow-hidden text-xs mt-4"
               >
-                <div className="flex items-center space-x-2 text-emerald-400 font-mono text-xs">
+                <div className="flex items-center space-x-2 text-emerald-400 font-mono text-xs mb-2">
                   <AlertCircle className="w-4 h-4" />
-                  <span>Follow-Up Probe: Interaction Intelligence</span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-zinc-400 mb-1 flex items-center space-x-1">
-                      <UserCheck className="w-3 h-3 text-emerald-400" />
-                      <span>Who did you talk to? (Person / Title)</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={contactName}
-                      onChange={(e) => setContactName(e.target.value)}
-                      placeholder="e.g. Program Director Alex Mercer"
-                      className="w-full bg-darkroom-surface rounded-xl px-3 py-2 text-white placeholder:text-zinc-500 focus:outline-none text-base"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-zinc-400 mb-1 flex items-center space-x-1">
-                      <Phone className="w-3 h-3 text-emerald-400" />
-                      <span>Phone Number / WhatsApp (Optional)</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={contactPhone}
-                      onChange={(e) => setContactPhone(e.target.value)}
-                      placeholder="+44 7700 900077"
-                      className="w-full bg-darkroom-surface rounded-xl px-3 py-2 text-white placeholder:text-zinc-500 focus:outline-none text-base"
-                    />
-                  </div>
+                  <span>Follow-Up Probe: Clarification Required</span>
                 </div>
 
                 <div>
-                  <label className="block text-zinc-400 mb-1 flex items-center space-x-1">
-                    <Mail className="w-3 h-3 text-emerald-400" />
-                    <span>Paste Email Text / Invitation Snippet (Optional)</span>
+                  <label className="block text-zinc-400 mb-2 flex items-center space-x-1">
+                    <span>Please provide more details based on your selection(s):</span>
                   </label>
                   <AnimatedFocusWrapper borderRadius={12}>
                     <textarea
-                      rows={2}
-                      value={emailSnippet}
-                      onChange={(e) => setEmailSnippet(e.target.value)}
-                      placeholder="Paste the invitation message or waiver code..."
-                      className="w-full bg-darkroom-surface rounded-xl px-3 py-2 text-white placeholder:text-zinc-500 focus:outline-none text-base font-mono"
+                      rows={4}
+                      value={clarificationText}
+                      onChange={(e) => setClarificationText(e.target.value)}
+                      placeholder={getClarificationPlaceholder()}
+                      className="w-full bg-darkroom-surface rounded-xl px-3 py-2 text-white placeholder:text-zinc-500/70 focus:outline-none text-sm font-sans resize-none"
                     />
                   </AnimatedFocusWrapper>
                 </div>
