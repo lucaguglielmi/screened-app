@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { ActivityEvent, InvestigationStatus } from '../types/investigation';
 import {
-  Bot,
   Search,
   Sparkles,
   Layers,
@@ -39,60 +38,48 @@ interface TimelineStep {
 
 const TIMELINE_STEPS: TimelineStep[] = [
   {
-    id: 'disambiguator',
-    stepNumber: 1,
-    name: 'Disambiguator',
-    shortLabel: 'Identity',
-    role: 'Entity Resolution',
-    description: 'Searches for the official festival entity and verifies its primary domain.',
-    details: [
-      'Resolves exact festival name',
-      'Identifies official website URL'
-    ],
-    toolsUsed: ['Parallel Search', 'Entity Matcher'],
-    icon: Bot,
-    activeStatus: ['DISAMBIGUATING', 'AWAITING_ENTITY_CONFIRMATION'],
-  },
-  {
     id: 'planner',
-    stepNumber: 2,
-    name: 'Planner',
+    stepNumber: 1,
+    name: 'Strategy & Planning',
     shortLabel: 'Strategy',
-    role: 'Search Strategy',
-    description: 'Generates specific search queries across multiple domains (organizer, participants, venue).',
+    role: 'Entity Resolution & Search Strategy',
+    description: 'Disambiguates festival identity and constructs deep multi-domain search queries.',
     details: [
+      'Disambiguates festival identity',
       'Generates search queries',
-      'Configures verification targets'
+      'Configures verification targets',
     ],
-    toolsUsed: ['Search Planner', 'LLM Query Gen'],
+    toolsUsed: ['Parallel Search', 'Search Planner', 'Entity Matcher'],
     icon: Sparkles,
-    activeStatus: ['PLANNING'],
+    activeStatus: ['DISAMBIGUATING', 'AWAITING_ENTITY_CONFIRMATION', 'PLANNING'],
   },
   {
     id: 'parallel_agents',
-    stepNumber: 3,
+    stepNumber: 2,
     name: 'Parallel Agents',
     shortLabel: 'Data Fetch',
-    role: 'Parallel Search',
-    description: 'Executes concurrent web searches to gather raw source documents.',
+    role: 'Parallel Web Search',
+    description: 'Executes concurrent web searches across festival, organizer, and participant domains.',
     details: [
-      'Fetches web pages',
-      'Downloads raw source text'
+      'Dispatches domain tasks',
+      'Fetches web documents',
+      'Harvests public records',
     ],
-    toolsUsed: ['Parallel Search API'],
+    toolsUsed: ['Parallel Task API', 'Parallel Search API'],
     icon: Search,
     activeStatus: ['RESEARCHING'],
   },
   {
     id: 'claim_extractor',
-    stepNumber: 4,
+    stepNumber: 3,
     name: 'ClaimExtractor',
     shortLabel: 'Extraction',
-    role: 'Fact Extraction',
-    description: 'Parses retrieved text to extract factual statements with exact source quotes.',
+    role: 'Fact & Evidence Extraction',
+    description: 'Parses retrieved text to extract atomic claims with exact source excerpts.',
     details: [
-      'Extracts facts and claims',
-      'Links exact source excerpts'
+      'Extracts atomic claims',
+      'Links verbatim quotes',
+      'Verifies source domains',
     ],
     toolsUsed: ['Substring Matcher', 'LLM Extractor'],
     icon: Layers,
@@ -100,14 +87,15 @@ const TIMELINE_STEPS: TimelineStep[] = [
   },
   {
     id: 'contradiction_analyst',
-    stepNumber: 5,
+    stepNumber: 4,
     name: 'ContradictionAnalyst',
     shortLabel: 'Analysis',
-    role: 'Cross-Examination',
-    description: 'Compares extracted claims to identify conflicts or disputed facts.',
+    role: 'Cross-Examination & Forensics',
+    description: 'Compares extracted claims to identify discrepancies, fee conflicts, or unverified claims.',
     details: [
       'Detects conflicting statements',
-      'Flags unverified claims'
+      'Flags unverified claims',
+      'Evaluates forensic risks',
     ],
     toolsUsed: ['Dispute Resolver', 'Forensic Scorer'],
     icon: Scale,
@@ -115,14 +103,15 @@ const TIMELINE_STEPS: TimelineStep[] = [
   },
   {
     id: 'report_writer',
-    stepNumber: 6,
+    stepNumber: 5,
     name: 'ReportWriter',
     shortLabel: 'Dossier',
     role: 'Report Synthesis',
-    description: 'Compiles verified facts and analysis into the final dossier.',
+    description: 'Compiles verified facts, citations, and due-diligence checklists into the final dossier.',
     details: [
-      'Generates summary',
-      'Calculates authenticity score'
+      'Generates neutral summary',
+      'Calculates authenticity score',
+      'Assembles evidence dossier',
     ],
     toolsUsed: ['Dossier Synthesizer'],
     icon: FileText,
@@ -134,10 +123,11 @@ const TIMELINE_STEPS: TimelineStep[] = [
 function getStepState(
   step: TimelineStep,
   currentStatus: InvestigationStatus,
-  lastActiveStatus?: InvestigationStatus
+  events: ActivityEvent[],
+  lastActiveStatus?: InvestigationStatus,
 ): 'COMPLETED' | 'ACTIVE' | 'PENDING' | 'FAILED' {
   if (currentStatus === 'READY') return 'COMPLETED';
-  
+
   const statusOrder: InvestigationStatus[] = [
     'DRAFT',
     'DISAMBIGUATING',
@@ -150,9 +140,10 @@ function getStepState(
   ];
 
   // We determine what the "effective" status is for progress calculation
-  const effectiveStatus = (currentStatus === 'FAILED' || currentStatus === 'CANCELLED') 
-    ? (lastActiveStatus || 'DISAMBIGUATING') 
-    : currentStatus;
+  const effectiveStatus =
+    currentStatus === 'FAILED' || currentStatus === 'CANCELLED'
+      ? lastActiveStatus || 'PLANNING'
+      : currentStatus;
 
   const currentIdx = statusOrder.indexOf(effectiveStatus);
   const stepIndices = step.activeStatus.map((s) => statusOrder.indexOf(s));
@@ -160,6 +151,24 @@ function getStepState(
 
   if (currentStatus === 'FAILED' && step.activeStatus.includes(effectiveStatus)) {
     return 'FAILED';
+  }
+
+  // Refined sub-step differentiation inside RESEARCHING:
+  // Step 2 (Data Fetch / Parallel Agents) vs Step 3 (Extraction / ClaimExtractor)
+  if (effectiveStatus === 'RESEARCHING') {
+    const hasStartedExtraction = events.some(
+      (e) =>
+        e.eventType === 'CLAIMS_EXTRACTING' ||
+        e.eventType === 'CLAIMS_EXTRACTED' ||
+        e.agentName === 'ClaimAssembler' ||
+        e.agentName === 'ClaimExtractor',
+    );
+    if (step.id === 'parallel_agents') {
+      return hasStartedExtraction ? 'COMPLETED' : 'ACTIVE';
+    }
+    if (step.id === 'claim_extractor') {
+      return hasStartedExtraction ? 'ACTIVE' : 'PENDING';
+    }
   }
 
   if (step.activeStatus.includes(effectiveStatus) && currentStatus !== 'FAILED' && currentStatus !== 'CANCELLED') {
@@ -182,7 +191,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
   // Compute last active status from events for FAILED states
   const lastActiveStatus = useMemo(() => {
     if (status !== 'FAILED' && status !== 'CANCELLED') return undefined;
-    
+
     const statusMap: Record<string, InvestigationStatus> = {
       DISAMBIGUATING: 'DISAMBIGUATING',
       PLANNING_STARTED: 'PLANNING',
@@ -191,30 +200,38 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
       CONTRADICTIONS_ANALYZING: 'ANALYZING_CONTRADICTIONS',
       DOSSIER_SYNTHESIZING: 'ASSEMBLING_DOSSIER',
     };
-    
+
     for (let i = events.length - 1; i >= 0; i--) {
       const s = statusMap[events[i].eventType];
       if (s) return s;
     }
-    return 'DISAMBIGUATING';
+    return 'PLANNING';
   }, [status, events]);
 
   // Auto-select the active step on status change if user hasn't manually selected
   useEffect(() => {
-    const activeIdx = TIMELINE_STEPS.findIndex((s) => getStepState(s, status, lastActiveStatus) === 'ACTIVE' || getStepState(s, status, lastActiveStatus) === 'FAILED');
+    const activeIdx = TIMELINE_STEPS.findIndex(
+      (s) =>
+        getStepState(s, status, events, lastActiveStatus) === 'ACTIVE' ||
+        getStepState(s, status, events, lastActiveStatus) === 'FAILED',
+    );
     if (activeIdx !== -1 && selectedStepIndex === null) {
       // Keep focused on active
     }
-  }, [status, selectedStepIndex, lastActiveStatus]);
+  }, [status, events, selectedStepIndex, lastActiveStatus]);
 
   useEffect(() => {
     eventsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [events]);
 
   // Compute overall progress percentage
-  const activeStepIdx = TIMELINE_STEPS.findIndex((s) => getStepState(s, status, lastActiveStatus) === 'ACTIVE' || getStepState(s, status, lastActiveStatus) === 'FAILED');
+  const activeStepIdx = TIMELINE_STEPS.findIndex(
+    (s) =>
+      getStepState(s, status, events, lastActiveStatus) === 'ACTIVE' ||
+      getStepState(s, status, events, lastActiveStatus) === 'FAILED',
+  );
   const completedCount = TIMELINE_STEPS.filter(
-    (s) => getStepState(s, status, lastActiveStatus) === 'COMPLETED',
+    (s) => getStepState(s, status, events, lastActiveStatus) === 'COMPLETED',
   ).length;
 
   const progressPercent =
@@ -235,7 +252,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
           : 0;
 
   const activeStep = TIMELINE_STEPS[inspectedStepIndex] || TIMELINE_STEPS[0];
-  const activeStepState = getStepState(activeStep, status, lastActiveStatus);
+  const activeStepState = getStepState(activeStep, status, events, lastActiveStatus);
 
 
 
@@ -316,7 +333,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
           </div>
         </div>
 
-        {/* Timeline Track - Desktop Horizontal, Mobile 3-Column Stack */}
+        {/* Timeline Track - Desktop Horizontal, Mobile 5-Column Row */}
         <div className="relative pt-1 sm:pt-2 pb-2 sm:pb-4 px-1 sm:px-6">
           {/* Background Connecting Rail (Desktop Only) */}
           <div className="hidden md:block absolute left-10 sm:left-14 right-10 sm:right-14 top-8 -translate-y-1/2 h-1 bg-darkroom-border rounded-full z-0" />
@@ -330,10 +347,10 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
             style={{ maxWidth: 'calc(100% - 5.5rem)' }}
           />
 
-          {/* Timeline Nodes - 3x2 Grid Stack on Mobile, Flex on Desktop */}
-          <div className="relative z-10 grid grid-cols-3 gap-y-4 gap-x-2 w-full md:flex md:items-start md:justify-between">
+          {/* Timeline Nodes - 5 Columns on Mobile, Flex on Desktop */}
+          <div className="relative z-10 grid grid-cols-5 gap-1 sm:gap-2 w-full md:flex md:items-start md:justify-between">
             {TIMELINE_STEPS.map((step, idx) => {
-              const state = getStepState(step, status);
+              const state = getStepState(step, status, events, lastActiveStatus);
               const isHovered = hoveredStepIndex === idx;
               const isSelected = selectedStepIndex === idx;
               const isInspected = inspectedStepIndex === idx;
