@@ -37,7 +37,6 @@ const GrantScout = lazyWithRetry(() => import('./components/GrantScout').then(m 
 const EntityConfirmation = lazyWithRetry(() => import('./components/EntityConfirmation').then(m => ({ default: m.EntityConfirmation })));
 import { VectorFieldBackground } from './components/animations/VectorFieldBackground';
 import { AnimatedEE } from './components/animations/AnimatedEE';
-import { ScrambleText } from './components/animations/ScrambleText';
 import { UpdateNotifier } from './components/common/UpdateNotifier';
 import { isSoundMuted, setSoundMuted, playSuccessChime } from './utils/audio';
 import { track } from './utils/analytics';
@@ -648,13 +647,9 @@ export default function App() {
                         ned
                       </span>
                     </div>
-                    <h1 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
-                      <ScrambleText text="Investigate before you submit." />
+                    <h1 className="font-sans text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white">
+                      Due diligence for film festivals
                     </h1>
-                    <p className="text-base text-slate-400 leading-relaxed">
-                      Autonomous multi-agent research across trade registries, press archives, and
-                      participant accounts. Transparent, cited facts — no blackbox scores.
-                    </p>
                   </section>
 
                   {/* Search Intake Box: Solid Opaque, Borderless */}

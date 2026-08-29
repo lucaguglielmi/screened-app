@@ -146,16 +146,29 @@ def get_demo_full_dossier():
                 "investigationId": DEMO_INVESTIGATION_ID,
                 "researchDomain": "VENUES",
                 "category": "VENUE_SCREENINGS",
-                "statement": "Festival holds physical screenings at Genesis Cinema and BFI Southbank.",
+                "statement": "Festival advertises theatrical West End gala screenings at BFI Southbank (Belvedere Rd, London SE1 8XT).",
                 "claimKind": "FACT",
-                "status": "CORROBORATED",
+                "status": "DISPUTED",
+                "editionYear": 2025,
+                "attributedTo": "Pinco Pallino Festival Website",
                 "evidence": [
                     {
-                        "sourceId": "src_bfi",
-                        "url": "https://bfi.org.uk/southbank/rentals/2025",
-                        "snippet": "Pinco Pallino Film Festival booked for Private Hire, Oct 12-14.",
-                        "confidenceScore": 95,
-                        "extractionDate": now_iso
+                        "sourceId": "src_bfi_calendar",
+                        "sourceUrl": "https://www.bfi.org.uk/venue-hire/southbank/calendar-2025",
+                        "sourceDomain": "bfi.org.uk",
+                        "sourceTitle": "BFI Southbank Public Event Manifest & Venue Hire Schedule",
+                        "stance": "CONTRADICTS",
+                        "exactExcerpt": "BFI Southbank NFT1/NFT2/NFT3 screening manifests for October 12-14 show zero bookings for 'Pinco Pallino Film Festival'. The venue is leased to BFI London Film Festival events.",
+                        "note": "Cinema box office records directly contradict claimed West End theatrical screening booking."
+                    },
+                    {
+                        "sourceId": "src_ff_overview",
+                        "sourceUrl": "https://www.filmfreeway.com/PincoPallinoFilmFestival",
+                        "sourceDomain": "filmfreeway.com",
+                        "sourceTitle": "Pinco Pallino London Submissions Page",
+                        "stance": "SUPPORTS",
+                        "exactExcerpt": "All selected short and feature films will be screened on the big screen at the legendary BFI Southbank in Central London followed by an industry red-carpet awards reception.",
+                        "note": "Promotional claim made directly to submitting filmmakers."
                     }
                 ]
             },
@@ -164,16 +177,29 @@ def get_demo_full_dossier():
                 "investigationId": DEMO_INVESTIGATION_ID,
                 "researchDomain": "PARTICIPANTS",
                 "category": "EXPERIENCE_FEEDBACK",
-                "statement": "Filmmakers experience 3-5 week communication blackouts prior to notification dates.",
-                "claimKind": "ALLEGATION",
-                "status": "CONTRADICTED",
+                "statement": "Filmmakers receive an unlisted private Vimeo link with fewer than 5 views in lieu of advertised theatrical screenings.",
+                "claimKind": "FACT",
+                "status": "CORROBORATED",
+                "editionYear": 2024,
+                "attributedTo": "Verified Filmmaker Testimonies",
                 "evidence": [
                     {
-                        "sourceId": "src_reddit",
-                        "url": "https://reddit.com/r/Filmmakers/comments/xx",
-                        "snippet": "They ghosted me for 4 weeks after the notification date before sending a generic rejection.",
-                        "confidenceScore": 88,
-                        "extractionDate": now_iso
+                        "sourceId": "src_reddit_warning",
+                        "sourceUrl": "https://www.reddit.com/r/Filmmakers/comments/18m2b1/pinco_pallino_festival_warning",
+                        "sourceDomain": "reddit.com",
+                        "sourceTitle": "r/Filmmakers - Anyone submitted to Pinco Pallino London?",
+                        "stance": "SUPPORTS",
+                        "exactExcerpt": "We paid £85 for a Gala Premiere category. Two days before, they emailed an unlisted Vimeo link with 3 total views. The cinema venue they advertised had no record of them.",
+                        "note": "Firsthand filmmaker testimony confirmed by receipt."
+                    },
+                    {
+                        "sourceId": "src_stage32_thread",
+                        "sourceUrl": "https://www.stage32.com/lounge/screenwriting/pinco-pallino-festival-experience",
+                        "sourceDomain": "stage32.com",
+                        "sourceTitle": "Stage 32 Community Forum - London Festival Vetting",
+                        "stance": "SUPPORTS",
+                        "exactExcerpt": "Confirmed: no live audience or physical cinema was ever booked. An unlisted Vimeo link password 'laurel2024' was emailed 48 hours prior with only 2 total impressions.",
+                        "note": "Independent corroboration from debut producer."
                     }
                 ]
             },
@@ -181,53 +207,65 @@ def get_demo_full_dossier():
                 "id": "claim_3",
                 "investigationId": DEMO_INVESTIGATION_ID,
                 "researchDomain": "ORGANIZER",
-                "category": "ORGANIZER_TRACK_RECORD",
-                "statement": "Festival Director A. Smith holds an active bankruptcy proceeding filed in 2022.",
+                "category": "LEGAL_IDENTITY",
+                "statement": "Operating entity Pallino Media Lab Ltd (Company No. 13984712) was dissolved via compulsory strike-off on 14 March 2024.",
                 "claimKind": "FACT",
-                "status": "SUPPORTED",
+                "status": "CORROBORATED",
+                "editionYear": 2024,
+                "attributedTo": "UK Companies House Public Register",
                 "evidence": [
                     {
-                        "sourceId": "src_gazette",
-                        "url": "https://thegazette.co.uk/notice/2384",
-                        "snippet": "Insolvency notice for A. Smith (trading as Pallino Media).",
-                        "confidenceScore": 92,
-                        "extractionDate": now_iso
+                        "sourceId": "src_ch_filing",
+                        "sourceUrl": "https://find-and-update.company-information.service.gov.uk/company/13984712",
+                        "sourceDomain": "gov.uk",
+                        "sourceTitle": "Companies House - Pallino Media Lab Ltd Filing History",
+                        "stance": "SUPPORTS",
+                        "exactExcerpt": "Final Gazette notice: Pallino Media Lab Ltd (Company number 13984712) dissolved via Compulsory Strike-off on 14 March 2024. Registered office: 71-75 Shelton Street, London, WC2H 9JQ.",
+                        "note": "Official corporate register confirms entity dissolved prior to current festival cycle."
                     }
                 ]
             },
             {
                 "id": "claim_4",
                 "investigationId": DEMO_INVESTIGATION_ID,
-                "researchDomain": "FEES",
-                "category": "FEES_POLICY",
-                "statement": "Festival offers an 'Expedited Judging' add-on for £150.",
+                "researchDomain": "ORGANIZER",
+                "category": "ORGANIZER_TRACK_RECORD",
+                "statement": "Festival Director Arthur Smith is subject to an individual bankruptcy order filed in November 2022.",
                 "claimKind": "FACT",
-                "status": "CORROBORATED",
+                "status": "SUPPORTED",
+                "editionYear": 2022,
+                "attributedTo": "The London Gazette",
                 "evidence": [
                     {
-                        "sourceId": "src_ff",
-                        "url": "https://filmfreeway.com/PincoPallino",
-                        "snippet": "Upgrade to Platinum Review (£150) for a guaranteed decision within 48 hours.",
-                        "confidenceScore": 99,
-                        "extractionDate": now_iso
+                        "sourceId": "src_gazette_notice",
+                        "sourceUrl": "https://www.thegazette.co.uk/notice/23849102",
+                        "sourceDomain": "thegazette.co.uk",
+                        "sourceTitle": "The London Gazette - Official Public Record of Insolvencies",
+                        "stance": "SUPPORTS",
+                        "exactExcerpt": "Insolvency Service Notice 23849102: Bankruptcy order dated 11 November 2022 against Arthur Smith (trading as Pallino Media & Events). Case No: 0491-2022.",
+                        "note": "Official UK government public record confirms active bankruptcy proceeding."
                     }
                 ]
             },
             {
                 "id": "claim_5",
                 "investigationId": DEMO_INVESTIGATION_ID,
-                "researchDomain": "PARTICIPANTS",
-                "category": "EXPERIENCE_FEEDBACK",
-                "statement": "Filmmakers report that the screening venue was half-empty and lacked adequate projection equipment.",
-                "claimKind": "ALLEGATION",
-                "status": "SUPPORTED",
+                "researchDomain": "FEES",
+                "category": "FEES_POLICY",
+                "statement": "Submission fee tiers escalate from £35 Early Bird to £95 Late Deadline, plus a £180 mandatory trophy package fee.",
+                "claimKind": "FACT",
+                "status": "CORROBORATED",
+                "editionYear": 2025,
+                "attributedTo": "FilmFreeway Rules & Pricing Manifest",
                 "evidence": [
                     {
-                        "sourceId": "src_trustpilot",
-                        "url": "https://trustpilot.com/review/pincopallino.com",
-                        "snippet": "Screening was literally just a projector in the basement of a pub. Sound cut out twice.",
-                        "confidenceScore": 76,
-                        "extractionDate": now_iso
+                        "sourceId": "src_ff_rules",
+                        "sourceUrl": "https://www.filmfreeway.com/PincoPallinoFilmFestival/rules",
+                        "sourceDomain": "filmfreeway.com",
+                        "sourceTitle": "FilmFreeway Submission Rules & Deadline Schedule",
+                        "stance": "SUPPORTS",
+                        "exactExcerpt": "Fee Deadlines: Early Bird £35, Regular £65, Late £95, Extended £120. Official Laurel Trophy Package available for £180 plus £35 international shipping.",
+                        "note": "Official fee schedule reflects high rate of fee escalation and ancillary trophy monetization."
                     }
                 ]
             },
@@ -236,88 +274,108 @@ def get_demo_full_dossier():
                 "investigationId": DEMO_INVESTIGATION_ID,
                 "researchDomain": "ORGANIZER",
                 "category": "ORGANIZER_TRACK_RECORD",
-                "statement": "Festival uses bot accounts to inflate Twitter following.",
-                "claimKind": "ALLEGATION",
-                "status": "UNVERIFIED",
+                "statement": "Jury Chair Benjamin Jones actively markets £120 paid script consulting to rejected festival submitters via IndiePitch Consulting.",
+                "claimKind": "FACT",
+                "status": "CORROBORATED",
+                "editionYear": 2025,
+                "attributedTo": "IndiePitch Consulting Direct Manifest",
                 "evidence": [
                     {
-                        "sourceId": "src_reddit2",
-                        "url": "https://reddit.com/r/Filmmakers/comments/yy",
-                        "snippet": "I checked their followers, mostly bots with no profile pics.",
-                        "confidenceScore": 45,
-                        "extractionDate": now_iso
+                        "sourceId": "src_indiepitch",
+                        "sourceUrl": "https://www.indiepitchconsulting.co.uk/services",
+                        "sourceDomain": "indiepitchconsulting.co.uk",
+                        "sourceTitle": "IndiePitch Consulting Services & Rates",
+                        "stance": "SUPPORTS",
+                        "exactExcerpt": "Senior Jury Consultant: Benjamin Jones. Festival Rejection Recovery Pitch Audit: £120 per script. Direct submission feedback available within 48 hours of notification.",
+                        "note": "Cross-commercial commercial conflict of interest documented on business website."
                     }
                 ]
             },
             {
                 "id": "claim_7",
                 "investigationId": DEMO_INVESTIGATION_ID,
-                "researchDomain": "VENUES",
-                "category": "VENUE_LOGISTICS",
-                "statement": "Event scheduled for June 2026 at BFI Southbank has been paid in full.",
+                "researchDomain": "ORGANIZER",
+                "category": "JURY_AWARDS",
+                "statement": "Associate Producer Martin Sterling won 'Best International Short' in consecutive years (2024 and 2025) despite claimed 1.2% acceptance rate.",
                 "claimKind": "FACT",
                 "status": "CORROBORATED",
+                "editionYear": 2025,
+                "attributedTo": "Official Awards Archive",
                 "evidence": [
                     {
-                        "sourceId": "src_bfi",
-                        "url": "https://bfi.org.uk/southbank/rentals/2026",
-                        "snippet": "Deposit cleared for 2026 dates.",
-                        "confidenceScore": 91,
-                        "extractionDate": now_iso
+                        "sourceId": "src_winners_archive",
+                        "sourceUrl": "https://www.pincopallinofilmfestival.com/past-winners-2024-2025",
+                        "sourceDomain": "pincopallinofilmfestival.com",
+                        "sourceTitle": "Pinco Pallino Past Editions Winners Archive",
+                        "stance": "SUPPORTS",
+                        "exactExcerpt": "2024 Best International Short: 'The Echo Chamber' directed by Martin Sterling. 2025 Best International Short: 'Shadow Puppets' directed by Martin Sterling.",
+                        "note": "Official catalog archives show identical director receiving top award in back-to-back editions."
                     }
                 ]
             },
             {
                 "id": "claim_8",
                 "investigationId": DEMO_INVESTIGATION_ID,
-                "researchDomain": "PARTICIPANTS",
-                "category": "EXPERIENCE_FEEDBACK",
-                "statement": "Organizers failed to provide laurels after payment of a 'Laurel Delivery Fee'.",
-                "claimKind": "ALLEGATION",
-                "status": "CONTRADICTED",
+                "researchDomain": "ORGANIZER",
+                "category": "ORGANIZER_TRACK_RECORD",
+                "statement": "Claimed 'Official Platinum Sponsorships' from ARRI and Sony Cinema were formally denied by manufacturer PR representatives.",
+                "claimKind": "FACT",
+                "status": "CORROBORATED",
+                "editionYear": 2024,
+                "attributedTo": "ARRI & Sony Corporate Communications",
                 "evidence": [
                     {
-                        "sourceId": "src_trustpilot2",
-                        "url": "https://trustpilot.com/review/pincopallino.com",
-                        "snippet": "They charge 20 quid for a laurel PNG and then take weeks to send it.",
-                        "confidenceScore": 82,
-                        "extractionDate": now_iso
+                        "sourceId": "src_arri_statement",
+                        "sourceUrl": "https://twitter.com/ARRIChannel/status/1234567890",
+                        "sourceDomain": "twitter.com",
+                        "sourceTitle": "ARRI Official Corporate Communications",
+                        "stance": "SUPPORTS",
+                        "exactExcerpt": "@PincoPallinoFest is not an authorized or official ARRI festival partner. We have issued a formal trademark cease-and-desist request for logo removal.",
+                        "note": "Manufacturer explicitly denies sponsorship affiliation."
                     }
                 ]
             },
             {
                 "id": "claim_9",
                 "investigationId": DEMO_INVESTIGATION_ID,
-                "researchDomain": "FEES",
-                "category": "FEES_POLICY",
-                "statement": "Festival grants fee waivers to local community centers and schools.",
+                "researchDomain": "PARTICIPANTS",
+                "category": "EXPERIENCE_FEEDBACK",
+                "statement": "Over 42 independent filmmakers document 3–5 week communication blackouts following submission fee processing.",
                 "claimKind": "FACT",
                 "status": "SUPPORTED",
+                "editionYear": 2024,
+                "attributedTo": "TrustPilot & Reddit Aggregated Accounts",
                 "evidence": [
                     {
-                        "sourceId": "src_ff",
-                        "url": "https://filmfreeway.com/PincoPallino",
-                        "snippet": "Free submissions for Tower Hamlets schools.",
-                        "confidenceScore": 85,
-                        "extractionDate": now_iso
+                        "sourceId": "src_trustpilot_reviews",
+                        "sourceUrl": "https://www.trustpilot.com/review/pincopallino.com",
+                        "sourceDomain": "trustpilot.com",
+                        "sourceTitle": "TrustPilot - Pinco Pallino Festival Reviews (Score: 1.4/5)",
+                        "stance": "SUPPORTS",
+                        "exactExcerpt": "42 separate filmmaker reviews report zero communication for over a month past the stated notification date, followed by automated upsell templates.",
+                        "note": "Aggregated consumer protection reviews indicate recurring communication pattern."
                     }
                 ]
             },
             {
                 "id": "claim_10",
                 "investigationId": DEMO_INVESTIGATION_ID,
-                "researchDomain": "ORGANIZER",
-                "category": "JURY_AWARDS",
-                "statement": "Best Actor award was given to a jury member's relative.",
-                "claimKind": "ALLEGATION",
-                "status": "SUPPORTED",
+                "researchDomain": "FEES",
+                "category": "FEES_POLICY",
+                "statement": "Festival policy stipulates zero entry fee refunds under any circumstances, including canceled physical screenings.",
+                "claimKind": "FACT",
+                "status": "CORROBORATED",
+                "editionYear": 2025,
+                "attributedTo": "Official Submission Terms & Conditions",
                 "evidence": [
                     {
-                        "sourceId": "src_reddit",
-                        "url": "https://reddit.com/r/Filmmakers/comments/zz",
-                        "snippet": "The Best Actor winner was B. Jones' nephew. Unbelievable.",
-                        "confidenceScore": 79,
-                        "extractionDate": now_iso
+                        "sourceId": "src_terms_conditions",
+                        "sourceUrl": "https://www.pincopallinofilmfestival.com/terms-and-conditions",
+                        "sourceDomain": "pincopallinofilmfestival.com",
+                        "sourceTitle": "Pinco Pallino Terms & Conditions - Section 4.2",
+                        "stance": "SUPPORTS",
+                        "exactExcerpt": "Section 4.2: All entry fees, trophy packaging fees, and review fees are strictly non-refundable regardless of screening format adaptations, venue changes, or program cancellations.",
+                        "note": "Non-refundable indemnity clause protects organizer against venue cancellations."
                     }
                 ]
             }
@@ -325,74 +383,124 @@ def get_demo_full_dossier():
 
         "sources": [
             {
-                "id": "src_bfi",
-                "url": "https://bfi.org.uk/southbank",
+                "id": "src_bfi_calendar",
+                "url": "https://www.bfi.org.uk/venue-hire/southbank/calendar-2025",
                 "domain": "bfi.org.uk",
-                "title": "BFI Southbank Venue Hire",
+                "title": "BFI Southbank Venue Hire & Event Manifest Archive",
                 "sourceTier": 1,
                 "retrievedAt": now_iso,
-                "excerpts": ["Pinco Pallino Film Festival booked for Private Hire, Oct 12-14."],
-                "contentHash": "hash1"
+                "excerpts": ["BFI Southbank NFT1/NFT2/NFT3 screening manifests for October 12-14 show zero bookings for 'Pinco Pallino Film Festival'."],
+                "contentHash": "hash_bfi_1"
             },
             {
-                "id": "src_ch",
+                "id": "src_ch_filing",
                 "url": "https://find-and-update.company-information.service.gov.uk/company/13984712",
                 "domain": "gov.uk",
-                "title": "Pinco Pallino Film CIC - Companies House",
+                "title": "Companies House - Pallino Media Lab Ltd Filing History",
                 "sourceTier": 1,
                 "retrievedAt": now_iso,
-                "excerpts": ["Directors: A. Smith, B. Jones, C. Davis."],
-                "contentHash": "hash2"
+                "excerpts": ["Final Gazette notice: Pallino Media Lab Ltd (Company number 13984712) dissolved via Compulsory Strike-off on 14 March 2024."],
+                "contentHash": "hash_ch_2"
             },
             {
-                "id": "src_reddit",
-                "url": "https://reddit.com/r/Filmmakers/comments/xx",
-                "domain": "reddit.com",
-                "title": "Warning: Avoid Pinco Pallino Fest",
-                "sourceTier": 3,
-                "retrievedAt": now_iso,
-                "excerpts": ["They ghosted me for 4 weeks after the notification date before sending a generic rejection."],
-                "contentHash": "hash3"
-            },
-            {
-                "id": "src_gazette",
-                "url": "https://thegazette.co.uk/notice/2384",
+                "id": "src_gazette_notice",
+                "url": "https://www.thegazette.co.uk/notice/23849102",
                 "domain": "thegazette.co.uk",
-                "title": "Insolvency Notices",
+                "title": "The London Gazette - Official Public Record of Insolvencies",
                 "sourceTier": 1,
                 "retrievedAt": now_iso,
-                "excerpts": ["Insolvency notice for A. Smith (trading as Pallino Media)."],
-                "contentHash": "hash4"
+                "excerpts": ["Insolvency Service Notice 23849102: Bankruptcy order dated 11 November 2022 against Arthur Smith (trading as Pallino Media & Events)."],
+                "contentHash": "hash_gaz_3"
             },
             {
-                "id": "src_ff",
-                "url": "https://filmfreeway.com/PincoPallino",
+                "id": "src_ff_overview",
+                "url": "https://www.filmfreeway.com/PincoPallinoFilmFestival",
                 "domain": "filmfreeway.com",
-                "title": "Pinco Pallino Film Festival",
+                "title": "Pinco Pallino London Submissions Overview",
                 "sourceTier": 2,
                 "retrievedAt": now_iso,
-                "excerpts": ["Upgrade to Platinum Review (£150) for a guaranteed decision within 48 hours.", "Early Bird: £28 for all categories.", "Extended Late Deadline: £85 (No waivers accepted)."],
-                "contentHash": "hash5"
+                "excerpts": ["All selected short and feature films will be screened on the big screen at the legendary BFI Southbank in Central London."],
+                "contentHash": "hash_ff_4"
             },
             {
-                "id": "src_twitter",
-                "url": "https://twitter.com/ARRIChannel/status/123456",
-                "domain": "twitter.com",
-                "title": "ARRI Official Statement",
-                "sourceTier": 1,
+                "id": "src_ff_rules",
+                "url": "https://www.filmfreeway.com/PincoPallinoFilmFestival/rules",
+                "domain": "filmfreeway.com",
+                "title": "FilmFreeway Submission Rules & Deadlines",
+                "sourceTier": 2,
                 "retrievedAt": now_iso,
-                "excerpts": ["@PincoPallinoFest is not an official ARRI partner. We have requested logo removal."],
-                "contentHash": "hash6"
+                "excerpts": ["Fee Deadlines: Early Bird £35, Regular £65, Late £95, Extended £120. Official Laurel Trophy Package available for £180 plus shipping."],
+                "contentHash": "hash_ff_5"
             },
             {
-                "id": "src_trustpilot",
-                "url": "https://trustpilot.com/review/pincopallino.com",
-                "domain": "trustpilot.com",
-                "title": "Terrible Screening Experience",
+                "id": "src_reddit_warning",
+                "url": "https://www.reddit.com/r/Filmmakers/comments/18m2b1/pinco_pallino_festival_warning",
+                "domain": "reddit.com",
+                "title": "r/Filmmakers - Anyone submitted to Pinco Pallino London?",
                 "sourceTier": 3,
                 "retrievedAt": now_iso,
-                "excerpts": ["Screening was literally just a projector in the basement of a pub. Sound cut out twice."],
-                "contentHash": "hash7"
+                "excerpts": ["We paid £85 for a Gala Premiere category. Two days before, they emailed an unlisted Vimeo link with 3 total views. The cinema venue they advertised had no record of them."],
+                "contentHash": "hash_red_6"
+            },
+            {
+                "id": "src_stage32_thread",
+                "url": "https://www.stage32.com/lounge/screenwriting/pinco-pallino-festival-experience",
+                "domain": "stage32.com",
+                "title": "Stage 32 Community Forum - London Festival Vetting",
+                "sourceTier": 3,
+                "retrievedAt": now_iso,
+                "excerpts": ["Confirmed: no live audience or physical cinema was ever booked. An unlisted Vimeo link password 'laurel2024' was emailed 48 hours prior with only 2 total impressions."],
+                "contentHash": "hash_st32_7"
+            },
+            {
+                "id": "src_indiepitch",
+                "url": "https://www.indiepitchconsulting.co.uk/services",
+                "domain": "indiepitchconsulting.co.uk",
+                "title": "IndiePitch Consulting Services & Rates",
+                "sourceTier": 2,
+                "retrievedAt": now_iso,
+                "excerpts": ["Senior Jury Consultant: Benjamin Jones. Festival Rejection Recovery Pitch Audit: £120 per script."],
+                "contentHash": "hash_ind_8"
+            },
+            {
+                "id": "src_winners_archive",
+                "url": "https://www.pincopallinofilmfestival.com/past-winners-2024-2025",
+                "domain": "pincopallinofilmfestival.com",
+                "title": "Pinco Pallino Past Editions Winners Archive",
+                "sourceTier": 2,
+                "retrievedAt": now_iso,
+                "excerpts": ["2024 Best International Short: 'The Echo Chamber' directed by Martin Sterling. 2025 Best International Short: 'Shadow Puppets' directed by Martin Sterling."],
+                "contentHash": "hash_win_9"
+            },
+            {
+                "id": "src_arri_statement",
+                "url": "https://twitter.com/ARRIChannel/status/1234567890",
+                "domain": "twitter.com",
+                "title": "ARRI Official Corporate Communications",
+                "sourceTier": 1,
+                "retrievedAt": now_iso,
+                "excerpts": ["@PincoPallinoFest is not an authorized or official ARRI festival partner. We have issued a formal trademark cease-and-desist request for logo removal."],
+                "contentHash": "hash_arri_10"
+            },
+            {
+                "id": "src_trustpilot_reviews",
+                "url": "https://www.trustpilot.com/review/pincopallino.com",
+                "domain": "trustpilot.com",
+                "title": "TrustPilot - Pinco Pallino Festival Reviews",
+                "sourceTier": 3,
+                "retrievedAt": now_iso,
+                "excerpts": ["42 separate filmmaker reviews report zero communication for over a month past the stated notification date, followed by automated upsell templates."],
+                "contentHash": "hash_tp_11"
+            },
+            {
+                "id": "src_terms_conditions",
+                "url": "https://www.pincopallinofilmfestival.com/terms-and-conditions",
+                "domain": "pincopallinofilmfestival.com",
+                "title": "Pinco Pallino Terms & Conditions - Section 4.2",
+                "sourceTier": 2,
+                "retrievedAt": now_iso,
+                "excerpts": ["Section 4.2: All entry fees, trophy packaging fees, and review fees are strictly non-refundable regardless of screening format adaptations, venue changes, or program cancellations."],
+                "contentHash": "hash_tc_12"
             }
         ],
 

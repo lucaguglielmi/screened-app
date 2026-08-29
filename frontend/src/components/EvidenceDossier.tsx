@@ -27,7 +27,6 @@ import {
 } from '../types/investigation';
 import { ContradictionPanel } from './ContradictionPanel';
 import { DetailDial } from './DetailDial';
-import { CitationPopover } from './CitationPopover';
 import { CredibilityRadar } from './CredibilityRadar';
 import { DeepVettingMatrix } from './investigation/DeepVettingMatrix';
 import { KeyPersonnelCardList } from './investigation/KeyPersonnelCardList';
@@ -60,6 +59,7 @@ import {
   User,
   Fingerprint,
   Sparkles,
+  Quote,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -1172,10 +1172,10 @@ export const EvidenceDossier: React.FC<Props> = ({
                     return (
                       <div
                         key={claim.id}
-                        className="rounded-2xl bg-darkroom-surface shadow-xl transition-colors overflow-hidden"
+                        className="rounded-2xl bg-darkroom-surface border border-darkroom-border/60 shadow-xl transition-all overflow-hidden"
                       >
-                        <div className="p-4 flex flex-col sm:flex-row items-start justify-between gap-4">
-                          <div className="space-y-1.5 flex-1">
+                        <div className="p-4 sm:p-5 flex flex-col sm:flex-row items-start justify-between gap-4">
+                          <div className="space-y-3 flex-1">
                             <div className="flex items-center gap-2 flex-wrap">
                               {getKindBadge(claim.claimKind)}
                               <span className="text-xs text-slate-400 font-mono">
@@ -1186,17 +1186,70 @@ export const EvidenceDossier: React.FC<Props> = ({
                                   ({claim.editionYear})
                                 </span>
                               )}
+                              {claim.attributedTo && (
+                                <span className="text-xs font-mono text-slate-400">
+                                  • Attributed: {claim.attributedTo}
+                                </span>
+                              )}
                             </div>
-                            <div className="text-base font-medium text-white leading-relaxed">
+
+                            <div className="text-base font-semibold text-white leading-relaxed">
                               {claim.statement}
                             </div>
 
-                            {/* Inline Citations Row */}
+                            {/* Direct Quoted Evidence References & Sources */}
                             {claim.evidence && claim.evidence.length > 0 && (
-                              <div className="flex items-center gap-1.5 flex-wrap pt-1">
-                                {claim.evidence.map((ev, idx) => (
-                                  <CitationPopover key={idx} evidence={ev} sourceTier={2} />
-                                ))}
+                              <div className="space-y-2.5 pt-1">
+                                {claim.evidence.map((ev, evIdx) => {
+                                  const quoteText = ev.exactExcerpt || (ev as unknown as { snippet?: string }).snippet || '';
+                                  const sourceTitle = ev.sourceTitle || ev.sourceDomain || (ev as unknown as { domain?: string }).domain || 'Verified Trade Source';
+                                  const sourceUrl = ev.sourceUrl || (ev as unknown as { url?: string }).url;
+
+                                  return (
+                                    <div
+                                      key={evIdx}
+                                      className="p-3.5 rounded-xl bg-darkroom-card border border-darkroom-border/80 space-y-2 text-xs"
+                                    >
+                                      <div className="flex flex-wrap items-center justify-between gap-2">
+                                        <div className="flex items-center gap-1.5 font-mono text-xs text-slate-300">
+                                          <Quote className="size-3.5 text-tool-diligence shrink-0" />
+                                          <span className="font-semibold text-white">
+                                            {sourceTitle}
+                                          </span>
+                                          {ev.sourceDomain && (
+                                            <span className="text-slate-400 font-normal">
+                                              ({ev.sourceDomain})
+                                            </span>
+                                          )}
+                                        </div>
+
+                                        {sourceUrl && (
+                                          <a
+                                            href={sourceUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-tool-diligence hover:text-tool-diligence-hover hover:underline inline-flex items-center gap-1 font-mono text-xs font-medium"
+                                          >
+                                            <span>View Source</span>
+                                            <ExternalLink className="size-3" />
+                                          </a>
+                                        )}
+                                      </div>
+
+                                      {quoteText && (
+                                        <blockquote className="text-slate-200 italic border-l-2 border-tool-diligence/60 pl-3 py-0.5 text-xs leading-relaxed">
+                                          "{quoteText}"
+                                        </blockquote>
+                                      )}
+
+                                      {ev.note && (
+                                        <div className="text-[11px] text-slate-400 font-mono pl-3">
+                                          ↳ {ev.note}
+                                        </div>
+                                      )}
+                                    </div>
+                                  );
+                                })}
                               </div>
                             )}
                           </div>
@@ -1214,37 +1267,12 @@ export const EvidenceDossier: React.FC<Props> = ({
                           </div>
                         </div>
 
-                        {/* Evidence Drawer */}
-                        {isExpanded && (
-                          <div className="p-4 bg-darkroom-card border-t border-darkroom-border space-y-3 text-xs">
-                            <div className="font-mono uppercase text-slate-400 text-[11px]">
-                              Verbatim Quoted Excerpts ({claim.evidence.length})
-                            </div>
-                            {claim.evidence.map((ev, idx) => (
-                              <div
-                                key={idx}
-                                className="p-3 rounded-xl bg-darkroom-surface space-y-1.5"
-                              >
-                                <div className="flex items-center justify-between gap-2">
-                                  <span className="font-semibold text-white">
-                                    {ev.sourceTitle || ev.sourceDomain}
-                                  </span>
-                                  {ev.sourceUrl && (
-                                    <a
-                                      href={ev.sourceUrl}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="text-indigo-400 hover:underline inline-flex items-center gap-1"
-                                    >
-                                      View Source <ExternalLink className="size-3" />
-                                    </a>
-                                  )}
-                                </div>
-                                <blockquote className="text-slate-300 italic border-l-2 border-indigo-500/50 pl-2">
-                                  "{ev.exactExcerpt}"
-                                </blockquote>
-                              </div>
-                            ))}
+                        {/* Additional full drawer toggle if user wants to inspect more */}
+                        {isExpanded && claim.evidence && claim.evidence.length > 1 && (
+                          <div className="px-4 pb-3 text-right">
+                            <span className="text-[11px] font-mono text-slate-400">
+                              {claim.evidence.length} corroborated sources linked
+                            </span>
                           </div>
                         )}
                       </div>

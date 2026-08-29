@@ -91,19 +91,19 @@ Disputed / Contradictory Points:
 Sources Count: {len(sources)}
 
 CRITICAL EDITORIAL RULES:
-1. Strict neutrality. Do not give an overall score or trust rating.
+1. Strict neutrality. Do not give an overall score or subjective trust rating.
 2. Never use banned emotional words (like 'scam', 'fraudulent', 'legit', 'fake').
-3. Focus purely on verifiable facts: venue confirmations, fee policies, refund terms, organizer legal entities, and verified dates.
-4. Keep all sections short, direct, and factual (1-2 concise paragraphs max).
-5. DO NOT add AI fluff, filler phrases (like 'Screened has conducted an exhaustive search...'), or speculative generalities.
-6. Extract key organizers, directors, or prominent individuals associated with the festival from the evidence into a list of strings formatted as 'Name - Role' (e.g. 'John Doe - Festival Director'). If none are found, return an empty list.
+3. HARD FACTS DENSITY: Prioritize concrete data points in every sentence—exact monetary submission amounts (£, $, €), company registration numbers, exact filing dates, venue physical addresses, acceptance percentages, and direct quoted phrases from public records.
+4. Eliminate AI generalities, speculative fluff, and filler transitions (e.g. avoid 'It is important to note', 'Screened investigated', 'Filmmakers should be mindful').
+5. Keep all sections dense, factual, and concise (1-2 structured paragraphs max per section).
+6. Extract key organizers, directors, or prominent individuals associated with the festival from the evidence into a list of strings formatted as 'Name - Role' (e.g. 'Arthur Smith - Festival Director'). If none are found, return an empty list.
 
 Return a JSON object conforming to this schema:
 {{
-  "executiveSummary": "string (1-2 concise paragraphs summarizing the factual ground truth)",
-  "festivalOverview": "string (1-2 concise paragraphs on venues, dates, fees, and editions)",
-  "organizerProfile": "string (1-2 concise paragraphs on legal entity, leadership, and registration)",
-  "participantFeedback": "string (1-2 concise paragraphs on community discussions and feedback)",
+  "executiveSummary": "string (1-2 concise paragraphs summarizing hard verified ground truth with figures and dates)",
+  "festivalOverview": "string (1-2 concise paragraphs detailing verified venues, addresses, fee schedules, dates, and screening format realities)",
+  "organizerProfile": "string (1-2 concise paragraphs on registered corporate entity numbers, Companies House filings, leadership directors, and cross-company ties)",
+  "participantFeedback": "string (1-2 concise paragraphs citing specific quoted filmmaker testimonies, delay lengths in weeks, and communication logs)",
   "unresolvedQuestions": ["factual question 1", "factual question 2"],
   "filmmakerChecklist": ["actionable due-diligence step 1", "actionable step 2"],
   "keyPersons": ["Name - Role"]

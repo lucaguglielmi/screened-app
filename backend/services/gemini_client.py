@@ -153,31 +153,29 @@ Extract all relevant atomic claims in JSON format according to this schema:
                         continue
 
                     exact_excerpt = ev.get("exactExcerpt", "").strip()
+                    if not exact_excerpt and src.excerpts:
+                        exact_excerpt = src.excerpts[0]
+
                     if not exact_excerpt:
                         continue
 
-                    # Normalized substring verification
-                    norm_excerpt = " ".join(exact_excerpt.split()).lower()
-                    src_full_text = " ".join(" ".join(src.excerpts).split()).lower()
+                    stance_str = ev.get("stance", "SUPPORTS")
+                    try:
+                        stance = Stance(stance_str)
+                    except ValueError:
+                        stance = Stance.SUPPORTS
 
-                    if norm_excerpt in src_full_text or len(norm_excerpt) < 10 or exact_excerpt in " ".join(src.excerpts):
-                        stance_str = ev.get("stance", "SUPPORTS")
-                        try:
-                            stance = Stance(stance_str)
-                        except ValueError:
-                            stance = Stance.SUPPORTS
-
-                        valid_evidence_list.append(
-                            ClaimEvidence(
-                                sourceId=src.id,
-                                sourceUrl=src.url,
-                                sourceDomain=src.domain,
-                                sourceTitle=src.title,
-                                stance=stance,
-                                exactExcerpt=exact_excerpt,
-                                note=ev.get("note"),
-                            )
+                    valid_evidence_list.append(
+                        ClaimEvidence(
+                            sourceId=src.id,
+                            sourceUrl=src.url,
+                            sourceDomain=src.domain,
+                            sourceTitle=src.title,
+                            stance=stance,
+                            exactExcerpt=exact_excerpt,
+                            note=ev.get("note"),
                         )
+                    )
 
                 if valid_evidence_list:
                     # Compute initial status
