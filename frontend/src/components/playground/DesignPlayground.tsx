@@ -79,7 +79,7 @@ export const DesignPlayground: React.FC = () => {
   const mockUserMsg: ChatMessage = {
     id: 'mock-user-1',
     role: 'user',
-    content: 'Is Aldergate Film Festival (Test Entity) legitimate or a scam? Check their screening leases.',
+    content: 'Is Pinco Pallino Film Festival legitimate or a scam? Check their screening leases.',
     timestamp: new Date().toISOString(),
   };
 
@@ -87,7 +87,7 @@ export const DesignPlayground: React.FC = () => {
     id: 'mock-assistant-1',
     role: 'assistant',
     content:
-      'I have reviewed the background for **Aldergate Film Festival (Test Entity)**.\n\nKey investigative findings:\n- **Venue Discrepancies**: Official promotional materials state gala screenings occur at the IMAX, but booking manifests list private Vimeo links.\n- **Fee Escalation**: Late entry fees average £65 with no published jury roster.\n- **Accreditation**: Not listed on BAFTA or BIFA qualifying lists.',
+      'I have reviewed the background for **Pinco Pallino Film Festival**.\n\nKey investigative findings:\n- **Venue Confirmations**: Official promotional materials state gala screenings occur at Genesis Cinema and BFI Southbank, which is corroborated by private hire manifests.\n- **Fee Escalation**: Late entry fees average £85.\n- **Personnel Conflict**: 3 key jury members co-own a media consulting firm targeting submitters.',
     timestamp: new Date().toISOString(),
   };
 
@@ -525,9 +525,9 @@ export const DesignPlayground: React.FC = () => {
                   <div className="w-full max-w-2xl">
                     <FestivalIntakeCard
                       args={{
-                        festival_name: 'Aldergate Film Festival (Test Entity)',
+                        festival_name: 'Pinco Pallino Film Festival',
                         city_country: 'London, United Kingdom',
-                        optional_url: 'https://aldergatefilmfest.example.com',
+                        optional_url: 'https://pincopallino.example.com',
                         preflight_summary:
                           'Targeted probe cross-examining municipal venue lease records against unlisted online screening links.',
                       }}

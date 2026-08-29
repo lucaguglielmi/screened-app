@@ -79,6 +79,30 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
     const newHistory = [...messages, userMsg];
     setMessages(newHistory);
     setIsLoading(true);
+
+    const normalizedText = userText.trim().toLowerCase();
+    if (normalizedText === 'demo mode' || normalizedText === 'demo' || normalizedText === '/demo') {
+      const demoAssistantMsg: ChatMessage = {
+        id: String(Date.now() + 1),
+        role: 'assistant',
+        content: '',
+        toolCall: {
+          id: `call_${Date.now()}`,
+          toolName: 'configure_due_diligence',
+          args: {
+            festival_name: 'demo mode',
+            preflight_summary: 'Initializing Demonstration Workspace for Pinco Pallino Film Festival. Click Launch to begin the accelerated simulation.'
+          }
+        },
+        timestamp: new Date().toISOString(),
+      };
+      setMessages([...newHistory, demoAssistantMsg]);
+      setIsLoading(false);
+      setThinkingMessage(null);
+      soundEffects.playSuccess();
+      return;
+    }
+
     setThinkingMessage(
       attachedFileName
         ? `Cinema Due Diligence Desk is analyzing attached file '${attachedFileName}'...`

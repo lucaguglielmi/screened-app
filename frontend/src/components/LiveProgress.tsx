@@ -21,6 +21,8 @@ interface Props {
   status: InvestigationStatus;
   events: ActivityEvent[];
   festivalName: string;
+  isCelebrating?: boolean;
+  onCancel?: () => void;
 }
 
 interface TimelineStep {
@@ -182,11 +184,109 @@ function getStepState(
   return 'PENDING';
 }
 
-export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) => {
+// Helper to determine the connector line state between Step i and Step i + 1
+function getSegmentState(
+  stepIdx: number,
+  steps: TimelineStep[],
+  status: InvestigationStatus,
+  events: ActivityEvent[],
+  lastActiveStatus?: InvestigationStatus,
+): 'COMPLETED' | 'ACTIVE' | 'PENDING' | 'FAILED' {
+  if (stepIdx >= steps.length - 1) return 'PENDING';
+
+  const stateCurrent = getStepState(steps[stepIdx], status, events, lastActiveStatus);
+  const stateNext = getStepState(steps[stepIdx + 1], status, events, lastActiveStatus);
+
+  if (stateCurrent === 'FAILED' || (stateNext === 'FAILED' && stateCurrent !== 'COMPLETED')) {
+    return 'FAILED';
+  }
+
+  // If both current and next are completed (or entire pipeline is ready)
+  if (stateCurrent === 'COMPLETED' && stateNext === 'COMPLETED') {
+    return 'COMPLETED';
+  }
+
+  // Traversed line leading to the currently active step
+  if (stateCurrent === 'COMPLETED' && stateNext === 'ACTIVE') {
+    return 'COMPLETED';
+  }
+
+  // Line actively extending from or between active steps
+  if (stateCurrent === 'ACTIVE' || stateNext === 'ACTIVE') {
+    return 'ACTIVE';
+  }
+
+  return 'PENDING';
+}
+
+export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, isCelebrating, onCancel }) => {
   const reducedMotion = useReducedMotion();
   const [hoveredStepIndex, setHoveredStepIndex] = useState<number | null>(null);
   const [selectedStepIndex, setSelectedStepIndex] = useState<number | null>(null);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [showEventLogTooltip, setShowEventLogTooltip] = useState(false);
   const eventsEndRef = useRef<HTMLDivElement>(null);
+
+  // Timer
+  useEffect(() => {
+    if (status === 'READY' || status === 'FAILED' || status === 'CANCELLED') return;
+    const interval = setInterval(() => {
+      setElapsedSeconds((prev) => prev + 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [status]);
+
+  // Extract live metrics
+  const metrics = useMemo(() => {
+    let sources = 0;
+    let claims = 0;
+    let contradictions = 0;
+    events.forEach(e => {
+      if (e.eventType === 'DOMAIN_SEARCH_STARTED') sources++; // fallback since we don't have SOURCE_FETCHED explicitly 
+      if (e.eventType === 'CLAIMS_EXTRACTED') {
+        const count = (e.details?.count as number) || 1;
+        claims += count;
+      }
+      if (e.message.includes('contradiction') || e.message.includes('discrepancy')) contradictions++;
+    });
+    // In absence of exact event type, we can infer some metric increments from messages
+    events.forEach(e => {
+      if (e.message.includes('Extracted') && e.message.includes('claims')) {
+        const match = e.message.match(/Extracted (\d+) claims/);
+        if (match) claims += parseInt(match[1], 10);
+      }
+      if (e.message.includes('Visited')) {
+        const match = e.message.match(/Visited (\d+) sources/);
+        if (match) sources += parseInt(match[1], 10);
+      }
+      if (e.message.includes('Fetched source')) sources++;
+    });
+    
+    // Deduplicate naive counting
+    return { 
+      sources: Math.min(sources, events.length), 
+      claims: claims > 0 ? claims : events.filter(e => e.message.includes('Extracted')).length, 
+      contradictions: events.filter(e => e.eventType === 'ANALYZING_CONTRADICTIONS').length 
+    };
+  }, [events]);
+
+  // Active Query extraction
+  const activeQuery = useMemo(() => {
+    for (let i = events.length - 1; i >= 0; i--) {
+      const msg = events[i].message;
+      if (msg.startsWith('Querying:') || msg.startsWith('Searching:') || msg.startsWith('Executing task API:')) {
+        return msg.replace('Executing task API:', 'Searching:');
+      }
+    }
+    return null;
+  }, [events]);
+
+  // Deduplicated display events for stream console
+  const displayEvents = useMemo(() => {
+    return events.filter((evt, i, arr) => !i || arr[i - 1].message !== evt.message);
+  }, [events]);
+
+  const isRunning = status !== 'READY' && status !== 'FAILED' && status !== 'CANCELLED';
 
   // Compute last active status from events for FAILED states
   const lastActiveStatus = useMemo(() => {
@@ -235,7 +335,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
   ).length;
 
   const progressPercent =
-    status === 'READY'
+    status === 'READY' || isCelebrating
       ? 100
       : activeStepIdx >= 0
         ? Math.round(((activeStepIdx + 0.5) / TIMELINE_STEPS.length) * 100)
@@ -252,7 +352,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
           : 0;
 
   const activeStep = TIMELINE_STEPS[inspectedStepIndex] || TIMELINE_STEPS[0];
-  const activeStepState = getStepState(activeStep, status, events, lastActiveStatus);
+  const activeStepState = isCelebrating ? 'COMPLETED' : getStepState(activeStep, status, events, lastActiveStatus);
 
 
 
@@ -289,15 +389,31 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
           </p>
         </div>
 
-        <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-start w-full sm:w-auto gap-2 z-10 shrink-0 border-t sm:border-t-0 border-darkroom-border/40 pt-3 sm:pt-0">
-          <div className="px-4 py-1.5 rounded-xl bg-tool-diligence/15 text-tool-diligence text-xs font-mono font-semibold flex items-center gap-2">
-            <span
-              className={`size-2 rounded-full bg-tool-diligence ${reducedMotion ? '' : 'animate-pulse'}`}
-            />
-            <span>State: {status}</span>
+        <div className="flex flex-col items-start sm:items-end gap-2 z-10 shrink-0 border-t sm:border-t-0 border-darkroom-border/40 pt-3 sm:pt-0 w-full sm:w-auto mt-2 sm:mt-0">
+          <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-2">
+            <div className="px-3 py-1.5 rounded-xl bg-darkroom-bg border border-darkroom-border text-slate-300 text-[11px] font-mono font-medium flex items-center gap-1.5 shadow-inner">
+              <span>⏱️ {Math.floor(elapsedSeconds / 60)}:{(elapsedSeconds % 60).toString().padStart(2, '0')}</span>
+              <span className="text-slate-500">· Avg ~35s</span>
+            </div>
+            
+            {onCancel && status !== 'READY' && status !== 'FAILED' && status !== 'CANCELLED' && !isCelebrating && (
+              <button 
+                onClick={onCancel}
+                className="px-3 py-1.5 rounded-xl bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border hover:border-rose-500/50 text-slate-400 hover:text-rose-400 text-[11px] font-mono transition-colors cursor-pointer shadow-sm active:scale-95"
+              >
+                Cancel / Refine
+              </button>
+            )}
           </div>
-          <div className="text-[11px] font-mono text-slate-400">
-            Pipeline Progress: <span className="text-white font-semibold">{progressPercent}%</span>
+
+          <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-2">
+            <div className="px-3 py-1.5 rounded-xl bg-tool-diligence/15 text-tool-diligence text-[11px] font-mono font-semibold flex items-center gap-2">
+              <span className={`size-1.5 rounded-full bg-tool-diligence ${reducedMotion || isCelebrating || status === 'FAILED' ? '' : 'animate-pulse'}`} />
+              <span>{isCelebrating ? 'COMPLETED' : status}</span>
+            </div>
+            <div className="text-[11px] font-mono text-slate-400 px-1">
+              <span className="text-white font-semibold">{progressPercent}%</span>
+            </div>
           </div>
         </div>
       </div>
@@ -333,24 +449,13 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
           </div>
         </div>
 
-        {/* Timeline Track - Desktop Horizontal, Mobile 5-Column Row */}
+        {/* Timeline Track - 5-Column Row with Connected Segment Lines */}
         <div className="relative pt-1 sm:pt-2 pb-2 sm:pb-4 px-1 sm:px-6">
-          {/* Background Connecting Rail (Desktop Only) */}
-          <div className="hidden md:block absolute left-10 sm:left-14 right-10 sm:right-14 top-8 -translate-y-1/2 h-1 bg-darkroom-border rounded-full z-0" />
-
-          {/* Animated Gradient Active Fill Rail (Desktop Only) */}
-          <motion.div
-            className="hidden md:block absolute left-10 sm:left-14 top-8 -translate-y-1/2 h-1 bg-gradient-to-r from-tool-diligence via-emerald-400 to-teal-300 rounded-full z-0 shadow-sm shadow-[var(--color-tool-diligence)]/50"
-            initial={{ width: 0 }}
-            animate={{ width: `${Math.max(2, Math.min(100, progressPercent))}%` }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-            style={{ maxWidth: 'calc(100% - 5.5rem)' }}
-          />
-
-          {/* Timeline Nodes - 5 Columns on Mobile, Flex on Desktop */}
-          <div className="relative z-10 grid grid-cols-5 gap-1 sm:gap-2 w-full md:flex md:items-start md:justify-between">
+          {/* Timeline Nodes - 5 Columns Grid */}
+          <div className="relative z-10 grid grid-cols-5 gap-1 sm:gap-2 w-full">
             {TIMELINE_STEPS.map((step, idx) => {
               const state = getStepState(step, status, events, lastActiveStatus);
+              const segmentState = getSegmentState(idx, TIMELINE_STEPS, status, events, lastActiveStatus);
               const isHovered = hoveredStepIndex === idx;
               const isSelected = selectedStepIndex === idx;
               const isInspected = inspectedStepIndex === idx;
@@ -359,7 +464,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
               return (
                 <div
                   key={step.id}
-                  className="flex flex-col items-center relative group w-full md:w-24 shrink-0"
+                  className="flex flex-col items-center relative group w-full shrink-0"
                   onMouseEnter={() => {
                     soundEffects.playClick();
                     setHoveredStepIndex(idx);
@@ -371,9 +476,58 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
                   }}
                 >
                   {/* Fixed-Height Centered Node Container */}
-                  <div className="h-12 flex items-center justify-center relative">
+                  <div className="h-12 w-full flex items-center justify-center relative">
+                    {/* Connecting Line Segment to Next Step (Strategy through Dossier) */}
+                    {idx < TIMELINE_STEPS.length - 1 && (
+                      <div className="absolute left-1/2 w-full top-1/2 -translate-y-1/2 h-1 z-0 pointer-events-none">
+                        {/* Base Dark Track */}
+                        <div className="absolute inset-0 bg-darkroom-border/80 rounded-full" />
+
+                        {/* Completed 'Done' Segment -> Rich Greener Line */}
+                        {segmentState === 'COMPLETED' && (
+                          <motion.div
+                            className="absolute inset-0 bg-gradient-to-r from-emerald-400 via-emerald-500 to-tool-diligence rounded-full shadow-[0_0_8px_rgba(52,211,153,0.7)]"
+                            initial={{ scaleX: 0 }}
+                            animate={{ scaleX: 1 }}
+                            transition={{ duration: 0.35, ease: 'easeOut' }}
+                            style={{ transformOrigin: 'left' }}
+                          />
+                        )}
+
+                        {/* Active Segment -> Animated glowing pulse wave only on active connecting line */}
+                        {segmentState === 'ACTIVE' && (
+                          <div className="absolute inset-0 overflow-hidden rounded-full">
+                            <div className="absolute inset-0 bg-emerald-500/20" />
+                            <motion.div
+                              className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-300 to-tool-diligence rounded-full shadow-[0_0_12px_rgba(52,211,153,0.85)]"
+                              animate={
+                                reducedMotion
+                                  ? { opacity: [0.4, 1, 0.4] }
+                                  : { x: ['-100%', '100%'] }
+                              }
+                              transition={{
+                                repeat: Infinity,
+                                duration: 1.2,
+                                ease: 'easeInOut',
+                              }}
+                            />
+                            <div
+                              className={`absolute inset-0 bg-tool-diligence/40 ${
+                                reducedMotion ? '' : 'animate-pulse'
+                              }`}
+                            />
+                          </div>
+                        )}
+
+                        {/* Failed Segment */}
+                        {segmentState === 'FAILED' && (
+                          <div className="absolute inset-0 bg-rose-500/70 rounded-full shadow-[0_0_6px_rgba(244,63,94,0.4)]" />
+                        )}
+                      </div>
+                    )}
+
                     <button
-                      className={`relative flex items-center justify-center transition-all duration-200 cursor-pointer rounded-2xl ${
+                      className={`relative z-10 flex items-center justify-center transition-all duration-200 cursor-pointer rounded-2xl ${
                         state === 'ACTIVE'
                           ? 'size-11 sm:size-12 bg-gradient-to-tr from-tool-diligence to-emerald-400 text-slate-950 shadow-xl shadow-[var(--color-tool-diligence)]/40 ring-4 ring-tool-diligence/30 scale-110'
                           : state === 'FAILED'
@@ -469,6 +623,29 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
           </div>
         </div>
 
+        {/* Real-Time Findings Counter */}
+        {metrics && (status !== 'FAILED' && status !== 'CANCELLED') && (
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 py-3 px-4 rounded-2xl bg-darkroom-bg/50 border border-darkroom-border/60 text-xs sm:text-sm font-mono text-slate-300">
+            <div className="flex items-center gap-2">
+              <span className="text-blue-400">🌐</span>
+              <span className="font-semibold text-white">{metrics.sources}</span>
+              <span className="text-slate-500">sources fetched</span>
+            </div>
+            <span className="text-slate-700 hidden sm:inline">•</span>
+            <div className="flex items-center gap-2">
+              <span className="text-emerald-400">⚡</span>
+              <span className="font-semibold text-white">{metrics.claims}</span>
+              <span className="text-slate-500">atomic claims extracted</span>
+            </div>
+            <span className="text-slate-700 hidden sm:inline">•</span>
+            <div className="flex items-center gap-2">
+              <span className="text-amber-400">⚖️</span>
+              <span className="font-semibold text-white">{metrics.contradictions}</span>
+              <span className="text-slate-500">contradictions found</span>
+            </div>
+          </div>
+        )}
+
         {/* 3. DEEP CONTEXT CARD (EXPANDED ON HOVER OR SELECTION) */}
         <AnimatePresence mode="wait">
           <motion.div
@@ -529,24 +706,64 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
                 </span>
               </div>
             </div>
+            
+            {/* Active Query Ticker */}
+            {activeStepState === 'ACTIVE' && activeQuery && (
+              <div className="mt-4 px-3 py-2 rounded-xl bg-darkroom-bg/80 border border-darkroom-border/40 text-xs font-mono text-tool-diligence flex items-center gap-2 overflow-hidden whitespace-nowrap">
+                <Terminal className="size-3.5 shrink-0 opacity-70" />
+                <motion.span 
+                  className="truncate"
+                  key={activeQuery} // re-trigger animation on query change
+                  initial={{ opacity: 0, x: 5 }}
+                  animate={{ opacity: 1, x: 0 }}
+                >
+                  {activeQuery}
+                </motion.span>
+              </div>
+            )}
 
-            {/* Step Inner Working Description */}
+            {/* Step Inner Working Description / History Drawer */}
             <div className="mt-4 space-y-3">
               <p className="text-sm text-slate-300 leading-relaxed">{activeStep.description}</p>
 
-              <div className="space-y-1.5">
-                <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold block">
-                  Key Execution Objectives:
-                </span>
-                <ul className="space-y-1">
-                  {activeStep.details.map((detail, dIdx) => (
-                    <li key={dIdx} className="flex items-start gap-2 text-xs text-slate-400">
-                      <ChevronRight className={`size-3.5 shrink-0 mt-0.5 ${activeStepState === 'PENDING' ? 'text-slate-500' : 'text-tool-diligence'}`} />
-                      <span>{detail}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {activeStepState === 'COMPLETED' ? (
+                <div className="mt-2 p-3 rounded-xl bg-darkroom-bg border border-darkroom-border/50 max-h-48 overflow-y-auto">
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold block mb-2 sticky top-0 bg-darkroom-bg pb-1">
+                    Executed Step Log
+                  </span>
+                  <div className="space-y-1.5">
+                    {events
+                      .filter(e => activeStep.activeStatus.includes(e.eventType === 'DOMAIN_SEARCH_STARTED' || e.eventType === 'CLAIMS_EXTRACTING' ? 'RESEARCHING' : 
+                                    e.eventType === 'CONTRADICTIONS_ANALYZING' ? 'ANALYZING_CONTRADICTIONS' : 
+                                    e.eventType === 'DOSSIER_SYNTHESIZING' ? 'ASSEMBLING_DOSSIER' : 
+                                    e.eventType === 'PLANNING_STARTED' ? 'PLANNING' : 
+                                    e.eventType === 'CANDIDATES_FOUND' ? 'AWAITING_ENTITY_CONFIRMATION' : 'DISAMBIGUATING'))
+                      .map((e, idx) => (
+                        <div key={idx} className="flex items-start gap-2 text-[11px] font-mono">
+                          <span className="text-slate-500 shrink-0 mt-0.5">[{new Date(e.timestamp).toLocaleTimeString()}]</span>
+                          <span className="text-slate-300">{e.message}</span>
+                        </div>
+                      ))}
+                    {events.length === 0 && (
+                      <div className="text-slate-500 text-xs italic">No specific log events captured for this step.</div>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-1.5">
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold block">
+                    Key Execution Objectives:
+                  </span>
+                  <ul className="space-y-1">
+                    {activeStep.details.map((detail, dIdx) => (
+                      <li key={dIdx} className="flex items-start gap-2 text-xs text-slate-400">
+                        <ChevronRight className={`size-3.5 shrink-0 mt-0.5 ${activeStepState === 'PENDING' ? 'text-slate-500' : 'text-tool-diligence'}`} />
+                        <span>{detail}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </motion.div>
         </AnimatePresence>
@@ -563,36 +780,108 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
               <Terminal className="size-3.5 text-indigo-400" />
               <span>Live Agent Event Log</span>
             </span>
-            <span className="text-xs font-mono text-slate-400">
-              {events.filter((evt, i, arr) => !i || arr[i - 1].message !== evt.message).length} events recorded
-            </span>
+            {/* Event Count Badge with Hover / Tap Tooltip */}
+            <div className="relative flex items-center">
+              <button
+                type="button"
+                onMouseEnter={() => setShowEventLogTooltip(true)}
+                onMouseLeave={() => setShowEventLogTooltip(false)}
+                onClick={() => setShowEventLogTooltip((prev) => !prev)}
+                onFocus={() => setShowEventLogTooltip(true)}
+                onBlur={() => setShowEventLogTooltip(false)}
+                className="px-2.5 py-0.5 rounded-full bg-darkroom-bg hover:bg-darkroom-card border border-darkroom-border hover:border-slate-600 text-slate-300 hover:text-white font-mono text-xs font-medium cursor-pointer transition-all flex items-center gap-1 shadow-sm select-none"
+                aria-label={`${displayEvents.length} events recorded`}
+              >
+                <span>{displayEvents.length}</span>
+              </button>
+
+              <AnimatePresence>
+                {showEventLogTooltip && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 4, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 4, scale: 0.95 }}
+                    transition={{ duration: 0.12 }}
+                    className="absolute right-0 bottom-full mb-2 px-2.5 py-1 rounded-xl bg-darkroom-bg border border-darkroom-border text-slate-100 text-xs font-mono whitespace-nowrap shadow-2xl z-30 pointer-events-none flex items-center gap-1.5"
+                  >
+                    <span className="size-1.5 rounded-full bg-tool-diligence" />
+                    <span>{displayEvents.length} events recorded</span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
 
           <div className="p-4 sm:p-5 max-h-60 overflow-y-auto space-y-2.5 text-xs font-mono bg-darkroom-bg/60">
-            {events
-              .filter((evt, i, arr) => !i || arr[i - 1].message !== evt.message)
-              .map((evt, idx) => (
-                <div
-                  key={idx}
-                  className="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-2.5 leading-relaxed hover:bg-darkroom-surface/40 p-2 sm:p-1 rounded-lg transition-colors border-b sm:border-b-0 border-darkroom-border/30 last:border-b-0"
-                >
-                  <div className="flex items-center gap-2 shrink-0">
-                    <span className="text-slate-400 text-[11px] font-mono">
-                      {evt.timestamp
-                        ? new Date(evt.timestamp).toLocaleTimeString([], {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            second: '2-digit',
-                          })
-                        : ''}
-                    </span>
-                    <span className="text-tool-diligence font-semibold text-xs">
-                      [{evt.agentName}]
-                    </span>
-                  </div>
-                  <span className="text-slate-200 text-xs flex-1 break-words">{evt.message}</span>
+            {displayEvents.map((evt, idx) => (
+              <div
+                key={idx}
+                className="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-2.5 leading-relaxed hover:bg-darkroom-surface/40 p-2 sm:p-1 rounded-lg transition-colors border-b sm:border-b-0 border-darkroom-border/30 last:border-b-0"
+              >
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-slate-400 text-[11px] font-mono">
+                    {evt.timestamp
+                      ? new Date(evt.timestamp).toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          second: '2-digit',
+                        })
+                      : ''}
+                  </span>
+                  <span className="text-tool-diligence font-semibold text-xs">
+                    [{evt.agentName}]
+                  </span>
                 </div>
-              ))}
+                <span className="text-slate-200 text-xs flex-1 break-words">{evt.message}</span>
+              </div>
+            ))}
+
+            {/* Active Live Agent Pulsating Mini-Loader Indicator */}
+            {isRunning && (
+              <div className="flex items-center gap-2.5 leading-relaxed p-2 sm:p-1.5 rounded-lg text-xs font-mono text-slate-400 bg-tool-diligence/[0.04] border border-tool-diligence/20 animate-fade-in">
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="relative flex size-2">
+                    <span
+                      className={`absolute inline-flex h-full w-full rounded-full bg-tool-diligence opacity-75 ${
+                        reducedMotion ? '' : 'animate-ping'
+                      }`}
+                    />
+                    <span
+                      className={`relative inline-flex rounded-full size-2 bg-tool-diligence ${
+                        reducedMotion ? '' : 'animate-pulse'
+                      }`}
+                    />
+                  </span>
+                  <span className="text-tool-diligence font-semibold text-xs">
+                    [Live Agent]
+                  </span>
+                </div>
+                <span className="text-slate-300 text-xs flex items-center gap-2 flex-1">
+                  <span>Gathering &amp; analyzing evidence stream</span>
+                  <span className="inline-flex gap-1 items-center">
+                    <span
+                      className={`size-1 rounded-full bg-tool-diligence ${
+                        reducedMotion ? '' : 'animate-bounce'
+                      }`}
+                      style={{ animationDelay: '0ms' }}
+                    />
+                    <span
+                      className={`size-1 rounded-full bg-tool-diligence ${
+                        reducedMotion ? '' : 'animate-bounce'
+                      }`}
+                      style={{ animationDelay: '150ms' }}
+                    />
+                    <span
+                      className={`size-1 rounded-full bg-tool-diligence ${
+                        reducedMotion ? '' : 'animate-bounce'
+                      }`}
+                      style={{ animationDelay: '300ms' }}
+                    />
+                  </span>
+                </span>
+              </div>
+            )}
+
             <div ref={eventsEndRef} />
           </div>
         </div>

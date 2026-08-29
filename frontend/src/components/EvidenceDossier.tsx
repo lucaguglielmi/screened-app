@@ -96,7 +96,13 @@ export const EvidenceDossier: React.FC<Props> = ({
   const [copiedAntigravity, setCopiedAntigravity] = useState(false);
   const [downloadingMd, setDownloadingMd] = useState(false);
   const [isActionsMenuOpen, setIsActionsMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>('Overview');
+  const [shareableLinkCopied, setShareableLinkCopied] = useState(false);
+  const [claimStatusFilter, setClaimStatusFilter] = useState<string>('ALL');
+  
   const actionsMenuRef = useRef<HTMLDivElement>(null);
+  
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -111,6 +117,29 @@ export const EvidenceDossier: React.FC<Props> = ({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isActionsMenuOpen]);
+
+  useEffect(() => {
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        const visibleEntries = entries.filter(e => e.isIntersecting);
+        if (visibleEntries.length > 0) {
+          // Find the one closest to the top of the viewport
+          const topEntry = visibleEntries.reduce((prev, curr) => 
+            curr.boundingClientRect.top < prev.boundingClientRect.top ? curr : prev
+          );
+          if (topEntry.target.getAttribute('data-section-name')) {
+            setActiveSection(topEntry.target.getAttribute('data-section-name')!);
+          }
+        }
+      },
+      { rootMargin: '-20% 0px -60% 0px', threshold: 0.1 }
+    );
+    
+    const sections = document.querySelectorAll('[data-section-name]');
+    sections.forEach(s => observerRef.current?.observe(s));
+    
+    return () => observerRef.current?.disconnect();
+  }, [activeTab]);
 
   // Normalize density mode (routing logic for AI agents vs human readers)
   const normalizedDensity: DetailDensity =
@@ -134,6 +163,27 @@ export const EvidenceDossier: React.FC<Props> = ({
     setCopiedSummary(true);
     setTimeout(() => setCopiedSummary(false), 2000);
   };
+  
+  const handleCopyShareableLink = () => {
+    const url = `${window.location.origin}/dossier/${entity.id || 'inv-001'}`;
+    navigator.clipboard.writeText(url);
+    setShareableLinkCopied(true);
+    soundEffects.playSuccess();
+    setTimeout(() => setShareableLinkCopied(false), 2000);
+  };
+
+  const sourceStats = useMemo(() => {
+    const total = sources.length || 1;
+    const tier1 = sources.filter(s => s.sourceTier === 1).length;
+    const tier2 = sources.filter(s => s.sourceTier === 2).length;
+    const tier3 = sources.filter(s => s.sourceTier === 3).length;
+    return {
+      t1Pct: (tier1 / total) * 100,
+      t2Pct: (tier2 / total) * 100,
+      t3Pct: (tier3 / total) * 100,
+      tier1, tier2, tier3
+    };
+  }, [sources]);
 
   const handlePrint = () => {
     window.print();
@@ -438,11 +488,12 @@ export const EvidenceDossier: React.FC<Props> = ({
 
   const filteredClaims = claims.filter((c) => {
     const matchesDomain = activeDomain === 'ALL' || c.researchDomain === activeDomain;
+    const matchesStatus = claimStatusFilter === 'ALL' || c.status === claimStatusFilter;
     const matchesSearch =
       !searchFilter.trim() ||
       c.statement.toLowerCase().includes(searchFilter.toLowerCase()) ||
       c.category.toLowerCase().includes(searchFilter.toLowerCase());
-    return matchesDomain && matchesSearch;
+    return matchesDomain && matchesSearch && matchesStatus;
   });
 
   const factsCount = claims.filter((c) => c.claimKind === 'FACT').length;
@@ -565,6 +616,22 @@ export const EvidenceDossier: React.FC<Props> = ({
                         </div>
                       </button>
                     )}
+                    
+                    <button
+                      onClick={() => {
+                        handleCopyShareableLink();
+                        setIsActionsMenuOpen(false);
+                      }}
+                      className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                    >
+                      <div className="p-1.5 rounded-lg bg-sky-500/15 border border-sky-500/30 text-sky-400 group-hover:bg-sky-500/25">
+                        {shareableLinkCopied ? <Check className="size-3.5 text-emerald-400" /> : <ExternalLink className="size-3.5" />}
+                      </div>
+                      <div className="flex flex-col min-w-0">
+                        <span className="font-semibold text-slate-100">{shareableLinkCopied ? 'Link Copied!' : 'Copy Shareable Link'}</span>
+                        <span className="text-[11px] text-slate-400 truncate">Read-only view for producers</span>
+                      </div>
+                    </button>
 
                     <button
                       onClick={() => {
@@ -741,7 +808,11 @@ export const EvidenceDossier: React.FC<Props> = ({
 
       {/* Sticky "HOW MUCH DATA DO YOU WANT TO SEE?" Header (before main content) */}
       {dossier && activeTab === 'DOSSIER' && (
-        <div className="sticky top-3 z-30 bg-darkroom-bg/95 backdrop-blur-md p-3.5 sm:px-6 rounded-2xl border border-darkroom-border shadow-2xl no-print">
+        <div className="sticky top-[72px] sm:top-20 z-40 bg-darkroom-bg/95 backdrop-blur-xl p-3.5 sm:px-6 rounded-2xl border border-darkroom-border shadow-2xl shadow-black/80 no-print transition-all flex flex-col sm:block gap-2">
+          <div className="flex sm:hidden items-center gap-1.5 text-[10px] font-mono text-indigo-400 font-semibold uppercase tracking-wider px-1 mb-1">
+            <span className="size-1.5 rounded-full bg-indigo-500 animate-pulse" />
+            Reading: {activeSection}
+          </div>
           <DetailDial density={density} onChange={handleDensityChange} />
         </div>
       )}
@@ -901,7 +972,7 @@ export const EvidenceDossier: React.FC<Props> = ({
           <CredibilityRadar claims={claims} disputes={disputes} />
 
           {/* Executive Overview (All Human Modes) */}
-          <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-3">
+          <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-3" data-section-name="Executive Overview">
             <div className="text-xs font-mono uppercase tracking-wider text-slate-400">
               Executive Overview
             </div>
@@ -912,7 +983,7 @@ export const EvidenceDossier: React.FC<Props> = ({
 
           {/* Key Persons (All Human Modes) */}
           {dossier.keyPersons && dossier.keyPersons.length > 0 && (
-            <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4 border border-darkroom-card">
+            <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4 border border-darkroom-card" data-section-name="Key Persons">
               <div className="text-xs font-mono uppercase tracking-wider text-indigo-400 flex items-center justify-between">
                 <span>Key Individuals & Entities</span>
               </div>
@@ -932,7 +1003,7 @@ export const EvidenceDossier: React.FC<Props> = ({
 
           {/* React Flow Interactive Diagram (Rendered in Balanced & Full Evidence modes) */}
           {(normalizedDensity === 'BALANCED' || normalizedDensity === 'FULL_EVIDENCE') && (
-            <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4">
+            <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4" data-section-name="Entity Architecture">
               <Suspense fallback={<div className="p-4 text-center text-xs text-slate-500 animate-pulse">Loading provenance graph...</div>}>
                 <EntityProvenanceGraph dossier={dossierAdapter} />
               </Suspense>
@@ -940,11 +1011,15 @@ export const EvidenceDossier: React.FC<Props> = ({
           )}
 
           {/* Side-by-Side Contradictions Panel */}
-          {disputes.length > 0 && <ContradictionPanel disputes={disputes} />}
+          {disputes.length > 0 && (
+            <div data-section-name="Active Disputes">
+              <ContradictionPanel disputes={disputes} />
+            </div>
+          )}
 
           {/* 3 Domain Narrative Syntheses (Rendered in Balanced & Full Evidence modes) */}
           {normalizedDensity !== 'SIMPLIFIED' && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4" data-section-name="Domain Analysis">
               {/* Festival Domain */}
               <div className="p-5 rounded-3xl bg-darkroom-surface shadow-2xl space-y-3">
                 <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-400 border-b border-paper-card border-darkroom-card pb-2">
@@ -978,7 +1053,7 @@ export const EvidenceDossier: React.FC<Props> = ({
 
           {/* Atomic Claims & Evidence Citations (Rendered in Balanced & Full Evidence) */}
           {normalizedDensity !== 'SIMPLIFIED' && (
-            <div className="space-y-4">
+            <div className="space-y-4" data-section-name="Atomic Ledger">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <h2 className="font-serif text-xl font-semibold text-white flex items-center gap-2">
                   <ShieldCheck className="size-5 text-indigo-400" /> Atomic Claims & Evidence
@@ -1014,6 +1089,28 @@ export const EvidenceDossier: React.FC<Props> = ({
                     ))}
                   </div>
                 </div>
+              </div>
+              
+              {/* Status Filters */}
+              <div className="flex items-center overflow-x-auto pb-2 gap-2 hide-scrollbar no-print text-xs font-mono">
+                {[
+                  { id: 'ALL', label: 'All Claims' },
+                  { id: 'CORROBORATED', label: 'Corroborated (Verified)' },
+                  { id: 'SUPPORTED', label: 'Single Source (Supported)' },
+                  { id: 'DISPUTED', label: 'Disputed' }
+                ].map(f => (
+                  <button
+                    key={f.id}
+                    onClick={() => setClaimStatusFilter(f.id)}
+                    className={`shrink-0 px-3 py-1.5 rounded-full transition-all cursor-pointer ${
+                      claimStatusFilter === f.id
+                        ? 'bg-indigo-600 text-white shadow-md font-medium'
+                        : 'bg-darkroom-card border border-darkroom-border text-slate-400 hover:text-white hover:bg-darkroom-surface'
+                    }`}
+                  >
+                    {f.label}
+                  </button>
+                ))}
               </div>
 
               {/* Claims List */}
@@ -1126,7 +1223,7 @@ export const EvidenceDossier: React.FC<Props> = ({
           )}
 
           {/* Filmmaker Checklist & Unresolved Questions */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4" data-section-name="Filmmaker Checklist">
             {/* Due Diligence Checklist */}
             <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4">
               <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-emerald-400 border-b border-paper-card border-darkroom-card pb-2">
@@ -1162,14 +1259,31 @@ export const EvidenceDossier: React.FC<Props> = ({
 
           {/* Discovered Footprint Drawer (Full Evidence Mode) */}
           {normalizedDensity === 'FULL_EVIDENCE' && (
-            <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4">
-              <div className="flex items-center justify-between border-b border-paper-card border-darkroom-card pb-3">
-                <span className="text-sm font-mono uppercase tracking-wider text-slate-300">
-                  Discovered Web Sources ({sources.length})
-                </span>
-                <span className="text-xs font-mono text-slate-400">
-                  Tier 1: Registry/Trade • Tier 2: General • Tier 3: Forum
-                </span>
+            <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4" data-section-name="Web Sources">
+              <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-paper-card border-darkroom-card pb-3 gap-3">
+                <div className="space-y-1">
+                  <span className="text-sm font-mono uppercase tracking-wider text-slate-300">
+                    Discovered Web Sources ({sources.length})
+                  </span>
+                  <div className="text-[10px] font-mono text-slate-400 flex items-center gap-2">
+                    <div className="flex items-center gap-1"><span className="size-2 rounded-full bg-emerald-500"></span> Tier 1 (Official)</div>
+                    <div className="flex items-center gap-1"><span className="size-2 rounded-full bg-blue-500"></span> Tier 2 (Trade/Press)</div>
+                    <div className="flex items-center gap-1"><span className="size-2 rounded-full bg-amber-500"></span> Tier 3 (Community)</div>
+                  </div>
+                </div>
+                
+                {/* Source Quality Distribution Indicator */}
+                <div className="w-full sm:w-48 space-y-1.5">
+                  <div className="flex items-center justify-between text-[10px] font-mono text-slate-400">
+                    <span>Quality Distribution</span>
+                    <span>{sources.length} Total</span>
+                  </div>
+                  <div className="h-2 w-full rounded-full flex overflow-hidden bg-darkroom-card">
+                    {sourceStats.t1Pct > 0 && <div style={{ width: `${sourceStats.t1Pct}%` }} className="bg-emerald-500 transition-all duration-500" title={`Tier 1: ${sourceStats.tier1}`} />}
+                    {sourceStats.t2Pct > 0 && <div style={{ width: `${sourceStats.t2Pct}%` }} className="bg-blue-500 transition-all duration-500" title={`Tier 2: ${sourceStats.tier2}`} />}
+                    {sourceStats.t3Pct > 0 && <div style={{ width: `${sourceStats.t3Pct}%` }} className="bg-amber-500 transition-all duration-500" title={`Tier 3: ${sourceStats.tier3}`} />}
+                  </div>
+                </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {sources.map((src) => (

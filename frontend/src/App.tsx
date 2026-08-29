@@ -80,6 +80,7 @@ export default function App() {
   // Command Palette & Keyboard state
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [isCelebrating, setIsCelebrating] = useState(false);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -232,7 +233,11 @@ export default function App() {
           );
         } else if (activityEvent.eventType === 'DOSSIER_READY') {
           playSuccessChime();
-          fetchInvestigation(invId);
+          setIsCelebrating(true);
+          setTimeout(() => {
+            fetchInvestigation(invId);
+            setTimeout(() => setIsCelebrating(false), 500); // 500ms celebration delay
+          }, 100);
           if ('Notification' in window && Notification.permission === 'granted') {
             new Notification('Screened', {
               body: `Investigation for ${invQuery} is complete.`,
@@ -716,6 +721,7 @@ export default function App() {
                   status={currentStatus}
                   events={events}
                   festivalName={investigation.query}
+                  onCancel={handleReset}
                 />
               )}
 
@@ -730,18 +736,18 @@ export default function App() {
                 </Suspense>
               )}
 
-              {/* State 2: Researching / Analyzing or Failed/Cancelled after confirmation */}
+              {/* State 2: Researching / Analyzing / Celebrating or Failed/Cancelled after confirmation */}
               {investigation &&
-                [
-                  'PLANNING',
-                  'RESEARCHING',
-                  'ANALYZING_CONTRADICTIONS',
-                  'ASSEMBLING_DOSSIER',
-                ].includes(currentStatus) && investigation.confirmedEntity && (
+                (
+                  ['PLANNING', 'RESEARCHING', 'ANALYZING_CONTRADICTIONS', 'ASSEMBLING_DOSSIER'].includes(currentStatus) || 
+                  (currentStatus === 'READY' && isCelebrating)
+                ) && investigation.confirmedEntity && (
                   <LiveProgress
                     status={currentStatus}
                     events={events}
                     festivalName={investigation.confirmedEntity?.name || investigation.query}
+                    isCelebrating={isCelebrating}
+                    onCancel={handleReset}
                   />
                 )}
               {investigation && ['FAILED', 'CANCELLED'].includes(currentStatus) && investigation.confirmedEntity && (
@@ -749,11 +755,12 @@ export default function App() {
                     status={currentStatus}
                     events={events}
                     festivalName={investigation.confirmedEntity?.name || investigation.query}
+                    onCancel={handleReset}
                   />
                 )}
 
               {/* State 3: Dossier Ready */}
-              {investigation && currentStatus === 'READY' && investigation.dossier && (
+              {investigation && currentStatus === 'READY' && !isCelebrating && investigation.dossier && (
                 <EvidenceDossier
                   entity={
                     investigation.confirmedEntity || {

@@ -328,8 +328,7 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
                   </h2>
                 </div>
                 <p className="text-base text-slate-300 mt-1">
-                  Hover on any capability tag to learn how the agent works, or click an example
-                  query.
+                  Hover on tags to learn more, or click an example query.
                 </p>
               </div>
 
@@ -431,17 +430,7 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
               })}
             </div>
 
-            {/* Modal Footer */}
-            <div className="pt-3 border-t border-darkroom-border flex items-center justify-between text-xs font-mono text-slate-400">
-              <span>Screened Autonomous Intelligence</span>
-              <button
-                type="button"
-                onClick={onClose}
-                className="hover:text-slate-200 transition-colors cursor-pointer"
-              >
-                Press Esc to close
-              </button>
-            </div>
+            {/* Footer removed per user request */}
           </motion.div>
         </div>
       )}

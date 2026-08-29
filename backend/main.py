@@ -351,6 +351,11 @@ async def create_investigation(req: CreateInvestigationRequest, request: Request
     if not query:
         raise HTTPException(status_code=400, detail="Festival query is required")
 
+    # DEMO MODE INTERCEPTION
+    if query.lower() in ["demo", "demo mode", "/demo"]:
+        from backend.demo_payloads import get_demo_investigation
+        return get_demo_investigation()
+
     inv = await orchestrator.start_investigation(
         query=query,
         optional_url=req.optionalUrl,
@@ -362,6 +367,11 @@ async def create_investigation(req: CreateInvestigationRequest, request: Request
 @app.get("/api/investigations/{investigation_id}")
 async def get_investigation(investigation_id: str):
     """Retrieve full investigation state including confirmed entity, dossier, claims, and sources."""
+    # DEMO MODE INTERCEPTION
+    if investigation_id == "demo_pinco_pallino":
+        from backend.demo_payloads import get_demo_full_dossier
+        return get_demo_full_dossier()
+
     inv = await db.get_investigation(investigation_id)
     if not inv:
         raise HTTPException(status_code=404, detail="Investigation not found")
@@ -382,6 +392,11 @@ async def get_investigation_batch(investigation_ids: list[str], request: Request
     results = []
     for inv_id in investigation_ids:
         try:
+            if inv_id == "demo_pinco_pallino":
+                from backend.demo_payloads import get_demo_full_dossier
+                results.append(get_demo_full_dossier())
+                continue
+                
             inv = await db.get_investigation(inv_id)
             if inv:
                 # Omit large collections like claims and sources for the summary view
@@ -425,6 +440,19 @@ async def confirm_entity(investigation_id: str, req: ConfirmEntityRequest, reque
 @app.get("/api/investigations/{investigation_id}/events")
 async def stream_investigation_events(investigation_id: str):
     """Server-Sent Events (SSE) streaming real-time multi-agent activity."""
+    # DEMO MODE INTERCEPTION
+    if investigation_id == "demo_pinco_pallino":
+        from backend.demo_payloads import demo_sse_generator
+        return StreamingResponse(
+            demo_sse_generator(),
+            media_type="text/event-stream",
+            headers={
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+                "X-Accel-Buffering": "no",
+            },
+        )
+        
     return StreamingResponse(
         broadcaster.event_generator(investigation_id),
         media_type="text/event-stream",
