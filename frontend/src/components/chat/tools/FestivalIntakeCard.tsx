@@ -70,12 +70,9 @@ export const FestivalIntakeCard: React.FC<FestivalIntakeCardProps> = ({ args, on
 
         {/* Field 2: Additional Clues & Context (Freeform Text Area) */}
         <div>
-          <label className="block text-sm font-semibold text-slate-300 mb-1.5 flex items-center justify-between">
-            <span className="flex items-center gap-1.5">
-              <FileText className="w-3.5 h-3.5 text-tool-diligence" />
-              <span>Additional Clues & Context (Optional)</span>
-            </span>
-            <span className="text-xs text-slate-400 font-mono">Used in strategy phase</span>
+          <label className="block text-sm font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
+            <FileText className="w-3.5 h-3.5 text-tool-diligence" />
+            <span>Additional Clues & Context (Optional)</span>
           </label>
           <textarea
             rows={3}
