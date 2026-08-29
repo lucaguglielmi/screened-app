@@ -481,7 +481,7 @@ export default function App() {
   const currentStatus = investigation?.status || 'DRAFT';
 
   return (
-    <div className="min-h-screen min-h-[100dvh] flex flex-col font-sans selection:bg-indigo-500/20 antialiased overflow-x-hidden text-darkroom-text bg-moving-dark-gradient">
+    <div className="min-h-screen min-h-[100dvh] flex flex-col font-sans selection:bg-indigo-500/20 antialiased text-darkroom-text bg-moving-dark-gradient">
       <div
         className={`relative flex-1 flex flex-row min-h-0 w-full ${
           activeTool === 'DESIGN_PLAYGROUND'
@@ -505,7 +505,7 @@ export default function App() {
         className={`relative z-10 flex-1 flex flex-col min-w-0 md:pl-16 lg:pl-20 ${
           activeTool === 'CONVERSATIONAL_DESK'
             ? 'h-screen h-[100dvh] overflow-hidden'
-            : 'min-h-screen min-h-[100dvh] overflow-y-auto'
+            : 'min-h-screen min-h-[100dvh]'
         }`}
       >
         {/* Top Header Bar */}

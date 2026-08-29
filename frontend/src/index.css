@@ -418,3 +418,7 @@ code {
 .hover-soft-pulse:hover {
   animation: soft-pulse 2s infinite ease-in-out;
 }
+
+body {
+  overflow-x: hidden;
+}
