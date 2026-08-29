@@ -44,7 +44,7 @@ async def demo_sse_generator():
     await asyncio.sleep(2.0)
     
     # Auto-confirm entity
-    yield format_event("CANDIDATES_FOUND", "Found candidate entity.", {"candidates": get_demo_investigation()["candidates"]})
+    yield format_event("PLANNING_STEP", "Found candidate entity.", {"candidates": get_demo_investigation()["candidates"]})
     await asyncio.sleep(0.5)
 
     # Step 2: Researching (3-7s)
@@ -129,8 +129,8 @@ def get_demo_full_dossier():
                 "researchDomain": "VENUES",
                 "category": "VENUE_SCREENINGS",
                 "statement": "Festival holds physical screenings at Genesis Cinema and BFI Southbank.",
-                "claimKind": "FACTUAL",
-                "status": "VERIFIED",
+                "claimKind": "FACT",
+                "status": "CORROBORATED",
                 "evidence": [
                     {
                         "sourceId": "src_bfi",
@@ -147,7 +147,7 @@ def get_demo_full_dossier():
                 "researchDomain": "PARTICIPANTS",
                 "category": "EXPERIENCE_FEEDBACK",
                 "statement": "Filmmakers experience 3-5 week communication blackouts prior to notification dates.",
-                "claimKind": "OPINION",
+                "claimKind": "ALLEGATION",
                 "status": "CONTRADICTED",
                 "evidence": [
                     {

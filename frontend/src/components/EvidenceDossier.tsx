@@ -558,17 +558,62 @@ export const EvidenceDossier: React.FC<Props> = ({
       animate={{ opacity: 1, y: 0 }}
       className="max-w-5xl mx-auto space-y-6"
     >
+      {/* Absolute "New Screen" button placed outside the card */}
+      <div className="flex justify-end mb-2">
+        <button
+          onClick={() => {
+            soundEffects.playClick();
+            onNewInvestigation();
+          }}
+          className="p-2 rounded-full hover:bg-darkroom-surface text-slate-400 hover:text-white transition-colors cursor-pointer shadow-sm active:scale-95 border border-transparent hover:border-darkroom-border"
+          title="New Screen"
+        >
+          <Search className="size-4" />
+        </button>
+      </div>
+
       {/* Top Profile & Header Card (Non-sticky) */}
       <div className="bg-darkroom-surface p-6 rounded-3xl shadow-2xl space-y-5 border border-darkroom-border">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-paper-card border-darkroom-card pb-4">
-          <div className="space-y-1 min-w-0 flex-1">
-            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-400">
-              <FileText className="size-4" />
-              <span>Evidence Dossier</span>
+        <div className="flex flex-col sm:flex-row items-start justify-between gap-4 border-b border-paper-card border-darkroom-card pb-4">
+          <div className="space-y-3 min-w-0 flex-1">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-400">
+                <FileText className="size-4" />
+                <span>Evidence Dossier</span>
+              </div>
+              <h1 className="font-serif text-2xl sm:text-3xl font-semibold text-white break-words">
+                {entity.name}
+              </h1>
             </div>
-            <h1 className="font-serif text-2xl sm:text-3xl font-semibold text-white break-words">
-              {entity.name}
-            </h1>
+
+            {/* Reorganized top facts - small & appropriate hierarchy */}
+            <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-slate-300">
+              {entity.cityCountry && (
+                <div className="flex items-center gap-1.5">
+                  <MapPin className="size-3.5 text-indigo-400 opacity-80" />
+                  <span>{entity.cityCountry}</span>
+                </div>
+              )}
+              {entity.foundedYear && (
+                <div className="flex items-center gap-1.5">
+                  <Calendar className="size-3.5 text-indigo-400 opacity-80" />
+                  <span>Est. {entity.foundedYear}</span>
+                </div>
+              )}
+              {entity.officialDomain && (
+                <div className="flex items-center gap-1.5">
+                  <Globe className="size-3.5 text-indigo-400 opacity-80" />
+                  <a
+                    href={`https://${entity.officialDomain}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-indigo-300 hover:underline truncate max-w-[200px]"
+                  >
+                    {entity.officialDomain}
+                  </a>
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="flex items-center gap-2.5 w-full sm:w-auto no-print">
@@ -692,57 +737,7 @@ export const EvidenceDossier: React.FC<Props> = ({
                 )}
               </AnimatePresence>
             </div>
-
-            {/* Primary Action Button */}
-            <button
-              onClick={() => {
-                soundEffects.playClick();
-                onNewInvestigation();
-              }}
-              className="flex-1 sm:flex-none px-4 py-2.5 sm:py-2 rounded-xl bg-midnight-royal hover:brightness-110 text-white text-xs font-mono font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-indigo-950/60 active:scale-95 shrink-0"
-            >
-              <Search className="size-3.5" />
-              <span>New Screen</span>
-            </button>
           </div>
-        </div>
-        
-        {/* Top Facts - Standardized Icon Colors */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-          {entity.cityCountry && (
-            <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-darkroom-surface border border-darkroom-border">
-              <MapPin className="size-4 text-indigo-400 shrink-0" />
-              <div className="flex flex-col">
-                <span className="text-[10px] text-slate-400 uppercase tracking-wider font-mono">Location</span>
-                <span className="text-sm font-semibold text-white">{entity.cityCountry}</span>
-              </div>
-            </div>
-          )}
-          {entity.foundedYear && (
-            <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-darkroom-surface border border-darkroom-border">
-              <Calendar className="size-4 text-indigo-400 shrink-0" />
-              <div className="flex flex-col">
-                <span className="text-[10px] text-slate-400 uppercase tracking-wider font-mono">Est. Year</span>
-                <span className="text-sm font-semibold text-white">{entity.foundedYear}</span>
-              </div>
-            </div>
-          )}
-          {entity.officialDomain && (
-            <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-darkroom-surface border border-darkroom-border">
-              <Globe className="size-4 text-indigo-400 shrink-0" />
-              <div className="flex flex-col overflow-hidden">
-                <span className="text-[10px] text-slate-400 uppercase tracking-wider font-mono">Official Web</span>
-                <a
-                  href={`https://${entity.officialDomain}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm font-semibold text-white hover:text-indigo-300 truncate"
-                >
-                  {entity.officialDomain}
-                </a>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Claim Metric Strip */}

@@ -269,7 +269,19 @@ export default function App() {
       fetchInvestigation(invId);
     };
 
-    // Fallback polling every 3s while investigation is active to guarantee state progression
+    return () => {
+      eventSource.close();
+    };
+  }, [investigation?.id, investigation?.query, fetchInvestigation]);
+
+  // Fallback polling every 3s while investigation is active to guarantee state progression
+  useEffect(() => {
+    if (!investigation?.id) return;
+    const invId = investigation.id;
+    
+    // Do not poll for the demo mode, since it relies entirely on the 18s SSE stream
+    if (invId === 'demo_pinco_pallino') return;
+
     const isActiveStatus = (st?: string) =>
       st &&
       [
@@ -288,9 +300,9 @@ export default function App() {
 
     return () => {
       clearInterval(pollInterval);
-      eventSource.close();
     };
-  }, [investigation?.id, investigation?.status, investigation?.query, fetchInvestigation]);
+  }, [investigation?.id, investigation?.status, fetchInvestigation]);
+
 
   const handleStartInvestigation = async (
     subjectQuery: string,
@@ -741,7 +753,7 @@ export default function App() {
                 (
                   ['PLANNING', 'RESEARCHING', 'ANALYZING_CONTRADICTIONS', 'ASSEMBLING_DOSSIER'].includes(currentStatus) || 
                   (currentStatus === 'READY' && isCelebrating)
-                ) && investigation.confirmedEntity && (
+                ) && (
                   <LiveProgress
                     status={currentStatus}
                     events={events}
