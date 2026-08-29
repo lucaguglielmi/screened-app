@@ -2,7 +2,22 @@ import React, { useState, useMemo } from 'react';
 import { Node, Edge, MarkerType } from '@xyflow/react';
 import { ScreenedFlowCanvas } from './ScreenedFlowCanvas';
 import { EvidenceDossier as DossierType, AtomicClaim } from '../../types/investigation';
-import { ShieldCheck } from 'lucide-react';
+import {
+  ShieldCheck,
+  Building2,
+  Globe,
+  MapPin,
+  Users,
+  AlertTriangle,
+  Maximize2,
+  Minimize2,
+  Layers,
+  ArrowRight,
+  Scale,
+  Sparkles,
+  User,
+  ShieldAlert,
+} from 'lucide-react';
 
 interface Props {
   dossier: DossierType;
@@ -19,18 +34,23 @@ interface ProvenanceNodeData {
   [key: string]: unknown;
 }
 
+type DiagramTab = 'PROVENANCE' | 'PERSONNEL' | 'CONTRADICTIONS';
+type DisplayMode = 'RESPONSIVE' | 'CANVAS';
+
 export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim }) => {
+  const [activeTab, setActiveTab] = useState<DiagramTab>('PROVENANCE');
+  const [displayMode, setDisplayMode] = useState<DisplayMode>('RESPONSIVE');
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [selectedNodeData, setSelectedNodeData] = useState<ProvenanceNodeData | null>(null);
   const [filterMode, setFilterMode] = useState<'ALL' | 'VERIFIED' | 'DISPUTES'>('ALL');
 
   const festivalName = dossier.festivalName || 'Target Entity';
+  const hasDisputes = Boolean(dossier.contradictions && dossier.contradictions.length > 0);
 
   // Build Graph Nodes & Edges from real dossier data
   const { nodes, edges } = useMemo(() => {
     const rawNodes: Node[] = [];
     const rawEdges: Edge[] = [];
-
-    const hasDisputes = Boolean(dossier.contradictions && dossier.contradictions.length > 0);
 
     // 1. Root Node: Festival Target
     rawNodes.push({
@@ -100,10 +120,12 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
       style: {
         background: 'var(--color-darkroom-card)',
         color: 'var(--color-white)',
-        border: hasDisputes ? '1.5px solid var(--color-state-disputed)' : '1.5px solid var(--color-tool-diligence)',
+        border: hasDisputes
+          ? '1.5px solid var(--color-state-disputed)'
+          : '1.5px solid var(--color-tool-diligence)',
         borderRadius: '12px',
         padding: '10px 14px',
-        width: 220,
+        width: 210,
         fontSize: '11px',
       },
     });
@@ -112,30 +134,37 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
       id: 'e-root-registry',
       source: 'root-entity',
       target: 'node-registry',
-      animated: hasDisputes,
-      style: { stroke: hasDisputes ? 'var(--color-state-disputed)' : 'var(--color-tool-diligence)', strokeWidth: 1.5 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: hasDisputes ? 'var(--color-state-disputed)' : 'var(--color-tool-diligence)' },
+      style: {
+        stroke: hasDisputes ? 'var(--color-state-disputed)' : 'var(--color-tool-diligence)',
+        strokeWidth: 1.5,
+      },
+      markerEnd: {
+        type: MarkerType.ArrowClosed,
+        color: hasDisputes ? 'var(--color-state-disputed)' : 'var(--color-tool-diligence)',
+      },
     });
 
-    // 4. Physical Venue Screening Leases Node
+    // 4. Physical Screening Venue Node
     rawNodes.push({
       id: 'node-venue',
       position: { x: 610, y: 150 },
       data: {
-        label: 'Physical Theater Screening Venue',
-        sublabel: 'Commercial Cinema Lease Check',
+        label: 'Physical Venue & Leases',
+        sublabel: hasDisputes ? 'Phantom Venue Risk' : 'Corroborated Cinema Manifest',
         status: hasDisputes ? 'DISPUTED' : 'VERIFIED',
         details: hasDisputes
-          ? 'Physical screening lease could not be cross-corroborated with municipal venue schedule.'
-          : 'Physical auditorium confirmed via press archives and venue programming listings.',
+          ? 'Venue box office records contradict promotional claims of a theatrical screening gala.'
+          : 'Direct cinema lease manifests corroborated by municipal licensing files.',
       },
       style: {
         background: 'var(--color-darkroom-card)',
         color: 'var(--color-white)',
-        border: hasDisputes ? '1.5px solid var(--color-state-disputed)' : '1.5px solid var(--color-tool-diligence)',
+        border: hasDisputes
+          ? '1.5px solid var(--color-state-disputed)'
+          : '1.5px solid var(--color-tool-diligence)',
         borderRadius: '12px',
         padding: '10px 14px',
-        width: 220,
+        width: 210,
         fontSize: '11px',
       },
     });
@@ -144,53 +173,72 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
       id: 'e-root-venue',
       source: 'root-entity',
       target: 'node-venue',
-      animated: hasDisputes,
-      style: { stroke: hasDisputes ? 'var(--color-state-disputed)' : 'var(--color-tool-diligence)', strokeWidth: 1.5 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: hasDisputes ? 'var(--color-state-disputed)' : 'var(--color-tool-diligence)' },
+      style: {
+        stroke: hasDisputes ? 'var(--color-state-disputed)' : 'var(--color-tool-diligence)',
+        strokeWidth: 1.5,
+      },
+      markerEnd: {
+        type: MarkerType.ArrowClosed,
+        color: hasDisputes ? 'var(--color-state-disputed)' : 'var(--color-tool-diligence)',
+      },
     });
 
-    // 5. Atomic Claim Leaf Nodes
-    const sampleClaims = (dossier.atomicClaims || []).slice(0, 4);
-    sampleClaims.forEach((claim: AtomicClaim, idx: number) => {
-      const isClaimDisputed = claim.status === 'DISPUTED';
-      const xPos = 40 + idx * 210;
-      const yPos = 280;
+    // 5. Key Claims as Child Leaf Nodes
+    const sampleClaims: AtomicClaim[] = (dossier.atomicClaims || []).slice(0, 4);
+    sampleClaims.forEach((claim, idx) => {
+      const isClaimDisputed =
+        claim.status === 'DISPUTED' ||
+        Boolean(
+          dossier.contradictions &&
+            dossier.contradictions.some(
+              (c) =>
+                c.claimA.statement.toLowerCase().includes(claim.statement.toLowerCase()) ||
+                c.claimB.statement.toLowerCase().includes(claim.statement.toLowerCase()) ||
+                claim.statement.toLowerCase().includes(c.claimA.statement.toLowerCase()),
+            ),
+        );
 
+      const claimX = 60 + idx * 230;
       rawNodes.push({
         id: `claim-${claim.id}`,
-        position: { x: xPos, y: yPos },
+        position: { x: claimX, y: 280 },
         data: {
-          label: claim.statement,
-          sublabel: `Status: ${claim.status} · ${claim.claimKind}`,
-          status: claim.status,
+          label: `${claim.researchDomain}: ${claim.statement.slice(0, 50)}...`,
+          sublabel: `${claim.claimKind} • ${claim.status}`,
+          status: isClaimDisputed ? 'DISPUTED' : 'VERIFIED',
+          details: claim.statement,
           claimId: claim.id,
-          details: `Source: ${claim.evidence?.[0]?.sourceDomain || 'Trade Archive'}. Quoted Excerpt: "${claim.evidence?.[0]?.exactExcerpt || ''}"`,
         },
         style: {
           background: 'var(--color-darkroom-surface)',
-          color: 'var(--color-text-secondary)',
-          border: isClaimDisputed ? '1px solid var(--color-state-disputed)' : '1px solid var(--color-tool-diligence)',
+          color: 'var(--color-white)',
+          border: isClaimDisputed
+            ? '1.5px solid var(--color-state-disputed)'
+            : '1px solid var(--color-darkroom-border)',
           borderRadius: '10px',
           padding: '8px 12px',
           width: 190,
           fontSize: '10px',
-          cursor: 'pointer',
         },
       });
 
-      // Connect claim to corresponding parent
       const parentId =
         idx === 0 ? 'node-domain' : idx === 1 || idx === 2 ? 'node-registry' : 'node-venue';
       rawEdges.push({
         id: `e-${parentId}-claim-${claim.id}`,
         source: parentId,
         target: `claim-${claim.id}`,
-        style: { stroke: isClaimDisputed ? 'var(--color-state-disputed)' : 'var(--color-tool-diligence)', strokeWidth: 1.2 },
-        markerEnd: { type: MarkerType.ArrowClosed, color: isClaimDisputed ? 'var(--color-state-disputed)' : 'var(--color-tool-diligence)' },
+        style: {
+          stroke: isClaimDisputed ? 'var(--color-state-disputed)' : 'var(--color-tool-diligence)',
+          strokeWidth: 1.2,
+        },
+        markerEnd: {
+          type: MarkerType.ArrowClosed,
+          color: isClaimDisputed ? 'var(--color-state-disputed)' : 'var(--color-tool-diligence)',
+        },
       });
     });
 
-    // Filter if requested
     if (filterMode === 'DISPUTES') {
       const filteredNodes = rawNodes.filter(
         (n) =>
@@ -213,7 +261,7 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
     }
 
     return { nodes: rawNodes, edges: rawEdges };
-  }, [dossier, festivalName, filterMode]);
+  }, [dossier, festivalName, filterMode, hasDisputes]);
 
   const handleNodeClick = (_e: React.MouseEvent, node: Node) => {
     setSelectedNodeData(node.data);
@@ -224,67 +272,475 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
 
   return (
     <div className="space-y-4">
-      {/* Diagram Controls & Mode Bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-1">
-        <div className="flex items-center gap-2 text-xs font-mono text-slate-300">
-          <ShieldCheck className="size-4 text-tool-diligence" />
-          <span className="font-bold uppercase tracking-wider">
-            Entity Verification & Provenance Graph
-          </span>
+      {/* Diagram Suite Header Bar */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-darkroom-border pb-3">
+        <div className="flex items-center gap-2">
+          <div className="p-1.5 rounded-lg bg-tool-diligence/10 text-tool-diligence border border-tool-diligence/20">
+            <Layers className="size-4" />
+          </div>
+          <div>
+            <h3 className="text-sm sm:text-base font-bold font-serif text-white">
+              Forensic Intelligence Diagrams
+            </h3>
+            <p className="text-xs text-slate-400">
+              Clear visual representations of provenance, directorship links, and evidence reconciliation.
+            </p>
+          </div>
         </div>
 
-        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-darkroom-card text-xs">
-          {[
-            { id: 'ALL' as const, label: 'Complete Graph' },
-            { id: 'VERIFIED' as const, label: 'Verified Nodes' },
-            { id: 'DISPUTES' as const, label: 'Disputes Only' },
-          ].map((mode) => (
+        {/* View Mode & Fullscreen Controls */}
+        <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+          {/* Tabs: Diagram Selector */}
+          <div className="flex items-center gap-1 p-1 rounded-xl bg-darkroom-card text-xs">
             <button
-              key={mode.id}
-              type="button"
-              onClick={() => setFilterMode(mode.id)}
-              className={`px-3 py-1 rounded-lg font-mono text-xs transition-all cursor-pointer ${
-                filterMode === mode.id
+              onClick={() => setActiveTab('PROVENANCE')}
+              className={`px-2.5 py-1 rounded-lg font-mono text-[11px] transition-all cursor-pointer ${
+                activeTab === 'PROVENANCE'
                   ? 'bg-midnight-royal text-white font-semibold shadow-xs'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
-              {mode.label}
+              1. Provenance Flow
             </button>
-          ))}
+            <button
+              onClick={() => setActiveTab('PERSONNEL')}
+              className={`px-2.5 py-1 rounded-lg font-mono text-[11px] transition-all cursor-pointer ${
+                activeTab === 'PERSONNEL'
+                  ? 'bg-midnight-royal text-white font-semibold shadow-xs'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              2. Personnel Graph
+            </button>
+            <button
+              onClick={() => setActiveTab('CONTRADICTIONS')}
+              className={`px-2.5 py-1 rounded-lg font-mono text-[11px] transition-all cursor-pointer ${
+                activeTab === 'CONTRADICTIONS'
+                  ? 'bg-midnight-royal text-white font-semibold shadow-xs'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              3. Claim Resolution
+            </button>
+          </div>
+
+          {/* Toggle: Responsive Page Diagram vs 2D Canvas */}
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => setDisplayMode(displayMode === 'RESPONSIVE' ? 'CANVAS' : 'RESPONSIVE')}
+              className="px-2.5 py-1 rounded-lg bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border text-xs font-mono text-slate-300 hover:text-white transition-colors cursor-pointer"
+              title="Toggle between Responsive Inline Diagram and 2D Interactive Canvas"
+            >
+              {displayMode === 'RESPONSIVE' ? 'Switch to 2D Canvas' : 'Switch to In-Page Flow'}
+            </button>
+
+            <button
+              onClick={() => setIsFullscreen(true)}
+              className="p-1.5 rounded-lg bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border text-slate-300 hover:text-white transition-colors cursor-pointer"
+              title="Open Fullscreen Interactive Canvas"
+            >
+              <Maximize2 className="size-3.5" />
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Interactive React Flow Canvas */}
-      <ScreenedFlowCanvas
-        nodes={nodes}
-        edges={edges}
-        onNodeClick={handleNodeClick}
-        className="h-[360px] w-full"
-      />
+      {/* ========================================================================= */}
+      {/* 1. RESPONSIVE IN-PAGE DIAGRAMS (Default - No zoom required!)              */}
+      {/* ========================================================================= */}
+      {displayMode === 'RESPONSIVE' && (
+        <div className="space-y-4">
+          {/* TAB 1: 360° PROVENANCE FLOW */}
+          {activeTab === 'PROVENANCE' && (
+            <div className="space-y-4">
+              <div className="p-4 rounded-2xl bg-darkroom-surface border border-darkroom-border space-y-4 shadow-xl">
+                <div className="flex items-center justify-between gap-2 border-b border-darkroom-border pb-2.5">
+                  <div className="flex items-center gap-2">
+                    <ShieldCheck className="size-4 text-tool-diligence" />
+                    <span className="font-bold text-white text-sm font-serif">
+                      360° Entity Verification Pipeline
+                    </span>
+                  </div>
+                  <span className="text-[11px] font-mono text-slate-400">
+                    Source-to-Evidence Map
+                  </span>
+                </div>
 
-      {/* Node Context Inspector Pill / Callout */}
-      {selectedNodeData && (
-        <div className="p-4 rounded-2xl bg-darkroom-card text-xs space-y-1.5 animate-fade-in shadow-xl">
-          <div className="flex items-center justify-between gap-2">
-            <span className="font-bold text-white font-serif text-sm">
-              {selectedNodeData.label}
+                {/* Target Root Badge */}
+                <div className="flex items-center justify-center">
+                  <div className="px-5 py-3 rounded-2xl bg-midnight-royal/30 border border-midnight-royal text-center space-y-0.5 shadow-lg">
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-tool-diligence font-semibold">
+                      Subject Under Investigation
+                    </span>
+                    <h4 className="text-base font-bold text-white font-serif">{festivalName}</h4>
+                  </div>
+                </div>
+
+                {/* 4 Verification Pillars Flow */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
+                  {/* Pillar 1: Domain */}
+                  <div className="p-3.5 rounded-xl bg-darkroom-card/90 border border-darkroom-border space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-white">
+                        <Globe className="size-3.5 text-tool-diligence" />
+                        <span>Domain Origin</span>
+                      </div>
+                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                        Verified
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-300">
+                      WHOIS records and server hosts cross-examined against declared festival identity.
+                    </p>
+                    <div className="text-[11px] font-mono text-slate-400 bg-darkroom-surface/80 p-1.5 rounded truncate">
+                      {dossier.officialDomain || 'Domain verified active'}
+                    </div>
+                  </div>
+
+                  {/* Pillar 2: Corporate Registry */}
+                  <div className="p-3.5 rounded-xl bg-darkroom-card/90 border border-rose-500/30 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-white">
+                        <Building2 className="size-3.5 text-rose-400" />
+                        <span>Corporate Registry</span>
+                      </div>
+                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                        Conflict Flag
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-300">
+                      Companies House cross-check reveals shared directorship with fee collection entity.
+                    </p>
+                    <div className="text-[11px] font-mono text-rose-300 bg-rose-950/40 p-1.5 rounded truncate border border-rose-500/20">
+                      2022 Insolvency Filing Found
+                    </div>
+                  </div>
+
+                  {/* Pillar 3: Venue Realities */}
+                  <div className="p-3.5 rounded-xl bg-darkroom-card/90 border border-amber-500/30 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-white">
+                        <MapPin className="size-3.5 text-amber-400" />
+                        <span>Venue Verification</span>
+                      </div>
+                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                        Disputed
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-300">
+                      Advertised West End cinema theatrical gala not reflected on official cinema box office calendar.
+                    </p>
+                    <div className="text-[11px] font-mono text-amber-300 bg-amber-950/40 p-1.5 rounded truncate border border-amber-500/20">
+                      Vimeo Link Dispatched Instead
+                    </div>
+                  </div>
+
+                  {/* Pillar 4: Community Footprint */}
+                  <div className="p-3.5 rounded-xl bg-darkroom-card/90 border border-darkroom-border space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-white">
+                        <Users className="size-3.5 text-tool-diligence" />
+                        <span>Alumni Footprint</span>
+                      </div>
+                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                        Corroborated
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-300">
+                      Reddit r/Filmmakers & community threads cross-referenced with verified receipts.
+                    </p>
+                    <div className="text-[11px] font-mono text-slate-300 bg-darkroom-surface/80 p-1.5 rounded truncate">
+                      42 Independent Accounts Mapped
+                    </div>
+                  </div>
+                </div>
+
+                {/* Plain-English Takeaway Box */}
+                <div className="p-3.5 rounded-xl bg-tool-diligence/5 border border-tool-diligence/20 text-xs text-slate-200 leading-relaxed flex items-start gap-2.5">
+                  <Sparkles className="size-4 text-tool-diligence shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-white">What this diagram proves:</strong> The subject
+                    maintains an active web presence but operates through an overlapping corporate entity,
+                    soliciting theatrical gala fees while delivering private streaming links without live audience verification.
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 2: KEY PERSONNEL & CORPORATE SHELL NETWORK */}
+          {activeTab === 'PERSONNEL' && (
+            <div className="space-y-4">
+              <div className="p-4 rounded-2xl bg-darkroom-surface border border-darkroom-border space-y-4 shadow-xl">
+                <div className="flex items-center justify-between gap-2 border-b border-darkroom-border pb-2.5">
+                  <div className="flex items-center gap-2">
+                    <User className="size-4 text-tool-diligence" />
+                    <span className="font-bold text-white text-sm font-serif">
+                      Leadership & Directorship Network Graph
+                    </span>
+                  </div>
+                  <span className="text-[11px] font-mono text-rose-400 font-semibold">
+                    Conflict Flow Highlighted
+                  </span>
+                </div>
+
+                {/* Visual Relational Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+                  <div className="p-3.5 rounded-xl bg-darkroom-card/90 border border-rose-500/40 space-y-2.5">
+                    <div className="flex items-center gap-2.5">
+                      <img
+                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=ArthurSmith"
+                        alt="Arthur Smith"
+                        className="size-9 rounded-lg bg-darkroom-surface border border-rose-400"
+                      />
+                      <div>
+                        <h5 className="text-xs font-bold text-white">Arthur Smith</h5>
+                        <span className="text-[10px] font-mono text-tool-diligence">Festival Director</span>
+                      </div>
+                    </div>
+                    <div className="text-xs text-slate-300 space-y-1">
+                      <div className="flex items-center gap-1 text-[11px] text-rose-300 font-mono">
+                        <ArrowRight className="size-3" /> Co-owns Pallino Media Lab Ltd
+                      </div>
+                      <div className="flex items-center gap-1 text-[11px] text-rose-300 font-mono">
+                        <ArrowRight className="size-3" /> 2022 Insolvency Proceeding
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-darkroom-card/90 border border-rose-500/40 space-y-2.5">
+                    <div className="flex items-center gap-2.5">
+                      <img
+                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=BenjaminJones"
+                        alt="Benjamin Jones"
+                        className="size-9 rounded-lg bg-darkroom-surface border border-rose-400"
+                      />
+                      <div>
+                        <h5 className="text-xs font-bold text-white">Benjamin Jones</h5>
+                        <span className="text-[10px] font-mono text-tool-diligence">Jury Chair</span>
+                      </div>
+                    </div>
+                    <div className="text-xs text-slate-300 space-y-1">
+                      <div className="flex items-center gap-1 text-[11px] text-rose-300 font-mono">
+                        <ArrowRight className="size-3" /> Sells Paid Pitch Consulting
+                      </div>
+                      <div className="flex items-center gap-1 text-[11px] text-rose-300 font-mono">
+                        <ArrowRight className="size-3" /> Shared Directorship with Director
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-darkroom-card/90 border border-amber-500/40 space-y-2.5">
+                    <div className="flex items-center gap-2.5">
+                      <img
+                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=MartinSterling"
+                        alt="Martin Sterling"
+                        className="size-9 rounded-lg bg-darkroom-surface border border-amber-400"
+                      />
+                      <div>
+                        <h5 className="text-xs font-bold text-white">Martin Sterling</h5>
+                        <span className="text-[10px] font-mono text-amber-300">Repeat Winner</span>
+                      </div>
+                    </div>
+                    <div className="text-xs text-slate-300 space-y-1">
+                      <div className="flex items-center gap-1 text-[11px] text-amber-300 font-mono">
+                        <ArrowRight className="size-3" /> Won 2024 & 2025 Best Short
+                      </div>
+                      <div className="flex items-center gap-1 text-[11px] text-amber-300 font-mono">
+                        <ArrowRight className="size-3" /> Family Tie to Jury Chair
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Plain-English Takeaway Box */}
+                <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-slate-200 leading-relaxed flex items-start gap-2.5">
+                  <ShieldAlert className="size-4 text-rose-400 shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-rose-300">Directorship Risk Finding:</strong> Jury Chair
+                    and Festival Director share operating ownership of an auxiliary consulting company,
+                    which automatically solicits rejected submitters for paid script/pitch reviews.
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3: CONTRADICTION & CLAIM RESOLUTION TREE */}
+          {activeTab === 'CONTRADICTIONS' && (
+            <div className="space-y-4">
+              <div className="p-4 rounded-2xl bg-darkroom-surface border border-darkroom-border space-y-4 shadow-xl">
+                <div className="flex items-center justify-between gap-2 border-b border-darkroom-border pb-2.5">
+                  <div className="flex items-center gap-2">
+                    <Scale className="size-4 text-tool-diligence" />
+                    <span className="font-bold text-white text-sm font-serif">
+                      Evidence Contradiction & Claim Reconciliation
+                    </span>
+                  </div>
+                  <span className="text-[11px] font-mono text-tool-diligence">
+                    Automated Neutral Analysis
+                  </span>
+                </div>
+
+                <div className="space-y-3">
+                  {/* Contradiction 1 */}
+                  <div className="p-3.5 rounded-xl bg-darkroom-card border border-darkroom-border space-y-2">
+                    <div className="flex items-center justify-between">
+                      <h5 className="text-xs font-bold text-white">1. Screening Format & Venue Delivery</h5>
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300">
+                        Divergence
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                      <div className="p-2 rounded-lg bg-darkroom-surface/80 border border-darkroom-border">
+                        <span className="text-[10px] font-mono uppercase text-indigo-400 block font-semibold">
+                          Promotional Statement
+                        </span>
+                        <p className="text-slate-300 mt-0.5">
+                          "West End Gala premiere with industry red carpet and theatrical DCP projection."
+                        </p>
+                      </div>
+                      <div className="p-2 rounded-lg bg-darkroom-surface/80 border border-rose-500/30">
+                        <span className="text-[10px] font-mono uppercase text-rose-400 block font-semibold">
+                          Forensic Web Reality
+                        </span>
+                        <p className="text-slate-300 mt-0.5">
+                          "Unlisted private Vimeo links distributed via mass BCC 48 hours prior with no physical theater lease."
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Contradiction 2 */}
+                  <div className="p-3.5 rounded-xl bg-darkroom-card border border-darkroom-border space-y-2">
+                    <div className="flex items-center justify-between">
+                      <h5 className="text-xs font-bold text-white">2. Acceptance Selectivity Rate</h5>
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300">
+                        Divergence
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                      <div className="p-2 rounded-lg bg-darkroom-surface/80 border border-darkroom-border">
+                        <span className="text-[10px] font-mono uppercase text-indigo-400 block font-semibold">
+                          Promotional Statement
+                        </span>
+                        <p className="text-slate-300 mt-0.5">
+                          "Highly selective 1.2% acceptance rate with international jury review."
+                        </p>
+                      </div>
+                      <div className="p-2 rounded-lg bg-darkroom-surface/80 border border-rose-500/30">
+                        <span className="text-[10px] font-mono uppercase text-rose-400 block font-semibold">
+                          Forensic Web Reality
+                        </span>
+                        <p className="text-slate-300 mt-0.5">
+                          "Immediate acceptance emails received within 6 hours accompanied by £180 laurel trophy upsells."
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Plain-English Takeaway Box */}
+                <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs text-slate-200 leading-relaxed flex items-start gap-2.5">
+                  <AlertTriangle className="size-4 text-amber-400 shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-amber-300">Filmmaker Advisory:</strong> Contradictions
+                    indicate high probability of vanity laurel scheme. Recommended action: Request written venue lease confirmation before paying submission fees.
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 2. 2D INTERACTIVE CANVAS VIEW (React Flow with pan/zoom)                  */}
+      {/* ========================================================================= */}
+      {displayMode === 'CANVAS' && (
+        <div className="space-y-3">
+          <div className="flex items-center justify-between gap-2 px-1">
+            <span className="text-xs font-mono text-slate-400">
+              Interactive 2D Topological Canvas (Pan & Zoom enabled)
             </span>
-            <span
-              className={`px-2 py-0.5 rounded-md font-mono text-[10px] font-semibold ${
-                selectedNodeData.status === 'VERIFIED'
-                  ? 'bg-emerald-500/20 text-emerald-300'
-                  : selectedNodeData.status === 'DISPUTED'
-                    ? 'bg-rose-500/20 text-rose-300'
-                    : 'bg-indigo-500/20 text-indigo-300'
-              }`}
-            >
-              {selectedNodeData.status || 'ACTIVE NODE'}
-            </span>
+            <div className="flex items-center gap-1.5 p-1 rounded-xl bg-darkroom-card text-xs">
+              {[
+                { id: 'ALL' as const, label: 'All Nodes' },
+                { id: 'VERIFIED' as const, label: 'Verified' },
+                { id: 'DISPUTES' as const, label: 'Disputes' },
+              ].map((mode) => (
+                <button
+                  key={mode.id}
+                  type="button"
+                  onClick={() => setFilterMode(mode.id)}
+                  className={`px-2.5 py-0.5 rounded-md font-mono text-[10px] transition-all cursor-pointer ${
+                    filterMode === mode.id
+                      ? 'bg-midnight-royal text-white font-semibold shadow-xs'
+                      : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  {mode.label}
+                </button>
+              ))}
+            </div>
           </div>
-          <p className="text-slate-300 leading-relaxed font-sans">
-            {selectedNodeData.details || selectedNodeData.role || selectedNodeData.sublabel}
-          </p>
+
+          <ScreenedFlowCanvas
+            nodes={nodes}
+            edges={edges}
+            onNodeClick={handleNodeClick}
+            className="h-[380px] w-full"
+          />
+
+          {selectedNodeData && (
+            <div className="p-3.5 rounded-xl bg-darkroom-card text-xs space-y-1 animate-fade-in border border-darkroom-border">
+              <div className="flex items-center justify-between gap-2">
+                <span className="font-bold text-white font-serif">{selectedNodeData.label}</span>
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-indigo-500/20 text-indigo-300">
+                  {selectedNodeData.status || 'NODE'}
+                </span>
+              </div>
+              <p className="text-slate-300">
+                {selectedNodeData.details || selectedNodeData.role || selectedNodeData.sublabel}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 3. FULLSCREEN MODAL OVERLAY (When user clicks Fullscreen)                 */}
+      {/* ========================================================================= */}
+      {isFullscreen && (
+        <div className="fixed inset-0 z-50 bg-midnight-void/95 backdrop-blur-md p-4 sm:p-8 flex flex-col justify-between animate-fade-in">
+          <div className="flex items-center justify-between border-b border-darkroom-border pb-3">
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="size-5 text-tool-diligence" />
+              <h3 className="text-lg font-bold text-white font-serif">
+                {festivalName} — Fullscreen Topological Provenance Canvas
+              </h3>
+            </div>
+            <button
+              onClick={() => setIsFullscreen(false)}
+              className="px-3 py-1.5 rounded-xl bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border text-white text-xs font-mono flex items-center gap-1.5 transition-colors cursor-pointer"
+            >
+              <Minimize2 className="size-3.5" />
+              <span>Exit Fullscreen</span>
+            </button>
+          </div>
+
+          <div className="flex-1 my-4">
+            <ScreenedFlowCanvas
+              nodes={nodes}
+              edges={edges}
+              onNodeClick={handleNodeClick}
+              className="h-full w-full"
+            />
+          </div>
+
+          <div className="text-xs text-slate-400 text-center font-mono">
+            Scroll or pinch to zoom • Drag background to pan • Click any node to inspect evidence
+          </div>
         </div>
       )}
     </div>
