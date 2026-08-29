@@ -137,7 +137,7 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
         }}
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
-        className="relative flex flex-col sm:flex-row items-stretch sm:items-center rounded-2xl sm:rounded-3xl bg-darkroom-surface shadow-2xl transition-all duration-300 p-2.5 sm:p-4 gap-2 sm:gap-3 border border-zinc-700/50 hover-soft-pulse"
+        className="relative flex items-center rounded-2xl sm:rounded-3xl bg-darkroom-surface shadow-2xl transition-all duration-300 p-2 sm:p-4 gap-2 sm:gap-3 border border-zinc-700/50 hover-soft-pulse"
       >
         <input
           type="file"
@@ -171,14 +171,15 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
           />
         </div>
 
-        <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
+          {/* Desktop Only: Inside the input prompt bar */}
           <button
             type="button"
             onClick={() => {
               soundEffects.playClick();
               setIsCapabilitiesModalOpen(true);
             }}
-            className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3.5 sm:px-4 py-2.5 sm:py-3 h-10 sm:h-12 rounded-xl sm:rounded-2xl border border-zinc-700 bg-midnight/80 hover:bg-surface text-xs sm:text-sm font-mono text-zinc-300 hover:text-white hover:border-blue-500/50 transition-colors cursor-pointer"
+            className="hidden sm:flex items-center justify-center gap-1.5 px-3.5 sm:px-4 py-2.5 sm:py-3 h-10 sm:h-12 rounded-xl sm:rounded-2xl border border-zinc-700 bg-midnight/80 hover:bg-surface text-xs sm:text-sm font-mono text-zinc-300 hover:text-white hover:border-blue-500/50 transition-colors cursor-pointer shrink-0"
           >
             <HelpCircle className="size-3.5 sm:size-4 text-blue-400" />
             <span className="inline">what can I ask</span>
@@ -212,6 +213,21 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
           </button>
         </div>
       </form>
+
+      {/* Mobile Only: Placed outside the input container, right above 'leave feedback' */}
+      <div className="flex sm:hidden items-center justify-center pt-2 pb-0.5 select-none">
+        <button
+          type="button"
+          onClick={() => {
+            soundEffects.playClick();
+            setIsCapabilitiesModalOpen(true);
+          }}
+          className="inline-flex items-center gap-1.5 text-xs font-mono text-blue-400 hover:text-blue-300 transition-colors cursor-pointer hover:underline"
+        >
+          <HelpCircle className="size-3.5 text-blue-400" />
+          <span>what can I ask</span>
+        </button>
+      </div>
 
       <CapabilitiesModal
         isOpen={isCapabilitiesModalOpen}
