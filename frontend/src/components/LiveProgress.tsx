@@ -551,11 +551,12 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
 
           <div className="p-4 sm:p-5 max-h-60 overflow-y-auto space-y-2.5 text-xs font-mono bg-darkroom-bg/60">
             {events.map((evt, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-start gap-2.5 leading-relaxed hover:bg-darkroom-surface/40 p-1 rounded-lg transition-colors"
-                >
-                  <span className="text-slate-400 text-[11px] shrink-0 pt-0.5 font-mono">
+              <div
+                key={idx}
+                className="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-2.5 leading-relaxed hover:bg-darkroom-surface/40 p-2 sm:p-1 rounded-lg transition-colors border-b sm:border-b-0 border-darkroom-border/30 last:border-b-0"
+              >
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-slate-400 text-[11px] font-mono">
                     {evt.timestamp
                       ? new Date(evt.timestamp).toLocaleTimeString([], {
                           hour: '2-digit',
@@ -564,12 +565,13 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
                         })
                       : ''}
                   </span>
-                  <span className="text-tool-diligence font-semibold shrink-0">
+                  <span className="text-tool-diligence font-semibold text-xs">
                     [{evt.agentName}]
                   </span>
-                  <span className="text-slate-200 flex-1 break-words">{evt.message}</span>
                 </div>
-              ))}
+                <span className="text-slate-200 text-xs flex-1 break-words">{evt.message}</span>
+              </div>
+            ))}
             <div ref={eventsEndRef} />
           </div>
         </div>
