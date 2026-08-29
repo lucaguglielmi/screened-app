@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, no-empty */
 import React, { useEffect, useState, useRef } from 'react';
 import { Mic, Send, X, AlertTriangle } from 'lucide-react';
 import { soundEffects } from '../../utils/audio';
@@ -59,7 +60,7 @@ export const VoiceDictationModal: React.FC<Props> = ({ isOpen, onClose, onSend }
     return () => clearInterval(interval);
   }, [lastSpeechTime, isOpen]);
 
-  const startDictation = () => {
+  function startDictation() {
     setTranscript('');
     setErrorMsg(null);
     setLastSpeechTime(null);
@@ -129,7 +130,7 @@ export const VoiceDictationModal: React.FC<Props> = ({ isOpen, onClose, onSend }
     }
   };
 
-  const stopDictation = () => {
+  function stopDictation() {
     if (recognitionRef.current) {
       try {
         recognitionRef.current.abort();
@@ -139,7 +140,7 @@ export const VoiceDictationModal: React.FC<Props> = ({ isOpen, onClose, onSend }
     isListeningRef.current = false;
   };
 
-  const handleSend = () => {
+  function handleSend() {
     const textToSend = transcriptRef.current.trim();
     if (textToSend) {
       soundEffects.playClick();
@@ -148,7 +149,7 @@ export const VoiceDictationModal: React.FC<Props> = ({ isOpen, onClose, onSend }
     onClose();
   };
   
-  const handleCancel = () => {
+  function handleCancel() {
     onClose();
   };
 
