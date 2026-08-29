@@ -1,12 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Sparkles,
   ShieldCheck,
-  Compass,
-  Palette,
-  Layers,
-  GripVertical,
-  Check,
+  Coins,
   Scale,
   Radio,
 } from 'lucide-react';
@@ -25,44 +21,11 @@ interface Props {
 }
 
 export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
-  const [isProductMenuOpen, setIsProductMenuOpen] = useState(false);
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
-  const flyoutRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLButtonElement>(null);
-
-  // Close flyout on outside click
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        flyoutRef.current &&
-        !flyoutRef.current.contains(event.target as Node) &&
-        triggerRef.current &&
-        !triggerRef.current.contains(event.target as Node)
-      ) {
-        setIsProductMenuOpen(false);
-      }
-    };
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setIsProductMenuOpen(false);
-      }
-    };
-
-    if (isProductMenuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      document.addEventListener('keydown', handleKeyDown);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isProductMenuOpen]);
 
   const handleSelectTool = (tool: ActiveTool) => {
     soundEffects.playClick();
     onChange(tool);
-    setIsProductMenuOpen(false);
   };
 
   return (
@@ -81,81 +44,104 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
         </button>
       </div>
 
-      {/* Center Section: Navigation Rail Icons (Only First and Last Icon Stacked) */}
+      {/* Center Section: Direct 3-Pillar Navigation Icons */}
       <div className="flex flex-col items-center gap-3.5 w-full my-auto">
-        {/* 1. First Icon: Mission Control (Sparkles) */}
+        {/* 1. The Producer Desk */}
         <div className="relative">
           <button
             onClick={() => handleSelectTool('CONVERSATIONAL_DESK')}
-            onMouseEnter={() => setActiveTooltip('Mission Control')}
+            onMouseEnter={() => setActiveTooltip('The Producer Desk')}
             onMouseLeave={() => setActiveTooltip(null)}
             className={`relative p-3 rounded-2xl transition-all cursor-pointer ${
               activeTool === 'CONVERSATIONAL_DESK'
                 ? 'bg-darkroom-card text-tool-diligence shadow-lg shadow-[var(--color-tool-diligence)]/20 ring-1 ring-tool-diligence/50 border border-tool-diligence/40'
                 : 'hover:bg-darkroom-surface text-slate-400 hover:text-slate-100'
             }`}
-            title="Mission Control"
+            title="The Producer Desk"
           >
             <Sparkles className="size-5" />
             {activeTool === 'CONVERSATIONAL_DESK' && (
               <span className="absolute -right-1 -top-1 size-2.5 rounded-full bg-tool-diligence ring-2 ring-darkroom-bg" />
             )}
           </button>
-          {activeTooltip === 'Mission Control' && (
+          {activeTooltip === 'The Producer Desk' && (
             <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-darkroom-surface text-slate-100 text-sm font-medium whitespace-nowrap shadow-xl border border-darkroom-border z-50 pointer-events-none">
-              Mission Control (Main AI Interface)
+              The Producer Desk (AI Research Hub)
             </div>
           )}
         </div>
 
-        {/* 2. Last Icon: Products & Workspaces Flyout Trigger (Layers) */}
+        {/* 2. Festival Due Diligence */}
         <div className="relative">
           <button
-            ref={triggerRef}
-            onClick={() => {
-              soundEffects.playClick();
-              setIsProductMenuOpen(!isProductMenuOpen);
-            }}
-            onMouseEnter={() => setActiveTooltip('Products')}
+            onClick={() => handleSelectTool('DUE_DILIGENCE')}
+            onMouseEnter={() => setActiveTooltip('Festival Due Diligence')}
             onMouseLeave={() => setActiveTooltip(null)}
             className={`relative p-3 rounded-2xl transition-all cursor-pointer ${
-              isProductMenuOpen || activeTool !== 'CONVERSATIONAL_DESK'
-                ? 'bg-darkroom-card text-tool-diligence border border-tool-diligence/60 shadow-md ring-1 ring-tool-diligence/40'
+              activeTool === 'DUE_DILIGENCE'
+                ? 'bg-darkroom-card text-tool-diligence shadow-lg shadow-[var(--color-tool-diligence)]/20 ring-1 ring-tool-diligence/50 border border-tool-diligence/40'
                 : 'hover:bg-darkroom-surface text-slate-400 hover:text-slate-100'
             }`}
-            title="Products & Workspaces"
+            title="Festival Due Diligence"
           >
-            <Layers className="size-5" />
-            <span className="absolute -right-0.5 -top-0.5 size-2.5 rounded-full bg-tool-diligence ring-2 ring-darkroom-bg" />
+            <ShieldCheck className="size-5" />
+            {activeTool === 'DUE_DILIGENCE' && (
+              <span className="absolute -right-1 -top-1 size-2.5 rounded-full bg-tool-diligence ring-2 ring-darkroom-bg" />
+            )}
           </button>
-          {activeTooltip === 'Products' && !isProductMenuOpen && (
+          {activeTooltip === 'Festival Due Diligence' && (
             <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-darkroom-surface text-slate-100 text-sm font-medium whitespace-nowrap shadow-xl border border-darkroom-border z-50 pointer-events-none">
-              Products & Workspaces
+              Festival Due Diligence (Forensic Dossier)
+            </div>
+          )}
+        </div>
+
+        {/* 3. Grant & Funding Research */}
+        <div className="relative">
+          <button
+            onClick={() => handleSelectTool('GRANT_SCOUT')}
+            onMouseEnter={() => setActiveTooltip('Grant & Funding Research')}
+            onMouseLeave={() => setActiveTooltip(null)}
+            className={`relative p-3 rounded-2xl transition-all cursor-pointer ${
+              activeTool === 'GRANT_SCOUT'
+                ? 'bg-darkroom-card text-tool-diligence shadow-lg shadow-[var(--color-tool-diligence)]/20 ring-1 ring-tool-diligence/50 border border-tool-diligence/40'
+                : 'hover:bg-darkroom-surface text-slate-400 hover:text-slate-100'
+            }`}
+            title="Grant & Funding Research"
+          >
+            <Coins className="size-5" />
+            {activeTool === 'GRANT_SCOUT' && (
+              <span className="absolute -right-1 -top-1 size-2.5 rounded-full bg-tool-diligence ring-2 ring-darkroom-bg" />
+            )}
+          </button>
+          {activeTooltip === 'Grant & Funding Research' && (
+            <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-darkroom-surface text-slate-100 text-sm font-medium whitespace-nowrap shadow-xl border border-darkroom-border z-50 pointer-events-none">
+              Grant & Funding Research (Public Funds Match)
             </div>
           )}
         </div>
       </div>
 
-      {/* Bottom Section: Utility Controls (Playground only) */}
+      {/* Bottom Section: Why Screened & Deployment Status */}
       <div className="flex flex-col items-center gap-3 w-full pt-2">
-        {/* Component Design Playground */}
+        {/* Why Screened Link */}
         <div className="relative">
           <button
-            onClick={() => handleSelectTool('DESIGN_PLAYGROUND')}
-            onMouseEnter={() => setActiveTooltip('Design Playground')}
+            onClick={() => handleSelectTool('WHY_SCREENED')}
+            onMouseEnter={() => setActiveTooltip('Why Screened Exists')}
             onMouseLeave={() => setActiveTooltip(null)}
             className={`p-2.5 rounded-xl transition-all cursor-pointer ${
-              activeTool === 'DESIGN_PLAYGROUND'
-                ? 'bg-tool-diligence text-slate-950 shadow-lg shadow-[var(--color-tool-diligence)]/30 font-bold'
-                : 'hover:bg-darkroom-surface text-slate-400 hover:text-tool-diligence'
+              activeTool === 'WHY_SCREENED'
+                ? 'bg-darkroom-card text-tool-diligence border border-tool-diligence/40'
+                : 'hover:bg-darkroom-surface text-slate-500 hover:text-slate-300'
             }`}
-            title="Design Playground"
+            title="Why Screened Exists"
           >
-            <Palette className="size-4.5" />
+            <Scale className="size-4.5" />
           </button>
-          {activeTooltip === 'Design Playground' && (
+          {activeTooltip === 'Why Screened Exists' && (
             <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-darkroom-surface text-slate-100 text-sm font-medium whitespace-nowrap shadow-xl border border-darkroom-border z-50 pointer-events-none">
-              Design Playground
+              Why Screened Exists (Baseline Matrix)
             </div>
           )}
         </div>
@@ -177,7 +163,7 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
                 ? __COMMIT_SHA__.slice(0, 6)
                 : typeof __APP_VERSION__ !== 'undefined'
                 ? `v${__APP_VERSION__}`
-                : 'v0.1'}
+                : 'v0.2'}
             </span>
           </div>
           {activeTooltip === 'Live Deployment' && (
@@ -187,12 +173,12 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
                 <span>Live Deployment</span>
               </div>
               <div className="text-[11px] text-slate-300 mt-1">
-                Version: <span className="text-white font-bold">{typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : '0.1.0'}</span>
+                Version: <span className="text-white font-bold">{typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : '0.2.0'}</span>
               </div>
               <div className="text-[11px] text-slate-400 mt-0.5">
                 Commit:{' '}
                 <span className="text-tool-diligence font-bold">
-                  {typeof __COMMIT_SHA__ !== 'undefined' ? __COMMIT_SHA__ : 'dev'}
+                  {typeof __COMMIT_SHA__ !== 'undefined' ? __COMMIT_SHA__ : 'production'}
                 </span>
               </div>
               <div className="text-[10px] text-slate-500 mt-0.5">
@@ -202,115 +188,13 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
                       dateStyle: 'short',
                       timeStyle: 'short',
                     })
-                  : 'local'}
+                  : 'live'}
               </div>
             </div>
           )}
         </div>
       </div>
-
-      {/* ========================================================================= */}
-      {/* EXPANDABLE FLOATING PRODUCT FLYOUT */}
-      {/* ========================================================================= */}
-      {isProductMenuOpen && (
-        <div
-          ref={flyoutRef}
-          className="absolute left-[72px] sm:left-[88px] top-1/2 -translate-y-1/2 w-88 p-3 rounded-3xl bg-darkroom-surface/95 backdrop-blur-xl border border-tool-diligence/30 shadow-2xl shadow-black/90 space-y-2 z-50 animate-in fade-in zoom-in-95 duration-150"
-        >
-          <div className="px-3 py-2 border-b border-darkroom-border flex items-center justify-between">
-            <span className="text-xs font-mono font-semibold tracking-wider text-slate-400 uppercase">
-              Select Workspace
-            </span>
-            <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-tool-diligence/15 text-tool-diligence border border-tool-diligence/30">
-              2 Products
-            </span>
-          </div>
-
-          {/* Product 1: Due Diligence (Mint / Emerald Teal) */}
-          <button
-            onClick={() => handleSelectTool('DUE_DILIGENCE')}
-            className={`w-full p-3 rounded-2xl flex items-center gap-3.5 transition-all text-left group cursor-pointer ${
-              activeTool === 'DUE_DILIGENCE'
-                ? 'bg-darkroom-card border border-tool-diligence/50 shadow-inner'
-                : 'hover:bg-darkroom-card border border-transparent'
-            }`}
-          >
-            <GripVertical className="size-4 text-slate-600 group-hover:text-slate-400 shrink-0" />
-
-            <div className="size-11 rounded-2xl bg-gradient-to-tr from-tool-diligence to-tool-diligence-hover flex items-center justify-center text-slate-950 shadow-lg shadow-[var(--color-tool-diligence)]/30 shrink-0 group-hover:scale-105 transition-transform">
-              <ShieldCheck className="size-6 text-slate-950" />
-            </div>
-
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between">
-                <h4 className="text-base font-semibold text-white group-hover:text-tool-diligence transition-colors">
-                  Due Diligence
-                </h4>
-                {activeTool === 'DUE_DILIGENCE' && (
-                  <Check className="size-4 text-tool-diligence shrink-0" />
-                )}
-              </div>
-              <p className="text-sm text-slate-400 line-clamp-1">
-                Multi-agent cinema investigation & dossier
-              </p>
-            </div>
-          </button>
-
-          {/* Product 2: Opportunity Scout */}
-          <button
-            onClick={() => handleSelectTool('OPPORTUNITY_SCOUT')}
-            className={`w-full p-3 rounded-2xl flex items-center gap-3.5 transition-all text-left group cursor-pointer ${
-              activeTool === 'OPPORTUNITY_SCOUT'
-                ? 'bg-darkroom-card border border-tool-diligence/50 shadow-inner'
-                : 'hover:bg-darkroom-card border border-transparent'
-            }`}
-          >
-            <GripVertical className="size-4 text-slate-600 group-hover:text-slate-400 shrink-0" />
-
-            <div className="size-11 rounded-2xl bg-gradient-to-tr from-tool-diligence to-tool-diligence-hover flex items-center justify-center text-slate-950 shadow-lg shadow-[var(--color-tool-diligence)]/30 shrink-0 group-hover:scale-105 transition-transform">
-              <Compass className="size-6 text-slate-950" />
-            </div>
-
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between">
-                <h4 className="text-base font-semibold text-white group-hover:text-tool-diligence transition-colors">
-                  Opportunity Scout
-                </h4>
-                {activeTool === 'OPPORTUNITY_SCOUT' && (
-                  <Check className="size-4 text-tool-diligence shrink-0" />
-                )}
-              </div>
-              <p className="text-sm text-slate-400 line-clamp-1">
-                Slate distribution & festival matching
-              </p>
-            </div>
-          </button>
-
-          {/* Simple Footer Links */}
-          <div className="pt-4 mt-2 border-t border-darkroom-border flex flex-col gap-3 px-1">
-            <button
-              onClick={() => handleSelectTool('CONVERSATIONAL_DESK')}
-              className="flex items-center justify-between text-xs font-mono text-slate-400 hover:text-tool-diligence transition-colors cursor-pointer group"
-            >
-              <div className="flex items-center gap-2">
-                <Sparkles className="size-3.5 group-hover:text-tool-diligence" />
-                <span>back to main chat</span>
-              </div>
-              <span className="text-[10px] text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity">Esc</span>
-            </button>
-            
-            <button
-              onClick={() => handleSelectTool('WHY_SCREENED')}
-              className="flex items-center justify-between text-xs font-mono text-slate-400 hover:text-tool-diligence transition-colors cursor-pointer group"
-            >
-              <div className="flex items-center gap-2">
-                <Scale className="size-3.5 group-hover:text-tool-diligence" />
-                <span>why screened exists</span>
-              </div>
-            </button>
-          </div>
-        </div>
-      )}
     </aside>
   );
 };
+

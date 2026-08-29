@@ -20,6 +20,7 @@ export type ApprovalStatus = 'PENDING_APPROVAL' | 'APPROVED' | 'REJECTED' | 'EXE
 export type ActiveTool =
   | 'CONVERSATIONAL_DESK'
   | 'DUE_DILIGENCE'
+  | 'GRANT_SCOUT'
   | 'OPPORTUNITY_SCOUT'
   | 'DESIGN_PLAYGROUND'
   | 'WHY_SCREENED'
@@ -223,6 +224,44 @@ export interface ScoutResponse {
   strategySummary: string;
   durationSeconds: number;
 }
+
+export interface GrantOpportunity {
+  id: string;
+  title: string;
+  fundingBody: string;
+  category: string;
+  amountRange: string;
+  deadlineDate?: string;
+  deadlineLabel: string;
+  eligibleStages: string[];
+  eligibleRegions: string[];
+  eligibleFormats: string[];
+  keyCriteria: string[];
+  guidelinesUrl?: string;
+  applicationPortalUrl?: string;
+  fitScore: number;
+  fitRationale: string;
+}
+
+export interface GrantScoutRequest {
+  projectTitle: string;
+  format: FilmFormat;
+  genre: string;
+  productionStage: string;
+  budgetTier: string;
+  fundingNeeded: string;
+  filmmakerRegion: string;
+  targetGrantTypes?: string[];
+}
+
+export interface GrantScoutResponse {
+  projectTitle: string;
+  grantsFound: number;
+  grants: GrantOpportunity[];
+  strategySummary: string;
+  durationSeconds: number;
+}
+
 
 export interface ActivityEvent {
   id: string;

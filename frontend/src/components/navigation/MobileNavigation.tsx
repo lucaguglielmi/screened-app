@@ -5,8 +5,7 @@ import {
   X,
   Sparkles,
   ShieldCheck,
-  Compass,
-  Palette,
+  Coins,
   Volume2,
   VolumeX,
   Search,
@@ -191,37 +190,37 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                   </div>
                 </button>
 
-                {/* 3. Opportunity Scout */}
+                {/* 3. Grant Research */}
                 <button
                   type="button"
-                  onClick={() => handleSelect('OPPORTUNITY_SCOUT')}
+                  onClick={() => handleSelect('GRANT_SCOUT')}
                   className={`w-full p-3.5 rounded-2xl flex items-center gap-3.5 transition-all text-left cursor-pointer ${
-                    activeTool === 'OPPORTUNITY_SCOUT'
+                    activeTool === 'GRANT_SCOUT'
                       ? 'bg-darkroom-card border border-tool-diligence/80 text-white shadow-lg shadow-[var(--color-tool-diligence)]/20'
                       : 'bg-darkroom-surface hover:bg-darkroom-card border border-darkroom-border text-slate-300'
                   }`}
                 >
                   <div className="size-10 rounded-xl bg-gradient-to-tr from-tool-diligence to-tool-diligence-hover flex items-center justify-center text-slate-950 shadow-md shrink-0">
-                    <Compass className="size-5 text-slate-950" />
+                    <Coins className="size-5 text-slate-950" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <h4 className="text-base font-bold text-white">Opportunity Scout</h4>
-                      {activeTool === 'OPPORTUNITY_SCOUT' && (
+                      <h4 className="text-base font-bold text-white">Grant Research</h4>
+                      {activeTool === 'GRANT_SCOUT' && (
                         <Check className="size-4 text-tool-diligence" />
                       )}
                     </div>
                     <p className="text-xs text-slate-400 line-clamp-1">
-                      Slate Strategy & Circuit Match
+                      Public Funds, Lottery & Subsidies
                     </p>
                   </div>
                 </button>
               </div>
 
-              {/* Subtle Secondary Links (Why Screened & Design Playground) */}
+              {/* Secondary Reference Link */}
               <div className="mt-6 pt-4 border-t border-zinc-800/80 space-y-2">
                 <span className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-500 px-1 block">
-                  Reference & Design
+                  Reference
                 </span>
 
                 <button
@@ -235,23 +234,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                 >
                   <div className="flex items-center space-x-2">
                     <Scale className="w-4 h-4 text-zinc-500" />
-                    <span>Why Screened (Problem & Empirical Matrix)</span>
-                  </div>
-                  <ExternalLink className="w-3.5 h-3.5 opacity-60" />
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => handleSelect('DESIGN_PLAYGROUND')}
-                  className={`w-full px-3 py-2 rounded-xl flex items-center justify-between text-xs font-medium transition-colors ${
-                    activeTool === 'DESIGN_PLAYGROUND'
-                      ? 'text-tool-diligence bg-tool-diligence/10 font-semibold'
-                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
-                  }`}
-                >
-                  <div className="flex items-center space-x-2">
-                    <Palette className="w-4 h-4 text-zinc-500" />
-                    <span>Design Playground & Tracing Lab</span>
+                    <span>Why Screened (Baseline & Impact Matrix)</span>
                   </div>
                   <ExternalLink className="w-3.5 h-3.5 opacity-60" />
                 </button>

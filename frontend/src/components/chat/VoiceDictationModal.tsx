@@ -58,6 +58,7 @@ export const VoiceDictationModal: React.FC<Props> = ({ isOpen, onClose, onSend }
     }, 50);
     
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lastSpeechTime, isOpen]);
 
   function startDictation() {

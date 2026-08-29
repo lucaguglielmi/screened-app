@@ -10,7 +10,7 @@ export type AnalyticsEvent =
   | {
       event: 'deep_screen_launched';
       params: {
-        source_tool: 'chat' | 'scout' | 'command_palette';
+        source_tool: 'chat' | 'scout' | 'command_palette' | 'grant_scout';
         query_length: number;
         target_provided: boolean;
       };

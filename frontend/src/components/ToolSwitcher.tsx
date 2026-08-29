@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActiveTool } from '../types/investigation';
-import { ShieldCheck, Compass, Sparkles, Palette } from 'lucide-react';
+import { ShieldCheck, Coins, Sparkles } from 'lucide-react';
 import { soundEffects } from '../utils/audio';
 
 interface Props {
@@ -45,32 +45,19 @@ export const ToolSwitcher: React.FC<Props> = ({ activeTool, onChange }) => {
         <span>Due Diligence</span>
       </button>
 
-      {/* Opportunity Scout */}
+      {/* Grant & Funding Research */}
       <button
-        onClick={() => handleSwitch('OPPORTUNITY_SCOUT')}
+        onClick={() => handleSwitch('GRANT_SCOUT')}
         className={`px-3 sm:px-4 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
-          activeTool === 'OPPORTUNITY_SCOUT'
+          activeTool === 'GRANT_SCOUT'
             ? 'bg-darkroom-surface text-tool-diligence shadow-xs font-bold border border-tool-diligence/30'
             : 'text-slate-400 hover:text-white'
         }`}
       >
-        <Compass className="size-3.5 text-tool-diligence" />
-        <span>Opportunity Scout</span>
-      </button>
-
-      {/* Design Playground */}
-      <button
-        onClick={() => handleSwitch('DESIGN_PLAYGROUND')}
-        title="Interactive Component Studio & Visual Playground"
-        className={`px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
-          activeTool === 'DESIGN_PLAYGROUND'
-            ? 'bg-darkroom-surface text-tool-diligence shadow-xs font-bold border border-tool-diligence/30'
-            : 'text-slate-400 hover:text-white'
-        }`}
-      >
-        <Palette className="size-3.5 text-tool-diligence" />
-        <span className="hidden md:inline">Playground</span>
+        <Coins className="size-3.5 text-tool-diligence" />
+        <span>Grant Research</span>
       </button>
     </div>
   );
 };
+

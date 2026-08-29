@@ -34,8 +34,7 @@ import { HistorySidebar } from './components/HistorySidebar';
 import { lazyWithRetry } from './utils/lazyWithRetry';
 
 const EvidenceDossier = lazyWithRetry(() => import('./components/EvidenceDossier').then(m => ({ default: m.EvidenceDossier })));
-const OpportunityScout = lazyWithRetry(() => import('./components/OpportunityScout').then(m => ({ default: m.OpportunityScout })));
-const DesignPlayground = lazyWithRetry(() => import('./components/playground/DesignPlayground').then(m => ({ default: m.DesignPlayground })));
+const GrantScout = lazyWithRetry(() => import('./components/GrantScout').then(m => ({ default: m.GrantScout })));
 const EntityConfirmation = lazyWithRetry(() => import('./components/EntityConfirmation').then(m => ({ default: m.EntityConfirmation })));
 import { VectorFieldBackground } from './components/animations/VectorFieldBackground';
 import { AnimatedEE } from './components/animations/AnimatedEE';
@@ -309,7 +308,7 @@ export default function App() {
 
   const handleStartInvestigation = async (
     subjectQuery: string,
-    entryPoint: 'search_form' | 'starter_chip' | 'command_palette' | 'chat_deep_screen' | 'scout_deep_screen' | 'command_palette_deep_screen'
+    entryPoint: 'search_form' | 'starter_chip' | 'command_palette' | 'chat_deep_screen' | 'scout_deep_screen' | 'command_palette_deep_screen' | 'grant_scout_deep_screen'
   ) => {
     if (!subjectQuery.trim()) return;
     setLoading(true);
@@ -318,7 +317,7 @@ export default function App() {
     saveRecentSearch(subjectQuery.trim());
     
     if (entryPoint.endsWith('_deep_screen')) {
-      const sourceTool = entryPoint.replace('_deep_screen', '') as 'chat' | 'scout' | 'command_palette';
+      const sourceTool = entryPoint.replace('_deep_screen', '') as 'chat' | 'scout' | 'command_palette' | 'grant_scout';
       track('deep_screen_launched', {
         source_tool: sourceTool,
         query_length: subjectQuery.trim().length,
@@ -461,7 +460,7 @@ export default function App() {
     setActiveTool('CONVERSATIONAL_DESK');
   };
 
-  const handleDeepScreen = (festivalName: string, sourceTool: 'chat' | 'scout' | 'command_palette') => {
+  const handleDeepScreen = (festivalName: string, sourceTool: 'chat' | 'scout' | 'command_palette' | 'grant_scout') => {
     setInvestigation(null);
     setEvents([]);
     setError(null);
@@ -472,7 +471,8 @@ export default function App() {
     const entryPoint = `${sourceTool}_deep_screen` as
       | 'chat_deep_screen'
       | 'scout_deep_screen'
-      | 'command_palette_deep_screen';
+      | 'command_palette_deep_screen'
+      | 'grant_scout_deep_screen';
     handleStartInvestigation(festivalName, entryPoint);
   };
 
@@ -619,34 +619,27 @@ export default function App() {
             <ChatContainer
               onLaunchDueDiligence={(q) => handleDeepScreen(q, 'chat')}
               onLaunchOpportunityScout={handleScoutLaunch}
-              onNavigateToPlaygroundFeedback={() => setActiveTool('DESIGN_PLAYGROUND')}
+              onNavigateToPlaygroundFeedback={() => setActiveTool('WHY_SCREENED')}
               onOpenKeyboardHelp={() => setIsKeyboardHelpOpen(true)}
             />
           )}
 
-          {/* View 2: Design Playground */}
-          {activeTool === 'DESIGN_PLAYGROUND' && (
-            <Suspense fallback={<div className="p-8 text-center text-slate-500">Loading Playground...</div>}>
-              <DesignPlayground />
-            </Suspense>
-          )}
-
-          {/* View 3: Opportunity Scout */}
-          {activeTool === 'OPPORTUNITY_SCOUT' && (
-            <Suspense fallback={<div className="p-8 text-center text-slate-500">Loading Scout...</div>}>
-              <OpportunityScout
-                onDeepScreen={(q: string) => handleDeepScreen(q, 'scout')}
-                initialProfile={initialScoutProfile}
+          {/* View 2: Grant & Funding Research (First-Class Workspace) */}
+          {(activeTool === 'GRANT_SCOUT' || activeTool === 'OPPORTUNITY_SCOUT') && (
+            <Suspense fallback={<div className="p-8 text-center text-slate-500">Loading Grant Research...</div>}>
+              <GrantScout
+                initialTitle={initialScoutProfile?.title || 'Untitled Cinema Project'}
+                onNavigateToDueDiligence={(q: string) => handleDeepScreen(q, 'grant_scout')}
               />
             </Suspense>
           )}
 
-          {/* View 4: Why Screened Exists */}
+          {/* View 3: Why Screened Exists */}
           {activeTool === 'WHY_SCREENED' && (
             <WhyScreened
               onNavigateToDesk={() => setActiveTool('CONVERSATIONAL_DESK')}
               onNavigateToDiligence={() => setActiveTool('DUE_DILIGENCE')}
-              onNavigateToScout={() => setActiveTool('OPPORTUNITY_SCOUT')}
+              onNavigateToScout={() => setActiveTool('GRANT_SCOUT')}
               onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
             />
           )}

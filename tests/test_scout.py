@@ -45,3 +45,31 @@ def test_scout_api_endpoint():
     assert "strategySummary" in data
     assert data["filmTitle"] == "Neon Horizons"
     assert isinstance(data["opportunities"], list)
+
+
+def test_grant_scout_api_endpoint():
+    payload = {
+        "projectTitle": "The Last Reel",
+        "format": "FEATURE",
+        "genre": "Drama",
+        "productionStage": "Production",
+        "budgetTier": "Low (< £250k)",
+        "fundingNeeded": "£50,000",
+        "filmmakerRegion": "UK & Europe",
+        "targetGrantTypes": ["Production Support"],
+    }
+    response = client.post("/api/grants/scout", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert "grants" in data
+    assert "strategySummary" in data
+    assert data["projectTitle"] == "The Last Reel"
+    assert isinstance(data["grants"], list)
+    assert data["grantsFound"] >= 1
+    # Verify structure of grant item
+    first_grant = data["grants"][0]
+    assert "title" in first_grant
+    assert "fundingBody" in first_grant
+    assert "amountRange" in first_grant
+    assert "fitScore" in first_grant
+

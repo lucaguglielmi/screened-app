@@ -30,6 +30,8 @@ from backend.models import (
     SourceRecord,
     ScoutRequest,
     ScoutResponse,
+    GrantScoutRequest,
+    GrantScoutResponse,
     TestPipelineRequest,
     TestPipelineResponse,
     ChatRequest,
@@ -514,6 +516,19 @@ async def scout_festival_opportunities(req: ScoutRequest, request: Request):
     except Exception as e:
         logger.exception(f"Opportunity scout failed: {e}")
         raise HTTPException(status_code=500, detail="Internal server error during opportunity scouting")
+
+
+@app.post("/api/grants/scout", response_model=GrantScoutResponse)
+@limiter.limit("10/minute")
+async def scout_film_grants(req: GrantScoutRequest, request: Request):
+    """Discover institutional public film funds, grants, and regional production support."""
+    try:
+        response = await opportunity_scout.scout_grants(req)
+        return response
+    except Exception as e:
+        logger.exception(f"Grant scout failed: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error during grant scouting")
+
 
 
 # --- Milestone M3: Sandbox Outreach & Action Approval Endpoints ---

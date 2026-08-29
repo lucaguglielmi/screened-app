@@ -3,8 +3,7 @@ import {
   Search,
   Sparkles,
   ShieldCheck,
-  Compass,
-  Palette,
+  Coins,
   Scale,
   ArrowRight,
   Command,
@@ -44,7 +43,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   const navItems = [
     {
       id: 'desk',
-      label: 'Mission Control (Main AI Interface)',
+      label: 'The Producer Desk (Conversational Hub)',
       category: 'Workspaces',
       icon: Sparkles,
       iconColor: 'text-tool-diligence',
@@ -55,7 +54,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     },
     {
       id: 'diligence',
-      label: 'Due Diligence (Cinema Investigation)',
+      label: 'Festival Due Diligence (Forensic Dossier)',
       category: 'Workspaces',
       icon: ShieldCheck,
       iconColor: 'text-tool-diligence',
@@ -65,13 +64,13 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       },
     },
     {
-      id: 'scout',
-      label: 'Opportunity Scout (Slate Matching)',
+      id: 'grants',
+      label: 'Grant & Funding Research (Public Funds & Lottery)',
       category: 'Workspaces',
-      icon: Compass,
+      icon: Coins,
       iconColor: 'text-tool-diligence',
       action: () => {
-        onSelectTool('OPPORTUNITY_SCOUT');
+        onSelectTool('GRANT_SCOUT');
         onClose();
       },
     },
@@ -94,17 +93,6 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       iconColor: 'text-tool-diligence',
       action: () => {
         onSelectTool('HOW_TO_USE');
-        onClose();
-      },
-    },
-    {
-      id: 'tokens',
-      label: 'Design Playground',
-      category: 'Design Playground',
-      icon: Palette,
-      iconColor: 'text-tool-diligence',
-      action: () => {
-        onSelectTool('DESIGN_PLAYGROUND');
         onClose();
       },
     },

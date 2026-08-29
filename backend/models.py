@@ -259,6 +259,43 @@ class ScoutResponse(BaseModel):
     durationSeconds: float
 
 
+class GrantOpportunity(BaseModel):
+    id: str = Field(default_factory=generate_uuid)
+    title: str
+    fundingBody: str
+    category: str = "Production & Development"
+    amountRange: str
+    deadlineDate: Optional[str] = None
+    deadlineLabel: str = "Upcoming Round"
+    eligibleStages: List[str] = Field(default_factory=list)
+    eligibleRegions: List[str] = Field(default_factory=list)
+    eligibleFormats: List[str] = Field(default_factory=list)
+    keyCriteria: List[str] = Field(default_factory=list)
+    guidelinesUrl: Optional[str] = None
+    applicationPortalUrl: Optional[str] = None
+    fitScore: int = 85
+    fitRationale: str
+
+
+class GrantScoutRequest(BaseModel):
+    projectTitle: str
+    format: FilmFormat = FilmFormat.SHORT
+    genre: str = "Drama"
+    productionStage: str = "Production"
+    budgetTier: str = "Micro / Indie (< £50k)"
+    fundingNeeded: str = "£25,000"
+    filmmakerRegion: str = "UK & Europe"
+    targetGrantTypes: List[str] = Field(default_factory=list)
+
+
+class GrantScoutResponse(BaseModel):
+    projectTitle: str
+    grantsFound: int
+    grants: List[GrantOpportunity]
+    strategySummary: str
+    durationSeconds: float
+
+
 class TestPipelineRequest(BaseModel):
     festivalName: str
     optionalUrl: Optional[str] = None
