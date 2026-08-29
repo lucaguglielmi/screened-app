@@ -727,16 +727,18 @@ export default function App() {
                 </div>
               )}
 
-              {/* State 1: Disambiguation in progress or Awaiting confirmation or Failed/Cancelled before confirmation */}
-              {investigation && ['DISAMBIGUATING', 'FAILED', 'CANCELLED'].includes(currentStatus) && !investigation.confirmedEntity && (
+              {/* State 1 & 2 Unified: Live Progress */}
+              {investigation && currentStatus !== 'AWAITING_ENTITY_CONFIRMATION' && (currentStatus !== 'READY' || isCelebrating) && (
                 <LiveProgress
                   status={currentStatus}
                   events={events}
-                  festivalName={investigation.query}
+                  festivalName={investigation.confirmedEntity?.name || investigation.query}
+                  isCelebrating={isCelebrating}
                   onCancel={handleReset}
                 />
               )}
 
+              {/* Awaiting Confirmation */}
               {investigation && currentStatus === 'AWAITING_ENTITY_CONFIRMATION' && (
                 <Suspense fallback={<div className="p-8 text-center text-slate-500">Loading Confirmation...</div>}>
                   <EntityConfirmation
@@ -747,29 +749,6 @@ export default function App() {
                   />
                 </Suspense>
               )}
-
-              {/* State 2: Researching / Analyzing / Celebrating or Failed/Cancelled after confirmation */}
-              {investigation &&
-                (
-                  ['PLANNING', 'RESEARCHING', 'ANALYZING_CONTRADICTIONS', 'ASSEMBLING_DOSSIER'].includes(currentStatus) || 
-                  (currentStatus === 'READY' && isCelebrating)
-                ) && (
-                  <LiveProgress
-                    status={currentStatus}
-                    events={events}
-                    festivalName={investigation.confirmedEntity?.name || investigation.query}
-                    isCelebrating={isCelebrating}
-                    onCancel={handleReset}
-                  />
-                )}
-              {investigation && ['FAILED', 'CANCELLED'].includes(currentStatus) && investigation.confirmedEntity && (
-                  <LiveProgress
-                    status={currentStatus}
-                    events={events}
-                    festivalName={investigation.confirmedEntity?.name || investigation.query}
-                    onCancel={handleReset}
-                  />
-                )}
 
               {/* State 3: Dossier Ready */}
               {investigation && currentStatus === 'READY' && !isCelebrating && investigation.dossier && (
