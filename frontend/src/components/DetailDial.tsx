@@ -35,22 +35,22 @@ export const DetailDial: React.FC<Props> = ({ density, onChange }) => {
     {
       value: 'SIMPLIFIED',
       stepNumber: '1',
-      label: 'Simplified',
-      sublabel: 'Basic overview',
+      label: 'Controversial',
+      sublabel: 'Red flags & disputes',
       icon: BookOpen,
     },
     {
       value: 'BALANCED',
       stepNumber: '2',
-      label: 'Balanced',
-      sublabel: 'Content, not overwhelming',
+      label: 'Overview',
+      sublabel: 'Quick summary & map',
       icon: Layers,
     },
     {
       value: 'FULL_EVIDENCE',
       stepNumber: '3',
-      label: 'Full Evidence',
-      sublabel: 'All quotes & source citations',
+      label: 'All Data',
+      sublabel: 'Full evidence & ledger',
       icon: ShieldAlert,
     },
     {

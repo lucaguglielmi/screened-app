@@ -42,7 +42,7 @@ import {
   ExternalLink,
   Layers,
   ChevronDown,
-  ChevronUp,
+  
   ListChecks,
   HelpCircle,
   Globe,
@@ -89,7 +89,7 @@ export const EvidenceDossier: React.FC<Props> = ({
   const [density, setDensity] = useState<DetailDensity>('BALANCED');
   const [activeDomain, setActiveDomain] = useState<string>('ALL');
   const [searchFilter, setSearchFilter] = useState<string>('');
-  const [expandedClaim, setExpandedClaim] = useState<string | null>(null);
+  const [expandedClaim] = useState<string | null>(null);
   const [copiedSummary, setCopiedSummary] = useState(false);
   const [copiedAiPayload, setCopiedAiPayload] = useState(false);
   const [copiedRawText, setCopiedRawText] = useState(false);
@@ -1080,8 +1080,8 @@ export const EvidenceDossier: React.FC<Props> = ({
             </div>
           )}
 
-          {/* Atomic Claims & Evidence Citations (Rendered in Balanced & Full Evidence) */}
-          {normalizedDensity !== 'SIMPLIFIED' && (
+          {/* Atomic Claims & Evidence Citations (Rendered ONLY in Full Evidence mode) */}
+          {normalizedDensity === 'FULL_EVIDENCE' && (
             <div className="space-y-4" data-section-name="Atomic Ledger">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <h2 className="font-serif text-xl font-semibold text-white flex items-center gap-2">
@@ -1194,19 +1194,6 @@ export const EvidenceDossier: React.FC<Props> = ({
                             >
                               <Mail className="size-4" />
                             </button>
-
-                            {normalizedDensity === 'BALANCED' && (
-                              <button
-                                onClick={() => setExpandedClaim(isExpanded ? null : claim.id)}
-                                className="p-1.5 rounded-lg text-slate-400 hover:bg-darkroom-card transition-colors cursor-pointer"
-                              >
-                                {isExpanded ? (
-                                  <ChevronUp className="size-4" />
-                                ) : (
-                                  <ChevronDown className="size-4" />
-                                )}
-                              </button>
-                            )}
                           </div>
                         </div>
 
