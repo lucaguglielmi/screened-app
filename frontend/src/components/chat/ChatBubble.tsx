@@ -1,16 +1,11 @@
 import React, { useRef, useState } from 'react';
-import { Search, Coins, MailWarning, GitCompare, Compass, UploadCloud } from 'lucide-react';
+import { Search, Coins, MailWarning, UploadCloud } from 'lucide-react';
 import {
   ChatMessage,
   DueDiligenceArgs,
-  OpportunityScoutArgs,
-  CompareFestivalsArgs,
   GrantScoutArgs,
   InvitationEmailArgs,
 } from '../../types/chat';
-import { FilmProfile } from '../../types/investigation';
-import { MiniScoutCard } from './mini_apps/MiniScoutCard';
-import { MiniCompareArena } from './mini_apps/MiniCompareArena';
 import { FestivalIntakeCard } from './tools/FestivalIntakeCard';
 import { GrantIntakeCard } from './tools/GrantIntakeCard';
 import { InvitationEmailCard } from './tools/InvitationEmailCard';
@@ -30,18 +25,11 @@ const ACTION_TABS = [
     icon: MailWarning,
     query: 'I received a festival invitation email I want to analyze',
   },
-  { label: 'Compare festivals', icon: GitCompare, query: 'I want to compare two film festivals' },
-  {
-    label: 'Scout strategy',
-    icon: Compass,
-    query: 'Help me plan a festival submission strategy for my film',
-  },
 ];
 
 interface ChatBubbleProps {
   message: ChatMessage;
   onLaunchDueDiligence: (festivalName: string, optionalUrl?: string) => void;
-  onLaunchOpportunityScout: (profile: FilmProfile) => void;
   onLaunchCustomPrompt?: (promptText: string) => void;
   onAvatarClick?: () => void;
   onFileUpload?: (file: AttachedFileState) => void;
@@ -50,7 +38,6 @@ interface ChatBubbleProps {
 export const ChatBubble: React.FC<ChatBubbleProps> = ({
   message,
   onLaunchDueDiligence,
-  onLaunchOpportunityScout,
   onLaunchCustomPrompt,
   onAvatarClick,
   onFileUpload,
@@ -181,7 +168,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
               <AgentAvatar size="sm" onClick={onAvatarClick} />
               <div className="flex items-baseline gap-2 min-w-0">
                 <span className="font-semibold text-xs text-slate-200 font-mono truncate">
-                  The Producer Desk
+                  Screened AI
                 </span>
                 <span className="text-[11px] text-slate-500 font-mono shrink-0">
                   {formattedTime}
@@ -195,7 +182,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
             className={`hidden md:flex items-center gap-2 mb-1.5 text-xs ${isUser ? 'justify-end' : 'justify-start'}`}
           >
             <span className="font-semibold text-slate-300 font-mono">
-              {isUser ? 'You' : 'The Producer Desk'}
+              {isUser ? 'You' : 'Screened AI'}
             </span>
             <span className="text-xs text-slate-500 font-mono">
               {formattedTime}
@@ -344,20 +331,6 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
                 <FestivalIntakeCard
                   args={message.toolCall.args as unknown as DueDiligenceArgs}
                   onLaunch={onLaunchDueDiligence}
-                />
-              )}
-
-              {message.toolCall.toolName === 'configure_opportunity_scout' && (
-                <MiniScoutCard
-                  args={message.toolCall.args as unknown as OpportunityScoutArgs}
-                  onLaunch={onLaunchOpportunityScout}
-                />
-              )}
-
-              {message.toolCall.toolName === 'compare_festivals_arena' && (
-                <MiniCompareArena
-                  args={message.toolCall.args as unknown as CompareFestivalsArgs}
-                  onSelectFestival={(name) => onLaunchDueDiligence(name)}
                 />
               )}
 

@@ -96,9 +96,9 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
             'Is Aberdeen Film Festival legitimate? Check their physical venue leases and entry fees.',
         },
         {
-          label: 'Audit Aldergate Festival (Test Entity)',
+          label: 'Audit Pinco Pallino (Demo Entity)',
           promptText:
-            'Is Aldergate Film Festival (Test Entity) legitimate or a scam? Check their screening leases.',
+            'Is Pinco Pallino Film Festival legitimate or a scam? Check their physical venue leases and entry fees.',
         },
         {
           label: 'Check Raindance credentials',
@@ -214,7 +214,7 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
         },
         {
           label: 'Direct Circuit Pre-fill',
-          info: 'Automatically populates Opportunity Scout parameters from the uploaded screenplay.',
+          info: 'Pre-populates Festival Due Diligence or Grant & Funding Research parameters from uploaded files.',
         },
       ],
       searchExamples: [
@@ -224,7 +224,7 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
         },
         {
           label: 'Review Attached Script',
-          promptText: 'Review my uploaded treatment PDF and recommend 5 top UK festival matches.',
+          promptText: 'Review my uploaded treatment PDF and recommend top UK festival matches.',
         },
       ],
     },
@@ -238,10 +238,6 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
       summary:
         'We dig into a festival’s history, checking if their website age, past winners, and rules actually make sense.',
       tags: [
-        {
-          label: 'Image Reverse Tracing',
-          info: 'Detects whether promotional gala photos are stock images or authentic physical venues.',
-        },
         {
           label: 'Boilerplate Plagiarism',
           info: 'Identifies copy-pasted rules and submission guidelines from known scam syndicates.',
@@ -259,7 +255,7 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
         {
           label: 'Multi-Year Forensic Check',
           promptText:
-            'Run a deep multi-year forensic scan on Aldergate Film Festival (Test Entity) examining alumni and domain history.',
+            'Run a deep multi-year forensic scan on Pinco Pallino Film Festival examining alumni and domain history.',
         },
       ],
     },

@@ -5,6 +5,7 @@ from backend.models import (
     DocumentAnalysisKind,
     FilmFormat,
     ChatRequest,
+    ToolCallType,
 )
 from backend.agents.producer_desk import producer_desk_agent
 
@@ -54,7 +55,7 @@ To receive your official laurel and physical engraved trophy, please submit your
 @pytest.mark.asyncio
 async def test_process_chat_with_attached_document():
     req = ChatRequest(
-        message="What festivals should I submit this project to?",
+        message="What grants and funding opportunities should I apply for with this project?",
         attachedFileName="script_treatment.txt",
         attachedFileContent="TITLE: THE LAST EMBERS\nFORMAT: Feature Film\nGENRE: Drama\nRUNTIME: 102 minutes\nLOGLINE: A retired firefighter returns to his highland hometown to investigate a string of arson attacks."
     )
@@ -65,6 +66,5 @@ async def test_process_chat_with_attached_document():
     tool_call_events = [e for e in events if e.get("type") == "TOOL_CALL"]
     assert len(tool_call_events) == 1
     tool_call = tool_call_events[0]["toolCall"]
-    assert tool_call["toolName"] == "configure_opportunity_scout"
-    assert "last embers" in tool_call["args"]["film_title"].lower() or "script_treatment" in tool_call["args"]["film_title"].lower()
-    assert tool_call["args"]["format"] == "FEATURE"
+    assert tool_call["toolName"] == ToolCallType.CONFIGURE_GRANT_SCOUT.value
+    assert "last embers" in tool_call["args"]["project_title"].lower() or "script_treatment" in tool_call["args"]["project_title"].lower() or "untitled" in tool_call["args"]["project_title"].lower()

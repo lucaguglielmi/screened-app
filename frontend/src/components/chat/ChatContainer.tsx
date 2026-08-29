@@ -5,7 +5,6 @@ import {
   ChatToolCall,
   InteractiveFollowUpProbe,
 } from '../../types/chat';
-import { FilmProfile } from '../../types/investigation';
 import { ChatBubble } from './ChatBubble';
 import { ChatPromptBar } from './ChatPromptBar';
 import { motion } from 'motion/react';
@@ -19,7 +18,6 @@ import { MessageSquare } from 'lucide-react';
 
 interface ChatContainerProps {
   onLaunchDueDiligence: (festivalName: string, optionalUrl?: string) => void;
-  onLaunchOpportunityScout: (profile: FilmProfile) => void;
   onNavigateToPlaygroundFeedback?: () => void;
   onOpenKeyboardHelp?: () => void;
 }
@@ -28,13 +26,12 @@ const INITIAL_HARDCODED_MESSAGE: ChatMessage = {
   id: 'initial-greeting-01',
   role: 'assistant',
   content:
-    'Cinema Due Diligence Desk online. Enter a festival name to investigate, request a grant/funding scan, or drop an invitation email.',
+    'Screened AI online. Enter a festival name to investigate, request a grant/funding scan, or drop an invitation email or treatment PDF.',
   timestamp: new Date().toISOString(),
 };
 
 export const ChatContainer: React.FC<ChatContainerProps> = ({
   onLaunchDueDiligence,
-  onLaunchOpportunityScout,
   onNavigateToPlaygroundFeedback,
 }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([INITIAL_HARDCODED_MESSAGE]);
@@ -228,7 +225,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
           id: String(Date.now() + 2),
           role: 'assistant',
           content:
-            '⚠️ An error occurred while communicating with the Cinema Due Diligence Desk. Please ensure your backend is active.',
+            '⚠️ An error occurred while communicating with Screened AI. Please ensure your backend is active.',
           timestamp: new Date().toISOString(),
         },
       ]);
@@ -273,7 +270,6 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
               key={msg.id}
               message={msg}
               onLaunchDueDiligence={onLaunchDueDiligence}
-              onLaunchOpportunityScout={onLaunchOpportunityScout}
               onLaunchCustomPrompt={(text) => handleSendMessage(text)}
               onFileUpload={(fileData) => handleSendMessage(`Please review the attached document: ${fileData.name}`, fileData.name, fileData.content, fileData.base64, fileData.mimeType, fileData.size)}
               onAvatarClick={() => {
@@ -311,7 +307,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
       <AboutScreenedModal
         isOpen={isAboutModalOpen}
         onClose={() => setIsAboutModalOpen(false)}
-        onNavigateToDiligence={() => onLaunchDueDiligence('Aldergate Film Festival (Test Entity)')}
+        onNavigateToDiligence={() => onLaunchDueDiligence('Pinco Pallino Film Festival')}
       />
 
       {/* Filmmaker Feedback Modal */}

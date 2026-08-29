@@ -8,25 +8,25 @@ interface StarterPromptChipsProps {
 const STARTER_PROMPTS = [
   {
     icon: '🚨',
-    title: 'Vet Aldergate Festival (Test Entity)',
+    title: 'Vet Pinco Pallino (Demo Entity)',
     prompt:
-      'Is Aldergate Film Festival (Test Entity) legitimate or a scam? Check their physical venue screening leases and entry fees.',
+      'Is Pinco Pallino Film Festival legitimate or a scam? Check their physical venue screening leases and entry fees.',
     badge: 'Due Diligence',
     badgeClass: 'bg-tool-diligence/15 text-tool-diligence border border-tool-diligence/30',
   },
   {
-    icon: '🎯',
-    title: 'Short Film Strategy',
+    icon: '💰',
+    title: 'Discover Film Grants',
     prompt:
-      'I have a 14-minute sci-fi short looking for a UK premiere under a £250 submission budget. Where should I apply?',
-    badge: 'Opportunity Scout',
+      'Find £25k documentary and short film production grants and public funding schemes in the UK.',
+    badge: 'Grant Research',
     badgeClass: 'bg-tool-diligence/15 text-tool-diligence border border-tool-diligence/30',
   },
   {
-    icon: '⚔️',
-    title: 'Sundance vs Tribeca',
-    prompt: 'Compare Sundance vs Tribeca for an independent documentary premiere.',
-    badge: 'Versus Arena',
+    icon: '✉️',
+    title: 'Analyze Invitation Email',
+    prompt: 'I received a festival invitation email offering a fee waiver. Is it legitimate?',
+    badge: 'Due Diligence',
     badgeClass: 'bg-tool-diligence/15 text-tool-diligence border border-tool-diligence/30',
   },
   {
@@ -34,7 +34,7 @@ const STARTER_PROMPTS = [
     title: 'Raindance Legitimacy',
     prompt:
       'Check Raindance Film Festival accreditation, BAFTA/BIFA qualifying status, and recent filmmaker feedback.',
-    badge: 'Prestige Audit',
+    badge: 'Due Diligence',
     badgeClass: 'bg-tool-diligence/15 text-tool-diligence border border-tool-diligence/30',
   },
 ];
@@ -43,7 +43,7 @@ export const StarterPromptChips: React.FC<StarterPromptChipsProps> = ({ onSelect
   return (
     <div className="w-full max-w-3xl mx-auto mt-6">
       <p className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-400 text-center mb-3">
-        Or Ask The Producer Desk:
+        Or Ask Screened AI:
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
         {STARTER_PROMPTS.map((item, idx) => (

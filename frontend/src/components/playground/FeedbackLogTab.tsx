@@ -41,7 +41,7 @@ const CATEGORY_MAP: Record<string, { label: string; bg: string; text: string; bo
     border: 'border-emerald-500/40',
   },
   CHAT_INTELLIGENCE: {
-    label: 'Mission Control AI',
+    label: 'Screened AI',
     bg: 'bg-indigo-500/20',
     text: 'text-indigo-300',
     border: 'border-indigo-500/40',

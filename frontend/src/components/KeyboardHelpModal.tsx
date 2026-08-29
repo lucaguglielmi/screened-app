@@ -7,7 +7,7 @@ import {
   Sun,
   Sparkles,
   ShieldCheck,
-  Compass,
+  Coins,
   Scale,
   MousePointer2,
 } from 'lucide-react';
@@ -41,9 +41,9 @@ export const KeyboardHelpModal: React.FC<Props> = ({ isOpen, onClose }) => {
     {
       title: 'Workspace Navigation',
       items: [
-        { key: '1', description: 'Switch to Mission Control (Main AI Desk)', icon: Sparkles },
-        { key: '2', description: 'Switch to Due Diligence Workspace', icon: ShieldCheck },
-        { key: '3', description: 'Switch to Opportunity Scout Workspace', icon: Compass },
+        { key: '1', description: 'Switch to Screened AI (Conversational Hub)', icon: Sparkles },
+        { key: '2', description: 'Switch to Festival Due Diligence', icon: ShieldCheck },
+        { key: '3', description: 'Switch to Grant & Funding Research', icon: Coins },
         { key: '4', description: 'Switch to Why Screened Exists', icon: Scale },
         { key: '/', description: 'Quick focus search prompt' },
       ],

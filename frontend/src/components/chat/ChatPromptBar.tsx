@@ -166,8 +166,8 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder='Ask Mission Control, research a festival, or drop a script/treatment PDF...'
-            className='w-full bg-transparent px-2 sm:px-3 py-2 sm:py-3 text-sm sm:text-base md:text-lg text-slate-100 placeholder-slate-400 focus:outline-none'
+            placeholder="Ask Screened AI, investigate a festival, or drop a script/treatment PDF..."
+            className="w-full bg-transparent px-2 sm:px-3 py-2 sm:py-3 text-sm sm:text-base md:text-lg text-slate-100 placeholder-slate-400 focus:outline-none"
           />
         </div>
 

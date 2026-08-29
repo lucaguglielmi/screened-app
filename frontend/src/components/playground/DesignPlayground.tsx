@@ -449,13 +449,11 @@ export const DesignPlayground: React.FC = () => {
                 <ChatBubble
                   message={mockUserMsg}
                   onLaunchDueDiligence={(name) => addLog(`Launch Due Diligence for: ${name}`)}
-                  onLaunchOpportunityScout={(p) => addLog(`Launch Opportunity Scout for: ${p.title}`)}
                 />
 
                 <ChatBubble
                   message={mockAssistantMsg}
                   onLaunchDueDiligence={(name) => addLog(`Launch Due Diligence for: ${name}`)}
-                  onLaunchOpportunityScout={(p) => addLog(`Launch Opportunity Scout for: ${p.title}`)}
                 />
 
                 <div className="pt-2">
@@ -470,9 +468,6 @@ export const DesignPlayground: React.FC = () => {
                       timestamp: new Date().toISOString(),
                     }}
                     onLaunchDueDiligence={(name) => addLog(`Launch Due Diligence for: ${name}`)}
-                    onLaunchOpportunityScout={(p) =>
-                      addLog(`Launch Opportunity Scout for: ${p.title}`)
-                    }
                   />
                 </div>
               </div>

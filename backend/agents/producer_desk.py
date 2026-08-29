@@ -26,7 +26,7 @@ from backend.tools.parallel_task import parallel_task_run
 logger = logging.getLogger("screened.agents.producer_desk")
 
 
-PRODUCER_DESK_SYSTEM_PROMPT = """You are Screened — an autonomous cinema due diligence and intelligence engine.
+PRODUCER_DESK_SYSTEM_PROMPT = """You are Screened AI — an autonomous cinema due diligence and grant funding research engine.
 
 Your tone of voice MUST be:
 - Straight to the point, authoritative, and concise.
@@ -35,9 +35,9 @@ Your tone of voice MUST be:
 - Directly address the user's intent.
 
 CRITICAL INSTRUCTIONS FOR GENERIC INTENTS:
-- When the user expresses a high-level or generic intent without specific parameters (for example: "I want to research a festival", "Research a festival", "Help me find grants", "Analyze an invitation email", "Compare festivals", "Plan a festival strategy"):
-  1. DO NOT assume or hardcode any default festival name (like Aldergate or Raindance), funding amount, or film project.
-  2. Ask clear, concise supporting questions to collect the necessary parameters (such as the specific festival name, film format, runtime, budget tier, or invitation text).
+- When the user expresses a high-level or generic intent without specific parameters (for example: "I want to research a festival", "Research a festival", "Help me find grants", "Analyze an invitation email"):
+  1. DO NOT assume or hardcode any default festival name, funding amount, or film project.
+  2. Ask clear, concise supporting questions to collect the necessary parameters (such as the specific festival name, funding needed, or invitation email text).
   3. Only call a diagnostic tool when the user has provided an actual festival name, film details, or document text.
 
 CRITICAL SECURITY INSTRUCTION:
@@ -83,65 +83,6 @@ TOOL_DECLARATIONS = [
         }
     },
     {
-        "name": "configure_opportunity_scout",
-        "description": "Prepares a tailored festival submission roadmap and scouts upcoming qualifying deadlines for a specific film profile.",
-        "parameters": {
-            "type": "OBJECT",
-            "properties": {
-                "film_title": {
-                    "type": "STRING",
-                    "description": "Working project title."
-                },
-                "format": {
-                    "type": "STRING",
-                    "enum": ["SHORT", "FEATURE", "DOCUMENTARY", "ANIMATION", "EPISODIC"]
-                },
-                "genre": {
-                    "type": "STRING",
-                    "description": "Primary genre."
-                },
-                "runtime_minutes": {
-                    "type": "INTEGER",
-                    "description": "Total film runtime in minutes."
-                },
-                "premiere_goal": {
-                    "type": "STRING",
-                    "enum": ["WORLD_PREMIERE", "INTERNATIONAL_PREMIERE", "NATIONAL_PREMIERE", "NO_PREFERENCE"]
-                },
-                "budget_tier": {
-                    "type": "STRING",
-                    "description": "Budget category (e.g., 'Micro (<£50k)', 'Low (<£250k)')."
-                },
-                "target_regions": {
-                    "type": "ARRAY",
-                    "items": {"type": "STRING"}
-                },
-                "strategy_rationale": {
-                    "type": "STRING",
-                    "description": "Strategic positioning angle."
-                }
-            },
-            "required": ["film_title", "format", "genre", "strategy_rationale"]
-        }
-    },
-    {
-        "name": "compare_festivals_arena",
-        "description": "Renders a side-by-side comparison matrix between two film festivals evaluating fee vs prestige, audience reach, and accreditation.",
-        "parameters": {
-            "type": "OBJECT",
-            "properties": {
-                "festival_a": { "type": "STRING" },
-                "festival_b": { "type": "STRING" },
-                "key_comparison_vectors": {
-                    "type": "ARRAY",
-                    "items": {"type": "STRING"}
-                },
-                "verdict_summary": { "type": "STRING" }
-            },
-            "required": ["festival_a", "festival_b", "verdict_summary"]
-        }
-    },
-    {
         "name": "configure_grant_scout",
         "description": "Configures public grant and film funding match search for a project.",
         "parameters": {
@@ -155,20 +96,6 @@ TOOL_DECLARATIONS = [
                 "grant_strategy_summary": { "type": "STRING" }
             },
             "required": ["project_title", "grant_strategy_summary"]
-        }
-    },
-    {
-        "name": "analyze_invitation_email",
-        "description": "Analyzes an unsolicited festival invitation or laurel email for predatory signals.",
-        "parameters": {
-            "type": "OBJECT",
-            "properties": {
-                "festival_claimed": { "type": "STRING" },
-                "sender_domain": { "type": "STRING" },
-                "fee_waiver_offered": { "type": "BOOLEAN" },
-                "initial_verdict": { "type": "STRING" }
-            },
-            "required": ["festival_claimed", "initial_verdict"]
         }
     }
 ]
@@ -461,20 +388,6 @@ Return a strict JSON object with:
                 ).model_dump()
             )
             return "SUCCESS: Tool call scheduled."
-            
-        def analyze_invitation_email(festival_claimed: str, initial_verdict: str, sender_domain: str = "unknown.com", fee_waiver_offered: bool = False) -> str:
-            """Analyzes an unsolicited festival invitation or laurel email for predatory signals."""
-            nonlocal tool_call
-            tool_call = ChatToolCall(
-                toolName=ToolCallType.ANALYZE_INVITATION_EMAIL,
-                args=InvitationEmailToolArgs(
-                    festival_claimed=festival_claimed,
-                    sender_domain=sender_domain,
-                    fee_waiver_offered=fee_waiver_offered,
-                    initial_verdict=initial_verdict
-                ).model_dump()
-            )
-            return "SUCCESS: Tool call scheduled."
 
         try:
             from google.adk.agents import LlmAgent
@@ -491,10 +404,7 @@ Return a strict JSON object with:
                 instruction=PRODUCER_DESK_SYSTEM_PROMPT,
                 tools=[
                     FunctionTool(configure_due_diligence),
-                    FunctionTool(configure_opportunity_scout),
-                    FunctionTool(compare_festivals_arena),
                     FunctionTool(configure_grant_scout),
-                    FunctionTool(analyze_invitation_email),
                     FunctionTool(parallel_task_run)
                 ]
             )
@@ -540,22 +450,14 @@ Return a strict JSON object with:
             if doc_result and not tool_call:
                 # Force inference
                 if doc_result.detectedKind == DocumentAnalysisKind.INVITATION_EMAIL:
-                    analyze_invitation_email(
-                        festival_claimed=doc_result.festivalClaimed or "Claimed Festival",
-                        initial_verdict=doc_result.recommendedAction or doc_result.extractedSummary,
-                        sender_domain=doc_result.senderDomain or "festival-communications.org",
-                        fee_waiver_offered=bool(doc_result.feeWaiverOffered)
+                    configure_due_diligence(
+                        festival_name=doc_result.festivalClaimed or "Claimed Festival",
+                        preflight_summary=doc_result.recommendedAction or doc_result.extractedSummary or "Email invitation received. Verify physical screening leases and fees before submitting."
                     )
                 elif doc_result.detectedKind == DocumentAnalysisKind.SCRIPT_TREATMENT:
-                    configure_opportunity_scout(
-                        film_title=doc_result.filmTitle or "Untitled Project",
-                        format=doc_result.format.value if doc_result.format else "SHORT",
-                        genre=doc_result.genre or "Drama",
-                        strategy_rationale=f"Tailored roadmap generated from '{doc_result.filmTitle}' ({doc_result.genre}, {doc_result.runtimeMinutes} min). Targeting qualifying festivals matching this tone.",
-                        runtime_minutes=doc_result.runtimeMinutes or 15,
-                        premiere_goal=doc_result.suggestedPremiereGoal.value if doc_result.suggestedPremiereGoal else "WORLD_PREMIERE",
-                        budget_tier=doc_result.budgetTier or "Micro (< £50k)",
-                        target_regions=["UK & Europe", "North America"]
+                    configure_grant_scout(
+                        project_title=doc_result.filmTitle or "Untitled Project",
+                        grant_strategy_summary=f"Public grant and funding match strategy for '{doc_result.filmTitle}' ({doc_result.genre})."
                     )
 
             import re
@@ -608,7 +510,7 @@ Return a strict JSON object with:
         ]
         if any(p in msg_lower for p in generic_patterns):
             specific_festivals = [
-                "aldergate", "raindance", "sundance", "aesthetica", "cannes", "venice", 
+                "pinco pallino", "raindance", "sundance", "aesthetica", "cannes", "venice", 
                 "berlinale", "berlin", "sxsw", "tribeca", "toronto", "tiff", "locarno", 
                 "edinburgh", "leeds", "sheffield", "idfa", "clermont", "san sebastian"
             ]
@@ -645,33 +547,6 @@ Return a strict JSON object with:
         ]
         return any(p in msg_lower for p in generic_patterns)
 
-    def _is_generic_compare_intent(self, user_msg: str) -> bool:
-        """Determines if the user wants festival comparison without naming two festivals."""
-        msg_lower = user_msg.lower().strip()
-        generic_patterns = [
-            "compare festivals", "i want to compare two film festivals", "compare two festivals",
-            "versus arena", "festival comparison", "compare film festivals", "head to head",
-            "i want to compare festivals"
-        ]
-        if any(p in msg_lower for p in generic_patterns):
-            if " vs " not in msg_lower and " vs. " not in msg_lower and " and " not in msg_lower and " to " not in msg_lower:
-                return True
-        return False
-
-    def _is_generic_scout_intent(self, user_msg: str) -> bool:
-        """Determines if the user wants strategy/scouting without providing film details."""
-        msg_lower = user_msg.lower().strip()
-        generic_patterns = [
-            "scout strategy", "help me plan a festival submission strategy for my film",
-            "plan strategy", "festival strategy", "submission strategy", "opportunity scout",
-            "plan my festival run", "where should i submit my film", "submission plan",
-            "help me plan a festival strategy"
-        ]
-        if any(p in msg_lower for p in generic_patterns):
-            if not any(w in msg_lower for w in ["min", "minute", "short", "feature", "documentary", "sci-fi", "horror", "drama", "comedy", "£", "$", "budget"]):
-                return True
-        return False
-
     def _extract_or_infer_tool_call(self, user_msg: str, agent_response: str, doc_result: Optional[DocumentAnalysisResult] = None) -> Optional[ChatToolCall]:
         """Infers structured tool invocation only when specific festival, film slate, or email details are provided."""
         import re
@@ -681,27 +556,24 @@ Return a strict JSON object with:
         if doc_result:
             if doc_result.detectedKind == DocumentAnalysisKind.INVITATION_EMAIL:
                 return ChatToolCall(
-                    toolName=ToolCallType.ANALYZE_INVITATION_EMAIL,
-                    args=InvitationEmailToolArgs(
-                        festival_claimed=doc_result.festivalClaimed or "Claimed Festival",
-                        sender_domain=doc_result.senderDomain or "festival-communications.org",
-                        fee_waiver_offered=bool(doc_result.feeWaiverOffered),
-                        red_flag_signals=doc_result.redFlagSignals or ["Requires fee before physical venue verification"],
-                        initial_verdict=doc_result.recommendedAction or doc_result.extractedSummary
+                    toolName=ToolCallType.CONFIGURE_DUE_DILIGENCE,
+                    args=DueDiligenceToolArgs(
+                        festival_name=doc_result.festivalClaimed or "Claimed Festival",
+                        suspected_concerns=["VENUE_LEGITIMACY", "FEE_TRANSPARENCY", "ORGANIZER_TRACK_RECORD"],
+                        preflight_summary=doc_result.recommendedAction or doc_result.extractedSummary or "Invitation email analyzed. Verify physical screening leases and fees before submitting."
                     ).model_dump()
                 )
             elif doc_result.detectedKind == DocumentAnalysisKind.SCRIPT_TREATMENT:
                 return ChatToolCall(
-                    toolName=ToolCallType.CONFIGURE_OPPORTUNITY_SCOUT,
-                    args=OpportunityScoutToolArgs(
-                        film_title=doc_result.filmTitle or "Untitled Project",
-                        format=doc_result.format or FilmFormat.SHORT,
-                        genre=doc_result.genre or "Drama",
-                        runtime_minutes=doc_result.runtimeMinutes or 15,
-                        premiere_goal=doc_result.suggestedPremiereGoal or PremiereGoal.WORLD_PREMIERE,
-                        budget_tier=doc_result.budgetTier or "Micro (< £50k)",
-                        target_regions=["UK & Europe", "North America"],
-                        strategy_rationale=f"Tailored roadmap generated from '{doc_result.filmTitle}' ({doc_result.genre}, {doc_result.runtimeMinutes} min). Targeting qualifying festivals matching this tone."
+                    toolName=ToolCallType.CONFIGURE_GRANT_SCOUT,
+                    args=GrantScoutToolArgs(
+                        project_title=doc_result.filmTitle or "Untitled Project",
+                        grant_category="DEVELOPMENT_AND_PRODUCTION",
+                        target_amount="£25,000",
+                        production_stage="Production",
+                        filmmaker_region="UK & Europe",
+                        recommended_grants=["BFI Filmmaking Fund", "Screen Scotland", "Sundance Doc Fund"],
+                        grant_strategy_summary=f"Public grant and funding match strategy for '{doc_result.filmTitle}' ({doc_result.genre})."
                     ).model_dump()
                 )
 
@@ -712,7 +584,7 @@ Return a strict JSON object with:
                 args=DueDiligenceToolArgs(
                     festival_name="",
                     suspected_concerns=["VENUE_LEGITIMACY", "FEE_TRANSPARENCY", "ORGANIZER_TRACK_RECORD"],
-                    preflight_summary="Prepare an autonomous 3-domain due diligence investigation across physical venues, organizer filings, and community feedback."
+                    preflight_summary="Prepare an autonomous due diligence investigation across physical venues, organizer filings, and community feedback."
                 ).model_dump()
             )
             
@@ -731,38 +603,11 @@ Return a strict JSON object with:
             
         if self._is_generic_invitation_intent(user_msg):
             return ChatToolCall(
-                toolName=ToolCallType.ANALYZE_INVITATION_EMAIL,
-                args=InvitationEmailToolArgs(
-                    festival_claimed="",
-                    sender_domain="",
-                    fee_waiver_offered=False,
-                    initial_verdict="Verify whether this invitation originated from an official domain before submitting or paying fees."
-                ).model_dump()
-            )
-            
-        if self._is_generic_compare_intent(user_msg):
-            return ChatToolCall(
-                toolName=ToolCallType.COMPARE_FESTIVALS_ARENA,
-                args=CompareFestivalsToolArgs(
-                    festival_a="",
-                    festival_b="",
-                    key_comparison_vectors=["BAFTA/BIFA Qualification", "Physical Screening Venues", "Entry Fee Bracket"],
-                    verdict_summary="Head-to-head comparison on accreditation, prestige, and venue transparency."
-                ).model_dump()
-            )
-            
-        if self._is_generic_scout_intent(user_msg):
-            return ChatToolCall(
-                toolName=ToolCallType.CONFIGURE_OPPORTUNITY_SCOUT,
-                args=OpportunityScoutToolArgs(
-                    film_title="",
-                    format=FilmFormat.SHORT,
-                    genre="Drama",
-                    runtime_minutes=15,
-                    premiere_goal=PremiereGoal.WORLD_PREMIERE,
-                    budget_tier="Micro (< £50k)",
-                    target_regions=["UK & Europe", "North America"],
-                    strategy_rationale="Tailored roadmap targeting qualifying festivals."
+                toolName=ToolCallType.CONFIGURE_DUE_DILIGENCE,
+                args=DueDiligenceToolArgs(
+                    festival_name="",
+                    suspected_concerns=["VENUE_LEGITIMACY", "FEE_TRANSPARENCY", "ORGANIZER_TRACK_RECORD"],
+                    preflight_summary="Verify whether this invitation originated from an official screening entity before submitting or paying fees."
                 ).model_dump()
             )
 
@@ -782,43 +627,11 @@ Return a strict JSON object with:
                     ).model_dump()
                 )
 
-        # Check for specific Email / Invitation analysis intent
-        if any(w in msg_lower for w in ["email", "invitation", "invited", "laurel", "waiver offer", "selected", "letter", "acceptance"]):
-            if any(w in msg_lower for w in ["waiver", "discount", "trophy", "fee", "certificate", "vip", "dear filmmaker", "@", "promo code"]):
-                return ChatToolCall(
-                    toolName=ToolCallType.ANALYZE_INVITATION_EMAIL,
-                    args=InvitationEmailToolArgs(
-                        festival_claimed="Festival Organizers",
-                        sender_domain="festival-submissions.com",
-                        fee_waiver_offered="waiver" in msg_lower or "discount" in msg_lower,
-                        red_flag_signals=["Unsolicited bulk invitation", "High paid award upgrade cost"],
-                        initial_verdict="Verify whether this invitation originated from an official domain before submitting or paying fees."
-                    ).model_dump()
-                )
-
-        # Check for Comparison intent with two festival names
-        if " vs " in msg_lower or " vs. " in msg_lower or ("compare" in msg_lower and (" and " in msg_lower or " to " in msg_lower)):
-            clean_q = re.sub(r"(what are the advantages of premiering at|should i submit to|compare|between)", "", user_msg, flags=re.IGNORECASE)
-            parts = re.split(r"\s+(?:vs\.?|or|and|to)\s+", clean_q.strip(), flags=re.IGNORECASE)
-            if len(parts) >= 2 and parts[0].strip() and parts[1].strip():
-                fest_a = parts[0].replace("?", "").strip()
-                fest_b = parts[1].replace("?", "").strip()
-                if len(fest_a) > 2 and len(fest_b) > 2:
-                    return ChatToolCall(
-                        toolName=ToolCallType.COMPARE_FESTIVALS_ARENA,
-                        args=CompareFestivalsToolArgs(
-                            festival_a=fest_a.title() if not any(c.isupper() for c in fest_a) else fest_a,
-                            festival_b=fest_b.title() if not any(c.isupper() for c in fest_b) else fest_b,
-                            key_comparison_vectors=["BAFTA/BIFA Qualification", "Physical Screening Venues", "Entry Fee Bracket"],
-                            verdict_summary=f"Head-to-head comparison between {fest_a} and {fest_b} on accreditation, prestige, and venue transparency."
-                        ).model_dump()
-                    )
-
         # Check for Due Diligence intent with a SPECIFIC festival name
-        if any(w in msg_lower for w in ["vet", "legit", "scam", "aldergate", "raindance", "sundance", "aesthetica", "cannes", "venice", "berlinale", "sxsw", "tribeca", "toronto", "check festival", "is it real", "is this real", "check fees", "tell me about", "research"]):
+        if any(w in msg_lower for w in ["vet", "legit", "scam", "pinco pallino", "raindance", "sundance", "aesthetica", "cannes", "venice", "berlinale", "sxsw", "tribeca", "toronto", "check festival", "is it real", "is this real", "check fees", "tell me about", "research"]):
             festival_name = None
-            if "aldergate" in msg_lower:
-                festival_name = "Aldergate Film Festival"
+            if "pinco pallino" in msg_lower:
+                festival_name = "Pinco Pallino Film Festival"
             elif "sundance" in msg_lower:
                 festival_name = "Sundance Film Festival"
             elif "aesthetica" in msg_lower:
@@ -848,44 +661,7 @@ Return a strict JSON object with:
                     args=DueDiligenceToolArgs(
                         festival_name=festival_name,
                         suspected_concerns=["VENUE_LEGITIMACY", "FEE_TRANSPARENCY", "ORGANIZER_TRACK_RECORD"],
-                        preflight_summary=f"Prepare an autonomous 3-domain due diligence investigation across physical venues, organizer filings, and community feedback for {festival_name}."
-                    ).model_dump()
-                )
-
-        # Check for Opportunity Scout intent with specific film details
-        if any(w in msg_lower for w in ["short", "feature", "documentary", "submit", "scout", "budget", "strategy", "where should i", "recommend", "comedy", "horror", "drama", "thriller", "animation"]):
-            if any(w in msg_lower for w in ["min", "minute", "short", "feature", "doc", "sci-fi", "horror", "drama", "comedy", "£", "$", "budget"]):
-                format_type = "SHORT" if "short" in msg_lower else ("FEATURE" if "feature" in msg_lower else "SHORT")
-                genre = "Drama"
-                for g in ["Comedy", "Horror", "Sci-Fi", "Thriller", "Documentary", "Animation", "Drama"]:
-                    if g.lower() in msg_lower:
-                        genre = g
-                        break
-
-                runtime = 14 if format_type == "SHORT" else 90
-                rt_match = re.search(r"(\d+)\s*(?:min|minute)", msg_lower)
-                if rt_match:
-                    try:
-                        runtime = int(rt_match.group(1))
-                    except Exception:
-                        pass
-
-                budget = "Micro (< £50k)"
-                b_match = re.search(r"([£$€]\s*\d+(?:[kK]|,\d+|\s*budget)?)", user_msg)
-                if b_match:
-                    budget = b_match.group(1).strip()
-
-                return ChatToolCall(
-                    toolName=ToolCallType.CONFIGURE_OPPORTUNITY_SCOUT,
-                    args=OpportunityScoutToolArgs(
-                        film_title="My Festival Project",
-                        format=format_type,
-                        genre=genre,
-                        runtime_minutes=runtime,
-                        premiere_goal="WORLD_PREMIERE",
-                        budget_tier=budget,
-                        target_regions=["UK & Europe", "North America"],
-                        strategy_rationale=f"Target verified Early Bird windows for {genre} {format_type.lower()} circuits before locking regional independent festival runs."
+                        preflight_summary=f"Prepare an autonomous due diligence investigation across physical venues, organizer filings, and community feedback for {festival_name}."
                     ).model_dump()
                 )
 
@@ -897,7 +673,7 @@ Return a strict JSON object with:
         tool_call: Optional[ChatToolCall],
         doc_result: Optional[DocumentAnalysisResult] = None
     ) -> Optional[InteractiveFollowUpProbe]:
-        """Generates contextual multi-step follow-up dialogue options to probe filmmaker interactions."""
+        """Generates contextual follow-up dialogue options."""
         return None
 
     async def _generate_fallback_response(
@@ -911,32 +687,20 @@ Return a strict JSON object with:
         if doc_result and doc_result.detectedKind == DocumentAnalysisKind.INVITATION_EMAIL:
             text = f"Analyzed email '{doc_result.fileName}'. Claimed festival: **{doc_result.festivalClaimed}**. Verification module prepared below."
         elif doc_result and doc_result.detectedKind == DocumentAnalysisKind.SCRIPT_TREATMENT:
-            text = f"Parsed '{doc_result.fileName}' ({doc_result.genre} {doc_result.format.value.lower()}, ~{doc_result.runtimeMinutes} min). Opportunity Scout roadmap configured below."
+            text = f"Parsed '{doc_result.fileName}' ({doc_result.genre} {doc_result.format.value.lower() if doc_result.format else 'film'}, ~{doc_result.runtimeMinutes} min). Grant and funding match prepared below."
         elif self._is_generic_festival_intent(user_msg):
-            text = "Which film festival would you like to investigate? Enter the festival name in chat (and optional city or website), or select an example below to begin due diligence."
+            text = "Which film festival would you like to investigate? Enter the festival name in chat (and optional city or website) to begin due diligence."
         elif self._is_generic_grant_intent(user_msg):
-            text = "What type of film funding are you seeking? Let me know your project format (short, feature, documentary), production stage, target budget, and region to match active grants."
+            text = "What type of film funding are you seeking? Let me know your project format, production stage, target budget, and region to match active grants."
         elif self._is_generic_invitation_intent(user_msg):
-            text = "Please paste the text of the invitation or laurel email, or attach the PDF/email file. What festival does it claim to be from, and did they mention a fee waiver or trophy charge?"
-        elif self._is_generic_compare_intent(user_msg):
-            text = "Which two film festivals would you like to compare head-to-head? Enter the two festival names to analyze their accreditation, fee structure, venue leases, and ROI."
-        elif self._is_generic_scout_intent(user_msg):
-            text = "Tell me about your film: What is the format (short, feature, documentary), genre, runtime, premiere goal, and submission budget?"
+            text = "Please paste the invitation email snippet or attach the file. What festival does it claim to be from?"
         elif tool_call and tool_call.toolName == ToolCallType.CONFIGURE_DUE_DILIGENCE:
             fest_name = tool_call.args.get("festival_name", "Target Festival")
-            text = f"Initiating due diligence pre-flight for **{fest_name}**. Confirm entity location and your interaction history below to launch."
-        elif tool_call and tool_call.toolName == ToolCallType.CONFIGURE_OPPORTUNITY_SCOUT:
-            text = "Scouting qualifying submission windows. Configure your film profile below to discover deadlines and accreditation roadmaps."
-        elif tool_call and tool_call.toolName == ToolCallType.COMPARE_FESTIVALS_ARENA:
-            fest_a = tool_call.args.get("festival_a", "Festival A")
-            fest_b = tool_call.args.get("festival_b", "Festival B")
-            text = f"Comparing **{fest_a}** vs **{fest_b}** across accreditation, physical venue leases, and ROI."
+            text = f"Initiating due diligence pre-flight for **{fest_name}**. Confirm details below to launch the multi-agent investigation."
         elif tool_call and tool_call.toolName == ToolCallType.CONFIGURE_GRANT_SCOUT:
             text = "Configuring film grant discovery. Adjust your budget tier and production stage below to match active funds."
-        elif tool_call and tool_call.toolName == ToolCallType.ANALYZE_INVITATION_EMAIL:
-            text = "Analyzing invitation provenance. Review the sender signals below to verify legitimacy before paying any fee."
         else:
-            text = "Cinema Due Diligence Desk active. Enter a festival to vet, request a grant search, or drop an invitation email."
+            text = "Screened AI active. Enter a festival to vet, request a grant search, or drop a document."
 
         words = text.split(" ")
         for i in range(0, len(words), 3):

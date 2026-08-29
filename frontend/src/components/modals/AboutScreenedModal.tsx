@@ -200,7 +200,7 @@ export const AboutScreenedModal: React.FC<AboutScreenedModalProps> = ({
               }}
               className="px-4 py-2 rounded-xl bg-midnight-royal hover:bg-midnight-royal text-white font-bold text-xs font-mono transition-all shadow-md shadow-indigo-950/50 cursor-pointer"
             >
-              Ask Mission Control
+              Ask Screened AI
             </button>
           </div>
         </div>

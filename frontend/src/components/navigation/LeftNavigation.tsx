@@ -46,27 +46,27 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
 
       {/* Center Section: Direct 3-Pillar Navigation Icons */}
       <div className="flex flex-col items-center gap-3.5 w-full my-auto">
-        {/* 1. The Producer Desk */}
+        {/* 1. Screened AI */}
         <div className="relative">
           <button
             onClick={() => handleSelectTool('CONVERSATIONAL_DESK')}
-            onMouseEnter={() => setActiveTooltip('The Producer Desk')}
+            onMouseEnter={() => setActiveTooltip('Screened AI')}
             onMouseLeave={() => setActiveTooltip(null)}
             className={`relative p-3 rounded-2xl transition-all cursor-pointer ${
               activeTool === 'CONVERSATIONAL_DESK'
                 ? 'bg-darkroom-card text-tool-diligence shadow-lg shadow-[var(--color-tool-diligence)]/20 ring-1 ring-tool-diligence/50 border border-tool-diligence/40'
                 : 'hover:bg-darkroom-surface text-slate-400 hover:text-slate-100'
             }`}
-            title="The Producer Desk"
+            title="Screened AI"
           >
             <Sparkles className="size-5" />
             {activeTool === 'CONVERSATIONAL_DESK' && (
               <span className="absolute -right-1 -top-1 size-2.5 rounded-full bg-tool-diligence ring-2 ring-darkroom-bg" />
             )}
           </button>
-          {activeTooltip === 'The Producer Desk' && (
+          {activeTooltip === 'Screened AI' && (
             <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-darkroom-surface text-slate-100 text-sm font-medium whitespace-nowrap shadow-xl border border-darkroom-border z-50 pointer-events-none">
-              The Producer Desk (AI Research Hub)
+              Screened AI (Conversational Hub)
             </div>
           )}
         </div>

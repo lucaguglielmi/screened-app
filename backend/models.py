@@ -299,6 +299,7 @@ class GrantScoutResponse(BaseModel):
 class TestPipelineRequest(BaseModel):
     festivalName: str
     optionalUrl: Optional[str] = None
+    additionalContext: Optional[str] = None
     intent: str = "Vet before submitting"
 
 

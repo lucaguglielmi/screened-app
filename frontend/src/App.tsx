@@ -17,7 +17,6 @@ import {
   CandidateEntity,
   Investigation,
   OutreachDraft,
-  FilmProfile,
 } from './types/investigation';
 import { LeftNavigation } from './components/navigation/LeftNavigation';
 import { MobileNavigation } from './components/navigation/MobileNavigation';
@@ -59,9 +58,6 @@ export default function App() {
   });
 
   const [activeTool, setActiveTool] = useState<ActiveTool>('CONVERSATIONAL_DESK');
-  const [initialScoutProfile, setInitialScoutProfile] = useState<FilmProfile | undefined>(
-    undefined,
-  );
   const [query, setQuery] = useState('');
 
   const [optionalUrl] = useState('');
@@ -476,11 +472,6 @@ export default function App() {
     handleStartInvestigation(festivalName, entryPoint);
   };
 
-  const handleScoutLaunch = (profile: FilmProfile) => {
-    setInitialScoutProfile(profile);
-    setActiveTool('OPPORTUNITY_SCOUT');
-  };
-
   const currentStatus = investigation?.status || 'DRAFT';
 
   return (
@@ -614,11 +605,10 @@ export default function App() {
             </div>
           )}
 
-          {/* View 1: Conversational Producer Desk (Home) */}
+          {/* View 1: Screened AI (Conversational Hub) */}
           {activeTool === 'CONVERSATIONAL_DESK' && (
             <ChatContainer
               onLaunchDueDiligence={(q) => handleDeepScreen(q, 'chat')}
-              onLaunchOpportunityScout={handleScoutLaunch}
               onNavigateToPlaygroundFeedback={() => setActiveTool('WHY_SCREENED')}
               onOpenKeyboardHelp={() => setIsKeyboardHelpOpen(true)}
             />
@@ -628,7 +618,7 @@ export default function App() {
           {(activeTool === 'GRANT_SCOUT' || activeTool === 'OPPORTUNITY_SCOUT') && (
             <Suspense fallback={<div className="p-8 text-center text-slate-500">Loading Grant Research...</div>}>
               <GrantScout
-                initialTitle={initialScoutProfile?.title || 'Untitled Cinema Project'}
+                initialTitle="Untitled Cinema Project"
                 onNavigateToDueDiligence={(q: string) => handleDeepScreen(q, 'grant_scout')}
               />
             </Suspense>
@@ -683,7 +673,7 @@ export default function App() {
                           type="text"
                           value={query}
                           onChange={(e) => setQuery(e.target.value)}
-                          placeholder="Enter festival name (e.g. Raindance, Aldergate (Test Entity), Sundance)..."
+                          placeholder="Enter festival name (e.g. Pinco Pallino Film Festival, Sundance)..."
                           className="w-full pl-11 pr-4 py-3 bg-transparent text-base text-white placeholder-slate-500 focus:outline-none"
                           disabled={loading}
                         />
