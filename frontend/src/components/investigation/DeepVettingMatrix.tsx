@@ -270,9 +270,9 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
                 Generated: {new Date(activeReport.generatedAt).toLocaleDateString()}
               </span>
             </div>
-            <h2 className="text-xl font-bold text-white font-serif tracking-tight flex items-center gap-2">
+            <h2 className="text-xl font-bold text-white font-serif tracking-tight flex items-center gap-2 flex-wrap">
               <span>360° Forensic Vetting Matrix:</span>
-              <span className="text-indigo-400">{activeReport.festivalName}</span>
+              <span className="text-indigo-400 break-words">{activeReport.festivalName}</span>
             </h2>
             <p className="text-xs text-zinc-300 max-w-2xl leading-relaxed">
               Multi-vector corroboration cross-examining corporate filings, WHOIS age, original
@@ -412,18 +412,18 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
                 onClick={() => toggleExpand(dim.id)}
                 className="p-4 sm:p-5 flex items-center justify-between cursor-pointer select-none"
               >
-                <div className="flex items-center space-x-3.5 min-w-0">
+                <div className="flex items-center space-x-3.5 min-w-0 flex-1">
                   <div className="p-2.5 rounded-xl bg-white/[0.04] shrink-0">
                     {getDimensionIcon(dim.dimensionKey)}
                   </div>
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2.5 flex-wrap">
-                      <h3 className="text-sm sm:text-base font-bold text-white tracking-tight truncate">
+                      <h3 className="text-sm sm:text-base font-bold text-white tracking-tight break-words">
                         {dim.title}
                       </h3>
                       {getStatusBadge(dim.status)}
                     </div>
-                    <p className="text-xs text-zinc-400 mt-1 line-clamp-1">{dim.summary}</p>
+                    <p className="text-xs text-zinc-400 mt-1 leading-relaxed break-words">{dim.summary}</p>
                   </div>
                 </div>
 

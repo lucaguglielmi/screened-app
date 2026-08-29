@@ -251,7 +251,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
         <div className={`absolute -right-20 -top-20 size-60 rounded-full blur-3xl pointer-events-none ${status === 'FAILED' ? 'bg-red-500/10' : 'bg-midnight-royal/20'}`} />
         <div className={`absolute -left-20 -bottom-20 size-60 rounded-full blur-3xl pointer-events-none ${status === 'FAILED' ? 'bg-rose-500/5' : 'bg-tool-diligence/10'}`} />
 
-        <div className="space-y-1.5 z-10 min-w-0">
+        <div className="space-y-1.5 z-10 min-w-0 flex-1">
           <div className={`flex items-center gap-2 text-xs font-mono uppercase tracking-wider ${status === 'FAILED' ? 'text-red-400' : 'text-tool-diligence'}`}>
             {status === 'FAILED' ? (
               <AlertTriangle className="size-3.5" />
@@ -262,17 +262,17 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
               {status === 'FAILED' ? 'Investigation Halted' : status === 'READY' ? 'Investigation Complete' : 'Autonomous Multi-Agent Pipeline Active'}
             </span>
           </div>
-          <h2 className="font-serif text-2xl sm:text-3xl font-bold text-white tracking-tight truncate">
+          <h2 className="font-serif text-2xl sm:text-3xl font-bold text-white tracking-tight break-words">
             Investigating {festivalName}
           </h2>
-          <p className="text-sm sm:text-base text-slate-400 leading-relaxed max-w-2xl">
+          <p className="text-sm sm:text-base text-slate-400 leading-relaxed max-w-2xl break-words">
             {status === 'FAILED' 
               ? 'A critical error was encountered during the pipeline execution.' 
               : 'Executing live Parallel Search API calls and Gemini claim extraction across 3 domains.'}
           </p>
         </div>
 
-        <div className="flex flex-col sm:items-end gap-2 z-10 shrink-0">
+        <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-start w-full sm:w-auto gap-2 z-10 shrink-0 border-t sm:border-t-0 border-darkroom-border/40 pt-3 sm:pt-0">
           <div className="px-4 py-1.5 rounded-xl bg-tool-diligence/15 text-tool-diligence text-xs font-mono font-semibold flex items-center gap-2">
             <span
               className={`size-2 rounded-full bg-tool-diligence ${reducedMotion ? '' : 'animate-pulse'}`}
@@ -481,15 +481,15 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName }) 
                 >
                   <activeStep.icon className="size-5" />
                 </div>
-                <div>
-                  <div className="flex items-center gap-2">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-xs font-mono text-indigo-400 font-semibold uppercase tracking-wider">
                       Stage 0{activeStep.stepNumber}
                     </span>
                     <span className="text-slate-600">•</span>
-                    <h3 className="text-base font-bold text-white">{activeStep.name}</h3>
+                    <h3 className="text-base font-bold text-white break-words">{activeStep.name}</h3>
                   </div>
-                  <p className="text-xs font-mono text-slate-400">{activeStep.role}</p>
+                  <p className="text-xs font-mono text-slate-400 break-words">{activeStep.role}</p>
                 </div>
               </div>
 

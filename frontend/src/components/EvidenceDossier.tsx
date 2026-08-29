@@ -510,12 +510,12 @@ export const EvidenceDossier: React.FC<Props> = ({
       {/* Top Profile & Header Card (Non-sticky) */}
       <div className="bg-darkroom-surface p-6 rounded-3xl shadow-2xl space-y-5 border border-darkroom-border">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-paper-card border-darkroom-card pb-4">
-          <div className="space-y-1">
+          <div className="space-y-1 min-w-0 flex-1">
             <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-400">
               <FileText className="size-4" />
               <span>Evidence Dossier</span>
             </div>
-            <h1 className="font-serif text-2xl sm:text-3xl font-semibold text-white">
+            <h1 className="font-serif text-2xl sm:text-3xl font-semibold text-white break-words">
               {entity.name}
             </h1>
           </div>

@@ -59,8 +59,8 @@ export const StarterPromptChips: React.FC<StarterPromptChipsProps> = ({ onSelect
               {item.icon}
             </span>
             <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between gap-2 mb-1.5">
-                <span className="text-base font-bold text-white group-hover:text-indigo-300 transition-colors truncate">
+              <div className="flex flex-wrap items-center justify-between gap-1.5 mb-1.5">
+                <span className="text-base font-bold text-white group-hover:text-indigo-300 transition-colors break-words">
                   {item.title}
                 </span>
                 <span
