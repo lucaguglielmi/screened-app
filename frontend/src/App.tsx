@@ -210,6 +210,7 @@ export default function App() {
   // SSE Subscription
   useEffect(() => {
     if (!investigation?.id) return;
+    if (investigation.status === 'READY') return;
     const invId = investigation.id;
     const invQuery = investigation.query;
 
@@ -232,6 +233,7 @@ export default function App() {
               : null,
           );
         } else if (activityEvent.eventType === 'DOSSIER_READY') {
+          eventSource.close();
           playSuccessChime();
           setIsCelebrating(true);
           setTimeout(() => {
@@ -272,6 +274,7 @@ export default function App() {
     return () => {
       eventSource.close();
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [investigation?.id, investigation?.query, fetchInvestigation]);
 
   // Fallback polling every 3s while investigation is active to guarantee state progression
