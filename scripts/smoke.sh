@@ -8,8 +8,8 @@ echo " Running Screened Smoke Tests against: ${BASE_URL}"
 echo "========================================================"
 
 echo ""
-echo "[1/4] Testing /healthz endpoint..."
-HEALTH_RESP=$(curl -s -f "${BASE_URL}/healthz")
+echo "[1/4] Testing /api/health endpoint..."
+HEALTH_RESP=$(curl -s -f "${BASE_URL}/api/health")
 echo "Health Response: ${HEALTH_RESP}"
 
 echo ""
