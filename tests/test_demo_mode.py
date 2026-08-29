@@ -76,6 +76,23 @@ def test_demo_batch_investigations_returns_200():
     assert data[0]["id"] == DEMO_INVESTIGATION_ID
 
 
+def test_confirm_entity_demo_mode_returns_200():
+    """POST /api/investigations/demo_pinco_pallino/confirm-entity returns 200 with full demo dossier."""
+    response = client.post(
+        f"/api/investigations/{DEMO_INVESTIGATION_ID}/confirm-entity",
+        json={
+            "name": "Pinco Pallino Film Festival",
+            "entityType": "FESTIVAL",
+            "descriptor": "Independent London festival",
+        },
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert data["id"] == DEMO_INVESTIGATION_ID
+    assert data["status"] == "READY"
+    assert len(data["sources"]) >= 7
+
+
 @pytest.mark.asyncio
 async def test_demo_sse_generator_direct():
     """Verify demo_sse_generator yields valid SSE-formatted data without errors."""

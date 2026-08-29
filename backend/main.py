@@ -427,6 +427,11 @@ async def resume_investigation(investigation_id: str, request: Request):
 @limiter.limit("10/minute")
 async def confirm_entity(investigation_id: str, req: ConfirmEntityRequest, request: Request):
     """Confirm disambiguated entity and launch parallel 3-domain research core."""
+    # DEMO MODE INTERCEPTION
+    if investigation_id == "demo_pinco_pallino":
+        from backend.demo_payloads import get_demo_full_dossier
+        return get_demo_full_dossier()
+
     try:
         inv = await orchestrator.confirm_entity(
             investigation_id=investigation_id,

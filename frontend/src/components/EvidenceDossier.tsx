@@ -1086,6 +1086,67 @@ export const EvidenceDossier: React.FC<Props> = ({
             </div>
           )}
 
+          {/* Corporate Entity Intelligence */}
+          {dossier?.corporateEntity && (
+            <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl border border-darkroom-border space-y-4" data-section-name="Corporate Intelligence">
+              <div className="flex flex-col gap-2 border-b border-paper-card border-darkroom-card pb-4">
+                <div className="flex items-center gap-2 text-sm font-mono uppercase tracking-wider text-amber-400 font-semibold">
+                  <Building2 className="size-4" />
+                  <span>Corporate Entity Intelligence</span>
+                </div>
+                <h3 className="text-xl font-bold text-white">{dossier.corporateEntity.legalName}</h3>
+                {dossier.corporateEntity.status && (
+                  <div className="inline-flex items-center self-start gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-400 text-xs font-semibold">
+                    <AlertTriangle className="size-3" />
+                    {dossier.corporateEntity.status}
+                  </div>
+                )}
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="text-xs font-mono uppercase text-slate-500 mb-1">Registration Details</h4>
+                    <p className="text-sm text-slate-300">
+                      <span className="text-slate-400">Reg No:</span> {dossier.corporateEntity.registrationNumber || 'N/A'}<br />
+                      <span className="text-slate-400">Incorporated:</span> {dossier.corporateEntity.incorporationDate || 'N/A'}<br />
+                      <span className="text-slate-400">Address:</span> {dossier.corporateEntity.registeredAddress || 'N/A'}
+                    </p>
+                  </div>
+                  {dossier.corporateEntity.notes && (
+                    <div>
+                      <h4 className="text-xs font-mono uppercase text-slate-500 mb-1">Analyst Notes</h4>
+                      <p className="text-sm text-slate-300 leading-relaxed bg-darkroom-card p-3 rounded-lg border border-darkroom-border">
+                        {dossier.corporateEntity.notes}
+                      </p>
+                    </div>
+                  )}
+                </div>
+                <div className="space-y-4">
+                  {dossier.corporateEntity.associatedFestivals && dossier.corporateEntity.associatedFestivals.length > 0 && (
+                    <div>
+                      <h4 className="text-xs font-mono uppercase text-slate-500 mb-1">Associated Festivals</h4>
+                      <ul className="list-disc list-inside text-sm text-slate-300">
+                        {dossier.corporateEntity.associatedFestivals.map((fest, idx) => (
+                          <li key={idx}>{fest}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {dossier.corporateEntity.connectedEntities && dossier.corporateEntity.connectedEntities.length > 0 && (
+                    <div>
+                      <h4 className="text-xs font-mono uppercase text-slate-500 mb-1">Connected Entities</h4>
+                      <ul className="list-disc list-inside text-sm text-slate-300">
+                        {dossier.corporateEntity.connectedEntities.map((ent, idx) => (
+                          <li key={idx}>{ent}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Key Personnel & Leadership Intelligence */}
           {deepVetting?.keyPersonnel && deepVetting.keyPersonnel.length > 0 && (
             <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl border border-darkroom-border space-y-4" data-section-name="Key Personnel">

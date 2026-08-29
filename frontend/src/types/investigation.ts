@@ -104,6 +104,18 @@ export interface DisputeRecord {
   guidance: string;
 }
 
+export interface CorporateEntity {
+  legalName: string;
+  registrationNumber?: string;
+  status: string;
+  incorporationDate?: string;
+  registeredAddress?: string;
+  associatedFestivals: string[];
+  connectedEntities: string[];
+  flags: string[];
+  notes?: string;
+}
+
 export interface DossierReport {
   executiveSummary: string;
   festivalOverview: string;
@@ -112,6 +124,7 @@ export interface DossierReport {
   unresolvedQuestions: string[];
   filmmakerChecklist: string[];
   keyPersons?: string[];
+  corporateEntity?: CorporateEntity;
 }
 
 export interface TransparencyMetric {

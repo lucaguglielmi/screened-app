@@ -46,41 +46,41 @@ async def demo_sse_generator():
         return f"data: {json.dumps(payload)}\n\n"
 
     # Stage 1: Planning (5s)
-    yield format_event("PLANNING_STARTED", "Formulating parallel investigation strategy...")
+    yield format_event("PLANNING_STARTED", "Formulating parallel investigation strategy across 3 core domains...")
     await asyncio.sleep(1.5)
-    yield format_event("PLANNING_STEP", "Identifying key domains: Corporate, Venue, Filmmaker Feedback...")
+    yield format_event("PLANNING_STEP", "Identifying target research domains: Corporate Shells, Venue Verification, Filmmaker Sentiment...", {"queriesCount": 6, "sourcesCount": 4})
     await asyncio.sleep(2.0)
-    yield format_event("PLANNING_STEP", "Found candidate entity.", {"candidates": get_demo_investigation()["candidates"]})
+    yield format_event("PLANNING_STEP", "Found candidate entity. Ready for confirmation.", {"candidates": get_demo_investigation()["candidates"], "sourcesCount": 6})
     await asyncio.sleep(1.5)
 
     # Stage 2: Researching (5s)
-    yield format_event("DOMAIN_SEARCH_STARTED", "Dispatching sub-agents to verify claims...")
+    yield format_event("DOMAIN_SEARCH_STARTED", "Dispatching parallel sub-agents across 18 public and commercial sources...", {"sourcesCount": 18, "queriesCount": 6})
     await asyncio.sleep(1.25)
-    yield format_event("AGENT_UPDATE", "VenueAgent: Verified BFI Southbank private hire manifests.", {"agent": "VenueAgent"})
+    yield format_event("AGENT_UPDATE", "VenueAgent: Harvested BFI Southbank & Genesis Cinema box office manifests (4 sources).", {"agent": "VenueAgent", "sourcesCount": 8, "claimsCount": 3})
     await asyncio.sleep(1.25)
-    yield format_event("AGENT_UPDATE", "CorporateAgent: Found Companies House matches for key personnel.", {"agent": "CorporateAgent"})
+    yield format_event("AGENT_UPDATE", "CorporateAgent: Retrieved Companies House & London Gazette filings for Pallino Media Lab (5 sources).", {"agent": "CorporateAgent", "sourcesCount": 14, "claimsCount": 6})
     await asyncio.sleep(1.25)
-    yield format_event("AGENT_UPDATE", "SentimentAgent: Aggregating 42+ reviews from Reddit & TrustPilot.", {"agent": "SentimentAgent"})
+    yield format_event("AGENT_UPDATE", "SentimentAgent: Aggregated 42+ filmmaker testimonies from Reddit r/Filmmakers, Stage 32 & TrustPilot (9 sources).", {"agent": "SentimentAgent", "sourcesCount": 18, "claimsCount": 10})
     await asyncio.sleep(1.25)
 
     # Stage 3: Analyzing (5s)
-    yield format_event("CONTRADICTIONS_ANALYZING", "Cross-referencing claims and calculating risk scores...")
+    yield format_event("CONTRADICTIONS_ANALYZING", "Cross-referencing 10 atomic claims against 18 multi-domain sources...", {"sourcesCount": 18, "claimsCount": 10, "contradictionsCount": 4})
     await asyncio.sleep(1.5)
-    yield format_event("AGENT_UPDATE", "VerificationAgent: Checking sponsor legitimacy with ARRI and Sony.", {"agent": "VerificationAgent"})
+    yield format_event("AGENT_UPDATE", "VerificationAgent: Verified manufacturer sponsorship disavowals with ARRI & Sony.", {"agent": "VerificationAgent", "sourcesCount": 18, "claimsCount": 10})
     await asyncio.sleep(1.5)
-    yield format_event("AGENT_UPDATE", "FraudAgent: Flagged conflict of interest anomaly in jury records.", {"agent": "FraudAgent"})
+    yield format_event("AGENT_UPDATE", "FraudAgent: Flagged conflict of interest anomaly in jury records & consulting upsells.", {"agent": "FraudAgent", "sourcesCount": 18, "claimsCount": 10, "contradictionsCount": 4})
     await asyncio.sleep(2.0)
 
     # Stage 4: Synthesizing (5s)
-    yield format_event("DOSSIER_SYNTHESIZING", "Assembling finalized evidence dossier...")
+    yield format_event("DOSSIER_SYNTHESIZING", "Assembling finalized evidence dossier with 18 verified sources and 10 claims...", {"sourcesCount": 18, "claimsCount": 10, "contradictionsCount": 4})
     await asyncio.sleep(1.5)
-    yield format_event("AGENT_UPDATE", "FraudAgent: Flagged fabricated sponsorships.", {"agent": "FraudAgent"})
+    yield format_event("AGENT_UPDATE", "SynthesisAgent: Finalizing full forensic dossier and executive summary.", {"agent": "SynthesisAgent", "sourcesCount": 18, "claimsCount": 10})
     await asyncio.sleep(2.0)
-    yield format_event("AGENT_UPDATE", "SynthesisAgent: Reviewing final output for accuracy...", {"agent": "SynthesisAgent"})
+    yield format_event("AGENT_UPDATE", "SynthesisAgent: Reviewing final output for accuracy and source citations...", {"agent": "SynthesisAgent", "sourcesCount": 18, "claimsCount": 10})
     await asyncio.sleep(1.5)
 
     # Complete
-    yield format_event("DOSSIER_READY", "Investigation complete. Generating final dossier.")
+    yield format_event("DOSSIER_READY", "Investigation complete. Generating final dossier.", {"sourcesCount": 18, "claimsCount": 10, "contradictionsCount": 4})
 
 
 def get_demo_full_dossier():
@@ -513,6 +513,22 @@ def get_demo_full_dossier():
             
             "participantFeedback": "Aggregated sentiment across Reddit, TrustPilot, and FilmFreeway reviews is overwhelmingly negative, generating a high volume of community red flags. The most frequent complaint (42 independent reports) centers on severe communication blackouts, with filmmakers citing 3 to 5 week delays past the official notification date.\n\nSecondary complaints focus on the physical screening experience. Despite the prestigious venue names, filmmakers report that the actual screenings were relegated to secondary, unequipped basement rooms with frequent audio-visual failures and no attending industry professionals or press.",
             
+            "corporateEntity": {
+                "legalName": "Pallino Media Lab Ltd",
+                "registrationNumber": "13984712",
+                "status": "Dissolved via Compulsory Strike-off (14 March 2024)",
+                "incorporationDate": "12 April 2022",
+                "registeredAddress": "71-75 Shelton Street, London, WC2H 9JQ, UK",
+                "associatedFestivals": ["Pinco Pallino Film Festival", "Apex Short Film Arena", "London Indie Excellence Awards"],
+                "connectedEntities": ["Pinco Pallino Film CIC", "IndiePitch Consulting", "Sterling Productions Ltd"],
+                "flags": [
+                    "Dissolved via Compulsory Strike-off",
+                    "Shell Entity Registered Address (Shelton Street)",
+                    "Director Active Insolvency Notice"
+                ],
+                "notes": "Registered to a well-known virtual office address often associated with shell companies. Entity was struck off the register while continuing to collect festival entry fees."
+            },
+
             "unresolvedQuestions": [
                 "Why was the 'Best International Short' awarded to the exact same director (Martin Sterling) in both 2024 and 2025?",
                 "How does the festival acquire filmmaker contact information to use for third-party Pallino Media Lab marketing?",
