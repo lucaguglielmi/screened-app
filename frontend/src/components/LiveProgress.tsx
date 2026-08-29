@@ -266,19 +266,16 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, is
     return { 
       sources: Math.min(sources, events.length), 
       claims: claims > 0 ? claims : events.filter(e => e.message.includes('Extracted')).length, 
-      contradictions: events.filter(e => e.eventType === 'ANALYZING_CONTRADICTIONS').length 
+      contradictions: Math.max(contradictions, events.filter(e => e.eventType === 'ANALYZING_CONTRADICTIONS').length) 
     };
   }, [events]);
 
   // Active Query extraction
   const activeQuery = useMemo(() => {
-    for (let i = events.length - 1; i >= 0; i--) {
-      const msg = events[i].message;
-      if (msg.startsWith('Querying:') || msg.startsWith('Searching:') || msg.startsWith('Executing task API:')) {
-        return msg.replace('Executing task API:', 'Searching:');
-      }
-    }
-    return null;
+    const matchEvent = events.slice().reverse().find(e => 
+      e.message.startsWith('Querying:') || e.message.startsWith('Searching:') || e.message.startsWith('Executing task API:')
+    );
+    return matchEvent ? matchEvent.message.replace('Executing task API:', 'Searching:') : null;
   }, [events]);
 
   // Deduplicated display events for stream console

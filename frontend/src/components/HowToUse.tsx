@@ -98,7 +98,7 @@ export const HowToUse: React.FC<Props> = ({
 
         {/* Opportunity Scout */}
         <div className="p-6 rounded-3xl bg-darkroom-surface border border-darkroom-border flex flex-col h-full space-y-4">
-          <div className="p-3 rounded-2xl bg-tool-scout/20 text-rose-400 self-start">
+          <div className="p-3 rounded-2xl bg-tool-diligence/20 text-tool-diligence self-start">
             <Compass className="size-6" />
           </div>
           <h2 className="text-xl font-bold text-white">3. Opportunity Scout</h2>
@@ -113,7 +113,7 @@ export const HowToUse: React.FC<Props> = ({
           <div className="pt-4 border-t border-darkroom-border">
             <button
               onClick={onNavigateToScout}
-              className="text-rose-400 hover:text-rose-300 text-sm font-bold flex items-center gap-1.5 transition-colors"
+              className="text-tool-diligence hover:text-tool-diligence-hover text-sm font-bold flex items-center gap-1.5 transition-colors"
             >
               <FileText className="size-4" /> Find Opportunities
             </button>

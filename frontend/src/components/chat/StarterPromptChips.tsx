@@ -12,7 +12,7 @@ const STARTER_PROMPTS = [
     prompt:
       'Is Aldergate Film Festival (Test Entity) legitimate or a scam? Check their physical venue screening leases and entry fees.',
     badge: 'Due Diligence',
-    badgeClass: 'bg-tool-diligence/20 text-tool-diligence border-tool-diligence/40',
+    badgeClass: 'bg-tool-diligence/15 text-tool-diligence border border-tool-diligence/30',
   },
   {
     icon: '🎯',
@@ -20,14 +20,14 @@ const STARTER_PROMPTS = [
     prompt:
       'I have a 14-minute sci-fi short looking for a UK premiere under a £250 submission budget. Where should I apply?',
     badge: 'Opportunity Scout',
-    badgeClass: 'bg-tool-scout/20 text-tool-scout border-tool-scout/40',
+    badgeClass: 'bg-tool-diligence/15 text-tool-diligence border border-tool-diligence/30',
   },
   {
     icon: '⚔️',
     title: 'Sundance vs Tribeca',
     prompt: 'Compare Sundance vs Tribeca for an independent documentary premiere.',
     badge: 'Versus Arena',
-    badgeClass: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40',
+    badgeClass: 'bg-tool-diligence/15 text-tool-diligence border border-tool-diligence/30',
   },
   {
     icon: '📜',
@@ -35,7 +35,7 @@ const STARTER_PROMPTS = [
     prompt:
       'Check Raindance Film Festival accreditation, BAFTA/BIFA qualifying status, and recent filmmaker feedback.',
     badge: 'Prestige Audit',
-    badgeClass: 'bg-midnight-royal/20 text-indigo-300 border-midnight-royal/40',
+    badgeClass: 'bg-tool-diligence/15 text-tool-diligence border border-tool-diligence/30',
   },
 ];
 
@@ -53,18 +53,18 @@ export const StarterPromptChips: React.FC<StarterPromptChipsProps> = ({ onSelect
               soundEffects.playClick();
               onSelectPrompt(item.prompt);
             }}
-            className="flex items-start gap-3.5 p-4 text-left rounded-2xl bg-darkroom-surface hover:bg-darkroom-card transition-all group cursor-pointer shadow-xl"
+            className="flex items-start gap-3.5 p-4 text-left rounded-2xl bg-darkroom-surface hover:bg-darkroom-card transition-all group cursor-pointer shadow-xl border border-darkroom-border hover:border-tool-diligence/40"
           >
             <span className="text-2xl shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
               {item.icon}
             </span>
             <div className="flex-1 min-w-0">
               <div className="flex flex-wrap items-center justify-between gap-1.5 mb-1.5">
-                <span className="text-base font-bold text-white group-hover:text-indigo-300 transition-colors break-words">
+                <span className="text-base font-bold text-white group-hover:text-tool-diligence transition-colors break-words">
                   {item.title}
                 </span>
                 <span
-                  className={`text-xs font-mono font-semibold px-2.5 py-0.5 rounded-md ${item.badgeClass}`}
+                  className={`text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full ${item.badgeClass}`}
                 >
                   {item.badge}
                 </span>

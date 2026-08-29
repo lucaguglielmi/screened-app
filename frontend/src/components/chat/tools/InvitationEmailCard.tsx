@@ -27,20 +27,20 @@ export const InvitationEmailCard: React.FC<InvitationEmailCardProps> = ({
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full max-w-2xl bg-darkroom-surface rounded-2xl p-6 shadow-2xl space-y-4 my-2 text-zinc-100"
+      className="w-full max-w-2xl my-2 p-5 sm:p-6 rounded-2xl border border-tool-diligence/30 bg-gradient-to-br from-tool-diligence/10 via-darkroom-surface to-darkroom-bg shadow-xl backdrop-blur-md transition-all hover:border-tool-diligence/60 text-slate-100 space-y-4"
     >
       {/* Header */}
-      <div className="flex items-center justify-between pb-3">
+      <div className="flex items-center justify-between border-b border-tool-diligence/20 pb-3">
         <div className="flex items-center space-x-3">
-          <div className="w-9 h-9 rounded-xl bg-rose-600/20 flex items-center justify-center text-rose-400">
+          <div className="w-8 h-8 rounded-xl bg-tool-diligence/20 flex items-center justify-center text-tool-diligence font-bold border border-tool-diligence/40">
             <MailWarning className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center space-x-2">
-              <span className="text-xs font-mono font-semibold tracking-wider text-rose-400 uppercase">
+              <span className="text-xs font-mono font-bold tracking-wider text-tool-diligence uppercase">
                 Invitation & Laurel Audit
               </span>
-              <span className="text-[10px] px-2 py-0.5 rounded-md bg-rose-500/15 text-rose-400 font-mono font-semibold">
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-tool-diligence/15 text-tool-diligence border border-tool-diligence/30 font-mono font-semibold">
                 Predatory Pattern Check
               </span>
             </div>
@@ -48,27 +48,27 @@ export const InvitationEmailCard: React.FC<InvitationEmailCardProps> = ({
           </div>
         </div>
         <div className="text-right hidden sm:block">
-          <span className="text-[11px] text-zinc-400 font-mono">Domain & Fee Check</span>
+          <span className="text-xs text-slate-400 font-mono">Domain & Fee Check</span>
         </div>
       </div>
 
       {/* Verdict & Signal Warning */}
-      <div className="p-4 rounded-xl bg-darkroom-card space-y-2.5 text-xs">
-        <div className="flex items-start space-x-2 text-rose-300">
-          <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+      <div className="p-4 rounded-xl bg-darkroom-bg border border-tool-diligence/20 space-y-3 text-xs">
+        <div className="flex items-start space-x-2 text-slate-200 text-sm">
+          <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
           <p className="leading-relaxed">{args.initial_verdict}</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-          <div className="flex items-center space-x-2 text-[11px] text-zinc-300 bg-darkroom-surface p-2.5 rounded-lg">
-            <Globe className="w-3.5 h-3.5 text-zinc-400" />
+          <div className="flex items-center space-x-2 text-xs text-slate-300 bg-darkroom-surface p-2.5 rounded-lg border border-darkroom-border">
+            <Globe className="w-3.5 h-3.5 text-tool-diligence shrink-0" />
             <span className="font-mono truncate">Sender: {senderDomain}</span>
           </div>
 
-          <div className="flex items-center space-x-2 text-[11px] text-zinc-300 bg-darkroom-surface p-2.5 rounded-lg">
-            <DollarSign className="w-3.5 h-3.5 text-zinc-400" />
+          <div className="flex items-center space-x-2 text-xs text-slate-300 bg-darkroom-surface p-2.5 rounded-lg border border-darkroom-border">
+            <DollarSign className="w-3.5 h-3.5 text-tool-diligence shrink-0" />
             <span>
-              Waiver Code: {args.fee_waiver_offered ? 'Yes (50-100% Discount)' : 'Standard Entry'}
+              Waiver: {args.fee_waiver_offered ? 'Yes (50-100% Discount)' : 'Standard Entry'}
             </span>
           </div>
         </div>
@@ -76,7 +76,7 @@ export const InvitationEmailCard: React.FC<InvitationEmailCardProps> = ({
 
       {/* Red Flag Indicators */}
       <div className="space-y-2 text-xs">
-        <span className="block text-[11px] font-mono text-zinc-400 uppercase tracking-wider">
+        <span className="block text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">
           Forensic Indicators Detected:
         </span>
         <div className="space-y-2">
@@ -89,9 +89,9 @@ export const InvitationEmailCard: React.FC<InvitationEmailCardProps> = ({
           ).map((signal, idx) => (
             <div
               key={idx}
-              className="flex items-start space-x-2.5 text-zinc-300 bg-darkroom-card p-3 rounded-xl"
+              className="flex items-start space-x-2.5 text-slate-200 bg-darkroom-bg border border-tool-diligence/15 p-3 rounded-xl"
             >
-              <ShieldAlert className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+              <ShieldAlert className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
               <span className="text-xs leading-relaxed">{signal}</span>
             </div>
           ))}
@@ -99,13 +99,13 @@ export const InvitationEmailCard: React.FC<InvitationEmailCardProps> = ({
       </div>
 
       {/* Action Button */}
-      <div className="pt-2">
+      <div className="pt-3 border-t border-darkroom-border">
         <button
           onClick={() => {
             soundEffects.playSuccess();
             onLaunchInvestigation(festivalName);
           }}
-          className="w-full flex items-center justify-center space-x-2 py-3 px-4 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs font-mono shadow-lg shadow-rose-950/50 hover:shadow-rose-600/30 transition-all group cursor-pointer"
+          className="w-full flex items-center justify-center space-x-2 py-3 px-6 rounded-xl bg-tool-diligence hover:bg-tool-diligence-hover text-slate-950 font-bold text-base shadow-md shadow-[var(--color-tool-diligence)]/30 transition-all hover:brightness-110 active:scale-95 group cursor-pointer"
         >
           <span>Run Full 3-Domain Background Check on "{festivalName}"</span>
           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

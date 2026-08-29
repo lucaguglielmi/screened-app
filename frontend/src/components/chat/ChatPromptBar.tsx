@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Paperclip,
   Send,
@@ -23,6 +23,7 @@ interface SpeechRecognitionInstance {
   onend: (() => void) | null;
   start: () => void;
   stop: () => void;
+  abort: () => void;
 }
 
 interface SpeechRecognitionConstructor {
@@ -46,6 +47,18 @@ interface ChatPromptBarProps {
   isLoading: boolean;
 }
 
+
+// Force release microphone hardware lock on iOS Safari
+const forceReleaseMicrophone = () => {
+  if (typeof navigator !== 'undefined' && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(stream => {
+        stream.getTracks().forEach(track => track.stop());
+      })
+      .catch(() => {});
+  }
+};
+
 export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isLoading }) => {
   const [input, setInput] = useState('');
   const [attachedFile, setAttachedFile] = useState<AttachedFileState | null>(null);
@@ -54,6 +67,17 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
   const [isCapabilitiesModalOpen, setIsCapabilitiesModalOpen] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    return () => {
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.abort();
+        } catch (e) {}
+        forceReleaseMicrophone();
+      }
+    };
+  }, []);
+
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
   const latestTranscriptRef = useRef<string>('');
 
@@ -122,6 +146,7 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
       };
 
       recognition.onerror = (event) => {
+        forceReleaseMicrophone();
         console.warn('Speech recognition error:', event.error);
         setIsRecording(false);
         if (event.error === 'not-allowed') {
@@ -133,6 +158,7 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
       };
 
       recognition.onend = () => {
+        forceReleaseMicrophone();
         setIsRecording(false);
         const textToSend = latestTranscriptRef.current.trim();
         if (textToSend) {
@@ -162,7 +188,7 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
   const stopRecording = () => {
     if (recognitionRef.current) {
       try {
-        recognitionRef.current.stop();
+        recognitionRef.current.abort(); // Use abort instead of stop to force immediate cleanup
       } catch (err) {
         console.warn('Error stopping recognition:', err);
       }

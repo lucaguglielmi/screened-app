@@ -21,13 +21,13 @@ export const ToolSwitcher: React.FC<Props> = ({ activeTool, onChange }) => {
         onClick={() => handleSwitch('CONVERSATIONAL_DESK')}
         className={`px-3 sm:px-4 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
           activeTool === 'CONVERSATIONAL_DESK'
-            ? 'bg-darkroom-surface text-darkroom-text shadow-xs font-semibold'
-            : 'text-darkroom-muted hover:text-paper-text hover:text-darkroom-text'
+            ? 'bg-darkroom-surface text-tool-diligence shadow-xs font-bold border border-tool-diligence/30'
+            : 'text-slate-400 hover:text-white'
         }`}
       >
-        <Sparkles className="size-3.5 text-amber-500" />
+        <Sparkles className="size-3.5 text-tool-diligence" />
         <span>The Desk</span>
-        <span className="hidden sm:inline text-[9px] px-1.5 py-0.2 rounded-full bg-amber-500/10 text-amber-600 text-amber-400 font-mono">
+        <span className="hidden sm:inline text-[9px] px-1.5 py-0.5 rounded-full bg-tool-diligence/15 text-tool-diligence border border-tool-diligence/30 font-mono font-semibold">
           AI
         </span>
       </button>
@@ -37,11 +37,11 @@ export const ToolSwitcher: React.FC<Props> = ({ activeTool, onChange }) => {
         onClick={() => handleSwitch('DUE_DILIGENCE')}
         className={`px-3 sm:px-4 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
           activeTool === 'DUE_DILIGENCE'
-            ? 'bg-darkroom-surface text-darkroom-text shadow-xs font-semibold'
-            : 'text-darkroom-muted hover:text-paper-text hover:text-darkroom-text'
+            ? 'bg-darkroom-surface text-tool-diligence shadow-xs font-bold border border-tool-diligence/30'
+            : 'text-slate-400 hover:text-white'
         }`}
       >
-        <ShieldCheck className="size-3.5 text-indigo-500" />
+        <ShieldCheck className="size-3.5 text-tool-diligence" />
         <span>Due Diligence</span>
       </button>
 
@@ -50,11 +50,11 @@ export const ToolSwitcher: React.FC<Props> = ({ activeTool, onChange }) => {
         onClick={() => handleSwitch('OPPORTUNITY_SCOUT')}
         className={`px-3 sm:px-4 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
           activeTool === 'OPPORTUNITY_SCOUT'
-            ? 'bg-darkroom-surface text-darkroom-text shadow-xs font-semibold'
-            : 'text-darkroom-muted hover:text-paper-text hover:text-darkroom-text'
+            ? 'bg-darkroom-surface text-tool-diligence shadow-xs font-bold border border-tool-diligence/30'
+            : 'text-slate-400 hover:text-white'
         }`}
       >
-        <Compass className="size-3.5 text-indigo-500" />
+        <Compass className="size-3.5 text-tool-diligence" />
         <span>Opportunity Scout</span>
       </button>
 
@@ -64,11 +64,11 @@ export const ToolSwitcher: React.FC<Props> = ({ activeTool, onChange }) => {
         title="Interactive Component Studio & Visual Playground"
         className={`px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
           activeTool === 'DESIGN_PLAYGROUND'
-            ? 'bg-darkroom-surface text-darkroom-text shadow-xs font-semibold'
-            : 'text-darkroom-muted hover:text-paper-text hover:text-darkroom-text'
+            ? 'bg-darkroom-surface text-tool-diligence shadow-xs font-bold border border-tool-diligence/30'
+            : 'text-slate-400 hover:text-white'
         }`}
       >
-        <Palette className="size-3.5 text-pink-500" />
+        <Palette className="size-3.5 text-tool-diligence" />
         <span className="hidden md:inline">Playground</span>
       </button>
     </div>

@@ -147,18 +147,18 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                   onClick={() => handleSelect('CONVERSATIONAL_DESK')}
                   className={`w-full p-3.5 rounded-2xl flex items-center gap-3.5 transition-all text-left cursor-pointer ${
                     activeTool === 'CONVERSATIONAL_DESK'
-                      ? 'bg-darkroom-card border border-midnight-royal/80 text-white shadow-lg shadow-[var(--color-midnight-royal)]/20'
+                      ? 'bg-darkroom-card border border-tool-diligence/80 text-white shadow-lg shadow-[var(--color-tool-diligence)]/20'
                       : 'bg-darkroom-surface hover:bg-darkroom-card border border-darkroom-border text-slate-300'
                   }`}
                 >
-                  <div className="size-10 rounded-xl bg-midnight-royal flex items-center justify-center text-white shadow-md shrink-0">
+                  <div className="size-10 rounded-xl bg-tool-diligence/20 text-tool-diligence border border-tool-diligence/40 flex items-center justify-center font-bold shadow-md shrink-0">
                     <Sparkles className="size-5" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
                       <h4 className="text-base font-bold text-white">Mission Control</h4>
                       {activeTool === 'CONVERSATIONAL_DESK' && (
-                        <Check className="size-4 text-indigo-400" />
+                        <Check className="size-4 text-tool-diligence" />
                       )}
                     </div>
                     <p className="text-xs text-slate-400 line-clamp-1">Main AI Command Interface</p>
@@ -197,18 +197,18 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                   onClick={() => handleSelect('OPPORTUNITY_SCOUT')}
                   className={`w-full p-3.5 rounded-2xl flex items-center gap-3.5 transition-all text-left cursor-pointer ${
                     activeTool === 'OPPORTUNITY_SCOUT'
-                      ? 'bg-darkroom-card border border-tool-scout/80 text-white shadow-lg shadow-[var(--color-tool-scout)]/20'
+                      ? 'bg-darkroom-card border border-tool-diligence/80 text-white shadow-lg shadow-[var(--color-tool-diligence)]/20'
                       : 'bg-darkroom-surface hover:bg-darkroom-card border border-darkroom-border text-slate-300'
                   }`}
                 >
-                  <div className="size-10 rounded-xl bg-gradient-to-tr from-tool-scout via-tool-scout to-tool-scout-hover flex items-center justify-center text-white shadow-md shrink-0">
-                    <Compass className="size-5 text-white" />
+                  <div className="size-10 rounded-xl bg-gradient-to-tr from-tool-diligence to-tool-diligence-hover flex items-center justify-center text-slate-950 shadow-md shrink-0">
+                    <Compass className="size-5 text-slate-950" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
                       <h4 className="text-base font-bold text-white">Opportunity Scout</h4>
                       {activeTool === 'OPPORTUNITY_SCOUT' && (
-                        <Check className="size-4 text-tool-scout" />
+                        <Check className="size-4 text-tool-diligence" />
                       )}
                     </div>
                     <p className="text-xs text-slate-400 line-clamp-1">
@@ -229,7 +229,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                   onClick={() => handleSelect('WHY_SCREENED')}
                   className={`w-full px-3 py-2 rounded-xl flex items-center justify-between text-xs font-medium transition-colors ${
                     activeTool === 'WHY_SCREENED'
-                      ? 'text-indigo-400 bg-indigo-500/10 font-semibold'
+                      ? 'text-tool-diligence bg-tool-diligence/10 font-semibold'
                       : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
                   }`}
                 >
@@ -245,7 +245,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                   onClick={() => handleSelect('DESIGN_PLAYGROUND')}
                   className={`w-full px-3 py-2 rounded-xl flex items-center justify-between text-xs font-medium transition-colors ${
                     activeTool === 'DESIGN_PLAYGROUND'
-                      ? 'text-purple-400 bg-purple-500/10 font-semibold'
+                      ? 'text-tool-diligence bg-tool-diligence/10 font-semibold'
                       : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
                   }`}
                 >

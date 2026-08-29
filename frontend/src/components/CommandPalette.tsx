@@ -47,7 +47,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       label: 'Mission Control (Main AI Interface)',
       category: 'Workspaces',
       icon: Sparkles,
-      iconColor: 'text-indigo-400',
+      iconColor: 'text-tool-diligence',
       action: () => {
         onSelectTool('CONVERSATIONAL_DESK');
         onClose();
@@ -69,7 +69,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       label: 'Opportunity Scout (Slate Matching)',
       category: 'Workspaces',
       icon: Compass,
-      iconColor: 'text-tool-scout',
+      iconColor: 'text-tool-diligence',
       action: () => {
         onSelectTool('OPPORTUNITY_SCOUT');
         onClose();
@@ -80,7 +80,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       label: 'Why Screened Exists (Problem & Impact)',
       category: 'Evidence & Research',
       icon: Scale,
-      iconColor: 'text-indigo-300',
+      iconColor: 'text-tool-diligence',
       action: () => {
         onSelectTool('WHY_SCREENED');
         onClose();
@@ -91,7 +91,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       label: 'How To Use Screened (AI Agent Page)',
       category: 'Evidence & Research',
       icon: Command,
-      iconColor: 'text-indigo-300',
+      iconColor: 'text-tool-diligence',
       action: () => {
         onSelectTool('HOW_TO_USE');
         onClose();
@@ -102,7 +102,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       label: 'Design Playground',
       category: 'Design Playground',
       icon: Palette,
-      iconColor: 'text-purple-400',
+      iconColor: 'text-tool-diligence',
       action: () => {
         onSelectTool('DESIGN_PLAYGROUND');
         onClose();

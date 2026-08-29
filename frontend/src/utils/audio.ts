@@ -1,6 +1,7 @@
 // Web Audio API synthesized micro-sounds (no external audio files needed)
 
 let audioCtx: AudioContext | null = null;
+let suspendTimeout: ReturnType<typeof setTimeout> | null = null;
 
 function getAudioContext(): AudioContext | null {
   if (typeof window === 'undefined') return null;
@@ -15,6 +16,16 @@ function getAudioContext(): AudioContext | null {
   if (audioCtx && audioCtx.state === 'suspended') {
     audioCtx.resume();
   }
+  
+  if (suspendTimeout) {
+    clearTimeout(suspendTimeout);
+  }
+  suspendTimeout = setTimeout(() => {
+    if (audioCtx && audioCtx.state === 'running') {
+      audioCtx.suspend().catch(() => {});
+    }
+  }, 2000);
+
   return audioCtx;
 }
 

@@ -75,28 +75,28 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args, onLaunch
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full max-w-2xl bg-darkroom-surface rounded-2xl p-6 shadow-2xl space-y-4 my-2 text-zinc-100"
+      className="w-full max-w-2xl my-2 p-5 sm:p-6 rounded-2xl border border-tool-diligence/30 bg-gradient-to-br from-tool-diligence/10 via-darkroom-surface to-darkroom-bg shadow-xl backdrop-blur-md transition-all hover:border-tool-diligence/60 text-slate-100 space-y-4"
     >
       {/* Header */}
-      <div className="flex items-center justify-between pb-3">
+      <div className="flex items-center justify-between border-b border-tool-diligence/20 pb-3">
         <div className="flex items-center space-x-3">
-          <div className="w-9 h-9 rounded-xl bg-blue-600/20 flex items-center justify-center text-blue-400">
+          <div className="w-8 h-8 rounded-xl bg-tool-diligence/20 flex items-center justify-center text-tool-diligence font-bold border border-tool-diligence/40">
             <Coins className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center space-x-2">
-              <span className="text-xs font-mono font-semibold tracking-wider text-blue-400 uppercase">
+              <span className="text-xs font-mono font-bold tracking-wider text-tool-diligence uppercase">
                 Film Grant & Sponsor Match
               </span>
-              <span className="text-[10px] px-2 py-0.5 rounded-md bg-blue-500/15 text-blue-400 font-mono font-semibold">
-                Intake
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-tool-diligence/15 text-tool-diligence border border-tool-diligence/30 font-mono font-semibold">
+                Public Ingestion
               </span>
             </div>
             <h3 className="text-base font-bold text-white font-serif">{projectTitle}</h3>
           </div>
         </div>
         <div className="text-right hidden sm:block">
-          <span className="text-[11px] text-zinc-400 font-mono">
+          <span className="text-xs text-slate-400 font-mono">
             BFI · Screen Scotland · Lottery
           </span>
         </div>
@@ -104,180 +104,178 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args, onLaunch
 
       {/* REQUIREMENTS GATHERING UI */}
       <div className="space-y-4">
-          {/* Project Title Input */}
-          <div className="text-xs">
-            <label className="block text-zinc-400 font-mono mb-1">Project / Screenplay Title</label>
+        {/* Project Title Input */}
+        <div className="text-xs">
+          <label className="block text-sm font-semibold text-slate-300 mb-1.5">Project / Screenplay Title</label>
+          <input
+            type="text"
+            value={projectTitle}
+            onChange={(e) => setProjectTitle(e.target.value)}
+            placeholder="e.g. Echoes of the Humber"
+            className="w-full bg-darkroom-bg border border-transparent focus:border-tool-diligence rounded-xl px-3.5 py-2.5 text-white text-base placeholder:text-zinc-500 focus:outline-none"
+          />
+        </div>
+
+        {/* Budget & Funding Needed Sliders */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
+          {/* Total Budget Slider */}
+          <div className="space-y-2 bg-darkroom-bg border border-tool-diligence/20 p-4 rounded-xl">
+            <div className="flex justify-between items-center">
+              <span className="text-slate-400 font-mono text-xs">Total Estimated Budget</span>
+              <span className="font-bold text-tool-diligence font-mono text-sm">
+                £{budgetTier.toLocaleString()}
+              </span>
+            </div>
             <input
-              type="text"
-              value={projectTitle}
-              onChange={(e) => setProjectTitle(e.target.value)}
-              placeholder="e.g. Echoes of the Humber"
-              className="w-full bg-darkroom-card rounded-xl px-3.5 py-2.5 text-white text-base placeholder:text-zinc-500 focus:outline-none focus:bg-paper-border focus:bg-darkroom-border"
+              type="range"
+              min={5000}
+              max={500000}
+              step={5000}
+              value={budgetTier}
+              onChange={(e) => setBudgetTier(Number(e.target.value))}
+              className="w-full h-2 bg-darkroom-surface rounded-lg appearance-none cursor-pointer accent-[var(--color-tool-diligence)]"
             />
-          </div>
-
-          {/* Budget & Funding Needed Sliders */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-            {/* Total Budget Slider */}
-            <div className="space-y-2 bg-darkroom-card p-4 rounded-xl">
-              <div className="flex justify-between items-center">
-                <span className="text-zinc-400 font-mono">Total Estimated Budget</span>
-                <span className="font-bold text-blue-400 font-mono">
-                  £{budgetTier.toLocaleString()}
-                </span>
-              </div>
-              <input
-                type="range"
-                min={5000}
-                max={500000}
-                step={5000}
-                value={budgetTier}
-                onChange={(e) => setBudgetTier(Number(e.target.value))}
-                className="w-full h-1.5 bg-darkroom-surface rounded-lg appearance-none cursor-pointer accent-blue-500"
-              />
-              <div className="flex justify-between text-[10px] text-zinc-500 font-mono">
-                <span>£5k (Micro)</span>
-                <span>£500k+ (Indie)</span>
-              </div>
-            </div>
-
-            {/* Funding Gap Needed Slider */}
-            <div className="space-y-2 bg-darkroom-card p-4 rounded-xl">
-              <div className="flex justify-between items-center">
-                <span className="text-zinc-400 font-mono">Grant Funding Needed</span>
-                <span className="font-bold text-emerald-400 font-mono">
-                  £{fundingNeeded.toLocaleString()}
-                </span>
-              </div>
-              <input
-                type="range"
-                min={2000}
-                max={Math.min(budgetTier, 200000)}
-                step={1000}
-                value={fundingNeeded}
-                onChange={(e) => setFundingNeeded(Number(e.target.value))}
-                className="w-full h-1.5 bg-darkroom-surface rounded-lg appearance-none cursor-pointer accent-emerald-500"
-              />
-              <div className="flex justify-between text-[10px] text-zinc-500 font-mono">
-                <span>£2k (Dev)</span>
-                <span>£{Math.min(budgetTier, 200000).toLocaleString()} (Cap)</span>
-              </div>
+            <div className="flex justify-between text-[11px] text-slate-400 font-mono">
+              <span>£5k (Micro)</span>
+              <span>£500k+ (Indie)</span>
             </div>
           </div>
 
-          {/* Region and Stage Pickers */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-            <div>
-              <label className="block text-zinc-400 font-mono mb-1">
-                Filmmaker / Producer Region
-              </label>
-              <select
-                value={filmmakerRegion}
-                onChange={(e) => setFilmmakerRegion(e.target.value)}
-                className="w-full bg-darkroom-card rounded-xl px-3 py-2.5 text-white text-base focus:outline-none focus:bg-paper-border focus:bg-darkroom-border cursor-pointer"
-              >
-                <option value="UK & Northern Ireland">
-                  United Kingdom & NI (BFI/Lottery Focus)
-                </option>
-                <option value="Screen Scotland">Scotland (Screen Scotland Focus)</option>
-                <option value="Creative Wales">Wales (Ffilm Cymru Focus)</option>
-                <option value="European Union">European Union (Eurimages / Creative Europe)</option>
-                <option value="North America">North America (Sundance / Film Independent)</option>
-                <option value="International / Worldwide">International Worldwide</option>
-              </select>
+          {/* Funding Gap Needed Slider */}
+          <div className="space-y-2 bg-darkroom-bg border border-tool-diligence/20 p-4 rounded-xl">
+            <div className="flex justify-between items-center">
+              <span className="text-slate-400 font-mono text-xs">Grant Funding Needed</span>
+              <span className="font-bold text-tool-diligence font-mono text-sm">
+                £{fundingNeeded.toLocaleString()}
+              </span>
             </div>
-
-            <div>
-              <label className="block text-zinc-400 font-mono mb-1">Production Stage</label>
-              <select
-                value={productionStage}
-                onChange={(e) => setProductionStage(e.target.value)}
-                className="w-full bg-darkroom-card rounded-xl px-3 py-2.5 text-white text-base focus:outline-none focus:bg-paper-border focus:bg-darkroom-border cursor-pointer"
-              >
-                <option value="Development & Scriptwriting">Development & Scriptwriting</option>
-                <option value="Early Pre-Production">Early Pre-Production</option>
-                <option value="Production">Production & Principal Photography</option>
-                <option value="Post-Production & Completion">
-                  Post-Production & Completion Funds
-                </option>
-                <option value="Distribution & Festival Travel">
-                  Distribution & Festival Travel
-                </option>
-              </select>
+            <input
+              type="range"
+              min={2000}
+              max={Math.min(budgetTier, 200000)}
+              step={1000}
+              value={fundingNeeded}
+              onChange={(e) => setFundingNeeded(Number(e.target.value))}
+              className="w-full h-2 bg-darkroom-surface rounded-lg appearance-none cursor-pointer accent-[var(--color-tool-diligence)]"
+            />
+            <div className="flex justify-between text-[11px] text-slate-400 font-mono">
+              <span>£2k (Dev)</span>
+              <span>£{Math.min(budgetTier, 200000).toLocaleString()} (Cap)</span>
             </div>
-          </div>
-
-          {/* Document Dropzone */}
-          <div className="space-y-1.5 text-xs">
-            <span className="block text-zinc-400 font-mono">
-              Attach Script Treatment / Pitch Deck (Optional):
-            </span>
-            <div
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={handleFileDrop}
-              onClick={() => fileInputRef.current?.click()}
-              className="bg-darkroom-card hover:bg-darkroom-card rounded-xl p-4 text-center cursor-pointer transition-all flex flex-col items-center justify-center space-y-1"
-            >
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".pdf,.txt,.docx,.doc"
-                onChange={handleFileInput}
-                className="hidden"
-              />
-
-              {attachedFile ? (
-                <div className="flex items-center space-x-2 text-blue-400">
-                  <FileText className="w-4 h-4" />
-                  <span className="font-medium text-white">{attachedFile.name}</span>
-                  <span className="text-[10px] text-zinc-500">({attachedFile.size})</span>
-                </div>
-              ) : (
-                <>
-                  <UploadCloud className="w-5 h-5 text-blue-400" />
-                  <p className="text-zinc-300 font-medium text-xs">
-                    Drop PDF synopsis, treatment or deck, or{' '}
-                    <span className="text-blue-400">browse</span>
-                  </p>
-                  <p className="text-[10px] text-zinc-500">
-                    Extracts grant eligibility themes and non-dilutive matching
-                  </p>
-                </>
-              )}
-            </div>
-
-            {/* Video Guard Alert */}
-            <AnimatePresence>
-              {videoGuardWarning && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="mt-2 p-3 rounded-xl bg-amber-500/20 flex items-start space-x-2 text-amber-300 text-xs"
-                >
-                  <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                  <div className="space-y-0.5">
-                    <span className="font-semibold block">Video File Detected</span>
-                    <span className="text-[11px] text-zinc-300">{videoGuardWarning}</span>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Action Trigger */}
-          <div className="pt-2">
-            <button
-              onClick={handleLaunch}
-              className="w-full flex items-center justify-center space-x-2 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs font-mono shadow-lg shadow-blue-950/50 hover:shadow-blue-600/30 transition-all group cursor-pointer"
-            >
-              <span>Discover Matching Public Grants</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </button>
           </div>
         </div>
 
+        {/* Region and Stage Pickers */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
+          <div>
+            <label className="block text-sm font-semibold text-slate-300 mb-1.5">
+              Filmmaker / Producer Region
+            </label>
+            <select
+              value={filmmakerRegion}
+              onChange={(e) => setFilmmakerRegion(e.target.value)}
+              className="w-full bg-darkroom-bg border border-transparent focus:border-tool-diligence rounded-xl px-3 py-2.5 text-white text-base focus:outline-none cursor-pointer"
+            >
+              <option value="UK & Northern Ireland">
+                United Kingdom & NI (BFI/Lottery Focus)
+              </option>
+              <option value="Screen Scotland">Scotland (Screen Scotland Focus)</option>
+              <option value="Creative Wales">Wales (Ffilm Cymru Focus)</option>
+              <option value="European Union">European Union (Eurimages / Creative Europe)</option>
+              <option value="North America">North America (Sundance / Film Independent)</option>
+              <option value="International / Worldwide">International Worldwide</option>
+            </select>
+          </div>
 
+          <div>
+            <label className="block text-sm font-semibold text-slate-300 mb-1.5">Production Stage</label>
+            <select
+              value={productionStage}
+              onChange={(e) => setProductionStage(e.target.value)}
+              className="w-full bg-darkroom-bg border border-transparent focus:border-tool-diligence rounded-xl px-3 py-2.5 text-white text-base focus:outline-none cursor-pointer"
+            >
+              <option value="Development & Scriptwriting">Development & Scriptwriting</option>
+              <option value="Early Pre-Production">Early Pre-Production</option>
+              <option value="Production">Production & Principal Photography</option>
+              <option value="Post-Production & Completion">
+                Post-Production & Completion Funds
+              </option>
+              <option value="Distribution & Festival Travel">
+                Distribution & Festival Travel
+              </option>
+            </select>
+          </div>
+        </div>
+
+        {/* Document Dropzone */}
+        <div className="space-y-1.5 text-xs">
+          <span className="block text-sm font-semibold text-slate-300">
+            Attach Script Treatment / Pitch Deck (Optional):
+          </span>
+          <div
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={handleFileDrop}
+            onClick={() => fileInputRef.current?.click()}
+            className="bg-darkroom-bg hover:bg-darkroom-surface border border-dashed border-tool-diligence/30 hover:border-tool-diligence/60 rounded-xl p-4 text-center cursor-pointer transition-all flex flex-col items-center justify-center space-y-1.5"
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".pdf,.txt,.docx,.doc"
+              onChange={handleFileInput}
+              className="hidden"
+            />
+
+            {attachedFile ? (
+              <div className="flex items-center space-x-2 text-tool-diligence">
+                <FileText className="w-4 h-4" />
+                <span className="font-medium text-white">{attachedFile.name}</span>
+                <span className="text-[10px] text-zinc-500">({attachedFile.size})</span>
+              </div>
+            ) : (
+              <>
+                <UploadCloud className="w-5 h-5 text-tool-diligence" />
+                <p className="text-zinc-200 font-medium text-sm">
+                  Drop PDF synopsis, treatment or deck, or{' '}
+                  <span className="text-tool-diligence underline font-semibold">browse</span>
+                </p>
+                <p className="text-xs text-slate-400">
+                  Extracts grant eligibility themes and non-dilutive matching
+                </p>
+              </>
+            )}
+          </div>
+
+          {/* Video Guard Alert */}
+          <AnimatePresence>
+            {videoGuardWarning && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="mt-2 p-3 rounded-xl bg-amber-500/20 flex items-start space-x-2 text-amber-300 text-xs border border-amber-500/30"
+              >
+                <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                <div className="space-y-0.5">
+                  <span className="font-semibold block">Video File Detected</span>
+                  <span className="text-xs text-zinc-300">{videoGuardWarning}</span>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Action Trigger */}
+        <div className="pt-3 border-t border-darkroom-border">
+          <button
+            onClick={handleLaunch}
+            className="w-full flex items-center justify-center space-x-2 py-3 px-6 rounded-xl bg-tool-diligence hover:bg-tool-diligence-hover text-slate-950 font-bold text-base shadow-md shadow-[var(--color-tool-diligence)]/30 transition-all hover:brightness-110 active:scale-95 group cursor-pointer"
+          >
+            <span>Discover Matching Public Grants</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </button>
+        </div>
+      </div>
     </motion.div>
   );
 };

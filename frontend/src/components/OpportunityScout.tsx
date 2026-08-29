@@ -144,7 +144,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
         >
-          <Upload className="size-7 mx-auto mb-2 text-tool-scout" />
+          <Upload className="size-7 mx-auto mb-2 text-tool-diligence" />
           <p className="text-white font-medium text-sm">
             Drop any document about the film or paste a URL
           </p>
@@ -227,7 +227,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
               onClick={() => setProfile({ ...profile, neverReleased: !profile.neverReleased })}
               className={`size-5 rounded-lg flex items-center justify-center transition-all ${
                 profile.neverReleased
-                  ? 'bg-tool-scout text-white shadow-md shadow-[var(--color-tool-scout)]/30'
+                  ? 'bg-tool-diligence text-slate-950 shadow-md shadow-[var(--color-tool-diligence)]/30'
                   : 'bg-darkroom-card group-hover:bg-paper-border group-hover:bg-darkroom-border'
               }`}
             >
@@ -261,7 +261,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
                     onClick={() => handlePremiereGoalToggle(goal.id as PremiereGoal)}
                     className={`px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-all cursor-pointer ${
                       active
-                        ? 'bg-tool-scout text-white shadow-md shadow-[var(--color-tool-scout)]/30 scale-102'
+                        ? 'bg-tool-diligence text-slate-950 font-bold shadow-md shadow-[var(--color-tool-diligence)]/30 scale-102'
                         : 'bg-darkroom-card text-slate-300 hover:bg-paper-border hover:bg-darkroom-border hover:text-white'
                     }`}
                   >
@@ -291,7 +291,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
                     onClick={() => handleRegionToggle(region.id)}
                     className={`px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-all cursor-pointer ${
                       active
-                        ? 'bg-tool-scout text-white shadow-md shadow-[var(--color-tool-scout)]/30 scale-102'
+                        ? 'bg-tool-diligence text-slate-950 font-bold shadow-md shadow-[var(--color-tool-diligence)]/30 scale-102'
                         : 'bg-darkroom-card text-slate-300 hover:bg-paper-border hover:bg-darkroom-border hover:text-white'
                     }`}
                   >
@@ -308,7 +308,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
           <button
             type="submit"
             disabled={loading || !isFormValid}
-            className="w-full py-4 rounded-2xl bg-gradient-to-r from-tool-scout to-tool-scout-hover hover:brightness-110 disabled:opacity-40 text-white font-bold text-base flex items-center justify-center gap-2.5 transition-all shadow-xl shadow-[var(--color-tool-scout)]/30 cursor-pointer active:scale-[0.99]"
+            className="w-full py-4 rounded-2xl bg-tool-diligence hover:bg-tool-diligence-hover hover:brightness-110 disabled:opacity-40 text-slate-950 font-bold text-base flex items-center justify-center gap-2.5 transition-all shadow-xl shadow-[var(--color-tool-diligence)]/30 cursor-pointer active:scale-[0.99]"
           >
             {loading ? (
               <>
@@ -338,7 +338,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
         >
           {/* Strategy Roadmap Narrative: Solid Opaque Card */}
           <div className="p-7 sm:p-8 rounded-3xl bg-darkroom-surface shadow-2xl shadow-black/80 space-y-3">
-            <div className="text-xs font-mono font-semibold uppercase tracking-wider text-tool-scout flex items-center gap-2">
+            <div className="text-xs font-mono font-semibold uppercase tracking-wider text-tool-diligence flex items-center gap-2">
               <Compass className="size-4" />
               <span>Strategy Roadmap: {scoutResult.filmTitle}</span>
             </div>
@@ -367,7 +367,7 @@ export const OpportunityScout: React.FC<Props> = ({ onDeepScreen, initialProfile
                   onClick={() => setFilterTag(f.id)}
                   className={`px-3 py-1.5 rounded-lg font-mono text-xs transition-all cursor-pointer ${
                     filterTag === f.id
-                      ? 'bg-tool-scout text-white shadow-sm font-semibold'
+                      ? 'bg-tool-diligence text-slate-950 font-bold shadow-sm'
                       : 'text-slate-400 hover:text-white'
                   }`}
                 >

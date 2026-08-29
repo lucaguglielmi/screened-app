@@ -100,7 +100,7 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
       style: {
         background: 'var(--color-darkroom-card)',
         color: 'var(--color-white)',
-        border: hasDisputes ? '1.5px solid var(--color-tool-scout)' : '1.5px solid var(--color-tool-diligence)',
+        border: hasDisputes ? '1.5px solid var(--color-state-disputed)' : '1.5px solid var(--color-tool-diligence)',
         borderRadius: '12px',
         padding: '10px 14px',
         width: 220,
@@ -113,8 +113,8 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
       source: 'root-entity',
       target: 'node-registry',
       animated: hasDisputes,
-      style: { stroke: hasDisputes ? 'var(--color-tool-scout)' : 'var(--color-tool-diligence)', strokeWidth: 1.5 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: hasDisputes ? 'var(--color-tool-scout)' : 'var(--color-tool-diligence)' },
+      style: { stroke: hasDisputes ? 'var(--color-state-disputed)' : 'var(--color-tool-diligence)', strokeWidth: 1.5 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: hasDisputes ? 'var(--color-state-disputed)' : 'var(--color-tool-diligence)' },
     });
 
     // 4. Physical Venue Screening Leases Node
@@ -132,7 +132,7 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
       style: {
         background: 'var(--color-darkroom-card)',
         color: 'var(--color-white)',
-        border: hasDisputes ? '1.5px solid var(--color-tool-scout)' : '1.5px solid var(--color-tool-diligence)',
+        border: hasDisputes ? '1.5px solid var(--color-state-disputed)' : '1.5px solid var(--color-tool-diligence)',
         borderRadius: '12px',
         padding: '10px 14px',
         width: 220,
@@ -145,8 +145,8 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
       source: 'root-entity',
       target: 'node-venue',
       animated: hasDisputes,
-      style: { stroke: hasDisputes ? 'var(--color-tool-scout)' : 'var(--color-tool-diligence)', strokeWidth: 1.5 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: hasDisputes ? 'var(--color-tool-scout)' : 'var(--color-tool-diligence)' },
+      style: { stroke: hasDisputes ? 'var(--color-state-disputed)' : 'var(--color-tool-diligence)', strokeWidth: 1.5 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: hasDisputes ? 'var(--color-state-disputed)' : 'var(--color-tool-diligence)' },
     });
 
     // 5. Atomic Claim Leaf Nodes
@@ -169,7 +169,7 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
         style: {
           background: 'var(--color-darkroom-surface)',
           color: 'var(--color-text-secondary)',
-          border: isClaimDisputed ? '1px solid var(--color-tool-scout)' : '1px solid var(--color-accent-blue)',
+          border: isClaimDisputed ? '1px solid var(--color-state-disputed)' : '1px solid var(--color-tool-diligence)',
           borderRadius: '10px',
           padding: '8px 12px',
           width: 190,
@@ -185,8 +185,8 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
         id: `e-${parentId}-claim-${claim.id}`,
         source: parentId,
         target: `claim-${claim.id}`,
-        style: { stroke: isClaimDisputed ? 'var(--color-tool-scout)' : 'var(--color-accent-blue)', strokeWidth: 1.2 },
-        markerEnd: { type: MarkerType.ArrowClosed, color: isClaimDisputed ? 'var(--color-tool-scout)' : 'var(--color-accent-blue)' },
+        style: { stroke: isClaimDisputed ? 'var(--color-state-disputed)' : 'var(--color-tool-diligence)', strokeWidth: 1.2 },
+        markerEnd: { type: MarkerType.ArrowClosed, color: isClaimDisputed ? 'var(--color-state-disputed)' : 'var(--color-tool-diligence)' },
       });
     });
 

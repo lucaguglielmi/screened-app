@@ -83,7 +83,7 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
 
       {/* Center Section: Navigation Rail Icons (Only First and Last Icon Stacked) */}
       <div className="flex flex-col items-center gap-3.5 w-full my-auto">
-        {/* 1. First Icon: Mission Control (Sparkles - Royal Blue) */}
+        {/* 1. First Icon: Mission Control (Sparkles) */}
         <div className="relative">
           <button
             onClick={() => handleSelectTool('CONVERSATIONAL_DESK')}
@@ -91,14 +91,14 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
             onMouseLeave={() => setActiveTooltip(null)}
             className={`relative p-3 rounded-2xl transition-all cursor-pointer ${
               activeTool === 'CONVERSATIONAL_DESK'
-                ? 'bg-midnight-royal text-white shadow-lg shadow-[var(--color-midnight-royal)]/40 ring-1 ring-indigo-400/40'
+                ? 'bg-darkroom-card text-tool-diligence shadow-lg shadow-[var(--color-tool-diligence)]/20 ring-1 ring-tool-diligence/50 border border-tool-diligence/40'
                 : 'hover:bg-darkroom-surface text-slate-400 hover:text-slate-100'
             }`}
             title="Mission Control"
           >
             <Sparkles className="size-5" />
             {activeTool === 'CONVERSATIONAL_DESK' && (
-              <span className="absolute -right-1 -top-1 size-2.5 rounded-full bg-amber-400 ring-2 ring-darkroom-bg" />
+              <span className="absolute -right-1 -top-1 size-2.5 rounded-full bg-tool-diligence ring-2 ring-darkroom-bg" />
             )}
           </button>
           {activeTooltip === 'Mission Control' && (
@@ -120,7 +120,7 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
             onMouseLeave={() => setActiveTooltip(null)}
             className={`relative p-3 rounded-2xl transition-all cursor-pointer ${
               isProductMenuOpen || activeTool !== 'CONVERSATIONAL_DESK'
-                ? 'bg-darkroom-card text-indigo-300 border border-midnight-royal/60 shadow-md ring-1 ring-midnight-royal/40'
+                ? 'bg-darkroom-card text-tool-diligence border border-tool-diligence/60 shadow-md ring-1 ring-tool-diligence/40'
                 : 'hover:bg-darkroom-surface text-slate-400 hover:text-slate-100'
             }`}
             title="Products & Workspaces"
@@ -146,8 +146,8 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
             onMouseLeave={() => setActiveTooltip(null)}
             className={`p-2.5 rounded-xl transition-all cursor-pointer ${
               activeTool === 'DESIGN_PLAYGROUND'
-                ? 'bg-purple-600 text-white shadow-lg shadow-purple-600/30'
-                : 'hover:bg-darkroom-surface text-slate-400 hover:text-purple-400'
+                ? 'bg-tool-diligence text-slate-950 shadow-lg shadow-[var(--color-tool-diligence)]/30 font-bold'
+                : 'hover:bg-darkroom-surface text-slate-400 hover:text-tool-diligence'
             }`}
             title="Design Playground"
           >
@@ -172,7 +172,7 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
               <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-tool-diligence opacity-75" />
               <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-tool-diligence" />
             </div>
-            <span className="text-[9px] font-mono text-slate-400 group-hover:text-indigo-300 font-semibold tracking-tighter">
+            <span className="text-[9px] font-mono text-slate-400 group-hover:text-tool-diligence font-semibold tracking-tighter">
               {typeof __COMMIT_SHA__ !== 'undefined' && __COMMIT_SHA__ !== 'unknown'
                 ? __COMMIT_SHA__.slice(0, 6)
                 : typeof __APP_VERSION__ !== 'undefined'
@@ -191,7 +191,7 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
               </div>
               <div className="text-[11px] text-slate-400 mt-0.5">
                 Commit:{' '}
-                <span className="text-indigo-300 font-bold">
+                <span className="text-tool-diligence font-bold">
                   {typeof __COMMIT_SHA__ !== 'undefined' ? __COMMIT_SHA__ : 'dev'}
                 </span>
               </div>
@@ -215,13 +215,13 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
       {isProductMenuOpen && (
         <div
           ref={flyoutRef}
-          className="absolute left-[72px] sm:left-[88px] top-1/2 -translate-y-1/2 w-88 p-3 rounded-3xl bg-darkroom-surface/95 backdrop-blur-xl border border-darkroom-border shadow-2xl shadow-black/90 space-y-2 z-50 animate-in fade-in zoom-in-95 duration-150"
+          className="absolute left-[72px] sm:left-[88px] top-1/2 -translate-y-1/2 w-88 p-3 rounded-3xl bg-darkroom-surface/95 backdrop-blur-xl border border-tool-diligence/30 shadow-2xl shadow-black/90 space-y-2 z-50 animate-in fade-in zoom-in-95 duration-150"
         >
           <div className="px-3 py-2 border-b border-darkroom-border flex items-center justify-between">
             <span className="text-xs font-mono font-semibold tracking-wider text-slate-400 uppercase">
               Select Workspace
             </span>
-            <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-midnight-royal/20 text-indigo-300 border border-midnight-royal/40">
+            <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-tool-diligence/15 text-tool-diligence border border-tool-diligence/30">
               2 Products
             </span>
           </div>
@@ -256,28 +256,28 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
             </div>
           </button>
 
-          {/* Product 2: Opportunity Scout (Coral Rose/Sky Blue) */}
+          {/* Product 2: Opportunity Scout */}
           <button
             onClick={() => handleSelectTool('OPPORTUNITY_SCOUT')}
             className={`w-full p-3 rounded-2xl flex items-center gap-3.5 transition-all text-left group cursor-pointer ${
               activeTool === 'OPPORTUNITY_SCOUT'
-                ? 'bg-darkroom-card border border-tool-scout/50 shadow-inner'
+                ? 'bg-darkroom-card border border-tool-diligence/50 shadow-inner'
                 : 'hover:bg-darkroom-card border border-transparent'
             }`}
           >
             <GripVertical className="size-4 text-slate-600 group-hover:text-slate-400 shrink-0" />
 
-            <div className="size-11 rounded-2xl bg-gradient-to-tr from-tool-scout via-tool-scout to-tool-scout-hover flex items-center justify-center text-white shadow-lg shadow-[var(--color-tool-scout)]/30 shrink-0 group-hover:scale-105 transition-transform">
-              <Compass className="size-6 text-white" />
+            <div className="size-11 rounded-2xl bg-gradient-to-tr from-tool-diligence to-tool-diligence-hover flex items-center justify-center text-slate-950 shadow-lg shadow-[var(--color-tool-diligence)]/30 shrink-0 group-hover:scale-105 transition-transform">
+              <Compass className="size-6 text-slate-950" />
             </div>
 
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between">
-                <h4 className="text-base font-semibold text-white group-hover:text-tool-scout transition-colors">
+                <h4 className="text-base font-semibold text-white group-hover:text-tool-diligence transition-colors">
                   Opportunity Scout
                 </h4>
                 {activeTool === 'OPPORTUNITY_SCOUT' && (
-                  <Check className="size-4 text-tool-scout shrink-0" />
+                  <Check className="size-4 text-tool-diligence shrink-0" />
                 )}
               </div>
               <p className="text-sm text-slate-400 line-clamp-1">
@@ -290,10 +290,10 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
           <div className="pt-4 mt-2 border-t border-darkroom-border flex flex-col gap-3 px-1">
             <button
               onClick={() => handleSelectTool('CONVERSATIONAL_DESK')}
-              className="flex items-center justify-between text-xs font-mono text-slate-400 hover:text-indigo-300 transition-colors cursor-pointer group"
+              className="flex items-center justify-between text-xs font-mono text-slate-400 hover:text-tool-diligence transition-colors cursor-pointer group"
             >
               <div className="flex items-center gap-2">
-                <Sparkles className="size-3.5 group-hover:text-indigo-400" />
+                <Sparkles className="size-3.5 group-hover:text-tool-diligence" />
                 <span>back to main chat</span>
               </div>
               <span className="text-[10px] text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity">Esc</span>
@@ -301,10 +301,10 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
             
             <button
               onClick={() => handleSelectTool('WHY_SCREENED')}
-              className="flex items-center justify-between text-xs font-mono text-slate-400 hover:text-indigo-300 transition-colors cursor-pointer group"
+              className="flex items-center justify-between text-xs font-mono text-slate-400 hover:text-tool-diligence transition-colors cursor-pointer group"
             >
               <div className="flex items-center gap-2">
-                <Scale className="size-3.5 group-hover:text-indigo-400" />
+                <Scale className="size-3.5 group-hover:text-tool-diligence" />
                 <span>why screened exists</span>
               </div>
             </button>

@@ -860,8 +860,8 @@ export const EvidenceDossier: React.FC<Props> = ({
         /* ==================================================================== */
         <div className="space-y-5 animate-fade-in" data-density="MACHINE_AI_INGESTION">
           {/* Human Explanatory Banner */}
-          <div className="p-4 sm:p-5 rounded-3xl bg-darkroom-card border-l-4 border-tool-scout shadow-2xl flex items-start gap-4">
-            <div className="size-10 rounded-2xl bg-slate-500/20 text-slate-400 flex items-center justify-center shrink-0">
+          <div className="p-4 sm:p-5 rounded-3xl bg-darkroom-card border-l-4 border-tool-diligence shadow-2xl flex items-start gap-4">
+            <div className="size-10 rounded-2xl bg-tool-diligence/20 text-tool-diligence flex items-center justify-center shrink-0">
               <Bot className="size-5" />
             </div>
             <div className="space-y-1">

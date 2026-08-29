@@ -73,7 +73,7 @@ export const ScreenedFlowCanvas: React.FC<ScreenedFlowCanvasProps> = ({
               if (node.data?.status === 'CORROBORATED' || node.data?.status === 'VERIFIED')
                 return 'var(--color-tool-diligence)';
               if (node.data?.status === 'DISPUTED' || node.data?.status === 'CONTRADICTED')
-                return 'var(--color-tool-scout)';
+                return 'var(--color-state-disputed)';
               if (node.data?.status === 'SUPPORTED' || node.data?.status === 'CAUTION')
                 return 'var(--color-accent-blue)';
               return 'var(--color-midnight-royal)';
