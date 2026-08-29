@@ -273,7 +273,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
                 </div>
 
                 {/* Action Pills Grid */}
-                <div className="grid grid-cols-1 sm:flex sm:flex-wrap gap-2 w-full flex-1">
+                <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 w-full flex-1">
                   {ACTION_TABS.map((tab, idx) => {
                     const Icon = tab.icon;
                     return (
