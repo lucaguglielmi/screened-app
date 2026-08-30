@@ -2,7 +2,7 @@
 
 ## 1. Specification & Execution Policy
 - **Physical Spec Files on Request**: When the user requests a spec (e.g. "spec this out", "create a spec"), ALWAYS create a physical specification file in the repository (e.g. `docs/specs/...`) and commit to designing the complete technical solution.
-- **Never Auto-Start Execution**: NEVER automatically begin implementation/execution of a specification without explicit user confirmation and go-ahead.
+- **Never Auto-Approve or Auto-Start Execution**: Specifications are NEVER approved automatically. You must NEVER automatically begin implementation/execution of a specification without the user explicitly and verbally asking you to execute it (e.g., "proceed", "execute the spec", "implement this").
 - **Persistent Pending Spec Reminders**: If a specification has been written but remains unexecuted or partially executed, actively and persistently remind the user about it in subsequent interactions until it is completed.
 
 ## 2. Pre-Commit Verification (Strict)
