@@ -92,3 +92,25 @@ async def test_generic_grant_intent_shows_intake_card():
     assert tool_events[0]["toolCall"]["toolName"] == ToolCallType.CONFIGURE_GRANT_SCOUT.value
     assert len(probe_events) == 0
 
+
+@pytest.mark.asyncio
+async def test_specific_festival_name_without_question_triggers_tool():
+    """Verify typing raw festival names like 'parma film festival' triggers configure_due_diligence with tokens."""
+    req = ChatRequest(message="parma film festival")
+    events = []
+    async for event in producer_desk_agent.process_chat(req):
+        events.append(event)
+
+    token_events = [e for e in events if e.get("type") == "TOKEN"]
+    tool_events = [e for e in events if e.get("type") == "TOOL_CALL"]
+
+    assert len(token_events) > 0
+    full_text = "".join(t["token"] for t in token_events).strip()
+    assert len(full_text) > 0
+    assert len(tool_events) == 1
+
+    tool_call = tool_events[0]["toolCall"]
+    assert tool_call["toolName"] == ToolCallType.CONFIGURE_DUE_DILIGENCE.value
+    assert "Parma" in tool_call["args"]["festival_name"]
+
+

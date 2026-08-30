@@ -190,26 +190,28 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
           </div>
 
           {/* Text Bubble - Full Width on Mobile */}
-          <div
-            className={`w-full rounded-2xl px-4 py-3.5 sm:px-5 sm:py-4 text-base leading-relaxed shadow-md ${
-              isUser
-                ? 'bg-paper-border bg-darkroom-border text-slate-100 md:rounded-tr-none border border-darkroom-border'
-                : 'bg-darkroom-surface text-slate-200 md:rounded-tl-none border border-darkroom-border'
-            }`}
-          >
-            {message.attachedFile && (
-              <div className="mb-3 flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-xs font-mono w-fit">
-                <span>📎</span>
-                <span className="font-semibold">{message.attachedFile.name}</span>
-                {message.attachedFile.size && (
-                  <span className="text-slate-400">
-                    ({Math.round(message.attachedFile.size / 1024)} KB)
-                  </span>
-                )}
-              </div>
-            )}
-            {formatContent(message.content)}
-          </div>
+          {(message.content.trim() || message.attachedFile) && (
+            <div
+              className={`w-full rounded-2xl px-4 py-3.5 sm:px-5 sm:py-4 text-base leading-relaxed shadow-md ${
+                isUser
+                  ? 'bg-paper-border bg-darkroom-border text-slate-100 md:rounded-tr-none border border-darkroom-border'
+                  : 'bg-darkroom-surface text-slate-200 md:rounded-tl-none border border-darkroom-border'
+              }`}
+            >
+              {message.attachedFile && (
+                <div className="mb-3 flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-xs font-mono w-fit">
+                  <span>📎</span>
+                  <span className="font-semibold">{message.attachedFile.name}</span>
+                  {message.attachedFile.size && (
+                    <span className="text-slate-400">
+                      ({Math.round(message.attachedFile.size / 1024)} KB)
+                    </span>
+                  )}
+                </div>
+              )}
+              {message.content.trim() ? formatContent(message.content) : null}
+            </div>
+          )}
 
           {/* Quick Action Tabs (Under First Greeting Bubble) - Full Width on Mobile */}
           {message.id === 'initial-greeting-01' && (
