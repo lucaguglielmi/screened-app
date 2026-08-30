@@ -68,3 +68,22 @@ async def test_process_chat_with_attached_document():
     tool_call = tool_call_events[0]["toolCall"]
     assert tool_call["toolName"] == ToolCallType.CONFIGURE_GRANT_SCOUT.value
     assert "last embers" in tool_call["args"]["project_title"].lower() or "script_treatment" in tool_call["args"]["project_title"].lower() or "untitled" in tool_call["args"]["project_title"].lower()
+
+
+def test_analyze_document_endpoint():
+    from fastapi.testclient import TestClient
+    from backend.main import app
+
+    client = TestClient(app)
+    payload = {
+        "fileName": "invitation_letter.txt",
+        "fileContent": "Dear Filmmaker, We invite you to the Venice Shorts Film Showcase 2026. Free entry waiver applied.",
+        "mimeType": "text/plain"
+    }
+    response = client.post("/api/chat/analyze-doc", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["detectedKind"] == "INVITATION_EMAIL"
+    assert "venice" in data["festivalClaimed"].lower() or "invitation" in data["festivalClaimed"].lower()
+
+
