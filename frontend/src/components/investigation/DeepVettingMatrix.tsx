@@ -30,7 +30,6 @@ interface DeepVettingMatrixProps {
 }
 
 export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, festivalName }) => {
-  const [filter, setFilter] = useState<'ALL' | 'VERIFIED' | 'ALERTS' | 'INFO'>('ALL');
   const [expandedDimId, setExpandedDimId] = useState<string | null>(null);
 
   // If report not provided, create realistic preview fixture
@@ -240,13 +239,6 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
     }
   };
 
-  const filteredDimensions = activeReport.dimensions.filter((dim) => {
-    if (filter === 'VERIFIED') return dim.status === 'VERIFIED_AUTHENTIC';
-    if (filter === 'ALERTS') return dim.status === 'AMBER_WARNING' || dim.status === 'RED_FLAG';
-    if (filter === 'INFO') return dim.status === 'INFORMATIONAL';
-    return true;
-  });
-
   const toggleExpand = (id: string) => {
     soundEffects.playClick();
     setExpandedDimId((prev) => (prev === id ? null : id));
@@ -306,76 +298,6 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
             </div>
           </div>
         </div>
-
-        {/* Filter Pills */}
-        <div className="mt-6 pt-4 border-t border-zinc-800/80 flex items-center justify-between flex-wrap gap-2">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => {
-                soundEffects.playClick();
-                setFilter('ALL');
-              }}
-              className={`px-3 py-1 rounded-lg text-xs font-mono transition-colors ${
-                filter === 'ALL'
-                  ? 'bg-indigo-600 text-white font-bold'
-                  : 'bg-black/30 text-zinc-400 hover:text-white'
-              }`}
-            >
-              All Dimensions ({activeReport.dimensions.length})
-            </button>
-            <button
-              onClick={() => {
-                soundEffects.playClick();
-                setFilter('VERIFIED');
-              }}
-              className={`px-3 py-1 rounded-lg text-xs font-mono transition-colors ${
-                filter === 'VERIFIED'
-                  ? 'bg-emerald-600 text-white font-bold'
-                  : 'bg-black/30 text-zinc-400 hover:text-white'
-              }`}
-            >
-              Verified Authentic (
-              {activeReport.dimensions.filter((d) => d.status === 'VERIFIED_AUTHENTIC').length})
-            </button>
-            <button
-              onClick={() => {
-                soundEffects.playClick();
-                setFilter('ALERTS');
-              }}
-              className={`px-3 py-1 rounded-lg text-xs font-mono transition-colors ${
-                filter === 'ALERTS'
-                  ? 'bg-emerald-600 text-white font-bold'
-                  : 'bg-black/30 text-zinc-400 hover:text-white'
-              }`}
-            >
-              Risk Alerts (
-              {
-                activeReport.dimensions.filter(
-                  (d) => d.status === 'AMBER_WARNING' || d.status === 'RED_FLAG',
-                ).length
-              }
-              )
-            </button>
-            <button
-              onClick={() => {
-                soundEffects.playClick();
-                setFilter('INFO');
-              }}
-              className={`px-3 py-1 rounded-lg text-xs font-mono transition-colors ${
-                filter === 'INFO'
-                  ? 'bg-blue-600 text-white font-bold'
-                  : 'bg-black/30 text-zinc-400 hover:text-white'
-              }`}
-            >
-              Informational (
-              {activeReport.dimensions.filter((d) => d.status === 'INFORMATIONAL').length})
-            </button>
-          </div>
-
-          <span className="text-xs text-zinc-500 font-mono">
-            Showing {filteredDimensions.length} of {activeReport.dimensions.length} vectors
-          </span>
-        </div>
       </div>
 
       {/* Disclaimer Banner */}
@@ -393,7 +315,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
 
       {/* 7 Dimension Cards List */}
       <div className="space-y-3">
-        {filteredDimensions.map((dim, idx) => {
+        {activeReport.dimensions.map((dim, idx) => {
           const isExpanded = expandedDimId === dim.id;
 
           return (

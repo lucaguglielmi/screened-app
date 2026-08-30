@@ -29,7 +29,6 @@ import { ContradictionPanel } from './ContradictionPanel';
 import { DetailDial } from './DetailDial';
 import { CredibilityRadar } from './CredibilityRadar';
 import { DeepVettingMatrix } from './investigation/DeepVettingMatrix';
-import { KeyPersonnelCardList } from './investigation/KeyPersonnelCardList';
 const EntityProvenanceGraph = lazy(() => import('./diagrams/EntityProvenanceGraph').then(m => ({ default: m.EntityProvenanceGraph })));
 import { playDialClick, soundEffects } from '../utils/audio';
 import {
@@ -56,10 +55,10 @@ import {
   Mail,
   Bot,
   Code,
-  User,
   Fingerprint,
   Sparkles,
   Quote,
+  Menu,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -86,8 +85,7 @@ export const EvidenceDossier: React.FC<Props> = ({
   onDraftOutreach,
   onExport,
 }) => {
-  const [activeTab, setActiveTab] = useState<'DOSSIER' | 'FORENSIC_VETTING'>('DOSSIER');
-  const [density, setDensity] = useState<DetailDensity>('BALANCED');
+  const [density, setDensity] = useState<DetailDensity>('FULL_EVIDENCE');
   const [activeDomain, setActiveDomain] = useState<string>('ALL');
   const [searchFilter, setSearchFilter] = useState<string>('');
   const [expandedClaim] = useState<string | null>(null);
@@ -98,7 +96,9 @@ export const EvidenceDossier: React.FC<Props> = ({
   const [downloadingMd, setDownloadingMd] = useState(false);
   const [isActionsMenuOpen, setIsActionsMenuOpen] = useState(false);
   const [isNewSearchMenuOpen, setIsNewSearchMenuOpen] = useState(false);
+  const [isNavOpen, setIsNavOpen] = useState(false);
   const newSearchMenuRef = useRef<HTMLDivElement>(null);
+  const navMenuRef = useRef<HTMLDivElement>(null);
   const [activeSection, setActiveSection] = useState<string>('Overview');
   const [shareableLinkCopied, setShareableLinkCopied] = useState(false);
   const [claimStatusFilter, setClaimStatusFilter] = useState<string>('ALL');
@@ -115,14 +115,17 @@ export const EvidenceDossier: React.FC<Props> = ({
       if (newSearchMenuRef.current && !newSearchMenuRef.current.contains(event.target as Node)) {
         setIsNewSearchMenuOpen(false);
       }
+      if (navMenuRef.current && !navMenuRef.current.contains(event.target as Node)) {
+        setIsNavOpen(false);
+      }
     };
-    if (isActionsMenuOpen || isNewSearchMenuOpen) {
+    if (isActionsMenuOpen || isNewSearchMenuOpen || isNavOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isActionsMenuOpen, isNewSearchMenuOpen]);
+  }, [isActionsMenuOpen, isNewSearchMenuOpen, isNavOpen]);
 
   useEffect(() => {
     observerRef.current = new IntersectionObserver(
@@ -138,14 +141,14 @@ export const EvidenceDossier: React.FC<Props> = ({
           }
         }
       },
-      { rootMargin: '-20% 0px -60% 0px', threshold: 0.1 }
+      { rootMargin: '-15% 0px -50% 0px', threshold: 0.1 }
     );
     
     const sections = document.querySelectorAll('[data-section-name]');
     sections.forEach(s => observerRef.current?.observe(s));
     
     return () => observerRef.current?.disconnect();
-  }, [activeTab]);
+  }, [density]);
 
   // Normalize density mode (routing logic for AI agents vs human readers)
   const normalizedDensity: DetailDensity =
@@ -564,47 +567,169 @@ export const EvidenceDossier: React.FC<Props> = ({
       animate={{ opacity: 1, y: 0 }}
       className="max-w-5xl mx-auto space-y-6"
     >
-      {/* Absolute "New Screen" button placed outside the card */}
-      <div className="flex justify-end mb-2 relative" ref={newSearchMenuRef}>
-        <button
-          onClick={() => {
-            soundEffects.playClick();
-            setIsNewSearchMenuOpen(!isNewSearchMenuOpen);
-          }}
-          className={`p-2 rounded-full transition-colors cursor-pointer shadow-sm active:scale-95 border ${isNewSearchMenuOpen ? 'bg-darkroom-surface text-white border-darkroom-border' : 'hover:bg-darkroom-surface text-slate-400 hover:text-white border-transparent hover:border-darkroom-border'}`}
-          title="New Screen"
-        >
-          <Plus className="size-4" />
-        </button>
+      {/* Top Bar Actions & New Screen */}
+      <div className="flex items-center justify-end gap-2 mb-2 relative no-print">
+        {/* Unified Dossier Actions Dropdown */}
+        <div className="relative" ref={actionsMenuRef}>
+          <button
+            onClick={() => {
+              soundEffects.playClick();
+              setIsActionsMenuOpen(!isActionsMenuOpen);
+            }}
+            className="px-3 py-1.5 rounded-full bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border text-xs font-mono font-medium text-slate-200 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
+            aria-expanded={isActionsMenuOpen}
+          >
+            <Sparkles className="size-3.5 text-indigo-400" />
+            <span>Actions</span>
+            <ChevronDown className={`size-3.5 text-slate-400 transition-transform duration-200 ${isActionsMenuOpen ? 'rotate-180 text-white' : ''}`} />
+          </button>
 
-        <AnimatePresence>
-          {isNewSearchMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: 5, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 5, scale: 0.95 }}
-              transition={{ duration: 0.15 }}
-              className="absolute top-full right-0 mt-2 w-64 bg-darkroom-card border border-darkroom-border rounded-xl shadow-2xl overflow-hidden z-50 flex flex-col p-1"
-            >
-              <button
-                onClick={() => {
-                  soundEffects.playSuccess();
-                  setIsNewSearchMenuOpen(false);
-                  onNewInvestigation();
-                }}
-                className="flex items-start gap-3 w-full text-left px-3 py-2.5 hover:bg-darkroom-surface transition-colors rounded-lg group"
+          {/* Dropdown Menu with Complete Action List */}
+          <AnimatePresence>
+            {isActionsMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                transition={{ duration: 0.15, ease: 'easeOut' }}
+                className="absolute right-0 top-full mt-2 w-[calc(100vw-3rem)] max-w-xs sm:w-72 p-1.5 rounded-2xl bg-darkroom-surface/98 backdrop-blur-xl border border-darkroom-border shadow-2xl shadow-black/80 z-50 space-y-1 font-sans text-xs"
               >
-                <div className="bg-indigo-500/10 p-1.5 rounded-md group-hover:bg-indigo-500/20 transition-colors shrink-0">
-                  <Plus className="size-4 text-indigo-400" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium text-slate-200 group-hover:text-white transition-colors">Start a new search</span>
-                  <span className="text-[10px] text-slate-500 mt-0.5 leading-tight">Click on history to come back to this dossier</span>
-                </div>
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                {dossier && (
+                  <button
+                    onClick={() => {
+                      handleCopySummary();
+                      setIsActionsMenuOpen(false);
+                    }}
+                    className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                  >
+                    <div className="p-1.5 rounded-lg bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 group-hover:bg-indigo-500/25">
+                      {copiedSummary ? <Check className="size-3.5 text-emerald-400" /> : <Copy className="size-3.5" />}
+                    </div>
+                    <div className="flex flex-col min-w-0">
+                      <span className="font-semibold text-slate-100">{copiedSummary ? 'Copied to Clipboard!' : 'Copy Summary'}</span>
+                      <span className="text-[11px] text-slate-400 truncate">Executive summary & checklist</span>
+                    </div>
+                  </button>
+                )}
+                
+                <button
+                  onClick={() => {
+                    handleCopyShareableLink();
+                    setIsActionsMenuOpen(false);
+                  }}
+                  className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                >
+                  <div className="p-1.5 rounded-lg bg-sky-500/15 border border-sky-500/30 text-sky-400 group-hover:bg-sky-500/25">
+                    {shareableLinkCopied ? <Check className="size-3.5 text-emerald-400" /> : <ExternalLink className="size-3.5" />}
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <span className="font-semibold text-slate-100">{shareableLinkCopied ? 'Link Copied!' : 'Copy Shareable Link'}</span>
+                    <span className="text-[11px] text-slate-400 truncate">Read-only view for producers</span>
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => {
+                    handlePrint();
+                    setIsActionsMenuOpen(false);
+                  }}
+                  className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                >
+                  <div className="p-1.5 rounded-lg bg-blue-500/15 border border-blue-500/30 text-blue-400 group-hover:bg-blue-500/25">
+                    <Printer className="size-3.5" />
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <span className="font-semibold text-slate-100">Print / Save as PDF</span>
+                    <span className="text-[11px] text-slate-400 truncate">Printable clean dossier view</span>
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => {
+                    onExport();
+                    setIsActionsMenuOpen(false);
+                  }}
+                  className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                >
+                  <div className="p-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 group-hover:bg-emerald-500/25">
+                    <Download className="size-3.5" />
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <span className="font-semibold text-slate-100">Export Signed Archive</span>
+                    <span className="text-[11px] text-slate-400 truncate">Markdown archive with SHA-256 seal</span>
+                  </div>
+                </button>
+
+                <div className="border-t border-darkroom-border my-1 pt-1" />
+
+                <button
+                  onClick={() => {
+                    handleCopyAiPayload();
+                    setIsActionsMenuOpen(false);
+                  }}
+                  className="w-full text-left px-3 py-2 rounded-xl hover:bg-darkroom-card text-slate-300 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                >
+                  <Bot className="size-3.5 text-purple-400 ml-1.5" />
+                  <span className="text-xs font-mono">{copiedAiPayload ? 'Copied JSON-LD!' : 'Copy AI Graph (JSON-LD)'}</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    handleCopyRawText();
+                    setIsActionsMenuOpen(false);
+                  }}
+                  className="w-full text-left px-3 py-2 rounded-xl hover:bg-darkroom-card text-slate-300 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                >
+                  <Code className="size-3.5 text-slate-400 ml-1.5" />
+                  <span className="text-xs font-mono">{copiedRawText ? 'Copied Raw Text!' : 'Copy Plain Text Dump'}</span>
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Absolute "New Screen" button placed outside the card */}
+        <div className="relative" ref={newSearchMenuRef}>
+          <button
+            onClick={() => {
+              soundEffects.playClick();
+              setIsNewSearchMenuOpen(!isNewSearchMenuOpen);
+            }}
+            className={`p-2 rounded-full transition-colors cursor-pointer shadow-sm active:scale-95 border ${isNewSearchMenuOpen ? 'bg-darkroom-surface text-white border-darkroom-border' : 'hover:bg-darkroom-surface text-slate-400 hover:text-white border-transparent hover:border-darkroom-border'}`}
+            title="New Screen"
+          >
+            <Plus className="size-4" />
+          </button>
+
+          <AnimatePresence>
+            {isNewSearchMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: 5, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 5, scale: 0.95 }}
+                transition={{ duration: 0.15 }}
+                className="absolute top-full right-0 mt-2 w-64 bg-darkroom-card border border-darkroom-border rounded-xl shadow-2xl overflow-hidden z-50 flex flex-col p-1"
+              >
+                <button
+                  onClick={() => {
+                    soundEffects.playSuccess();
+                    setIsNewSearchMenuOpen(false);
+                    onNewInvestigation();
+                  }}
+                  className="flex items-start gap-3 w-full text-left px-3 py-2.5 hover:bg-darkroom-surface transition-colors rounded-lg group"
+                >
+                  <div className="bg-indigo-500/10 p-1.5 rounded-md group-hover:bg-indigo-500/20 transition-colors shrink-0">
+                    <Plus className="size-4 text-indigo-400" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium text-slate-200 group-hover:text-white transition-colors">Start a new search</span>
+                    <span className="text-[10px] text-slate-500 mt-0.5 leading-tight">Click on history to come back to this dossier</span>
+                  </div>
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
 
       {/* Top Profile & Header Card (Non-sticky) */}
@@ -655,129 +780,6 @@ export const EvidenceDossier: React.FC<Props> = ({
               )}
             </div>
           </div>
-
-          <div className="flex items-center gap-2.5 w-full sm:w-auto no-print">
-            {/* Unified Dossier Actions Dropdown */}
-            <div className="relative flex-1 sm:flex-none" ref={actionsMenuRef}>
-              <button
-                onClick={() => {
-                  soundEffects.playClick();
-                  setIsActionsMenuOpen(!isActionsMenuOpen);
-                }}
-                className="w-full sm:w-auto px-4 py-2.5 sm:py-2 rounded-xl bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border text-xs font-mono font-medium text-slate-200 hover:text-white transition-all flex items-center justify-between sm:justify-center gap-2 cursor-pointer shadow-sm active:scale-95"
-                aria-expanded={isActionsMenuOpen}
-              >
-                <div className="flex items-center gap-2">
-                  <Sparkles className="size-3.5 text-indigo-400" />
-                  <span>Dossier Actions</span>
-                </div>
-                <ChevronDown className={`size-3.5 text-slate-400 transition-transform duration-200 ${isActionsMenuOpen ? 'rotate-180 text-white' : ''}`} />
-              </button>
-
-              {/* Dropdown Menu with Complete Action List */}
-              <AnimatePresence>
-                {isActionsMenuOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 8, scale: 0.96 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 8, scale: 0.96 }}
-                    transition={{ duration: 0.15, ease: 'easeOut' }}
-                    className="absolute left-0 sm:left-auto sm:right-0 top-full mt-2 w-[calc(100vw-3rem)] max-w-xs sm:w-72 p-1.5 rounded-2xl bg-darkroom-surface/98 backdrop-blur-xl border border-darkroom-border shadow-2xl shadow-black/80 z-50 space-y-1 font-sans text-xs"
-                  >
-                    {dossier && (
-                      <button
-                        onClick={() => {
-                          handleCopySummary();
-                          setIsActionsMenuOpen(false);
-                        }}
-                        className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
-                      >
-                        <div className="p-1.5 rounded-lg bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 group-hover:bg-indigo-500/25">
-                          {copiedSummary ? <Check className="size-3.5 text-emerald-400" /> : <Copy className="size-3.5" />}
-                        </div>
-                        <div className="flex flex-col min-w-0">
-                          <span className="font-semibold text-slate-100">{copiedSummary ? 'Copied to Clipboard!' : 'Copy Summary'}</span>
-                          <span className="text-[11px] text-slate-400 truncate">Executive summary & checklist</span>
-                        </div>
-                      </button>
-                    )}
-                    
-                    <button
-                      onClick={() => {
-                        handleCopyShareableLink();
-                        setIsActionsMenuOpen(false);
-                      }}
-                      className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
-                    >
-                      <div className="p-1.5 rounded-lg bg-sky-500/15 border border-sky-500/30 text-sky-400 group-hover:bg-sky-500/25">
-                        {shareableLinkCopied ? <Check className="size-3.5 text-emerald-400" /> : <ExternalLink className="size-3.5" />}
-                      </div>
-                      <div className="flex flex-col min-w-0">
-                        <span className="font-semibold text-slate-100">{shareableLinkCopied ? 'Link Copied!' : 'Copy Shareable Link'}</span>
-                        <span className="text-[11px] text-slate-400 truncate">Read-only view for producers</span>
-                      </div>
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        handlePrint();
-                        setIsActionsMenuOpen(false);
-                      }}
-                      className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
-                    >
-                      <div className="p-1.5 rounded-lg bg-blue-500/15 border border-blue-500/30 text-blue-400 group-hover:bg-blue-500/25">
-                        <Printer className="size-3.5" />
-                      </div>
-                      <div className="flex flex-col min-w-0">
-                        <span className="font-semibold text-slate-100">Print / Save as PDF</span>
-                        <span className="text-[11px] text-slate-400 truncate">Printable clean dossier view</span>
-                      </div>
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        onExport();
-                        setIsActionsMenuOpen(false);
-                      }}
-                      className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
-                    >
-                      <div className="p-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 group-hover:bg-emerald-500/25">
-                        <Download className="size-3.5" />
-                      </div>
-                      <div className="flex flex-col min-w-0">
-                        <span className="font-semibold text-slate-100">Export Signed Archive</span>
-                        <span className="text-[11px] text-slate-400 truncate">Markdown archive with SHA-256 seal</span>
-                      </div>
-                    </button>
-
-                    <div className="border-t border-darkroom-border my-1 pt-1" />
-
-                    <button
-                      onClick={() => {
-                        handleCopyAiPayload();
-                        setIsActionsMenuOpen(false);
-                      }}
-                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-darkroom-card text-slate-300 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
-                    >
-                      <Bot className="size-3.5 text-purple-400 ml-1.5" />
-                      <span className="text-xs font-mono">{copiedAiPayload ? 'Copied JSON-LD!' : 'Copy AI Graph (JSON-LD)'}</span>
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        handleCopyRawText();
-                        setIsActionsMenuOpen(false);
-                      }}
-                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-darkroom-card text-slate-300 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
-                    >
-                      <Code className="size-3.5 text-slate-400 ml-1.5" />
-                      <span className="text-xs font-mono">{copiedRawText ? 'Copied Raw Text!' : 'Copy Plain Text Dump'}</span>
-                    </button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </div>
         </div>
 
         {/* Claim Metric Strip */}
@@ -799,55 +801,123 @@ export const EvidenceDossier: React.FC<Props> = ({
             <div className="text-base font-semibold text-amber-400">{disputes.length}</div>
           </div>
         </div>
-
-        {/* View Mode Switcher: Dossier vs 360° Forensic Matrix */}
-        <div className="pt-3 border-t border-paper-card border-darkroom-card flex items-center justify-between flex-wrap gap-3 no-print">
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 p-1 rounded-2xl bg-darkroom-card w-full sm:w-auto">
-            <button
-              onClick={() => {
-                playDialClick();
-                setActiveTab('DOSSIER');
-              }}
-              className={`px-3.5 py-2 sm:py-1.5 rounded-xl text-xs font-mono font-medium transition-all flex items-center justify-center sm:justify-start gap-1.5 cursor-pointer w-full sm:w-auto ${
-                activeTab === 'DOSSIER'
-                  ? 'bg-midnight-royal text-white shadow-xs font-bold'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              <FileText className="size-3.5 shrink-0" />
-              <span>Due Diligence Intelligence</span>
-            </button>
-            <button
-              onClick={() => {
-                playDialClick();
-                setActiveTab('FORENSIC_VETTING');
-              }}
-              className={`px-3.5 py-2 sm:py-1.5 rounded-xl text-xs font-mono font-medium transition-all flex items-center justify-center sm:justify-start gap-1.5 cursor-pointer w-full sm:w-auto ${
-                activeTab === 'FORENSIC_VETTING'
-                  ? 'bg-emerald-600 text-white shadow-xs font-bold'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              <Fingerprint className="size-3.5 shrink-0" />
-              <span>360° Forensic Matrix (7 Vectors)</span>
-            </button>
-          </div>
-
-          <span className="text-xs text-slate-400 font-mono">
-            {activeTab === 'DOSSIER'
-              ? `${claims.length} Claims · ${disputes.length} Disputes`
-              : `7 Forensic Inspection Vectors`}
-          </span>
-        </div>
       </div>
 
-      {/* Sticky "HOW MUCH DATA DO YOU WANT TO SEE?" Header (before main content) */}
-      {dossier && activeTab === 'DOSSIER' && (
-        <div className="sticky top-[72px] sm:top-20 z-40 bg-darkroom-bg/95 backdrop-blur-xl p-3.5 sm:px-6 rounded-2xl border border-darkroom-border shadow-2xl shadow-black/80 no-print transition-all flex flex-col sm:block gap-2">
-          <div className="flex sm:hidden items-center gap-1.5 text-[10px] font-mono text-indigo-400 font-semibold uppercase tracking-wider px-1 mb-1">
-            <span className="size-1.5 rounded-full bg-indigo-500 animate-pulse" />
-            Reading: {activeSection}
+      {/* Sticky Header with Section Name, Burger Navigation & 3-Bar Detail Selector */}
+      {dossier && (
+        <div className="sticky top-0 z-40 bg-darkroom-bg/95 backdrop-blur-xl p-3 sm:px-5 rounded-2xl border border-darkroom-border shadow-2xl shadow-black/80 no-print transition-all space-y-2">
+          <div className="flex items-center justify-between gap-3 relative">
+            {/* Left: Burger button + Current Section Name */}
+            <div className="flex items-center gap-2.5 min-w-0 flex-1">
+              <button
+                type="button"
+                onClick={() => {
+                  soundEffects.playClick();
+                  setIsNavOpen(!isNavOpen);
+                }}
+                className={`p-2 rounded-xl border transition-all cursor-pointer flex items-center justify-center shrink-0 ${
+                  isNavOpen
+                    ? 'bg-midnight-royal text-white border-midnight-royal shadow-sm'
+                    : 'bg-darkroom-card text-slate-300 hover:text-white border-darkroom-border hover:bg-darkroom-surface'
+                }`}
+                title="Dossier Table of Contents"
+                aria-expanded={isNavOpen}
+              >
+                <Menu className="size-4" />
+              </button>
+
+              <div className="flex items-center gap-2 min-w-0 truncate">
+                <span className="size-2 rounded-full bg-indigo-500 animate-pulse shrink-0" />
+                <span className="text-xs font-mono text-slate-400 shrink-0">Reading:</span>
+                <span className="text-xs font-mono font-semibold text-white truncate">
+                  {activeSection}
+                </span>
+              </div>
+            </div>
+
+            {/* Right: Quick metric counter */}
+            <div className="hidden sm:flex items-center gap-2 text-[11px] font-mono text-slate-400 shrink-0">
+              <span>{claims.length} Claims</span>
+              <span>·</span>
+              <span>7 Forensic Vectors</span>
+              {disputes.length > 0 && (
+                <>
+                  <span>·</span>
+                  <span className="text-amber-400">{disputes.length} Disputes</span>
+                </>
+              )}
+            </div>
+
+            {/* Burger Dropdown Menu */}
+            <AnimatePresence>
+              {isNavOpen && (
+                <motion.div
+                  ref={navMenuRef}
+                  initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                  transition={{ duration: 0.15, ease: 'easeOut' }}
+                  className="absolute left-0 top-full mt-2 w-full max-w-sm p-2 rounded-2xl bg-darkroom-surface/98 backdrop-blur-2xl border border-darkroom-border shadow-2xl shadow-black/90 z-50 space-y-1 max-h-[70vh] overflow-y-auto"
+                >
+                  <div className="px-3 py-1.5 border-b border-darkroom-border flex items-center justify-between text-[11px] font-mono uppercase text-slate-400">
+                    <span>Jump to Section</span>
+                    <button
+                      type="button"
+                      onClick={() => setIsNavOpen(false)}
+                      className="text-slate-400 hover:text-white cursor-pointer"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  <div className="pt-1 space-y-0.5">
+                    {[
+                      { id: 'section-radar', name: 'Transparency & Credibility', icon: ShieldCheck },
+                      { id: 'section-overview', name: 'Executive Overview', icon: FileText },
+                      { id: 'section-forensic-matrix', name: '360° Forensic Matrix (7 Vectors)', icon: Fingerprint },
+                      { id: 'section-disputes', name: 'Contradictions & Disputes', icon: AlertTriangle, condition: disputes.length > 0 },
+                      { id: 'section-network', name: 'Entity Architecture & Network', icon: Layers, condition: normalizedDensity === 'FULL_EVIDENCE' },
+                      { id: 'section-domains', name: '3-Domain Synthesis', icon: Globe, condition: normalizedDensity === 'FULL_EVIDENCE' },
+                      { id: 'section-corporate', name: 'Corporate Entity Intelligence', icon: Building2, condition: Boolean(dossier?.corporateEntity) },
+                      { id: 'section-claims', name: 'Atomic Claims & Citations', icon: ShieldCheck, condition: normalizedDensity === 'FULL_EVIDENCE' && claims.length > 0 },
+                      { id: 'section-checklist', name: 'Filmmaker Action Checklist', icon: ListChecks },
+                      { id: 'section-sources', name: 'Discovered Web Sources', icon: ExternalLink, condition: normalizedDensity === 'FULL_EVIDENCE' && sources.length > 0 },
+                    ]
+                      .filter((item) => item.condition === undefined || item.condition)
+                      .map((item) => {
+                        const Icon = item.icon;
+                        const isActive = activeSection === item.name;
+                        return (
+                          <button
+                            key={item.id}
+                            type="button"
+                            onClick={() => {
+                              soundEffects.playClick();
+                              setIsNavOpen(false);
+                              const element = document.getElementById(item.id);
+                              if (element) {
+                                const yOffset = -140;
+                                const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                                window.scrollTo({ top: y, behavior: 'smooth' });
+                              }
+                            }}
+                            className={`w-full text-left px-3 py-2 rounded-xl flex items-center gap-2.5 text-xs font-mono transition-all cursor-pointer ${
+                              isActive
+                                ? 'bg-midnight-royal text-white font-bold'
+                                : 'text-slate-300 hover:text-white hover:bg-darkroom-card'
+                            }`}
+                          >
+                            <Icon className={`size-3.5 shrink-0 ${isActive ? 'text-white' : 'text-indigo-400'}`} />
+                            <span className="truncate">{item.name}</span>
+                          </button>
+                        );
+                      })}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
+
+          {/* 3-Bar Detail Settings: Short / Full / Agent */}
           <DetailDial density={density} onChange={handleDensityChange} />
         </div>
       )}
@@ -858,13 +928,11 @@ export const EvidenceDossier: React.FC<Props> = ({
           <div className="text-white font-serif text-xl mb-2">Synthesizing Dossier...</div>
           Loading deep vetting results, claims, and AI findings.
         </div>
-      ) : activeTab === 'FORENSIC_VETTING' ? (
-        <DeepVettingMatrix report={deepVetting} festivalName={entity.name} />
       ) : normalizedDensity === 'MACHINE_AI_INGESTION' ? (
         /* ==================================================================== */
         /* MODE 4: 🤖 "I Am Not Human" (AI & Non-Human Machine Ingestion Mode)   */
         /* ==================================================================== */
-        <div className="space-y-5 animate-fade-in" data-density="MACHINE_AI_INGESTION">
+        <div className="space-y-5 animate-fade-in" data-density="MACHINE_AI_INGESTION" data-section-name="AI Agent Ingestion">
           {/* Human Explanatory Banner */}
           <div className="p-4 sm:p-5 rounded-3xl bg-darkroom-card border-l-4 border-tool-diligence shadow-2xl flex items-start gap-4">
             <div className="size-10 rounded-2xl bg-tool-diligence/20 text-tool-diligence flex items-center justify-center shrink-0">
@@ -1002,12 +1070,19 @@ export const EvidenceDossier: React.FC<Props> = ({
           </div>
         </div>
       ) : (
+        /* Single-Page Human Dossier Flow (Short & Full Modes) */
         <>
           {/* Credibility & Transparency Radar Bar */}
-          <CredibilityRadar claims={claims} disputes={disputes} />
+          <div id="section-radar" data-section-name="Transparency & Credibility">
+            <CredibilityRadar claims={claims} disputes={disputes} />
+          </div>
 
-          {/* Executive Overview (All Human Modes) */}
-          <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-3" data-section-name="Executive Overview">
+          {/* Executive Overview */}
+          <div
+            id="section-overview"
+            className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-3"
+            data-section-name="Executive Overview"
+          >
             <div className="text-xs font-mono uppercase tracking-wider text-slate-400">
               Executive Overview
             </div>
@@ -1016,45 +1091,44 @@ export const EvidenceDossier: React.FC<Props> = ({
             </p>
           </div>
 
-          {/* Key Persons (All Human Modes) */}
-          {dossier.keyPersons && dossier.keyPersons.length > 0 && (
-            <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4 border border-darkroom-card" data-section-name="Key Persons">
-              <div className="text-xs font-mono uppercase tracking-wider text-indigo-400 flex items-center justify-between">
-                <span>Key Individuals & Entities</span>
-              </div>
-              <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-200/80 font-sans leading-relaxed">
-                <strong>Disclaimer:</strong> This is an automated tool. The associations of these key persons should be verified manually as the tool can make mistakes.
-              </div>
-              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
-                {dossier.keyPersons.map((person, idx) => (
-                  <li key={idx} className="flex items-center gap-2 p-3 rounded-xl bg-darkroom-bg text-sm text-slate-200">
-                    <User className="size-4 text-indigo-400 shrink-0" />
-                    <span className="truncate">{person}</span>
-                  </li>
-                ))}
-              </ul>
+          {/* 360° Forensic Matrix (7 Vectors, Key Personnel & Directorship Network) */}
+          <div id="section-forensic-matrix" data-section-name="360° Forensic Matrix (7 Vectors)">
+            <DeepVettingMatrix report={deepVetting} festivalName={entity.name} />
+          </div>
+
+          {/* Side-by-Side Contradictions Panel */}
+          {disputes.length > 0 && (
+            <div id="section-disputes" data-section-name="Contradictions & Disputes">
+              <ContradictionPanel disputes={disputes} />
             </div>
           )}
 
-          {/* React Flow Interactive Diagram (Rendered in Balanced & Full Evidence modes) */}
-          {(normalizedDensity === 'BALANCED' || normalizedDensity === 'FULL_EVIDENCE') && (
-            <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4" data-section-name="Entity Architecture">
-              <Suspense fallback={<div className="p-4 text-center text-xs text-slate-500 animate-pulse">Loading provenance graph...</div>}>
+          {/* Entity Provenance Graph (Rendered in Full mode) */}
+          {normalizedDensity === 'FULL_EVIDENCE' && (
+            <div
+              id="section-network"
+              className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4"
+              data-section-name="Entity Architecture & Network"
+            >
+              <Suspense
+                fallback={
+                  <div className="p-4 text-center text-xs text-slate-500 animate-pulse">
+                    Loading provenance graph...
+                  </div>
+                }
+              >
                 <EntityProvenanceGraph dossier={dossierAdapter} />
               </Suspense>
             </div>
           )}
 
-          {/* Side-by-Side Contradictions Panel */}
-          {disputes.length > 0 && (
-            <div data-section-name="Active Disputes">
-              <ContradictionPanel disputes={disputes} />
-            </div>
-          )}
-
-          {/* 3 Domain Narrative Syntheses (Rendered in Balanced & Full Evidence modes) */}
-          {normalizedDensity !== 'SIMPLIFIED' && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4" data-section-name="Domain Analysis">
+          {/* 3 Domain Narrative Syntheses (Rendered in Full mode) */}
+          {normalizedDensity === 'FULL_EVIDENCE' && (
+            <div
+              id="section-domains"
+              className="grid grid-cols-1 md:grid-cols-3 gap-4"
+              data-section-name="3-Domain Synthesis"
+            >
               {/* Festival Domain */}
               <div className="p-5 rounded-3xl bg-darkroom-surface shadow-2xl space-y-3">
                 <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-400 border-b border-paper-card border-darkroom-card pb-2">
@@ -1088,7 +1162,11 @@ export const EvidenceDossier: React.FC<Props> = ({
 
           {/* Corporate Entity Intelligence */}
           {dossier?.corporateEntity && (
-            <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl border border-darkroom-border space-y-4" data-section-name="Corporate Intelligence">
+            <div
+              id="section-corporate"
+              className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl border border-darkroom-border space-y-4"
+              data-section-name="Corporate Entity Intelligence"
+            >
               <div className="flex flex-col gap-2 border-b border-paper-card border-darkroom-card pb-4">
                 <div className="flex items-center gap-2 text-sm font-mono uppercase tracking-wider text-amber-400 font-semibold">
                   <Building2 className="size-4" />
@@ -1147,20 +1225,9 @@ export const EvidenceDossier: React.FC<Props> = ({
             </div>
           )}
 
-          {/* Key Personnel & Leadership Intelligence */}
-          {deepVetting?.keyPersonnel && deepVetting.keyPersonnel.length > 0 && (
-            <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl border border-darkroom-border space-y-4" data-section-name="Key Personnel">
-              <KeyPersonnelCardList
-                keyPersonnel={deepVetting.keyPersonnel}
-                title="Key Personnel & Leadership Intelligence"
-                subtitle="Verified directors, jury members, and connected corporate entities evaluated for conflicts of interest."
-              />
-            </div>
-          )}
-
-          {/* Atomic Claims & Evidence Citations (Rendered ONLY in Full Evidence mode) */}
+          {/* Atomic Claims & Evidence Citations (Rendered in Full mode) */}
           {normalizedDensity === 'FULL_EVIDENCE' && (
-            <div className="space-y-4" data-section-name="Atomic Ledger">
+            <div id="section-claims" className="space-y-4" data-section-name="Atomic Claims & Citations">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <h2 className="font-serif text-xl font-semibold text-white flex items-center gap-2">
                   <ShieldCheck className="size-5 text-indigo-400" /> Atomic Claims & Evidence
@@ -1345,7 +1412,11 @@ export const EvidenceDossier: React.FC<Props> = ({
           )}
 
           {/* Filmmaker Checklist & Unresolved Questions */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4" data-section-name="Filmmaker Checklist">
+          <div
+            id="section-checklist"
+            className="grid grid-cols-1 md:grid-cols-2 gap-4"
+            data-section-name="Filmmaker Action Checklist"
+          >
             {/* Due Diligence Checklist */}
             <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4">
               <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-emerald-400 border-b border-paper-card border-darkroom-card pb-2">
@@ -1379,9 +1450,13 @@ export const EvidenceDossier: React.FC<Props> = ({
             </div>
           </div>
 
-          {/* Discovered Footprint Drawer (Full Evidence Mode) */}
+          {/* Discovered Web Sources (Rendered in Full mode) */}
           {normalizedDensity === 'FULL_EVIDENCE' && (
-            <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4" data-section-name="Web Sources">
+            <div
+              id="section-sources"
+              className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4"
+              data-section-name="Discovered Web Sources"
+            >
               <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-paper-card border-darkroom-card pb-3 gap-3">
                 <div className="space-y-1">
                   <span className="text-sm font-mono uppercase tracking-wider text-slate-300">

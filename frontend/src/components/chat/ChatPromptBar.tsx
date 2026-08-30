@@ -129,6 +129,21 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
         </div>
       )}
 
+      {/* Mobile Only: Placed above the input container */}
+      <div className="flex sm:hidden items-center justify-center pb-1 select-none">
+        <button
+          type="button"
+          onClick={() => {
+            soundEffects.playClick();
+            setIsCapabilitiesModalOpen(true);
+          }}
+          className="inline-flex items-center gap-1.5 text-xs font-mono text-blue-400 hover:text-blue-300 transition-colors cursor-pointer hover:underline"
+        >
+          <HelpCircle className="size-3.5 text-blue-400" />
+          <span>what can I ask</span>
+        </button>
+      </div>
+
       <form
         onSubmit={handleSubmit}
         onDragOver={(e) => {
@@ -213,21 +228,6 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
           </button>
         </div>
       </form>
-
-      {/* Mobile Only: Placed outside the input container, right above 'leave feedback' */}
-      <div className="flex sm:hidden items-center justify-center pt-2 pb-0.5 select-none">
-        <button
-          type="button"
-          onClick={() => {
-            soundEffects.playClick();
-            setIsCapabilitiesModalOpen(true);
-          }}
-          className="inline-flex items-center gap-1.5 text-xs font-mono text-blue-400 hover:text-blue-300 transition-colors cursor-pointer hover:underline"
-        >
-          <HelpCircle className="size-3.5 text-blue-400" />
-          <span>what can I ask</span>
-        </button>
-      </div>
 
       <CapabilitiesModal
         isOpen={isCapabilitiesModalOpen}
