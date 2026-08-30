@@ -28,7 +28,7 @@ export const OpportunityCard: React.FC<Props> = ({ opportunity, onDeepScreen }) 
             <span
               onMouseEnter={() => setShowTooltip('BAFTA')}
               onMouseLeave={() => setShowTooltip(null)}
-              className="px-2.5 py-1 rounded-lg text-xs font-mono bg-darkroom-card text-amber-300 font-semibold cursor-help inline-flex items-center gap-1.5 hover:bg-paper-border hover:bg-darkroom-border transition-colors"
+              className="px-2.5 py-1 rounded-lg text-xs font-mono bg-darkroom-card text-orange-400 font-semibold cursor-help inline-flex items-center gap-1.5 hover:bg-darkroom-surface border border-orange-500/30 transition-colors"
             >
               BAFTA Qualifying <Info className="size-3 opacity-70" />
             </span>
@@ -170,8 +170,8 @@ export const OpportunityCard: React.FC<Props> = ({ opportunity, onDeepScreen }) 
 
         {/* Eligibility Notes */}
         {opportunity.eligibilityNotes && (
-          <div className="text-xs text-amber-300/90 flex items-start gap-2 pt-1 font-mono">
-            <AlertCircle className="size-4 text-amber-400 shrink-0 mt-0.5" />
+          <div className="text-xs text-orange-300/90 flex items-start gap-2 pt-1 font-mono">
+            <AlertCircle className="size-4 text-orange-400 shrink-0 mt-0.5" />
             <span>{opportunity.eligibilityNotes}</span>
           </div>
         )}

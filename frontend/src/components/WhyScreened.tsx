@@ -120,7 +120,7 @@ export const WhyScreened: React.FC<Props> = ({
 
                 <div>
                   <div className="text-2xl font-bold text-white flex items-center gap-3">
-                    <Layers className="size-6 text-amber-400 shrink-0" />
+                    <Layers className="size-6 text-orange-400 shrink-0" />
                     <span>20+ Browser Tabs</span>
                   </div>
                   <p className="text-sm text-slate-300 mt-1 ml-9">
