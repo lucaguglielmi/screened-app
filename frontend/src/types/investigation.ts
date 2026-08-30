@@ -342,6 +342,33 @@ export interface KeyPerson {
   twitterUrl?: string;
 }
 
+export type ImageAssetType =
+  | 'LAUREL_GRAPHIC'
+  | 'VENUE_PHOTO'
+  | 'RED_CARPET'
+  | 'AWARD_TROPHY'
+  | 'JURY_HEADSHOT';
+
+export type ImageMatchClassification =
+  | 'STOCK_PHOTO'
+  | 'TEMPLATE_LAUREL'
+  | 'AUTHENTIC_LIVE'
+  | 'SYNTHETIC_RENDER'
+  | 'CLONED_ACROSS_NETWORK'
+  | 'INCONCLUSIVE';
+
+export interface ImageForensicRecord {
+  id: string;
+  assetType: ImageAssetType;
+  claimedUrl: string;
+  claimedDescription: string;
+  classification: ImageMatchClassification;
+  originMatchUrl?: string;
+  originMatchTitle?: string;
+  confidenceScore: number;
+  forensicNotes: string;
+}
+
 export interface DeepVettingDimension {
   id: string;
   dimensionKey: string;
@@ -353,6 +380,7 @@ export interface DeepVettingDimension {
   signalsFound: string[];
   corroboratingSources: string[];
   riskWeight: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  imageArtifacts?: ImageForensicRecord[];
 }
 
 export interface DeepVettingReport {
@@ -361,6 +389,7 @@ export interface DeepVettingReport {
   totalFlags: number;
   dimensions: DeepVettingDimension[];
   keyPersonnel?: KeyPerson[];
+  imageArtifacts?: ImageForensicRecord[];
   disclaimer?: string;
   generatedAt: string;
 }

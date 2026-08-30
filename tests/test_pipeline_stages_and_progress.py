@@ -191,8 +191,8 @@ def test_deep_vetting_adk_single_terminal_node():
     )
 
     assert workflow.name == "deep_vetting_pipeline"
-    # Verify fan-out from START (5 edges) + fan-in to scorer (5 edges) = 10 edges
-    assert len(workflow.edges) == 10
+    # Verify fan-out from START (N edges) + fan-in to scorer (N edges) = 2*N edges
+    assert len(workflow.edges) == len(DIMENSIONS) * 2
 
     # Scorer must be the sole target of all dimension agents
     targets = {e.to_node.name for e in edges if e.from_node != START}

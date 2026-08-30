@@ -854,28 +854,40 @@ def get_demo_full_dossier():
             "totalFlags": 12,
             "dimensions": [
                 {
+                    "id": "dim_corp",
+                    "dimensionKey": "CORPORATE_REGISTRY",
+                    "title": "Corporate & Legal Entity Verification",
+                    "category": "ORGANIZER_TRACK_RECORD",
+                    "status": "RED_FLAG",
+                    "confidenceScore": 96,
+                    "summary": "Operating company Pallino Media Lab Ltd subjected to compulsory strike-off in 2022; active CIC filed late micro-entity accounts.",
+                    "signalsFound": ["2022 Insolvency notice", "Late micro-entity filing", "Multiple dormant entities"],
+                    "corroboratingSources": ["find-and-update.company-information.service.gov.uk", "thegazette.co.uk"],
+                    "riskWeight": "CRITICAL"
+                },
+                {
+                    "id": "dim_domain",
+                    "dimensionKey": "DOMAIN_PROVENANCE",
+                    "title": "Domain Age & WHOIS Provenance",
+                    "category": "ORGANIZER_TRACK_RECORD",
+                    "status": "AMBER_WARNING",
+                    "confidenceScore": 92,
+                    "summary": "Domain pincopallinofilmfestival.com registered June 2021 despite claiming 15-year heritage since 2009.",
+                    "signalsFound": ["WHOIS Creation: 2021-06-14", "Claimed founded year: 2009 (12-year discrepancy)", "Privacy-protected registrant"],
+                    "corroboratingSources": ["whois.domaintools.com", "web.archive.org"],
+                    "riskWeight": "MEDIUM"
+                },
+                {
                     "id": "dim_venue",
-                    "dimensionKey": "VENUE_LOGISTICS",
-                    "title": "Physical Venue Footprint",
+                    "dimensionKey": "VENUE_CORROBORATION",
+                    "title": "Municipal Screening & Venue Corroboration",
                     "category": "VENUE_SCREENINGS",
                     "status": "VERIFIED_AUTHENTIC",
                     "confidenceScore": 95,
-                    "summary": "Confirmed physical bookings at Genesis Cinema and BFI Southbank.",
-                    "signalsFound": ["BFI Private Hire manifest match", "Genesis Cinema website listing"],
+                    "summary": "Confirmed physical bookings at Genesis Cinema and BFI Southbank NFT3 via private hire manifests.",
+                    "signalsFound": ["BFI Private Hire manifest match", "Genesis Cinema website listing", "Confirmed DCP delivery guidelines"],
                     "corroboratingSources": ["bfi.org.uk", "genesiscinema.co.uk"],
                     "riskWeight": "LOW"
-                },
-                {
-                    "id": "dim_sponsors",
-                    "dimensionKey": "INDUSTRY_AFFILIATION",
-                    "title": "Corporate Sponsorship Integrity",
-                    "category": "ORGANIZER_TRACK_RECORD",
-                    "status": "RED_FLAG",
-                    "confidenceScore": 98,
-                    "summary": "Festival falsely claims ARRI and Sony as platinum sponsors.",
-                    "signalsFound": ["ARRI public disavowal on Twitter", "No press releases from Sony"],
-                    "corroboratingSources": ["twitter.com"],
-                    "riskWeight": "HIGH"
                 },
                 {
                     "id": "dim_personnel",
@@ -890,28 +902,137 @@ def get_demo_full_dossier():
                     "riskWeight": "HIGH"
                 },
                 {
-                    "id": "dim_fees",
-                    "dimensionKey": "FINANCIAL_MODEL",
-                    "title": "Fee Structure & Revenue Generation",
-                    "category": "FEES_POLICY",
-                    "status": "AMBER_WARNING",
+                    "id": "dim_plagiarism",
+                    "dimensionKey": "BOILERPLATE_PLAGIARISM",
+                    "title": "Boilerplate Rules & Text Duplication",
+                    "category": "ORGANIZER_TRACK_RECORD",
+                    "status": "RED_FLAG",
+                    "confidenceScore": 94,
+                    "summary": "Terms and Conditions Section 4.2 copied verbatim from Apex Short Film Arena (97% semantic similarity).",
+                    "signalsFound": ["97% text duplication with Apex Short Film Arena", "Identical non-refundable indemnity clause", "Shared contact email pattern"],
+                    "corroboratingSources": ["filmfreeway.com/ApexShortFilmArena", "copyscape.com"],
+                    "riskWeight": "HIGH"
+                },
+                {
+                    "id": "dim_alumni",
+                    "dimensionKey": "ALUMNI_FOOTPRINT",
+                    "title": "Alumni Filmmaker & Selection Footprint",
+                    "category": "EXPERIENCE_FEEDBACK",
+                    "status": "INFORMATIONAL",
                     "confidenceScore": 88,
-                    "summary": "Aggressive 200% late fee spikes and questionable £180 trophy packaging add-ons.",
-                    "signalsFound": ["£180 trophy package option", "£95 late fee", "No waivers policy"],
-                    "corroboratingSources": ["filmfreeway.com"],
+                    "summary": "18 verified past alumni on IMDb; however, 42 reviews highlight severe post-submission communication blackouts.",
+                    "signalsFound": ["18 confirmed alumni credits on IMDb", "42 negative reviews documenting communication delays", "Mixed festival forum sentiment"],
+                    "corroboratingSources": ["imdb.com", "trustpilot.com", "reddit.com"],
                     "riskWeight": "MEDIUM"
                 },
                 {
-                    "id": "dim_feedback",
-                    "dimensionKey": "FILMMAKER_SENTIMENT",
-                    "title": "Community Sentiment & Feedback",
-                    "category": "EXPERIENCE_FEEDBACK",
+                    "id": "dim_images",
+                    "dimensionKey": "IMAGE_PROVENANCE",
+                    "title": "Promotional Image & Asset Authenticity",
+                    "category": "IMAGE_PROVENANCE",
                     "status": "RED_FLAG",
-                    "confidenceScore": 85,
-                    "summary": "Consistent reports of 3-5 week communication delays and poor AV quality.",
-                    "signalsFound": ["42 negative mentions of communication delays", "TrustPilot reports of AV failure"],
-                    "corroboratingSources": ["reddit.com", "trustpilot.com"],
-                    "riskWeight": "HIGH"
+                    "confidenceScore": 96,
+                    "summary": "Reverse image search detected stock auditorium photos from Shutterstock and generic laurel graphics cloned across 14 other festival mill sites.",
+                    "signalsFound": [
+                        "Auditorium photo matches Shutterstock Asset #7192014 (2017)",
+                        "Laurel graphic identical to Canva template reused across 14 festivals",
+                        "Best Director Trophy is a synthetic 3D CGI TurboSquid render",
+                        "Venue marquee is a digitally superimposed iStock image"
+                    ],
+                    "corroboratingSources": ["shutterstock.com", "turbosquid.com", "istockphoto.com"],
+                    "riskWeight": "HIGH",
+                    "imageArtifacts": [
+                        {
+                            "id": "img_art_1",
+                            "assetType": "VENUE_PHOTO",
+                            "claimedUrl": "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&auto=format&fit=crop&q=80",
+                            "claimedDescription": "2024 Gala Screening Audience at West End Curzon Soho",
+                            "classification": "STOCK_PHOTO",
+                            "originMatchUrl": "https://www.shutterstock.com/image-photo/cinema-auditorium-crowd-watching-movie-7192014",
+                            "originMatchTitle": "Shutterstock Asset #7192014 ('Crowd in Modern Cinema Auditorium')",
+                            "confidenceScore": 98,
+                            "forensicNotes": "Reverse image search identified identical stock photo on Shutterstock uploaded in 2017. Zero metadata or architectural geometry matches Curzon Soho Screen 1."
+                        },
+                        {
+                            "id": "img_art_2",
+                            "assetType": "LAUREL_GRAPHIC",
+                            "claimedUrl": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=800&auto=format&fit=crop&q=80",
+                            "claimedDescription": "Official Selection & Winner Laurel Emblem 2024/2025",
+                            "classification": "CLONED_ACROSS_NETWORK",
+                            "originMatchUrl": "https://filmfreeway.com/ApexShortFilmArena",
+                            "originMatchTitle": "Canva Template #FF-8812 & Apex Short Film Arena",
+                            "confidenceScore": 94,
+                            "forensicNotes": "Vector leaf structure matches standard free Canva laurel template reused verbatim across 14 other festivals operated by the same network."
+                        },
+                        {
+                            "id": "img_art_3",
+                            "assetType": "AWARD_TROPHY",
+                            "claimedUrl": "https://images.unsplash.com/photo-1578269174936-2709b6aeb913?w=800&auto=format&fit=crop&q=80",
+                            "claimedDescription": "Heavy Cast Brass Best Director Award Trophy (£180 Option)",
+                            "classification": "SYNTHETIC_RENDER",
+                            "originMatchUrl": "https://www.turbosquid.com/3d-models/golden-trophy-statuette-cinema-189201",
+                            "originMatchTitle": "TurboSquid 3D Cinema Trophy Mockup #189201",
+                            "confidenceScore": 91,
+                            "forensicNotes": "Specular reflections and ambient occlusion indicate synthetic 3D CAD render. No physical casting foundry or manufacturing record found."
+                        },
+                        {
+                            "id": "img_art_4",
+                            "assetType": "VENUE_PHOTO",
+                            "claimedUrl": "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=800&auto=format&fit=crop&q=80",
+                            "claimedDescription": "Opening Night Red Carpet Marquee at Prince Charles Cinema",
+                            "classification": "STOCK_PHOTO",
+                            "originMatchUrl": "https://www.istockphoto.com/photo/london-west-end-theater-entrance-gm182910",
+                            "originMatchTitle": "iStock by Getty Images ('London Theater Entrance by Night')",
+                            "confidenceScore": 96,
+                            "forensicNotes": "Photoshop layering and font kerning artifacts show 'Pinco Pallino Film Gala' digitally superimposed over a 2019 generic London theater entrance photo."
+                        }
+                    ]
+                }
+            ],
+            "imageArtifacts": [
+                {
+                    "id": "img_art_1",
+                    "assetType": "VENUE_PHOTO",
+                    "claimedUrl": "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&auto=format&fit=crop&q=80",
+                    "claimedDescription": "2024 Gala Screening Audience at West End Curzon Soho",
+                    "classification": "STOCK_PHOTO",
+                    "originMatchUrl": "https://www.shutterstock.com/image-photo/cinema-auditorium-crowd-watching-movie-7192014",
+                    "originMatchTitle": "Shutterstock Asset #7192014 ('Crowd in Modern Cinema Auditorium')",
+                    "confidenceScore": 98,
+                    "forensicNotes": "Reverse image search identified identical stock photo on Shutterstock uploaded in 2017. Zero metadata or architectural geometry matches Curzon Soho Screen 1."
+                },
+                {
+                    "id": "img_art_2",
+                    "assetType": "LAUREL_GRAPHIC",
+                    "claimedUrl": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=800&auto=format&fit=crop&q=80",
+                    "claimedDescription": "Official Selection & Winner Laurel Emblem 2024/2025",
+                    "classification": "CLONED_ACROSS_NETWORK",
+                    "originMatchUrl": "https://filmfreeway.com/ApexShortFilmArena",
+                    "originMatchTitle": "Canva Template #FF-8812 & Apex Short Film Arena",
+                    "confidenceScore": 94,
+                    "forensicNotes": "Vector leaf structure matches standard free Canva laurel template reused verbatim across 14 other festivals operated by the same network."
+                },
+                {
+                    "id": "img_art_3",
+                    "assetType": "AWARD_TROPHY",
+                    "claimedUrl": "https://images.unsplash.com/photo-1578269174936-2709b6aeb913?w=800&auto=format&fit=crop&q=80",
+                    "claimedDescription": "Heavy Cast Brass Best Director Award Trophy (£180 Option)",
+                    "classification": "SYNTHETIC_RENDER",
+                    "originMatchUrl": "https://www.turbosquid.com/3d-models/golden-trophy-statuette-cinema-189201",
+                    "originMatchTitle": "TurboSquid 3D Cinema Trophy Mockup #189201",
+                    "confidenceScore": 91,
+                    "forensicNotes": "Specular reflections and ambient occlusion indicate synthetic 3D CAD render. No physical casting foundry or manufacturing record found."
+                },
+                {
+                    "id": "img_art_4",
+                    "assetType": "VENUE_PHOTO",
+                    "claimedUrl": "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=800&auto=format&fit=crop&q=80",
+                    "claimedDescription": "Opening Night Red Carpet Marquee at Prince Charles Cinema",
+                    "classification": "STOCK_PHOTO",
+                    "originMatchUrl": "https://www.istockphoto.com/photo/london-west-end-theater-entrance-gm182910",
+                    "originMatchTitle": "iStock by Getty Images ('London Theater Entrance by Night')",
+                    "confidenceScore": 96,
+                    "forensicNotes": "Photoshop layering and font kerning artifacts show 'Pinco Pallino Film Gala' digitally superimposed over a 2019 generic London theater entrance photo."
                 }
             ],
             "keyPersonnel": [

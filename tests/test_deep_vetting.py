@@ -148,3 +148,50 @@ async def test_deep_vetting_successful_synthesis(mock_gemini, sample_sources, mo
     corp_dim = next(d for d in report.dimensions if d.dimensionKey == "CORPORATE_REGISTRY")
     assert corp_dim.status == VettingSignalStatus.VERIFIED_AUTHENTIC
     assert corp_dim.confidenceScore == 95
+
+
+def test_image_forensic_records_serialization():
+    """Verify ImageForensicRecord models serialize and deserialize accurately."""
+    from backend.models import ImageAssetType, ImageMatchClassification, ImageForensicRecord
+
+    record = ImageForensicRecord(
+        assetType=ImageAssetType.VENUE_PHOTO,
+        claimedUrl="https://example.com/screening.jpg",
+        claimedDescription="West End Gala Screening",
+        classification=ImageMatchClassification.STOCK_PHOTO,
+        originMatchUrl="https://shutterstock.com/7192014",
+        originMatchTitle="Shutterstock Crowd In Auditorium",
+        confidenceScore=98,
+        forensicNotes="Direct SHA-256 and visual feature match with stock asset."
+    )
+
+    data = record.model_dump()
+    assert data["assetType"] == "VENUE_PHOTO"
+    assert data["classification"] == "STOCK_PHOTO"
+    assert data["confidenceScore"] == 98
+
+    restored = ImageForensicRecord.model_validate(data)
+    assert restored.assetType == ImageAssetType.VENUE_PHOTO
+    assert restored.originMatchUrl == "https://shutterstock.com/7192014"
+
+
+def test_demo_payload_image_artifacts():
+    """Verify demo_pinco_pallino fixture includes valid image forensics on IMAGE_PROVENANCE."""
+    from backend.demo_payloads import get_demo_full_dossier
+
+    demo = get_demo_full_dossier()
+    assert "deepVetting" in demo
+    dv = demo["deepVetting"]
+    assert "imageArtifacts" in dv
+    assert len(dv["imageArtifacts"]) >= 4
+
+    img_dim = next((d for d in dv["dimensions"] if d["dimensionKey"] == "IMAGE_PROVENANCE"), None)
+    assert img_dim is not None
+    assert img_dim["status"] == "RED_FLAG"
+    assert len(img_dim["imageArtifacts"]) >= 4
+
+    # Check for stock photo classification on venue photo
+    venue_art = next(a for a in img_dim["imageArtifacts"] if a["assetType"] == "VENUE_PHOTO")
+    assert venue_art["classification"] == "STOCK_PHOTO"
+    assert "shutterstock.com" in venue_art["originMatchUrl"] or "istockphoto.com" in venue_art["originMatchUrl"]
+

@@ -39,6 +39,7 @@ DIMENSIONS = [
     {"key": "VENUE_CORROBORATION", "name": "venue_reality", "desc": "Cross-check physical theater leases, cinema screening spaces, and event schedules.", "include_domains": VENUE_REALITY_DOMAINS},
     {"key": "PERSONNEL_DOSSIER", "name": "personnel_dossier", "desc": "Factually assess Festival Directors, Programmers, and Jury Members. Check if they run multiple other festivals (Festival Mills) or own/operate distribution and consulting companies targeting filmmakers.", "include_domains": PERSONNEL_DOSSIER_DOMAINS},
     {"key": "BOILERPLATE_PLAGIARISM", "name": "rules_plagiarism", "desc": "Check if submission rules, fee policies, or waiver texts are unique or cloned from known laurel mills.", "include_domains": None},
+    {"key": "IMAGE_PROVENANCE", "name": "image_provenance", "desc": "Inspect festival promotional photography, gala screening venue photos, red carpet pictures, and laurel graphics using reverse image lookup techniques to detect stock photo reuse, template laurels cloned across multiple festivals, or synthetic CGI renders.", "include_domains": None},
 ]
 
 class DeepVettingAgent:
@@ -105,9 +106,9 @@ class DeepVettingAgent:
         reducer_instruction = f"""
 You are the Chief Investigative Forensic Analyst for Screened.
 Synthesize the parallel dimension analyses into a final deep vetting report for {festival_name}.
-Focus on these 5 dimensions: CORPORATE_REGISTRY, DOMAIN_PROVENANCE, VENUE_CORROBORATION, PERSONNEL_DOSSIER, BOILERPLATE_PLAGIARISM.
-Aggregate the "Festival Mill" and "Consulting Overlap" findings into prominent RED_FLAG or AMBER_WARNING signals.
-Fill in the other 2 (ALUMNI_FOOTPRINT, IMAGE_PROVENANCE) with INCONCLUSIVE or INFORMATIONAL defaults.
+Focus on these forensic dimensions: CORPORATE_REGISTRY, DOMAIN_PROVENANCE, VENUE_CORROBORATION, PERSONNEL_DOSSIER, BOILERPLATE_PLAGIARISM, and IMAGE_PROVENANCE.
+Aggregate the "Festival Mill", "Consulting Overlap", and "Stock/Cloned Image" findings into prominent RED_FLAG or AMBER_WARNING signals.
+Fill in ALUMNI_FOOTPRINT with INCONCLUSIVE or INFORMATIONAL defaults if not explicitly analyzed.
 Ensure you populate the keyPersonnel array with extracted information about directors, officers, programmers, and jury members. For each person include:
 - name: Full name
 - roles: List of roles (e.g. ['Festival Director', 'Founder'])
@@ -120,6 +121,16 @@ Ensure you populate the keyPersonnel array with extracted information about dire
 - hasDistributionOverlap: True if commercial distribution/consulting service overlaps
 - flags: List of specific warning flags
 - notes: Detailed summary of forensic findings about this person
+
+Also extract and populate imageArtifacts on the IMAGE_PROVENANCE dimension and on the top-level report with identified image assets (laurel emblems, venue screening photos, red carpet pictures, and trophies) with:
+- assetType: 'LAUREL_GRAPHIC' | 'VENUE_PHOTO' | 'RED_CARPET' | 'AWARD_TROPHY' | 'JURY_HEADSHOT'
+- claimedUrl: Image URL referenced in promo/website
+- claimedDescription: Description of what the festival claimed this photo represented
+- classification: 'STOCK_PHOTO' | 'TEMPLATE_LAUREL' | 'AUTHENTIC_LIVE' | 'SYNTHETIC_RENDER' | 'CLONED_ACROSS_NETWORK' | 'INCONCLUSIVE'
+- originMatchUrl: URL of discovered stock catalog, template library, or matching external festival
+- originMatchTitle: Discovered source or stock title
+- confidenceScore: 0-100
+- forensicNotes: Detailed breakdown of the forensic match
 Return a JSON object conforming strictly to the output schema.
 """
 

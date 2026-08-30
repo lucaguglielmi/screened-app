@@ -17,8 +17,17 @@ import {
   ExternalLink,
   ShieldCheck,
   Search,
+  Camera,
+  Award,
+  Sparkles,
 } from 'lucide-react';
-import { DeepVettingReport, VettingSignalStatus } from '../../types/investigation';
+import {
+  DeepVettingReport,
+  VettingSignalStatus,
+  ImageAssetType,
+  ImageMatchClassification,
+  ImageForensicRecord,
+} from '../../types/investigation';
 import { soundEffects } from '../../utils/audio';
 import { PersonnelNetworkDiagram } from '../diagrams/PersonnelNetworkDiagram';
 import { KeyPersonnelCardList } from './KeyPersonnelCardList';
@@ -153,6 +162,30 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
         ],
         corroboratingSources: ['google.com/imghp', 'tineye.com'],
         riskWeight: 'LOW',
+        imageArtifacts: [
+          {
+            id: 'art_preview_1',
+            assetType: 'VENUE_PHOTO',
+            claimedUrl: 'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=800&auto=format&fit=crop&q=80',
+            claimedDescription: 'Opening Night Red Carpet & Theatrical Screening at Vue West End',
+            classification: 'AUTHENTIC_LIVE',
+            originMatchUrl: 'https://raindance.org/festival/editions/2024',
+            originMatchTitle: 'Raindance 2024 Gala Event Photography Archive',
+            confidenceScore: 95,
+            forensicNotes: 'Photographic EXIF metadata, spatial geometry, and attendee tags confirm authentic physical screening venue.',
+          },
+          {
+            id: 'art_preview_2',
+            assetType: 'LAUREL_GRAPHIC',
+            claimedUrl: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=800&auto=format&fit=crop&q=80',
+            claimedDescription: 'Official Raindance 32nd Edition Laurel Emblem',
+            classification: 'AUTHENTIC_LIVE',
+            originMatchUrl: 'https://raindance.org',
+            originMatchTitle: 'Official Raindance Festival Brand Registry',
+            confidenceScore: 98,
+            forensicNotes: 'Unique bespoke vector identity registered with UK Intellectual Property Office with no template duplication.',
+          },
+        ],
       },
     ],
     keyPersonnel: [
@@ -242,6 +275,86 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
         return (
           <span className="inline-flex items-center gap-1 text-xs font-mono font-medium text-zinc-400">
             <HelpCircle className="w-3.5 h-3.5 text-zinc-400" />
+            <span>Inconclusive</span>
+          </span>
+        );
+    }
+  };
+
+  const getImageAssetIcon = (assetType: ImageAssetType) => {
+    switch (assetType) {
+      case 'LAUREL_GRAPHIC':
+        return <Award className="w-3.5 h-3.5 text-orange-400" />;
+      case 'VENUE_PHOTO':
+        return <Ticket className="w-3.5 h-3.5 text-emerald-400" />;
+      case 'RED_CARPET':
+        return <Camera className="w-3.5 h-3.5 text-pink-400" />;
+      case 'AWARD_TROPHY':
+        return <Award className="w-3.5 h-3.5 text-purple-400" />;
+      case 'JURY_HEADSHOT':
+        return <Users className="w-3.5 h-3.5 text-indigo-400" />;
+      default:
+        return <ImageIcon className="w-3.5 h-3.5 text-zinc-400" />;
+    }
+  };
+
+  const formatAssetType = (assetType: ImageAssetType): string => {
+    switch (assetType) {
+      case 'LAUREL_GRAPHIC':
+        return 'Official Laurel Leaf Emblem';
+      case 'VENUE_PHOTO':
+        return 'Screening Auditorium / Venue Photo';
+      case 'RED_CARPET':
+        return 'Red Carpet & Festival Gala';
+      case 'AWARD_TROPHY':
+        return 'Award Statuette & Trophy';
+      case 'JURY_HEADSHOT':
+        return 'Jury / Director Headshot';
+      default:
+        return 'Promotional Asset';
+    }
+  };
+
+  const getImageClassificationBadge = (classification: ImageMatchClassification) => {
+    switch (classification) {
+      case 'STOCK_PHOTO':
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-medium text-rose-400 border border-rose-500/30 bg-rose-500/10">
+            <AlertTriangle className="size-3" />
+            <span>Stock Photo Detected</span>
+          </span>
+        );
+      case 'CLONED_ACROSS_NETWORK':
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-medium text-orange-400 border border-orange-500/30 bg-orange-500/10">
+            <ShieldAlert className="size-3" />
+            <span>Cloned Across Network</span>
+          </span>
+        );
+      case 'TEMPLATE_LAUREL':
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-medium text-orange-400 border border-orange-500/30 bg-orange-500/10">
+            <AlertTriangle className="size-3" />
+            <span>Template Laurel Graphic</span>
+          </span>
+        );
+      case 'SYNTHETIC_RENDER':
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-medium text-purple-400 border border-purple-500/30 bg-purple-500/10">
+            <Sparkles className="size-3" />
+            <span>Synthetic 3D Render</span>
+          </span>
+        );
+      case 'AUTHENTIC_LIVE':
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-medium text-emerald-400 border border-emerald-500/30 bg-emerald-500/10">
+            <VerifiedTick size={11} />
+            <span>Verified Authentic Live</span>
+          </span>
+        );
+      default:
+        return (
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-medium text-slate-400 border border-slate-700 bg-slate-800/40">
             <span>Inconclusive</span>
           </span>
         );
@@ -395,11 +508,103 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
                       <p className="text-zinc-200 leading-relaxed font-sans text-xs sm:text-sm">{dim.summary}</p>
                     </div>
 
+                    {/* Reverse Image Search & Asset Provenance Inspector */}
+                    {(() => {
+                      const imageArtifacts =
+                        dim.imageArtifacts ||
+                        (dim.dimensionKey === 'IMAGE_PROVENANCE' ? activeReport.imageArtifacts : undefined);
+                      if (!imageArtifacts || imageArtifacts.length === 0) return null;
+
+                      return (
+                        <div className="space-y-3 pt-1 border-b border-darkroom-border/40 pb-4">
+                          <div className="flex items-center justify-between flex-wrap gap-2">
+                            <div className="flex items-center gap-2">
+                              <Camera className="size-4 text-pink-400" />
+                              <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-pink-300">
+                                Reverse Image Search &amp; Asset Provenance ({imageArtifacts.length} Assets Analyzed)
+                              </span>
+                            </div>
+                            <span className="text-[10px] font-mono text-slate-400">
+                              Multi-Engine Reverse Catalog Match
+                            </span>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-1">
+                            {imageArtifacts.map((artifact: ImageForensicRecord) => (
+                              <div
+                                key={artifact.id}
+                                className="p-3.5 rounded-xl bg-[#070b14] border border-darkroom-border/80 space-y-3 hover:border-indigo-500/40 transition-all"
+                              >
+                                {/* Asset Header */}
+                                <div className="flex items-center justify-between gap-2 flex-wrap">
+                                  <div className="flex items-center gap-1.5 font-mono text-[11px] font-semibold text-slate-200">
+                                    {getImageAssetIcon(artifact.assetType)}
+                                    <span>{formatAssetType(artifact.assetType)}</span>
+                                  </div>
+                                  {getImageClassificationBadge(artifact.classification)}
+                                </div>
+
+                                {/* Visual Asset Preview & Description */}
+                                <div className="flex gap-3 items-start">
+                                  <div className="relative shrink-0 w-24 h-20 rounded-lg overflow-hidden border border-darkroom-border/60 bg-black/60 group">
+                                    <img
+                                      src={artifact.claimedUrl}
+                                      alt={artifact.claimedDescription}
+                                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                      loading="lazy"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-1">
+                                      <span className="text-[9px] font-mono text-white">Visual Asset</span>
+                                    </div>
+                                  </div>
+
+                                  <div className="min-w-0 flex-1 space-y-1.5">
+                                    <div className="text-xs font-medium text-white leading-snug">
+                                      {artifact.claimedDescription}
+                                    </div>
+
+                                    {artifact.originMatchUrl && (
+                                      <div className="text-[11px] font-mono text-slate-400 space-y-0.5">
+                                        <div className="text-indigo-400 font-medium">Discovered Web Match:</div>
+                                        <a
+                                          href={artifact.originMatchUrl}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="text-indigo-300 hover:text-white hover:underline flex items-center gap-1 truncate"
+                                        >
+                                          <span className="truncate">{artifact.originMatchTitle || artifact.originMatchUrl}</span>
+                                          <ExternalLink className="size-3 shrink-0" />
+                                        </a>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+
+                                {/* Forensic Notes */}
+                                <div className="p-2.5 rounded-lg bg-black/40 border border-darkroom-border/40 text-[11px] font-sans text-slate-300 leading-relaxed">
+                                  <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-semibold mb-0.5">
+                                    Forensic Findings:
+                                  </div>
+                                  {artifact.forensicNotes}
+                                </div>
+
+                                {/* Footer: Confidence */}
+                                <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 pt-0.5">
+                                  <span>Forensic Confidence:</span>
+                                  <span className="font-semibold text-slate-200">{artifact.confidenceScore}% Corroboration</span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })()}
+
                     {/* Specific Extracted Signals */}
                     {dim.signalsFound && dim.signalsFound.length > 0 && (
                       <div className="space-y-2 border-b border-darkroom-border/40 pb-3">
                         <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-zinc-400 block">
-                          Corroborated Signals & Registry Matches ({dim.signalsFound.length})
+                          Corroborated Signals &amp; Registry Matches ({dim.signalsFound.length})
                         </span>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                           {dim.signalsFound.map((sig, sIdx) => (
