@@ -1,7 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import {
   ReactFlow,
-  Controls,
   Background,
   Edge,
   Node,
@@ -17,15 +16,9 @@ import {
   Ticket,
   User,
   ShieldAlert,
-  Layers,
   Network,
-  Maximize2,
-  Minimize2,
-  ArrowRight,
-  Sparkles,
 } from 'lucide-react';
 import clsx from 'clsx';
-import { soundEffects } from '../../utils/audio';
 
 interface PersonNodeData extends Record<string, unknown> {
   name: string;
@@ -123,9 +116,6 @@ interface Props {
 }
 
 export const PersonnelNetworkDiagram: React.FC<Props> = ({ keyPersonnel }) => {
-  const [displayMode, setDisplayMode] = useState<'RESPONSIVE' | 'CANVAS'>('RESPONSIVE');
-  const [isFullscreen, setIsFullscreen] = useState(false);
-
   // Compute graph nodes and edges with generous spacing
   const { nodes, edges } = useMemo(() => {
     const newNodes: Node[] = [];
@@ -237,234 +227,56 @@ export const PersonnelNetworkDiagram: React.FC<Props> = ({ keyPersonnel }) => {
   if (keyPersonnel.length === 0) return null;
 
   return (
-    <div className="space-y-4">
-      {/* Top Toolbar with Mode Switcher & Fullscreen Toggle */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-2xl bg-darkroom-surface border border-darkroom-border">
+    <div className="space-y-3">
+      {/* Header */}
+      <div className="border-b border-darkroom-border pb-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <div className="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-400">
-            <Sparkles className="size-4" />
+            <Network className="size-4" />
           </div>
           <div>
-            <span className="text-xs font-mono font-semibold text-white">Connection View</span>
-            <span className="text-[10px] text-slate-400 block">
-              {displayMode === 'RESPONSIVE'
-                ? 'Clean in-page relationship flow (touch & mobile friendly)'
-                : 'Interactive pan/zoom topological canvas'}
+            <h4 className="text-sm font-bold text-white font-serif">Entity &amp; Directorship Connection Network</h4>
+            <span className="text-[11px] text-slate-400 block">
+              Structural cross-entity linkages, shared corporate directorships, and sister festival networks.
             </span>
           </div>
         </div>
-
-        <div className="flex items-center gap-1.5 bg-darkroom-card p-1 rounded-xl border border-darkroom-border">
-          <button
-            type="button"
-            onClick={() => {
-              soundEffects.playClick();
-              setDisplayMode('RESPONSIVE');
-            }}
-            className={clsx(
-              'px-3 py-1.5 rounded-lg text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer',
-              displayMode === 'RESPONSIVE'
-                ? 'bg-midnight-royal text-white shadow-sm font-semibold'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-darkroom-surface',
-            )}
-          >
-            <Layers className="size-3.5" />
-            <span>In-Page Flow</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              soundEffects.playClick();
-              setDisplayMode('CANVAS');
-            }}
-            className={clsx(
-              'px-3 py-1.5 rounded-lg text-xs font-mono flex items-center gap-1.5 transition-all cursor-pointer',
-              displayMode === 'CANVAS'
-                ? 'bg-midnight-royal text-white shadow-sm font-semibold'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-darkroom-surface',
-            )}
-          >
-            <Network className="size-3.5" />
-            <span>Interactive Graph</span>
-          </button>
-
-          {displayMode === 'CANVAS' && (
-            <button
-              type="button"
-              onClick={() => {
-                soundEffects.playClick();
-                setIsFullscreen(!isFullscreen);
-              }}
-              className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-darkroom-surface transition-colors cursor-pointer ml-1"
-              title={isFullscreen ? 'Exit Fullscreen' : 'Fullscreen Canvas'}
-            >
-              {isFullscreen ? <Minimize2 className="size-3.5" /> : <Maximize2 className="size-3.5" />}
-            </button>
-          )}
-        </div>
       </div>
 
-      {/* MODE 1: IN-PAGE RESPONSIVE FLOW (Clean, non-canvas, perfect for mobile & structured reading) */}
-      {displayMode === 'RESPONSIVE' && (
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 gap-4">
-            {keyPersonnel.map((person, idx) => {
-              const isSuspect = person.isFestivalMillSuspect || person.hasDistributionOverlap;
-              return (
-                <div
-                  key={`person-flow-${idx}`}
-                  className={clsx(
-                    'p-5 rounded-2xl border transition-all space-y-4 shadow-xl',
-                    isSuspect
-                      ? 'bg-darkroom-surface border-rose-500/40 shadow-rose-950/20'
-                      : 'bg-darkroom-surface border-darkroom-border',
-                  )}
-                >
-                  {/* Person Identity Header */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-darkroom-border pb-3">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={clsx(
-                          'p-2.5 rounded-xl shrink-0',
-                          isSuspect ? 'bg-rose-500/20 text-rose-400' : 'bg-indigo-500/20 text-indigo-400',
-                        )}
-                      >
-                        <User className="size-5" />
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h4 className="text-sm font-bold text-white">{person.name}</h4>
-                          {isSuspect && (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-rose-500/10 px-2 py-0.5 text-[10px] font-mono font-medium text-rose-400 border border-rose-500/30">
-                              <AlertTriangle className="size-3" /> Directorship Alert
-                            </span>
-                          )}
-                        </div>
-                        <div className="text-xs text-slate-400 font-mono mt-0.5">
-                          {person.roles.join(' • ')}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Suspect Alert Badges */}
-                    {isSuspect && (
-                      <div className="flex flex-wrap items-center gap-2">
-                        {person.isFestivalMillSuspect && (
-                          <span className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-rose-500/15 border border-rose-500/30 text-rose-300">
-                            Festival Mill Pattern
-                          </span>
-                        )}
-                        {person.hasDistributionOverlap && (
-                          <span className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-rose-500/15 border border-rose-500/30 text-rose-300">
-                            Distribution Overlap
-                          </span>
-                        )}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Connected Entities Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
-                    {/* Left Lane: Corporate Directorships */}
-                    <div className="p-3.5 rounded-xl bg-darkroom-card/70 border border-darkroom-border/80 space-y-2.5">
-                      <div className="flex items-center gap-2 text-xs font-mono text-slate-400 uppercase tracking-wider">
-                        <Building2 className="size-3.5 text-emerald-400" />
-                        <span>Corporate Entities & Directorships</span>
-                      </div>
-                      {person.companies && person.companies.length > 0 ? (
-                        <div className="space-y-1.5">
-                          {person.companies.map((company, cIdx) => (
-                            <div
-                              key={`c-${cIdx}`}
-                              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-darkroom-surface border border-zinc-700/60 text-xs text-slate-200"
-                            >
-                              <ArrowRight className="size-3 text-emerald-400 shrink-0" />
-                              <span className="font-medium truncate">{company}</span>
-                              <span className="ml-auto text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded">
-                                Active Director
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="text-xs text-slate-500 italic py-1">
-                          No external corporate directorships registered.
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Right Lane: Associated Festivals */}
-                    <div className="p-3.5 rounded-xl bg-darkroom-card/70 border border-darkroom-border/80 space-y-2.5">
-                      <div className="flex items-center gap-2 text-xs font-mono text-slate-400 uppercase tracking-wider">
-                        <Ticket className="size-3.5 text-amber-400" />
-                        <span>Associated Film Festivals</span>
-                      </div>
-                      {person.associatedFestivals && person.associatedFestivals.length > 0 ? (
-                        <div className="space-y-1.5">
-                          {person.associatedFestivals.map((fest, fIdx) => (
-                            <div
-                              key={`f-${fIdx}`}
-                              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-darkroom-surface border border-zinc-700/60 text-xs text-slate-200"
-                            >
-                              <ArrowRight className="size-3 text-amber-400 shrink-0" />
-                              <span className="font-medium truncate">{fest}</span>
-                              <span className="ml-auto text-[10px] font-mono text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded">
-                                Linked Festival
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="text-xs text-slate-500 italic py-1">
-                          No additional linked festivals detected.
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Forensic Takeaway Footer */}
-          {hasSuspects && (
-            <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-xs text-slate-200 leading-relaxed flex items-start gap-3">
-              <ShieldAlert className="size-4 text-rose-400 shrink-0 mt-0.5" />
-              <div>
-                <strong className="text-rose-300">Forensic Network Assessment:</strong> Key personnel
-                hold concurrent directorships across multiple festival entities and commercial sales
-                companies. Screened recommends verifying jury independence and checking for paid
-                consultancy solicitations.
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* MODE 2: INTERACTIVE CANVAS (Generously spaced topological graph) */}
-      {displayMode === 'CANVAS' && (
-        <div
-          className={clsx(
-            'w-full rounded-2xl border border-darkroom-border bg-darkroom-bg overflow-hidden transition-all',
-            isFullscreen
-              ? 'fixed inset-4 z-50 shadow-2xl h-[calc(100vh-2rem)]'
-              : 'h-[520px]',
-          )}
+      {/* Embedded Non-Hijacking Diagram */}
+      <div className="w-full h-[400px] sm:h-[450px] rounded-2xl border border-darkroom-border/60 bg-darkroom-bg overflow-hidden shadow-2xl">
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          nodeTypes={nodeTypes}
+          fitView
+          fitViewOptions={{ padding: 0.2 }}
+          minZoom={0.7}
+          maxZoom={1.15}
+          zoomOnScroll={false}
+          panOnScroll={false}
+          zoomOnPinch={false}
+          nodesDraggable={false}
+          nodesConnectable={false}
+          elementsSelectable={true}
+          translateExtent={[[-150, -80], [1150, 800]]}
+          proOptions={{ hideAttribution: true }}
+          colorMode="dark"
         >
-          <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            nodeTypes={nodeTypes}
-            fitView
-            fitViewOptions={{ padding: 0.35 }}
-            proOptions={{ hideAttribution: true }}
-            zoomOnScroll={false}
-            preventScrolling={false}
-          >
-            <Background color="var(--color-zinc-700)" gap={28} size={2} />
-            <Controls className="bg-darkroom-surface border-zinc-700 fill-zinc-400" />
-          </ReactFlow>
+          <Background color="var(--color-midnight-base)" gap={20} size={1.2} />
+        </ReactFlow>
+      </div>
+
+      {/* Forensic Takeaway Footer */}
+      {hasSuspects && (
+        <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-xs text-slate-200 leading-relaxed flex items-start gap-3">
+          <ShieldAlert className="size-4 text-rose-400 shrink-0 mt-0.5" />
+          <div>
+            <strong className="text-rose-300">Forensic Network Assessment:</strong> Key personnel
+            hold concurrent directorships across multiple festival entities and commercial sales
+            companies. Screened recommends verifying jury independence and checking for paid
+            consultancy solicitations.
+          </div>
         </div>
       )}
     </div>

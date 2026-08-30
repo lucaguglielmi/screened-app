@@ -56,8 +56,8 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
   return (
     <div className="py-4 space-y-4 border-b border-darkroom-border/30 pb-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-darkroom-border/40 pb-2.5">
-        <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-amber-400 font-semibold">
-          <Scale className="size-3.5" />
+        <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-300 font-semibold">
+          <Scale className="size-3.5 text-indigo-400" />
           <span>Factual Contradictions &amp; Disputed Claims ({disputes.length})</span>
         </div>
         <span className="text-[11px] font-mono text-slate-400">
@@ -73,7 +73,7 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
           >
             <div className="flex items-start justify-between gap-4">
               <div>
-                <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20">
+                <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/30">
                   {dispute.category}
                 </span>
                 <h3 className="font-serif font-semibold text-base text-white mt-1.5">
@@ -128,7 +128,7 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
 
               {/* Claim B */}
               <div className="p-3 rounded-xl bg-darkroom-bg/70 border border-darkroom-border/40 space-y-1.5">
-                <div className="text-[10px] font-mono uppercase text-amber-300 font-semibold flex items-center gap-1.5">
+                <div className="text-[10px] font-mono uppercase text-orange-400 font-semibold flex items-center gap-1.5">
                   <span>Position B (Contradictory / Divergent)</span>
                 </div>
                 <div className="text-xs font-medium text-slate-100 leading-relaxed">
@@ -143,7 +143,7 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
                       return (
                         <div
                           key={eIdx}
-                          className="border-l-2 border-amber-500/60 bg-amber-500/5 rounded-r-md px-2.5 py-1 text-slate-300 space-y-1"
+                          className="border-l-2 border-orange-500/60 bg-orange-500/5 rounded-r-md px-2.5 py-1 text-slate-300 space-y-1"
                         >
                           {quote && (
                             <div className="italic text-slate-200 font-sans text-xs">
@@ -155,7 +155,7 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
                               href={url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-amber-400 hover:text-amber-300 hover:underline inline-flex items-center gap-1 text-[10px] font-mono"
+                              className="text-orange-400 hover:text-orange-300 hover:underline inline-flex items-center gap-1 text-[10px] font-mono"
                             >
                               Source: {title}{' '}
                               <ExternalLink className="size-2.5" />
@@ -172,9 +172,9 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
             {/* Reconciliation Guidance */}
             {dispute.guidance && (
               <div className="p-3 rounded-xl bg-darkroom-bg/50 border border-darkroom-border/40 flex items-start gap-2.5 text-xs">
-                <AlertTriangle className="size-4 text-amber-400 shrink-0 mt-0.5" />
+                <AlertTriangle className="size-4 text-orange-400 shrink-0 mt-0.5" />
                 <div className="space-y-0.5">
-                  <div className="font-mono text-[10px] uppercase text-amber-400 font-bold">
+                  <div className="font-mono text-[10px] uppercase text-orange-400 font-bold">
                     Filmmaker Advisory &amp; Verification Guidance
                   </div>
                   <div className="text-slate-300 leading-relaxed font-sans text-xs">

@@ -1,4 +1,4 @@
-export type ResearchDomain = 'FESTIVAL' | 'ORGANIZER' | 'PARTICIPANTS' | 'FIT';
+export type ResearchDomain = 'FESTIVAL' | 'ORGANIZER' | 'PARTICIPANTS' | 'FEES' | 'VENUES' | 'CLAIMS' | 'FIT';
 
 export type ClaimKind = 'FACT' | 'ALLEGATION' | 'OPINION';
 
@@ -24,6 +24,7 @@ export type ActiveTool =
   | 'OPPORTUNITY_SCOUT'
   | 'DESIGN_PLAYGROUND'
   | 'WHY_SCREENED'
+  | 'FESTIVAL_PROTECTION_GUIDE'
   | 'HOW_TO_USE';
 
 export type FilmFormat = 'SHORT' | 'FEATURE' | 'DOCUMENTARY' | 'ANIMATION' | 'EPISODIC';
@@ -48,12 +49,17 @@ export type InvestigationStatus =
 
 export interface Evidence {
   sourceId: string;
-  sourceUrl?: string;
-  sourceDomain?: string;
-  sourceTitle?: string;
-  stance: Stance;
+  sourceUrl: string;
+  sourceDomain: string;
+  sourceTitle: string;
   exactExcerpt: string;
+  relevanceExplanation?: string;
+  confidenceScore?: number;
+  extractedAt?: string;
+  retrievalQuery?: string;
+  domainTier?: string;
   note?: string;
+  stance?: Stance;
 }
 
 export interface AtomicClaim {
@@ -74,9 +80,8 @@ export interface SourceRecord {
   url: string;
   domain: string;
   title: string;
-  publishedDate?: string;
-  retrievedAt: string;
-  excerpts: string[];
+  publisher?: string;
+  firstSeenAt: string;
   sourceTier: number;
   contentHash: string;
 }
@@ -120,7 +125,9 @@ export interface PreviousEditionAward {
   awardName: string;
   winnerTitle: string;
   recipientName?: string;
+  recipientAvatarUrl?: string;
   winnerUrl?: string;
+  imdbUrl?: string;
 }
 
 export interface PreviousEditionPress {

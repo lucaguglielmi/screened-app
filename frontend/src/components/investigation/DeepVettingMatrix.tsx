@@ -8,7 +8,6 @@ import {
   Ticket,
   GraduationCap,
   Image as ImageIcon,
-  CheckCircle2,
   AlertTriangle,
   ShieldAlert,
   Info,
@@ -23,6 +22,7 @@ import { DeepVettingReport, VettingSignalStatus } from '../../types/investigatio
 import { soundEffects } from '../../utils/audio';
 import { PersonnelNetworkDiagram } from '../diagrams/PersonnelNetworkDiagram';
 import { KeyPersonnelCardList } from './KeyPersonnelCardList';
+import { VerifiedTick } from '../ui/VerifiedTick';
 
 interface DeepVettingMatrixProps {
   report?: DeepVettingReport;
@@ -148,10 +148,10 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
         summary: `Marketing imagery and website photography depict actual physical auditoriums and red-carpet step-and-repeats with zero stock photo matches.`,
         signalsFound: [
           'Branded festival step-and-repeat backdrops with verified attendee photos',
-          'Auditorium crowd shots match physical architecture of Curzon Soho',
-          'Absence of generic royalty-free cinema stock imagery in promotions',
+          'Real cinema marquee photography matching verified London locations',
+          'Zero stock agency watermarks or reverse-image template duplications',
         ],
-        corroboratingSources: ['raindance.org', 'filmfreeway.com'],
+        corroboratingSources: ['google.com/imghp', 'tineye.com'],
         riskWeight: 'LOW',
       },
     ],
@@ -190,13 +190,13 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
   const getDimensionIcon = (key: string) => {
     switch (key) {
       case 'CORPORATE_REGISTRY':
-        return <Building2 className="w-5 h-5 text-emerald-400" />;
+        return <Building2 className="w-5 h-5 text-indigo-400" />;
       case 'DOMAIN_PROVENANCE':
         return <Globe className="w-5 h-5 text-blue-400" />;
       case 'BOILERPLATE_PLAGIARISM':
-        return <CopyCheck className="w-5 h-5 text-indigo-400" />;
+        return <CopyCheck className="w-5 h-5 text-cyan-400" />;
       case 'PERSONNEL_DOSSIER':
-        return <Users className="w-5 h-5 text-amber-400" />;
+        return <Users className="w-5 h-5 text-indigo-300" />;
       case 'VENUE_CORROBORATION':
         return <Ticket className="w-5 h-5 text-emerald-400" />;
       case 'ALUMNI_FOOTPRINT':
@@ -212,37 +212,37 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
     switch (status) {
       case 'VERIFIED_AUTHENTIC':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            Verified Authentic
+          <span className="inline-flex items-center gap-1 text-xs font-mono font-medium text-emerald-400">
+            <VerifiedTick size={13} />
+            <span>Verified Authentic</span>
           </span>
         );
       case 'AMBER_WARNING':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-amber-500/10 text-amber-400 border border-amber-500/30">
-            <AlertTriangle className="w-3.5 h-3.5" />
-            Caution Signal
+          <span className="inline-flex items-center gap-1 text-xs font-mono font-medium text-orange-400">
+            <AlertTriangle className="w-3.5 h-3.5 text-orange-400" />
+            <span>Caution Signal</span>
           </span>
         );
       case 'RED_FLAG':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-            <ShieldAlert className="w-3.5 h-3.5" />
-            Review Recommended
+          <span className="inline-flex items-center gap-1 text-xs font-mono font-medium text-rose-400">
+            <ShieldAlert className="w-3.5 h-3.5 text-rose-400" />
+            <span>Review Recommended</span>
           </span>
         );
       case 'INFORMATIONAL':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-blue-500/10 text-blue-400 border border-blue-500/30">
-            <Info className="w-3.5 h-3.5" />
-            Corroborated
+          <span className="inline-flex items-center gap-1 text-xs font-mono font-medium text-indigo-300">
+            <Info className="w-3.5 h-3.5 text-indigo-400" />
+            <span>Corroborated</span>
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-zinc-700/30 text-zinc-400 border border-zinc-700">
-            <HelpCircle className="w-3.5 h-3.5" />
-            Inconclusive
+          <span className="inline-flex items-center gap-1 text-xs font-mono font-medium text-zinc-400">
+            <HelpCircle className="w-3.5 h-3.5 text-zinc-400" />
+            <span>Inconclusive</span>
           </span>
         );
     }
@@ -260,7 +260,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
         <div className="space-y-1.5 min-w-0 flex-1">
           <div className="flex items-center space-x-2">
             {!report && (
-              <span className="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-medium">
+              <span className="px-2 py-0.5 rounded-md bg-orange-500/10 text-orange-400 border border-orange-500/30 text-[10px] font-mono font-medium">
                 PREVIEW
               </span>
             )}
@@ -292,7 +292,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
 
           <div className="text-center">
             <div
-              className={`text-lg font-bold font-mono ${activeReport.totalFlags === 0 ? 'text-slate-400' : 'text-amber-400'}`}
+              className={`text-lg font-bold font-mono ${activeReport.totalFlags === 0 ? 'text-slate-400' : 'text-orange-400'}`}
             >
               {activeReport.totalFlags}
             </div>
@@ -305,11 +305,11 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
 
       {/* Disclaimer Banner */}
       {activeReport.disclaimer && (
-        <div className="px-4 py-3 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-3">
-          <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+        <div className="px-4 py-3 rounded-xl bg-orange-500/10 border border-orange-500/30 flex items-start gap-3">
+          <AlertTriangle className="w-5 h-5 text-orange-400 shrink-0 mt-0.5" />
           <div>
-            <h4 className="text-sm font-bold text-amber-400">Automated AI Vetting Note</h4>
-            <p className="text-xs text-amber-200/70 mt-1 leading-relaxed">
+            <h4 className="text-sm font-bold text-orange-400">Automated AI Vetting Note</h4>
+            <p className="text-xs text-orange-200/80 mt-1 leading-relaxed">
               {activeReport.disclaimer}
             </p>
           </div>
@@ -329,7 +329,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
               transition={{ duration: 0.2, delay: idx * 0.04 }}
               className={`rounded-2xl border transition-all ${
                 isExpanded
-                  ? 'bg-darkroom-surface border-indigo-500/60 shadow-lg shadow-indigo-500/10'
+                  ? 'bg-black/95 border-indigo-500/60 shadow-lg shadow-indigo-500/10'
                   : 'bg-darkroom-bg border-darkroom-border hover:border-midnight-violet'
               }`}
             >
@@ -343,7 +343,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
                     {getDimensionIcon(dim.dimensionKey)}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2.5 flex-wrap">
+                    <div className="flex items-center gap-3 flex-wrap">
                       <h3 className="text-sm sm:text-base font-bold text-white tracking-tight break-words">
                         {dim.title}
                       </h3>
@@ -377,7 +377,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
                 </div>
               </div>
 
-              {/* Expanded Inspection Drawer */}
+              {/* Expanded Inspection Drawer (Uniform Solid Black Background, Flat Structure) */}
               <AnimatePresence>
                 {isExpanded && (
                   <motion.div
@@ -385,29 +385,29 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
                     transition={{ duration: 0.2 }}
-                    className="border-t border-zinc-800/80 p-5 space-y-4 text-xs overflow-hidden"
+                    className="border-t border-darkroom-border/60 p-5 space-y-4 text-xs overflow-hidden bg-black/95 rounded-b-2xl"
                   >
                     {/* Full Summary */}
-                    <div className="p-3.5 rounded-xl bg-black/40">
-                      <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-indigo-400 block mb-1">
+                    <div className="space-y-1 border-b border-darkroom-border/40 pb-3">
+                      <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-indigo-400 block">
                         Executive Forensic Summary
                       </span>
-                      <p className="text-zinc-200 leading-relaxed">{dim.summary}</p>
+                      <p className="text-zinc-200 leading-relaxed font-sans text-xs sm:text-sm">{dim.summary}</p>
                     </div>
 
                     {/* Specific Extracted Signals */}
                     {dim.signalsFound && dim.signalsFound.length > 0 && (
-                      <div>
-                        <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-zinc-400 block mb-2">
+                      <div className="space-y-2 border-b border-darkroom-border/40 pb-3">
+                        <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-zinc-400 block">
                           Corroborated Signals & Registry Matches ({dim.signalsFound.length})
                         </span>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                           {dim.signalsFound.map((sig, sIdx) => (
                             <div
                               key={sIdx}
-                              className="p-2.5 rounded-xl bg-black/40 flex items-start space-x-2"
+                              className="flex items-start space-x-2 py-1"
                             >
-                              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                              <VerifiedTick size={14} className="mt-0.5" />
                               <span className="text-zinc-300">{sig}</span>
                             </div>
                           ))}
@@ -417,7 +417,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
 
                     {/* Corroborating Source Domains */}
                     {dim.corroboratingSources && dim.corroboratingSources.length > 0 && (
-                      <div className="pt-2 flex items-center justify-between flex-wrap gap-2 text-zinc-400">
+                      <div className="pt-1 flex items-center justify-between flex-wrap gap-2 text-zinc-400">
                         <div className="flex items-center space-x-2">
                           <Search className="w-3.5 h-3.5 text-zinc-500" />
                           <span className="text-[11px] font-mono">
@@ -428,7 +428,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
                           {dim.corroboratingSources.map((src, srcIdx) => (
                             <span
                               key={srcIdx}
-                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-zinc-900 border border-zinc-800 text-[11px] font-mono text-zinc-300"
+                              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#080d1a] border border-indigo-900/40 text-[11px] font-mono text-indigo-300 hover:text-white transition-colors"
                             >
                               <span>{src}</span>
                               <ExternalLink className="w-3 h-3 opacity-60" />

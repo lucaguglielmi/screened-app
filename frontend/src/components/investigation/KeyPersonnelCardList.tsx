@@ -109,7 +109,7 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
                         person.roles.map((r, rIdx) => (
                           <span
                             key={rIdx}
-                            className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-darkroom-card text-tool-diligence border border-tool-diligence/30"
+                            className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-[#080d1a] border border-indigo-900/40 text-indigo-300"
                           >
                             {r}
                           </span>
@@ -128,14 +128,14 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
                       href={person.linkedinUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#0077b5]/15 hover:bg-[#0077b5]/30 text-[#38bdf8] border border-[#0077b5]/40 text-xs font-semibold transition-all hover:text-white group"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#080d1a] border border-indigo-900/40 text-indigo-300 font-mono text-xs font-medium hover:scale-105 active:scale-95 transition-all duration-200 ease-out hover:border-indigo-500/60 hover:text-white hover:bg-indigo-950/60 shadow-sm cursor-pointer group"
                       title={`View ${person.name}'s LinkedIn Profile`}
                     >
-                      <svg className="size-3 fill-current" viewBox="0 0 24 24">
+                      <svg className="size-3 fill-current opacity-80 group-hover:opacity-100" viewBox="0 0 24 24">
                         <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
                       </svg>
                       <span>LinkedIn</span>
-                      <ExternalLink className="size-2.5 opacity-60 group-hover:opacity-100" />
+                      <ExternalLink className="size-2.5 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                     </a>
                   )}
 
@@ -144,12 +144,12 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
                       href={person.companiesHouseUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-indigo-500/15 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-500/30 text-xs font-semibold transition-all hover:text-white group"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#080d1a] border border-indigo-900/40 text-indigo-300 font-mono text-xs font-medium hover:scale-105 active:scale-95 transition-all duration-200 ease-out hover:border-indigo-500/60 hover:text-white hover:bg-indigo-950/60 shadow-sm cursor-pointer group"
                       title="View Official Corporate Filings & Directorships"
                     >
                       <Building2 className="size-3 text-indigo-400" />
                       <span>Gov Registry</span>
-                      <ExternalLink className="size-2.5 opacity-60 group-hover:opacity-100" />
+                      <ExternalLink className="size-2.5 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                     </a>
                   )}
 
@@ -158,14 +158,14 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
                       href={person.facebookUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#1877f2]/15 hover:bg-[#1877f2]/30 text-[#60a5fa] border border-[#1877f2]/30 text-xs font-semibold transition-all hover:text-white group"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#080d1a] border border-indigo-900/40 text-indigo-300 font-mono text-xs font-medium hover:scale-105 active:scale-95 transition-all duration-200 ease-out hover:border-indigo-500/60 hover:text-white hover:bg-indigo-950/60 shadow-sm cursor-pointer group"
                       title={`View ${person.name}'s Facebook Profile`}
                     >
-                      <svg className="size-3 fill-current" viewBox="0 0 24 24">
+                      <svg className="size-3 fill-current opacity-80 group-hover:opacity-100" viewBox="0 0 24 24">
                         <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                       </svg>
                       <span>Facebook</span>
-                      <ExternalLink className="size-2.5 opacity-60 group-hover:opacity-100" />
+                      <ExternalLink className="size-2.5 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                     </a>
                   )}
 
@@ -174,12 +174,12 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
                       href={person.websiteUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30 text-xs font-semibold transition-all hover:text-white group"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#080d1a] border border-indigo-900/40 text-indigo-300 font-mono text-xs font-medium hover:scale-105 active:scale-95 transition-all duration-200 ease-out hover:border-indigo-500/60 hover:text-white hover:bg-indigo-950/60 shadow-sm cursor-pointer group"
                       title={`Visit ${person.name}'s Personal Website`}
                     >
-                      <Globe className="size-3 text-emerald-400" />
+                      <Globe className="size-3 text-indigo-400" />
                       <span>Website</span>
-                      <ExternalLink className="size-2.5 opacity-60 group-hover:opacity-100" />
+                      <ExternalLink className="size-2.5 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                     </a>
                   )}
 
@@ -188,12 +188,12 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
                       href={person.imdbUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-500/15 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 text-xs font-semibold transition-all hover:text-white group"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#080d1a] border border-indigo-900/40 text-indigo-300 font-mono text-xs font-medium hover:scale-105 active:scale-95 transition-all duration-200 ease-out hover:border-indigo-500/60 hover:text-white hover:bg-indigo-950/60 shadow-sm cursor-pointer group"
                       title={`View ${person.name}'s IMDb Profile`}
                     >
-                      <Film className="size-3 text-amber-400" />
+                      <Film className="size-3 text-indigo-400" />
                       <span>IMDb</span>
-                      <ExternalLink className="size-2.5 opacity-60 group-hover:opacity-100" />
+                      <ExternalLink className="size-2.5 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                     </a>
                   )}
 
@@ -202,11 +202,11 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
                       href={person.twitterUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-500/15 hover:bg-slate-500/30 text-slate-300 border border-slate-500/30 text-xs font-semibold transition-all hover:text-white group"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#080d1a] border border-indigo-900/40 text-indigo-300 font-mono text-xs font-medium hover:scale-105 active:scale-95 transition-all duration-200 ease-out hover:border-indigo-500/60 hover:text-white hover:bg-indigo-950/60 shadow-sm cursor-pointer group"
                       title={`View ${person.name} on X/Twitter`}
                     >
                       <span className="font-bold text-[11px]">𝕏</span>
-                      <ExternalLink className="size-2.5 opacity-60 group-hover:opacity-100" />
+                      <ExternalLink className="size-2.5 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                     </a>
                   )}
                 </div>
@@ -240,9 +240,9 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
                     {person.flags.map((flag, fIdx) => (
                       <span
                         key={fIdx}
-                        className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20"
+                        className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/30"
                       >
-                        <ShieldAlert className="size-2.5 text-amber-400" />
+                        <ShieldAlert className="size-2.5 text-orange-400" />
                         <span>{flag}</span>
                       </span>
                     ))}

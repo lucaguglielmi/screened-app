@@ -417,20 +417,20 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
                   </div>
 
                   {/* Pillar 3: Venue Realities */}
-                  <div className="p-3.5 rounded-xl bg-darkroom-card/90 border border-amber-500/30 space-y-2">
+                  <div className="p-3.5 rounded-xl bg-darkroom-card/90 border border-orange-500/30 space-y-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1.5 text-xs font-bold text-white">
-                        <MapPin className="size-3.5 text-amber-400" />
+                        <MapPin className="size-3.5 text-orange-400" />
                         <span>Venue Verification</span>
                       </div>
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-orange-500/20 text-orange-300 border border-orange-500/30">
                         Disputed
                       </span>
                     </div>
                     <p className="text-xs text-slate-300">
                       Advertised West End cinema theatrical gala not reflected on official cinema box office calendar.
                     </p>
-                    <div className="text-[11px] font-mono text-amber-300 bg-amber-950/40 p-1.5 rounded truncate border border-amber-500/20">
+                    <div className="text-[11px] font-mono text-orange-300 bg-orange-950/40 p-1.5 rounded truncate border border-orange-500/20">
                       Vimeo Link Dispatched Instead
                     </div>
                   </div>
@@ -530,23 +530,23 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
                     </div>
                   </div>
 
-                  <div className="p-3.5 rounded-xl bg-darkroom-card/90 border border-amber-500/40 space-y-2.5">
+                  <div className="p-3.5 rounded-xl bg-darkroom-card/90 border border-orange-500/40 space-y-2.5">
                     <div className="flex items-center gap-2.5">
                       <img
-                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=MartinSterling"
+                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&auto=format&fit=crop&q=80"
                         alt="Martin Sterling"
-                        className="size-9 rounded-lg bg-darkroom-surface border border-amber-400"
+                        className="size-9 rounded-lg bg-darkroom-surface border border-orange-400 object-cover"
                       />
                       <div>
                         <h5 className="text-xs font-bold text-white">Martin Sterling</h5>
-                        <span className="text-[10px] font-mono text-amber-300">Repeat Winner</span>
+                        <span className="text-[10px] font-mono text-orange-300">Repeat Winner</span>
                       </div>
                     </div>
                     <div className="text-xs text-slate-300 space-y-1">
-                      <div className="flex items-center gap-1 text-[11px] text-amber-300 font-mono">
-                        <ArrowRight className="size-3" /> Won 2024 & 2025 Best Short
+                      <div className="flex items-center gap-1 text-[11px] text-orange-300 font-mono">
+                        <ArrowRight className="size-3" /> Won 2024 &amp; 2025 Best Short
                       </div>
-                      <div className="flex items-center gap-1 text-[11px] text-amber-300 font-mono">
+                      <div className="flex items-center gap-1 text-[11px] text-orange-300 font-mono">
                         <ArrowRight className="size-3" /> Family Tie to Jury Chair
                       </div>
                     </div>
@@ -574,7 +574,7 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
                   <div className="flex items-center gap-2">
                     <Scale className="size-4 text-tool-diligence" />
                     <span className="font-bold text-white text-sm font-serif">
-                      Evidence Contradiction & Claim Reconciliation
+                      Evidence Contradiction &amp; Claim Reconciliation
                     </span>
                   </div>
                   <span className="text-[11px] font-mono text-tool-diligence">
@@ -586,8 +586,8 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
                   {/* Contradiction 1 */}
                   <div className="p-3.5 rounded-xl bg-darkroom-card border border-darkroom-border space-y-2">
                     <div className="flex items-center justify-between">
-                      <h5 className="text-xs font-bold text-white">1. Screening Format & Venue Delivery</h5>
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300">
+                      <h5 className="text-xs font-bold text-white">1. Screening Format &amp; Venue Delivery</h5>
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/20 text-orange-300">
                         Divergence
                       </span>
                     </div>
@@ -615,7 +615,7 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
                   <div className="p-3.5 rounded-xl bg-darkroom-card border border-darkroom-border space-y-2">
                     <div className="flex items-center justify-between">
                       <h5 className="text-xs font-bold text-white">2. Acceptance Selectivity Rate</h5>
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300">
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/20 text-orange-300">
                         Divergence
                       </span>
                     </div>
@@ -641,10 +641,10 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
                 </div>
 
                 {/* Plain-English Takeaway Box */}
-                <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs text-slate-200 leading-relaxed flex items-start gap-2.5">
-                  <AlertTriangle className="size-4 text-amber-400 shrink-0 mt-0.5" />
+                <div className="p-3.5 rounded-xl bg-orange-500/10 border border-orange-500/30 text-xs text-slate-200 leading-relaxed flex items-start gap-2.5">
+                  <AlertTriangle className="size-4 text-orange-400 shrink-0 mt-0.5" />
                   <div>
-                    <strong className="text-amber-300">Filmmaker Advisory:</strong> Contradictions
+                    <strong className="text-orange-300">Filmmaker Advisory:</strong> Contradictions
                     indicate high probability of vanity laurel scheme. Recommended action: Request written venue lease confirmation before paying submission fees.
                   </div>
                 </div>
@@ -655,13 +655,13 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
       )}
 
       {/* ========================================================================= */}
-      {/* 2. 2D INTERACTIVE CANVAS VIEW (React Flow with pan/zoom)                  */}
+      {/* 2. 2D INTERACTIVE CANVAS VIEW (React Flow with non-hijacking bounded canvas)*/}
       {/* ========================================================================= */}
       {displayMode === 'CANVAS' && (
         <div className="space-y-3">
           <div className="flex items-center justify-between gap-2 px-1">
-            <span className="text-xs font-mono text-slate-400">
-              Interactive 2D Topological Canvas (Pan & Zoom enabled)
+            <span className="text-xs font-mono text-slate-300 font-semibold">
+              Entity Architecture &amp; Provenance Graph
             </span>
             <div className="flex items-center gap-1.5 p-1 rounded-xl bg-darkroom-card text-xs">
               {[

@@ -38,15 +38,15 @@ export const ScreenedFlowCanvas: React.FC<ScreenedFlowCanvasProps> = ({
   edgeTypes,
   onNodeClick,
   className = 'h-96 w-full',
-  minZoom = 0.5,
-  maxZoom = 1.5,
+  minZoom = 0.7,
+  maxZoom = 1.2,
   fitView = true,
-  showMiniMap = true,
-  showControls = true,
+  showMiniMap = false,
+  showControls = false,
 }) => {
   return (
     <div
-      className={`relative rounded-2xl bg-darkroom-bg border-none overflow-hidden shadow-2xl ${className}`}
+      className={`relative rounded-2xl bg-darkroom-bg border border-darkroom-border/40 overflow-hidden shadow-2xl ${className}`}
     >
       <ReactFlow
         nodes={nodes}
@@ -59,6 +59,14 @@ export const ScreenedFlowCanvas: React.FC<ScreenedFlowCanvasProps> = ({
         minZoom={minZoom}
         maxZoom={maxZoom}
         fitView={fitView}
+        fitViewOptions={{ padding: 0.15, includeHiddenNodes: false }}
+        zoomOnScroll={false}
+        panOnScroll={false}
+        zoomOnPinch={false}
+        nodesDraggable={false}
+        nodesConnectable={false}
+        elementsSelectable={true}
+        translateExtent={[[-150, -80], [1100, 750]]}
         proOptions={{ hideAttribution: true }}
         colorMode="dark"
       >

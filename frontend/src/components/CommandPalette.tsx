@@ -75,6 +75,17 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       },
     },
     {
+      id: 'protection',
+      label: 'How to Protect Yourself (Scam & Risk Defense Guide)',
+      category: 'Evidence & Research',
+      icon: ShieldCheck,
+      iconColor: 'text-orange-400',
+      action: () => {
+        onSelectTool('FESTIVAL_PROTECTION_GUIDE');
+        onClose();
+      },
+    },
+    {
       id: 'why',
       label: 'Why Screened Exists (Problem & Impact)',
       category: 'Evidence & Research',

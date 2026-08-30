@@ -63,7 +63,7 @@ def test_get_demo_pinco_pallino_returns_200():
     assert "deepVetting" in data
     assert "executiveSummary" in data["dossier"]
     assert data["deepVetting"]["overallAuthenticityScore"] == 34
-    assert len(data["claims"]) == 10
+    assert len(data["claims"]) >= 300
     assert len(data["sources"]) >= 7
 
 

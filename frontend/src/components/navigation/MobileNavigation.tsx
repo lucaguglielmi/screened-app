@@ -217,11 +217,27 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                 </button>
               </div>
 
-              {/* Secondary Reference Link */}
+              {/* Secondary Reference Links */}
               <div className="mt-6 pt-4 border-t border-zinc-800/80 space-y-2">
                 <span className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-500 px-1 block">
-                  Reference
+                  Reference &amp; Guides
                 </span>
+
+                <button
+                  type="button"
+                  onClick={() => handleSelect('FESTIVAL_PROTECTION_GUIDE')}
+                  className={`w-full px-3 py-2 rounded-xl flex items-center justify-between text-xs font-medium transition-colors ${
+                    activeTool === 'FESTIVAL_PROTECTION_GUIDE'
+                      ? 'text-orange-400 bg-orange-500/10 font-semibold border border-orange-500/30'
+                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
+                  }`}
+                >
+                  <div className="flex items-center space-x-2">
+                    <ShieldCheck className="w-4 h-4 text-orange-400" />
+                    <span>Scam &amp; Risk Defense Guide</span>
+                  </div>
+                  <ExternalLink className="w-3.5 h-3.5 opacity-60" />
+                </button>
 
                 <button
                   type="button"
@@ -234,7 +250,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                 >
                   <div className="flex items-center space-x-2">
                     <Scale className="w-4 h-4 text-zinc-500" />
-                    <span>Why Screened (Baseline & Impact Matrix)</span>
+                    <span>Why Screened (Baseline &amp; Impact Matrix)</span>
                   </div>
                   <ExternalLink className="w-3.5 h-3.5 opacity-60" />
                 </button>

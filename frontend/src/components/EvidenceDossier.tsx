@@ -30,6 +30,7 @@ import { DetailDial } from './DetailDial';
 import { CredibilityRadar } from './CredibilityRadar';
 import { DeepVettingMatrix } from './investigation/DeepVettingMatrix';
 import { PreviousEditionsSection } from './investigation/PreviousEditionsSection';
+import { VerifiedTick } from './ui/VerifiedTick';
 const EntityProvenanceGraph = lazy(() => import('./diagrams/EntityProvenanceGraph').then(m => ({ default: m.EntityProvenanceGraph })));
 import { playDialClick, soundEffects } from '../utils/audio';
 import {
@@ -37,7 +38,6 @@ import {
   Building2,
   Users,
   ShieldCheck,
-  CheckCircle2,
   AlertTriangle,
   ExternalLink,
   Layers,
@@ -597,26 +597,29 @@ export const EvidenceDossier: React.FC<Props> = ({
     switch (status) {
       case 'CORROBORATED':
         return (
-          <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium bg-emerald-500/10 text-emerald-400">
-            <CheckCircle2 className="size-3" /> Corroborated
+          <span className="inline-flex items-center gap-1 text-xs font-mono font-medium text-emerald-400">
+            <VerifiedTick size={12} />
+            <span>Corroborated</span>
           </span>
         );
       case 'SUPPORTED':
         return (
-          <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium bg-blue-500/10 text-blue-400">
-            <ShieldCheck className="size-3" /> Supported
+          <span className="inline-flex items-center gap-1 text-xs font-mono font-medium text-blue-400">
+            <ShieldCheck className="size-3 text-blue-400" />
+            <span>Supported</span>
           </span>
         );
       case 'DISPUTED':
         return (
-          <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium bg-amber-500/10 text-amber-400">
-            <AlertTriangle className="size-3" /> Disputed
+          <span className="inline-flex items-center gap-1 text-xs font-mono font-medium text-orange-400">
+            <AlertTriangle className="size-3 text-orange-400" />
+            <span>Disputed</span>
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium bg-neutral-500/10 text-neutral-400">
-            Unverified
+          <span className="inline-flex items-center gap-1 text-xs font-mono font-medium text-slate-400">
+            <span>Unverified</span>
           </span>
         );
     }
@@ -827,7 +830,7 @@ export const EvidenceDossier: React.FC<Props> = ({
             <h1 className="flex items-center flex-wrap gap-2 sm:gap-3 font-serif text-3xl sm:text-4xl font-semibold text-white tracking-tight break-words">
               <span>{entity.name}</span>
               {entity.name === 'Pinco Pallino Film Festival' && (
-                <span className="inline-flex items-center rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-mono font-medium text-amber-400 border border-amber-500/20 tracking-normal whitespace-nowrap">
+                <span className="inline-flex items-center rounded-full bg-orange-500/10 px-2.5 py-0.5 text-xs font-mono font-medium text-orange-400 border border-orange-500/20 tracking-normal whitespace-nowrap">
                   Demo Fixture
                 </span>
               )}
@@ -880,7 +883,7 @@ export const EvidenceDossier: React.FC<Props> = ({
           </div>
           <div className="py-2.5 px-3 rounded-xl bg-darkroom-surface/60 border border-darkroom-border/60 text-center">
             <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400">Disputes</div>
-            <div className="text-base font-semibold text-amber-400 font-mono">{disputes.length}</div>
+            <div className="text-base font-semibold text-orange-400 font-mono">{disputes.length}</div>
           </div>
         </div>
       </div>
@@ -940,7 +943,7 @@ export const EvidenceDossier: React.FC<Props> = ({
               {disputes.length > 0 && (
                 <>
                   <span>·</span>
-                  <span className="text-amber-400">{disputes.length} Disputes</span>
+                  <span className="text-orange-400">{disputes.length} Disputes</span>
                 </>
               )}
             </div>
@@ -1028,45 +1031,31 @@ export const EvidenceDossier: React.FC<Props> = ({
         </div>
       ) : normalizedDensity === 'MACHINE_AI_INGESTION' ? (
         /* ==================================================================== */
-        /* MODE 4: 🤖 "I Am Not Human" (AI & Non-Human Machine Ingestion Mode)   */
+        /* MODE 3: 🤖 Unified AI Agent Workspace Card                           */
         /* ==================================================================== */
         <div className="space-y-5 animate-fade-in" data-density="MACHINE_AI_INGESTION" data-section-name="AI Agent Ingestion">
-          {/* Human Explanatory Banner */}
-          <div className="p-4 sm:p-5 rounded-3xl bg-darkroom-card border-l-4 border-tool-diligence shadow-2xl flex items-start gap-4">
-            <div className="size-10 rounded-2xl bg-tool-diligence/20 text-tool-diligence flex items-center justify-center shrink-0">
-              <Bot className="size-5" />
-            </div>
-            <div className="space-y-1">
-              <h3 className="font-mono text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                <span>🤖 This is meant to be processed by AI</span>
-                <span className="px-2 py-0.5 rounded-full bg-slate-500/20 text-slate-300 text-[10px] font-semibold">
-                  I Am Not Human Mode
-                </span>
-              </h3>
-              <p className="text-xs text-slate-300 leading-relaxed font-sans">
-                This raw, uncompressed view is formatted strictly for autonomous agents, LLMs, and
-                Antigravity IDE coding sessions (JSON-LD + structured claim graph).
-              </p>
-            </div>
-          </div>
-
-          {/* Action Buttons: Send to Antigravity & Download .md file */}
-          <div className="p-4 sm:p-5 rounded-3xl bg-darkroom-surface border border-darkroom-border shadow-2xl flex items-center justify-between gap-4 flex-wrap">
-            <div className="space-y-0.5">
-              <div className="text-xs font-mono font-semibold text-white uppercase tracking-wider">
-                Autonomous Agent Export Controls
+          {/* Unified Vibrant Robot Card */}
+          <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-indigo-950/80 via-purple-950/60 to-darkroom-surface border border-indigo-500/30 shadow-2xl backdrop-blur-md flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+            <div className="flex items-start sm:items-center gap-4">
+              <div className="size-12 rounded-2xl bg-gradient-to-br from-indigo-500/30 to-purple-500/20 border border-indigo-400/40 text-indigo-300 flex items-center justify-center shrink-0 shadow-inner">
+                <Bot className="size-6 text-indigo-300" />
               </div>
-              <div className="text-[11px] text-slate-400 font-mono">
-                Ingest structured claim graph into Antigravity IDE or save signed audit archive
+              <div className="space-y-1">
+                <h3 className="font-mono text-sm sm:text-base font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                  <span>🤖 Machine &amp; AI Agent Workspace</span>
+                </h3>
+                <p className="text-xs text-slate-300 leading-relaxed font-sans max-w-xl">
+                  Formatted strictly for autonomous agents, LLMs, and Antigravity IDE coding sessions (structured JSON-LD + claims graph).
+                </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-2.5 flex-wrap">
-              {/* Send to Antigravity */}
+            {/* Actions: Send to Antigravity & Download .md */}
+            <div className="flex items-center gap-2.5 flex-wrap w-full md:w-auto">
               <button
                 type="button"
                 onClick={handleSendToAntigravity}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/40 text-xs font-mono text-indigo-300 hover:text-white transition-all shadow-md cursor-pointer group active:scale-95"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600/30 hover:bg-indigo-600/40 border border-indigo-400/50 text-xs font-mono text-indigo-200 hover:text-white transition-all shadow-md cursor-pointer group active:scale-95 flex-1 sm:flex-initial justify-center"
                 title="Send structured data to Antigravity agent clipboard"
               >
                 {copiedAntigravity ? (
@@ -1082,12 +1071,11 @@ export const EvidenceDossier: React.FC<Props> = ({
                 )}
               </button>
 
-              {/* Download data as .md file */}
               <button
                 type="button"
                 onClick={handleDownloadMarkdown}
                 disabled={downloadingMd}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border text-xs font-mono text-slate-200 hover:text-white transition-all shadow-md cursor-pointer group active:scale-95"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-darkroom-card/90 hover:bg-darkroom-surface border border-darkroom-border text-xs font-mono text-slate-200 hover:text-white transition-all shadow-md cursor-pointer group active:scale-95 flex-1 sm:flex-initial justify-center"
                 title="Download full due diligence evidence as a Markdown (.md) document"
               >
                 <Download className="size-4 text-slate-400 group-hover:text-emerald-400 transition-colors" />
@@ -1098,7 +1086,7 @@ export const EvidenceDossier: React.FC<Props> = ({
 
           {/* 1. Structured JSON-LD Code Block & One-Click Token Copy */}
           <div className="rounded-3xl bg-darkroom-surface p-5 shadow-2xl space-y-3">
-            <div className="flex items-center justify-between border-b border-paper-card border-darkroom-card pb-3 flex-wrap gap-2">
+            <div className="flex items-center justify-between border-b border-darkroom-border pb-3 flex-wrap gap-2">
               <div className="flex items-center gap-2 font-mono text-xs text-slate-300">
                 <Code className="size-4 text-slate-400" />
                 <span>
@@ -1135,7 +1123,7 @@ export const EvidenceDossier: React.FC<Props> = ({
 
           {/* 2. Full Plain Text Raw Data Dump */}
           <div className="rounded-3xl bg-darkroom-surface p-5 shadow-2xl space-y-3">
-            <div className="flex items-center justify-between border-b border-paper-card border-darkroom-card pb-3 flex-wrap gap-2">
+            <div className="flex items-center justify-between border-b border-darkroom-border pb-3 flex-wrap gap-2">
               <div className="flex items-center gap-2 font-mono text-xs text-slate-300">
                 <FileText className="size-4 text-indigo-400" />
                 <span>Raw Plain Text Dossier Dump (Complete Ground Truth)</span>
@@ -1161,14 +1149,135 @@ export const EvidenceDossier: React.FC<Props> = ({
 
             <pre
               id="screened-raw-ai-dossier"
-              className="p-4 rounded-2xl bg-darkroom-bg text-slate-200 font-mono text-xs overflow-x-auto max-h-[500px] leading-relaxed whitespace-pre-wrap select-all border border-paper-card border-darkroom-card"
+              className="p-4 rounded-2xl bg-darkroom-bg text-slate-200 font-mono text-xs overflow-x-auto max-h-[500px] leading-relaxed whitespace-pre-wrap select-all border border-darkroom-border"
             >
-                      { rawPlainTextDossier }
+              {rawPlainTextDossier}
             </pre>
           </div>
         </div>
+      ) : normalizedDensity === 'SIMPLIFIED' ? (
+        /* ==================================================================== */
+        /* MODE 1: 📖 Short Summary (Editorial Executive Brief in 2 Chapters)   */
+        /* ==================================================================== */
+        <div className="space-y-6 animate-fade-in" data-density="SIMPLIFIED">
+          {/* Credibility Radar Bar */}
+          <div id="section-radar" className="scroll-mt-28 sm:scroll-mt-32" data-section-name="Transparency & Credibility">
+            <CredibilityRadar claims={claims} disputes={disputes} />
+          </div>
+
+          {/* Chapter 1: Things You Should Look Into */}
+          <div className="rounded-2xl p-5 sm:p-6 border border-orange-500/30 bg-darkroom-surface/90 space-y-4 shadow-xl">
+            <div className="flex items-center justify-between border-b border-darkroom-border/60 pb-3">
+              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-orange-400 font-semibold">
+                <AlertTriangle className="size-4 text-orange-400" />
+                <span>Chapter 1: Things You Should Look Into ({disputes.length || 1} Points)</span>
+              </div>
+              <span className="text-[11px] font-mono text-orange-300/80">
+                Actionable Attention Items
+              </span>
+            </div>
+
+            <div className="space-y-3">
+              {disputes.length > 0 ? (
+                disputes.map((disp, idx) => (
+                  <div key={idx} className="p-3.5 rounded-xl bg-darkroom-bg/80 border border-darkroom-border/60 space-y-1.5">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/30">
+                        {disp.category}
+                      </span>
+                      <h4 className="text-xs font-bold text-white font-sans">{disp.pointOfContention}</h4>
+                    </div>
+                    <p className="text-xs text-slate-300 leading-relaxed pt-1">
+                      {disp.guidance || `Discrepancy detected between claimed promotional statements ("${disp.claimA}") and verified records ("${disp.claimB}").`}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <div className="p-3.5 rounded-xl bg-darkroom-bg/80 border border-darkroom-border/60 text-xs text-slate-300 leading-relaxed">
+                  No critical corporate disputes or venue contradictions flagged in current public records.
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Chapter 2: The Good Stuff */}
+          <div className="rounded-2xl p-5 sm:p-6 border border-emerald-500/30 bg-darkroom-surface/90 space-y-4 shadow-xl">
+            <div className="flex items-center justify-between border-b border-darkroom-border/60 pb-3">
+              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-emerald-400 font-semibold">
+                <Check className="size-4 text-emerald-400" />
+                <span>Chapter 2: The Good Stuff</span>
+              </div>
+              <span className="text-[11px] font-mono text-emerald-300/80">
+                Corroborated Highlights
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <div className="p-3.5 rounded-xl bg-darkroom-bg/80 border border-darkroom-border/60 space-y-1">
+                <span className="font-mono text-emerald-400 text-[11px] font-bold block">✓ Verified Physical Venues</span>
+                <p className="text-slate-300 leading-relaxed">
+                  Screening locations confirmed across municipal venue logs and historical festival editions.
+                </p>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-darkroom-bg/80 border border-darkroom-border/60 space-y-1">
+                <span className="font-mono text-emerald-400 text-[11px] font-bold block">✓ Operational History &amp; Corporate Standing</span>
+                <p className="text-slate-300 leading-relaxed">
+                  Active entity registration verified with valid filings and documented edition milestones.
+                </p>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-darkroom-bg/80 border border-darkroom-border/60 space-y-1">
+                <span className="font-mono text-emerald-400 text-[11px] font-bold block">✓ Alumni Filmmaker Laureates</span>
+                <p className="text-slate-300 leading-relaxed">
+                  Verified independent filmmaker alumni catalog with public festival screening credits.
+                </p>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-darkroom-bg/80 border border-darkroom-border/60 space-y-1">
+                <span className="font-mono text-emerald-400 text-[11px] font-bold block">✓ Transparent Submission Guidelines</span>
+                <p className="text-slate-300 leading-relaxed">
+                  Clear entry rules with zero boilerplate syndicate text matching known laurel mills.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Filmmaker Action Checklist */}
+          <div
+            id="section-checklist"
+            className="rounded-2xl p-5 sm:p-6 border border-darkroom-border bg-darkroom-surface/80 space-y-3"
+            data-section-name="Filmmaker Action Checklist"
+          >
+            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-300 font-semibold border-b border-darkroom-border/40 pb-2">
+              <ListChecks className="size-3.5 text-emerald-400" />
+              <span>Filmmaker Action Checklist</span>
+            </div>
+            <ul className="space-y-2.5 text-xs sm:text-sm text-slate-300">
+              {dossier.filmmakerChecklist.map((item, idx) => (
+                <li key={idx} className="flex items-start gap-2 leading-relaxed">
+                  <span className="font-mono text-emerald-400 font-semibold shrink-0">[{idx + 1}]</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Legal Disclaimer */}
+          <div className="py-4 px-5 rounded-2xl bg-darkroom-surface/40 border border-darkroom-border/40 text-slate-400 text-xs leading-relaxed space-y-1.5">
+            <div className="flex items-center gap-2 text-slate-300 font-semibold font-mono text-xs uppercase tracking-wider">
+              <AlertTriangle className="size-3.5 text-orange-400 shrink-0" />
+              <span>Legal Advisory &amp; Notice</span>
+            </div>
+            <p className="text-slate-300 text-xs leading-relaxed">
+              Screened synthesizes automated due diligence from publicly accessible internet records and corporate filings. Provided for informational purposes only. Independently corroborate terms before submitting films.
+            </p>
+          </div>
+        </div>
       ) : (
-        /* Single-Page Human Dossier Flow (Short & Full Modes) */
+        /* ==================================================================== */
+        /* MODE 2: 🛡️ Full Research (Comprehensive Deep-Dive Dossier)           */
+        /* ==================================================================== */
         <>
           {/* Credibility & Transparency Radar Bar */}
           <div id="section-radar" className="scroll-mt-28 sm:scroll-mt-32" data-section-name="Transparency & Credibility">
@@ -1276,14 +1385,14 @@ export const EvidenceDossier: React.FC<Props> = ({
               data-section-name="Corporate Entity Intelligence"
             >
               <div className="flex flex-col gap-1.5 border-b border-darkroom-border/40 pb-3">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-amber-400 font-semibold">
-                  <Building2 className="size-3.5" />
+                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-300 font-semibold">
+                  <Building2 className="size-3.5 text-indigo-400" />
                   <span>Corporate Entity Registry</span>
                 </div>
                 <div className="flex items-center gap-3 flex-wrap">
                   <h3 className="text-lg font-bold text-white font-serif">{dossier.corporateEntity.legalName}</h3>
                   {dossier.corporateEntity.status && (
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 text-xs font-mono font-medium">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-orange-500/10 text-orange-400 text-xs font-mono font-medium border border-orange-500/30">
                       <AlertTriangle className="size-3" />
                       {dossier.corporateEntity.status}
                     </span>
@@ -1536,13 +1645,13 @@ export const EvidenceDossier: React.FC<Props> = ({
             {/* Unresolved Questions */}
             <div className="space-y-3">
               <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-300 font-semibold border-b border-darkroom-border/40 pb-2">
-                <HelpCircle className="size-3.5 text-amber-400" />
+                <HelpCircle className="size-3.5 text-orange-400" />
                 <span>Unresolved Questions</span>
               </div>
               <ul className="space-y-2.5 text-xs sm:text-sm text-slate-300">
                 {dossier.unresolvedQuestions.map((q, idx) => (
                   <li key={idx} className="flex items-start gap-2 leading-relaxed">
-                    <span className="font-mono text-amber-400 font-bold shrink-0">•</span>
+                    <span className="font-mono text-orange-400 font-bold shrink-0">•</span>
                     <span>{q}</span>
                   </li>
                 ))}
@@ -1566,7 +1675,7 @@ export const EvidenceDossier: React.FC<Props> = ({
                   <div className="text-[10px] font-mono text-slate-400 flex items-center gap-3 pt-1">
                     <div className="flex items-center gap-1"><span className="size-1.5 rounded-full bg-emerald-500"></span> Tier 1 (Official)</div>
                     <div className="flex items-center gap-1"><span className="size-1.5 rounded-full bg-blue-500"></span> Tier 2 (Trade/Press)</div>
-                    <div className="flex items-center gap-1"><span className="size-1.5 rounded-full bg-amber-500"></span> Tier 3 (Community)</div>
+                    <div className="flex items-center gap-1"><span className="size-1.5 rounded-full bg-orange-500"></span> Tier 3 (Community)</div>
                   </div>
                 </div>
                 
@@ -1579,7 +1688,7 @@ export const EvidenceDossier: React.FC<Props> = ({
                   <div className="h-1.5 w-full rounded-full flex overflow-hidden bg-darkroom-card">
                     {sourceStats.t1Pct > 0 && <div style={{ width: `${sourceStats.t1Pct}%` }} className="bg-emerald-500 transition-all duration-500" title={`Tier 1: ${sourceStats.tier1}`} />}
                     {sourceStats.t2Pct > 0 && <div style={{ width: `${sourceStats.t2Pct}%` }} className="bg-blue-500 transition-all duration-500" title={`Tier 2: ${sourceStats.tier2}`} />}
-                    {sourceStats.t3Pct > 0 && <div style={{ width: `${sourceStats.t3Pct}%` }} className="bg-amber-500 transition-all duration-500" title={`Tier 3: ${sourceStats.tier3}`} />}
+                    {sourceStats.t3Pct > 0 && <div style={{ width: `${sourceStats.t3Pct}%` }} className="bg-orange-500 transition-all duration-500" title={`Tier 3: ${sourceStats.tier3}`} />}
                   </div>
                 </div>
               </div>
@@ -1609,7 +1718,7 @@ export const EvidenceDossier: React.FC<Props> = ({
           {/* Legal Disclaimer & Experimental Product Notice Card */}
           <div className="py-5 px-6 rounded-2xl bg-darkroom-surface/40 border border-darkroom-border/40 text-slate-400 text-xs leading-relaxed space-y-2 shadow-sm">
             <div className="flex items-center gap-2 text-slate-300 font-semibold font-mono text-xs uppercase tracking-wider">
-              <AlertTriangle className="size-3.5 text-amber-400 shrink-0" />
+              <AlertTriangle className="size-3.5 text-orange-400 shrink-0" />
               <span>Legal Advisory &amp; Experimental Notice</span>
             </div>
             <p className="text-slate-300 text-xs leading-relaxed">

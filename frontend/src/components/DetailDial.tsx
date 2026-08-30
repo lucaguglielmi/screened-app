@@ -21,7 +21,7 @@ export const DetailDial: React.FC<Props> = ({ density, onChange }) => {
     <div className="w-full">
       {/* 3-Mode Segmented Control */}
       <div className="grid grid-cols-3 p-1 rounded-xl bg-darkroom-card border border-darkroom-border shadow-inner gap-1">
-        {/* Mode 1: Short */}
+        {/* Mode 1: Short summary */}
         <button
           type="button"
           onClick={() => {
@@ -36,10 +36,11 @@ export const DetailDial: React.FC<Props> = ({ density, onChange }) => {
           title="Short executive summary & key checklist"
         >
           <BookOpen className="size-3.5 shrink-0" />
-          <span>Short</span>
+          <span className="sm:hidden">Short</span>
+          <span className="hidden sm:inline">Short summary</span>
         </button>
 
-        {/* Mode 2: Full (Default) */}
+        {/* Mode 2: Full research (Default) */}
         <button
           type="button"
           onClick={() => {
@@ -54,10 +55,11 @@ export const DetailDial: React.FC<Props> = ({ density, onChange }) => {
           title="Full comprehensive due diligence with all vectors, claims, and graphs"
         >
           <ShieldCheck className="size-3.5 shrink-0" />
-          <span>Full</span>
+          <span className="sm:hidden">Full</span>
+          <span className="hidden sm:inline">Full research</span>
         </button>
 
-        {/* Mode 3: Agent */}
+        {/* Mode 3: AI Agent */}
         <button
           type="button"
           onClick={() => {
@@ -72,7 +74,8 @@ export const DetailDial: React.FC<Props> = ({ density, onChange }) => {
           title="Machine AI JSON-LD & plain-text token dump for autonomous agents"
         >
           <Bot className="size-3.5 shrink-0" />
-          <span>Agent</span>
+          <span className="sm:hidden">Agent</span>
+          <span className="hidden sm:inline">AI Agent</span>
         </button>
       </div>
     </div>

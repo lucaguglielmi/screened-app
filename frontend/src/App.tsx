@@ -26,6 +26,7 @@ import { KeyboardHelpModal } from './components/KeyboardHelpModal';
 import { FunkyCursor } from './components/common/FunkyCursor';
 import { ChatContainer } from './components/chat/ChatContainer';
 import { WhyScreened } from './components/WhyScreened';
+import { FestivalProtectionGuide } from './components/FestivalProtectionGuide';
 import { HowToUse } from './components/HowToUse';
 import { CommandPalette } from './components/CommandPalette';
 import { HistorySidebar } from './components/HistorySidebar';
@@ -704,6 +705,15 @@ export default function App() {
               onNavigateToDesk={() => setActiveTool('CONVERSATIONAL_DESK')}
               onNavigateToDiligence={() => setActiveTool('DUE_DILIGENCE')}
               onNavigateToScout={() => setActiveTool('GRANT_SCOUT')}
+              onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
+            />
+          )}
+
+          {/* View 4: Scam & Risk Defense Guide */}
+          {activeTool === 'FESTIVAL_PROTECTION_GUIDE' && (
+            <FestivalProtectionGuide
+              onNavigateToDesk={() => setActiveTool('CONVERSATIONAL_DESK')}
+              onNavigateToDiligence={() => setActiveTool('DUE_DILIGENCE')}
               onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
             />
           )}
