@@ -173,6 +173,29 @@ class DeepVettingDimension(BaseModel):
     riskWeight: str = "MEDIUM"  # "LOW", "MEDIUM", "HIGH", "CRITICAL"
 
 
+class PreviousEditionAward(BaseModel):
+    awardName: str
+    winnerTitle: str
+    recipientName: Optional[str] = None
+    winnerUrl: Optional[str] = None
+
+
+class PreviousEditionPress(BaseModel):
+    headline: str
+    publisher: str
+    url: Optional[str] = None
+
+
+class PreviousEditionRecord(BaseModel):
+    year: int
+    editionNumber: Optional[str] = None
+    heldLocation: Optional[str] = None
+    heldDates: Optional[str] = None
+    awards: List[PreviousEditionAward] = Field(default_factory=list)
+    pressCoverage: List[PreviousEditionPress] = Field(default_factory=list)
+    notes: str = ""
+
+
 class KeyPerson(BaseModel):
     name: str
     roles: List[str] = Field(default_factory=list)
@@ -188,6 +211,11 @@ class KeyPerson(BaseModel):
     avatarUrl: Optional[str] = None
     linkedinUrl: Optional[str] = None
     companiesHouseUrl: Optional[str] = None
+    facebookUrl: Optional[str] = None
+    websiteUrl: Optional[str] = None
+    imdbUrl: Optional[str] = None
+    wikipediaUrl: Optional[str] = None
+    twitterUrl: Optional[str] = None
 
 
 class DeepVettingReport(BaseModel):

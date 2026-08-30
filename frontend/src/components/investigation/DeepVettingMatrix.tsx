@@ -159,6 +159,10 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
       {
         name: 'Elliot Grove',
         roles: ['Founder', 'Festival Director'],
+        avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80',
+        linkedinUrl: 'https://www.linkedin.com/in/elliot-grove-raindance',
+        websiteUrl: 'https://elliotgrove.com',
+        companiesHouseUrl: 'https://find-and-update.company-information.service.gov.uk/company/02849884',
         companies: ['RAINDANCE FILM FESTIVAL LIMITED'],
         associatedFestivals: ['Raindance Film Festival'],
         isFestivalMillSuspect: false,
@@ -168,11 +172,16 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
       {
         name: 'David Martinez',
         roles: ['Senior Programmer'],
+        avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&auto=format&fit=crop&q=80',
+        linkedinUrl: 'https://www.linkedin.com/in/david-martinez-cinema',
+        websiteUrl: 'https://davidmartinezfilm.com',
+        companiesHouseUrl: 'https://find-and-update.company-information.service.gov.uk',
         companies: ['MARTINEZ CONSULTING LLC'],
         associatedFestivals: ['Raindance Film Festival', 'Independent Shorts Awards'],
         isFestivalMillSuspect: true,
         hasDistributionOverlap: true,
-        notes: 'Flagged for multiple festival associations and consulting overlap.'
+        flags: ['Multiple Festival Affiliations', 'Commercial Consulting Overlap'],
+        notes: 'Programmer with multiple festival associations and consulting overlap.'
       }
     ],
     disclaimer: 'This is an automated tool and should be manually reviewed as the AI tool can be wrong.'

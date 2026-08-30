@@ -619,6 +619,97 @@ def get_demo_full_dossier():
                 "Do not purchase 'distribution consultation' services from Pallino Media Lab Ltd.",
                 "Disregard the fabricated ARRI/Sony sponsorships when evaluating prestige.",
                 "Expect a 3-5 week delay on all communication regarding submission status."
+            ],
+            "previousEditions": [
+                {
+                    "year": 2024,
+                    "editionNumber": "4th Annual Edition",
+                    "heldLocation": "Genesis Cinema (Studio 4) & BFI Southbank (NFT3 private hire), London",
+                    "heldDates": "October 12-14, 2024",
+                    "awards": [
+                        {
+                            "awardName": "Grand Jury Prize (Best International Feature)",
+                            "winnerTitle": "The Iron Threshold",
+                            "recipientName": "Martin Sterling",
+                            "winnerUrl": "https://www.imdb.com/title/tt2948194"
+                        },
+                        {
+                            "awardName": "Best Cinematography Short",
+                            "winnerTitle": "Echoes in Amber",
+                            "recipientName": "Chloe Laurent",
+                            "winnerUrl": "https://chloelaurentfilm.com"
+                        },
+                        {
+                            "awardName": "Special Director's Discovery Award",
+                            "winnerTitle": "Submerged Voices",
+                            "recipientName": "Tariq Mansoor",
+                            "winnerUrl": "https://www.imdb.com/title/tt3819201"
+                        }
+                    ],
+                    "pressCoverage": [
+                        {
+                            "headline": "London Indie Festival Announces 2024 Winners Amidst Venue Shift",
+                            "publisher": "IndieWire Community Wire",
+                            "url": "https://www.indiewire.com"
+                        },
+                        {
+                            "headline": "Filmmakers Voice Mixed Reactions Following Genesis Cinema Screening",
+                            "publisher": "Screen International Dispatch",
+                            "url": "https://www.screendaily.com"
+                        }
+                    ],
+                    "notes": "Official catalog listed 18 screened shorts and 2 features. Multiple attendees reported AV projection glitches in Studio 4."
+                },
+                {
+                    "year": 2023,
+                    "editionNumber": "3rd Annual Edition",
+                    "heldLocation": "Genesis Cinema (Studio 2), London",
+                    "heldDates": "October 15-16, 2023",
+                    "awards": [
+                        {
+                            "awardName": "Grand Jury Prize (Best Narrative Short)",
+                            "winnerTitle": "Fading Horizon",
+                            "recipientName": "Martin Sterling",
+                            "winnerUrl": "https://www.imdb.com/title/tt1928472"
+                        },
+                        {
+                            "awardName": "Best Student Documentary",
+                            "winnerTitle": "Under The Flyover",
+                            "recipientName": "Sarah Jenkins",
+                            "winnerUrl": "https://sarahjenkinsdocs.co.uk"
+                        }
+                    ],
+                    "pressCoverage": [
+                        {
+                            "headline": "Pinco Pallino Festival 2023 Concludes in East London",
+                            "publisher": "Film London News",
+                            "url": "https://filmlondon.org.uk"
+                        }
+                    ],
+                    "notes": "Early bird entries accounted for 65% of submitted catalog."
+                },
+                {
+                    "year": 2022,
+                    "editionNumber": "2nd Annual Edition",
+                    "heldLocation": "The Watermans Arts Centre, Brentford, London",
+                    "heldDates": "November 5-6, 2022",
+                    "awards": [
+                        {
+                            "awardName": "Best UK Independent Short",
+                            "winnerTitle": "Thames Drift",
+                            "recipientName": "Oliver Finch",
+                            "winnerUrl": "https://www.oliverfinchcinema.com"
+                        }
+                    ],
+                    "pressCoverage": [
+                        {
+                            "headline": "Emerging Voices Screen at Watermans Centre",
+                            "publisher": "British Film Review",
+                            "url": "https://www.britishfilmreview.co.uk"
+                        }
+                    ],
+                    "notes": "Inaugural physical screening following the 2021 virtual pandemic launch."
+                }
             ]
         },
 
@@ -692,8 +783,11 @@ def get_demo_full_dossier():
                 {
                     "name": "Arthur Smith",
                     "roles": ["Festival Director", "Co-Founder"],
-                    "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=ArthurSmith",
+                    "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80",
                     "linkedinUrl": "https://www.linkedin.com/in/arthur-smith-cinema",
+                    "facebookUrl": "https://www.facebook.com/arthursmithfilm",
+                    "websiteUrl": "https://arthursmithcinema.co.uk",
+                    "twitterUrl": "https://twitter.com/arthursmithfilm",
                     "companiesHouseUrl": "https://find-and-update.company-information.service.gov.uk/company/13984712",
                     "companies": ["Pinco Pallino Film CIC", "Pallino Media Lab Ltd"],
                     "associatedFestivals": ["Pinco Pallino Film Festival", "Apex Short Film Arena"],
@@ -705,8 +799,10 @@ def get_demo_full_dossier():
                 {
                     "name": "Benjamin Jones",
                     "roles": ["Jury Chair", "Senior Programmer"],
-                    "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=BenjaminJones",
+                    "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&auto=format&fit=crop&q=80",
                     "linkedinUrl": "https://www.linkedin.com/in/benjamin-jones-jury",
+                    "websiteUrl": "https://benjaminjonesjury.com",
+                    "imdbUrl": "https://www.imdb.com/name/nm2948192",
                     "companiesHouseUrl": "https://find-and-update.company-information.service.gov.uk/company/13984712",
                     "companies": ["IndiePitch Consulting", "Pallino Media Lab Ltd"],
                     "associatedFestivals": ["Pinco Pallino Film Festival"],
@@ -718,8 +814,11 @@ def get_demo_full_dossier():
                 {
                     "name": "Martin Sterling",
                     "roles": ["Repeat Winner (2024 & 2025)", "Associate Producer"],
-                    "avatarUrl": "https://api.dicebear.com/7.x/avataaars/svg?seed=MartinSterling",
+                    "avatarUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&auto=format&fit=crop&q=80",
                     "linkedinUrl": "https://www.linkedin.com/in/martin-sterling-director",
+                    "facebookUrl": "https://www.facebook.com/martinsterlingdirector",
+                    "websiteUrl": "https://sterlingproductions.co.uk",
+                    "imdbUrl": "https://www.imdb.com/name/nm5829104",
                     "companiesHouseUrl": None,
                     "companies": ["Sterling Productions Ltd"],
                     "associatedFestivals": ["Pinco Pallino Film Festival"],

@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import {
   ExternalLink,
   Building2,
-  AlertTriangle,
   ShieldAlert,
   User,
   Film,
+  Globe,
 } from 'lucide-react';
 import { KeyPerson } from '../../types/investigation';
 
@@ -49,7 +49,6 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {keyPersonnel.map((person, idx) => {
-          const hasConflict = person.isFestivalMillSuspect || person.hasDistributionOverlap;
           const initials = person.name
             .split(' ')
             .map((n) => n[0])
@@ -61,14 +60,10 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
           return (
             <div
               key={idx}
-              className={`rounded-2xl p-4.5 border transition-all flex flex-col justify-between ${
-                hasConflict
-                  ? 'bg-darkroom-surface/90 border-rose-500/40 shadow-lg shadow-rose-950/20 ring-1 ring-rose-500/20'
-                  : 'bg-darkroom-surface/80 border-darkroom-border hover:border-zinc-700/80 shadow-md'
-              }`}
+              className="rounded-2xl p-4.5 border border-darkroom-border bg-darkroom-surface/90 hover:border-zinc-700/80 shadow-md transition-all flex flex-col justify-between"
             >
               <div className="space-y-3.5">
-                {/* Header: Avatar, Name & Conflict Status */}
+                {/* Header: Avatar & Name */}
                 <div className="flex items-start gap-3">
                   <div className="relative shrink-0">
                     {person.avatarUrl && !hasImgError ? (
@@ -76,39 +71,18 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
                         src={person.avatarUrl}
                         alt={person.name}
                         onError={() => handleImageError(person.name)}
-                        className={`size-12 rounded-xl object-cover bg-darkroom-card border ${
-                          hasConflict ? 'border-rose-400/50 ring-2 ring-rose-500/30' : 'border-darkroom-border'
-                        }`}
+                        className="size-12 rounded-xl object-cover bg-darkroom-card border border-darkroom-border shadow-xs"
                       />
                     ) : (
-                      <div
-                        className={`size-12 rounded-xl flex items-center justify-center font-bold text-sm border ${
-                          hasConflict
-                            ? 'bg-rose-950/60 text-rose-300 border-rose-500/40 ring-2 ring-rose-500/30'
-                            : 'bg-midnight-royal/40 text-white border-darkroom-border'
-                        }`}
-                      >
+                      <div className="size-12 rounded-xl flex items-center justify-center font-bold text-sm bg-midnight-royal/40 text-white border border-darkroom-border shadow-xs">
                         {initials || <User className="size-5 text-slate-300" />}
                       </div>
-                    )}
-                    {hasConflict && (
-                      <span
-                        className="absolute -bottom-1 -right-1 size-4 rounded-full bg-rose-500 border-2 border-darkroom-bg flex items-center justify-center"
-                        title="High Conflict / Risk Flagged"
-                      >
-                        <AlertTriangle className="size-2.5 text-white" />
-                      </span>
                     )}
                   </div>
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-1">
                       <h4 className="text-sm font-bold text-white truncate font-sans">{person.name}</h4>
-                      {hasConflict && (
-                        <span className="shrink-0 text-[10px] font-mono font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">
-                          Risk Flag
-                        </span>
-                      )}
                     </div>
 
                     {/* Roles Badges */}
@@ -129,17 +103,17 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
                   </div>
                 </div>
 
-                {/* External Verified Links (LinkedIn, Companies House) */}
-                <div className="flex flex-wrap gap-2 pt-1">
+                {/* External Verified Links (LinkedIn, Companies House, Facebook, Website, IMDb, Twitter) */}
+                <div className="flex flex-wrap gap-1.5 pt-1">
                   {person.linkedinUrl && (
                     <a
                       href={person.linkedinUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#0077b5]/15 hover:bg-[#0077b5]/30 text-[#38bdf8] border border-[#0077b5]/40 text-xs font-semibold transition-all hover:text-white group"
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#0077b5]/15 hover:bg-[#0077b5]/30 text-[#38bdf8] border border-[#0077b5]/40 text-xs font-semibold transition-all hover:text-white group"
                       title={`View ${person.name}'s LinkedIn Profile`}
                     >
-                      <svg className="size-3.5 fill-current" viewBox="0 0 24 24">
+                      <svg className="size-3 fill-current" viewBox="0 0 24 24">
                         <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
                       </svg>
                       <span>LinkedIn</span>
@@ -152,11 +126,68 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
                       href={person.companiesHouseUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-500/15 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-500/30 text-xs font-semibold transition-all hover:text-white group"
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-indigo-500/15 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-500/30 text-xs font-semibold transition-all hover:text-white group"
                       title="View Official Corporate Filings & Directorships"
                     >
-                      <Building2 className="size-3.5 text-indigo-400" />
+                      <Building2 className="size-3 text-indigo-400" />
                       <span>Gov Registry</span>
+                      <ExternalLink className="size-2.5 opacity-60 group-hover:opacity-100" />
+                    </a>
+                  )}
+
+                  {person.facebookUrl && (
+                    <a
+                      href={person.facebookUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#1877f2]/15 hover:bg-[#1877f2]/30 text-[#60a5fa] border border-[#1877f2]/30 text-xs font-semibold transition-all hover:text-white group"
+                      title={`View ${person.name}'s Facebook Profile`}
+                    >
+                      <svg className="size-3 fill-current" viewBox="0 0 24 24">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                      </svg>
+                      <span>Facebook</span>
+                      <ExternalLink className="size-2.5 opacity-60 group-hover:opacity-100" />
+                    </a>
+                  )}
+
+                  {person.websiteUrl && (
+                    <a
+                      href={person.websiteUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30 text-xs font-semibold transition-all hover:text-white group"
+                      title={`Visit ${person.name}'s Personal Website`}
+                    >
+                      <Globe className="size-3 text-emerald-400" />
+                      <span>Website</span>
+                      <ExternalLink className="size-2.5 opacity-60 group-hover:opacity-100" />
+                    </a>
+                  )}
+
+                  {person.imdbUrl && (
+                    <a
+                      href={person.imdbUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-500/15 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 text-xs font-semibold transition-all hover:text-white group"
+                      title={`View ${person.name}'s IMDb Profile`}
+                    >
+                      <Film className="size-3 text-amber-400" />
+                      <span>IMDb</span>
+                      <ExternalLink className="size-2.5 opacity-60 group-hover:opacity-100" />
+                    </a>
+                  )}
+
+                  {person.twitterUrl && (
+                    <a
+                      href={person.twitterUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-500/15 hover:bg-slate-500/30 text-slate-300 border border-slate-500/30 text-xs font-semibold transition-all hover:text-white group"
+                      title={`View ${person.name} on X/Twitter`}
+                    >
+                      <span className="font-bold text-[11px]">𝕏</span>
                       <ExternalLink className="size-2.5 opacity-60 group-hover:opacity-100" />
                     </a>
                   )}
@@ -185,15 +216,15 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
                   </div>
                 )}
 
-                {/* Flags Pill List */}
+                {/* Flags Pill List (Contextual Highlights) */}
                 {person.flags && person.flags.length > 0 && (
                   <div className="flex flex-wrap gap-1 pt-1">
                     {person.flags.map((flag, fIdx) => (
                       <span
                         key={fIdx}
-                        className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded bg-rose-500/15 text-rose-300 border border-rose-500/30"
+                        className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20"
                       >
-                        <ShieldAlert className="size-2.5 text-rose-400" />
+                        <ShieldAlert className="size-2.5 text-amber-400" />
                         <span>{flag}</span>
                       </span>
                     ))}

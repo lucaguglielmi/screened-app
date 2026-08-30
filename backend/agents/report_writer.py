@@ -5,7 +5,14 @@ from typing import Dict, List, Optional
 from pydantic import BaseModel, Field
 from google.genai import types
 
-from backend.models import AtomicClaim, CandidateEntity, SourceRecord
+from backend.models import (
+    AtomicClaim,
+    CandidateEntity,
+    SourceRecord,
+    PreviousEditionRecord,
+    PreviousEditionAward,
+    PreviousEditionPress,
+)
 from backend.agents.contradiction_analyst import DisputeRecord
 from backend.services.gemini_client import GeminiClient
 
@@ -20,6 +27,7 @@ class DossierReport(BaseModel):
     unresolvedQuestions: List[str] = Field(default_factory=list)
     filmmakerChecklist: List[str] = Field(default_factory=list)
     keyPersons: List[str] = Field(default_factory=list)
+    previousEditions: List[PreviousEditionRecord] = Field(default_factory=list)
 
 
 class ReportWriterAgent:
@@ -52,6 +60,7 @@ class ReportWriterAgent:
                     "Verify corporate registration in official government entity database.",
                 ],
                 keyPersons=[],
+                previousEditions=[],
             )
 
         claims_summary = [
@@ -97,6 +106,7 @@ CRITICAL EDITORIAL RULES:
 4. Eliminate AI generalities, speculative fluff, and filler transitions (e.g. avoid 'It is important to note', 'Screened investigated', 'Filmmakers should be mindful').
 5. Keep all sections dense, factual, and concise (1-2 structured paragraphs max per section).
 6. Extract key organizers, directors, or prominent individuals associated with the festival from the evidence into a list of strings formatted as 'Name - Role' (e.g. 'Arthur Smith - Festival Director'). If none are found, return an empty list.
+7. PREVIOUS EDITIONS: Extract past edition history, screening venues/dates, and official award winners with film titles and URLs if present in the evidence.
 
 Return a JSON object conforming to this schema:
 {{
@@ -106,7 +116,31 @@ Return a JSON object conforming to this schema:
   "participantFeedback": "string (1-2 concise paragraphs citing specific quoted filmmaker testimonies, delay lengths in weeks, and communication logs)",
   "unresolvedQuestions": ["factual question 1", "factual question 2"],
   "filmmakerChecklist": ["actionable due-diligence step 1", "actionable step 2"],
-  "keyPersons": ["Name - Role"]
+  "keyPersons": ["Name - Role"],
+  "previousEditions": [
+    {{
+      "year": 2024,
+      "editionNumber": "32nd Edition",
+      "heldLocation": "Curzon Soho, London",
+      "heldDates": "Oct 20-30, 2024",
+      "awards": [
+        {{
+          "awardName": "Grand Jury Prize",
+          "winnerTitle": "Film Title",
+          "recipientName": "Director Name",
+          "winnerUrl": "https://..."
+        }}
+      ],
+      "pressCoverage": [
+        {{
+          "headline": "Variety review",
+          "publisher": "Variety",
+          "url": "https://..."
+        }}
+      ],
+      "notes": "string"
+    }}
+  ]
 }}
 """
         try:
@@ -120,6 +154,16 @@ Return a JSON object conforming to this schema:
             )
 
             raw = json.loads(response.text or "{}")
+            
+            raw_editions = raw.get("previousEditions", [])
+            parsed_editions = []
+            for ed in raw_editions:
+                if isinstance(ed, dict) and "year" in ed:
+                    try:
+                        parsed_editions.append(PreviousEditionRecord.model_validate(ed))
+                    except Exception:
+                        pass
+
             return DossierReport(
                 executiveSummary=raw.get("executiveSummary", f"Investigation completed for {entity.name} with {len(claims)} verified claims."),
                 festivalOverview=raw.get("festivalOverview", "Verified festival details compiled from public records."),
@@ -132,15 +176,13 @@ Return a JSON object conforming to this schema:
                     "Confirm screening format requirements",
                 ]),
                 keyPersons=raw.get("keyPersons", []),
+                previousEditions=parsed_editions,
             )
         except Exception as e:
             logger.exception(f"ReportWriter failed: {e}")
             return DossierReport(
                 executiveSummary=f"Investigation completed for {entity.name}. Extracted {len(claims)} verified claims across {len(sources)} sources.",
-                festivalOverview="Festival details compiled from verified web excerpts.",
-                organizerProfile="Organizer details compiled from public records.",
-                participantFeedback="Community feedback compiled from public discussions.",
-                unresolvedQuestions=["Confirm physical screening dates."],
-                filmmakerChecklist=["Review festival rules and terms."],
+                filmmakerChecklist=["Review official festival regulations", "Check entry fee deadlines"],
                 keyPersons=[],
+                previousEditions=[],
             )

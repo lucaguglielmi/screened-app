@@ -9,8 +9,9 @@ import {
   CheckCircle2,
   Loader2,
   ChevronRight,
+  ChevronDown,
+  ChevronUp,
   Terminal,
-  Cpu,
   AlertTriangle,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -225,6 +226,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, is
   const [selectedStepIndex, setSelectedStepIndex] = useState<number | null>(null);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [showEventLogTooltip, setShowEventLogTooltip] = useState(false);
+  const [isStepLogExpanded, setIsStepLogExpanded] = useState(false);
   const eventsEndRef = useRef<HTMLDivElement>(null);
 
   // Timer
@@ -325,9 +327,10 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, is
     return matchEvent ? matchEvent.message.replace('Executing task API:', 'Searching:') : null;
   }, [events]);
 
-  // Deduplicated display events for stream console
+  // Deduplicated display events for stream console, reversed so newest is at the top
   const displayEvents = useMemo(() => {
-    return events.filter((evt, i, arr) => !i || arr[i - 1].message !== evt.message);
+    const deduped = events.filter((evt, i, arr) => !i || arr[i - 1].message !== evt.message);
+    return [...deduped].reverse();
   }, [events]);
 
   const isRunning = status !== 'READY' && status !== 'FAILED' && status !== 'CANCELLED';
@@ -403,88 +406,59 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, is
       animate={{ opacity: 1, y: 0 }}
       className="max-w-4xl mx-auto space-y-6"
     >
-      {/* 1. Header Banner */}
-      <div className={`p-6 sm:p-7 rounded-3xl bg-darkroom-surface flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 shadow-2xl shadow-black/80 relative overflow-hidden ${status === 'FAILED' ? 'border border-red-500/20' : ''}`}>
+      {/* 1. Unified Progress & Pipeline Header */}
+      <div className={`p-5 sm:p-7 rounded-3xl bg-darkroom-surface shadow-2xl shadow-black/80 space-y-5 sm:space-y-6 relative overflow-hidden ${status === 'FAILED' ? 'border border-red-500/20' : ''}`}>
         {/* Glow ambient accent behind header */}
         <div className={`absolute -right-20 -top-20 size-60 rounded-full blur-3xl pointer-events-none ${status === 'FAILED' ? 'bg-red-500/10' : 'bg-midnight-royal/20'}`} />
         <div className={`absolute -left-20 -bottom-20 size-60 rounded-full blur-3xl pointer-events-none ${status === 'FAILED' ? 'bg-rose-500/5' : 'bg-tool-diligence/10'}`} />
 
-        <div className="space-y-1.5 z-10 min-w-0 flex-1">
-          <div className={`flex items-center gap-2 text-xs font-mono uppercase tracking-wider ${status === 'FAILED' ? 'text-red-400' : 'text-tool-diligence'}`}>
-            {status === 'FAILED' ? (
-              <AlertTriangle className="size-3.5" />
-            ) : (
-              <Loader2 className={`size-3.5 ${reducedMotion || status === 'READY' ? '' : 'animate-spin'}`} />
-            )}
-            <span className="font-semibold">
-              {status === 'FAILED' ? 'Investigation Halted' : status === 'READY' ? 'Investigation Complete' : 'Autonomous Multi-Agent Pipeline Active'}
-            </span>
-          </div>
-          <h2 className="font-serif text-2xl sm:text-3xl font-bold text-white tracking-tight break-words flex items-center flex-wrap gap-2 sm:gap-3">
-            <span>Investigating {festivalName}</span>
-            {festivalName === 'Pinco Pallino Film Festival' && (
-              <span className="inline-flex items-center rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-sans font-medium text-amber-400 border border-amber-500/20 tracking-normal whitespace-nowrap mt-1 sm:mt-0">
-                Demo Only
+        {/* Top bar: Title + Status + Timers */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-darkroom-border/60 pb-4 relative z-10">
+          <div className="space-y-1 min-w-0 flex-1">
+            <div className={`flex items-center gap-2 text-xs font-mono uppercase tracking-wider ${status === 'FAILED' ? 'text-red-400' : 'text-tool-diligence'}`}>
+              {status === 'FAILED' ? (
+                <AlertTriangle className="size-3.5" />
+              ) : (
+                <Loader2 className={`size-3.5 ${reducedMotion || status === 'READY' ? '' : 'animate-spin'}`} />
+              )}
+              <span className="font-semibold">
+                {status === 'FAILED' ? 'Investigation Halted' : status === 'READY' ? 'Investigation Complete' : 'Autonomous Pipeline Active'}
               </span>
-            )}
-          </h2>
-          <p className="text-sm sm:text-base text-slate-400 leading-relaxed max-w-2xl break-words">
-            {status === 'FAILED' 
-              ? 'A critical error was encountered during the pipeline execution.' 
-              : 'Executing live Parallel Search API calls and Gemini claim extraction across 3 domains.'}
-          </p>
-        </div>
+            </div>
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-white tracking-tight break-words flex items-center flex-wrap gap-2 sm:gap-3">
+              <span>Investigating {festivalName}</span>
+              {festivalName === 'Pinco Pallino Film Festival' && (
+                <span className="inline-flex items-center rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-sans font-medium text-amber-400 border border-amber-500/20 tracking-normal whitespace-nowrap mt-1 sm:mt-0">
+                  Demo Only
+                </span>
+              )}
+            </h2>
+          </div>
 
-        <div className="flex flex-col items-start sm:items-end gap-2 z-10 shrink-0 border-t sm:border-t-0 border-darkroom-border/40 pt-3 sm:pt-0 w-full sm:w-auto mt-2 sm:mt-0">
-          <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-2">
+          <div className="flex items-center gap-2 z-10 shrink-0 w-full sm:w-auto justify-between sm:justify-end">
             <div className="px-3 py-1.5 rounded-xl bg-darkroom-bg border border-darkroom-border text-slate-300 text-[11px] font-mono font-medium flex items-center gap-1.5 shadow-inner">
               <span>⏱️ {Math.floor(elapsedSeconds / 60)}:{(elapsedSeconds % 60).toString().padStart(2, '0')}</span>
-              <span className="text-slate-500">· Avg ~35s</span>
             </div>
-            
+
             {onCancel && status !== 'READY' && status !== 'FAILED' && status !== 'CANCELLED' && !isCelebrating && (
               <button 
                 onClick={onCancel}
                 className="px-3 py-1.5 rounded-xl bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border hover:border-rose-500/50 text-slate-400 hover:text-rose-400 text-[11px] font-mono transition-colors cursor-pointer shadow-sm active:scale-95"
               >
-                Cancel / Refine
+                Cancel
               </button>
             )}
-          </div>
 
-          <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-2">
             <div className="px-3 py-1.5 rounded-xl bg-tool-diligence/15 text-tool-diligence text-[11px] font-mono font-semibold flex items-center gap-2">
               <span className={`size-1.5 rounded-full bg-tool-diligence ${reducedMotion || isCelebrating || status === 'FAILED' ? '' : 'animate-pulse'}`} />
               <span>{isCelebrating ? 'COMPLETED' : status}</span>
-            </div>
-            <div className="text-[11px] font-mono text-slate-400 px-1">
-              <span className="text-white font-semibold">{progressPercent}%</span>
+              <span className="text-white font-semibold ml-1">{progressPercent}%</span>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* 2. THE SINGLE NEAT TIMELINE */}
-      <div className="p-4 sm:p-6 md:p-8 rounded-3xl bg-darkroom-surface shadow-2xl shadow-black/80 space-y-4 sm:space-y-6 relative overflow-hidden">
-        {/* Timeline Header Subtitle */}
-        <div className="flex items-center justify-between pb-2">
-          <div className="flex items-center gap-2">
-            <Cpu className="size-4 text-indigo-400" />
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300">
-              Investigation Pipeline Sequence
-            </span>
-          </div>
-          <span className="text-xs font-mono text-slate-400 hidden sm:inline">
-            Hover any node to inspect agent context
-          </span>
         </div>
 
         {/* Mobile Compact Progress Bar */}
-        <div className="block md:hidden space-y-1.5 pt-1 pb-2">
-          <div className="flex items-center justify-between text-[11px] font-mono text-slate-400">
-            <span>Progress Track</span>
-            <span className="text-tool-diligence font-semibold">{progressPercent}%</span>
-          </div>
+        <div className="block md:hidden space-y-1.5">
           <div className="h-2 w-full bg-darkroom-bg rounded-full overflow-hidden border border-darkroom-border">
             <motion.div
               className="h-full bg-gradient-to-r from-tool-diligence via-emerald-400 to-teal-300 rounded-full shadow-sm shadow-[var(--color-tool-diligence)]/50"
@@ -748,7 +722,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, is
                     <Loader2 className={`size-3 ${reducedMotion ? '' : 'animate-spin'}`} />
                   )}
                   {activeStepState === 'COMPLETED' && <CheckCircle2 className="size-3" />}
-                  <span>{activeStepState === 'PENDING' ? 'PENDING (NOT STARTED)' : activeStepState}</span>
+                  <span>{activeStepState === 'PENDING' ? 'PENDING' : activeStepState}</span>
                 </span>
               </div>
             </div>
@@ -773,27 +747,51 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, is
               <p className="text-sm text-slate-300 leading-relaxed">{activeStep.description}</p>
 
               {activeStepState === 'COMPLETED' ? (
-                <div className="mt-2 p-3 rounded-xl bg-darkroom-bg border border-darkroom-border/50 max-h-48 overflow-y-auto">
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold block mb-2 sticky top-0 bg-darkroom-bg pb-1">
-                    Executed Step Log
-                  </span>
-                  <div className="space-y-1.5">
-                    {events
-                      .filter(e => activeStep.activeStatus.includes(e.eventType === 'DOMAIN_SEARCH_STARTED' || e.eventType === 'CLAIMS_EXTRACTING' ? 'RESEARCHING' : 
-                                    e.eventType === 'CONTRADICTIONS_ANALYZING' ? 'ANALYZING_CONTRADICTIONS' : 
-                                    e.eventType === 'DOSSIER_SYNTHESIZING' ? 'ASSEMBLING_DOSSIER' : 
-                                    e.eventType === 'PLANNING_STARTED' ? 'PLANNING' : 
-                                    e.eventType === 'CANDIDATES_FOUND' ? 'AWAITING_ENTITY_CONFIRMATION' : 'DISAMBIGUATING'))
-                      .map((e, idx) => (
-                        <div key={idx} className="flex items-start gap-2 text-[11px] font-mono">
-                          <span className="text-slate-500 shrink-0 mt-0.5">[{new Date(e.timestamp).toLocaleTimeString()}]</span>
-                          <span className="text-slate-300">{e.message}</span>
-                        </div>
-                      ))}
-                    {events.length === 0 && (
-                      <div className="text-slate-500 text-xs italic">No specific log events captured for this step.</div>
+                <div className="mt-2 rounded-xl bg-darkroom-bg border border-darkroom-border/50 overflow-hidden">
+                  <button
+                    type="button"
+                    onClick={() => setIsStepLogExpanded(!isStepLogExpanded)}
+                    className="w-full px-3.5 py-2.5 flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold hover:text-slate-200 hover:bg-darkroom-card/50 transition-colors cursor-pointer"
+                  >
+                    <span>Executed Step Log</span>
+                    <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                      <span>
+                        {events.filter(e => activeStep.activeStatus.includes(e.eventType === 'DOMAIN_SEARCH_STARTED' || e.eventType === 'CLAIMS_EXTRACTING' ? 'RESEARCHING' : 
+                                      e.eventType === 'CONTRADICTIONS_ANALYZING' ? 'ANALYZING_CONTRADICTIONS' : 
+                                      e.eventType === 'DOSSIER_SYNTHESIZING' ? 'ASSEMBLING_DOSSIER' : 
+                                      e.eventType === 'PLANNING_STARTED' ? 'PLANNING' : 
+                                      e.eventType === 'CANDIDATES_FOUND' ? 'AWAITING_ENTITY_CONFIRMATION' : 'DISAMBIGUATING')).length} events
+                      </span>
+                      {isStepLogExpanded ? <ChevronUp className="size-3.5" /> : <ChevronDown className="size-3.5" />}
+                    </div>
+                  </button>
+
+                  <AnimatePresence>
+                    {isStepLogExpanded && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="p-3 pt-1 max-h-48 overflow-y-auto space-y-1.5 border-t border-darkroom-border/40"
+                      >
+                        {events
+                          .filter(e => activeStep.activeStatus.includes(e.eventType === 'DOMAIN_SEARCH_STARTED' || e.eventType === 'CLAIMS_EXTRACTING' ? 'RESEARCHING' : 
+                                        e.eventType === 'CONTRADICTIONS_ANALYZING' ? 'ANALYZING_CONTRADICTIONS' : 
+                                        e.eventType === 'DOSSIER_SYNTHESIZING' ? 'ASSEMBLING_DOSSIER' : 
+                                        e.eventType === 'PLANNING_STARTED' ? 'PLANNING' : 
+                                        e.eventType === 'CANDIDATES_FOUND' ? 'AWAITING_ENTITY_CONFIRMATION' : 'DISAMBIGUATING'))
+                          .map((e, idx) => (
+                            <div key={idx} className="flex items-start gap-2 text-[11px] font-mono">
+                              <span className="text-slate-500 shrink-0 mt-0.5">[{new Date(e.timestamp).toLocaleTimeString()}]</span>
+                              <span className="text-slate-300">{e.message}</span>
+                            </div>
+                          ))}
+                        {events.length === 0 && (
+                          <div className="text-slate-500 text-xs italic">No specific log events captured for this step.</div>
+                        )}
+                      </motion.div>
                     )}
-                  </div>
+                  </AnimatePresence>
                 </div>
               ) : (
                 <div className="space-y-1.5">

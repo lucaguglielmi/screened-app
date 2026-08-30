@@ -48,27 +48,40 @@ def create_domain_agent(domain: str, investigation_id: str, entity_info: Dict[st
         tools=[task_tool]
     )
 
-async def _run_domain_agent(domain: ResearchDomain, plan: DomainPlan, investigation_id: str, entity_info: Dict[str, Any], session_service: FirestoreSessionService) -> dict:
-    agent = create_domain_agent(domain.value, investigation_id, entity_info)
-    runner = Runner(
-        agent=agent,
-        app_name="screened",
-        session_service=session_service
-    )
-    
-    # We pump the runner stream to trigger tools (the tool itself streams to SSE)
-    prompt_text = f"Extract claims for objective: {plan.objective} with queries: {plan.searchQueries}"
-    new_msg = types.Content(role="user", parts=[types.Part.from_text(text=prompt_text)])
-    async for _ in runner.run_async(user_id="default_user", session_id=investigation_id, new_message=new_msg):
-        pass
-        
-    # The output of the agent should be the claims, but we can also just fetch the state.
-    # For now, return what we can. We will integrate this in the state machine.
-    # Assuming the tool call populates the session state
-    session = await session_service.get_session(app_name="screened", user_id="default_user", session_id=investigation_id)
-    if session:
-        return session.state.get(f"{domain.value}_result", {"claims": [], "basis": []})
-    return {"claims": [], "basis": []}
+async def _run_domain_agent(
+    domain: ResearchDomain,
+    plan: DomainPlan,
+    investigation_id: str,
+    entity_info: Dict[str, Any],
+    session_service: FirestoreSessionService,
+) -> dict:
+    """Execute deep parallel search and extraction directly for a specific domain."""
+    try:
+        await broadcaster.emit(
+            investigation_id=investigation_id,
+            event_type=EventType.DOMAIN_SEARCH_STARTED,
+            agent_name=f"{domain.value}Agent",
+            message=f"Starting deep research on {domain.value} domain ({len(plan.searchQueries)} verification targets)...",
+        )
+
+        result = await _parallel_task_run(
+            investigation_id=investigation_id,
+            domain=domain.value,
+            entity_info=entity_info,
+            objective=plan.objective,
+            queries=plan.searchQueries,
+            processor="core",
+        )
+
+        session = await session_service.get_session(app_name="screened", user_id="default_user", session_id=investigation_id)
+        if session:
+            session.state[f"{domain.value}_result"] = result
+            await session_service.save_session(session)
+
+        return result if isinstance(result, dict) else {"claims": [], "basis": []}
+    except Exception as e:
+        logger.exception(f"Error in _run_domain_agent for {domain.value}: {e}")
+        return {"claims": [], "basis": []}
 
 
 async def run_parallel_domain_agents(
@@ -76,7 +89,7 @@ async def run_parallel_domain_agents(
     investigation_id: str,
     entity_info: Dict[str, Any]
 ) -> dict:
-    """Execute all three domain research agents concurrently via ADK LlmAgent."""
+    """Execute all three domain research agents concurrently."""
     
     session_service = FirestoreSessionService()
     f_task = _run_domain_agent(ResearchDomain.FESTIVAL, plans["FESTIVAL"], investigation_id, entity_info, session_service)
@@ -94,8 +107,8 @@ async def run_parallel_domain_agents(
                 agent_name=f"{domain.value}Agent",
                 message=f"Research failed for {domain.value}: {str(res)}"
             )
-            return {}
-        return res if isinstance(res, dict) else {}
+            return {"claims": [], "basis": []}
+        return res if isinstance(res, dict) else {"claims": [], "basis": []}
 
     results = {
         ResearchDomain.FESTIVAL: await process_res(ResearchDomain.FESTIVAL, f_res),

@@ -116,6 +116,29 @@ export interface CorporateEntity {
   notes?: string;
 }
 
+export interface PreviousEditionAward {
+  awardName: string;
+  winnerTitle: string;
+  recipientName?: string;
+  winnerUrl?: string;
+}
+
+export interface PreviousEditionPress {
+  headline: string;
+  publisher: string;
+  url?: string;
+}
+
+export interface PreviousEditionRecord {
+  year: number;
+  editionNumber?: string;
+  heldLocation?: string;
+  heldDates?: string;
+  awards?: PreviousEditionAward[];
+  pressCoverage?: PreviousEditionPress[];
+  notes?: string;
+}
+
 export interface DossierReport {
   executiveSummary: string;
   festivalOverview: string;
@@ -124,6 +147,7 @@ export interface DossierReport {
   unresolvedQuestions: string[];
   filmmakerChecklist: string[];
   keyPersons?: string[];
+  previousEditions?: PreviousEditionRecord[];
   corporateEntity?: CorporateEntity;
 }
 
@@ -304,6 +328,11 @@ export interface KeyPerson {
   avatarUrl?: string;
   linkedinUrl?: string;
   companiesHouseUrl?: string;
+  facebookUrl?: string;
+  websiteUrl?: string;
+  imdbUrl?: string;
+  wikipediaUrl?: string;
+  twitterUrl?: string;
 }
 
 export interface DeepVettingDimension {

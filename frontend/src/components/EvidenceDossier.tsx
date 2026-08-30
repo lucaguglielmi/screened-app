@@ -29,6 +29,7 @@ import { ContradictionPanel } from './ContradictionPanel';
 import { DetailDial } from './DetailDial';
 import { CredibilityRadar } from './CredibilityRadar';
 import { DeepVettingMatrix } from './investigation/DeepVettingMatrix';
+import { PreviousEditionsSection } from './investigation/PreviousEditionsSection';
 const EntityProvenanceGraph = lazy(() => import('./diagrams/EntityProvenanceGraph').then(m => ({ default: m.EntityProvenanceGraph })));
 import { playDialClick, soundEffects } from '../utils/audio';
 import {
@@ -505,9 +506,18 @@ export const EvidenceDossier: React.FC<Props> = ({
     return matchesDomain && matchesSearch && matchesStatus;
   });
 
-  const factsCount = claims.filter((c) => c.claimKind === 'FACT').length;
-  const allegationsCount = claims.filter((c) => c.claimKind === 'ALLEGATION').length;
-  const corroboratedCount = claims.filter((c) => c.status === 'CORROBORATED').length;
+  const factsCount = claims.filter((c) => {
+    const k = (c.claimKind || '').toUpperCase();
+    return k === 'FACT' || !k.includes('ALLEGATION');
+  }).length;
+  const allegationsCount = claims.filter((c) => {
+    const k = (c.claimKind || '').toUpperCase();
+    return k === 'ALLEGATION' || k.includes('ALLEGATION');
+  }).length;
+  const corroboratedCount = claims.filter((c) => {
+    const s = (c.status || '').toUpperCase();
+    return s === 'CORROBORATED' || s === 'VERIFIED_MATCH' || s === 'SUPPORTED' || (c.evidence && c.evidence.length > 0);
+  }).length;
 
   const getStatusBadge = (status: AtomicClaim['status']) => {
     switch (status) {
@@ -805,35 +815,42 @@ export const EvidenceDossier: React.FC<Props> = ({
 
       {/* Sticky Header with Section Name, Burger Navigation & 3-Bar Detail Selector */}
       {dossier && (
-        <div className="sticky top-0 z-40 bg-darkroom-bg/95 backdrop-blur-xl p-3 sm:px-5 rounded-2xl border border-darkroom-border shadow-2xl shadow-black/80 no-print transition-all space-y-2">
+        <div className="sticky top-16 sm:top-20 z-20 bg-darkroom-bg/95 backdrop-blur-xl p-3 sm:px-5 rounded-2xl border border-darkroom-border shadow-2xl shadow-black/80 no-print transition-all space-y-2">
           <div className="flex items-center justify-between gap-3 relative">
-            {/* Left: Burger button + Current Section Name */}
-            <div className="flex items-center gap-2.5 min-w-0 flex-1">
-              <button
-                type="button"
-                onClick={() => {
-                  soundEffects.playClick();
-                  setIsNavOpen(!isNavOpen);
-                }}
-                className={`p-2 rounded-xl border transition-all cursor-pointer flex items-center justify-center shrink-0 ${
-                  isNavOpen
-                    ? 'bg-midnight-royal text-white border-midnight-royal shadow-sm'
-                    : 'bg-darkroom-card text-slate-300 hover:text-white border-darkroom-border hover:bg-darkroom-surface'
-                }`}
-                title="Dossier Table of Contents"
-                aria-expanded={isNavOpen}
-              >
-                <Menu className="size-4" />
-              </button>
+            {/* Left: Burger button + Current Section Name (Visible in Full Mode) */}
+            {normalizedDensity === 'FULL_EVIDENCE' ? (
+              <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundEffects.playClick();
+                    setIsNavOpen(!isNavOpen);
+                  }}
+                  className={`p-2 rounded-xl border transition-all cursor-pointer flex items-center justify-center shrink-0 ${
+                    isNavOpen
+                      ? 'bg-midnight-royal text-white border-midnight-royal shadow-sm'
+                      : 'bg-darkroom-card text-slate-300 hover:text-white border-darkroom-border hover:bg-darkroom-surface'
+                  }`}
+                  title="Dossier Table of Contents"
+                  aria-expanded={isNavOpen}
+                >
+                  <Menu className="size-4" />
+                </button>
 
-              <div className="flex items-center gap-2 min-w-0 truncate">
-                <span className="size-2 rounded-full bg-indigo-500 animate-pulse shrink-0" />
-                <span className="text-xs font-mono text-slate-400 shrink-0">Reading:</span>
-                <span className="text-xs font-mono font-semibold text-white truncate">
-                  {activeSection}
-                </span>
+                <div className="flex items-center gap-2 min-w-0 truncate">
+                  <span className="size-2 rounded-full bg-indigo-500 animate-pulse shrink-0" />
+                  <span className="text-xs font-mono text-slate-400 shrink-0">Reading:</span>
+                  <span className="text-xs font-mono font-semibold text-white truncate">
+                    {activeSection}
+                  </span>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="flex items-center gap-2 min-w-0 flex-1">
+                <span className="text-xs font-mono text-slate-400">View Mode:</span>
+                <span className="text-xs font-mono font-semibold text-tool-diligence">Executive Brief</span>
+              </div>
+            )}
 
             {/* Right: Quick metric counter */}
             <div className="hidden sm:flex items-center gap-2 text-[11px] font-mono text-slate-400 shrink-0">
@@ -850,7 +867,7 @@ export const EvidenceDossier: React.FC<Props> = ({
 
             {/* Burger Dropdown Menu */}
             <AnimatePresence>
-              {isNavOpen && (
+              {isNavOpen && normalizedDensity === 'FULL_EVIDENCE' && (
                 <motion.div
                   ref={navMenuRef}
                   initial={{ opacity: 0, y: 8, scale: 0.96 }}
@@ -874,6 +891,7 @@ export const EvidenceDossier: React.FC<Props> = ({
                       { id: 'section-radar', name: 'Transparency & Credibility', icon: ShieldCheck },
                       { id: 'section-overview', name: 'Executive Overview', icon: FileText },
                       { id: 'section-forensic-matrix', name: '360° Forensic Matrix (7 Vectors)', icon: Fingerprint },
+                      { id: 'section-previous-editions', name: 'Previous Editions & Track Record', icon: Calendar },
                       { id: 'section-disputes', name: 'Contradictions & Disputes', icon: AlertTriangle, condition: disputes.length > 0 },
                       { id: 'section-network', name: 'Entity Architecture & Network', icon: Layers, condition: normalizedDensity === 'FULL_EVIDENCE' },
                       { id: 'section-domains', name: '3-Domain Synthesis', icon: Globe, condition: normalizedDensity === 'FULL_EVIDENCE' },
@@ -1094,6 +1112,11 @@ export const EvidenceDossier: React.FC<Props> = ({
           {/* 360° Forensic Matrix (7 Vectors, Key Personnel & Directorship Network) */}
           <div id="section-forensic-matrix" data-section-name="360° Forensic Matrix (7 Vectors)">
             <DeepVettingMatrix report={deepVetting} festivalName={entity.name} />
+          </div>
+
+          {/* Previous Editions & Historical Track Record */}
+          <div id="section-previous-editions" data-section-name="Previous Editions & Track Record">
+            <PreviousEditionsSection previousEditions={dossier.previousEditions} festivalName={entity.name} />
           </div>
 
           {/* Side-by-Side Contradictions Panel */}
