@@ -54,96 +54,54 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
   }
 
   return (
-    <div className="p-6 rounded-2xl bg-amber-500/10 border border-amber-500/20 space-y-6">
-      <div className="flex items-center justify-between border-b border-amber-500/20 pb-3">
-        <div className="flex items-center gap-2 text-sm font-mono uppercase tracking-wider text-amber-400">
-          <Scale className="size-4.5" />
-          <span>Factual Contradictions & Direct Disputes ({disputes.length})</span>
+    <div className="py-4 space-y-4 border-b border-darkroom-border/30 pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-darkroom-border/40 pb-2.5">
+        <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-amber-400 font-semibold">
+          <Scale className="size-3.5" />
+          <span>Factual Contradictions &amp; Disputed Claims ({disputes.length})</span>
         </div>
-        <span className="text-xs font-mono text-amber-400/80">
-          Side-by-side evidence comparison
+        <span className="text-[11px] font-mono text-slate-400">
+          Side-by-side evidence cross-examination
         </span>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-4">
         {disputes.map((dispute, idx) => (
           <div
             key={dispute.id || idx}
-            className="p-4 rounded-xl bg-darkroom-surface border border-amber-500/30 space-y-4 shadow-sm"
+            className="p-4 sm:p-5 rounded-2xl bg-darkroom-surface/60 border border-darkroom-border/60 space-y-3.5"
           >
             <div className="flex items-start justify-between gap-4">
               <div>
-                <span className="font-mono text-[10px] uppercase px-2 py-0.5 rounded bg-amber-500/20 text-amber-300">
+                <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20">
                   {dispute.category}
                 </span>
-                <h3 className="font-serif font-semibold text-base text-darkroom-text mt-1.5">
+                <h3 className="font-serif font-semibold text-base text-white mt-1.5">
                   {dispute.pointOfContention}
                 </h3>
               </div>
             </div>
 
             {/* Split Comparison Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {/* Claim A */}
-              <div className="p-3.5 rounded-lg bg-black/40 space-y-2">
-                <div className="text-[11px] font-mono uppercase text-blue-400 font-semibold flex items-center gap-1.5">
+              <div className="p-3 rounded-xl bg-darkroom-bg/70 border border-darkroom-border/40 space-y-1.5">
+                <div className="text-[10px] font-mono uppercase text-indigo-300 font-semibold flex items-center gap-1.5">
                   <span>Position A</span>
                 </div>
-                <div className="text-xs font-medium text-darkroom-text">
+                <div className="text-xs font-medium text-slate-100 leading-relaxed">
                   "{dispute.claimA}"
                 </div>
 
                 {dispute.evidenceA && dispute.evidenceA.length > 0 && (
-                  <div className="space-y-2 pt-1 text-[11px]">
+                  <div className="space-y-1.5 pt-1 text-[11px]">
                     {(dispute.evidenceA as FlexibleEvidence[]).map((ev, eIdx) => {
                       const { quote, url, title } = resolveEvidence(ev);
                       if (!quote && !url) return null;
                       return (
                         <div
                           key={eIdx}
-                          className="border-l-2 border-blue-500/60 bg-blue-500/5 rounded-r-md px-2.5 py-1.5 text-darkroom-muted space-y-1"
-                        >
-                          {quote && (
-                            <div className="italic text-slate-200 font-sans text-xs">
-                              "{quote}"
-                            </div>
-                          )}
-                          {url && (
-                            <a
-                              href={url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-400 hover:text-blue-300 hover:underline inline-flex items-center gap-1 text-[10px] font-mono"
-                            >
-                              Source: {title}{' '}
-                              <ExternalLink className="size-2.5" />
-                            </a>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-
-              {/* Claim B */}
-              <div className="p-3.5 rounded-lg bg-black/40 space-y-2">
-                <div className="text-[11px] font-mono uppercase text-slate-400 font-semibold flex items-center gap-1.5">
-                  <span>Position B (Opposing)</span>
-                </div>
-                <div className="text-xs font-medium text-darkroom-text">
-                  "{dispute.claimB}"
-                </div>
-
-                {dispute.evidenceB && dispute.evidenceB.length > 0 && (
-                  <div className="space-y-2 pt-1 text-[11px]">
-                    {(dispute.evidenceB as FlexibleEvidence[]).map((ev, eIdx) => {
-                      const { quote, url, title } = resolveEvidence(ev);
-                      if (!quote && !url) return null;
-                      return (
-                        <div
-                          key={eIdx}
-                          className="border-l-2 border-slate-500/60 bg-slate-500/5 rounded-r-md px-2.5 py-1.5 text-darkroom-muted space-y-1"
+                          className="border-l-2 border-indigo-500/60 bg-indigo-500/5 rounded-r-md px-2.5 py-1 text-slate-300 space-y-1"
                         >
                           {quote && (
                             <div className="italic text-slate-200 font-sans text-xs">
@@ -167,18 +125,64 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
                   </div>
                 )}
               </div>
-            </div>
 
-            {/* Guidance for Filmmaker */}
-            <div className="p-3 rounded-lg bg-amber-500/10 text-xs text-amber-200 flex items-start gap-2">
-              <AlertTriangle className="size-4 shrink-0 mt-0.5 text-amber-400" />
-              <div>
-                <span className="font-semibold font-mono uppercase text-[10px]">
-                  Filmmaker Recommendation:{' '}
-                </span>
-                <span>{dispute.guidance}</span>
+              {/* Claim B */}
+              <div className="p-3 rounded-xl bg-darkroom-bg/70 border border-darkroom-border/40 space-y-1.5">
+                <div className="text-[10px] font-mono uppercase text-amber-300 font-semibold flex items-center gap-1.5">
+                  <span>Position B (Contradictory / Divergent)</span>
+                </div>
+                <div className="text-xs font-medium text-slate-100 leading-relaxed">
+                  "{dispute.claimB}"
+                </div>
+
+                {dispute.evidenceB && dispute.evidenceB.length > 0 && (
+                  <div className="space-y-1.5 pt-1 text-[11px]">
+                    {(dispute.evidenceB as FlexibleEvidence[]).map((ev, eIdx) => {
+                      const { quote, url, title } = resolveEvidence(ev);
+                      if (!quote && !url) return null;
+                      return (
+                        <div
+                          key={eIdx}
+                          className="border-l-2 border-amber-500/60 bg-amber-500/5 rounded-r-md px-2.5 py-1 text-slate-300 space-y-1"
+                        >
+                          {quote && (
+                            <div className="italic text-slate-200 font-sans text-xs">
+                              "{quote}"
+                            </div>
+                          )}
+                          {url && (
+                            <a
+                              href={url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-amber-400 hover:text-amber-300 hover:underline inline-flex items-center gap-1 text-[10px] font-mono"
+                            >
+                              Source: {title}{' '}
+                              <ExternalLink className="size-2.5" />
+                            </a>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             </div>
+
+            {/* Reconciliation Guidance */}
+            {dispute.guidance && (
+              <div className="p-3 rounded-xl bg-darkroom-bg/50 border border-darkroom-border/40 flex items-start gap-2.5 text-xs">
+                <AlertTriangle className="size-4 text-amber-400 shrink-0 mt-0.5" />
+                <div className="space-y-0.5">
+                  <div className="font-mono text-[10px] uppercase text-amber-400 font-bold">
+                    Filmmaker Advisory &amp; Verification Guidance
+                  </div>
+                  <div className="text-slate-300 leading-relaxed font-sans text-xs">
+                    {dispute.guidance}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>

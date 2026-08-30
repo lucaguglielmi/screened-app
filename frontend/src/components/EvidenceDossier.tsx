@@ -58,8 +58,8 @@ import {
   Code,
   Fingerprint,
   Sparkles,
-  Quote,
   Menu,
+  Share2,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -816,47 +816,45 @@ export const EvidenceDossier: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Top Profile & Header Card (Non-sticky) */}
-      <div className="bg-darkroom-surface p-6 rounded-3xl shadow-2xl space-y-5 border border-darkroom-border">
-        <div className="flex flex-col sm:flex-row items-start justify-between gap-4 border-b border-paper-card border-darkroom-card pb-4">
-          <div className="space-y-3 min-w-0 flex-1">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-400">
-                <FileText className="size-4" />
-                <span>Evidence Dossier</span>
-              </div>
-              <h1 className="flex items-center flex-wrap gap-2 sm:gap-3 font-serif text-2xl sm:text-3xl font-semibold text-white break-words">
-                <span>{entity.name}</span>
-                {entity.name === 'Pinco Pallino Film Festival' && (
-                  <span className="inline-flex items-center rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-sans font-medium text-amber-400 border border-amber-500/20 tracking-normal whitespace-nowrap">
-                    Demo Only
-                  </span>
-                )}
-              </h1>
+      {/* Top Profile & Header Masthead (Editorial Clean Layout) */}
+      <div className="pt-2 pb-6 border-b border-darkroom-border/40 space-y-4">
+        <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
+          <div className="space-y-2 min-w-0 flex-1">
+            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-400">
+              <FileText className="size-3.5" />
+              <span>Due Diligence Dossier</span>
             </div>
+            <h1 className="flex items-center flex-wrap gap-2 sm:gap-3 font-serif text-3xl sm:text-4xl font-semibold text-white tracking-tight break-words">
+              <span>{entity.name}</span>
+              {entity.name === 'Pinco Pallino Film Festival' && (
+                <span className="inline-flex items-center rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-mono font-medium text-amber-400 border border-amber-500/20 tracking-normal whitespace-nowrap">
+                  Demo Fixture
+                </span>
+              )}
+            </h1>
 
-            {/* Reorganized top facts - small & appropriate hierarchy */}
-            <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-slate-300">
+            {/* Editorial Metadata Bar */}
+            <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-slate-400 pt-1">
               {entity.cityCountry && (
                 <div className="flex items-center gap-1.5">
-                  <MapPin className="size-3.5 text-indigo-400 opacity-80" />
+                  <MapPin className="size-3.5 text-slate-400" />
                   <span>{entity.cityCountry}</span>
                 </div>
               )}
               {entity.foundedYear && (
                 <div className="flex items-center gap-1.5">
-                  <Calendar className="size-3.5 text-indigo-400 opacity-80" />
+                  <Calendar className="size-3.5 text-slate-400" />
                   <span>Est. {entity.foundedYear}</span>
                 </div>
               )}
               {entity.officialDomain && (
                 <div className="flex items-center gap-1.5">
-                  <Globe className="size-3.5 text-indigo-400 opacity-80" />
+                  <Globe className="size-3.5 text-slate-400" />
                   <a
                     href={`https://${entity.officialDomain}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-indigo-300 hover:underline truncate max-w-[200px]"
+                    className="hover:text-indigo-300 hover:underline truncate max-w-[220px]"
                   >
                     {entity.officialDomain}
                   </a>
@@ -866,23 +864,23 @@ export const EvidenceDossier: React.FC<Props> = ({
           </div>
         </div>
 
-        {/* Claim Metric Strip */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center pt-2">
-          <div className="p-3 rounded-2xl bg-darkroom-surface border border-darkroom-border">
-            <div className="text-[10px] font-mono uppercase text-slate-400">Facts</div>
-            <div className="text-base font-semibold text-blue-400">{factsCount}</div>
+        {/* Claim Metric Strip (Flat, Calm) */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2">
+          <div className="py-2.5 px-3 rounded-xl bg-darkroom-surface/60 border border-darkroom-border/60 text-center">
+            <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400">Facts</div>
+            <div className="text-base font-semibold text-slate-200 font-mono">{factsCount}</div>
           </div>
-          <div className="p-3 rounded-2xl bg-darkroom-surface border border-darkroom-border">
-            <div className="text-[10px] font-mono uppercase text-slate-400">Allegations</div>
-            <div className="text-base font-semibold text-slate-400">{allegationsCount}</div>
+          <div className="py-2.5 px-3 rounded-xl bg-darkroom-surface/60 border border-darkroom-border/60 text-center">
+            <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400">Allegations</div>
+            <div className="text-base font-semibold text-slate-400 font-mono">{allegationsCount}</div>
           </div>
-          <div className="p-3 rounded-2xl bg-darkroom-surface border border-darkroom-border">
-            <div className="text-[10px] font-mono uppercase text-slate-400">Corroborated</div>
-            <div className="text-base font-semibold text-emerald-400">{corroboratedCount}</div>
+          <div className="py-2.5 px-3 rounded-xl bg-darkroom-surface/60 border border-darkroom-border/60 text-center">
+            <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400">Corroborated</div>
+            <div className="text-base font-semibold text-emerald-400 font-mono">{corroboratedCount}</div>
           </div>
-          <div className="p-3 rounded-2xl bg-darkroom-surface border border-darkroom-border">
-            <div className="text-[10px] font-mono uppercase text-slate-400">Disputes</div>
-            <div className="text-base font-semibold text-amber-400">{disputes.length}</div>
+          <div className="py-2.5 px-3 rounded-xl bg-darkroom-surface/60 border border-darkroom-border/60 text-center">
+            <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400">Disputes</div>
+            <div className="text-base font-semibold text-amber-400 font-mono">{disputes.length}</div>
           </div>
         </div>
       </div>
@@ -1180,13 +1178,14 @@ export const EvidenceDossier: React.FC<Props> = ({
           {/* Executive Overview */}
           <div
             id="section-overview"
-            className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-3 scroll-mt-28 sm:scroll-mt-32"
+            className="py-4 space-y-2.5 scroll-mt-28 sm:scroll-mt-32 border-b border-darkroom-border/30 pb-6"
             data-section-name="Executive Overview"
           >
-            <div className="text-xs font-mono uppercase tracking-wider text-slate-400">
-              Executive Overview
+            <div className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-2">
+              <FileText className="size-3.5 text-indigo-400" />
+              <span>Executive Overview</span>
             </div>
-            <p className="font-serif text-base sm:text-lg text-white leading-relaxed whitespace-pre-line">
+            <p className="font-serif text-base sm:text-lg text-slate-100 leading-relaxed whitespace-pre-line">
               {dossier.executiveSummary}
             </p>
           </div>
@@ -1212,9 +1211,13 @@ export const EvidenceDossier: React.FC<Props> = ({
           {normalizedDensity === 'FULL_EVIDENCE' && (
             <div
               id="section-network"
-              className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4 scroll-mt-28 sm:scroll-mt-32"
+              className="py-4 space-y-3 scroll-mt-28 sm:scroll-mt-32 border-b border-darkroom-border/30 pb-6"
               data-section-name="Entity Architecture & Network"
             >
+              <div className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-2">
+                <Share2 className="size-3.5 text-indigo-400" />
+                <span>Entity Architecture &amp; Directorship Network</span>
+              </div>
               <Suspense
                 fallback={
                   <div className="p-4 text-center text-xs text-slate-500 animate-pulse">
@@ -1231,34 +1234,34 @@ export const EvidenceDossier: React.FC<Props> = ({
           {normalizedDensity === 'FULL_EVIDENCE' && (
             <div
               id="section-domains"
-              className="grid grid-cols-1 md:grid-cols-3 gap-4 scroll-mt-28 sm:scroll-mt-32"
+              className="grid grid-cols-1 md:grid-cols-3 gap-6 py-4 scroll-mt-28 sm:scroll-mt-32 border-b border-darkroom-border/30 pb-6"
               data-section-name="3-Domain Synthesis"
             >
               {/* Festival Domain */}
-              <div className="p-5 rounded-3xl bg-darkroom-surface shadow-2xl space-y-3">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-400 border-b border-paper-card border-darkroom-card pb-2">
-                  <Layers className="size-4" />
-                  <span>Festival Profile</span>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-300 font-semibold border-b border-darkroom-border/40 pb-2">
+                  <Layers className="size-3.5 text-indigo-400" />
+                  <span>Festival Identity</span>
                 </div>
-                <p className="text-sm text-slate-200 leading-relaxed">{dossier.festivalOverview}</p>
+                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">{dossier.festivalOverview}</p>
               </div>
 
               {/* Organizer Domain */}
-              <div className="p-5 rounded-3xl bg-darkroom-surface shadow-2xl space-y-3">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-400 border-b border-paper-card border-darkroom-card pb-2">
-                  <Building2 className="size-4" />
-                  <span>Organizer Profile</span>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-300 font-semibold border-b border-darkroom-border/40 pb-2">
+                  <Building2 className="size-3.5 text-indigo-400" />
+                  <span>Corporate &amp; Organizer</span>
                 </div>
-                <p className="text-sm text-slate-200 leading-relaxed">{dossier.organizerProfile}</p>
+                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">{dossier.organizerProfile}</p>
               </div>
 
               {/* Participants Domain */}
-              <div className="p-5 rounded-3xl bg-darkroom-surface shadow-2xl space-y-3">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-400 border-b border-paper-card border-darkroom-card pb-2">
-                  <Users className="size-4" />
-                  <span>Community Accounts</span>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-300 font-semibold border-b border-darkroom-border/40 pb-2">
+                  <Users className="size-3.5 text-indigo-400" />
+                  <span>Community &amp; Filmmakers</span>
                 </div>
-                <p className="text-sm text-slate-200 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
                   {dossier.participantFeedback}
                 </p>
               </div>
@@ -1269,46 +1272,48 @@ export const EvidenceDossier: React.FC<Props> = ({
           {dossier?.corporateEntity && (
             <div
               id="section-corporate"
-              className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl border border-darkroom-border space-y-4 scroll-mt-28 sm:scroll-mt-32"
+              className="py-4 space-y-4 scroll-mt-28 sm:scroll-mt-32 border-b border-darkroom-border/30 pb-6"
               data-section-name="Corporate Entity Intelligence"
             >
-              <div className="flex flex-col gap-2 border-b border-paper-card border-darkroom-card pb-4">
-                <div className="flex items-center gap-2 text-sm font-mono uppercase tracking-wider text-amber-400 font-semibold">
-                  <Building2 className="size-4" />
-                  <span>Corporate Entity Intelligence</span>
+              <div className="flex flex-col gap-1.5 border-b border-darkroom-border/40 pb-3">
+                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-amber-400 font-semibold">
+                  <Building2 className="size-3.5" />
+                  <span>Corporate Entity Registry</span>
                 </div>
-                <h3 className="text-xl font-bold text-white">{dossier.corporateEntity.legalName}</h3>
-                {dossier.corporateEntity.status && (
-                  <div className="inline-flex items-center self-start gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-400 text-xs font-semibold">
-                    <AlertTriangle className="size-3" />
-                    {dossier.corporateEntity.status}
-                  </div>
-                )}
+                <div className="flex items-center gap-3 flex-wrap">
+                  <h3 className="text-lg font-bold text-white font-serif">{dossier.corporateEntity.legalName}</h3>
+                  {dossier.corporateEntity.status && (
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 text-xs font-mono font-medium">
+                      <AlertTriangle className="size-3" />
+                      {dossier.corporateEntity.status}
+                    </span>
+                  )}
+                </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
-                <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-1">
+                <div className="space-y-3">
                   <div>
-                    <h4 className="text-xs font-mono uppercase text-slate-500 mb-1">Registration Details</h4>
-                    <p className="text-sm text-slate-300">
-                      <span className="text-slate-400">Reg No:</span> {dossier.corporateEntity.registrationNumber || 'N/A'}<br />
-                      <span className="text-slate-400">Incorporated:</span> {dossier.corporateEntity.incorporationDate || 'N/A'}<br />
-                      <span className="text-slate-400">Address:</span> {dossier.corporateEntity.registeredAddress || 'N/A'}
+                    <h4 className="text-[11px] font-mono uppercase text-slate-400 mb-1">Registration Details</h4>
+                    <p className="text-xs sm:text-sm text-slate-300 font-mono space-y-1">
+                      <div><span className="text-slate-400">Reg No:</span> {dossier.corporateEntity.registrationNumber || 'N/A'}</div>
+                      <div><span className="text-slate-400">Incorporated:</span> {dossier.corporateEntity.incorporationDate || 'N/A'}</div>
+                      <div><span className="text-slate-400">Registered Office:</span> {dossier.corporateEntity.registeredAddress || 'N/A'}</div>
                     </p>
                   </div>
                   {dossier.corporateEntity.notes && (
                     <div>
-                      <h4 className="text-xs font-mono uppercase text-slate-500 mb-1">Analyst Notes</h4>
-                      <p className="text-sm text-slate-300 leading-relaxed bg-darkroom-card p-3 rounded-lg border border-darkroom-border">
+                      <h4 className="text-[11px] font-mono uppercase text-slate-400 mb-1">Analyst Notes</h4>
+                      <p className="text-xs sm:text-sm text-slate-300 leading-relaxed p-3 rounded-xl bg-darkroom-surface/50 border border-darkroom-border/50">
                         {dossier.corporateEntity.notes}
                       </p>
                     </div>
                   )}
                 </div>
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {dossier.corporateEntity.associatedFestivals && dossier.corporateEntity.associatedFestivals.length > 0 && (
                     <div>
-                      <h4 className="text-xs font-mono uppercase text-slate-500 mb-1">Associated Festivals</h4>
-                      <ul className="list-disc list-inside text-sm text-slate-300">
+                      <h4 className="text-[11px] font-mono uppercase text-slate-400 mb-1">Associated Festivals</h4>
+                      <ul className="list-disc list-inside text-xs sm:text-sm text-slate-300 space-y-1">
                         {dossier.corporateEntity.associatedFestivals.map((fest, idx) => (
                           <li key={idx}>{fest}</li>
                         ))}
@@ -1317,8 +1322,8 @@ export const EvidenceDossier: React.FC<Props> = ({
                   )}
                   {dossier.corporateEntity.connectedEntities && dossier.corporateEntity.connectedEntities.length > 0 && (
                     <div>
-                      <h4 className="text-xs font-mono uppercase text-slate-500 mb-1">Connected Entities</h4>
-                      <ul className="list-disc list-inside text-sm text-slate-300">
+                      <h4 className="text-[11px] font-mono uppercase text-slate-400 mb-1">Connected Entities</h4>
+                      <ul className="list-disc list-inside text-xs sm:text-sm text-slate-300 space-y-1">
                         {dossier.corporateEntity.connectedEntities.map((ent, idx) => (
                           <li key={idx}>{ent}</li>
                         ))}
@@ -1332,11 +1337,11 @@ export const EvidenceDossier: React.FC<Props> = ({
 
           {/* Atomic Claims & Evidence Citations (Rendered in Full mode) */}
           {normalizedDensity === 'FULL_EVIDENCE' && (
-            <div id="section-claims" className="space-y-4 scroll-mt-28 sm:scroll-mt-32" data-section-name="Atomic Claims & Citations">
+            <div id="section-claims" className="space-y-4 scroll-mt-28 sm:scroll-mt-32 border-b border-darkroom-border/30 pb-8" data-section-name="Atomic Claims & Citations">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <h2 className="font-serif text-xl font-semibold text-white flex items-center gap-2">
-                  <ShieldCheck className="size-5 text-indigo-400" /> Atomic Claims & Evidence
-                  Citations
+                  <ShieldCheck className="size-4 text-indigo-400" />
+                  <span>Atomic Claims &amp; Evidence Ledger</span>
                 </h2>
 
                 {/* In-Dossier Search & Domain Filters */}
@@ -1348,11 +1353,11 @@ export const EvidenceDossier: React.FC<Props> = ({
                       value={searchFilter}
                       onChange={(e) => setSearchFilter(e.target.value)}
                       placeholder="Filter claims..."
-                      className="w-full pl-8 pr-2.5 py-1 text-xs rounded-xl bg-darkroom-card text-white placeholder-slate-400 focus:outline-none"
+                      className="w-full pl-8 pr-2.5 py-1 text-xs rounded-xl bg-darkroom-surface/80 border border-darkroom-border/60 text-white placeholder-slate-400 focus:outline-none"
                     />
                   </div>
 
-                  <div className="flex items-center gap-1 p-1 rounded-xl bg-darkroom-card text-xs">
+                  <div className="flex items-center gap-1 p-1 rounded-xl bg-darkroom-surface/80 border border-darkroom-border/60 text-xs">
                     {['ALL', 'FESTIVAL', 'ORGANIZER', 'PARTICIPANTS'].map((d) => (
                       <button
                         key={d}
@@ -1374,17 +1379,17 @@ export const EvidenceDossier: React.FC<Props> = ({
               <div className="flex items-center overflow-x-auto pb-2 gap-2 hide-scrollbar no-print text-xs font-mono">
                 {[
                   { id: 'ALL', label: 'All Claims' },
-                  { id: 'CORROBORATED', label: 'Corroborated (Verified)' },
-                  { id: 'SUPPORTED', label: 'Single Source (Supported)' },
+                  { id: 'CORROBORATED', label: 'Corroborated' },
+                  { id: 'SUPPORTED', label: 'Single Source' },
                   { id: 'DISPUTED', label: 'Disputed' }
                 ].map(f => (
                   <button
                     key={f.id}
                     onClick={() => setClaimStatusFilter(f.id)}
-                    className={`shrink-0 px-3 py-1.5 rounded-full transition-all cursor-pointer ${
+                    className={`shrink-0 px-3 py-1 rounded-full transition-all cursor-pointer ${
                       claimStatusFilter === f.id
-                        ? 'bg-indigo-600 text-white shadow-md font-medium'
-                        : 'bg-darkroom-card border border-darkroom-border text-slate-400 hover:text-white hover:bg-darkroom-surface'
+                        ? 'bg-midnight-royal text-white border border-tool-diligence/40 font-medium'
+                        : 'bg-darkroom-surface/50 border border-darkroom-border/50 text-slate-400 hover:text-white hover:bg-darkroom-surface'
                     }`}
                   >
                     {f.label}
@@ -1395,7 +1400,7 @@ export const EvidenceDossier: React.FC<Props> = ({
               {/* Claims List */}
               <div className="space-y-3">
                 {filteredClaims.length === 0 ? (
-                  <div className="p-8 rounded-3xl bg-darkroom-surface text-center text-xs text-slate-400">
+                  <div className="p-8 rounded-2xl bg-darkroom-surface/40 border border-darkroom-border/40 text-center text-xs text-slate-400">
                     No claims matched your filter query "{searchFilter}".
                   </div>
                 ) : (
@@ -1405,10 +1410,10 @@ export const EvidenceDossier: React.FC<Props> = ({
                     return (
                       <div
                         key={claim.id}
-                        className="rounded-2xl bg-darkroom-surface border border-darkroom-border/60 shadow-xl transition-all overflow-hidden"
+                        className="rounded-2xl bg-darkroom-surface/60 border border-darkroom-border/60 transition-all overflow-hidden"
                       >
                         <div className="p-4 sm:p-5 flex flex-col sm:flex-row items-start justify-between gap-4">
-                          <div className="space-y-3 flex-1">
+                          <div className="space-y-2 flex-1">
                             <div className="flex items-center gap-2 flex-wrap">
                               {getKindBadge(claim.claimKind)}
                               <span className="text-xs text-slate-400 font-mono">
@@ -1426,51 +1431,41 @@ export const EvidenceDossier: React.FC<Props> = ({
                               )}
                             </div>
 
-                            <div className="text-base font-semibold text-white leading-relaxed">
+                            <div className="text-sm sm:text-base font-semibold text-slate-100 leading-relaxed">
                               {claim.statement}
                             </div>
 
                             {/* Direct Quoted Evidence References & Sources */}
                             {claim.evidence && claim.evidence.length > 0 && (
-                              <div className="space-y-2.5 pt-1">
-                                {claim.evidence.map((ev, evIdx) => {
-                                  const quoteText = ev.exactExcerpt || (ev as unknown as { snippet?: string }).snippet || '';
-                                  const sourceTitle = ev.sourceTitle || ev.sourceDomain || (ev as unknown as { domain?: string }).domain || 'Verified Trade Source';
-                                  const sourceUrl = ev.sourceUrl || (ev as unknown as { url?: string }).url;
-
+                              <div className="space-y-2 pt-1">
+                                {claim.evidence.map((ev, idx) => {
+                                  const quoteText =
+                                    ev.exactExcerpt ||
+                                    (ev as unknown as { quote?: string }).quote;
                                   return (
                                     <div
-                                      key={evIdx}
-                                      className="p-3.5 rounded-xl bg-darkroom-card border border-darkroom-border/80 space-y-2 text-xs"
+                                      key={idx}
+                                      className="p-2.5 rounded-xl bg-darkroom-bg/70 border border-darkroom-border/40 space-y-1.5"
                                     >
-                                      <div className="flex flex-wrap items-center justify-between gap-2">
-                                        <div className="flex items-center gap-1.5 font-mono text-xs text-slate-300">
-                                          <Quote className="size-3.5 text-tool-diligence shrink-0" />
-                                          <span className="font-semibold text-white">
-                                            {sourceTitle}
-                                          </span>
-                                          {ev.sourceDomain && (
-                                            <span className="text-slate-400 font-normal">
-                                              ({ev.sourceDomain})
-                                            </span>
-                                          )}
-                                        </div>
-
-                                        {sourceUrl && (
+                                      <div className="flex items-center justify-between text-xs">
+                                        <span className="font-mono text-slate-400 text-[11px] truncate max-w-[280px] sm:max-w-md">
+                                          Source {idx + 1}: {ev.sourceDomain || ev.sourceTitle || 'Web record'}
+                                        </span>
+                                        {ev.sourceUrl && (
                                           <a
-                                            href={sourceUrl}
+                                            href={ev.sourceUrl}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="text-tool-diligence hover:text-tool-diligence-hover hover:underline inline-flex items-center gap-1 font-mono text-xs font-medium"
+                                            className="text-indigo-400 hover:text-indigo-300 transition-colors flex items-center gap-1 font-mono text-[11px]"
                                           >
-                                            <span>View Source</span>
+                                            <span>Verify</span>
                                             <ExternalLink className="size-3" />
                                           </a>
                                         )}
                                       </div>
 
                                       {quoteText && (
-                                        <blockquote className="text-slate-200 italic border-l-2 border-tool-diligence/60 pl-3 py-0.5 text-xs leading-relaxed">
+                                        <blockquote className="text-slate-300 italic border-l-2 border-tool-diligence/40 pl-3 py-0.5 text-xs leading-relaxed">
                                           "{quoteText}"
                                         </blockquote>
                                       )}
@@ -1519,19 +1514,19 @@ export const EvidenceDossier: React.FC<Props> = ({
           {/* Filmmaker Checklist & Unresolved Questions */}
           <div
             id="section-checklist"
-            className="grid grid-cols-1 md:grid-cols-2 gap-4 scroll-mt-28 sm:scroll-mt-32"
+            className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4 scroll-mt-28 sm:scroll-mt-32 border-b border-darkroom-border/30 pb-6"
             data-section-name="Filmmaker Action Checklist"
           >
             {/* Due Diligence Checklist */}
-            <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4">
-              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-emerald-400 border-b border-paper-card border-darkroom-card pb-2">
-                <ListChecks className="size-4" />
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-300 font-semibold border-b border-darkroom-border/40 pb-2">
+                <ListChecks className="size-3.5 text-emerald-400" />
                 <span>Filmmaker Action Checklist</span>
               </div>
-              <ul className="space-y-3 text-sm text-slate-200">
+              <ul className="space-y-2.5 text-xs sm:text-sm text-slate-300">
                 {dossier.filmmakerChecklist.map((item, idx) => (
-                  <li key={idx} className="flex items-start gap-2.5 leading-relaxed">
-                    <span className="font-mono text-emerald-400 font-bold">[{idx + 1}]</span>
+                  <li key={idx} className="flex items-start gap-2 leading-relaxed">
+                    <span className="font-mono text-emerald-400 font-semibold shrink-0">[{idx + 1}]</span>
                     <span>{item}</span>
                   </li>
                 ))}
@@ -1539,15 +1534,15 @@ export const EvidenceDossier: React.FC<Props> = ({
             </div>
 
             {/* Unresolved Questions */}
-            <div className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4">
-              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-amber-400 border-b border-paper-card border-darkroom-card pb-2">
-                <HelpCircle className="size-4" />
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-300 font-semibold border-b border-darkroom-border/40 pb-2">
+                <HelpCircle className="size-3.5 text-amber-400" />
                 <span>Unresolved Questions</span>
               </div>
-              <ul className="space-y-3 text-sm text-slate-200">
+              <ul className="space-y-2.5 text-xs sm:text-sm text-slate-300">
                 {dossier.unresolvedQuestions.map((q, idx) => (
-                  <li key={idx} className="flex items-start gap-2.5 leading-relaxed">
-                    <span className="font-mono text-amber-400 font-bold">•</span>
+                  <li key={idx} className="flex items-start gap-2 leading-relaxed">
+                    <span className="font-mono text-amber-400 font-bold shrink-0">•</span>
                     <span>{q}</span>
                   </li>
                 ))}
@@ -1559,48 +1554,49 @@ export const EvidenceDossier: React.FC<Props> = ({
           {normalizedDensity === 'FULL_EVIDENCE' && (
             <div
               id="section-sources"
-              className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4 scroll-mt-28 sm:scroll-mt-32"
+              className="py-4 space-y-4 scroll-mt-28 sm:scroll-mt-32 border-b border-darkroom-border/30 pb-6"
               data-section-name="Discovered Web Sources"
             >
-              <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-paper-card border-darkroom-card pb-3 gap-3">
+              <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-darkroom-border/40 pb-3 gap-3">
                 <div className="space-y-1">
-                  <span className="text-sm font-mono uppercase tracking-wider text-slate-300">
-                    Discovered Web Sources ({sources.length})
-                  </span>
-                  <div className="text-[10px] font-mono text-slate-400 flex items-center gap-2">
-                    <div className="flex items-center gap-1"><span className="size-2 rounded-full bg-emerald-500"></span> Tier 1 (Official)</div>
-                    <div className="flex items-center gap-1"><span className="size-2 rounded-full bg-blue-500"></span> Tier 2 (Trade/Press)</div>
-                    <div className="flex items-center gap-1"><span className="size-2 rounded-full bg-amber-500"></span> Tier 3 (Community)</div>
+                  <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-300 font-semibold">
+                    <ExternalLink className="size-3.5 text-indigo-400" />
+                    <span>Discovered Web Sources ({sources.length})</span>
+                  </div>
+                  <div className="text-[10px] font-mono text-slate-400 flex items-center gap-3 pt-1">
+                    <div className="flex items-center gap-1"><span className="size-1.5 rounded-full bg-emerald-500"></span> Tier 1 (Official)</div>
+                    <div className="flex items-center gap-1"><span className="size-1.5 rounded-full bg-blue-500"></span> Tier 2 (Trade/Press)</div>
+                    <div className="flex items-center gap-1"><span className="size-1.5 rounded-full bg-amber-500"></span> Tier 3 (Community)</div>
                   </div>
                 </div>
                 
                 {/* Source Quality Distribution Indicator */}
-                <div className="w-full sm:w-48 space-y-1.5">
+                <div className="w-full sm:w-44 space-y-1">
                   <div className="flex items-center justify-between text-[10px] font-mono text-slate-400">
                     <span>Quality Distribution</span>
                     <span>{sources.length} Total</span>
                   </div>
-                  <div className="h-2 w-full rounded-full flex overflow-hidden bg-darkroom-card">
+                  <div className="h-1.5 w-full rounded-full flex overflow-hidden bg-darkroom-card">
                     {sourceStats.t1Pct > 0 && <div style={{ width: `${sourceStats.t1Pct}%` }} className="bg-emerald-500 transition-all duration-500" title={`Tier 1: ${sourceStats.tier1}`} />}
                     {sourceStats.t2Pct > 0 && <div style={{ width: `${sourceStats.t2Pct}%` }} className="bg-blue-500 transition-all duration-500" title={`Tier 2: ${sourceStats.tier2}`} />}
                     {sourceStats.t3Pct > 0 && <div style={{ width: `${sourceStats.t3Pct}%` }} className="bg-amber-500 transition-all duration-500" title={`Tier 3: ${sourceStats.tier3}`} />}
                   </div>
                 </div>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {sources.map((src) => (
-                  <div key={src.id} className="p-3 rounded-2xl bg-darkroom-card space-y-1">
+                  <div key={src.id} className="p-3 rounded-xl bg-darkroom-surface/50 border border-darkroom-border/50 space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-slate-300">
+                      <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-slate-400">
                         Tier {src.sourceTier} • {src.domain}
                       </span>
                       <a
                         href={src.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-indigo-400 hover:underline"
+                        className="text-indigo-400 hover:text-indigo-300"
                       >
-                        <ExternalLink className="size-3.5" />
+                        <ExternalLink className="size-3" />
                       </a>
                     </div>
                     <div className="font-medium text-xs text-slate-200 truncate">{src.title}</div>
@@ -1611,10 +1607,10 @@ export const EvidenceDossier: React.FC<Props> = ({
           )}
 
           {/* Legal Disclaimer & Experimental Product Notice Card */}
-          <div className="p-6 rounded-3xl bg-darkroom-surface/90 border border-darkroom-border text-slate-400 text-xs leading-relaxed space-y-3 shadow-xl">
-            <div className="flex items-center gap-2.5 text-slate-300 font-semibold font-mono text-xs uppercase tracking-wider">
-              <AlertTriangle className="size-4 text-amber-400 shrink-0" />
-              <span>Legal Disclaimer &amp; Experimental Product Notice</span>
+          <div className="py-5 px-6 rounded-2xl bg-darkroom-surface/40 border border-darkroom-border/40 text-slate-400 text-xs leading-relaxed space-y-2 shadow-sm">
+            <div className="flex items-center gap-2 text-slate-300 font-semibold font-mono text-xs uppercase tracking-wider">
+              <AlertTriangle className="size-3.5 text-amber-400 shrink-0" />
+              <span>Legal Advisory &amp; Experimental Notice</span>
             </div>
             <p className="text-slate-300 text-xs leading-relaxed">
               Screened is an experimental intelligence platform designed to assist filmmakers and creators in conducting due diligence on film festivals and funding opportunities. All findings, directorship graphs, and claim evaluations are synthesized automatically from publicly accessible internet records, corporate registries, and media archives.

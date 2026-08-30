@@ -254,57 +254,51 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
   };
 
   return (
-    <div className="space-y-6">
-      {/* Top Banner: Authenticity Radar & Health Metrics */}
-      <div className="p-6 rounded-2xl bg-gradient-to-r from-darkroom-surface via-darkroom-bg to-darkroom-surface border border-darkroom-border shadow-xl">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="space-y-2">
-            <div className="flex items-center space-x-2">
-              {!report && (
-                <span className="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/40 text-[11px] font-mono font-bold uppercase animate-pulse">
-                  PREVIEW DATA
-                </span>
-              )}
-              <span className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[11px] font-mono font-bold uppercase">
-                Spec 14 Forensic Audit
+    <div className="space-y-4 border-b border-darkroom-border/30 pb-6">
+      {/* Section Header: Authenticity Radar & Vector Tallies */}
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 py-2">
+        <div className="space-y-1.5 min-w-0 flex-1">
+          <div className="flex items-center space-x-2">
+            {!report && (
+              <span className="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-mono font-medium">
+                PREVIEW
               </span>
-              <span className="text-xs text-zinc-400 font-mono">
-                Generated: {new Date(activeReport.generatedAt).toLocaleDateString()}
-              </span>
+            )}
+            <span className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-1.5">
+              <ShieldCheck className="size-3.5 text-indigo-400" />
+              <span>360° Forensic Vector Matrix</span>
+            </span>
+          </div>
+          <h2 className="text-lg sm:text-xl font-bold text-white font-serif tracking-tight">
+            Multi-Vector Corroboration: <span className="text-indigo-400">{activeReport.festivalName}</span>
+          </h2>
+          <p className="text-xs text-slate-400 max-w-2xl leading-relaxed">
+            Multi-vector corroboration cross-examining corporate filings, WHOIS age, original entry rules, IMDb jury records, physical screening leases, and alumni footprint.
+          </p>
+        </div>
+
+        {/* Factual Vector Summary Tally */}
+        <div className="flex items-center gap-3 py-1.5 px-3 rounded-xl bg-darkroom-surface/50 border border-darkroom-border/50 shrink-0">
+          <div className="text-center">
+            <div className="text-lg font-bold font-mono text-emerald-400">
+              {activeReport.dimensions.filter(d => d.status === 'VERIFIED_AUTHENTIC').length}/{activeReport.dimensions.length}
             </div>
-            <h2 className="text-xl font-bold text-white font-serif tracking-tight flex items-center gap-2 flex-wrap">
-              <span>360° Forensic Vetting Matrix:</span>
-              <span className="text-indigo-400 break-words">{activeReport.festivalName}</span>
-            </h2>
-            <p className="text-xs text-zinc-300 max-w-2xl leading-relaxed">
-              Multi-vector corroboration cross-examining corporate filings, WHOIS age, original
-              entry rules, IMDb jury records, physical screening leases, and alumni footprint.
-            </p>
+            <span className="text-[9px] font-mono uppercase tracking-wider text-slate-400">
+              Vectors Verified
+            </span>
           </div>
 
-          {/* Factual Corroboration Summary Card */}
-          <div className="flex items-center gap-4 bg-black/40 p-4 rounded-2xl shrink-0">
-            <div className="text-center">
-              <div className="text-2xl font-black font-mono text-emerald-400">
-                {activeReport.dimensions.filter(d => d.status === 'VERIFIED_AUTHENTIC').length}/{activeReport.dimensions.length}
-              </div>
-              <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
-                Vectors Verified
-              </span>
-            </div>
+          <div className="h-6 w-px bg-darkroom-border/60" />
 
-            <div className="h-10 w-px bg-zinc-800" />
-
-            <div className="text-center">
-              <div
-                className={`text-2xl font-black font-mono ${activeReport.totalFlags === 0 ? 'text-zinc-400' : 'text-amber-400'}`}
-              >
-                {activeReport.totalFlags}
-              </div>
-              <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
-                Attention Points
-              </span>
+          <div className="text-center">
+            <div
+              className={`text-lg font-bold font-mono ${activeReport.totalFlags === 0 ? 'text-slate-400' : 'text-amber-400'}`}
+            >
+              {activeReport.totalFlags}
             </div>
+            <span className="text-[9px] font-mono uppercase tracking-wider text-slate-400">
+              Attention Points
+            </span>
           </div>
         </div>
       </div>

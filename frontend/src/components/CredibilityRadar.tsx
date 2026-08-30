@@ -108,10 +108,10 @@ export const CredibilityRadar: React.FC<Props> = ({ claims, disputes }) => {
   const totalCorroborated = claims.filter(c => c.status === 'CORROBORATED' || c.status === 'SUPPORTED').length;
 
   return (
-    <div className="p-6 rounded-2xl bg-darkroom-surface border border-darkroom-border space-y-5">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-darkroom-border pb-3">
+    <div className="py-3 border-b border-darkroom-border/30 pb-6 space-y-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-darkroom-border/40 pb-2.5">
         <div className="flex items-center gap-2">
-          <Sparkles className="size-4 text-indigo-400" />
+          <Sparkles className="size-3.5 text-indigo-400" />
           <span className="font-mono text-xs uppercase tracking-wider text-slate-300 font-semibold">
             Evidence-Based Corroboration Summary
           </span>
@@ -120,19 +120,19 @@ export const CredibilityRadar: React.FC<Props> = ({ claims, disputes }) => {
           <span className="text-xs font-mono text-slate-400">
             Verified Claims:
           </span>
-          <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-tool-diligence/10 text-tool-diligence border border-tool-diligence/20">
+          <span className="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
             {totalCorroborated}/{claims.length || '0'} Corroborated
           </span>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {dimensions.map((dim, idx) => {
           const Icon = dim.icon;
           return (
             <div
               key={idx}
-              className="p-3.5 rounded-xl bg-darkroom-card border border-darkroom-border space-y-2.5"
+              className="p-3.5 rounded-xl bg-darkroom-surface/60 border border-darkroom-border/60 space-y-2"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-xs font-medium text-slate-200">
@@ -144,12 +144,12 @@ export const CredibilityRadar: React.FC<Props> = ({ claims, disputes }) => {
                 </span>
               </div>
 
-              <div className="flex items-center justify-between text-[11px] font-mono pt-1">
+              <div className="flex items-center justify-between text-[11px] font-mono pt-0.5">
                 <span className="inline-flex items-center gap-1.5 text-slate-300">
                   {dim.isRisk ? (
                     <AlertTriangle className="size-3 shrink-0 text-amber-400" />
                   ) : (
-                    <ShieldCheck className="size-3 shrink-0 text-tool-diligence" />
+                    <ShieldCheck className="size-3 shrink-0 text-emerald-400" />
                   )}
                   <span className="truncate">{dim.status}</span>
                 </span>
