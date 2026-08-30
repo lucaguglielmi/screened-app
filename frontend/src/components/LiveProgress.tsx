@@ -15,11 +15,12 @@ import {
   AlertTriangle,
   Bell,
   Mail,
-  Check,
+  X,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useReducedMotion } from '../utils/motionTokens';
 import { soundEffects } from '../utils/audio';
+import { VerifiedTick } from './ui/VerifiedTick';
 
 interface Props {
   status: InvestigationStatus;
@@ -245,6 +246,27 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
   const [pushEnabled, setPushEnabled] = useState<boolean>(() => {
     return typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted';
   });
+  const [stickyDismissed, setStickyDismissed] = useState(false);
+  const [showStickyNotify, setShowStickyNotify] = useState(false);
+
+  const isPostDisambiguationRunning =
+    status !== 'DRAFT' &&
+    status !== 'DISAMBIGUATING' &&
+    status !== 'AWAITING_ENTITY_CONFIRMATION' &&
+    status !== 'READY' &&
+    status !== 'FAILED' &&
+    status !== 'CANCELLED';
+
+  // Trigger sticky bottom drawer 10 seconds after disambiguation finishes
+  useEffect(() => {
+    if (!isPostDisambiguationRunning || stickyDismissed) {
+      return;
+    }
+    const timer = setTimeout(() => {
+      setShowStickyNotify(true);
+    }, 10000);
+    return () => clearTimeout(timer);
+  }, [isPostDisambiguationRunning, stickyDismissed]);
 
   const handleRegisterEmail = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -878,20 +900,33 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
         </AnimatePresence>
       </div>
 
-      {/* 4. Come Back Later & Background Notifications Tray */}
+      {/* 4. Come Back Later & Background Notifications Card (In-Page) */}
       {isRunning && (
         <div className="rounded-3xl bg-darkroom-surface/90 border border-darkroom-border p-4 sm:p-5 shadow-xl space-y-3">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-darkroom-border/60 pb-3">
             <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-xl bg-midnight-royal/40 border border-tool-diligence/30 text-tool-diligence">
-                <Bell className="size-4" />
+              <div
+                className={`p-2 rounded-xl border ${
+                  isNotified
+                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                    : 'bg-midnight-royal/40 border-tool-diligence/30 text-tool-diligence'
+                }`}
+              >
+                {isNotified ? <VerifiedTick size={16} /> : <Bell className="size-4" />}
               </div>
               <div>
-                <h4 className="text-xs font-bold text-white font-sans">
-                  Come Back Later &amp; Get Notified
+                <h4 className="text-xs font-bold text-white font-sans flex items-center gap-2">
+                  <span>{isNotified ? 'Background Notification Active' : 'Come Back Later & Get Notified'}</span>
+                  {isNotified && (
+                    <span className="text-[10px] font-mono text-emerald-400 font-normal">
+                      (Will notify when ready)
+                    </span>
+                  )}
                 </h4>
                 <p className="text-[11px] text-slate-400">
-                  Feel free to close this tab. We can notify you via push and email as soon as the dossier is ready.
+                  {isNotified
+                    ? `Registered to ${notifyEmail}. Feel free to close or bookmark this tab — we'll notify you as soon as the dossier is ready.`
+                    : 'Feel free to close this tab. We can notify you via push and email as soon as the dossier is ready.'}
                 </p>
               </div>
             </div>
@@ -908,47 +943,48 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
                     : 'bg-darkroom-card hover:bg-darkroom-bg text-slate-300 hover:text-white border-darkroom-border'
                 }`}
               >
-                {pushEnabled ? <Check className="size-3.5" /> : <Bell className="size-3.5 text-tool-diligence" />}
+                {pushEnabled ? <VerifiedTick size={13} /> : <Bell className="size-3.5 text-tool-diligence" />}
                 <span>{pushEnabled ? 'Push Enabled' : 'Enable Browser Push'}</span>
               </button>
             )}
           </div>
 
-          {/* Email Notification Form */}
-          <form onSubmit={handleRegisterEmail} className="flex flex-col sm:flex-row items-center gap-2">
-            <div className="relative flex-1 w-full">
-              <Mail className="size-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
-              <input
-                type="email"
-                value={notifyEmail}
-                onChange={(e) => setNotifyEmail(e.target.value)}
-                placeholder="Enter your email for direct dossier link..."
-                className="w-full pl-10 pr-4 py-2 rounded-xl bg-darkroom-bg border border-darkroom-border text-xs text-white placeholder-slate-500 focus:outline-none focus:border-tool-diligence/50 font-mono"
-                disabled={isNotified || isSubmittingNotify}
-              />
+          {/* Email Notification Form or Permanent Confirmation Banner */}
+          {isNotified ? (
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-xs text-emerald-300 font-mono">
+              <div className="flex items-center gap-2">
+                <VerifiedTick size={15} />
+                <span>
+                  We&apos;ll email the direct dossier link to: <strong className="text-white">{notifyEmail}</strong>
+                </span>
+              </div>
+              <span className="text-[11px] text-emerald-400/80 px-2 py-0.5 rounded bg-emerald-500/15 border border-emerald-500/30">
+                Pending Synthesis
+              </span>
             </div>
-            <button
-              type="submit"
-              disabled={isNotified || isSubmittingNotify || !notifyEmail.includes('@')}
-              className={`w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-mono font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0 ${
-                isNotified
-                  ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
-                  : 'bg-midnight-royal hover:bg-midnight-royal/80 text-white border border-tool-diligence/40 shadow-sm disabled:opacity-40'
-              }`}
-            >
-              {isNotified ? (
-                <>
-                  <Check className="size-3.5 text-emerald-400" />
-                  <span>Email Registered</span>
-                </>
-              ) : (
-                <>
-                  <Mail className="size-3.5 text-tool-diligence" />
-                  <span>{isSubmittingNotify ? 'Registering...' : 'Email Me When Ready'}</span>
-                </>
-              )}
-            </button>
-          </form>
+          ) : (
+            <form onSubmit={handleRegisterEmail} className="flex flex-col sm:flex-row items-center gap-2">
+              <div className="relative flex-1 w-full">
+                <Mail className="size-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
+                <input
+                  type="email"
+                  value={notifyEmail}
+                  onChange={(e) => setNotifyEmail(e.target.value)}
+                  placeholder="Enter your email for direct dossier link..."
+                  className="w-full pl-10 pr-4 py-2 rounded-xl bg-darkroom-bg border border-darkroom-border text-xs text-white placeholder-slate-500 focus:outline-none focus:border-tool-diligence/50 font-mono"
+                  disabled={isSubmittingNotify}
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={isSubmittingNotify || !notifyEmail.includes('@')}
+                className="w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-mono font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0 bg-midnight-royal hover:bg-midnight-royal/80 text-white border border-tool-diligence/40 shadow-sm disabled:opacity-40"
+              >
+                <Mail className="size-3.5 text-tool-diligence" />
+                <span>{isSubmittingNotify ? 'Registering...' : 'Email Me When Ready'}</span>
+              </button>
+            </form>
+          )}
         </div>
       )}
 
@@ -1102,6 +1138,116 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
           </div>
         </div>
       )}
+
+      {/* Sticky Bottom Notification Drawer (Appears 10s after disambiguation completes) */}
+      <AnimatePresence>
+        {isPostDisambiguationRunning && showStickyNotify && !stickyDismissed && (
+          <motion.div
+            initial={{ y: 80, opacity: 0, scale: 0.95 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            exit={{ y: 80, opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
+            className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-2xl bg-[#090d18]/95 backdrop-blur-xl border border-indigo-500/40 rounded-2xl shadow-2xl shadow-black/90 p-3.5 sm:p-4 text-white"
+          >
+            {isNotified ? (
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="p-2 rounded-xl bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shrink-0">
+                    <VerifiedTick size={16} />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-xs font-semibold text-white truncate">
+                      Notification Active for {notifyEmail}
+                    </div>
+                    <div className="text-[11px] text-slate-400 truncate">
+                      We&apos;ll email you the dossier as soon as it&apos;s ready. Feel free to close this tab!
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundEffects.playClick();
+                    setStickyDismissed(true);
+                  }}
+                  className="px-3 py-1.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.15] text-xs font-mono text-slate-200 hover:text-white transition-colors shrink-0 cursor-pointer"
+                >
+                  Got it
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-2.5">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="p-1.5 rounded-lg bg-midnight-royal/50 border border-tool-diligence/40 text-tool-diligence shrink-0">
+                      <Bell className="size-3.5" />
+                    </div>
+                    <div className="min-w-0">
+                      <span className="text-xs font-bold text-white block truncate">
+                        Deep Research Running in Background
+                      </span>
+                      <span className="text-[11px] text-slate-400 block truncate">
+                        Feel free to close this tab — get notified when the dossier is ready.
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    {'Notification' in window && (
+                      <button
+                        type="button"
+                        onClick={handleEnableBrowserPush}
+                        disabled={pushEnabled}
+                        className={`hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-mono transition-all cursor-pointer ${
+                          pushEnabled
+                            ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
+                            : 'bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 text-slate-300 hover:text-white'
+                        }`}
+                      >
+                        {pushEnabled ? <VerifiedTick size={11} /> : <Bell className="size-3 text-tool-diligence" />}
+                        <span>{pushEnabled ? 'Push On' : 'Push'}</span>
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        soundEffects.playClick();
+                        setStickyDismissed(true);
+                      }}
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                      aria-label="Dismiss notification banner"
+                    >
+                      <X className="size-4" />
+                    </button>
+                  </div>
+                </div>
+
+                <form onSubmit={handleRegisterEmail} className="flex items-center gap-2">
+                  <div className="relative flex-1">
+                    <Mail className="size-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                    <input
+                      type="email"
+                      value={notifyEmail}
+                      onChange={(e) => setNotifyEmail(e.target.value)}
+                      placeholder="Enter your email for direct dossier link..."
+                      className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-black/60 border border-darkroom-border text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400 font-mono"
+                      disabled={isSubmittingNotify}
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={isSubmittingNotify || !notifyEmail.includes('@')}
+                    className="px-3.5 py-1.5 rounded-xl text-xs font-mono font-semibold transition-all flex items-center gap-1.5 cursor-pointer shrink-0 bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm disabled:opacity-40"
+                  >
+                    <Mail className="size-3" />
+                    <span>{isSubmittingNotify ? 'Saving...' : 'Notify Me'}</span>
+                  </button>
+                </form>
+              </div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };
