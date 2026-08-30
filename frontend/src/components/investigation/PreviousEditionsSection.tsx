@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Calendar,
   Award,
@@ -9,6 +9,7 @@ import {
   Info,
 } from 'lucide-react';
 import { PreviousEditionRecord } from '../../types/investigation';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface Props {
   previousEditions?: PreviousEditionRecord[];
@@ -19,6 +20,8 @@ export const PreviousEditionsSection: React.FC<Props> = ({
   previousEditions,
   festivalName,
 }) => {
+  const [selectedYear, setSelectedYear] = useState<string>('ALL');
+
   if (!previousEditions || previousEditions.length === 0) {
     return (
       <div className="rounded-2xl p-5 border border-darkroom-border bg-darkroom-surface/60 text-slate-400 text-xs flex items-center gap-3">
@@ -32,10 +35,15 @@ export const PreviousEditionsSection: React.FC<Props> = ({
 
   // Sort by year descending
   const sortedEditions = [...previousEditions].sort((a, b) => b.year - a.year);
+  const availableYears = Array.from(new Set(sortedEditions.map(e => e.year.toString())));
+
+  const filteredEditions = selectedYear === 'ALL'
+    ? sortedEditions
+    : sortedEditions.filter(e => e.year.toString() === selectedYear);
 
   return (
     <div className="space-y-4">
-      <div className="border-b border-darkroom-border pb-2.5 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+      <div className="border-b border-darkroom-border pb-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
         <div>
           <h3 className="text-base sm:text-lg font-bold font-serif text-white flex items-center gap-2">
             <Calendar className="size-4 text-tool-diligence" />
@@ -45,17 +53,55 @@ export const PreviousEditionsSection: React.FC<Props> = ({
             Documented past festival years, screening venue footprints, verified award recipients, and press coverage.
           </p>
         </div>
-        <span className="text-xs font-mono font-semibold text-tool-diligence bg-tool-diligence/10 border border-tool-diligence/20 px-2.5 py-0.5 rounded-full self-start sm:self-auto">
-          {sortedEditions.length} Years Corroborated
-        </span>
+
+        <div className="flex items-center gap-1.5 flex-wrap">
+          {availableYears.length > 1 && (
+            <div className="flex items-center gap-1 p-0.5 rounded-xl bg-darkroom-card border border-darkroom-border text-xs font-mono">
+              <button
+                type="button"
+                onClick={() => setSelectedYear('ALL')}
+                className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer text-[11px] ${
+                  selectedYear === 'ALL'
+                    ? 'bg-midnight-royal text-white font-semibold shadow-xs'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                All ({sortedEditions.length})
+              </button>
+              {availableYears.map(year => (
+                <button
+                  key={year}
+                  type="button"
+                  onClick={() => setSelectedYear(year)}
+                  className={`px-2 py-1 rounded-lg transition-all cursor-pointer text-[11px] ${
+                    selectedYear === year
+                      ? 'bg-midnight-royal text-white font-semibold shadow-xs'
+                      : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  {year}
+                </button>
+              ))}
+            </div>
+          )}
+
+          <span className="text-xs font-mono font-semibold text-tool-diligence bg-tool-diligence/10 border border-tool-diligence/20 px-2.5 py-0.5 rounded-full">
+            {sortedEditions.length} Years Corroborated
+          </span>
+        </div>
       </div>
 
       <div className="space-y-4">
-        {sortedEditions.map((edition, idx) => (
-          <div
-            key={idx}
-            className="rounded-2xl p-4 sm:p-5 border border-darkroom-border bg-darkroom-surface/90 hover:border-zinc-700/80 shadow-md space-y-4 transition-all"
-          >
+        <AnimatePresence mode="popLayout">
+          {filteredEditions.map((edition, idx) => (
+            <motion.div
+              key={edition.year || idx}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.2 }}
+              className="rounded-2xl p-4 sm:p-5 border border-darkroom-border bg-darkroom-surface/90 hover:border-zinc-700/80 shadow-md space-y-4 transition-all"
+            >
             {/* Edition Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-darkroom-border/60">
               <div className="flex items-center gap-3">
@@ -165,8 +211,9 @@ export const PreviousEditionsSection: React.FC<Props> = ({
                 {edition.notes}
               </div>
             )}
-          </div>
+          </motion.div>
         ))}
+        </AnimatePresence>
       </div>
     </div>
   );

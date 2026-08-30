@@ -227,6 +227,8 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, is
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [showEventLogTooltip, setShowEventLogTooltip] = useState(false);
   const [isStepLogExpanded, setIsStepLogExpanded] = useState(false);
+  const [eventCategoryFilter, setEventCategoryFilter] = useState<'ALL' | 'QUERIES' | 'CLAIMS' | 'DISPUTES'>('ALL');
+  const [, setIsHoveringLog] = useState(false);
   const eventsEndRef = useRef<HTMLDivElement>(null);
 
   // Timer
@@ -330,8 +332,18 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, is
   // Deduplicated display events for stream console, reversed so newest is at the top
   const displayEvents = useMemo(() => {
     const deduped = events.filter((evt, i, arr) => !i || arr[i - 1].message !== evt.message);
-    return [...deduped].reverse();
-  }, [events]);
+    const reversed = [...deduped].reverse();
+    if (eventCategoryFilter === 'QUERIES') {
+      return reversed.filter(e => e.message.includes('Search') || e.message.includes('Query') || e.message.includes('Visited'));
+    }
+    if (eventCategoryFilter === 'CLAIMS') {
+      return reversed.filter(e => e.message.toLowerCase().includes('claim') || e.message.includes('Extract') || e.eventType === 'CLAIMS_EXTRACTED');
+    }
+    if (eventCategoryFilter === 'DISPUTES') {
+      return reversed.filter(e => e.message.toLowerCase().includes('contradiction') || e.message.toLowerCase().includes('conflict') || e.message.toLowerCase().includes('dispute') || e.eventType === 'CONTRADICTIONS_ANALYZING');
+    }
+    return reversed;
+  }, [events, eventCategoryFilter]);
 
   const isRunning = status !== 'READY' && status !== 'FAILED' && status !== 'CANCELLED';
 
@@ -438,6 +450,11 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, is
           <div className="flex items-center gap-2 z-10 shrink-0 w-full sm:w-auto justify-between sm:justify-end">
             <div className="px-3 py-1.5 rounded-xl bg-darkroom-bg border border-darkroom-border text-slate-300 text-[11px] font-mono font-medium flex items-center gap-1.5 shadow-inner">
               <span>⏱️ {Math.floor(elapsedSeconds / 60)}:{(elapsedSeconds % 60).toString().padStart(2, '0')}</span>
+              {isRunning && (
+                <span className="text-slate-500 font-normal">
+                  · ~{Math.max(0, 35 - elapsedSeconds)}s left
+                </span>
+              )}
             </div>
 
             {onCancel && status !== 'READY' && status !== 'FAILED' && status !== 'CANCELLED' && !isCelebrating && (
@@ -816,7 +833,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, is
       {/* 4. Live SSE Activity Stream Console */}
       {events.length > 0 && (
         <div className="rounded-3xl bg-darkroom-surface overflow-hidden shadow-2xl shadow-black/80">
-          <div className="p-4 sm:px-6 flex items-center justify-between">
+          <div className="p-4 sm:px-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-darkroom-border/60">
             <span className="font-mono text-xs uppercase tracking-wider text-slate-300 flex items-center gap-2 font-semibold">
               <span
                 className={`size-2 rounded-full bg-tool-diligence ${reducedMotion ? '' : 'animate-pulse'}`}
@@ -824,39 +841,72 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, is
               <Terminal className="size-3.5 text-indigo-400" />
               <span>Live Agent Event Log</span>
             </span>
-            {/* Event Count Badge with Hover / Tap Tooltip */}
-            <div className="relative flex items-center">
-              <button
-                type="button"
-                onMouseEnter={() => setShowEventLogTooltip(true)}
-                onMouseLeave={() => setShowEventLogTooltip(false)}
-                onClick={() => setShowEventLogTooltip((prev) => !prev)}
-                onFocus={() => setShowEventLogTooltip(true)}
-                onBlur={() => setShowEventLogTooltip(false)}
-                className="px-2.5 py-0.5 rounded-full bg-darkroom-bg hover:bg-darkroom-card border border-darkroom-border hover:border-slate-600 text-slate-300 hover:text-white font-mono text-xs font-medium cursor-pointer transition-all flex items-center gap-1 shadow-sm select-none"
-                aria-label={`${displayEvents.length} events recorded`}
-              >
-                <span>{displayEvents.length}</span>
-              </button>
 
-              <AnimatePresence>
-                {showEventLogTooltip && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 4, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 4, scale: 0.95 }}
-                    transition={{ duration: 0.12 }}
-                    className="absolute right-0 bottom-full mb-2 px-2.5 py-1 rounded-xl bg-darkroom-bg border border-darkroom-border text-slate-100 text-xs font-mono whitespace-nowrap shadow-2xl z-30 pointer-events-none flex items-center gap-1.5"
+            <div className="flex items-center gap-2 flex-wrap">
+              {/* Category Filter Pills */}
+              <div className="flex items-center gap-1 p-0.5 rounded-xl bg-darkroom-bg border border-darkroom-border text-[11px] font-mono">
+                {[
+                  { id: 'ALL', label: 'All' },
+                  { id: 'QUERIES', label: 'Queries' },
+                  { id: 'CLAIMS', label: 'Claims' },
+                  { id: 'DISPUTES', label: 'Disputes' },
+                ].map((cat) => (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => {
+                      soundEffects.playClick();
+                      setEventCategoryFilter(cat.id as 'ALL' | 'QUERIES' | 'CLAIMS' | 'DISPUTES');
+                    }}
+                    className={`px-2 py-0.5 rounded-lg transition-all cursor-pointer ${
+                      eventCategoryFilter === cat.id
+                        ? 'bg-midnight-royal text-white font-semibold shadow-xs'
+                        : 'text-slate-400 hover:text-white'
+                    }`}
                   >
-                    <span className="size-1.5 rounded-full bg-tool-diligence" />
-                    <span>{displayEvents.length} events recorded</span>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Event Count Badge with Hover / Tap Tooltip */}
+              <div className="relative flex items-center">
+                <button
+                  type="button"
+                  onMouseEnter={() => setShowEventLogTooltip(true)}
+                  onMouseLeave={() => setShowEventLogTooltip(false)}
+                  onClick={() => setShowEventLogTooltip((prev) => !prev)}
+                  onFocus={() => setShowEventLogTooltip(true)}
+                  onBlur={() => setShowEventLogTooltip(false)}
+                  className="px-2.5 py-0.5 rounded-full bg-darkroom-bg hover:bg-darkroom-card border border-darkroom-border hover:border-slate-600 text-slate-300 hover:text-white font-mono text-xs font-medium cursor-pointer transition-all flex items-center gap-1 shadow-sm select-none"
+                  aria-label={`${displayEvents.length} events recorded`}
+                >
+                  <span>{displayEvents.length}</span>
+                </button>
+
+                <AnimatePresence>
+                  {showEventLogTooltip && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 4, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 4, scale: 0.95 }}
+                      transition={{ duration: 0.12 }}
+                      className="absolute right-0 bottom-full mb-2 px-2.5 py-1 rounded-xl bg-darkroom-bg border border-darkroom-border text-slate-100 text-xs font-mono whitespace-nowrap shadow-2xl z-30 pointer-events-none flex items-center gap-1.5"
+                    >
+                      <span className="size-1.5 rounded-full bg-tool-diligence" />
+                      <span>{displayEvents.length} events matching filter</span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
           </div>
 
-          <div className="p-4 sm:p-5 max-h-60 overflow-y-auto space-y-2.5 text-xs font-mono bg-darkroom-bg/60">
+          <div
+            className="p-4 sm:p-5 max-h-60 overflow-y-auto space-y-2.5 text-xs font-mono bg-darkroom-bg/60"
+            onMouseEnter={() => setIsHoveringLog(true)}
+            onMouseLeave={() => setIsHoveringLog(false)}
+          >
             {displayEvents.map((evt, idx) => (
               <div
                 key={idx}

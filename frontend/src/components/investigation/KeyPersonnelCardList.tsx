@@ -21,11 +21,16 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
   subtitle = 'Verified organizers, jury members, and connected corporate directorships evaluated for conflicts of interest.',
 }) => {
   const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
+  const [imagesLoaded, setImagesLoaded] = useState<Record<string, boolean>>({});
 
   if (!keyPersonnel || keyPersonnel.length === 0) return null;
 
   const handleImageError = (name: string) => {
     setImageErrors((prev) => ({ ...prev, [name]: true }));
+  };
+
+  const handleImageLoad = (name: string) => {
+    setImagesLoaded((prev) => ({ ...prev, [name]: true }));
   };
 
   return (
@@ -56,25 +61,38 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
             .toUpperCase()
             .slice(0, 2);
           const hasImgError = imageErrors[person.name];
+          const isLoaded = imagesLoaded[person.name];
+          const anchorId = `key-person-${person.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
 
           return (
             <div
               key={idx}
-              className="rounded-2xl p-4.5 border border-darkroom-border bg-darkroom-surface/90 hover:border-zinc-700/80 shadow-md transition-all flex flex-col justify-between"
+              id={anchorId}
+              className="rounded-2xl p-4.5 border border-darkroom-border bg-darkroom-surface/90 hover:border-zinc-700/80 shadow-md transition-all flex flex-col justify-between scroll-mt-32"
             >
               <div className="space-y-3.5">
                 {/* Header: Avatar & Name */}
                 <div className="flex items-start gap-3">
-                  <div className="relative shrink-0">
+                  <div className="relative shrink-0 size-12 rounded-xl overflow-hidden bg-darkroom-card border border-darkroom-border shadow-xs">
                     {person.avatarUrl && !hasImgError ? (
-                      <img
-                        src={person.avatarUrl}
-                        alt={person.name}
-                        onError={() => handleImageError(person.name)}
-                        className="size-12 rounded-xl object-cover bg-darkroom-card border border-darkroom-border shadow-xs"
-                      />
+                      <>
+                        {!isLoaded && (
+                          <div className="absolute inset-0 bg-slate-800 animate-pulse flex items-center justify-center">
+                            <span className="text-[10px] font-mono text-slate-500">{initials}</span>
+                          </div>
+                        )}
+                        <img
+                          src={person.avatarUrl}
+                          alt={person.name}
+                          onLoad={() => handleImageLoad(person.name)}
+                          onError={() => handleImageError(person.name)}
+                          className={`size-full object-cover transition-opacity duration-200 ${
+                            isLoaded ? 'opacity-100' : 'opacity-0'
+                          }`}
+                        />
+                      </>
                     ) : (
-                      <div className="size-12 rounded-xl flex items-center justify-center font-bold text-sm bg-midnight-royal/40 text-white border border-darkroom-border shadow-xs">
+                      <div className="size-full flex items-center justify-center font-bold text-sm bg-midnight-royal/40 text-white">
                         {initials || <User className="size-5 text-slate-300" />}
                       </div>
                     )}

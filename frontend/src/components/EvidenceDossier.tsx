@@ -108,6 +108,20 @@ export const EvidenceDossier: React.FC<Props> = ({
   
   const observerRef = useRef<IntersectionObserver | null>(null);
 
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalHeight > 0) {
+        const currentProgress = (window.scrollY / totalHeight) * 100;
+        setScrollProgress(Math.min(100, Math.max(0, currentProgress)));
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (actionsMenuRef.current && !actionsMenuRef.current.contains(event.target as Node)) {
@@ -142,7 +156,7 @@ export const EvidenceDossier: React.FC<Props> = ({
           }
         }
       },
-      { rootMargin: '-15% 0px -50% 0px', threshold: 0.1 }
+      { rootMargin: '-100px 0px -60% 0px', threshold: 0.1 }
     );
     
     const sections = document.querySelectorAll('[data-section-name]');
@@ -259,6 +273,61 @@ export const EvidenceDossier: React.FC<Props> = ({
     mdContent += `### 1. Festival Identity & Venue Leases\n${dossier?.festivalOverview || 'Official domain and physical theater leases verified.'}\n\n`;
     mdContent += `### 2. Legal Organizer & Corporate Registration\n${dossier?.organizerProfile || 'UK Companies House and corporate standing checked.'}\n\n`;
     mdContent += `### 3. Filmmaker Community & Fee Escalation\n${dossier?.participantFeedback || 'Historical feedback and entry fee schedules checked.'}\n\n`;
+
+    if (deepVetting?.keyPersonnel && deepVetting.keyPersonnel.length > 0) {
+      mdContent += `## Key Personnel & Governance Forensic Dossier\n\n`;
+      deepVetting.keyPersonnel.forEach((person) => {
+        mdContent += `### ${person.name} — ${person.roles.join(', ')}\n`;
+        if (person.notes) mdContent += `**Background**: ${person.notes}\n\n`;
+        const links: string[] = [];
+        if (person.linkedinUrl) links.push(`[LinkedIn](${person.linkedinUrl})`);
+        if (person.companiesHouseUrl) links.push(`[Gov Registry](${person.companiesHouseUrl})`);
+        if (person.websiteUrl) links.push(`[Personal Website](${person.websiteUrl})`);
+        if (person.imdbUrl) links.push(`[IMDb](${person.imdbUrl})`);
+        if (person.facebookUrl) links.push(`[Facebook](${person.facebookUrl})`);
+        if (person.twitterUrl) links.push(`[Twitter/X](${person.twitterUrl})`);
+        if (links.length > 0) mdContent += `**Verified Profiles**: ${links.join(' · ')}\n\n`;
+        if (person.flags && person.flags.length > 0) {
+          mdContent += `**Context Flags**: ${person.flags.join(', ')}\n\n`;
+        }
+        if (person.companies && person.companies.length > 0) {
+          mdContent += `**Associated Corporate Directorships**: ${person.companies.join(', ')}\n\n`;
+        }
+      });
+    }
+
+    if (dossier?.previousEditions && dossier.previousEditions.length > 0) {
+      mdContent += `## Previous Editions & Historical Track Record\n\n`;
+      dossier.previousEditions.forEach((ed) => {
+        mdContent += `### ${ed.year} Edition (${ed.heldDates || 'Annual Run'})\n`;
+        mdContent += `**Physical Screening Venue**: ${ed.heldLocation || 'Registered Venue'}\n\n`;
+        if (ed.awards && ed.awards.length > 0) {
+          mdContent += `**Official Award Winners**:\n`;
+          ed.awards.forEach((award) => {
+            const linkPart = award.winnerUrl ? ` ([View Winner Profile](${award.winnerUrl}))` : '';
+            mdContent += `- 🏆 **${award.awardName}**: *${award.winnerTitle}* — ${award.recipientName || 'Award Recipient'}${linkPart}\n`;
+          });
+          mdContent += `\n`;
+        }
+        if (ed.pressCoverage && ed.pressCoverage.length > 0) {
+          mdContent += `**Verified Press Coverage**:\n`;
+          ed.pressCoverage.forEach((press) => {
+            mdContent += `- 📰 [${press.publisher}: "${press.headline}"](${press.url || '#'})\n`;
+          });
+          mdContent += `\n`;
+        }
+      });
+    }
+
+    if (dossier?.corporateEntity) {
+      mdContent += `## Corporate Entity & Legal Standing\n\n`;
+      mdContent += `- **Legal Entity Name**: ${dossier.corporateEntity.legalName}\n`;
+      if (dossier.corporateEntity.registrationNumber) mdContent += `- **Registration Number**: ${dossier.corporateEntity.registrationNumber}\n`;
+      mdContent += `- **Filing Status**: ${dossier.corporateEntity.status || 'Active'}\n`;
+      if (dossier.corporateEntity.incorporationDate) mdContent += `- **Incorporation Date**: ${dossier.corporateEntity.incorporationDate}\n`;
+      if (dossier.corporateEntity.registeredAddress) mdContent += `- **Registered Address**: ${dossier.corporateEntity.registeredAddress}\n`;
+      mdContent += `\n`;
+    }
 
     if (disputes.length > 0) {
       mdContent += `## Active Contradictions & Disputed Claims\n\n`;
@@ -815,7 +884,15 @@ export const EvidenceDossier: React.FC<Props> = ({
 
       {/* Sticky Header with Section Name, Burger Navigation & 3-Bar Detail Selector */}
       {dossier && (
-        <div className="sticky top-16 sm:top-20 z-20 bg-darkroom-bg/95 backdrop-blur-xl p-3 sm:px-5 rounded-2xl border border-darkroom-border shadow-2xl shadow-black/80 no-print transition-all space-y-2">
+        <div className="sticky top-16 sm:top-20 z-20 bg-darkroom-bg/95 backdrop-blur-xl p-3 sm:px-5 rounded-2xl border border-darkroom-border shadow-2xl shadow-black/80 no-print transition-all space-y-2 relative overflow-hidden">
+          {/* Bottom 2px Reading Scroll Progress Bar */}
+          <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-darkroom-border/60">
+            <div
+              className="h-full bg-gradient-to-r from-tool-diligence via-emerald-400 to-indigo-400 transition-all duration-150 ease-out"
+              style={{ width: `${scrollProgress}%` }}
+            />
+          </div>
+
           <div className="flex items-center justify-between gap-3 relative">
             {/* Left: Burger button + Current Section Name (Visible in Full Mode) */}
             {normalizedDensity === 'FULL_EVIDENCE' ? (
@@ -1083,7 +1160,7 @@ export const EvidenceDossier: React.FC<Props> = ({
               id="screened-raw-ai-dossier"
               className="p-4 rounded-2xl bg-darkroom-bg text-slate-200 font-mono text-xs overflow-x-auto max-h-[500px] leading-relaxed whitespace-pre-wrap select-all border border-paper-card border-darkroom-card"
             >
-              {rawPlainTextDossier}
+                      { rawPlainTextDossier }
             </pre>
           </div>
         </div>
@@ -1091,14 +1168,14 @@ export const EvidenceDossier: React.FC<Props> = ({
         /* Single-Page Human Dossier Flow (Short & Full Modes) */
         <>
           {/* Credibility & Transparency Radar Bar */}
-          <div id="section-radar" data-section-name="Transparency & Credibility">
+          <div id="section-radar" className="scroll-mt-28 sm:scroll-mt-32" data-section-name="Transparency & Credibility">
             <CredibilityRadar claims={claims} disputes={disputes} />
           </div>
 
           {/* Executive Overview */}
           <div
             id="section-overview"
-            className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-3"
+            className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-3 scroll-mt-28 sm:scroll-mt-32"
             data-section-name="Executive Overview"
           >
             <div className="text-xs font-mono uppercase tracking-wider text-slate-400">
@@ -1110,18 +1187,18 @@ export const EvidenceDossier: React.FC<Props> = ({
           </div>
 
           {/* 360° Forensic Matrix (7 Vectors, Key Personnel & Directorship Network) */}
-          <div id="section-forensic-matrix" data-section-name="360° Forensic Matrix (7 Vectors)">
+          <div id="section-forensic-matrix" className="scroll-mt-28 sm:scroll-mt-32" data-section-name="360° Forensic Matrix (7 Vectors)">
             <DeepVettingMatrix report={deepVetting} festivalName={entity.name} />
           </div>
 
           {/* Previous Editions & Historical Track Record */}
-          <div id="section-previous-editions" data-section-name="Previous Editions & Track Record">
+          <div id="section-previous-editions" className="scroll-mt-28 sm:scroll-mt-32" data-section-name="Previous Editions & Track Record">
             <PreviousEditionsSection previousEditions={dossier.previousEditions} festivalName={entity.name} />
           </div>
 
           {/* Side-by-Side Contradictions Panel */}
           {disputes.length > 0 && (
-            <div id="section-disputes" data-section-name="Contradictions & Disputes">
+            <div id="section-disputes" className="scroll-mt-28 sm:scroll-mt-32" data-section-name="Contradictions & Disputes">
               <ContradictionPanel disputes={disputes} />
             </div>
           )}
@@ -1130,7 +1207,7 @@ export const EvidenceDossier: React.FC<Props> = ({
           {normalizedDensity === 'FULL_EVIDENCE' && (
             <div
               id="section-network"
-              className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4"
+              className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4 scroll-mt-28 sm:scroll-mt-32"
               data-section-name="Entity Architecture & Network"
             >
               <Suspense
@@ -1149,7 +1226,7 @@ export const EvidenceDossier: React.FC<Props> = ({
           {normalizedDensity === 'FULL_EVIDENCE' && (
             <div
               id="section-domains"
-              className="grid grid-cols-1 md:grid-cols-3 gap-4"
+              className="grid grid-cols-1 md:grid-cols-3 gap-4 scroll-mt-28 sm:scroll-mt-32"
               data-section-name="3-Domain Synthesis"
             >
               {/* Festival Domain */}
@@ -1187,7 +1264,7 @@ export const EvidenceDossier: React.FC<Props> = ({
           {dossier?.corporateEntity && (
             <div
               id="section-corporate"
-              className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl border border-darkroom-border space-y-4"
+              className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl border border-darkroom-border space-y-4 scroll-mt-28 sm:scroll-mt-32"
               data-section-name="Corporate Entity Intelligence"
             >
               <div className="flex flex-col gap-2 border-b border-paper-card border-darkroom-card pb-4">
@@ -1250,7 +1327,7 @@ export const EvidenceDossier: React.FC<Props> = ({
 
           {/* Atomic Claims & Evidence Citations (Rendered in Full mode) */}
           {normalizedDensity === 'FULL_EVIDENCE' && (
-            <div id="section-claims" className="space-y-4" data-section-name="Atomic Claims & Citations">
+            <div id="section-claims" className="space-y-4 scroll-mt-28 sm:scroll-mt-32" data-section-name="Atomic Claims & Citations">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <h2 className="font-serif text-xl font-semibold text-white flex items-center gap-2">
                   <ShieldCheck className="size-5 text-indigo-400" /> Atomic Claims & Evidence
@@ -1437,7 +1514,7 @@ export const EvidenceDossier: React.FC<Props> = ({
           {/* Filmmaker Checklist & Unresolved Questions */}
           <div
             id="section-checklist"
-            className="grid grid-cols-1 md:grid-cols-2 gap-4"
+            className="grid grid-cols-1 md:grid-cols-2 gap-4 scroll-mt-28 sm:scroll-mt-32"
             data-section-name="Filmmaker Action Checklist"
           >
             {/* Due Diligence Checklist */}
@@ -1477,7 +1554,7 @@ export const EvidenceDossier: React.FC<Props> = ({
           {normalizedDensity === 'FULL_EVIDENCE' && (
             <div
               id="section-sources"
-              className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4"
+              className="p-6 rounded-3xl bg-darkroom-surface shadow-2xl space-y-4 scroll-mt-28 sm:scroll-mt-32"
               data-section-name="Discovered Web Sources"
             >
               <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-paper-card border-darkroom-card pb-3 gap-3">
