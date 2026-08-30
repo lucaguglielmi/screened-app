@@ -8,9 +8,6 @@ import {
   FileText,
   CheckCircle2,
   Loader2,
-  ChevronRight,
-  ChevronDown,
-  ChevronUp,
   Terminal,
   AlertTriangle,
   Bell,
@@ -51,7 +48,7 @@ const TIMELINE_STEPS: TimelineStep[] = [
     name: 'Strategy & Planning',
     shortLabel: 'Strategy',
     role: 'Entity Resolution & Search Strategy',
-    description: 'Disambiguates festival identity and constructs deep multi-domain search queries.',
+    description: 'Identifies the festival and plans the web search.',
     details: [
       'Disambiguates festival identity',
       'Generates search queries',
@@ -64,10 +61,10 @@ const TIMELINE_STEPS: TimelineStep[] = [
   {
     id: 'parallel_agents',
     stepNumber: 2,
-    name: 'Parallel Agents',
+    name: 'Parallel Search',
     shortLabel: 'Data Fetch',
     role: 'Parallel Web Search',
-    description: 'Executes concurrent web searches across festival, organizer, and participant domains.',
+    description: 'Searches official websites, public records, and directories.',
     details: [
       'Dispatches domain tasks',
       'Fetches web documents',
@@ -80,10 +77,10 @@ const TIMELINE_STEPS: TimelineStep[] = [
   {
     id: 'claim_extractor',
     stepNumber: 3,
-    name: 'ClaimExtractor',
+    name: 'Claim Extraction',
     shortLabel: 'Extraction',
     role: 'Fact & Evidence Extraction',
-    description: 'Parses retrieved text to extract atomic claims with exact source excerpts.',
+    description: 'Pulls key facts, dates, and quotes from sources.',
     details: [
       'Extracts atomic claims',
       'Links verbatim quotes',
@@ -96,10 +93,10 @@ const TIMELINE_STEPS: TimelineStep[] = [
   {
     id: 'contradiction_analyst',
     stepNumber: 4,
-    name: 'ContradictionAnalyst',
+    name: 'Contradiction Analysis',
     shortLabel: 'Analysis',
     role: 'Cross-Examination & Forensics',
-    description: 'Compares extracted claims to identify discrepancies, fee conflicts, or unverified claims.',
+    description: 'Checks for hidden fees, false claims, and red flags.',
     details: [
       'Detects conflicting statements',
       'Flags unverified claims',
@@ -112,10 +109,10 @@ const TIMELINE_STEPS: TimelineStep[] = [
   {
     id: 'report_writer',
     stepNumber: 5,
-    name: 'ReportWriter',
+    name: 'Report Synthesis',
     shortLabel: 'Dossier',
     role: 'Report Synthesis',
-    description: 'Compiles verified facts, citations, and due-diligence checklists into the final dossier.',
+    description: 'Builds the final verification dossier and trust score.',
     details: [
       'Generates neutral summary',
       'Calculates authenticity score',
@@ -231,7 +228,6 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
   const [selectedStepIndex, setSelectedStepIndex] = useState<number | null>(null);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [showEventLogTooltip, setShowEventLogTooltip] = useState(false);
-  const [isStepLogExpanded, setIsStepLogExpanded] = useState(false);
   const [eventCategoryFilter, setEventCategoryFilter] = useState<'ALL' | 'QUERIES' | 'CLAIMS' | 'DISPUTES'>('ALL');
   const [, setIsHoveringLog] = useState(false);
   const [notifyEmail, setNotifyEmail] = useState<string>(() => {
@@ -309,95 +305,6 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
     }, 1000);
     return () => clearInterval(interval);
   }, [status]);
-
-  // Extract live metrics
-  const metrics = useMemo(() => {
-    let sources = 0;
-    let claims = 0;
-    let contradictions = 0;
-
-    events.forEach((e) => {
-      // 1. Direct explicit details fields
-      if (typeof e.details?.sourcesCount === 'number') {
-        sources = Math.max(sources, e.details.sourcesCount);
-      }
-      if (typeof e.details?.claimsCount === 'number') {
-        claims = Math.max(claims, e.details.claimsCount);
-      }
-      if (typeof e.details?.contradictionsCount === 'number') {
-        contradictions = Math.max(contradictions, e.details.contradictionsCount);
-      }
-      if (Array.isArray(e.details?.sources)) {
-        sources = Math.max(sources, e.details.sources.length);
-      }
-      if (Array.isArray(e.details?.claims)) {
-        claims = Math.max(claims, e.details.claims.length);
-      }
-
-      // 2. Pattern matching in event message
-      const sourcesMatch =
-        e.message.match(/(\d+)\s+(?:public\s+)?sources/i) ||
-        e.message.match(/Visited\s+(\d+)\s+sources/i) ||
-        e.message.match(/Fetched\s+(\d+)\s+sources?/i) ||
-        e.message.match(/Harvested\s+(\d+)/i);
-      if (sourcesMatch) {
-        sources = Math.max(sources, parseInt(sourcesMatch[1], 10));
-      }
-
-      const claimsMatch =
-        e.message.match(/(\d+)\s+(?:atomic\s+)?claims/i) ||
-        e.message.match(/Extracted\s+(\d+)\s+claims/i);
-      if (claimsMatch) {
-        claims = Math.max(claims, parseInt(claimsMatch[1], 10));
-      }
-
-      if (
-        e.message.toLowerCase().includes('contradiction') ||
-        e.message.toLowerCase().includes('discrepancy') ||
-        e.message.toLowerCase().includes('conflict')
-      ) {
-        contradictions++;
-      }
-      if (e.eventType === 'CONTRADICTIONS_ANALYZING') {
-        contradictions = Math.max(contradictions, 3);
-      }
-    });
-
-    // Fallbacks if search phase has started
-    if (
-      sources === 0 &&
-      events.some(
-        (e) => e.eventType === 'DOMAIN_SEARCH_STARTED' || e.eventType === 'AGENT_UPDATE',
-      )
-    ) {
-      sources = 12;
-    }
-    if (
-      claims === 0 &&
-      events.some(
-        (e) =>
-          e.eventType === 'CLAIMS_EXTRACTED' ||
-          e.eventType === 'CONTRADICTIONS_ANALYZING' ||
-          e.eventType === 'DOSSIER_SYNTHESIZING',
-      )
-    ) {
-      claims = 8;
-    }
-
-    return {
-      sources: Math.max(sources, 0),
-      claims: Math.max(claims, 0),
-      contradictions: Math.max(contradictions, 0),
-    };
-  }, [events]);
-
-  // Active Query extraction
-  const activeQuery = useMemo(() => {
-    const matchEvent = events.slice().reverse().find(e => 
-      e.message.startsWith('Querying:') || e.message.startsWith('Searching:') || e.message.startsWith('Executing task API:')
-    );
-    return matchEvent ? matchEvent.message.replace('Executing task API:', 'Searching:') : null;
-  }, [events]);
 
   // Deduplicated display events for stream console, reversed so newest is at the top
   const displayEvents = useMemo(() => {
@@ -733,171 +640,44 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
           </div>
         </div>
 
-        {/* Real-Time Findings Counter */}
-        {metrics && (status !== 'FAILED' && status !== 'CANCELLED') && (
-          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 py-3 px-4 rounded-2xl bg-darkroom-bg/50 border border-darkroom-border/60 text-xs sm:text-sm font-mono text-slate-300">
-            <div className="flex items-center gap-2">
-              <span className="text-blue-400">🌐</span>
-              <span className="font-semibold text-white">{metrics.sources}</span>
-              <span className="text-slate-500">sources fetched</span>
-            </div>
-            <span className="text-slate-700 hidden sm:inline">•</span>
-            <div className="flex items-center gap-2">
-              <span className="text-emerald-400">⚡</span>
-              <span className="font-semibold text-white">{metrics.claims}</span>
-              <span className="text-slate-500">atomic claims extracted</span>
-            </div>
-            <span className="text-slate-700 hidden sm:inline">•</span>
-            <div className="flex items-center gap-2">
-              <span className="text-amber-400">⚖️</span>
-              <span className="font-semibold text-white">{metrics.contradictions}</span>
-              <span className="text-slate-500">contradictions found</span>
-            </div>
-          </div>
-        )}
-
-        {/* 3. DEEP CONTEXT CARD (EXPANDED ON HOVER OR SELECTION) */}
+        {/* 3. Active / Inspected Step Caption (Streamlined Title & Caption) */}
         <AnimatePresence mode="wait">
           <motion.div
             key={activeStep.id}
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
+            exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.2 }}
-            className={`transition-all ${
-              activeStepState === 'ACTIVE'
-                ? ''
-                : activeStepState === 'COMPLETED'
-                  ? ''
-                  : 'p-5 rounded-2xl bg-darkroom-surface/40 border-2 border-dashed border-slate-700/80 shadow-inner'
-            }`}
+            className="pt-2 pb-1 flex flex-col sm:flex-row items-center sm:items-start gap-3.5 text-center sm:text-left"
           >
-            <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b ${activeStepState === 'PENDING' ? 'border-dashed border-slate-700/60' : 'border-darkroom-border'}`}>
-              <div className="flex items-center gap-3">
-                <div
-                  className={`size-10 rounded-xl flex items-center justify-center shrink-0 ${
-                    activeStepState === 'ACTIVE'
-                      ? 'bg-tool-diligence text-slate-950 shadow-md shadow-[var(--color-tool-diligence)]/30'
-                      : activeStepState === 'COMPLETED'
-                        ? 'bg-tool-diligence/20 text-tool-diligence border border-tool-diligence/40'
-                        : 'bg-darkroom-card/50 text-slate-500 border border-dashed border-slate-600/70'
-                  }`}
-                >
-                  <activeStep.icon className="size-5" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-xs font-mono text-indigo-400 font-semibold uppercase tracking-wider">
-                      Stage 0{activeStep.stepNumber}
-                    </span>
-                    <span className="text-slate-600">•</span>
-                    <h3 className="text-base font-bold text-white break-words">{activeStep.name}</h3>
-                  </div>
-                  <p className="text-xs font-mono text-slate-400 break-words">{activeStep.role}</p>
-                </div>
-              </div>
-
-              {/* Status Badge */}
-              <div className="flex items-center gap-2">
-                <span
-                  className={`px-3 py-1 rounded-full text-xs font-mono font-semibold flex items-center gap-1.5 ${
-                    activeStepState === 'ACTIVE'
-                      ? `bg-tool-diligence/20 text-tool-diligence border border-tool-diligence/40 ${reducedMotion ? '' : 'animate-pulse'}`
-                      : activeStepState === 'COMPLETED'
-                        ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
-                        : 'bg-slate-800/40 text-slate-400 border border-dashed border-slate-600/60'
-                  }`}
-                >
-                  {activeStepState === 'ACTIVE' && (
-                    <Loader2 className={`size-3 ${reducedMotion ? '' : 'animate-spin'}`} />
-                  )}
-                  {activeStepState === 'COMPLETED' && <CheckCircle2 className="size-3" />}
-                  <span>{activeStepState === 'PENDING' ? 'PENDING' : activeStepState}</span>
-                </span>
-              </div>
+            <div
+              className={`size-10 rounded-xl flex items-center justify-center shrink-0 ${
+                activeStepState === 'ACTIVE'
+                  ? 'bg-gradient-to-tr from-tool-diligence to-emerald-400 text-slate-950 shadow-md shadow-[var(--color-tool-diligence)]/30'
+                  : activeStepState === 'COMPLETED'
+                    ? 'bg-[#0a261e] text-emerald-400 border border-emerald-500/40'
+                    : 'bg-[#090e1a] text-slate-500 border border-slate-700'
+              }`}
+            >
+              <activeStep.icon className="size-5" />
             </div>
-            
-            {/* Active Query Ticker */}
-            {activeStepState === 'ACTIVE' && activeQuery && (
-              <div className="mt-4 px-3 py-2 rounded-xl bg-darkroom-bg/80 border border-darkroom-border/40 text-xs font-mono text-tool-diligence flex items-center gap-2 overflow-hidden whitespace-nowrap">
-                <Terminal className="size-3.5 shrink-0 opacity-70" />
-                <motion.span 
-                  className="truncate"
-                  key={activeQuery} // re-trigger animation on query change
-                  initial={{ opacity: 0, x: 5 }}
-                  animate={{ opacity: 1, x: 0 }}
-                >
-                  {activeQuery}
-                </motion.span>
-              </div>
-            )}
 
-            {/* Step Inner Working Description / History Drawer */}
-            <div className="mt-4 space-y-3">
-              <p className="text-sm text-slate-300 leading-relaxed">{activeStep.description}</p>
-
-              {activeStepState === 'COMPLETED' ? (
-                <div className="mt-2 rounded-xl bg-darkroom-bg border border-darkroom-border/50 overflow-hidden">
-                  <button
-                    type="button"
-                    onClick={() => setIsStepLogExpanded(!isStepLogExpanded)}
-                    className="w-full px-3.5 py-2.5 flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold hover:text-slate-200 hover:bg-darkroom-card/50 transition-colors cursor-pointer"
-                  >
-                    <span>Executed Step Log</span>
-                    <div className="flex items-center gap-1.5 text-xs text-slate-400">
-                      <span>
-                        {events.filter(e => activeStep.activeStatus.includes(e.eventType === 'DOMAIN_SEARCH_STARTED' || e.eventType === 'CLAIMS_EXTRACTING' ? 'RESEARCHING' : 
-                                      e.eventType === 'CONTRADICTIONS_ANALYZING' ? 'ANALYZING_CONTRADICTIONS' : 
-                                      e.eventType === 'DOSSIER_SYNTHESIZING' ? 'ASSEMBLING_DOSSIER' : 
-                                      e.eventType === 'PLANNING_STARTED' ? 'PLANNING' : 
-                                      e.eventType === 'CANDIDATES_FOUND' ? 'AWAITING_ENTITY_CONFIRMATION' : 'DISAMBIGUATING')).length} events
-                      </span>
-                      {isStepLogExpanded ? <ChevronUp className="size-3.5" /> : <ChevronDown className="size-3.5" />}
-                    </div>
-                  </button>
-
-                  <AnimatePresence>
-                    {isStepLogExpanded && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="p-3 pt-1 max-h-48 overflow-y-auto space-y-1.5 border-t border-darkroom-border/40"
-                      >
-                        {events
-                          .filter(e => activeStep.activeStatus.includes(e.eventType === 'DOMAIN_SEARCH_STARTED' || e.eventType === 'CLAIMS_EXTRACTING' ? 'RESEARCHING' : 
-                                        e.eventType === 'CONTRADICTIONS_ANALYZING' ? 'ANALYZING_CONTRADICTIONS' : 
-                                        e.eventType === 'DOSSIER_SYNTHESIZING' ? 'ASSEMBLING_DOSSIER' : 
-                                        e.eventType === 'PLANNING_STARTED' ? 'PLANNING' : 
-                                        e.eventType === 'CANDIDATES_FOUND' ? 'AWAITING_ENTITY_CONFIRMATION' : 'DISAMBIGUATING'))
-                          .map((e, idx) => (
-                            <div key={idx} className="flex items-start gap-2 text-[11px] font-mono">
-                              <span className="text-slate-500 shrink-0 mt-0.5">[{new Date(e.timestamp).toLocaleTimeString()}]</span>
-                              <span className="text-slate-300">{e.message}</span>
-                            </div>
-                          ))}
-                        {events.length === 0 && (
-                          <div className="text-slate-500 text-xs italic">No specific log events captured for this step.</div>
-                        )}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              ) : (
-                <div className="space-y-1.5">
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold block">
-                    Key Execution Objectives:
+            <div className="min-w-0 flex-1 space-y-0.5">
+              <div className="flex items-center justify-center sm:justify-start gap-2.5 flex-wrap">
+                <h3 className="text-sm sm:text-base font-bold text-white tracking-tight">{activeStep.name}</h3>
+                {activeStepState === 'ACTIVE' && (
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-tool-diligence/20 text-tool-diligence border border-tool-diligence/40 animate-pulse">
+                    Running
                   </span>
-                  <ul className="space-y-1">
-                    {activeStep.details.map((detail, dIdx) => (
-                      <li key={dIdx} className="flex items-start gap-2 text-xs text-slate-400">
-                        <ChevronRight className={`size-3.5 shrink-0 mt-0.5 ${activeStepState === 'PENDING' ? 'text-slate-500' : 'text-tool-diligence'}`} />
-                        <span>{detail}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+                )}
+                {activeStepState === 'COMPLETED' && (
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
+                    <VerifiedTick size={10} />
+                    <span>Completed</span>
+                  </span>
+                )}
+              </div>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans">{activeStep.description}</p>
             </div>
           </motion.div>
         </AnimatePresence>
