@@ -633,15 +633,18 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
                       </div>
                     )}
 
+                    {/* Solid Opaque Backing Plate under Node to ensure line is strictly hidden under icon */}
+                    <div className="absolute z-10 size-10 sm:size-11 rounded-2xl bg-[#090d18] pointer-events-none" />
+
                     <button
-                      className={`relative z-10 flex items-center justify-center transition-all duration-200 cursor-pointer rounded-2xl ${
+                      className={`relative z-20 flex items-center justify-center transition-all duration-200 cursor-pointer rounded-2xl ${
                         state === 'ACTIVE'
                           ? 'size-11 sm:size-12 bg-gradient-to-tr from-tool-diligence to-emerald-400 text-slate-950 shadow-xl shadow-[var(--color-tool-diligence)]/40 ring-4 ring-tool-diligence/30 scale-110'
                           : state === 'FAILED'
                             ? 'size-11 sm:size-12 bg-gradient-to-tr from-rose-500 to-red-400 text-slate-950 shadow-xl shadow-red-500/40 ring-4 ring-red-500/30 scale-110'
                             : state === 'COMPLETED'
-                              ? 'size-9 sm:size-10 bg-tool-diligence/20 border border-tool-diligence/60 text-tool-diligence shadow-md shadow-[var(--color-tool-diligence)]/20 hover:scale-105 hover:bg-tool-diligence/30'
-                              : 'size-9 sm:size-10 bg-darkroom-surface border border-darkroom-border text-slate-400 hover:text-slate-200 hover:border-slate-500 hover:scale-105'
+                              ? 'size-9 sm:size-10 bg-[#0a261e] border-2 border-emerald-400 text-emerald-300 shadow-lg shadow-black/80 hover:scale-105 hover:bg-[#0e352b]'
+                              : 'size-9 sm:size-10 bg-[#090e1a] border border-slate-700 text-slate-400 hover:text-slate-200 hover:border-slate-500 hover:scale-105 shadow-md'
                       } ${isSelected ? (state === 'FAILED' ? 'ring-2 ring-red-500' : 'ring-2 ring-tool-diligence') : isInspected && state !== 'ACTIVE' && state !== 'FAILED' ? 'ring-2 ring-indigo-400/60 border-indigo-400' : ''}`}
                       title={`${step.stepNumber}. ${step.name}`}
                     >
