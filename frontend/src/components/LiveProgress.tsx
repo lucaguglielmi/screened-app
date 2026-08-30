@@ -13,6 +13,9 @@ import {
   ChevronUp,
   Terminal,
   AlertTriangle,
+  Bell,
+  Mail,
+  Check,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useReducedMotion } from '../utils/motionTokens';
@@ -22,6 +25,7 @@ interface Props {
   status: InvestigationStatus;
   events: ActivityEvent[];
   festivalName: string;
+  investigationId?: string;
   isCelebrating?: boolean;
   onCancel?: () => void;
 }
@@ -220,7 +224,7 @@ function getSegmentState(
   return 'PENDING';
 }
 
-export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, isCelebrating, onCancel }) => {
+export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, investigationId, isCelebrating, onCancel }) => {
   const reducedMotion = useReducedMotion();
   const [hoveredStepIndex, setHoveredStepIndex] = useState<number | null>(null);
   const [selectedStepIndex, setSelectedStepIndex] = useState<number | null>(null);
@@ -229,6 +233,50 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, is
   const [isStepLogExpanded, setIsStepLogExpanded] = useState(false);
   const [eventCategoryFilter, setEventCategoryFilter] = useState<'ALL' | 'QUERIES' | 'CLAIMS' | 'DISPUTES'>('ALL');
   const [, setIsHoveringLog] = useState(false);
+  const [notifyEmail, setNotifyEmail] = useState<string>(() => {
+    try {
+      return localStorage.getItem('screened_notification_email') || '';
+    } catch {
+      return '';
+    }
+  });
+  const [isNotified, setIsNotified] = useState(false);
+  const [isSubmittingNotify, setIsSubmittingNotify] = useState(false);
+  const [pushEnabled, setPushEnabled] = useState<boolean>(() => {
+    return typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted';
+  });
+
+  const handleRegisterEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!notifyEmail || !notifyEmail.includes('@') || !investigationId) return;
+    setIsSubmittingNotify(true);
+    try {
+      localStorage.setItem('screened_notification_email', notifyEmail);
+      await fetch(`/api/investigations/${investigationId}/notifications`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: notifyEmail }),
+      });
+      setIsNotified(true);
+      soundEffects.playSuccess();
+    } catch (err) {
+      console.error('Failed to register notification email:', err);
+    } finally {
+      setIsSubmittingNotify(false);
+    }
+  };
+
+  const handleEnableBrowserPush = async () => {
+    if ('Notification' in window) {
+      soundEffects.playClick();
+      const perm = await Notification.requestPermission();
+      if (perm === 'granted') {
+        setPushEnabled(true);
+        soundEffects.playSuccess();
+      }
+    }
+  };
+
   const eventsEndRef = useRef<HTMLDivElement>(null);
 
   // Timer
@@ -830,7 +878,81 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, is
         </AnimatePresence>
       </div>
 
-      {/* 4. Live SSE Activity Stream Console */}
+      {/* 4. Come Back Later & Background Notifications Tray */}
+      {isRunning && (
+        <div className="rounded-3xl bg-darkroom-surface/90 border border-darkroom-border p-4 sm:p-5 shadow-xl space-y-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-darkroom-border/60 pb-3">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-xl bg-midnight-royal/40 border border-tool-diligence/30 text-tool-diligence">
+                <Bell className="size-4" />
+              </div>
+              <div>
+                <h4 className="text-xs font-bold text-white font-sans">
+                  Come Back Later &amp; Get Notified
+                </h4>
+                <p className="text-[11px] text-slate-400">
+                  Feel free to close this tab. We can notify you via push and email as soon as the dossier is ready.
+                </p>
+              </div>
+            </div>
+
+            {/* PWA / Browser Notification Button */}
+            {'Notification' in window && (
+              <button
+                type="button"
+                onClick={handleEnableBrowserPush}
+                disabled={pushEnabled}
+                className={`px-3 py-1.5 rounded-xl border text-xs font-mono transition-all flex items-center gap-1.5 cursor-pointer shrink-0 ${
+                  pushEnabled
+                    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                    : 'bg-darkroom-card hover:bg-darkroom-bg text-slate-300 hover:text-white border-darkroom-border'
+                }`}
+              >
+                {pushEnabled ? <Check className="size-3.5" /> : <Bell className="size-3.5 text-tool-diligence" />}
+                <span>{pushEnabled ? 'Push Enabled' : 'Enable Browser Push'}</span>
+              </button>
+            )}
+          </div>
+
+          {/* Email Notification Form */}
+          <form onSubmit={handleRegisterEmail} className="flex flex-col sm:flex-row items-center gap-2">
+            <div className="relative flex-1 w-full">
+              <Mail className="size-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
+              <input
+                type="email"
+                value={notifyEmail}
+                onChange={(e) => setNotifyEmail(e.target.value)}
+                placeholder="Enter your email for direct dossier link..."
+                className="w-full pl-10 pr-4 py-2 rounded-xl bg-darkroom-bg border border-darkroom-border text-xs text-white placeholder-slate-500 focus:outline-none focus:border-tool-diligence/50 font-mono"
+                disabled={isNotified || isSubmittingNotify}
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={isNotified || isSubmittingNotify || !notifyEmail.includes('@')}
+              className={`w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-mono font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0 ${
+                isNotified
+                  ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
+                  : 'bg-midnight-royal hover:bg-midnight-royal/80 text-white border border-tool-diligence/40 shadow-sm disabled:opacity-40'
+              }`}
+            >
+              {isNotified ? (
+                <>
+                  <Check className="size-3.5 text-emerald-400" />
+                  <span>Email Registered</span>
+                </>
+              ) : (
+                <>
+                  <Mail className="size-3.5 text-tool-diligence" />
+                  <span>{isSubmittingNotify ? 'Registering...' : 'Email Me When Ready'}</span>
+                </>
+              )}
+            </button>
+          </form>
+        </div>
+      )}
+
+      {/* 5. Live SSE Activity Stream Console */}
       {events.length > 0 && (
         <div className="rounded-3xl bg-darkroom-surface overflow-hidden shadow-2xl shadow-black/80">
           <div className="p-4 sm:px-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-darkroom-border/60">

@@ -40,6 +40,7 @@ from backend.models import (
     DocumentAnalysisResult,
     FeedbackItem,
     FeedbackCreateRequest,
+    NotificationSubscriptionRequest,
 )
 from backend.db.firestore import db
 from backend.tools.parallel_search import ParallelSearchTool
@@ -407,6 +408,31 @@ async def get_investigation_batch(investigation_ids: list[str], request: Request
         except Exception as e:
             logger.exception(f"Failed to fetch investigation {inv_id} for batch: {e}")
     return results
+
+
+@app.post("/api/investigations/{investigation_id}/notifications")
+@limiter.limit("20/minute")
+async def register_notification_subscriber(
+    investigation_id: str,
+    req: NotificationSubscriptionRequest,
+    request: Request,
+):
+    """Registers an email or push subscription to be notified when the investigation completes."""
+    if investigation_id == "demo_pinco_pallino":
+        return {"status": "ok", "message": "Notification registered for demo"}
+
+    update_data: Dict[str, Any] = {}
+    if req.email:
+        update_data["notificationEmail"] = req.email
+    if req.pushSubscription:
+        update_data["pushSubscription"] = req.pushSubscription
+
+    if update_data:
+        await db.save_investigation(investigation_id, update_data)
+        logger.info(f"Registered notification preferences for investigation {investigation_id}: {list(update_data.keys())}")
+
+    return {"status": "ok", "registered": True}
+
 
 
 @app.post("/api/investigations/{investigation_id}/resume")

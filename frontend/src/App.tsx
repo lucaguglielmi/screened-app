@@ -56,7 +56,19 @@ export default function App() {
     }
   });
 
-  const [activeTool, setActiveTool] = useState<ActiveTool>('CONVERSATIONAL_DESK');
+  const [activeTool, setActiveTool] = useState<ActiveTool>(() => {
+    try {
+      if (typeof window !== 'undefined') {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('id') || params.get('investigationId') || window.location.pathname.startsWith('/investigation/')) {
+          return 'DUE_DILIGENCE';
+        }
+      }
+    } catch {
+      // ignore
+    }
+    return 'CONVERSATIONAL_DESK';
+  });
   const [query, setQuery] = useState('');
 
   const [optionalUrl] = useState('');
@@ -182,6 +194,19 @@ export default function App() {
     }
   }, []);
 
+  const updateUrlForInvestigation = useCallback((id: string) => {
+    try {
+      const currentParams = new URLSearchParams(window.location.search);
+      if (currentParams.get('id') !== id) {
+        currentParams.set('id', id);
+        const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
+        window.history.pushState({ investigationId: id }, '', newUrl);
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
   const fetchInvestigation = useCallback(
     async (id: string) => {
       try {
@@ -190,6 +215,7 @@ export default function App() {
           const data: Investigation = await res.json();
           setInvestigation(data);
           saveRecentInvestigation(data.id);
+          updateUrlForInvestigation(data.id);
           if (data.confirmedEntity?.name) {
             saveRecentSearch(data.confirmedEntity.name);
           }
@@ -198,8 +224,57 @@ export default function App() {
         console.error('Failed to fetch investigation:', e);
       }
     },
-    [saveRecentInvestigation, saveRecentSearch],
+    [saveRecentInvestigation, saveRecentSearch, updateUrlForInvestigation],
   );
+
+  // Hydrate investigation from URL parameter (?id=... or /investigation/...)
+  useEffect(() => {
+    let isMounted = true;
+    const loadInitialInvestigation = async () => {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const idParam = params.get('id') || params.get('investigationId');
+        const pathMatch = window.location.pathname.match(/\/investigation\/([^/]+)/);
+        const initialId = idParam || (pathMatch ? pathMatch[1] : null);
+
+        if (initialId && isMounted) {
+          const res = await fetch(`/api/investigations/${initialId}`);
+          if (res.ok && isMounted) {
+            const data: Investigation = await res.json();
+            setInvestigation(data);
+            saveRecentInvestigation(data.id);
+            updateUrlForInvestigation(data.id);
+            if (data.confirmedEntity?.name) {
+              saveRecentSearch(data.confirmedEntity.name);
+            }
+          }
+        }
+      } catch (e) {
+        console.error('Failed to parse URL investigation param:', e);
+      }
+    };
+
+    loadInitialInvestigation();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [saveRecentInvestigation, saveRecentSearch, updateUrlForInvestigation]);
+
+  // Handle browser back / forward navigation
+  useEffect(() => {
+    const handlePopState = () => {
+      const params = new URLSearchParams(window.location.search);
+      const idParam = params.get('id') || params.get('investigationId');
+      if (idParam) {
+        fetchInvestigation(idParam);
+      } else {
+        setInvestigation(null);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [fetchInvestigation]);
 
   // SSE Subscription
   useEffect(() => {
@@ -714,6 +789,7 @@ export default function App() {
                   status={currentStatus}
                   events={events}
                   festivalName={investigation.confirmedEntity?.name || investigation.query}
+                  investigationId={investigation.id}
                   isCelebrating={isCelebrating}
                   onCancel={handleReset}
                 />

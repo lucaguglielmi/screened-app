@@ -520,3 +520,9 @@ class FeedbackCreateRequest(BaseModel):
     authorEmail: Optional[str] = Field(None, max_length=150)
 
 
+class NotificationSubscriptionRequest(BaseModel):
+    email: Optional[str] = Field(None, max_length=200)
+    pushSubscription: Optional[Dict[str, Any]] = None
+
+
+

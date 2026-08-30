@@ -282,14 +282,14 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
             </p>
           </div>
 
-          {/* Authenticity Score Card */}
+          {/* Factual Corroboration Summary Card */}
           <div className="flex items-center gap-4 bg-black/40 p-4 rounded-2xl shrink-0">
             <div className="text-center">
               <div className="text-2xl font-black font-mono text-emerald-400">
-                {activeReport.overallAuthenticityScore}%
+                {activeReport.dimensions.filter(d => d.status === 'VERIFIED_AUTHENTIC').length}/{activeReport.dimensions.length}
               </div>
               <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
-                Authenticity
+                Vectors Verified
               </span>
             </div>
 
@@ -297,12 +297,12 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
 
             <div className="text-center">
               <div
-                className={`text-2xl font-black font-mono ${activeReport.totalFlags === 0 ? 'text-zinc-400' : 'text-zinc-400'}`}
+                className={`text-2xl font-black font-mono ${activeReport.totalFlags === 0 ? 'text-zinc-400' : 'text-amber-400'}`}
               >
                 {activeReport.totalFlags}
               </div>
               <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
-                Risk Signals
+                Attention Points
               </span>
             </div>
           </div>

@@ -36,16 +36,17 @@ export const CredibilityRadar: React.FC<Props> = ({ claims, disputes }) => {
     (c) => c.researchDomain === 'PARTICIPANTS' || c.category.toLowerCase().includes('feedback'),
   );
 
-  const calcScore = (catClaims: AtomicClaim[], hasDispute: boolean) => {
-    if (catClaims.length === 0) return 75; // baseline if no specific claims
-    const corroborated = catClaims.filter((c) => c.status === 'CORROBORATED').length;
-    const supported = catClaims.filter((c) => c.status === 'SUPPORTED').length;
+  const getFactualStats = (catClaims: AtomicClaim[], hasDispute: boolean) => {
+    const total = catClaims.length;
+    const corroborated = catClaims.filter((c) => c.status === 'CORROBORATED' || c.status === 'SUPPORTED').length;
     const disputed = catClaims.filter((c) => c.status === 'DISPUTED').length;
-    let score = Math.round(
-      ((corroborated * 1.0 + supported * 0.8) / Math.max(1, catClaims.length)) * 100,
-    );
-    if (hasDispute || disputed > 0) score = Math.min(score, 45);
-    return Math.max(25, Math.min(100, score));
+    return {
+      total,
+      corroborated,
+      disputed,
+      hasDispute,
+      label: total === 0 ? 'Public Record Active' : `${corroborated}/${total} Verified Claims`,
+    };
   };
 
   const hasVenueDispute = disputes.some(
@@ -77,60 +78,50 @@ export const CredibilityRadar: React.FC<Props> = ({ claims, disputes }) => {
     {
       name: 'Screening Venue',
       icon: Building2,
-      score: calcScore(venueClaims, hasVenueDispute),
+      stats: getFactualStats(venueClaims, hasVenueDispute),
       status: hasVenueDispute ? 'Disputed Venue Claims' : 'Physical Venue Corroborated',
       isRisk: hasVenueDispute,
     },
     {
       name: 'Fee & Prize Structure',
       icon: DollarSign,
-      score: calcScore(feeClaims, hasFeeDispute),
-      status: hasFeeDispute ? 'Fee Discrepancy Found' : 'Fee Schedule Clear',
+      stats: getFactualStats(feeClaims, hasFeeDispute),
+      status: hasFeeDispute ? 'Fee Discrepancy Found' : 'Fee Schedule Corroborated',
       isRisk: hasFeeDispute,
     },
     {
-      name: 'Organizer & Jury',
+      name: 'Organizer & Directorships',
       icon: Award,
-      score: calcScore(organizerClaims, hasOrganizerDispute),
-      status: hasOrganizerDispute ? 'Track Record Questions' : 'Verified Company Filing',
+      stats: getFactualStats(organizerClaims, hasOrganizerDispute),
+      status: hasOrganizerDispute ? 'Directorship Inconsistencies' : 'Verified Companies House Filing',
       isRisk: hasOrganizerDispute,
     },
     {
-      name: 'Filmmaker Sentiment',
+      name: 'Filmmaker Alumni Footprint',
       icon: Users,
-      score: calcScore(participantClaims, hasParticipantDispute),
-      status: hasParticipantDispute ? 'Community Red Flags' : 'Positive Participant Accounts',
+      stats: getFactualStats(participantClaims, hasParticipantDispute),
+      status: hasParticipantDispute ? 'Alumni Inquiries Flagged' : 'Alumni Premiers Documented',
       isRisk: hasParticipantDispute,
     },
   ];
 
-  const overallTransparency = Math.round(
-    dimensions.reduce((acc, d) => acc + d.score, 0) / dimensions.length,
-  );
+  const totalCorroborated = claims.filter(c => c.status === 'CORROBORATED' || c.status === 'SUPPORTED').length;
 
   return (
     <div className="p-6 rounded-2xl bg-darkroom-surface border border-darkroom-border space-y-5">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-darkroom-border pb-3">
         <div className="flex items-center gap-2">
-          <Sparkles className="size-4 text-indigo-600 text-indigo-400" />
-          <span className="font-mono text-xs uppercase tracking-wider text-darkroom-text font-semibold">
-            Evidence-Based Transparency Radar
+          <Sparkles className="size-4 text-indigo-400" />
+          <span className="font-mono text-xs uppercase tracking-wider text-slate-300 font-semibold">
+            Evidence-Based Corroboration Summary
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-xs font-mono text-darkroom-muted">
-            Overall Index:
+          <span className="text-xs font-mono text-slate-400">
+            Verified Claims:
           </span>
-          <span
-            className={`text-sm font-mono font-bold px-2 py-0.5 rounded-full ${
-              overallTransparency >= 75
-                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                : overallTransparency >= 50
-                  ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                  : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-            }`}
-          >
-            {overallTransparency}/100
+          <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-tool-diligence/10 text-tool-diligence border border-tool-diligence/20">
+            {totalCorroborated}/{claims.length || '0'} Corroborated
           </span>
         </div>
       </div>
@@ -144,39 +135,21 @@ export const CredibilityRadar: React.FC<Props> = ({ claims, disputes }) => {
               className="p-3.5 rounded-xl bg-darkroom-card border border-darkroom-border space-y-2.5"
             >
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-xs font-medium text-darkroom-text">
-                  <Icon className="size-3.5 text-indigo-500" />
+                <div className="flex items-center gap-2 text-xs font-medium text-slate-200">
+                  <Icon className="size-3.5 text-indigo-400" />
                   <span>{dim.name}</span>
                 </div>
-                <span className="font-mono text-xs font-semibold text-darkroom-text">
-                  {dim.score}%
+                <span className="font-mono text-[11px] font-semibold text-slate-300">
+                  {dim.stats.label}
                 </span>
               </div>
 
-              {/* Progress Bar */}
-              <div className="w-full h-1.5 rounded-full bg-paper-border bg-darkroom-border overflow-hidden">
-                <div
-                  className={`h-full rounded-full transition-all duration-700 ${
-                    dim.score >= 70
-                      ? 'bg-emerald-500'
-                      : dim.score >= 50
-                        ? 'bg-emerald-500'
-                        : 'bg-emerald-500'
-                  }`}
-                  style={{ width: `${dim.score}%` }}
-                />
-              </div>
-
-              <div className="flex items-center justify-between text-[11px] font-mono">
-                <span
-                  className={`inline-flex items-center gap-1 ${
-                    'text-darkroom-muted'
-                  }`}
-                >
+              <div className="flex items-center justify-between text-[11px] font-mono pt-1">
+                <span className="inline-flex items-center gap-1.5 text-slate-300">
                   {dim.isRisk ? (
-                    <AlertTriangle className="size-3 shrink-0 text-emerald-500" />
+                    <AlertTriangle className="size-3 shrink-0 text-amber-400" />
                   ) : (
-                    <ShieldCheck className="size-3 shrink-0 text-emerald-500" />
+                    <ShieldCheck className="size-3 shrink-0 text-tool-diligence" />
                   )}
                   <span className="truncate">{dim.status}</span>
                 </span>

@@ -729,6 +729,19 @@ class Orchestrator:
             inv_data["updatedAt"] = datetime.now(timezone.utc).isoformat()
             await db.save_investigation(investigation_id, inv_data)
 
+            # Background Notification Dispatcher (Email & Web Push)
+            notification_email = inv_data.get("notificationEmail")
+            if notification_email:
+                try:
+                    from backend.services.email_service import email_service
+                    await email_service.send_completion_email(
+                        to_email=notification_email,
+                        festival_name=entity.name,
+                        investigation_id=investigation_id,
+                    )
+                except Exception as em_err:
+                    logger.warning(f"Could not send completion email for {investigation_id}: {em_err}")
+
             await broadcaster.emit(
                 investigation_id=investigation_id,
                 event_type=EventType.DOSSIER_READY,
@@ -739,7 +752,6 @@ class Orchestrator:
                     "claimsCount": len(claims),
                     "sourcesCount": len(all_sources),
                     "disputesCount": len(disputes),
-                    "authenticityScore": deep_vetting_report.overallAuthenticityScore,
                 },
             )
 
