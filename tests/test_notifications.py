@@ -38,3 +38,40 @@ async def test_email_service_send_completion_email():
         investigation_id="inv_raindance_999"
     )
     assert success is True
+
+
+@pytest.mark.asyncio
+async def test_sse_disconnect_does_not_cancel_background_task():
+    """Verify that when client disconnects from SSE (e.g. mobile phone locked), background task continues running."""
+    import asyncio
+    from backend.orchestrator.events import broadcaster
+    from backend.orchestrator.state_machine import orchestrator
+
+    inv_id = "test_resilient_bg_task"
+    
+    # Mock a running background task
+    async def dummy_work():
+        await asyncio.sleep(5)
+
+    task = asyncio.create_task(dummy_work())
+    orchestrator._running_tasks[inv_id] = task
+
+    # Client subscribes to SSE
+    queue = await broadcaster.subscribe(inv_id)
+    assert inv_id in broadcaster._listeners
+
+    # Client disconnects (locks phone / closes tab)
+    broadcaster.unsubscribe(inv_id, queue)
+    assert inv_id not in broadcaster._listeners
+
+    # Verify background task is still running and was NOT cancelled
+    assert not task.cancelled()
+    assert not task.done()
+
+    # Clean up dummy task
+    task.cancel()
+    try:
+        await task
+    except asyncio.CancelledError:
+        pass
+

@@ -376,6 +376,21 @@ export default function App() {
     };
   }, [investigation?.id, investigation?.status, fetchInvestigation]);
 
+  // Re-poll / re-hydrate on tab focus or visibility change (e.g. user unlocked phone or returned to tab)
+  useEffect(() => {
+    const handleVisibilityOrFocus = () => {
+      if (document.visibilityState === 'visible' && investigation?.id && investigation.status !== 'READY') {
+        fetchInvestigation(investigation.id);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityOrFocus);
+    window.addEventListener('focus', handleVisibilityOrFocus);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityOrFocus);
+      window.removeEventListener('focus', handleVisibilityOrFocus);
+    };
+  }, [fetchInvestigation, investigation?.id, investigation?.status]);
+
 
   const handleStartInvestigation = async (
     subjectQuery: string,

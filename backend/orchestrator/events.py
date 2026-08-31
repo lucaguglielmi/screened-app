@@ -76,9 +76,6 @@ class EventBroadcaster:
                 self._listeners[investigation_id].remove(queue)
                 if not self._listeners[investigation_id]:
                     del self._listeners[investigation_id]
-                    # No more active clients listening to this SSE, cancel any running background tasks
-                    from backend.orchestrator.state_machine import orchestrator
-                    orchestrator.cancel_task(investigation_id)
             except ValueError:
                 pass
 
