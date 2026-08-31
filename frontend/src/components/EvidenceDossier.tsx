@@ -1208,18 +1208,18 @@ export const EvidenceDossier: React.FC<Props> = ({
                 disputes.map((disp, idx) => (
                   <div key={idx} className="p-3.5 rounded-xl bg-darkroom-bg/80 border border-darkroom-border/60 space-y-2">
                     <div className="flex flex-col items-start gap-1.5">
-                      <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/30 shrink-0">
+                      <span className="text-xs font-mono uppercase px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/30 shrink-0">
                         {disp.category}
                       </span>
-                      <h4 className="text-xs sm:text-sm font-bold text-white font-sans break-words">{disp.pointOfContention}</h4>
+                      <h4 className="text-sm sm:text-base font-bold text-white font-sans break-words">{disp.pointOfContention}</h4>
                     </div>
-                    <p className="text-xs text-slate-300 leading-relaxed pt-0.5 break-words">
+                    <p className="text-sm text-slate-300 leading-relaxed pt-0.5 break-words">
                       {disp.guidance || `Discrepancy detected between claimed promotional statements ("${disp.claimA}") and verified records ("${disp.claimB}").`}
                     </p>
                   </div>
                 ))
               ) : (
-                <div className="p-3.5 rounded-xl bg-darkroom-bg/80 border border-darkroom-border/60 text-xs text-slate-300 leading-relaxed">
+                <div className="p-3.5 rounded-xl bg-darkroom-bg/80 border border-darkroom-border/60 text-sm text-slate-300 leading-relaxed">
                   No critical corporate disputes or venue contradictions flagged in current public records.
                 </div>
               )}
@@ -1233,36 +1233,36 @@ export const EvidenceDossier: React.FC<Props> = ({
                 <Check className="size-4 text-emerald-400 shrink-0" />
                 <span>Chapter 2: The Good Stuff</span>
               </div>
-              <span className="text-[11px] font-mono text-emerald-300/80 self-start sm:self-auto">
+              <span className="text-xs font-mono text-emerald-300/80 self-start sm:self-auto">
                 Corroborated Highlights
               </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
               <div className="p-3.5 rounded-xl bg-darkroom-bg/80 border border-darkroom-border/60 space-y-1">
-                <span className="font-mono text-emerald-400 text-[11px] font-bold block">✓ Verified Physical Venues</span>
-                <p className="text-slate-300 leading-relaxed">
+                <span className="font-mono text-emerald-400 text-xs font-bold block">✓ Verified Physical Venues</span>
+                <p className="text-sm text-slate-300 leading-relaxed">
                   Screening locations confirmed across municipal venue logs and historical festival editions.
                 </p>
               </div>
 
               <div className="p-3.5 rounded-xl bg-darkroom-bg/80 border border-darkroom-border/60 space-y-1">
-                <span className="font-mono text-emerald-400 text-[11px] font-bold block">✓ Operational History &amp; Corporate Standing</span>
-                <p className="text-slate-300 leading-relaxed">
+                <span className="font-mono text-emerald-400 text-xs font-bold block">✓ Operational History &amp; Corporate Standing</span>
+                <p className="text-sm text-slate-300 leading-relaxed">
                   Active entity registration verified with valid filings and documented edition milestones.
                 </p>
               </div>
 
               <div className="p-3.5 rounded-xl bg-darkroom-bg/80 border border-darkroom-border/60 space-y-1">
-                <span className="font-mono text-emerald-400 text-[11px] font-bold block">✓ Alumni Filmmaker Laureates</span>
-                <p className="text-slate-300 leading-relaxed">
+                <span className="font-mono text-emerald-400 text-xs font-bold block">✓ Alumni Filmmaker Laureates</span>
+                <p className="text-sm text-slate-300 leading-relaxed">
                   Verified independent filmmaker alumni catalog with public festival screening credits.
                 </p>
               </div>
 
               <div className="p-3.5 rounded-xl bg-darkroom-bg/80 border border-darkroom-border/60 space-y-1">
-                <span className="font-mono text-emerald-400 text-[11px] font-bold block">✓ Transparent Submission Guidelines</span>
-                <p className="text-slate-300 leading-relaxed">
+                <span className="font-mono text-emerald-400 text-xs font-bold block">✓ Transparent Submission Guidelines</span>
+                <p className="text-sm text-slate-300 leading-relaxed">
                   Clear entry rules with zero boilerplate syndicate text matching known laurel mills.
                 </p>
               </div>
@@ -1279,9 +1279,9 @@ export const EvidenceDossier: React.FC<Props> = ({
               <ListChecks className="size-3.5 text-emerald-400" />
               <span>Filmmaker Action Checklist</span>
             </div>
-            <ul className="space-y-2.5 text-xs sm:text-sm text-slate-300">
+            <ul className="space-y-2.5 text-sm sm:text-base text-slate-200">
               {dossier.filmmakerChecklist.map((item, idx) => (
-                <li key={idx} className="flex items-start gap-2 leading-relaxed">
+                <li key={idx} className="flex items-start gap-2.5 leading-relaxed">
                   <span className="font-mono text-emerald-400 font-semibold shrink-0">[{idx + 1}]</span>
                   <span>{item}</span>
                 </li>
@@ -1290,12 +1290,12 @@ export const EvidenceDossier: React.FC<Props> = ({
           </div>
 
           {/* Legal Disclaimer */}
-          <div className="py-4 px-5 rounded-2xl bg-darkroom-surface/40 border border-darkroom-border/40 text-slate-400 text-xs leading-relaxed space-y-1.5">
-            <div className="flex items-center gap-2 text-slate-300 font-semibold font-mono text-xs uppercase tracking-wider">
+          <div className="py-4 px-5 rounded-2xl bg-darkroom-surface/40 border border-darkroom-border/40 text-slate-300 text-sm leading-relaxed space-y-1.5">
+            <div className="flex items-center gap-2 text-slate-200 font-semibold font-mono text-xs uppercase tracking-wider">
               <AlertTriangle className="size-3.5 text-orange-400 shrink-0" />
               <span>Legal Advisory &amp; Notice</span>
             </div>
-            <p className="text-slate-300 text-xs leading-relaxed">
+            <p className="text-slate-300 text-sm leading-relaxed">
               Screened synthesizes automated due diligence from publicly accessible internet records and corporate filings. Provided for informational purposes only. Independently corroborate terms before submitting films.
             </p>
           </div>

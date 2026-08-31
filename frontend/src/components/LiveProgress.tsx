@@ -393,28 +393,24 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
     <motion.div
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      className="max-w-4xl mx-auto space-y-6"
+      className="max-w-4xl mx-auto space-y-6 sm:space-y-8"
     >
-      {/* 1. Unified Progress & Pipeline Header */}
-      <div className={`p-5 sm:p-7 rounded-3xl bg-darkroom-surface shadow-2xl shadow-black/80 space-y-5 sm:space-y-6 relative overflow-hidden ${status === 'FAILED' ? 'border border-red-500/20' : ''}`}>
-        {/* Glow ambient accent behind header */}
-        <div className={`absolute -right-20 -top-20 size-60 rounded-full blur-3xl pointer-events-none ${status === 'FAILED' ? 'bg-red-500/10' : 'bg-midnight-royal/20'}`} />
-        <div className={`absolute -left-20 -bottom-20 size-60 rounded-full blur-3xl pointer-events-none ${status === 'FAILED' ? 'bg-rose-500/5' : 'bg-tool-diligence/10'}`} />
-
+      {/* 1. Unified Progress & Pipeline Section (Unboxed, Clean & Modern) */}
+      <div className="space-y-6 relative">
         {/* Top bar: Title + Status + Timers */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-darkroom-border/60 pb-4 relative z-10">
           <div className="space-y-1 min-w-0 flex-1">
-            <div className={`flex items-center gap-2 text-xs font-mono uppercase tracking-wider ${status === 'FAILED' ? 'text-red-400' : 'text-tool-diligence'}`}>
+            <div className={`flex items-center gap-2 text-xs sm:text-sm font-mono uppercase tracking-wider ${status === 'FAILED' ? 'text-red-400' : 'text-tool-diligence'}`}>
               {status === 'FAILED' ? (
-                <AlertTriangle className="size-3.5" />
+                <AlertTriangle className="size-4" />
               ) : (
-                <Loader2 className={`size-3.5 ${reducedMotion || status === 'READY' ? '' : 'animate-spin'}`} />
+                <Loader2 className={`size-4 ${reducedMotion || status === 'READY' ? '' : 'animate-spin'}`} />
               )}
               <span className="font-semibold">
                 {status === 'FAILED' ? 'Investigation Halted' : status === 'READY' ? 'Investigation Complete' : 'Autonomous Pipeline Active'}
               </span>
             </div>
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-white tracking-tight break-words flex items-center flex-wrap gap-2 sm:gap-3">
+            <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-white tracking-tight break-words flex items-center flex-wrap gap-2 sm:gap-3">
               <span>Investigating {festivalName}</span>
               {festivalName === 'Pinco Pallino Film Festival' && (
                 <span className="inline-flex items-center rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-sans font-medium text-amber-400 border border-amber-500/20 tracking-normal whitespace-nowrap mt-1 sm:mt-0">
@@ -425,26 +421,21 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
           </div>
 
           <div className="flex items-center gap-2 z-10 shrink-0 w-full sm:w-auto justify-between sm:justify-end">
-            <div className="px-3 py-1.5 rounded-xl bg-darkroom-bg border border-darkroom-border text-slate-300 text-[11px] font-mono font-medium flex items-center gap-1.5 shadow-inner">
+            <div className="px-3.5 py-1.5 rounded-xl bg-darkroom-surface/80 border border-darkroom-border/60 text-slate-200 text-xs sm:text-sm font-mono font-medium flex items-center gap-1.5 shadow-sm">
               <span>⏱️ {Math.floor(elapsedSeconds / 60)}:{(elapsedSeconds % 60).toString().padStart(2, '0')}</span>
-              {isRunning && (
-                <span className="text-slate-500 font-normal">
-                  · ~{Math.max(0, 35 - elapsedSeconds)}s left
-                </span>
-              )}
             </div>
 
             {onCancel && status !== 'READY' && status !== 'FAILED' && status !== 'CANCELLED' && !isCelebrating && (
               <button 
                 onClick={onCancel}
-                className="px-3 py-1.5 rounded-xl bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border hover:border-rose-500/50 text-slate-400 hover:text-rose-400 text-[11px] font-mono transition-colors cursor-pointer shadow-sm active:scale-95"
+                className="px-3.5 py-1.5 rounded-xl bg-darkroom-surface/80 hover:bg-darkroom-surface border border-darkroom-border/60 hover:border-rose-500/50 text-slate-300 hover:text-rose-400 text-xs sm:text-sm font-mono transition-colors cursor-pointer shadow-sm active:scale-95"
               >
                 Cancel
               </button>
             )}
 
-            <div className="px-3 py-1.5 rounded-xl bg-tool-diligence/15 text-tool-diligence text-[11px] font-mono font-semibold flex items-center gap-2">
-              <span className={`size-1.5 rounded-full bg-tool-diligence ${reducedMotion || isCelebrating || status === 'FAILED' ? '' : 'animate-pulse'}`} />
+            <div className="px-3.5 py-1.5 rounded-xl bg-tool-diligence/15 text-tool-diligence text-xs sm:text-sm font-mono font-semibold flex items-center gap-2">
+              <span className={`size-2 rounded-full bg-tool-diligence ${reducedMotion || isCelebrating || status === 'FAILED' ? '' : 'animate-pulse'}`} />
               <span>{isCelebrating ? 'COMPLETED' : status}</span>
               <span className="text-white font-semibold ml-1">{progressPercent}%</span>
             </div>
@@ -453,7 +444,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
 
         {/* Mobile Compact Progress Bar */}
         <div className="block md:hidden space-y-1.5">
-          <div className="h-2 w-full bg-darkroom-bg rounded-full overflow-hidden border border-darkroom-border">
+          <div className="h-2 w-full bg-darkroom-surface/80 rounded-full overflow-hidden border border-darkroom-border/60">
             <motion.div
               className="h-full bg-gradient-to-r from-tool-diligence via-emerald-400 to-teal-300 rounded-full shadow-sm shadow-[var(--color-tool-diligence)]/50"
               initial={{ width: 0 }}
@@ -464,7 +455,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
         </div>
 
         {/* Timeline Track - 5-Column Row with Connected Segment Lines */}
-        <div className="relative pt-1 sm:pt-2 pb-2 sm:pb-4 px-1 sm:px-6">
+        <div className="relative pt-2 sm:pt-4 pb-2 sm:pb-4 px-1 sm:px-6">
           {/* Timeline Nodes - 5 Columns Grid */}
           <div className="relative z-10 grid grid-cols-5 gap-1 sm:gap-2 w-full">
             {TIMELINE_STEPS.map((step, idx) => {
@@ -594,9 +585,9 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
                   </div>
 
                   {/* Node Label Below */}
-                  <div className="mt-2 flex flex-col items-center text-center select-none">
+                  <div className="mt-2.5 flex flex-col items-center text-center select-none">
                     <span
-                      className={`text-[11px] sm:text-xs font-semibold font-mono tracking-tight transition-colors ${
+                      className={`text-xs sm:text-sm font-semibold font-mono tracking-tight transition-colors ${
                         state === 'ACTIVE'
                           ? 'text-tool-diligence font-bold'
                           : state === 'FAILED'
@@ -608,14 +599,14 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
                     >
                       {step.shortLabel}
                     </span>
-                    <span className="text-[10px] font-mono text-slate-400 hidden md:inline">
-                      {step.name.length > 12 ? step.name.slice(0, 10) + '..' : step.name}
+                    <span className="text-xs font-mono text-slate-400 hidden md:inline mt-0.5">
+                      {step.name.length > 14 ? step.name.slice(0, 12) + '..' : step.name}
                     </span>
                   </div>
 
                   {/* MINI HOVER TOOLTIP BADGE */}
                   {isHovered && (
-                    <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-xl bg-darkroom-bg text-slate-100 text-xs font-mono whitespace-nowrap shadow-xl border border-darkroom-border z-30 pointer-events-none animate-in fade-in zoom-in-95 duration-150 flex items-center gap-1.5">
+                    <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-xl bg-darkroom-surface text-slate-100 text-xs font-mono whitespace-nowrap shadow-xl border border-darkroom-border z-30 pointer-events-none animate-in fade-in zoom-in-95 duration-150 flex items-center gap-1.5">
                       <span
                         className={`size-1.5 rounded-full ${
                           state === 'ACTIVE'
@@ -648,10 +639,10 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.2 }}
-            className="pt-2 pb-1 flex flex-col sm:flex-row items-center sm:items-start gap-3.5 text-center sm:text-left"
+            className="p-4 sm:p-5 rounded-2xl bg-darkroom-surface/50 border border-darkroom-border/40 flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left shadow-sm"
           >
             <div
-              className={`size-10 rounded-xl flex items-center justify-center shrink-0 ${
+              className={`size-11 rounded-xl flex items-center justify-center shrink-0 ${
                 activeStepState === 'ACTIVE'
                   ? 'bg-gradient-to-tr from-tool-diligence to-emerald-400 text-slate-950 shadow-md shadow-[var(--color-tool-diligence)]/30'
                   : activeStepState === 'COMPLETED'
@@ -659,54 +650,54 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
                     : 'bg-[#090e1a] text-slate-500 border border-slate-700'
               }`}
             >
-              <activeStep.icon className="size-5" />
+              <activeStep.icon className="size-5 sm:size-5.5" />
             </div>
 
-            <div className="min-w-0 flex-1 space-y-0.5">
+            <div className="min-w-0 flex-1 space-y-1">
               <div className="flex items-center justify-center sm:justify-start gap-2.5 flex-wrap">
-                <h3 className="text-sm sm:text-base font-bold text-white tracking-tight">{activeStep.name}</h3>
+                <h3 className="text-base sm:text-lg font-bold text-white tracking-tight font-sans">{activeStep.name}</h3>
                 {activeStepState === 'ACTIVE' && (
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-tool-diligence/20 text-tool-diligence border border-tool-diligence/40 animate-pulse">
+                  <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-tool-diligence/20 text-tool-diligence border border-tool-diligence/40 animate-pulse">
                     Running
                   </span>
                 )}
                 {activeStepState === 'COMPLETED' && (
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
-                    <VerifiedTick size={10} />
+                  <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
+                    <VerifiedTick size={12} />
                     <span>Completed</span>
                   </span>
                 )}
               </div>
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans">{activeStep.description}</p>
+              <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-sans">{activeStep.description}</p>
             </div>
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {/* 4. Come Back Later & Background Notifications Card (In-Page) */}
+      {/* 2. Come Back Later & Background Notifications (Streamlined, Integrated) */}
       {isRunning && (
-        <div className="rounded-3xl bg-darkroom-surface/90 border border-darkroom-border p-4 sm:p-5 shadow-xl space-y-3">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-darkroom-border/60 pb-3">
-            <div className="flex items-center gap-2.5">
+        <div className="rounded-2xl bg-darkroom-surface/40 border border-darkroom-border/40 p-4 sm:p-5 space-y-3.5 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-darkroom-border/40 pb-3">
+            <div className="flex items-start sm:items-center gap-3">
               <div
-                className={`p-2 rounded-xl border ${
+                className={`p-2.5 rounded-xl border shrink-0 mt-0.5 sm:mt-0 ${
                   isNotified
                     ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
                     : 'bg-midnight-royal/40 border-tool-diligence/30 text-tool-diligence'
                 }`}
               >
-                {isNotified ? <VerifiedTick size={16} /> : <Bell className="size-4" />}
+                {isNotified ? <VerifiedTick size={18} /> : <Bell className="size-4.5" />}
               </div>
               <div className="min-w-0 flex-1">
-                <h4 className="text-xs font-bold text-white font-sans flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                <h4 className="text-sm sm:text-base font-bold text-white font-sans flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
                   <span>{isNotified ? 'Background Notification Active' : 'Come Back Later & Get Notified'}</span>
                   {isNotified && (
-                    <span className="text-[10px] font-mono text-emerald-400 font-normal">
+                    <span className="text-xs font-mono text-emerald-400 font-normal">
                       (Will notify when ready)
                     </span>
                   )}
                 </h4>
-                <p className="text-[11px] text-slate-400 mt-0.5 break-words">
+                <p className="text-sm text-slate-300 mt-1 break-words font-sans leading-relaxed">
                   {isNotified
                     ? `Registered to ${notifyEmail}. Feel free to close or bookmark this tab — we'll notify you as soon as the dossier is ready.`
                     : 'Feel free to close this tab. We can notify you via push and email as soon as the dossier is ready.'}
@@ -720,13 +711,13 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
                 type="button"
                 onClick={handleEnableBrowserPush}
                 disabled={pushEnabled}
-                className={`px-3 py-1.5 rounded-xl border text-xs font-mono transition-all flex items-center gap-1.5 cursor-pointer shrink-0 ${
+                className={`px-3.5 py-2 rounded-xl border text-xs sm:text-sm font-mono transition-all flex items-center gap-1.5 cursor-pointer shrink-0 ${
                   pushEnabled
                     ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                    : 'bg-darkroom-card hover:bg-darkroom-bg text-slate-300 hover:text-white border-darkroom-border'
+                    : 'bg-darkroom-card hover:bg-darkroom-bg text-slate-200 hover:text-white border-darkroom-border'
                 }`}
               >
-                {pushEnabled ? <VerifiedTick size={13} /> : <Bell className="size-3.5 text-tool-diligence" />}
+                {pushEnabled ? <VerifiedTick size={14} /> : <Bell className="size-4 text-tool-diligence" />}
                 <span>{pushEnabled ? 'Push Enabled' : 'Enable Browser Push'}</span>
               </button>
             )}
@@ -734,36 +725,36 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
 
           {/* Email Notification Form or Permanent Confirmation Banner */}
           {isNotified ? (
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-xs text-emerald-300 font-mono">
-              <div className="flex items-start gap-2 min-w-0">
-                <VerifiedTick size={15} className="shrink-0 mt-0.5" />
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-sm text-emerald-300 font-mono">
+              <div className="flex items-start gap-2.5 min-w-0">
+                <VerifiedTick size={16} className="shrink-0 mt-0.5" />
                 <span className="break-all">
                   We&apos;ll email the direct dossier link to: <strong className="text-white">{notifyEmail}</strong>
                 </span>
               </div>
-              <span className="text-[11px] text-emerald-400/80 px-2 py-0.5 rounded bg-emerald-500/15 border border-emerald-500/30 shrink-0 self-start sm:self-auto">
+              <span className="text-xs text-emerald-400/90 px-2.5 py-0.5 rounded bg-emerald-500/15 border border-emerald-500/30 shrink-0 self-start sm:self-auto">
                 Pending Synthesis
               </span>
             </div>
           ) : (
-            <form onSubmit={handleRegisterEmail} className="flex flex-col sm:flex-row items-center gap-2">
+            <form onSubmit={handleRegisterEmail} className="flex flex-col sm:flex-row items-center gap-2.5">
               <div className="relative flex-1 w-full">
-                <Mail className="size-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
+                <Mail className="size-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input
                   type="email"
                   value={notifyEmail}
                   onChange={(e) => setNotifyEmail(e.target.value)}
                   placeholder="Enter your email for direct dossier link..."
-                  className="w-full pl-10 pr-4 py-2 rounded-xl bg-darkroom-bg border border-darkroom-border text-xs text-white placeholder-slate-500 focus:outline-none focus:border-tool-diligence/50 font-mono"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-darkroom-bg border border-darkroom-border text-sm text-white placeholder-slate-400 focus:outline-none focus:border-tool-diligence/50 font-mono"
                   disabled={isSubmittingNotify}
                 />
               </div>
               <button
                 type="submit"
                 disabled={isSubmittingNotify || !notifyEmail.includes('@')}
-                className="w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-mono font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0 bg-midnight-royal hover:bg-midnight-royal/80 text-white border border-tool-diligence/40 shadow-sm disabled:opacity-40"
+                className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs sm:text-sm font-mono font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0 bg-midnight-royal hover:bg-midnight-royal/80 text-white border border-tool-diligence/40 shadow-sm disabled:opacity-40"
               >
-                <Mail className="size-3.5 text-tool-diligence" />
+                <Mail className="size-4 text-tool-diligence" />
                 <span>{isSubmittingNotify ? 'Registering...' : 'Email Me When Ready'}</span>
               </button>
             </form>
@@ -771,21 +762,21 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
         </div>
       )}
 
-      {/* 5. Live SSE Activity Stream Console */}
+      {/* 3. Live SSE Activity Stream Console (Preserved Card Container) */}
       {events.length > 0 && (
-        <div className="rounded-3xl bg-darkroom-surface overflow-hidden shadow-2xl shadow-black/80">
+        <div className="rounded-3xl bg-darkroom-surface overflow-hidden shadow-2xl shadow-black/80 border border-darkroom-border/60">
           <div className="p-4 sm:px-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-darkroom-border/60">
-            <span className="font-mono text-xs uppercase tracking-wider text-slate-300 flex items-center gap-2 font-semibold">
+            <span className="font-mono text-xs sm:text-sm uppercase tracking-wider text-slate-200 flex items-center gap-2 font-semibold">
               <span
                 className={`size-2 rounded-full bg-tool-diligence ${reducedMotion ? '' : 'animate-pulse'}`}
               />
-              <Terminal className="size-3.5 text-indigo-400" />
+              <Terminal className="size-4 text-indigo-400" />
               <span>Live Agent Event Log</span>
             </span>
 
             <div className="flex items-center gap-2 flex-wrap">
               {/* Category Filter Pills */}
-              <div className="flex items-center gap-1 p-0.5 rounded-xl bg-darkroom-bg border border-darkroom-border text-[11px] font-mono">
+              <div className="flex items-center gap-1 p-0.5 rounded-xl bg-darkroom-bg border border-darkroom-border text-xs font-mono">
                 {[
                   { id: 'ALL', label: 'All' },
                   { id: 'QUERIES', label: 'Queries' },
@@ -799,7 +790,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
                       soundEffects.playClick();
                       setEventCategoryFilter(cat.id as 'ALL' | 'QUERIES' | 'CLAIMS' | 'DISPUTES');
                     }}
-                    className={`px-2 py-0.5 rounded-lg transition-all cursor-pointer ${
+                    className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
                       eventCategoryFilter === cat.id
                         ? 'bg-midnight-royal text-white font-semibold shadow-xs'
                         : 'text-slate-400 hover:text-white'
@@ -819,7 +810,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
                   onClick={() => setShowEventLogTooltip((prev) => !prev)}
                   onFocus={() => setShowEventLogTooltip(true)}
                   onBlur={() => setShowEventLogTooltip(false)}
-                  className="px-2.5 py-0.5 rounded-full bg-darkroom-bg hover:bg-darkroom-card border border-darkroom-border hover:border-slate-600 text-slate-300 hover:text-white font-mono text-xs font-medium cursor-pointer transition-all flex items-center gap-1 shadow-sm select-none"
+                  className="px-3 py-1 rounded-full bg-darkroom-bg hover:bg-darkroom-card border border-darkroom-border hover:border-slate-600 text-slate-200 hover:text-white font-mono text-xs font-medium cursor-pointer transition-all flex items-center gap-1 shadow-sm select-none"
                   aria-label={`${displayEvents.length} events recorded`}
                 >
                   <span>{displayEvents.length}</span>
@@ -832,7 +823,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 4, scale: 0.95 }}
                       transition={{ duration: 0.12 }}
-                      className="absolute right-0 bottom-full mb-2 px-2.5 py-1 rounded-xl bg-darkroom-bg border border-darkroom-border text-slate-100 text-xs font-mono whitespace-nowrap shadow-2xl z-30 pointer-events-none flex items-center gap-1.5"
+                      className="absolute right-0 bottom-full mb-2 px-3 py-1 rounded-xl bg-darkroom-surface border border-darkroom-border text-slate-100 text-xs font-mono whitespace-nowrap shadow-2xl z-30 pointer-events-none flex items-center gap-1.5"
                     >
                       <span className="size-1.5 rounded-full bg-tool-diligence" />
                       <span>{displayEvents.length} events matching filter</span>
@@ -844,17 +835,17 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
           </div>
 
           <div
-            className="p-4 sm:p-5 max-h-60 overflow-y-auto space-y-2.5 text-xs font-mono bg-darkroom-bg/60"
+            className="p-4 sm:p-5 max-h-64 overflow-y-auto space-y-2.5 text-xs sm:text-sm font-mono bg-darkroom-bg/60"
             onMouseEnter={() => setIsHoveringLog(true)}
             onMouseLeave={() => setIsHoveringLog(false)}
           >
             {displayEvents.map((evt, idx) => (
               <div
                 key={idx}
-                className="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-2.5 leading-relaxed hover:bg-darkroom-surface/40 p-2 sm:p-1 rounded-lg transition-colors border-b sm:border-b-0 border-darkroom-border/30 last:border-b-0"
+                className="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-2.5 leading-relaxed hover:bg-darkroom-surface/40 p-2 sm:p-1.5 rounded-lg transition-colors border-b sm:border-b-0 border-darkroom-border/30 last:border-b-0 text-xs sm:text-sm"
               >
                 <div className="flex items-center gap-2 shrink-0">
-                  <span className="text-slate-400 text-[11px] font-mono">
+                  <span className="text-slate-400 text-xs font-mono">
                     {evt.timestamp
                       ? new Date(evt.timestamp).toLocaleTimeString([], {
                           hour: '2-digit',
@@ -863,17 +854,17 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
                         })
                       : ''}
                   </span>
-                  <span className="text-tool-diligence font-semibold text-xs">
+                  <span className="text-tool-diligence font-semibold text-xs sm:text-sm">
                     [{evt.agentName}]
                   </span>
                 </div>
-                <span className="text-slate-200 text-xs flex-1 break-words">{evt.message}</span>
+                <span className="text-slate-200 text-xs sm:text-sm flex-1 break-words font-mono">{evt.message}</span>
               </div>
             ))}
 
             {/* Active Live Agent Pulsating Mini-Loader Indicator */}
             {isRunning && (
-              <div className="flex items-center gap-2.5 leading-relaxed p-2 sm:p-1.5 rounded-lg text-xs font-mono text-slate-400 bg-tool-diligence/[0.04] border border-tool-diligence/20 animate-fade-in">
+              <div className="flex items-center gap-2.5 leading-relaxed p-2 sm:p-2 rounded-lg text-xs sm:text-sm font-mono text-slate-300 bg-tool-diligence/[0.04] border border-tool-diligence/20 animate-fade-in">
                 <div className="flex items-center gap-2 shrink-0">
                   <span className="relative flex size-2">
                     <span
@@ -887,27 +878,27 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
                       }`}
                     />
                   </span>
-                  <span className="text-tool-diligence font-semibold text-xs">
+                  <span className="text-tool-diligence font-semibold text-xs sm:text-sm">
                     [Live Agent]
                   </span>
                 </div>
-                <span className="text-slate-300 text-xs flex items-center gap-2 flex-1">
+                <span className="text-slate-300 text-xs sm:text-sm flex items-center gap-2 flex-1">
                   <span>Gathering &amp; analyzing evidence stream</span>
                   <span className="inline-flex gap-1 items-center">
                     <span
-                      className={`size-1 rounded-full bg-tool-diligence ${
+                      className={`size-1.5 rounded-full bg-tool-diligence ${
                         reducedMotion ? '' : 'animate-bounce'
                       }`}
                       style={{ animationDelay: '0ms' }}
                     />
                     <span
-                      className={`size-1 rounded-full bg-tool-diligence ${
+                      className={`size-1.5 rounded-full bg-tool-diligence ${
                         reducedMotion ? '' : 'animate-bounce'
                       }`}
                       style={{ animationDelay: '150ms' }}
                     />
                     <span
-                      className={`size-1 rounded-full bg-tool-diligence ${
+                      className={`size-1.5 rounded-full bg-tool-diligence ${
                         reducedMotion ? '' : 'animate-bounce'
                       }`}
                       style={{ animationDelay: '300ms' }}
