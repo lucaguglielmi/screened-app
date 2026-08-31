@@ -1085,5 +1085,17 @@ def get_demo_full_dossier():
                 }
             ],
             "generatedAt": now_iso
+        },
+        "auditHealth": {
+            "status": "HEALTHY",
+            "rawDomainClaimsReceived": 300,
+            "assembledClaimsCount": 300,
+            "sourcesCount": 12,
+            "validationErrorsCount": 0,
+            "validationErrors": [],
+            "deepVettingVectorsCount": 7,
+            "deepVettingInconclusiveCount": 0,
+            "warnings": [],
+            "executionDurationMs": 18000
         }
     }

@@ -50,6 +50,13 @@ from backend.models import (
     QuestionCategory,
     ClaimEvidence,
     Stance,
+    VettingSignalStatus,
+    InvestigationAuditHealth,
+    extract_domain_from_url,
+    safe_claim_kind,
+    safe_verification_status,
+    safe_question_category,
+    safe_research_domain,
 )
 from backend.tools.parallel_search import ParallelSearchTool
 from backend.tools.parallel_extract import ParallelExtractTool
@@ -117,6 +124,32 @@ def enqueue_task(path: str, payload: dict, fallback_task_func, *args):
     return None
 
 
+def _create_source_record(
+    source_id: str,
+    url: str,
+    title: str,
+    excerpt: Optional[str] = None,
+    default_domain: Optional[str] = None,
+    publish_date: Optional[str] = None,
+) -> SourceRecord:
+    """Constructs a valid SourceRecord with safe domain resolution, tiering, and required fields."""
+    clean_url = url or "https://screened.app"
+    domain = default_domain or extract_domain_from_url(clean_url)
+    excerpts_list = [excerpt] if excerpt else []
+    from backend.tools.source_tiers import determine_source_tier
+    tier = determine_source_tier(domain)
+    return SourceRecord(
+        id=source_id or str(uuid.uuid4()),
+        url=clean_url,
+        domain=domain,
+        title=title or "Verified Source",
+        publishedDate=publish_date,
+        excerpts=excerpts_list,
+        sourceTier=tier,
+        contentHash="verified_hash"
+    )
+
+
 class Orchestrator:
     """Coordinates multi-agent execution and manages investigation lifecycle."""
 
@@ -166,6 +199,7 @@ class Orchestrator:
             "claimsCount": 0,
             "dossier": None,
             "disputes": [],
+            "auditHealth": InvestigationAuditHealth().model_dump(),
         }
         await db.save_investigation(inv_id, inv_data)
 
@@ -475,6 +509,8 @@ class Orchestrator:
                 message="Parallel Task API completed domain deep research.",
             )
 
+            pipeline_start_time = time.time()
+
             # 3. Claim Assembly Phase
             inv_data["status"] = InvestigationStatus.RESEARCHING.value
             await db.save_investigation(investigation_id, inv_data)
@@ -488,21 +524,20 @@ class Orchestrator:
 
             claims: List[AtomicClaim] = []
             extract_tool = ParallelExtractTool()
+            all_sources: List[SourceRecord] = []
+            validation_errors: List[str] = []
+            raw_domain_claims_count = sum(len(d_res.get("claims", [])) for d_res in domain_claims_raw.values())
 
-            all_sources = []
-            
             if tracer:
                 claim_span_cm = tracer.start_as_current_span("ClaimAssembler.assemble")
                 claim_span = claim_span_cm.__enter__()
+
             for domain_enum, domain_result in domain_claims_raw.items():
                 domain_claims_list = domain_result.get("claims", [])
                 domain_basis_list = domain_result.get("basis", [])
                 
-                # We build claims and evidence first
                 domain_atomic_claims = []
                 domain_evidence_list = []
-                
-                from backend.tools.parallel_extract import normalize_whitespace
 
                 for i, raw_claim in enumerate(domain_claims_list):
                     try:
@@ -512,50 +547,43 @@ class Orchestrator:
                             parsed_ev = []
                             for ev in raw_ev_list:
                                 if isinstance(ev, dict):
+                                    ev_url = ev.get("sourceUrl") or "https://screened.app"
+                                    ev_domain = ev.get("sourceDomain") or extract_domain_from_url(ev_url)
+                                    ev_title = ev.get("sourceTitle") or "Web Record"
+                                    ev_excerpt = ev.get("exactExcerpt", "")
+                                    ev_stance_str = str(ev.get("stance", "SUPPORTS")).upper()
+                                    ev_stance = Stance.CONTRADICTS if "CONTRADICT" in ev_stance_str else (Stance.MENTIONS if "MENTION" in ev_stance_str else Stance.SUPPORTS)
+                                    
                                     ev_obj = ClaimEvidence(
                                         sourceId=ev.get("sourceId", str(uuid.uuid4())),
-                                        sourceUrl=ev.get("sourceUrl", "https://screened.app"),
-                                        sourceDomain=ev.get("sourceDomain", ""),
-                                        sourceTitle=ev.get("sourceTitle", "Web Record"),
-                                        stance=Stance(ev.get("stance", "SUPPORTS")),
-                                        exactExcerpt=ev.get("exactExcerpt", "")
+                                        sourceUrl=ev_url,
+                                        sourceDomain=ev_domain,
+                                        sourceTitle=ev_title,
+                                        stance=ev_stance,
+                                        exactExcerpt=ev_excerpt
                                     )
                                 elif hasattr(ev, "sourceUrl"):
                                     ev_obj = ev
                                 else:
                                     continue
+                                
                                 parsed_ev.append(ev_obj)
                                 domain_evidence_list.append(ev_obj)
-                                all_sources.append(SourceRecord(
-                                    id=ev_obj.sourceId,
-                                    investigationId=investigation_id,
+                                all_sources.append(_create_source_record(
+                                    source_id=ev_obj.sourceId,
                                     url=ev_obj.sourceUrl,
                                     title=ev_obj.sourceTitle,
-                                    excerpts=[ev_obj.exactExcerpt] if ev_obj.exactExcerpt else [],
-                                    contentHash="verified_hash"
+                                    excerpt=ev_obj.exactExcerpt,
+                                    default_domain=ev_obj.sourceDomain
                                 ))
                             
-                            category_val = raw_claim.get("category", QuestionCategory.BACKGROUND.value)
-                            try:
-                                cat_enum = QuestionCategory(category_val)
-                            except ValueError:
-                                cat_enum = QuestionCategory.BACKGROUND
-
-                            kind_val = raw_claim.get("kind", raw_claim.get("claimKind", "FACT"))
-                            try:
-                                kind_enum = ClaimKind(kind_val)
-                            except ValueError:
-                                kind_enum = ClaimKind.FACT
-
-                            status_val = raw_claim.get("status", VerificationStatus.CORROBORATED.value)
-                            try:
-                                status_enum = VerificationStatus(status_val)
-                            except ValueError:
-                                status_enum = VerificationStatus.CORROBORATED
+                            cat_enum = safe_question_category(raw_claim.get("category", QuestionCategory.BACKGROUND.value))
+                            kind_enum = safe_claim_kind(raw_claim.get("kind", raw_claim.get("claimKind", "FACT")))
+                            status_enum = safe_verification_status(raw_claim.get("status", VerificationStatus.CORROBORATED.value))
 
                             claim = AtomicClaim(
                                 investigationId=investigation_id,
-                                researchDomain=domain_enum,
+                                researchDomain=safe_research_domain(domain_enum),
                                 category=cat_enum,
                                 statement=raw_claim.get("statement", "Unknown Statement"),
                                 claimKind=kind_enum,
@@ -569,17 +597,18 @@ class Orchestrator:
                             continue
 
                         # Standard Task API basis parsing
+                        kind_enum = safe_claim_kind(raw_claim.get("kind", "FACT"))
                         claim = AtomicClaim(
                             investigationId=investigation_id,
-                            researchDomain=domain_enum,
+                            researchDomain=safe_research_domain(domain_enum),
                             category=QuestionCategory.BACKGROUND,
                             statement=raw_claim.get("statement", "Unknown Statement"),
-                            claimKind=ClaimKind(raw_claim.get("kind", "FACT")),
+                            claimKind=kind_enum,
                             status=VerificationStatus.VERIFIED_MATCH,
                             evidence=[]
                         )
                         
-                        # Find the matching FieldBasis entry (by field name, like "claims[i].statement" or similar)
+                        # Find the matching FieldBasis entry
                         matching_basis = None
                         for b in domain_basis_list:
                             field_name = b.get("field", "")
@@ -595,43 +624,38 @@ class Orchestrator:
                                 if not isinstance(cit, dict) or not cit.get("url"):
                                     continue
                                 
+                                cit_url = cit.get("url") or "https://screened.app"
+                                cit_domain = extract_domain_from_url(cit_url)
+                                cit_title = cit.get("title") or "Verified Source"
                                 exact_excerpts = cit.get("excerpts", [])
                                 exact_excerpt = exact_excerpts[0] if exact_excerpts else raw_claim.get("statement", "")[:50]
                                 
                                 evidence = ClaimEvidence(
                                     sourceId=str(uuid.uuid4()),
-                                    sourceUrl=cit.get("url"),
-                                    sourceTitle=cit.get("title", "Verified Source"),
+                                    sourceUrl=cit_url,
+                                    sourceDomain=cit_domain,
+                                    sourceTitle=cit_title,
                                     stance=Stance.SUPPORTS,
                                     exactExcerpt=exact_excerpt
                                 )
                                 claim.evidence.append(evidence)
                                 domain_evidence_list.append(evidence)
                                 
-                                all_sources.append(SourceRecord(
-                                    id=evidence.sourceId,
-                                    investigationId=investigation_id,
-                                    url=evidence.sourceUrl,
-                                    title=evidence.sourceTitle,
-                                    publishedDate=cit.get("publish_date"),
-                                    relevanceScore=1.0,
-                                    domainAuthority=0.8,
-                                    contentHash="verified_hash"
+                                all_sources.append(_create_source_record(
+                                    source_id=evidence.sourceId,
+                                    url=cit_url,
+                                    title=cit_title,
+                                    excerpt=exact_excerpt,
+                                    default_domain=cit_domain,
+                                    publish_date=cit.get("publish_date")
                                 ))
                         
                         domain_atomic_claims.append(claim)
                         claims.append(claim)
                     except Exception as e:
-                        from backend.config import settings
-                        if settings.strict_mode:
-                            raise
-                        if trace:
-                            span = trace.get_current_span()
-                            if span and span.is_recording():
-                                span.record_exception(e)
-                                from opentelemetry.trace.status import Status, StatusCode
-                                span.set_status(Status(StatusCode.ERROR, str(e)))
-                        logger.error(f"Error parsing claim: {e}", extra={"json_fields": {"fallbackPath": "claim_assembly"}}, exc_info=True)
+                        err_msg = f"Claim parsing anomaly on index {i}: {e}"
+                        validation_errors.append(err_msg)
+                        logger.warning(f"[CLAIM_PARSE_WARNING] {err_msg}", exc_info=True)
 
                 # Fetch basis URLs to get content hash and verify snippets
                 basis_urls = [b.get("url") for b in domain_basis_list if isinstance(b, dict) and b.get("url")]
@@ -642,14 +666,16 @@ class Orchestrator:
                 claim_span.set_attribute("screened.claims_extracted", len(claims))
                 claim_span_cm.__exit__(None, None, None)
                 
+            # Persist both atomic claims AND discovered web sources
             await db.save_claims(investigation_id, claims)
+            await db.save_sources(investigation_id, all_sources)
 
             await broadcaster.emit(
                 investigation_id=investigation_id,
                 event_type=EventType.CLAIMS_EXTRACTED,
                 agent_name="ClaimAssembler",
-                message=f"Assembled {len(claims)} atomic claims from Task outputs.",
-                details={"claimsCount": len(claims)},
+                message=f"Assembled {len(claims)} atomic claims and {len(all_sources)} verified sources.",
+                details={"claimsCount": len(claims), "sourcesCount": len(all_sources)},
             )
 
             # 4. Contradiction & Dispute Analysis Phase
@@ -677,12 +703,12 @@ class Orchestrator:
                     details={"disputes": [d.model_dump() for d in disputes]},
                 )
 
-            # 5. Deep 360° Forensic Vetting Phase (Spec 14)
+            # 5. Deep 360° Forensic Vetting Phase (Spec 14 & Spec 17)
             await broadcaster.emit(
                 investigation_id=investigation_id,
                 event_type=EventType.DEEP_VETTING_ANALYZING,
                 agent_name="DeepVettingAgent",
-                message="Executing 360° forensic analysis across Companies House, WHOIS, rules plagiarism, and jury dossiers...",
+                message="Executing 360° forensic analysis across Corporate Registries, WHOIS, rules plagiarism, and alumni footprint...",
             )
 
             deep_vetting_report = await self.deep_vetting.analyze(
@@ -691,6 +717,7 @@ class Orchestrator:
                 optional_url=entity.officialDomain,
                 city_country=entity.cityCountry,
                 investigation_id=investigation_id,
+                claims=claims,
             )
 
             await broadcaster.emit(
@@ -719,11 +746,49 @@ class Orchestrator:
                 disputes=disputes,
             )
 
+            # 7. Diagnostic Health Evaluation & Finalization
+            inconclusive_count = sum(
+                1 for d in deep_vetting_report.dimensions
+                if getattr(d, "status", None) == VettingSignalStatus.INCONCLUSIVE
+            )
+            audit_status = "HEALTHY"
+            audit_warnings: List[str] = []
+
+            if len(claims) == 0 and raw_domain_claims_count > 0:
+                audit_status = "EMPTY_WARNING"
+                warn_text = f"CRITICAL: {raw_domain_claims_count} raw domain claims received from search/task APIs but 0 claims assembled into database."
+                audit_warnings.append(warn_text)
+                logger.error(
+                    f"[CLAIM_PIPELINE_ANOMALY] Investigation {investigation_id} dropped all claims! "
+                    f"Raw received: {raw_domain_claims_count}, Assembled: 0, Errors: {validation_errors}"
+                )
+            elif inconclusive_count >= 5:
+                audit_status = "DEGRADED"
+                audit_warnings.append(f"Deep Vetting starvation: {inconclusive_count}/7 forensic vectors returned INCONCLUSIVE.")
+            elif validation_errors:
+                audit_status = "DEGRADED"
+                audit_warnings.extend(validation_errors[:5])
+
+            execution_duration_ms = int((time.time() - pipeline_start_time) * 1000) if 'pipeline_start_time' in locals() else 0
+            audit_health = InvestigationAuditHealth(
+                status=audit_status,
+                rawDomainClaimsReceived=raw_domain_claims_count,
+                assembledClaimsCount=len(claims),
+                sourcesCount=len(all_sources),
+                validationErrorsCount=len(validation_errors),
+                validationErrors=validation_errors[:10],
+                deepVettingVectorsCount=len(deep_vetting_report.dimensions),
+                deepVettingInconclusiveCount=inconclusive_count,
+                warnings=audit_warnings,
+                executionDurationMs=execution_duration_ms
+            )
+
             # Finalize Investigation Record
             inv_data["status"] = InvestigationStatus.READY.value
             inv_data["dossier"] = dossier.model_dump()
             inv_data["disputes"] = [d.model_dump() for d in disputes]
             inv_data["deepVetting"] = deep_vetting_report.model_dump()
+            inv_data["auditHealth"] = audit_health.model_dump()
             inv_data["sourcesCount"] = len(all_sources)
             inv_data["claimsCount"] = len(claims)
             inv_data["updatedAt"] = datetime.now(timezone.utc).isoformat()

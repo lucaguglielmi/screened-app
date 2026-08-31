@@ -23,6 +23,7 @@ import {
   DetailDensity,
   SourceRecord,
   DeepVettingReport,
+  InvestigationAuditHealth,
   EvidenceDossier as EvidenceDossierType,
 } from '../types/investigation';
 import { ContradictionPanel } from './ContradictionPanel';
@@ -42,7 +43,6 @@ import {
   ExternalLink,
   Layers,
   ChevronDown,
-  
   ListChecks,
   HelpCircle,
   Globe,
@@ -52,7 +52,8 @@ import {
   Printer,
   Copy,
   Check,
-  Search, Plus,
+  Search,
+  Plus,
   Mail,
   Bot,
   Code,
@@ -70,6 +71,7 @@ interface Props {
   sources: SourceRecord[];
   disputes: DisputeRecord[];
   deepVetting?: DeepVettingReport;
+  auditHealth?: InvestigationAuditHealth;
   onNewInvestigation: () => void;
   onDraftOutreach: (claim?: AtomicClaim) => void;
   onExport: () => void;
@@ -82,6 +84,7 @@ export const EvidenceDossier: React.FC<Props> = ({
   sources,
   disputes,
   deepVetting,
+  auditHealth,
   onNewInvestigation,
   onDraftOutreach,
   onExport,
@@ -831,7 +834,7 @@ export const EvidenceDossier: React.FC<Props> = ({
               <span>{entity.name}</span>
               {entity.name === 'Pinco Pallino Film Festival' && (
                 <span className="inline-flex items-center rounded-full bg-orange-500/10 px-2.5 py-0.5 text-xs font-mono font-medium text-orange-400 border border-orange-500/20 tracking-normal whitespace-nowrap">
-                  Demo Fixture
+                  Demo
                 </span>
               )}
             </h1>
@@ -886,6 +889,29 @@ export const EvidenceDossier: React.FC<Props> = ({
             <div className="text-base font-semibold text-orange-400 font-mono">{disputes.length}</div>
           </div>
         </div>
+
+        {/* Diagnostic Anomaly Notice */}
+        {auditHealth && (auditHealth.status === 'EMPTY_WARNING' || auditHealth.status === 'DEGRADED') && (
+          <div className="rounded-xl bg-amber-500/10 border border-amber-500/30 p-3 text-xs font-mono text-amber-300 flex items-start gap-2.5">
+            <AlertTriangle className="size-4 text-amber-400 shrink-0 mt-0.5" />
+            <div className="space-y-1">
+              <div className="font-semibold text-amber-200">
+                Pipeline Health Notice ({auditHealth.status})
+              </div>
+              {auditHealth.warnings && auditHealth.warnings.length > 0 ? (
+                <ul className="list-disc list-inside space-y-0.5 text-amber-300/90 text-[11px]">
+                  {auditHealth.warnings.map((w, idx) => (
+                    <li key={idx}>{w}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-amber-300/90 text-[11px]">
+                  Some research vectors returned incomplete signals.
+                </p>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Sticky Header with Section Name, Burger Navigation & 3-Bar Detail Selector */}

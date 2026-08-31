@@ -834,6 +834,7 @@ export default function App() {
                   sources={investigation.sources || []}
                   disputes={investigation.disputes || []}
                   deepVetting={investigation.deepVetting}
+                  auditHealth={investigation.auditHealth}
                   onNewInvestigation={handleReset}
                   onDraftOutreach={handleDraftOutreach}
                   onExport={handleExport}

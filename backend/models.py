@@ -556,4 +556,101 @@ class NotificationSubscriptionRequest(BaseModel):
     pushSubscription: Optional[Dict[str, Any]] = None
 
 
+class InvestigationAuditHealth(BaseModel):
+    status: str = "HEALTHY"  # "HEALTHY", "DEGRADED", "EMPTY_WARNING", "CRITICAL_FAILURE"
+    rawDomainClaimsReceived: int = 0
+    assembledClaimsCount: int = 0
+    sourcesCount: int = 0
+    validationErrorsCount: int = 0
+    validationErrors: List[str] = Field(default_factory=list)
+    deepVettingVectorsCount: int = 0
+    deepVettingInconclusiveCount: int = 0
+    warnings: List[str] = Field(default_factory=list)
+    executionDurationMs: int = 0
+
+
+def extract_domain_from_url(url: Optional[str]) -> str:
+    """Safely extract the registrable domain or hostname from a URL with fallback."""
+    if not url:
+        return "screened.app"
+    try:
+        from urllib.parse import urlparse
+        parsed = urlparse(url if "://" in url else f"https://{url}")
+        host = parsed.netloc.lower() or parsed.path.lower()
+        host = host.split(":")[0].strip("/")
+        return host or "screened.app"
+    except Exception:
+        return "screened.app"
+
+
+def safe_claim_kind(val: Any) -> ClaimKind:
+    """Defensively parse ClaimKind from any string or enum."""
+    if isinstance(val, ClaimKind):
+        return val
+    try:
+        clean = str(val).upper().strip()
+        if "ALLEGATION" in clean:
+            return ClaimKind.ALLEGATION
+        if "OPINION" in clean:
+            return ClaimKind.OPINION
+        return ClaimKind.FACT
+    except Exception:
+        return ClaimKind.FACT
+
+
+def safe_verification_status(val: Any) -> VerificationStatus:
+    """Defensively parse VerificationStatus from any string or enum."""
+    if isinstance(val, VerificationStatus):
+        return val
+    try:
+        clean = str(val).upper().strip()
+        for status in VerificationStatus:
+            if status.value == clean:
+                return status
+        if "CORROBORATED" in clean or "MATCH" in clean:
+            return VerificationStatus.CORROBORATED
+        if "SUPPORT" in clean:
+            return VerificationStatus.SUPPORTED
+        if "DISPUTE" in clean:
+            return VerificationStatus.DISPUTED
+        return VerificationStatus.UNVERIFIED
+    except Exception:
+        return VerificationStatus.UNVERIFIED
+
+
+def safe_question_category(val: Any) -> QuestionCategory:
+    """Defensively parse QuestionCategory from any string or enum."""
+    if isinstance(val, QuestionCategory):
+        return val
+    try:
+        clean = str(val).upper().strip()
+        for cat in QuestionCategory:
+            if cat.value == clean:
+                return cat
+        return QuestionCategory.BACKGROUND
+    except Exception:
+        return QuestionCategory.BACKGROUND
+
+
+def safe_research_domain(val: Any) -> ResearchDomain:
+    """Defensively parse ResearchDomain from any string or enum."""
+    if isinstance(val, ResearchDomain):
+        return val
+    try:
+        clean = str(val).upper().strip()
+        for dom in ResearchDomain:
+            if dom.value == clean:
+                return dom
+        if "FESTIVAL" in clean:
+            return ResearchDomain.FESTIVAL
+        if "ORGANIZER" in clean:
+            return ResearchDomain.ORGANIZER
+        if "PARTICIPANT" in clean:
+            return ResearchDomain.PARTICIPANTS
+        return ResearchDomain.FESTIVAL
+    except Exception:
+        return ResearchDomain.FESTIVAL
+
+
+
 

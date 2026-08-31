@@ -385,6 +385,15 @@ async def get_investigation(investigation_id: str):
 
     inv["claims"] = claims
     inv["sources"] = sources
+    if "auditHealth" not in inv or not inv["auditHealth"]:
+        from backend.models import InvestigationAuditHealth
+        is_ready = inv.get("status") == "READY"
+        inv["auditHealth"] = InvestigationAuditHealth(
+            status="HEALTHY" if len(claims) > 0 else ("EMPTY_WARNING" if is_ready else "HEALTHY"),
+            assembledClaimsCount=len(claims),
+            sourcesCount=len(sources),
+            warnings=["Investigation completed with 0 assembled claims in database."] if is_ready and len(claims) == 0 else []
+        ).model_dump()
     return inv
 
 @app.post("/api/investigations/batch")

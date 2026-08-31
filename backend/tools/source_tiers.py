@@ -31,14 +31,20 @@ CORPORATE_IDENTITY_DOMAINS = [
     "gov.uk",
     "find-and-update.company-information.service.gov.uk",
     "opencorporates.com",
+    "registroimprese.it",
+    "infogreffe.fr",
+    "handelsregister.de",
+    "sec.gov",
+    "guidestar.org",
+    "crunchbase.com",
     "wikipedia.org"
 ]
 
 DOMAIN_FORENSICS_DOMAINS = [
-    "crt.sh",
-    "whois.com",
-    "icann.org",
-    "lookup.icann.org"
+    "archive.org",
+    "web.archive.org",
+    "wikipedia.org",
+    "domaintools.com"
 ]
 
 VENUE_REALITY_DOMAINS = [

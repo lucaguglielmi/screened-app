@@ -112,19 +112,10 @@ async def test_deep_vetting_successful_synthesis(mock_gemini, sample_sources, mo
         ]
     )
 
-    class MockStep:
-        class Data:
-            def __init__(self, report):
-                self.report = report
-        def __init__(self, report):
-            self.data = self.Data(report)
+    mock_resp = MagicMock()
+    mock_resp.text = mock_report.model_dump_json()
+    mock_gemini.client.models.generate_content.return_value = mock_resp
 
-    async def mock_run_async(*args, **kwargs):
-        yield MockStep(mock_report)
-
-    from google.adk.runners import Runner
-    monkeypatch.setattr(Runner, "run_async", mock_run_async)
-    
     class MockSession:
         def __init__(self):
             self.state = {"deep_vetting_report": mock_report.model_dump()}

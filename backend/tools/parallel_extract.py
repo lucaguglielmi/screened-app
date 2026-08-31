@@ -5,7 +5,7 @@ import logging
 from typing import List, Dict, Optional
 from parallel import AsyncParallel
 from backend.config import settings
-from backend.models import SourceRecord, ClaimEvidence
+from backend.models import SourceRecord, ClaimEvidence, VerificationStatus
 
 logger = logging.getLogger("screened.tools.parallel_extract")
 
@@ -51,9 +51,9 @@ class ParallelExtractTool:
                         if ev.sourceUrl == url:
                             norm_excerpt = normalize_whitespace(ev.exactExcerpt)
                             if norm_excerpt and norm_excerpt not in norm_full:
-                                ev.verificationStatus = "UNVERIFIED_EXCERPT"
+                                ev.verificationStatus = VerificationStatus.UNVERIFIED_EXCERPT
                             else:
-                                ev.verificationStatus = "VERIFIED_MATCH"
+                                ev.verificationStatus = VerificationStatus.VERIFIED_MATCH
                                 
                     if full_content:
                         provenance[url] = {

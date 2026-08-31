@@ -394,6 +394,19 @@ export interface DeepVettingReport {
   generatedAt: string;
 }
 
+export interface InvestigationAuditHealth {
+  status: 'HEALTHY' | 'DEGRADED' | 'EMPTY_WARNING' | 'CRITICAL_FAILURE';
+  rawDomainClaimsReceived: number;
+  assembledClaimsCount: number;
+  sourcesCount: number;
+  validationErrorsCount: number;
+  validationErrors: string[];
+  deepVettingVectorsCount: number;
+  deepVettingInconclusiveCount: number;
+  warnings: string[];
+  executionDurationMs: number;
+}
+
 export interface Investigation {
   id: string;
   status: InvestigationStatus;
@@ -412,4 +425,5 @@ export interface Investigation {
   sources?: SourceRecord[];
   outreachDrafts?: OutreachDraft[];
   deepVetting?: DeepVettingReport;
+  auditHealth?: InvestigationAuditHealth;
 }
