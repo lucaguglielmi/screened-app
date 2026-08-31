@@ -36,9 +36,14 @@ export const CredibilityRadar: React.FC<Props> = ({ claims, disputes }) => {
     (c) => c.researchDomain === 'PARTICIPANTS' || c.category.toLowerCase().includes('feedback'),
   );
 
+  const isCorroboratedClaim = (c: AtomicClaim) => {
+    const s = (c.status || '').toUpperCase();
+    return s === 'CORROBORATED' || s === 'SUPPORTED' || s === 'VERIFIED_MATCH' || (c.evidence && c.evidence.length > 0);
+  };
+
   const getFactualStats = (catClaims: AtomicClaim[], hasDispute: boolean) => {
     const total = catClaims.length;
-    const corroborated = catClaims.filter((c) => c.status === 'CORROBORATED' || c.status === 'SUPPORTED').length;
+    const corroborated = catClaims.filter(isCorroboratedClaim).length;
     const disputed = catClaims.filter((c) => c.status === 'DISPUTED').length;
     return {
       total,
@@ -78,38 +83,68 @@ export const CredibilityRadar: React.FC<Props> = ({ claims, disputes }) => {
       d.category.toLowerCase().includes('community'),
   ) || participantClaims.some(c => c.status === 'DISPUTED');
 
+  const venueStats = getFactualStats(venueClaims, hasVenueDispute);
+  const feeStats = getFactualStats(feeClaims, hasFeeDispute);
+  const organizerStats = getFactualStats(organizerClaims, hasOrganizerDispute);
+  const participantStats = getFactualStats(participantClaims, hasParticipantDispute);
+
+  const getCategoryStatus = (catName: string, stats: { total: number; corroborated: number; hasDispute: boolean }) => {
+    if (stats.hasDispute) {
+      switch (catName) {
+        case 'Screening Venue': return 'Disputed Venue Claims';
+        case 'Fee & Prize Structure': return 'Fee Discrepancy Found';
+        case 'Organizer & Directorships': return 'Directorship Inconsistencies';
+        case 'Filmmaker Alumni Footprint': return 'Alumni Inquiries Flagged';
+        default: return 'Disputed Claims Flagged';
+      }
+    }
+
+    if (stats.corroborated > 0) {
+      switch (catName) {
+        case 'Screening Venue': return 'Physical Venue Corroborated';
+        case 'Fee & Prize Structure': return 'Fee Schedule Corroborated';
+        case 'Organizer & Directorships': return 'Corporate Identity Verified';
+        case 'Filmmaker Alumni Footprint': return 'Alumni Footprint Corroborated';
+        default: return 'Evidence Corroborated';
+      }
+    }
+
+    // When corroboration is 0 and no dispute, hide this message
+    return null;
+  };
+
   const dimensions = [
     {
       name: 'Screening Venue',
       icon: Building2,
-      stats: getFactualStats(venueClaims, hasVenueDispute),
-      status: hasVenueDispute ? 'Disputed Venue Claims' : 'Physical Venue Corroborated',
-      isRisk: hasVenueDispute,
+      stats: venueStats,
+      status: getCategoryStatus('Screening Venue', venueStats),
+      isRisk: venueStats.hasDispute,
     },
     {
       name: 'Fee & Prize Structure',
       icon: DollarSign,
-      stats: getFactualStats(feeClaims, hasFeeDispute),
-      status: hasFeeDispute ? 'Fee Discrepancy Found' : 'Fee Schedule Corroborated',
-      isRisk: hasFeeDispute,
+      stats: feeStats,
+      status: getCategoryStatus('Fee & Prize Structure', feeStats),
+      isRisk: feeStats.hasDispute,
     },
     {
       name: 'Organizer & Directorships',
       icon: Award,
-      stats: getFactualStats(organizerClaims, hasOrganizerDispute),
-      status: hasOrganizerDispute ? 'Directorship Inconsistencies' : 'Verified Companies House Filing',
-      isRisk: hasOrganizerDispute,
+      stats: organizerStats,
+      status: getCategoryStatus('Organizer & Directorships', organizerStats),
+      isRisk: organizerStats.hasDispute,
     },
     {
       name: 'Filmmaker Alumni Footprint',
       icon: Users,
-      stats: getFactualStats(participantClaims, hasParticipantDispute),
-      status: hasParticipantDispute ? 'Alumni Inquiries Flagged' : 'Alumni Premiers Documented',
-      isRisk: hasParticipantDispute,
+      stats: participantStats,
+      status: getCategoryStatus('Filmmaker Alumni Footprint', participantStats),
+      isRisk: participantStats.hasDispute,
     },
   ];
 
-  const totalCorroborated = claims.filter(c => c.status === 'CORROBORATED' || c.status === 'SUPPORTED').length;
+  const totalCorroborated = claims.filter(isCorroboratedClaim).length;
 
   return (
     <div className="py-3 border-b border-darkroom-border/30 pb-6 space-y-4">
@@ -124,7 +159,7 @@ export const CredibilityRadar: React.FC<Props> = ({ claims, disputes }) => {
           <span className="text-slate-400">
             Verified Claims:
           </span>
-          <span className="font-semibold text-emerald-400">
+          <span className={`font-semibold ${totalCorroborated > 0 ? 'text-emerald-400' : 'text-slate-400'}`}>
             {totalCorroborated}/{claims.length || '0'} Corroborated
           </span>
         </div>
@@ -150,14 +185,16 @@ export const CredibilityRadar: React.FC<Props> = ({ claims, disputes }) => {
                 </span>
               </div>
 
-              <div className="flex items-center justify-between text-[11px] font-mono pt-0.5">
-                <span className={`inline-flex items-center gap-1.5 ${dim.isRisk ? 'text-orange-400 font-medium' : 'text-slate-300'}`}>
-                  {dim.isRisk && (
-                    <AlertTriangle className="size-3.5 shrink-0 text-orange-400" />
-                  )}
-                  <span className="truncate">{dim.status}</span>
-                </span>
-              </div>
+              {dim.status && (
+                <div className="flex items-center justify-between text-[11px] font-mono pt-0.5">
+                  <span className={`inline-flex items-center gap-1.5 ${dim.isRisk ? 'text-orange-400 font-medium' : 'text-slate-300'}`}>
+                    {dim.isRisk && (
+                      <AlertTriangle className="size-3.5 shrink-0 text-orange-400" />
+                    )}
+                    <span className="truncate">{dim.status}</span>
+                  </span>
+                </div>
+              )}
             </div>
           );
         })}

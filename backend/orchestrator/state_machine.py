@@ -580,6 +580,8 @@ class Orchestrator:
                             cat_enum = safe_question_category(raw_claim.get("category", QuestionCategory.BACKGROUND.value))
                             kind_enum = safe_claim_kind(raw_claim.get("kind", raw_claim.get("claimKind", "FACT")))
                             status_enum = safe_verification_status(raw_claim.get("status", VerificationStatus.CORROBORATED.value))
+                            if status_enum == VerificationStatus.UNVERIFIED and parsed_ev:
+                                status_enum = VerificationStatus.CORROBORATED if len(parsed_ev) >= 2 else VerificationStatus.SUPPORTED
 
                             claim = AtomicClaim(
                                 investigationId=investigation_id,
@@ -604,7 +606,7 @@ class Orchestrator:
                             category=QuestionCategory.BACKGROUND,
                             statement=raw_claim.get("statement", "Unknown Statement"),
                             claimKind=kind_enum,
-                            status=VerificationStatus.VERIFIED_MATCH,
+                            status=VerificationStatus.SUPPORTED,
                             evidence=[]
                         )
                         
@@ -650,6 +652,13 @@ class Orchestrator:
                                     publish_date=cit.get("publish_date")
                                 ))
                         
+                        if len(claim.evidence) >= 2:
+                            claim.status = VerificationStatus.CORROBORATED
+                        elif len(claim.evidence) == 1:
+                            claim.status = VerificationStatus.SUPPORTED
+                        elif not matching_basis:
+                            claim.status = VerificationStatus.UNVERIFIED
+
                         domain_atomic_claims.append(claim)
                         claims.append(claim)
                     except Exception as e:
