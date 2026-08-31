@@ -400,16 +400,30 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
         {/* Top bar: Title + Status + Timers */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-darkroom-border/60 pb-4 relative z-10">
           <div className="space-y-1 min-w-0 flex-1">
-            <div className={`flex items-center gap-2 text-xs sm:text-sm font-mono uppercase tracking-wider ${status === 'FAILED' ? 'text-red-400' : 'text-tool-diligence'}`}>
-              {status === 'FAILED' ? (
-                <AlertTriangle className="size-4" />
-              ) : (
-                <Loader2 className={`size-4 ${reducedMotion || status === 'READY' ? '' : 'animate-spin'}`} />
+            <div className="flex items-center gap-3 flex-wrap">
+              <div className={`flex items-center gap-2 text-xs sm:text-sm font-mono uppercase tracking-wider ${status === 'FAILED' ? 'text-red-400' : 'text-tool-diligence'}`}>
+                {status === 'FAILED' ? (
+                  <AlertTriangle className="size-4" />
+                ) : (
+                  <Loader2 className={`size-4 ${reducedMotion || status === 'READY' ? '' : 'animate-spin'}`} />
+                )}
+                <span className="font-semibold">
+                  {status === 'FAILED' ? 'Investigation Halted' : status === 'READY' ? 'Investigation Complete' : 'Autonomous Pipeline Active'}
+                </span>
+              </div>
+
+              {onCancel && status !== 'READY' && status !== 'FAILED' && status !== 'CANCELLED' && !isCelebrating && (
+                <button 
+                  onClick={onCancel}
+                  className="px-2.5 py-0.5 rounded-lg bg-darkroom-surface/80 hover:bg-darkroom-surface border border-darkroom-border/60 hover:border-rose-500/50 text-slate-400 hover:text-rose-400 text-xs font-mono transition-colors cursor-pointer shadow-xs active:scale-95 flex items-center gap-1"
+                  title="Cancel active investigation"
+                >
+                  <X className="size-3" />
+                  <span>Cancel Search</span>
+                </button>
               )}
-              <span className="font-semibold">
-                {status === 'FAILED' ? 'Investigation Halted' : status === 'READY' ? 'Investigation Complete' : 'Autonomous Pipeline Active'}
-              </span>
             </div>
+
             <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-white tracking-tight break-words flex items-center flex-wrap gap-2 sm:gap-3">
               <span>Investigating {festivalName}</span>
               {festivalName === 'Pinco Pallino Film Festival' && (
@@ -424,15 +438,6 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
             <div className="px-3.5 py-1.5 rounded-xl bg-darkroom-surface/80 border border-darkroom-border/60 text-slate-200 text-xs sm:text-sm font-mono font-medium flex items-center gap-1.5 shadow-sm">
               <span>⏱️ {Math.floor(elapsedSeconds / 60)}:{(elapsedSeconds % 60).toString().padStart(2, '0')}</span>
             </div>
-
-            {onCancel && status !== 'READY' && status !== 'FAILED' && status !== 'CANCELLED' && !isCelebrating && (
-              <button 
-                onClick={onCancel}
-                className="px-3.5 py-1.5 rounded-xl bg-darkroom-surface/80 hover:bg-darkroom-surface border border-darkroom-border/60 hover:border-rose-500/50 text-slate-300 hover:text-rose-400 text-xs sm:text-sm font-mono transition-colors cursor-pointer shadow-sm active:scale-95"
-              >
-                Cancel
-              </button>
-            )}
 
             <div className="px-3.5 py-1.5 rounded-xl bg-tool-diligence/15 text-tool-diligence text-xs sm:text-sm font-mono font-semibold flex items-center gap-2">
               <span className={`size-2 rounded-full bg-tool-diligence ${reducedMotion || isCelebrating || status === 'FAILED' ? '' : 'animate-pulse'}`} />
