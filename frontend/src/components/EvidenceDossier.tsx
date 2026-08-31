@@ -840,27 +840,27 @@ export const EvidenceDossier: React.FC<Props> = ({
             </h1>
 
             {/* Editorial Metadata Bar */}
-            <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-slate-400 pt-1">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-mono text-slate-400 pt-1">
               {entity.cityCountry && (
                 <div className="flex items-center gap-1.5">
-                  <MapPin className="size-3.5 text-slate-400" />
-                  <span>{entity.cityCountry}</span>
+                  <MapPin className="size-3.5 text-slate-400 shrink-0" />
+                  <span className="break-words">{entity.cityCountry}</span>
                 </div>
               )}
               {entity.foundedYear && (
                 <div className="flex items-center gap-1.5">
-                  <Calendar className="size-3.5 text-slate-400" />
+                  <Calendar className="size-3.5 text-slate-400 shrink-0" />
                   <span>Est. {entity.foundedYear}</span>
                 </div>
               )}
               {entity.officialDomain && (
-                <div className="flex items-center gap-1.5">
-                  <Globe className="size-3.5 text-slate-400" />
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <Globe className="size-3.5 text-slate-400 shrink-0" />
                   <a
                     href={`https://${entity.officialDomain}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-indigo-300 hover:underline truncate max-w-[220px]"
+                    className="hover:text-indigo-300 hover:underline break-all"
                   >
                     {entity.officialDomain}
                   </a>
@@ -1192,13 +1192,13 @@ export const EvidenceDossier: React.FC<Props> = ({
           </div>
 
           {/* Chapter 1: Things You Should Look Into */}
-          <div className="rounded-2xl p-5 sm:p-6 border border-orange-500/30 bg-darkroom-surface/90 space-y-4 shadow-xl">
-            <div className="flex items-center justify-between border-b border-darkroom-border/60 pb-3">
+          <div className="rounded-2xl p-4 sm:p-6 border border-orange-500/30 bg-darkroom-surface/90 space-y-4 shadow-xl">
+            <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5 border-b border-darkroom-border/60 pb-3">
               <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-orange-400 font-semibold">
-                <AlertTriangle className="size-4 text-orange-400" />
+                <AlertTriangle className="size-4 text-orange-400 shrink-0" />
                 <span>Chapter 1: Things You Should Look Into ({disputes.length || 1} Points)</span>
               </div>
-              <span className="text-[11px] font-mono text-orange-300/80">
+              <span className="text-[11px] font-mono text-orange-300/80 self-start sm:self-auto">
                 Actionable Attention Items
               </span>
             </div>
@@ -1206,14 +1206,14 @@ export const EvidenceDossier: React.FC<Props> = ({
             <div className="space-y-3">
               {disputes.length > 0 ? (
                 disputes.map((disp, idx) => (
-                  <div key={idx} className="p-3.5 rounded-xl bg-darkroom-bg/80 border border-darkroom-border/60 space-y-1.5">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/30">
+                  <div key={idx} className="p-3.5 rounded-xl bg-darkroom-bg/80 border border-darkroom-border/60 space-y-2">
+                    <div className="flex flex-col items-start gap-1.5">
+                      <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/30 shrink-0">
                         {disp.category}
                       </span>
-                      <h4 className="text-xs font-bold text-white font-sans">{disp.pointOfContention}</h4>
+                      <h4 className="text-xs sm:text-sm font-bold text-white font-sans break-words">{disp.pointOfContention}</h4>
                     </div>
-                    <p className="text-xs text-slate-300 leading-relaxed pt-1">
+                    <p className="text-xs text-slate-300 leading-relaxed pt-0.5 break-words">
                       {disp.guidance || `Discrepancy detected between claimed promotional statements ("${disp.claimA}") and verified records ("${disp.claimB}").`}
                     </p>
                   </div>
@@ -1227,13 +1227,13 @@ export const EvidenceDossier: React.FC<Props> = ({
           </div>
 
           {/* Chapter 2: The Good Stuff */}
-          <div className="rounded-2xl p-5 sm:p-6 border border-emerald-500/30 bg-darkroom-surface/90 space-y-4 shadow-xl">
-            <div className="flex items-center justify-between border-b border-darkroom-border/60 pb-3">
+          <div className="rounded-2xl p-4 sm:p-6 border border-emerald-500/30 bg-darkroom-surface/90 space-y-4 shadow-xl">
+            <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5 border-b border-darkroom-border/60 pb-3">
               <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-emerald-400 font-semibold">
-                <Check className="size-4 text-emerald-400" />
+                <Check className="size-4 text-emerald-400 shrink-0" />
                 <span>Chapter 2: The Good Stuff</span>
               </div>
-              <span className="text-[11px] font-mono text-emerald-300/80">
+              <span className="text-[11px] font-mono text-emerald-300/80 self-start sm:self-auto">
                 Corroborated Highlights
               </span>
             </div>

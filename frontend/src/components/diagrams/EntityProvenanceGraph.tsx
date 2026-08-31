@@ -289,12 +289,12 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
         </div>
 
         {/* View Mode & Fullscreen Controls */}
-        <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
           {/* Tabs: Diagram Selector */}
-          <div className="flex items-center gap-1 p-1 rounded-xl bg-darkroom-card text-xs">
+          <div className="flex items-center overflow-x-auto max-w-full gap-1 p-1 rounded-xl bg-darkroom-card text-xs hide-scrollbar">
             <button
               onClick={() => setActiveTab('PROVENANCE')}
-              className={`px-2.5 py-1 rounded-lg font-mono text-[11px] transition-all cursor-pointer ${
+              className={`px-2.5 py-1 rounded-lg font-mono text-[11px] transition-all cursor-pointer shrink-0 ${
                 activeTab === 'PROVENANCE'
                   ? 'bg-midnight-royal text-white font-semibold shadow-xs'
                   : 'text-slate-400 hover:text-white'
@@ -304,7 +304,7 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
             </button>
             <button
               onClick={() => setActiveTab('PERSONNEL')}
-              className={`px-2.5 py-1 rounded-lg font-mono text-[11px] transition-all cursor-pointer ${
+              className={`px-2.5 py-1 rounded-lg font-mono text-[11px] transition-all cursor-pointer shrink-0 ${
                 activeTab === 'PERSONNEL'
                   ? 'bg-midnight-royal text-white font-semibold shadow-xs'
                   : 'text-slate-400 hover:text-white'
@@ -314,7 +314,7 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
             </button>
             <button
               onClick={() => setActiveTab('CONTRADICTIONS')}
-              className={`px-2.5 py-1 rounded-lg font-mono text-[11px] transition-all cursor-pointer ${
+              className={`px-2.5 py-1 rounded-lg font-mono text-[11px] transition-all cursor-pointer shrink-0 ${
                 activeTab === 'CONTRADICTIONS'
                   ? 'bg-midnight-royal text-white font-semibold shadow-xs'
                   : 'text-slate-400 hover:text-white'
@@ -325,10 +325,10 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
           </div>
 
           {/* Toggle: Responsive Page Diagram vs 2D Canvas */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5 flex-wrap">
             <button
               onClick={() => setDisplayMode(displayMode === 'RESPONSIVE' ? 'CANVAS' : 'RESPONSIVE')}
-              className="px-2.5 py-1 rounded-lg bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border text-xs font-mono text-slate-300 hover:text-white transition-colors cursor-pointer"
+              className="px-2.5 py-1 rounded-lg bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border text-xs font-mono text-slate-300 hover:text-white transition-colors cursor-pointer shrink-0"
               title="Toggle between Responsive Inline Diagram and 2D Interactive Canvas"
             >
               {displayMode === 'RESPONSIVE' ? 'Switch to 2D Canvas' : 'Switch to In-Page Flow'}
@@ -336,7 +336,7 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
 
             <button
               onClick={() => setIsFullscreen(true)}
-              className="p-1.5 rounded-lg bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border text-slate-300 hover:text-white transition-colors cursor-pointer"
+              className="p-1.5 rounded-lg bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border text-slate-300 hover:text-white transition-colors cursor-pointer shrink-0"
               title="Open Fullscreen Interactive Canvas"
             >
               <Maximize2 className="size-3.5" />

@@ -105,30 +105,30 @@ export const PreviousEditionsSection: React.FC<Props> = ({
               className="rounded-2xl p-4 sm:p-5 border border-darkroom-border bg-darkroom-surface/90 hover:border-zinc-700/80 shadow-md space-y-4 transition-all"
             >
               {/* Edition Header */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-darkroom-border/60">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-darkroom-border/60">
                 <div className="flex items-center gap-3">
-                  <span className="px-3 py-1 rounded-xl bg-midnight-royal/40 border border-tool-diligence/30 text-white font-mono font-bold text-sm sm:text-base">
+                  <span className="px-3 py-1 rounded-xl bg-midnight-royal/40 border border-tool-diligence/30 text-white font-mono font-bold text-sm sm:text-base shrink-0">
                     {edition.year}
                   </span>
                   {edition.editionNumber && (
-                    <span className="text-xs font-mono text-tool-diligence font-semibold">
+                    <span className="text-xs font-mono text-tool-diligence font-semibold break-words">
                       {edition.editionNumber}
                     </span>
                   )}
                 </div>
 
                 {(edition.heldLocation || edition.heldDates) && (
-                  <div className="flex flex-wrap items-center gap-3 text-xs text-slate-300 font-mono">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-slate-300 font-mono">
                     {edition.heldLocation && (
                       <span className="inline-flex items-center gap-1.5 text-slate-300">
                         <MapPin className="size-3.5 text-rose-400 shrink-0" />
-                        <span>{edition.heldLocation}</span>
+                        <span className="break-words">{edition.heldLocation}</span>
                       </span>
                     )}
                     {edition.heldDates && (
                       <span className="inline-flex items-center gap-1.5 text-slate-400">
                         <Calendar className="size-3.5 text-indigo-400 shrink-0" />
-                        <span>{edition.heldDates}</span>
+                        <span className="break-words">{edition.heldDates}</span>
                       </span>
                     )}
                   </div>

@@ -449,24 +449,26 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
               {/* Collapsed Header */}
               <div
                 onClick={() => toggleExpand(dim.id)}
-                className="p-4 sm:p-5 flex items-center justify-between cursor-pointer select-none"
+                className="p-4 sm:p-5 flex items-start justify-between gap-3 cursor-pointer select-none"
               >
-                <div className="flex items-center space-x-3.5 min-w-0 flex-1">
-                  <div className="p-2.5 rounded-xl bg-white/[0.04] shrink-0">
+                <div className="flex items-start gap-3 sm:gap-3.5 min-w-0 flex-1">
+                  <div className="p-2.5 rounded-xl bg-white/[0.04] shrink-0 mt-0.5">
                     {getDimensionIcon(dim.dimensionKey)}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-3 flex-wrap">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
                       <h3 className="text-sm sm:text-base font-bold text-white tracking-tight break-words">
                         {dim.title}
                       </h3>
-                      {getStatusBadge(dim.status)}
+                      <div className="self-start sm:self-auto">
+                        {getStatusBadge(dim.status)}
+                      </div>
                     </div>
-                    <p className="text-xs text-zinc-400 mt-1 leading-relaxed break-words">{dim.summary}</p>
+                    <p className="text-xs text-zinc-400 mt-1.5 leading-relaxed break-words">{dim.summary}</p>
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-3 pl-3 shrink-0">
+                <div className="flex items-center gap-2 sm:gap-3 pl-1 sm:pl-3 shrink-0 self-start sm:self-center mt-1 sm:mt-0">
                   <div className="hidden sm:flex flex-col items-end">
                     <span className="text-xs font-mono font-bold text-zinc-300">
                       {dim.confidenceScore}% Conf.
@@ -479,7 +481,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
                   <button
                     type="button"
                     aria-label={isExpanded ? 'Collapse dimension' : 'Expand dimension'}
-                    className="p-1.5 rounded-lg bg-white/[0.04] text-zinc-400 hover:text-white"
+                    className="p-1.5 rounded-lg bg-white/[0.04] text-zinc-400 hover:text-white shrink-0"
                   >
                     {isExpanded ? (
                       <ChevronUp className="w-4 h-4" />

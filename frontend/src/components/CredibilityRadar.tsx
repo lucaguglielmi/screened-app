@@ -173,14 +173,14 @@ export const CredibilityRadar: React.FC<Props> = ({ claims, disputes }) => {
               key={idx}
               className="p-4 rounded-xl bg-darkroom-surface/60 border border-darkroom-border/60 space-y-2.5"
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2.5 text-xs font-medium text-slate-200">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+                <div className="flex items-center gap-2 text-xs font-medium text-slate-200 min-w-0">
                   <div className="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-400 shrink-0">
-                    <Icon className="size-5 text-indigo-400" />
+                    <Icon className="size-4.5 text-indigo-400" />
                   </div>
-                  <span className="font-semibold text-white">{dim.name}</span>
+                  <span className="font-semibold text-white break-words">{dim.name}</span>
                 </div>
-                <span className="font-mono text-[11px] font-semibold text-slate-300">
+                <span className="font-mono text-[11px] font-semibold text-slate-300 self-start sm:self-auto pl-8 sm:pl-0 shrink-0">
                   {dim.stats.label}
                 </span>
               </div>

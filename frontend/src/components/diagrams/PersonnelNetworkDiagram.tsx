@@ -250,16 +250,16 @@ export const PersonnelNetworkDiagram: React.FC<Props> = ({ keyPersonnel }) => {
           edges={edges}
           nodeTypes={nodeTypes}
           fitView
-          fitViewOptions={{ padding: 0.2 }}
-          minZoom={0.7}
-          maxZoom={1.15}
+          fitViewOptions={{ padding: 0.15 }}
+          minZoom={0.25}
+          maxZoom={1.2}
           zoomOnScroll={false}
           panOnScroll={false}
-          zoomOnPinch={false}
+          zoomOnPinch={true}
+          panOnDrag={true}
           nodesDraggable={false}
           nodesConnectable={false}
           elementsSelectable={true}
-          translateExtent={[[-150, -80], [1150, 800]]}
           proOptions={{ hideAttribution: true }}
           colorMode="dark"
         >

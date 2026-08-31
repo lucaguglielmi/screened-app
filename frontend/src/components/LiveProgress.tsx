@@ -697,8 +697,8 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
               >
                 {isNotified ? <VerifiedTick size={16} /> : <Bell className="size-4" />}
               </div>
-              <div>
-                <h4 className="text-xs font-bold text-white font-sans flex items-center gap-2">
+              <div className="min-w-0 flex-1">
+                <h4 className="text-xs font-bold text-white font-sans flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
                   <span>{isNotified ? 'Background Notification Active' : 'Come Back Later & Get Notified'}</span>
                   {isNotified && (
                     <span className="text-[10px] font-mono text-emerald-400 font-normal">
@@ -706,7 +706,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
                     </span>
                   )}
                 </h4>
-                <p className="text-[11px] text-slate-400">
+                <p className="text-[11px] text-slate-400 mt-0.5 break-words">
                   {isNotified
                     ? `Registered to ${notifyEmail}. Feel free to close or bookmark this tab — we'll notify you as soon as the dossier is ready.`
                     : 'Feel free to close this tab. We can notify you via push and email as soon as the dossier is ready.'}
@@ -735,13 +735,13 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
           {/* Email Notification Form or Permanent Confirmation Banner */}
           {isNotified ? (
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-xs text-emerald-300 font-mono">
-              <div className="flex items-center gap-2">
-                <VerifiedTick size={15} />
-                <span>
+              <div className="flex items-start gap-2 min-w-0">
+                <VerifiedTick size={15} className="shrink-0 mt-0.5" />
+                <span className="break-all">
                   We&apos;ll email the direct dossier link to: <strong className="text-white">{notifyEmail}</strong>
                 </span>
               </div>
-              <span className="text-[11px] text-emerald-400/80 px-2 py-0.5 rounded bg-emerald-500/15 border border-emerald-500/30">
+              <span className="text-[11px] text-emerald-400/80 px-2 py-0.5 rounded bg-emerald-500/15 border border-emerald-500/30 shrink-0 self-start sm:self-auto">
                 Pending Synthesis
               </span>
             </div>
