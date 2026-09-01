@@ -52,7 +52,8 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* Mobile: Clean, compact list without heavy cards. Desktop: Sleek multi-column grid */}
+      <div className="divide-y divide-darkroom-border/40 border-y border-darkroom-border/40 sm:border-y-0 sm:divide-y-0 sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:gap-3.5">
         {keyPersonnel.map((person, idx) => {
           const initials = person.name
             .split(' ')
@@ -64,65 +65,79 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
           const isLoaded = imagesLoaded[person.name];
           const anchorId = `key-person-${person.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
 
+          const hasLinks = Boolean(
+            person.linkedinUrl ||
+            person.companiesHouseUrl ||
+            person.facebookUrl ||
+            person.websiteUrl ||
+            person.imdbUrl ||
+            person.twitterUrl
+          );
+
+          const hasAffiliations = Boolean(
+            (person.companies && person.companies.length > 0) ||
+            (person.associatedFestivals && person.associatedFestivals.length > 0)
+          );
+
           return (
             <div
               key={idx}
               id={anchorId}
-              className="rounded-2xl p-4.5 border border-darkroom-border bg-darkroom-surface/90 hover:border-zinc-700/80 shadow-md transition-all flex flex-col justify-between scroll-mt-32"
+              className="py-3 px-1 sm:p-4 sm:rounded-2xl sm:border sm:border-darkroom-border/80 sm:bg-darkroom-surface/90 sm:hover:border-zinc-700/80 sm:shadow-sm transition-all flex flex-col justify-start scroll-mt-32 space-y-2.5"
             >
-              <div className="space-y-3.5">
-                {/* Header: Avatar & Name */}
-                <div className="flex items-start gap-3">
-                  <div className="relative shrink-0 size-12 rounded-xl overflow-hidden bg-darkroom-card border border-darkroom-border shadow-xs">
-                    {person.avatarUrl && !hasImgError ? (
-                      <>
-                        {!isLoaded && (
-                          <div className="absolute inset-0 bg-slate-800 animate-pulse flex items-center justify-center">
-                            <span className="text-[10px] font-mono text-slate-500">{initials}</span>
-                          </div>
-                        )}
-                        <img
-                          src={person.avatarUrl}
-                          alt={person.name}
-                          onLoad={() => handleImageLoad(person.name)}
-                          onError={() => handleImageError(person.name)}
-                          className={`size-full object-cover transition-opacity duration-200 ${
-                            isLoaded ? 'opacity-100' : 'opacity-0'
-                          }`}
-                        />
-                      </>
-                    ) : (
-                      <div className="size-full flex items-center justify-center font-bold text-sm bg-midnight-royal/40 text-white">
-                        {initials || <User className="size-5 text-slate-300" />}
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between gap-1">
-                      <h4 className="text-sm font-bold text-white truncate font-sans">{person.name}</h4>
-                    </div>
-
-                    {/* Roles Badges */}
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {person.roles && person.roles.length > 0 ? (
-                        person.roles.map((r, rIdx) => (
-                          <span
-                            key={rIdx}
-                            className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-[#080d1a] border border-indigo-900/40 text-indigo-300"
-                          >
-                            {r}
-                          </span>
-                        ))
-                      ) : (
-                        <span className="text-[11px] font-mono text-slate-400">Personnel</span>
+              {/* Header: Avatar & Name & Roles */}
+              <div className="flex items-start gap-3">
+                <div className="relative shrink-0 size-10 sm:size-11 rounded-xl overflow-hidden bg-darkroom-card border border-darkroom-border/80 shadow-xs">
+                  {person.avatarUrl && !hasImgError ? (
+                    <>
+                      {!isLoaded && (
+                        <div className="absolute inset-0 bg-slate-800 animate-pulse flex items-center justify-center">
+                          <span className="text-[10px] font-mono text-slate-500">{initials}</span>
+                        </div>
                       )}
+                      <img
+                        src={person.avatarUrl}
+                        alt={person.name}
+                        onLoad={() => handleImageLoad(person.name)}
+                        onError={() => handleImageError(person.name)}
+                        className={`size-full object-cover transition-opacity duration-200 ${
+                          isLoaded ? 'opacity-100' : 'opacity-0'
+                        }`}
+                      />
+                    </>
+                  ) : (
+                    <div className="size-full flex items-center justify-center font-bold text-xs sm:text-sm bg-midnight-royal/40 text-white">
+                      {initials || <User className="size-4.5 text-slate-300" />}
                     </div>
-                  </div>
+                  )}
                 </div>
 
-                {/* External Verified Links (LinkedIn, Companies House, Facebook, Website, IMDb, Twitter) */}
-                <div className="flex flex-wrap gap-1.5 pt-1">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-1">
+                    <h4 className="text-sm sm:text-base font-bold text-white truncate font-sans">{person.name}</h4>
+                  </div>
+
+                  {/* Roles Badges */}
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {person.roles && person.roles.length > 0 ? (
+                      person.roles.map((r, rIdx) => (
+                        <span
+                          key={rIdx}
+                          className="text-xs font-mono px-2 py-0.5 rounded-md bg-[#080d1a] border border-indigo-900/40 text-indigo-300"
+                        >
+                          {r}
+                        </span>
+                      ))
+                    ) : (
+                      <span className="text-xs font-mono text-slate-400">Personnel</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* External Verified Links (LinkedIn, Companies House, Facebook, Website, IMDb, Twitter) */}
+              {hasLinks && (
+                <div className="flex flex-wrap gap-1.5 pt-0.5">
                   {person.linkedinUrl && (
                     <a
                       href={person.linkedinUrl}
@@ -210,52 +225,51 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
                     </a>
                   )}
                 </div>
+              )}
 
-                {/* Directorships & Affiliations */}
-                {((person.companies && person.companies.length > 0) ||
-                  (person.associatedFestivals && person.associatedFestivals.length > 0)) && (
-                  <div className="space-y-1.5 pt-1">
-                    {person.companies && person.companies.length > 0 && (
-                      <div className="text-xs text-slate-300 flex items-start gap-1.5">
-                        <Building2 className="size-3.5 text-slate-400 shrink-0 mt-0.5" />
-                        <span className="line-clamp-1">
-                          <strong className="text-slate-200">Entities:</strong> {person.companies.join(', ')}
-                        </span>
-                      </div>
-                    )}
-                    {person.associatedFestivals && person.associatedFestivals.length > 0 && (
-                      <div className="text-xs text-slate-300 flex items-start gap-1.5">
-                        <Film className="size-3.5 text-slate-400 shrink-0 mt-0.5" />
-                        <span className="line-clamp-1">
-                          <strong className="text-slate-200">Festivals:</strong> {person.associatedFestivals.join(', ')}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* Flags Pill List (Contextual Highlights) */}
-                {person.flags && person.flags.length > 0 && (
-                  <div className="flex flex-wrap gap-1 pt-1">
-                    {person.flags.map((flag, fIdx) => (
-                      <span
-                        key={fIdx}
-                        className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/30"
-                      >
-                        <ShieldAlert className="size-2.5 text-orange-400" />
-                        <span>{flag}</span>
+              {/* Directorships & Affiliations */}
+              {hasAffiliations && (
+                <div className="space-y-1 pt-0.5">
+                  {person.companies && person.companies.length > 0 && (
+                    <div className="text-xs sm:text-sm text-slate-300 flex items-start gap-1.5">
+                      <Building2 className="size-3.5 text-slate-400 shrink-0 mt-0.5" />
+                      <span className="line-clamp-1">
+                        <strong className="text-slate-200 font-medium">Entities:</strong> {person.companies.join(', ')}
                       </span>
-                    ))}
-                  </div>
-                )}
+                    </div>
+                  )}
+                  {person.associatedFestivals && person.associatedFestivals.length > 0 && (
+                    <div className="text-xs sm:text-sm text-slate-300 flex items-start gap-1.5">
+                      <Film className="size-3.5 text-slate-400 shrink-0 mt-0.5" />
+                      <span className="line-clamp-1">
+                        <strong className="text-slate-200 font-medium">Festivals:</strong> {person.associatedFestivals.join(', ')}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
 
-                {/* Notes Quote Box */}
-                {person.notes && (
-                  <div className="p-2.5 rounded-xl bg-darkroom-card/80 border border-darkroom-border text-xs text-slate-300 leading-relaxed italic">
-                    "{person.notes}"
-                  </div>
-                )}
-              </div>
+              {/* Flags Pill List (Contextual Highlights) */}
+              {person.flags && person.flags.length > 0 && (
+                <div className="flex flex-wrap gap-1 pt-0.5">
+                  {person.flags.map((flag, fIdx) => (
+                    <span
+                      key={fIdx}
+                      className="inline-flex items-center gap-1 text-xs font-mono px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/30"
+                    >
+                      <ShieldAlert className="size-3 text-orange-400" />
+                      <span>{flag}</span>
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* Notes Quote Box (Rendered only when notes exist) */}
+              {person.notes && person.notes.trim().length > 0 && (
+                <div className="p-2.5 rounded-xl bg-darkroom-card/70 border border-darkroom-border/60 text-xs sm:text-sm text-slate-300 leading-relaxed italic">
+                  &ldquo;{person.notes}&rdquo;
+                </div>
+              )}
             </div>
           );
         })}
