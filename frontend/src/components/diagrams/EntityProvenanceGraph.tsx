@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Node, Edge, MarkerType } from '@xyflow/react';
 import { ScreenedFlowCanvas } from './ScreenedFlowCanvas';
 import { EvidenceDossier as DossierType, AtomicClaim } from '../../types/investigation';
+import { categorizePersonnel } from '../../utils/personnel';
 import {
   ShieldCheck,
   Building2,
@@ -17,6 +18,9 @@ import {
   Sparkles,
   User,
   ShieldAlert,
+  ChevronDown,
+  ChevronUp,
+  GraduationCap,
 } from 'lucide-react';
 
 interface Props {
@@ -40,6 +44,8 @@ type DisplayMode = 'RESPONSIVE' | 'CANVAS';
 export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim }) => {
   const [activeTab, setActiveTab] = useState<DiagramTab>('PROVENANCE');
   const [displayMode, setDisplayMode] = useState<DisplayMode>('RESPONSIVE');
+  const [showAllPersonnelTab2, setShowAllPersonnelTab2] = useState(false);
+  const [showConnectedTab2, setShowConnectedTab2] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [selectedNodeData, setSelectedNodeData] = useState<ProvenanceNodeData | null>(null);
   const [filterMode, setFilterMode] = useState<'ALL' | 'VERIFIED' | 'DISPUTES'>('ALL');
@@ -500,127 +506,209 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
           )}
 
           {/* TAB 2: KEY PERSONNEL & CORPORATE SHELL NETWORK */}
-          {activeTab === 'PERSONNEL' && (
-            <div className="space-y-4">
-              <div className="p-4 rounded-2xl bg-darkroom-surface border border-darkroom-border space-y-4 shadow-xl">
-                <div className="flex items-center justify-between gap-2 border-b border-darkroom-border pb-2.5">
-                  <div className="flex items-center gap-2">
-                    <User className="size-4 text-tool-diligence" />
-                    <span className="font-bold text-white text-sm font-serif">
-                      Leadership &amp; Directorship Network Graph
-                    </span>
+          {activeTab === 'PERSONNEL' && (() => {
+            const { leadership: tab2Leadership, connected: tab2Connected } = categorizePersonnel(dossier.keyPersonnel || []);
+            const visibleTab2Leadership = showAllPersonnelTab2 ? tab2Leadership : tab2Leadership.slice(0, 6);
+
+            return (
+              <div className="space-y-4">
+                <div className="p-4 rounded-2xl bg-darkroom-surface border border-darkroom-border space-y-4 shadow-xl">
+                  <div className="flex items-center justify-between gap-2 border-b border-darkroom-border pb-2.5">
+                    <div className="flex items-center gap-2">
+                      <User className="size-4 text-tool-diligence" />
+                      <span className="font-bold text-white text-sm font-serif">
+                        Leadership &amp; Directorship Network Graph
+                      </span>
+                    </div>
+                    {(dossier.keyPersonnel && dossier.keyPersonnel.some((p) => p.isFestivalMillSuspect || (p.flags && p.flags.length > 0))) ? (
+                      <span className="text-[11px] font-mono text-rose-400 font-semibold">
+                        Conflict Flow Highlighted
+                      </span>
+                    ) : (
+                      <div className="flex items-center gap-1.5 text-[11px] font-mono">
+                        <span className="text-emerald-400 font-semibold">{tab2Leadership.length} Core Organizers</span>
+                        {tab2Connected.length > 0 && (
+                          <span className="text-slate-400">+{tab2Connected.length} Connected</span>
+                        )}
+                      </div>
+                    )}
                   </div>
-                  {(dossier.keyPersonnel && dossier.keyPersonnel.some((p) => p.isFestivalMillSuspect || (p.flags && p.flags.length > 0))) ? (
-                    <span className="text-[11px] font-mono text-rose-400 font-semibold">
-                      Conflict Flow Highlighted
-                    </span>
-                  ) : (
-                    <span className="text-[11px] font-mono text-emerald-400 font-semibold">
-                      {(dossier.keyPersonnel?.length || 0)} Profiles Analyzed
-                    </span>
-                  )}
-                </div>
 
-                {/* Real Dynamic Personnel Cards */}
-                {dossier.keyPersonnel && dossier.keyPersonnel.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 pt-1">
-                    {dossier.keyPersonnel.map((person, pIdx) => {
-                      const initials = person.name
-                        .split(' ')
-                        .map((n) => n[0])
-                        .join('')
-                        .toUpperCase()
-                        .slice(0, 2);
+                  {/* Group 1: Core Leadership Cards */}
+                  {tab2Leadership.length > 0 ? (
+                    <div className="space-y-3">
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 pt-1">
+                        {visibleTab2Leadership.map((person, pIdx) => {
+                          const initials = person.name
+                            .split(' ')
+                            .map((n) => n[0])
+                            .join('')
+                            .toUpperCase()
+                            .slice(0, 2);
 
-                      const hasConflict = Boolean(
-                        person.isFestivalMillSuspect ||
-                        person.hasDistributionOverlap ||
-                        (person.flags && person.flags.length > 0)
-                      );
+                          const hasConflict = Boolean(
+                            person.isFestivalMillSuspect ||
+                            person.hasDistributionOverlap ||
+                            (person.flags && person.flags.length > 0)
+                          );
 
-                      return (
-                        <div
-                          key={pIdx}
-                          className={`p-3.5 rounded-xl bg-darkroom-card/90 border space-y-2.5 ${
-                            hasConflict ? 'border-rose-500/40' : 'border-darkroom-border'
-                          }`}
-                        >
-                          <div className="flex items-center gap-2.5">
-                            {person.avatarUrl ? (
-                              <img
-                                src={person.avatarUrl}
-                                alt={person.name}
-                                className={`size-9 rounded-xl bg-darkroom-surface border object-cover ${
-                                  hasConflict ? 'border-rose-400' : 'border-darkroom-border'
-                                }`}
-                              />
-                            ) : (
-                              <div className={`size-9 rounded-xl flex items-center justify-center font-bold text-xs font-mono border ${
-                                hasConflict
-                                  ? 'bg-rose-500/20 text-rose-300 border-rose-500/30'
-                                  : 'bg-midnight-royal/40 text-white border-indigo-900/40'
-                              }`}>
-                                {initials || <User className="size-4 text-slate-300" />}
-                              </div>
-                            )}
-                            <div className="min-w-0 flex-1">
-                              <h5 className="text-xs sm:text-sm font-bold text-white truncate font-sans">{person.name}</h5>
-                              <span className="text-[11px] font-mono text-indigo-300 truncate block">
-                                {person.roles && person.roles.length > 0 ? person.roles.join(', ') : 'Personnel'}
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Affiliations & Directorships */}
-                          <div className="text-xs text-slate-300 space-y-1">
-                            {person.companies && person.companies.length > 0 && (
-                              <div className="flex items-center gap-1 text-[11px] text-slate-300 font-mono truncate">
-                                <ArrowRight className="size-3 text-indigo-400 shrink-0" />
-                                <span className="truncate">Entities: {person.companies.join(', ')}</span>
-                              </div>
-                            )}
-                            {person.associatedFestivals && person.associatedFestivals.length > 0 && (
-                              <div className="flex items-center gap-1 text-[11px] text-slate-300 font-mono truncate">
-                                <ArrowRight className="size-3 text-indigo-400 shrink-0" />
-                                <span className="truncate">Festivals: {person.associatedFestivals.join(', ')}</span>
-                              </div>
-                            )}
-                            {person.flags && person.flags.length > 0 && (
-                              <div className="flex flex-wrap gap-1 pt-0.5">
-                                {person.flags.map((flag, fIdx) => (
-                                  <span
-                                    key={fIdx}
-                                    className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-300 border border-rose-500/30"
-                                  >
-                                    {flag}
+                          return (
+                            <div
+                              key={pIdx}
+                              className={`p-3.5 rounded-xl bg-darkroom-card/90 border space-y-2.5 ${
+                                hasConflict ? 'border-rose-500/40' : 'border-darkroom-border'
+                              }`}
+                            >
+                              <div className="flex items-center gap-2.5">
+                                {person.avatarUrl ? (
+                                  <img
+                                    src={person.avatarUrl}
+                                    alt={person.name}
+                                    className={`size-9 rounded-xl bg-darkroom-surface border object-cover ${
+                                      hasConflict ? 'border-rose-400' : 'border-darkroom-border'
+                                    }`}
+                                  />
+                                ) : (
+                                  <div className={`size-9 rounded-xl flex items-center justify-center font-bold text-xs font-mono border ${
+                                    hasConflict
+                                      ? 'bg-rose-500/20 text-rose-300 border-rose-500/30'
+                                      : 'bg-midnight-royal/40 text-white border-indigo-900/40'
+                                  }`}>
+                                    {initials || <User className="size-4 text-slate-300" />}
+                                  </div>
+                                )}
+                                <div className="min-w-0 flex-1">
+                                  <h5 className="text-xs sm:text-sm font-bold text-white truncate font-sans">{person.name}</h5>
+                                  <span className="text-[11px] font-mono text-indigo-300 truncate block">
+                                    {person.roles && person.roles.length > 0 ? person.roles.join(', ') : 'Personnel'}
                                   </span>
-                                ))}
+                                </div>
                               </div>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <div className="p-6 text-center text-xs font-mono text-slate-400 bg-darkroom-card/50 rounded-xl border border-darkroom-border">
-                    No conflicting directorships or auxiliary corporate shell entities identified.
-                  </div>
-                )}
 
-                {/* Dynamic Takeaway Box */}
-                <div className="p-3.5 rounded-xl bg-darkroom-card/90 border border-darkroom-border text-xs text-slate-200 leading-relaxed flex items-start gap-2.5">
-                  <ShieldAlert className="size-4 text-indigo-400 shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="text-slate-100">Directorship Analysis:</strong>{' '}
-                    {dossier.keyPersonnel && dossier.keyPersonnel.some((p) => p.isFestivalMillSuspect || (p.flags && p.flags.length > 0))
-                      ? 'Cross-referenced leadership profiles identified auxiliary entities or potential conflict-of-interest indicators.'
-                      : 'All identified leadership individuals verified without conflicting commercial directorships or vanity cross-ownership.'}
+                              {/* Affiliations & Directorships */}
+                              <div className="text-xs text-slate-300 space-y-1">
+                                {person.companies && person.companies.length > 0 && (
+                                  <div className="flex items-center gap-1 text-[11px] text-slate-300 font-mono truncate">
+                                    <ArrowRight className="size-3 text-slate-400 shrink-0" />
+                                    <span className="truncate">Entities: {person.companies.join(', ')}</span>
+                                  </div>
+                                )}
+                                {person.associatedFestivals && person.associatedFestivals.length > 0 && (
+                                  <div className="flex items-center gap-1 text-[11px] text-slate-300 font-mono truncate">
+                                    <ArrowRight className="size-3 text-slate-400 shrink-0" />
+                                    <span className="truncate">Festivals: {person.associatedFestivals.join(', ')}</span>
+                                  </div>
+                                )}
+                                {person.flags && person.flags.length > 0 && (
+                                  <div className="flex flex-wrap gap-1 pt-0.5">
+                                    {person.flags.map((flag, fIdx) => (
+                                      <span
+                                        key={fIdx}
+                                        className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-300 border border-rose-500/30"
+                                      >
+                                        {flag}
+                                      </span>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {tab2Leadership.length > 6 && (
+                        <button
+                          type="button"
+                          onClick={() => setShowAllPersonnelTab2(!showAllPersonnelTab2)}
+                          className="w-full py-2 px-3 rounded-xl bg-darkroom-card/80 hover:bg-darkroom-surface border border-darkroom-border text-xs font-mono text-indigo-300 hover:text-white flex items-center justify-center gap-1 transition-all cursor-pointer"
+                        >
+                          {showAllPersonnelTab2 ? (
+                            <>
+                              <ChevronUp className="size-3.5 text-slate-400" />
+                              <span>Show Top 6 Organizers</span>
+                            </>
+                          ) : (
+                            <>
+                              <ChevronDown className="size-3.5 text-slate-400" />
+                              <span>View All {tab2Leadership.length} Organizers ({tab2Leadership.length - 6} more)</span>
+                            </>
+                          )}
+                        </button>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="p-6 text-center text-xs font-mono text-slate-400 bg-darkroom-card/50 rounded-xl border border-darkroom-border">
+                      No conflicting directorships or auxiliary corporate shell entities identified.
+                    </div>
+                  )}
+
+                  {/* Group 2: Connected Personnel in Tab 2 */}
+                  {tab2Connected.length > 0 && (
+                    <div className="pt-2 border-t border-darkroom-border/60 space-y-2.5">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="text-xs font-mono text-slate-400 font-semibold flex items-center gap-1.5">
+                          <GraduationCap className="size-3.5 text-slate-400" />
+                          <span>Collaborators &amp; Extended Network ({tab2Connected.length})</span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setShowConnectedTab2(!showConnectedTab2)}
+                          className="px-2.5 py-1 rounded-lg bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border text-xs font-mono text-slate-300 hover:text-white flex items-center gap-1 transition-colors cursor-pointer"
+                        >
+                          <span>{showConnectedTab2 ? 'Hide' : 'View'} {tab2Connected.length} People</span>
+                          {showConnectedTab2 ? <ChevronUp className="size-3" /> : <ChevronDown className="size-3" />}
+                        </button>
+                      </div>
+
+                      {showConnectedTab2 && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 pt-1">
+                          {tab2Connected.map((person, cIdx) => {
+                            const initials = person.name
+                              .split(' ')
+                              .map((n) => n[0])
+                              .join('')
+                              .toUpperCase()
+                              .slice(0, 2);
+
+                            return (
+                              <div
+                                key={cIdx}
+                                className="p-3 rounded-xl bg-darkroom-card/80 border border-darkroom-border flex items-start gap-2.5"
+                              >
+                                <div className="size-8 rounded-lg flex items-center justify-center font-bold text-xs font-mono shrink-0 bg-midnight-royal/40 text-white border border-indigo-900/40">
+                                  {initials || <User className="size-3.5 text-slate-300" />}
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                  <div className="font-bold text-white text-xs truncate font-sans">
+                                    {person.name}
+                                  </div>
+                                  <div className="text-[11px] font-mono text-slate-400 mt-0.5 line-clamp-1">
+                                    {person.roles && person.roles.length > 0 ? person.roles.join(', ') : 'Collaborator'}
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Dynamic Takeaway Box */}
+                  <div className="p-3.5 rounded-xl bg-darkroom-card/90 border border-darkroom-border text-xs text-slate-200 leading-relaxed flex items-start gap-2.5">
+                    <ShieldAlert className="size-4 text-indigo-400 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-slate-100">Directorship Analysis:</strong>{' '}
+                      {dossier.keyPersonnel && dossier.keyPersonnel.some((p) => p.isFestivalMillSuspect || (p.flags && p.flags.length > 0))
+                        ? 'Cross-referenced leadership profiles identified auxiliary entities or potential conflict-of-interest indicators.'
+                        : 'All identified leadership individuals verified without conflicting commercial directorships or vanity cross-ownership.'}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
 
           {/* TAB 3: CONTRADICTION & CLAIM RESOLUTION TREE */}
           {activeTab === 'CONTRADICTIONS' && (
