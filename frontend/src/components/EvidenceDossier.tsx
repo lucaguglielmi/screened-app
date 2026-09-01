@@ -43,6 +43,7 @@ import {
   ExternalLink,
   Layers,
   ChevronDown,
+  ChevronUp,
   ListChecks,
   HelpCircle,
   Globe,
@@ -106,6 +107,11 @@ export const EvidenceDossier: React.FC<Props> = ({
   const [activeSection, setActiveSection] = useState<string>('Transparency & Credibility');
   const [shareableLinkCopied, setShareableLinkCopied] = useState(false);
   const [claimStatusFilter, setClaimStatusFilter] = useState<string>('ALL');
+  const [expandedDomains, setExpandedDomains] = useState<Record<string, boolean>>({});
+
+  const toggleDomain = (domainKey: string) => {
+    setExpandedDomains((prev) => ({ ...prev, [domainKey]: !prev[domainKey] }));
+  };
   
   const actionsMenuRef = useRef<HTMLDivElement>(null);
   
@@ -1357,33 +1363,91 @@ export const EvidenceDossier: React.FC<Props> = ({
               data-section-name="3-Domain Synthesis"
             >
               {/* Festival Domain */}
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-300 font-semibold border-b border-darkroom-border/40 pb-2">
-                  <Layers className="size-3.5 text-indigo-400" />
-                  <span>Festival Identity</span>
+              {dossier.festivalOverview && (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold border-b border-darkroom-border/40 pb-2">
+                    <Layers className="size-3.5 text-slate-400" />
+                    <span>Festival Identity</span>
+                  </div>
+                  <p className={`text-xs sm:text-sm text-slate-300 leading-relaxed ${
+                    expandedDomains['festival'] ? '' : 'line-clamp-4'
+                  }`}>
+                    {dossier.festivalOverview}
+                  </p>
+                  {dossier.festivalOverview.length > 180 && (
+                    <button
+                      type="button"
+                      onClick={() => toggleDomain('festival')}
+                      className="text-xs font-mono text-indigo-300 hover:text-white flex items-center gap-1 transition-colors cursor-pointer pt-0.5"
+                    >
+                      <span>{expandedDomains['festival'] ? 'Show less' : 'View more'}</span>
+                      {expandedDomains['festival'] ? (
+                        <ChevronUp className="size-3 text-slate-400" />
+                      ) : (
+                        <ChevronDown className="size-3 text-slate-400" />
+                      )}
+                    </button>
+                  )}
                 </div>
-                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">{dossier.festivalOverview}</p>
-              </div>
+              )}
 
               {/* Organizer Domain */}
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-300 font-semibold border-b border-darkroom-border/40 pb-2">
-                  <Building2 className="size-3.5 text-indigo-400" />
-                  <span>Corporate &amp; Organizer</span>
+              {dossier.organizerProfile && (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold border-b border-darkroom-border/40 pb-2">
+                    <Building2 className="size-3.5 text-slate-400" />
+                    <span>Corporate &amp; Organizer</span>
+                  </div>
+                  <p className={`text-xs sm:text-sm text-slate-300 leading-relaxed ${
+                    expandedDomains['organizer'] ? '' : 'line-clamp-4'
+                  }`}>
+                    {dossier.organizerProfile}
+                  </p>
+                  {dossier.organizerProfile.length > 180 && (
+                    <button
+                      type="button"
+                      onClick={() => toggleDomain('organizer')}
+                      className="text-xs font-mono text-indigo-300 hover:text-white flex items-center gap-1 transition-colors cursor-pointer pt-0.5"
+                    >
+                      <span>{expandedDomains['organizer'] ? 'Show less' : 'View more'}</span>
+                      {expandedDomains['organizer'] ? (
+                        <ChevronUp className="size-3 text-slate-400" />
+                      ) : (
+                        <ChevronDown className="size-3 text-slate-400" />
+                      )}
+                    </button>
+                  )}
                 </div>
-                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">{dossier.organizerProfile}</p>
-              </div>
+              )}
 
               {/* Participants Domain */}
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-300 font-semibold border-b border-darkroom-border/40 pb-2">
-                  <Users className="size-3.5 text-indigo-400" />
-                  <span>Community &amp; Filmmakers</span>
+              {dossier.participantFeedback && (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold border-b border-darkroom-border/40 pb-2">
+                    <Users className="size-3.5 text-slate-400" />
+                    <span>Community &amp; Filmmakers</span>
+                  </div>
+                  <p className={`text-xs sm:text-sm text-slate-300 leading-relaxed ${
+                    expandedDomains['participants'] ? '' : 'line-clamp-4'
+                  }`}>
+                    {dossier.participantFeedback}
+                  </p>
+                  {dossier.participantFeedback.length > 180 && (
+                    <button
+                      type="button"
+                      onClick={() => toggleDomain('participants')}
+                      className="text-xs font-mono text-indigo-300 hover:text-white flex items-center gap-1 transition-colors cursor-pointer pt-0.5"
+                    >
+                      <span>{expandedDomains['participants'] ? 'Show less' : 'View more'}</span>
+                      {expandedDomains['participants'] ? (
+                        <ChevronUp className="size-3 text-slate-400" />
+                      ) : (
+                        <ChevronDown className="size-3 text-slate-400" />
+                      )}
+                    </button>
+                  )}
                 </div>
-                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                  {dossier.participantFeedback}
-                </p>
-              </div>
+              )}
             </div>
           )}
 
