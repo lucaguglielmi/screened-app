@@ -20,7 +20,7 @@ export const DetailDial: React.FC<Props> = ({ density, onChange }) => {
   return (
     <div className="w-full">
       {/* 3-Mode Segmented Control */}
-      <div className="grid grid-cols-3 p-1 rounded-xl bg-darkroom-card border border-darkroom-border shadow-inner gap-1">
+      <div className="grid grid-cols-3 p-1 rounded-2xl bg-[#060a15]/90 border border-darkroom-border/60 shadow-inner gap-1">
         {/* Mode 1: Short summary */}
         <button
           type="button"
@@ -28,16 +28,15 @@ export const DetailDial: React.FC<Props> = ({ density, onChange }) => {
             soundEffects.playClick();
             onChange('SIMPLIFIED');
           }}
-          className={`py-1.5 px-2 rounded-lg flex items-center justify-center gap-1.5 text-xs font-mono transition-all cursor-pointer ${
+          className={`py-2 px-3 rounded-xl flex items-center justify-center gap-2 text-xs sm:text-sm font-mono transition-all cursor-pointer ${
             isShort
-              ? 'bg-midnight-royal text-white font-bold shadow-sm'
-              : 'text-slate-400 hover:text-slate-200'
+              ? 'bg-[#2563eb] text-white font-bold shadow-md shadow-blue-500/25'
+              : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.03]'
           }`}
           title="Short executive summary & key checklist"
         >
-          <BookOpen className="size-3.5 shrink-0" />
-          <span className="sm:hidden">Short</span>
-          <span className="hidden sm:inline">Short summary</span>
+          <BookOpen className="size-4 shrink-0" />
+          <span>Short</span>
         </button>
 
         {/* Mode 2: Full research (Default) */}
@@ -47,16 +46,15 @@ export const DetailDial: React.FC<Props> = ({ density, onChange }) => {
             soundEffects.playClick();
             onChange('FULL_EVIDENCE');
           }}
-          className={`py-1.5 px-2 rounded-lg flex items-center justify-center gap-1.5 text-xs font-mono transition-all cursor-pointer ${
+          className={`py-2 px-3 rounded-xl flex items-center justify-center gap-2 text-xs sm:text-sm font-mono transition-all cursor-pointer ${
             isFull
-              ? 'bg-midnight-royal text-white font-bold shadow-sm'
-              : 'text-slate-400 hover:text-slate-200'
+              ? 'bg-[#2563eb] text-white font-bold shadow-md shadow-blue-500/25'
+              : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.03]'
           }`}
           title="Full comprehensive due diligence with all vectors, claims, and graphs"
         >
-          <ShieldCheck className="size-3.5 shrink-0" />
-          <span className="sm:hidden">Full</span>
-          <span className="hidden sm:inline">Full research</span>
+          <ShieldCheck className="size-4 shrink-0" />
+          <span>Full</span>
         </button>
 
         {/* Mode 3: AI Agent */}
@@ -66,19 +64,19 @@ export const DetailDial: React.FC<Props> = ({ density, onChange }) => {
             soundEffects.playClick();
             onChange('MACHINE_AI_INGESTION');
           }}
-          className={`py-1.5 px-2 rounded-lg flex items-center justify-center gap-1.5 text-xs font-mono transition-all cursor-pointer ${
+          className={`py-2 px-3 rounded-xl flex items-center justify-center gap-2 text-xs sm:text-sm font-mono transition-all cursor-pointer ${
             isAgent
-              ? 'bg-midnight-royal text-white font-bold shadow-sm'
-              : 'text-slate-400 hover:text-slate-200'
+              ? 'bg-[#2563eb] text-white font-bold shadow-md shadow-blue-500/25'
+              : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.03]'
           }`}
           title="Machine AI JSON-LD & plain-text token dump for autonomous agents"
         >
-          <Bot className="size-3.5 shrink-0" />
-          <span className="sm:hidden">Agent</span>
-          <span className="hidden sm:inline">AI Agent</span>
+          <Bot className="size-4 shrink-0" />
+          <span>Agent</span>
         </button>
       </div>
     </div>
   );
 };
+
 

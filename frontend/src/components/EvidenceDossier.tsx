@@ -103,7 +103,7 @@ export const EvidenceDossier: React.FC<Props> = ({
   const [isNavOpen, setIsNavOpen] = useState(false);
   const newSearchMenuRef = useRef<HTMLDivElement>(null);
   const navMenuRef = useRef<HTMLDivElement>(null);
-  const [activeSection, setActiveSection] = useState<string>('Overview');
+  const [activeSection, setActiveSection] = useState<string>('Transparency & Credibility');
   const [shareableLinkCopied, setShareableLinkCopied] = useState(false);
   const [claimStatusFilter, setClaimStatusFilter] = useState<string>('ALL');
   
@@ -657,170 +657,285 @@ export const EvidenceDossier: React.FC<Props> = ({
       animate={{ opacity: 1, y: 0 }}
       className="max-w-5xl mx-auto space-y-6"
     >
-      {/* Top Bar Actions & New Screen */}
-      <div className="flex items-center justify-end gap-2 mb-2 relative no-print">
-        {/* Unified Dossier Actions Dropdown */}
-        <div className="relative" ref={actionsMenuRef}>
-          <button
-            onClick={() => {
-              soundEffects.playClick();
-              setIsActionsMenuOpen(!isActionsMenuOpen);
-            }}
-            className="px-3 py-1.5 rounded-full bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border text-xs font-mono font-medium text-slate-200 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
-            aria-expanded={isActionsMenuOpen}
-          >
-            <Sparkles className="size-3.5 text-indigo-400" />
-            <span>Actions</span>
-            <ChevronDown className={`size-3.5 text-slate-400 transition-transform duration-200 ${isActionsMenuOpen ? 'rotate-180 text-white' : ''}`} />
-          </button>
+      {/* 1. Sticky Navigation & Reading Mode Bar (Top of Dossier, Sticky under App Header) */}
+      {dossier && (
+        <div className="sticky top-16 z-20 bg-[#090d18]/95 backdrop-blur-xl p-3 sm:p-4 rounded-3xl border border-darkroom-border shadow-2xl shadow-black/90 no-print transition-all space-y-2.5 relative overflow-hidden">
+          {/* Reading Scroll Progress Line */}
+          <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-darkroom-border/40">
+            <div
+              className="h-full bg-gradient-to-r from-tool-diligence via-emerald-400 to-indigo-400 transition-all duration-150 ease-out"
+              style={{ width: `${scrollProgress}%` }}
+            />
+          </div>
 
-          {/* Dropdown Menu with Complete Action List */}
-          <AnimatePresence>
-            {isActionsMenuOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: 8, scale: 0.96 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 8, scale: 0.96 }}
-                transition={{ duration: 0.15, ease: 'easeOut' }}
-                className="absolute right-0 top-full mt-2 w-[calc(100vw-3rem)] max-w-xs sm:w-72 p-1.5 rounded-2xl bg-darkroom-surface/98 backdrop-blur-xl border border-darkroom-border shadow-2xl shadow-black/80 z-50 space-y-1 font-sans text-xs"
+          {/* Top Row: [Menu Button] • Reading: <Section Title> + Actions/New Search */}
+          <div className="flex items-center justify-between gap-3 relative">
+            <div className="flex items-center gap-3 min-w-0 flex-1">
+              <button
+                type="button"
+                onClick={() => {
+                  soundEffects.playClick();
+                  setIsNavOpen(!isNavOpen);
+                }}
+                className={`p-2 rounded-xl border transition-all cursor-pointer flex items-center justify-center shrink-0 ${
+                  isNavOpen
+                    ? 'bg-midnight-royal text-white border-midnight-royal shadow-sm'
+                    : 'bg-darkroom-card/90 text-slate-300 hover:text-white border-darkroom-border hover:bg-darkroom-surface'
+                }`}
+                title="Dossier Table of Contents"
+                aria-expanded={isNavOpen}
               >
-                {dossier && (
-                  <button
-                    onClick={() => {
-                      handleCopySummary();
-                      setIsActionsMenuOpen(false);
-                    }}
-                    className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
-                  >
-                    <div className="p-1.5 rounded-lg bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 group-hover:bg-indigo-500/25">
-                      {copiedSummary ? <Check className="size-3.5 text-emerald-400" /> : <Copy className="size-3.5" />}
-                    </div>
-                    <div className="flex flex-col min-w-0">
-                      <span className="font-semibold text-slate-100">{copiedSummary ? 'Copied to Clipboard!' : 'Copy Summary'}</span>
-                      <span className="text-[11px] text-slate-400 truncate">Executive summary & checklist</span>
-                    </div>
-                  </button>
-                )}
-                
+                <Menu className="size-4.5" />
+              </button>
+
+              <div className="flex items-center gap-2 min-w-0 truncate">
+                <span className="size-2.5 rounded-full bg-indigo-500 shrink-0" />
+                <span className="text-xs sm:text-sm font-mono text-slate-400 shrink-0">Reading:</span>
+                <span className="text-xs sm:text-sm font-mono font-bold text-white truncate">
+                  {activeSection}
+                </span>
+              </div>
+            </div>
+
+            {/* Right: Actions Dropdown & New Screen */}
+            <div className="flex items-center gap-2 shrink-0">
+              {/* Unified Dossier Actions Dropdown */}
+              <div className="relative" ref={actionsMenuRef}>
                 <button
                   onClick={() => {
-                    handleCopyShareableLink();
-                    setIsActionsMenuOpen(false);
+                    soundEffects.playClick();
+                    setIsActionsMenuOpen(!isActionsMenuOpen);
                   }}
-                  className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                  className="px-3 py-1.5 rounded-xl bg-darkroom-card/90 hover:bg-darkroom-surface border border-darkroom-border text-xs font-mono font-medium text-slate-200 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
+                  aria-expanded={isActionsMenuOpen}
                 >
-                  <div className="p-1.5 rounded-lg bg-sky-500/15 border border-sky-500/30 text-sky-400 group-hover:bg-sky-500/25">
-                    {shareableLinkCopied ? <Check className="size-3.5 text-emerald-400" /> : <ExternalLink className="size-3.5" />}
-                  </div>
-                  <div className="flex flex-col min-w-0">
-                    <span className="font-semibold text-slate-100">{shareableLinkCopied ? 'Link Copied!' : 'Copy Shareable Link'}</span>
-                    <span className="text-[11px] text-slate-400 truncate">Read-only view for producers</span>
-                  </div>
+                  <Sparkles className="size-3.5 text-indigo-400" />
+                  <span className="hidden sm:inline">Actions</span>
+                  <ChevronDown className={`size-3.5 text-slate-400 transition-transform duration-200 ${isActionsMenuOpen ? 'rotate-180 text-white' : ''}`} />
                 </button>
 
+                {/* Dropdown Menu with Complete Action List */}
+                <AnimatePresence>
+                  {isActionsMenuOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                      transition={{ duration: 0.15, ease: 'easeOut' }}
+                      className="absolute right-0 top-full mt-2 w-[calc(100vw-3rem)] max-w-xs sm:w-72 p-1.5 rounded-2xl bg-darkroom-surface/98 backdrop-blur-xl border border-darkroom-border shadow-2xl shadow-black/80 z-50 space-y-1 font-sans text-xs"
+                    >
+                      {dossier && (
+                        <button
+                          onClick={() => {
+                            handleCopySummary();
+                            setIsActionsMenuOpen(false);
+                          }}
+                          className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                        >
+                          <div className="p-1.5 rounded-lg bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 group-hover:bg-indigo-500/25">
+                            {copiedSummary ? <Check className="size-3.5 text-emerald-400" /> : <Copy className="size-3.5" />}
+                          </div>
+                          <div className="flex flex-col min-w-0">
+                            <span className="font-semibold text-slate-100">{copiedSummary ? 'Copied to Clipboard!' : 'Copy Summary'}</span>
+                            <span className="text-[11px] text-slate-400 truncate">Executive summary & checklist</span>
+                          </div>
+                        </button>
+                      )}
+                      
+                      <button
+                        onClick={() => {
+                          handleCopyShareableLink();
+                          setIsActionsMenuOpen(false);
+                        }}
+                        className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                      >
+                        <div className="p-1.5 rounded-lg bg-sky-500/15 border border-sky-500/30 text-sky-400 group-hover:bg-sky-500/25">
+                          {shareableLinkCopied ? <Check className="size-3.5 text-emerald-400" /> : <ExternalLink className="size-3.5" />}
+                        </div>
+                        <div className="flex flex-col min-w-0">
+                          <span className="font-semibold text-slate-100">{shareableLinkCopied ? 'Link Copied!' : 'Copy Shareable Link'}</span>
+                          <span className="text-[11px] text-slate-400 truncate">Read-only view for producers</span>
+                        </div>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          handlePrint();
+                          setIsActionsMenuOpen(false);
+                        }}
+                        className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                      >
+                        <div className="p-1.5 rounded-lg bg-blue-500/15 border border-blue-500/30 text-blue-400 group-hover:bg-blue-500/25">
+                          <Printer className="size-3.5" />
+                        </div>
+                        <div className="flex flex-col min-w-0">
+                          <span className="font-semibold text-slate-100">Print / Save as PDF</span>
+                          <span className="text-[11px] text-slate-400 truncate">Printable clean dossier view</span>
+                        </div>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          onExport();
+                          setIsActionsMenuOpen(false);
+                        }}
+                        className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                      >
+                        <div className="p-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 group-hover:bg-emerald-500/25">
+                          <Download className="size-3.5" />
+                        </div>
+                        <div className="flex flex-col min-w-0">
+                          <span className="font-semibold text-slate-100">Export Signed Archive</span>
+                          <span className="text-[11px] text-slate-400 truncate">Markdown archive with SHA-256 seal</span>
+                        </div>
+                      </button>
+
+                      <div className="border-t border-darkroom-border my-1 pt-1" />
+
+                      <button
+                        onClick={() => {
+                          handleCopyAiPayload();
+                          setIsActionsMenuOpen(false);
+                        }}
+                        className="w-full text-left px-3 py-2 rounded-xl hover:bg-darkroom-card text-slate-300 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                      >
+                        <Bot className="size-3.5 text-purple-400 ml-1.5" />
+                        <span className="text-xs font-mono">{copiedAiPayload ? 'Copied JSON-LD!' : 'Copy AI Graph (JSON-LD)'}</span>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          handleCopyRawText();
+                          setIsActionsMenuOpen(false);
+                        }}
+                        className="w-full text-left px-3 py-2 rounded-xl hover:bg-darkroom-card text-slate-300 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                      >
+                        <Code className="size-3.5 text-slate-400 ml-1.5" />
+                        <span className="text-xs font-mono">{copiedRawText ? 'Copied Raw Text!' : 'Copy Plain Text Dump'}</span>
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* New Screen Button */}
+              <div className="relative" ref={newSearchMenuRef}>
                 <button
                   onClick={() => {
-                    handlePrint();
-                    setIsActionsMenuOpen(false);
+                    soundEffects.playClick();
+                    setIsNewSearchMenuOpen(!isNewSearchMenuOpen);
                   }}
-                  className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                  className={`p-1.5 rounded-xl transition-colors cursor-pointer shadow-sm active:scale-95 border ${isNewSearchMenuOpen ? 'bg-darkroom-surface text-white border-darkroom-border' : 'bg-darkroom-card/90 hover:bg-darkroom-surface text-slate-300 hover:text-white border-darkroom-border'}`}
+                  title="New Screen"
                 >
-                  <div className="p-1.5 rounded-lg bg-blue-500/15 border border-blue-500/30 text-blue-400 group-hover:bg-blue-500/25">
-                    <Printer className="size-3.5" />
-                  </div>
-                  <div className="flex flex-col min-w-0">
-                    <span className="font-semibold text-slate-100">Print / Save as PDF</span>
-                    <span className="text-[11px] text-slate-400 truncate">Printable clean dossier view</span>
-                  </div>
+                  <Plus className="size-4" />
                 </button>
 
-                <button
-                  onClick={() => {
-                    onExport();
-                    setIsActionsMenuOpen(false);
-                  }}
-                  className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                <AnimatePresence>
+                  {isNewSearchMenuOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 5, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 5, scale: 0.95 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute top-full right-0 mt-2 w-64 bg-darkroom-card border border-darkroom-border rounded-xl shadow-2xl overflow-hidden z-50 flex flex-col p-1"
+                    >
+                      <button
+                        onClick={() => {
+                          soundEffects.playSuccess();
+                          setIsNewSearchMenuOpen(false);
+                          onNewInvestigation();
+                        }}
+                        className="flex items-start gap-3 w-full text-left px-3 py-2.5 hover:bg-darkroom-surface transition-colors rounded-lg group"
+                      >
+                        <div className="bg-indigo-500/10 p-1.5 rounded-md group-hover:bg-indigo-500/20 transition-colors shrink-0">
+                          <Plus className="size-4 text-indigo-400" />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-sm font-medium text-slate-200 group-hover:text-white transition-colors">Start a new search</span>
+                          <span className="text-[10px] text-slate-500 mt-0.5 leading-tight">Click on history to come back to this dossier</span>
+                        </div>
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
+
+            {/* Burger Dropdown Menu */}
+            <AnimatePresence>
+              {isNavOpen && (
+                <motion.div
+                  ref={navMenuRef}
+                  initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                  transition={{ duration: 0.15, ease: 'easeOut' }}
+                  className="absolute left-0 top-full mt-2 w-full max-w-sm p-2 rounded-2xl bg-darkroom-surface/98 backdrop-blur-2xl border border-darkroom-border shadow-2xl shadow-black/90 z-50 space-y-1 max-h-[70vh] overflow-y-auto"
                 >
-                  <div className="p-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 group-hover:bg-emerald-500/25">
-                    <Download className="size-3.5" />
+                  <div className="px-3 py-1.5 border-b border-darkroom-border flex items-center justify-between text-[11px] font-mono uppercase text-slate-400">
+                    <span>Jump to Section</span>
+                    <button
+                      type="button"
+                      onClick={() => setIsNavOpen(false)}
+                      className="text-slate-400 hover:text-white cursor-pointer"
+                    >
+                      ✕
+                    </button>
                   </div>
-                  <div className="flex flex-col min-w-0">
-                    <span className="font-semibold text-slate-100">Export Signed Archive</span>
-                    <span className="text-[11px] text-slate-400 truncate">Markdown archive with SHA-256 seal</span>
+                  <div className="pt-1 space-y-0.5">
+                    {[
+                      { id: 'section-radar', name: 'Transparency & Credibility', icon: ShieldCheck },
+                      { id: 'section-overview', name: 'Executive Overview', icon: FileText },
+                      { id: 'section-forensic-matrix', name: '360° Forensic Matrix (7 Vectors)', icon: Fingerprint },
+                      { id: 'section-previous-editions', name: 'Previous Editions & Track Record', icon: Calendar },
+                      { id: 'section-disputes', name: 'Contradictions & Disputes', icon: AlertTriangle, condition: disputes.length > 0 },
+                      { id: 'section-network', name: 'Entity Architecture & Network', icon: Layers, condition: normalizedDensity === 'FULL_EVIDENCE' },
+                      { id: 'section-domains', name: '3-Domain Synthesis', icon: Globe, condition: normalizedDensity === 'FULL_EVIDENCE' },
+                      { id: 'section-corporate', name: 'Corporate Entity Intelligence', icon: Building2, condition: Boolean(dossier?.corporateEntity) },
+                      { id: 'section-claims', name: 'Atomic Claims & Citations', icon: ShieldCheck, condition: normalizedDensity === 'FULL_EVIDENCE' && claims.length > 0 },
+                      { id: 'section-checklist', name: 'Filmmaker Action Checklist', icon: ListChecks },
+                      { id: 'section-sources', name: 'Discovered Web Sources', icon: ExternalLink, condition: normalizedDensity === 'FULL_EVIDENCE' && sources.length > 0 },
+                    ]
+                      .filter((item) => item.condition === undefined || item.condition)
+                      .map((item) => {
+                        const Icon = item.icon;
+                        const isActive = activeSection === item.name;
+                        return (
+                          <button
+                            key={item.id}
+                            type="button"
+                            onClick={() => {
+                              soundEffects.playClick();
+                              setIsNavOpen(false);
+                              const element = document.getElementById(item.id);
+                              if (element) {
+                                const yOffset = -150;
+                                const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                                window.scrollTo({ top: y, behavior: 'smooth' });
+                              }
+                            }}
+                            className={`w-full text-left px-3 py-2 rounded-xl flex items-center gap-2.5 text-xs sm:text-sm font-mono transition-all cursor-pointer ${
+                              isActive
+                                ? 'bg-midnight-royal text-white font-bold'
+                                : 'text-slate-300 hover:text-white hover:bg-darkroom-card'
+                            }`}
+                          >
+                            <Icon className={`size-3.5 shrink-0 ${isActive ? 'text-white' : 'text-indigo-400'}`} />
+                            <span className="truncate">{item.name}</span>
+                          </button>
+                        );
+                      })}
                   </div>
-                </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
-                <div className="border-t border-darkroom-border my-1 pt-1" />
-
-                <button
-                  onClick={() => {
-                    handleCopyAiPayload();
-                    setIsActionsMenuOpen(false);
-                  }}
-                  className="w-full text-left px-3 py-2 rounded-xl hover:bg-darkroom-card text-slate-300 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
-                >
-                  <Bot className="size-3.5 text-purple-400 ml-1.5" />
-                  <span className="text-xs font-mono">{copiedAiPayload ? 'Copied JSON-LD!' : 'Copy AI Graph (JSON-LD)'}</span>
-                </button>
-
-                <button
-                  onClick={() => {
-                    handleCopyRawText();
-                    setIsActionsMenuOpen(false);
-                  }}
-                  className="w-full text-left px-3 py-2 rounded-xl hover:bg-darkroom-card text-slate-300 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
-                >
-                  <Code className="size-3.5 text-slate-400 ml-1.5" />
-                  <span className="text-xs font-mono">{copiedRawText ? 'Copied Raw Text!' : 'Copy Plain Text Dump'}</span>
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {/* Bottom Row: 3-Pill Mode Selector (Short | Full | Agent) */}
+          <DetailDial density={density} onChange={handleDensityChange} />
         </div>
-
-        {/* Absolute "New Screen" button placed outside the card */}
-        <div className="relative" ref={newSearchMenuRef}>
-          <button
-            onClick={() => {
-              soundEffects.playClick();
-              setIsNewSearchMenuOpen(!isNewSearchMenuOpen);
-            }}
-            className={`p-2 rounded-full transition-colors cursor-pointer shadow-sm active:scale-95 border ${isNewSearchMenuOpen ? 'bg-darkroom-surface text-white border-darkroom-border' : 'hover:bg-darkroom-surface text-slate-400 hover:text-white border-transparent hover:border-darkroom-border'}`}
-            title="New Screen"
-          >
-            <Plus className="size-4" />
-          </button>
-
-          <AnimatePresence>
-            {isNewSearchMenuOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: 5, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 5, scale: 0.95 }}
-                transition={{ duration: 0.15 }}
-                className="absolute top-full right-0 mt-2 w-64 bg-darkroom-card border border-darkroom-border rounded-xl shadow-2xl overflow-hidden z-50 flex flex-col p-1"
-              >
-                <button
-                  onClick={() => {
-                    soundEffects.playSuccess();
-                    setIsNewSearchMenuOpen(false);
-                    onNewInvestigation();
-                  }}
-                  className="flex items-start gap-3 w-full text-left px-3 py-2.5 hover:bg-darkroom-surface transition-colors rounded-lg group"
-                >
-                  <div className="bg-indigo-500/10 p-1.5 rounded-md group-hover:bg-indigo-500/20 transition-colors shrink-0">
-                    <Plus className="size-4 text-indigo-400" />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-sm font-medium text-slate-200 group-hover:text-white transition-colors">Start a new search</span>
-                    <span className="text-[10px] text-slate-500 mt-0.5 leading-tight">Click on history to come back to this dossier</span>
-                  </div>
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </div>
+      )}
 
       {/* Top Profile & Header Masthead (Editorial Clean Layout) */}
       <div className="pt-2 pb-6 border-b border-darkroom-border/40 space-y-4">
@@ -913,141 +1028,6 @@ export const EvidenceDossier: React.FC<Props> = ({
           </div>
         )}
       </div>
-
-      {/* Sticky Header with Section Name, Burger Navigation & 3-Bar Detail Selector */}
-      {dossier && (
-        <div className="sticky top-16 sm:top-20 z-20 bg-darkroom-bg/95 backdrop-blur-xl p-3 sm:px-5 rounded-2xl border border-darkroom-border shadow-2xl shadow-black/80 no-print transition-all space-y-2 relative overflow-hidden">
-          {/* Bottom 2px Reading Scroll Progress Bar */}
-          <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-darkroom-border/60">
-            <div
-              className="h-full bg-gradient-to-r from-tool-diligence via-emerald-400 to-indigo-400 transition-all duration-150 ease-out"
-              style={{ width: `${scrollProgress}%` }}
-            />
-          </div>
-
-          <div className="flex items-center justify-between gap-3 relative">
-            {/* Left: Burger button + Current Section Name (Visible in Full Mode) */}
-            {normalizedDensity === 'FULL_EVIDENCE' ? (
-              <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                <button
-                  type="button"
-                  onClick={() => {
-                    soundEffects.playClick();
-                    setIsNavOpen(!isNavOpen);
-                  }}
-                  className={`p-2 rounded-xl border transition-all cursor-pointer flex items-center justify-center shrink-0 ${
-                    isNavOpen
-                      ? 'bg-midnight-royal text-white border-midnight-royal shadow-sm'
-                      : 'bg-darkroom-card text-slate-300 hover:text-white border-darkroom-border hover:bg-darkroom-surface'
-                  }`}
-                  title="Dossier Table of Contents"
-                  aria-expanded={isNavOpen}
-                >
-                  <Menu className="size-4" />
-                </button>
-
-                <div className="flex items-center gap-2 min-w-0 truncate">
-                  <span className="size-2 rounded-full bg-indigo-500 animate-pulse shrink-0" />
-                  <span className="text-xs font-mono text-slate-400 shrink-0">Reading:</span>
-                  <span className="text-xs font-mono font-semibold text-white truncate">
-                    {activeSection}
-                  </span>
-                </div>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2 min-w-0 flex-1">
-                <span className="text-xs font-mono text-slate-400">View Mode:</span>
-                <span className="text-xs font-mono font-semibold text-tool-diligence">Executive Brief</span>
-              </div>
-            )}
-
-            {/* Right: Quick metric counter */}
-            <div className="hidden sm:flex items-center gap-2 text-[11px] font-mono text-slate-400 shrink-0">
-              <span>{claims.length} Claims</span>
-              <span>·</span>
-              <span>7 Forensic Vectors</span>
-              {disputes.length > 0 && (
-                <>
-                  <span>·</span>
-                  <span className="text-orange-400">{disputes.length} Disputes</span>
-                </>
-              )}
-            </div>
-
-            {/* Burger Dropdown Menu */}
-            <AnimatePresence>
-              {isNavOpen && normalizedDensity === 'FULL_EVIDENCE' && (
-                <motion.div
-                  ref={navMenuRef}
-                  initial={{ opacity: 0, y: 8, scale: 0.96 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 8, scale: 0.96 }}
-                  transition={{ duration: 0.15, ease: 'easeOut' }}
-                  className="absolute left-0 top-full mt-2 w-full max-w-sm p-2 rounded-2xl bg-darkroom-surface/98 backdrop-blur-2xl border border-darkroom-border shadow-2xl shadow-black/90 z-50 space-y-1 max-h-[70vh] overflow-y-auto"
-                >
-                  <div className="px-3 py-1.5 border-b border-darkroom-border flex items-center justify-between text-[11px] font-mono uppercase text-slate-400">
-                    <span>Jump to Section</span>
-                    <button
-                      type="button"
-                      onClick={() => setIsNavOpen(false)}
-                      className="text-slate-400 hover:text-white cursor-pointer"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                  <div className="pt-1 space-y-0.5">
-                    {[
-                      { id: 'section-radar', name: 'Transparency & Credibility', icon: ShieldCheck },
-                      { id: 'section-overview', name: 'Executive Overview', icon: FileText },
-                      { id: 'section-forensic-matrix', name: '360° Forensic Matrix (7 Vectors)', icon: Fingerprint },
-                      { id: 'section-previous-editions', name: 'Previous Editions & Track Record', icon: Calendar },
-                      { id: 'section-disputes', name: 'Contradictions & Disputes', icon: AlertTriangle, condition: disputes.length > 0 },
-                      { id: 'section-network', name: 'Entity Architecture & Network', icon: Layers, condition: normalizedDensity === 'FULL_EVIDENCE' },
-                      { id: 'section-domains', name: '3-Domain Synthesis', icon: Globe, condition: normalizedDensity === 'FULL_EVIDENCE' },
-                      { id: 'section-corporate', name: 'Corporate Entity Intelligence', icon: Building2, condition: Boolean(dossier?.corporateEntity) },
-                      { id: 'section-claims', name: 'Atomic Claims & Citations', icon: ShieldCheck, condition: normalizedDensity === 'FULL_EVIDENCE' && claims.length > 0 },
-                      { id: 'section-checklist', name: 'Filmmaker Action Checklist', icon: ListChecks },
-                      { id: 'section-sources', name: 'Discovered Web Sources', icon: ExternalLink, condition: normalizedDensity === 'FULL_EVIDENCE' && sources.length > 0 },
-                    ]
-                      .filter((item) => item.condition === undefined || item.condition)
-                      .map((item) => {
-                        const Icon = item.icon;
-                        const isActive = activeSection === item.name;
-                        return (
-                          <button
-                            key={item.id}
-                            type="button"
-                            onClick={() => {
-                              soundEffects.playClick();
-                              setIsNavOpen(false);
-                              const element = document.getElementById(item.id);
-                              if (element) {
-                                const yOffset = -140;
-                                const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-                                window.scrollTo({ top: y, behavior: 'smooth' });
-                              }
-                            }}
-                            className={`w-full text-left px-3 py-2 rounded-xl flex items-center gap-2.5 text-xs font-mono transition-all cursor-pointer ${
-                              isActive
-                                ? 'bg-midnight-royal text-white font-bold'
-                                : 'text-slate-300 hover:text-white hover:bg-darkroom-card'
-                            }`}
-                          >
-                            <Icon className={`size-3.5 shrink-0 ${isActive ? 'text-white' : 'text-indigo-400'}`} />
-                            <span className="truncate">{item.name}</span>
-                          </button>
-                        );
-                      })}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* 3-Bar Detail Settings: Short / Full / Agent */}
-          <DetailDial density={density} onChange={handleDensityChange} />
-        </div>
-      )}
 
       {!dossier ? (
         <div className="p-16 text-center text-slate-500 animate-pulse font-mono text-sm bg-darkroom-surface rounded-3xl border border-darkroom-card shadow-2xl">
