@@ -405,8 +405,12 @@ export const EvidenceDossier: React.FC<Props> = ({
         domain: 'FESTIVAL',
       })),
       atomicClaims: claims,
+      keyPersonnel: deepVetting?.keyPersonnel || [],
+      deepVetting: deepVetting || undefined,
+      corporateEntity: dossier?.corporateEntity || undefined,
+      previousEditions: dossier?.previousEditions || undefined,
       transparencyIndex: {
-        score: 85,
+        score: deepVetting?.overallAuthenticityScore || 85,
         confidenceLevel: 'HIGH',
         breakdown: {
           screeningVenue: { score: 90, status: 'HIGH', notes: 'Physical leases verified' },
@@ -427,7 +431,7 @@ export const EvidenceDossier: React.FC<Props> = ({
       recommendedAction: 'Proceed with standard earlybird submission.',
       generatedAt: new Date().toISOString(),
     };
-  }, [entity, dossier, claims, disputes, sources]);
+  }, [entity, dossier, claims, disputes, sources, deepVetting]);
 
   // Machine AI Ingestion Schema (JSON-LD + Markdown Graph)
   const aiIngestionPayload = useMemo(() => {

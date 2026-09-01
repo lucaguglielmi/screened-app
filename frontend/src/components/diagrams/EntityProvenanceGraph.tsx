@@ -346,7 +346,7 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
       </div>
 
       {/* ========================================================================= */}
-      {/* 1. RESPONSIVE IN-PAGE DIAGRAMS (Default - No zoom required!)              */}
+      {/* 1. RESPONSIVE IN-PAGE DIAGRAMS (Dynamic Dossier Signals - No Mock Data)   */}
       {/* ========================================================================= */}
       {displayMode === 'RESPONSIVE' && (
         <div className="space-y-4">
@@ -378,60 +378,92 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
 
                 {/* 4 Verification Pillars Flow */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
-                  {/* Pillar 1: Domain */}
+                  {/* Pillar 1: Domain Origin */}
                   <div className="p-3.5 rounded-xl bg-darkroom-card/90 border border-darkroom-border space-y-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1.5 text-xs font-bold text-white">
                         <Globe className="size-3.5 text-tool-diligence" />
                         <span>Domain Origin</span>
                       </div>
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                        Verified
+                      <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded border ${
+                        dossier.officialDomain
+                          ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                          : 'bg-slate-500/20 text-slate-300 border-slate-500/30'
+                      }`}>
+                        {dossier.officialDomain ? 'Verified' : 'Informational'}
                       </span>
                     </div>
                     <p className="text-xs text-slate-300">
                       WHOIS records and server hosts cross-examined against declared festival identity.
                     </p>
-                    <div className="text-[11px] font-mono text-slate-400 bg-darkroom-surface/80 p-1.5 rounded truncate">
-                      {dossier.officialDomain || 'Domain verified active'}
+                    <div className="text-[11px] font-mono text-slate-300 bg-darkroom-surface/80 p-1.5 rounded truncate">
+                      {dossier.officialDomain || 'Domain verification active'}
                     </div>
                   </div>
 
                   {/* Pillar 2: Corporate Registry */}
-                  <div className="p-3.5 rounded-xl bg-darkroom-card/90 border border-rose-500/30 space-y-2">
+                  <div className={`p-3.5 rounded-xl bg-darkroom-card/90 border space-y-2 ${
+                    dossier.corporateEntity?.flags && dossier.corporateEntity.flags.length > 0
+                      ? 'border-rose-500/30'
+                      : 'border-darkroom-border'
+                  }`}>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1.5 text-xs font-bold text-white">
-                        <Building2 className="size-3.5 text-rose-400" />
+                        <Building2 className={`size-3.5 ${
+                          dossier.corporateEntity?.flags && dossier.corporateEntity.flags.length > 0
+                            ? 'text-rose-400'
+                            : 'text-indigo-400'
+                        }`} />
                         <span>Corporate Registry</span>
                       </div>
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">
-                        Conflict Flag
+                      <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded border ${
+                        dossier.corporateEntity?.flags && dossier.corporateEntity.flags.length > 0
+                          ? 'bg-rose-500/20 text-rose-300 border-rose-500/30'
+                          : dossier.corporateEntity
+                            ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                            : 'bg-slate-500/20 text-slate-300 border-slate-500/30'
+                      }`}>
+                        {dossier.corporateEntity?.flags && dossier.corporateEntity.flags.length > 0
+                          ? 'Conflict Flag'
+                          : dossier.corporateEntity
+                            ? 'Verified'
+                            : 'Informational'}
                       </span>
                     </div>
                     <p className="text-xs text-slate-300">
-                      Companies House cross-check reveals shared directorship with fee collection entity.
+                      Official commercial register filings evaluated for connected entities and directorships.
                     </p>
-                    <div className="text-[11px] font-mono text-rose-300 bg-rose-950/40 p-1.5 rounded truncate border border-rose-500/20">
-                      2022 Insolvency Filing Found
+                    <div className="text-[11px] font-mono text-slate-300 bg-darkroom-surface/80 p-1.5 rounded truncate">
+                      {dossier.corporateEntity
+                        ? `${dossier.corporateEntity.legalName} (${dossier.corporateEntity.status})`
+                        : 'No separate corporate entity recorded'}
                     </div>
                   </div>
 
                   {/* Pillar 3: Venue Realities */}
-                  <div className="p-3.5 rounded-xl bg-darkroom-card/90 border border-orange-500/30 space-y-2">
+                  <div className={`p-3.5 rounded-xl bg-darkroom-card/90 border space-y-2 ${
+                    hasDisputes ? 'border-orange-500/30' : 'border-darkroom-border'
+                  }`}>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1.5 text-xs font-bold text-white">
-                        <MapPin className="size-3.5 text-orange-400" />
+                        <MapPin className={`size-3.5 ${hasDisputes ? 'text-orange-400' : 'text-indigo-400'}`} />
                         <span>Venue Verification</span>
                       </div>
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-orange-500/20 text-orange-300 border border-orange-500/30">
-                        Disputed
+                      <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded border ${
+                        hasDisputes
+                          ? 'bg-orange-500/20 text-orange-300 border-orange-500/30'
+                          : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                      }`}>
+                        {hasDisputes ? 'Disputed' : 'Verified'}
                       </span>
                     </div>
                     <p className="text-xs text-slate-300">
-                      Advertised West End cinema theatrical gala not reflected on official cinema box office calendar.
+                      Physical screening locations cross-referenced with municipal records and cinema manifests.
                     </p>
-                    <div className="text-[11px] font-mono text-orange-300 bg-orange-950/40 p-1.5 rounded truncate border border-orange-500/20">
-                      Vimeo Link Dispatched Instead
+                    <div className="text-[11px] font-mono text-slate-300 bg-darkroom-surface/80 p-1.5 rounded truncate">
+                      {hasDisputes
+                        ? 'Conflicting venue delivery signals detected'
+                        : 'Physical venue leases and declared locations'}
                     </div>
                   </div>
 
@@ -443,25 +475,28 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
                         <span>Alumni Footprint</span>
                       </div>
                       <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-                        Corroborated
+                        {dossier.previousEditions && dossier.previousEditions.length > 0 ? 'Verified' : 'Observed'}
                       </span>
                     </div>
                     <p className="text-xs text-slate-300">
-                      Reddit r/Filmmakers & community threads cross-referenced with verified receipts.
+                      Filmmaker community threads, past award recipients, and verified track records mapped.
                     </p>
                     <div className="text-[11px] font-mono text-slate-300 bg-darkroom-surface/80 p-1.5 rounded truncate">
-                      42 Independent Accounts Mapped
+                      {dossier.previousEditions && dossier.previousEditions.length > 0
+                        ? `${dossier.previousEditions.length} Recorded Editions Mapped`
+                        : `${dossier.atomicClaims?.length || 0} Atomic Claims Extracted`}
                     </div>
                   </div>
                 </div>
 
-                {/* Plain-English Takeaway Box */}
+                {/* Dynamic Takeaway Box */}
                 <div className="p-3.5 rounded-xl bg-tool-diligence/5 border border-tool-diligence/20 text-xs text-slate-200 leading-relaxed flex items-start gap-2.5">
                   <Sparkles className="size-4 text-tool-diligence shrink-0 mt-0.5" />
                   <div>
-                    <strong className="text-white">What this diagram proves:</strong> The subject
-                    maintains an active web presence but operates through an overlapping corporate entity,
-                    soliciting theatrical gala fees while delivering private streaming links without live audience verification.
+                    <strong className="text-white">Investigation Synthesis:</strong>{' '}
+                    {hasDisputes
+                      ? 'The subject maintains an active presence, but autonomous inspection identified specific divergences between promotional statements and trade records.'
+                      : 'The subject demonstrates corroborated operational continuity across official domain, physical venue manifests, and historical editions.'}
                   </div>
                 </div>
               </div>
@@ -476,90 +511,115 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
                   <div className="flex items-center gap-2">
                     <User className="size-4 text-tool-diligence" />
                     <span className="font-bold text-white text-sm font-serif">
-                      Leadership & Directorship Network Graph
+                      Leadership &amp; Directorship Network Graph
                     </span>
                   </div>
-                  <span className="text-[11px] font-mono text-rose-400 font-semibold">
-                    Conflict Flow Highlighted
-                  </span>
+                  {(dossier.keyPersonnel && dossier.keyPersonnel.some((p) => p.isFestivalMillSuspect || (p.flags && p.flags.length > 0))) ? (
+                    <span className="text-[11px] font-mono text-rose-400 font-semibold">
+                      Conflict Flow Highlighted
+                    </span>
+                  ) : (
+                    <span className="text-[11px] font-mono text-emerald-400 font-semibold">
+                      {(dossier.keyPersonnel?.length || 0)} Profiles Analyzed
+                    </span>
+                  )}
                 </div>
 
-                {/* Visual Relational Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
-                  <div className="p-3.5 rounded-xl bg-darkroom-card/90 border border-rose-500/40 space-y-2.5">
-                    <div className="flex items-center gap-2.5">
-                      <img
-                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=ArthurSmith"
-                        alt="Arthur Smith"
-                        className="size-9 rounded-lg bg-darkroom-surface border border-rose-400"
-                      />
-                      <div>
-                        <h5 className="text-xs font-bold text-white">Arthur Smith</h5>
-                        <span className="text-[10px] font-mono text-tool-diligence">Festival Director</span>
-                      </div>
-                    </div>
-                    <div className="text-xs text-slate-300 space-y-1">
-                      <div className="flex items-center gap-1 text-[11px] text-rose-300 font-mono">
-                        <ArrowRight className="size-3" /> Co-owns Pallino Media Lab Ltd
-                      </div>
-                      <div className="flex items-center gap-1 text-[11px] text-rose-300 font-mono">
-                        <ArrowRight className="size-3" /> 2022 Insolvency Proceeding
-                      </div>
-                    </div>
-                  </div>
+                {/* Real Dynamic Personnel Cards */}
+                {dossier.keyPersonnel && dossier.keyPersonnel.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 pt-1">
+                    {dossier.keyPersonnel.map((person, pIdx) => {
+                      const initials = person.name
+                        .split(' ')
+                        .map((n) => n[0])
+                        .join('')
+                        .toUpperCase()
+                        .slice(0, 2);
 
-                  <div className="p-3.5 rounded-xl bg-darkroom-card/90 border border-rose-500/40 space-y-2.5">
-                    <div className="flex items-center gap-2.5">
-                      <img
-                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=BenjaminJones"
-                        alt="Benjamin Jones"
-                        className="size-9 rounded-lg bg-darkroom-surface border border-rose-400"
-                      />
-                      <div>
-                        <h5 className="text-xs font-bold text-white">Benjamin Jones</h5>
-                        <span className="text-[10px] font-mono text-tool-diligence">Jury Chair</span>
-                      </div>
-                    </div>
-                    <div className="text-xs text-slate-300 space-y-1">
-                      <div className="flex items-center gap-1 text-[11px] text-rose-300 font-mono">
-                        <ArrowRight className="size-3" /> Sells Paid Pitch Consulting
-                      </div>
-                      <div className="flex items-center gap-1 text-[11px] text-rose-300 font-mono">
-                        <ArrowRight className="size-3" /> Shared Directorship with Director
-                      </div>
-                    </div>
-                  </div>
+                      const hasConflict = Boolean(
+                        person.isFestivalMillSuspect ||
+                        person.hasDistributionOverlap ||
+                        (person.flags && person.flags.length > 0)
+                      );
 
-                  <div className="p-3.5 rounded-xl bg-darkroom-card/90 border border-orange-500/40 space-y-2.5">
-                    <div className="flex items-center gap-2.5">
-                      <img
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&auto=format&fit=crop&q=80"
-                        alt="Martin Sterling"
-                        className="size-9 rounded-lg bg-darkroom-surface border border-orange-400 object-cover"
-                      />
-                      <div>
-                        <h5 className="text-xs font-bold text-white">Martin Sterling</h5>
-                        <span className="text-[10px] font-mono text-orange-300">Repeat Winner</span>
-                      </div>
-                    </div>
-                    <div className="text-xs text-slate-300 space-y-1">
-                      <div className="flex items-center gap-1 text-[11px] text-orange-300 font-mono">
-                        <ArrowRight className="size-3" /> Won 2024 &amp; 2025 Best Short
-                      </div>
-                      <div className="flex items-center gap-1 text-[11px] text-orange-300 font-mono">
-                        <ArrowRight className="size-3" /> Family Tie to Jury Chair
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                      return (
+                        <div
+                          key={pIdx}
+                          className={`p-3.5 rounded-xl bg-darkroom-card/90 border space-y-2.5 ${
+                            hasConflict ? 'border-rose-500/40' : 'border-darkroom-border'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2.5">
+                            {person.avatarUrl ? (
+                              <img
+                                src={person.avatarUrl}
+                                alt={person.name}
+                                className={`size-9 rounded-xl bg-darkroom-surface border object-cover ${
+                                  hasConflict ? 'border-rose-400' : 'border-darkroom-border'
+                                }`}
+                              />
+                            ) : (
+                              <div className={`size-9 rounded-xl flex items-center justify-center font-bold text-xs font-mono border ${
+                                hasConflict
+                                  ? 'bg-rose-500/20 text-rose-300 border-rose-500/30'
+                                  : 'bg-midnight-royal/40 text-white border-indigo-900/40'
+                              }`}>
+                                {initials || <User className="size-4 text-slate-300" />}
+                              </div>
+                            )}
+                            <div className="min-w-0 flex-1">
+                              <h5 className="text-xs sm:text-sm font-bold text-white truncate font-sans">{person.name}</h5>
+                              <span className="text-[11px] font-mono text-indigo-300 truncate block">
+                                {person.roles && person.roles.length > 0 ? person.roles.join(', ') : 'Personnel'}
+                              </span>
+                            </div>
+                          </div>
 
-                {/* Plain-English Takeaway Box */}
-                <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-slate-200 leading-relaxed flex items-start gap-2.5">
-                  <ShieldAlert className="size-4 text-rose-400 shrink-0 mt-0.5" />
+                          {/* Affiliations & Directorships */}
+                          <div className="text-xs text-slate-300 space-y-1">
+                            {person.companies && person.companies.length > 0 && (
+                              <div className="flex items-center gap-1 text-[11px] text-slate-300 font-mono truncate">
+                                <ArrowRight className="size-3 text-indigo-400 shrink-0" />
+                                <span className="truncate">Entities: {person.companies.join(', ')}</span>
+                              </div>
+                            )}
+                            {person.associatedFestivals && person.associatedFestivals.length > 0 && (
+                              <div className="flex items-center gap-1 text-[11px] text-slate-300 font-mono truncate">
+                                <ArrowRight className="size-3 text-indigo-400 shrink-0" />
+                                <span className="truncate">Festivals: {person.associatedFestivals.join(', ')}</span>
+                              </div>
+                            )}
+                            {person.flags && person.flags.length > 0 && (
+                              <div className="flex flex-wrap gap-1 pt-0.5">
+                                {person.flags.map((flag, fIdx) => (
+                                  <span
+                                    key={fIdx}
+                                    className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-300 border border-rose-500/30"
+                                  >
+                                    {flag}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="p-6 text-center text-xs font-mono text-slate-400 bg-darkroom-card/50 rounded-xl border border-darkroom-border">
+                    No conflicting directorships or auxiliary corporate shell entities identified.
+                  </div>
+                )}
+
+                {/* Dynamic Takeaway Box */}
+                <div className="p-3.5 rounded-xl bg-darkroom-card/90 border border-darkroom-border text-xs text-slate-200 leading-relaxed flex items-start gap-2.5">
+                  <ShieldAlert className="size-4 text-indigo-400 shrink-0 mt-0.5" />
                   <div>
-                    <strong className="text-rose-300">Directorship Risk Finding:</strong> Jury Chair
-                    and Festival Director share operating ownership of an auxiliary consulting company,
-                    which automatically solicits rejected submitters for paid script/pitch reviews.
+                    <strong className="text-slate-100">Directorship Analysis:</strong>{' '}
+                    {dossier.keyPersonnel && dossier.keyPersonnel.some((p) => p.isFestivalMillSuspect || (p.flags && p.flags.length > 0))
+                      ? 'Cross-referenced leadership profiles identified auxiliary entities or potential conflict-of-interest indicators.'
+                      : 'All identified leadership individuals verified without conflicting commercial directorships or vanity cross-ownership.'}
                   </div>
                 </div>
               </div>
@@ -582,70 +642,54 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
                   </span>
                 </div>
 
-                <div className="space-y-3">
-                  {/* Contradiction 1 */}
-                  <div className="p-3.5 rounded-xl bg-darkroom-card border border-darkroom-border space-y-2">
-                    <div className="flex items-center justify-between">
-                      <h5 className="text-xs font-bold text-white">1. Screening Format &amp; Venue Delivery</h5>
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/20 text-orange-300">
-                        Divergence
-                      </span>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-                      <div className="p-2 rounded-lg bg-darkroom-surface/80 border border-darkroom-border">
-                        <span className="text-[10px] font-mono uppercase text-indigo-400 block font-semibold">
-                          Promotional Statement
-                        </span>
-                        <p className="text-slate-300 mt-0.5">
-                          "West End Gala premiere with industry red carpet and theatrical DCP projection."
-                        </p>
+                {dossier.contradictions && dossier.contradictions.length > 0 ? (
+                  <div className="space-y-3">
+                    {dossier.contradictions.map((c, cIdx) => (
+                      <div key={c.id || cIdx} className="p-3.5 rounded-xl bg-darkroom-card border border-darkroom-border space-y-2">
+                        <div className="flex items-center justify-between">
+                          <h5 className="text-xs font-bold text-white">
+                            {cIdx + 1}. {c.domain || 'Domain'} Divergence
+                          </h5>
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/20 text-orange-300">
+                            Divergence
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                          <div className="p-2 rounded-lg bg-darkroom-surface/80 border border-darkroom-border">
+                            <span className="text-[10px] font-mono uppercase text-indigo-400 block font-semibold">
+                              Statement A ({c.claimA.claimKind || 'Fact'})
+                            </span>
+                            <p className="text-slate-300 mt-0.5">{c.claimA.statement}</p>
+                          </div>
+                          <div className="p-2 rounded-lg bg-darkroom-surface/80 border border-rose-500/30">
+                            <span className="text-[10px] font-mono uppercase text-rose-400 block font-semibold">
+                              Statement B ({c.claimB.claimKind || 'Counter Claim'})
+                            </span>
+                            <p className="text-slate-300 mt-0.5">{c.claimB.statement}</p>
+                          </div>
+                        </div>
+                        {c.reconciliationNote && (
+                          <div className="text-[11px] text-slate-400 italic pt-1 border-t border-darkroom-border/40">
+                            <strong>Reconciliation:</strong> {c.reconciliationNote}
+                          </div>
+                        )}
                       </div>
-                      <div className="p-2 rounded-lg bg-darkroom-surface/80 border border-rose-500/30">
-                        <span className="text-[10px] font-mono uppercase text-rose-400 block font-semibold">
-                          Forensic Web Reality
-                        </span>
-                        <p className="text-slate-300 mt-0.5">
-                          "Unlisted private Vimeo links distributed via mass BCC 48 hours prior with no physical theater lease."
-                        </p>
-                      </div>
-                    </div>
+                    ))}
                   </div>
-
-                  {/* Contradiction 2 */}
-                  <div className="p-3.5 rounded-xl bg-darkroom-card border border-darkroom-border space-y-2">
-                    <div className="flex items-center justify-between">
-                      <h5 className="text-xs font-bold text-white">2. Acceptance Selectivity Rate</h5>
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-orange-500/20 text-orange-300">
-                        Divergence
-                      </span>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-                      <div className="p-2 rounded-lg bg-darkroom-surface/80 border border-darkroom-border">
-                        <span className="text-[10px] font-mono uppercase text-indigo-400 block font-semibold">
-                          Promotional Statement
-                        </span>
-                        <p className="text-slate-300 mt-0.5">
-                          "Highly selective 1.2% acceptance rate with international jury review."
-                        </p>
-                      </div>
-                      <div className="p-2 rounded-lg bg-darkroom-surface/80 border border-rose-500/30">
-                        <span className="text-[10px] font-mono uppercase text-rose-400 block font-semibold">
-                          Forensic Web Reality
-                        </span>
-                        <p className="text-slate-300 mt-0.5">
-                          "Immediate acceptance emails received within 6 hours accompanied by £180 laurel trophy upsells."
-                        </p>
-                      </div>
-                    </div>
+                ) : (
+                  <div className="p-6 text-center text-xs font-mono text-slate-400 bg-darkroom-card/50 rounded-xl border border-darkroom-border">
+                    No unresolved contradictions or evidence divergences identified across analyzed sources.
                   </div>
-                </div>
+                )}
 
-                {/* Plain-English Takeaway Box */}
-                <div className="p-3.5 rounded-xl bg-orange-500/10 border border-orange-500/30 text-xs text-slate-200 leading-relaxed flex items-start gap-2.5">
-                  <AlertTriangle className="size-4 text-orange-400 shrink-0 mt-0.5" />
+                {/* Advisory Box */}
+                <div className="p-3.5 rounded-xl bg-tool-diligence/5 border border-tool-diligence/20 text-xs text-slate-200 leading-relaxed flex items-start gap-2.5">
+                  <AlertTriangle className="size-4 text-tool-diligence shrink-0 mt-0.5" />
                   <div>
-                    <strong className="text-orange-300">Filmmaker Advisory:</strong> Contradictions
-                    indicate high probability of vanity laurel scheme. Recommended action: Request written venue lease confirmation before paying submission fees.
+                    <strong className="text-slate-100">Filmmaker Advisory:</strong>{' '}
+                    {dossier.contradictions && dossier.contradictions.length > 0
+                      ? 'Contradictions indicate areas of divergence between promotional claims and public records. Review guidance prior to paying submission fees.'
+                      : 'Zero contradictory statements detected. Evidence aligns with verified festival statements.'}
                   </div>
                 </div>
               </div>

@@ -202,6 +202,10 @@ export interface EvidenceDossier {
   }>;
   overallRisk?: string;
   recommendedAction?: string;
+  keyPersonnel?: KeyPerson[];
+  deepVetting?: DeepVettingReport;
+  corporateEntity?: CorporateEntity;
+  previousEditions?: PreviousEditionRecord[];
   generatedAt?: string;
 }
 
