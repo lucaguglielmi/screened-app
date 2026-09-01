@@ -108,9 +108,14 @@ export const EvidenceDossier: React.FC<Props> = ({
   const [shareableLinkCopied, setShareableLinkCopied] = useState(false);
   const [claimStatusFilter, setClaimStatusFilter] = useState<string>('ALL');
   const [expandedDomains, setExpandedDomains] = useState<Record<string, boolean>>({});
+  const [expandedClaimSources, setExpandedClaimSources] = useState<Record<string, boolean>>({});
 
   const toggleDomain = (domainKey: string) => {
     setExpandedDomains((prev) => ({ ...prev, [domainKey]: !prev[domainKey] }));
+  };
+
+  const toggleClaimSources = (claimId: string) => {
+    setExpandedClaimSources((prev) => ({ ...prev, [claimId]: !prev[claimId] }));
   };
   
   const actionsMenuRef = useRef<HTMLDivElement>(null);
@@ -1619,50 +1624,85 @@ export const EvidenceDossier: React.FC<Props> = ({
                             </div>
 
                             {/* Direct Quoted Evidence References & Sources */}
-                            {claim.evidence && claim.evidence.length > 0 && (
-                              <div className="space-y-2 pt-1">
-                                {claim.evidence.map((ev, idx) => {
-                                  const quoteText =
-                                    ev.exactExcerpt ||
-                                    (ev as unknown as { quote?: string }).quote;
-                                  return (
-                                    <div
-                                      key={idx}
-                                      className="p-2.5 rounded-xl bg-darkroom-bg/70 border border-darkroom-border/40 space-y-1.5"
-                                    >
-                                      <div className="flex items-center justify-between text-xs">
-                                        <span className="font-mono text-slate-400 text-[11px] truncate max-w-[280px] sm:max-w-md">
-                                          Source {idx + 1}: {ev.sourceDomain || ev.sourceTitle || 'Web record'}
+                            {claim.evidence && claim.evidence.length > 0 && (() => {
+                              const isCorroborated = claim.status === 'CORROBORATED';
+                              const areSourcesExpanded = Boolean(expandedClaimSources[claim.id]);
+                              const showSourceDetails = !isCorroborated || areSourcesExpanded;
+
+                              return (
+                                <div className="space-y-2 pt-1">
+                                  {isCorroborated && (
+                                    <div>
+                                      <button
+                                        type="button"
+                                        onClick={() => toggleClaimSources(claim.id)}
+                                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-darkroom-card/70 hover:bg-darkroom-surface border border-darkroom-border/60 hover:border-slate-600 text-xs font-mono text-slate-300 hover:text-white transition-all cursor-pointer shadow-2xs group"
+                                      >
+                                        <span className="text-emerald-400 font-semibold">✓</span>
+                                        <span>
+                                          {areSourcesExpanded ? 'Hide' : 'View'} {claim.evidence.length} {claim.evidence.length === 1 ? 'Source' : 'Sources'}
                                         </span>
-                                        {ev.sourceUrl && (
-                                          <a
-                                            href={ev.sourceUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-indigo-400 hover:text-indigo-300 transition-colors flex items-center gap-1 font-mono text-[11px]"
-                                          >
-                                            <span>Verify</span>
-                                            <ExternalLink className="size-3" />
-                                          </a>
+                                        {!areSourcesExpanded && (
+                                          <span className="text-slate-400 text-[11px] truncate max-w-[200px] sm:max-w-xs">
+                                            ({claim.evidence.map((e) => e.sourceDomain || e.sourceTitle || 'Web').slice(0, 2).join(', ')}{claim.evidence.length > 2 ? '...' : ''})
+                                          </span>
                                         )}
-                                      </div>
-
-                                      {quoteText && (
-                                        <blockquote className="text-slate-300 italic border-l-2 border-tool-diligence/40 pl-3 py-0.5 text-xs leading-relaxed">
-                                          "{quoteText}"
-                                        </blockquote>
-                                      )}
-
-                                      {ev.note && (
-                                        <div className="text-[11px] text-slate-400 font-mono pl-3">
-                                          ↳ {ev.note}
-                                        </div>
-                                      )}
+                                        {areSourcesExpanded ? (
+                                          <ChevronUp className="size-3 text-slate-400 group-hover:text-white" />
+                                        ) : (
+                                          <ChevronDown className="size-3 text-slate-400 group-hover:text-white" />
+                                        )}
+                                      </button>
                                     </div>
-                                  );
-                                })}
-                              </div>
-                            )}
+                                  )}
+
+                                  {showSourceDetails && (
+                                    <div className="space-y-2 pt-0.5">
+                                      {claim.evidence.map((ev, idx) => {
+                                        const quoteText =
+                                          ev.exactExcerpt ||
+                                          (ev as unknown as { quote?: string }).quote;
+                                        return (
+                                          <div
+                                            key={idx}
+                                            className="p-2.5 rounded-xl bg-darkroom-bg/70 border border-darkroom-border/40 space-y-1.5"
+                                          >
+                                            <div className="flex items-center justify-between text-xs">
+                                              <span className="font-mono text-slate-400 text-[11px] truncate max-w-[280px] sm:max-w-md">
+                                                Source {idx + 1}: {ev.sourceDomain || ev.sourceTitle || 'Web record'}
+                                              </span>
+                                              {ev.sourceUrl && (
+                                                <a
+                                                  href={ev.sourceUrl}
+                                                  target="_blank"
+                                                  rel="noopener noreferrer"
+                                                  className="text-indigo-400 hover:text-indigo-300 transition-colors flex items-center gap-1 font-mono text-[11px]"
+                                                >
+                                                  <span>Verify</span>
+                                                  <ExternalLink className="size-3" />
+                                                </a>
+                                              )}
+                                            </div>
+
+                                            {quoteText && (
+                                              <blockquote className="text-slate-300 italic border-l-2 border-tool-diligence/40 pl-3 py-0.5 text-xs leading-relaxed">
+                                                "{quoteText}"
+                                              </blockquote>
+                                            )}
+
+                                            {ev.note && (
+                                              <div className="text-[11px] text-slate-400 font-mono pl-3">
+                                                ↳ {ev.note}
+                                              </div>
+                                            )}
+                                          </div>
+                                        );
+                                      })}
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })()}
                           </div>
 
                           <div className="flex items-center gap-2 shrink-0 self-end sm:self-start no-print">
