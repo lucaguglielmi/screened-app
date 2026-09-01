@@ -102,7 +102,7 @@ export const EntityConfirmation: React.FC<Props> = ({ candidates, query, onConfi
                     </span>
                     {c.foundedYear && (
                       <span className="inline-flex items-center gap-1 text-xs font-mono text-darkroom-muted">
-                        <Calendar className="size-3.5" /> Est. {c.foundedYear}
+                        <Calendar className="size-3.5 text-slate-400" /> Est. {c.foundedYear}
                       </span>
                     )}
                   </div>
@@ -114,12 +114,12 @@ export const EntityConfirmation: React.FC<Props> = ({ candidates, query, onConfi
                   <div className="flex items-center gap-4 text-sm font-mono text-slate-400 pt-1">
                     {c.cityCountry && (
                       <span className="inline-flex items-center gap-1.5">
-                        <MapPin className="size-3.5 text-tool-diligence" /> {c.cityCountry}
+                        <MapPin className="size-3.5 text-slate-400" /> {c.cityCountry}
                       </span>
                     )}
                     {c.officialDomain && (
                       <span className="inline-flex items-center gap-1.5">
-                        <Globe className="size-3.5 text-tool-diligence" /> {c.officialDomain}
+                        <Globe className="size-3.5 text-slate-400" /> {c.officialDomain}
                       </span>
                     )}
                   </div>

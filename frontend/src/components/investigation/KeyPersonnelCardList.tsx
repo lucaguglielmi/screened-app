@@ -162,7 +162,7 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
                       className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#080d1a] border border-indigo-900/40 text-indigo-300 font-mono text-xs font-medium hover:scale-105 active:scale-95 transition-all duration-200 ease-out hover:border-indigo-500/60 hover:text-white hover:bg-indigo-950/60 shadow-sm cursor-pointer group"
                       title="View Official Corporate Filings & Directorships"
                     >
-                      <Building2 className="size-3 text-indigo-400" />
+                      <Building2 className="size-3 text-slate-400" />
                       <span>Gov Registry</span>
                       <ExternalLink className="size-2.5 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                     </a>
@@ -192,7 +192,7 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
                       className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#080d1a] border border-indigo-900/40 text-indigo-300 font-mono text-xs font-medium hover:scale-105 active:scale-95 transition-all duration-200 ease-out hover:border-indigo-500/60 hover:text-white hover:bg-indigo-950/60 shadow-sm cursor-pointer group"
                       title={`Visit ${person.name}'s Personal Website`}
                     >
-                      <Globe className="size-3 text-indigo-400" />
+                      <Globe className="size-3 text-slate-400" />
                       <span>Website</span>
                       <ExternalLink className="size-2.5 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                     </a>
@@ -206,7 +206,7 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
                       className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#080d1a] border border-indigo-900/40 text-indigo-300 font-mono text-xs font-medium hover:scale-105 active:scale-95 transition-all duration-200 ease-out hover:border-indigo-500/60 hover:text-white hover:bg-indigo-950/60 shadow-sm cursor-pointer group"
                       title={`View ${person.name}'s IMDb Profile`}
                     >
-                      <Film className="size-3 text-indigo-400" />
+                      <Film className="size-3 text-slate-400" />
                       <span>IMDb</span>
                       <ExternalLink className="size-2.5 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                     </a>

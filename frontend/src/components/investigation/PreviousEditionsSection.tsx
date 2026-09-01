@@ -118,16 +118,16 @@ export const PreviousEditionsSection: React.FC<Props> = ({
                 </div>
 
                 {(edition.heldLocation || edition.heldDates) && (
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-slate-300 font-mono">
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-slate-300 font-mono">
                     {edition.heldLocation && (
-                      <span className="inline-flex items-center gap-1.5 text-slate-300">
-                        <MapPin className="size-3.5 text-rose-400 shrink-0" />
+                      <span className="inline-flex items-center gap-1.5">
+                        <MapPin className="size-3.5 text-slate-400 shrink-0" />
                         <span className="break-words">{edition.heldLocation}</span>
                       </span>
                     )}
                     {edition.heldDates && (
-                      <span className="inline-flex items-center gap-1.5 text-slate-400">
-                        <Calendar className="size-3.5 text-indigo-400 shrink-0" />
+                      <span className="inline-flex items-center gap-1.5">
+                        <Calendar className="size-3.5 text-slate-400 shrink-0" />
                         <span className="break-words">{edition.heldDates}</span>
                       </span>
                     )}
@@ -138,8 +138,8 @@ export const PreviousEditionsSection: React.FC<Props> = ({
               {/* Awards & Winners Flat List */}
               {edition.awards && edition.awards.length > 0 && (
                 <div className="space-y-3">
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-1.5">
-                    <Trophy className="size-3 text-orange-400" />
+                  <span className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-1.5">
+                    <Trophy className="size-3.5 text-slate-400" />
                     <span>Official Awards &amp; Winning Laureates</span>
                   </span>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -152,15 +152,15 @@ export const PreviousEditionsSection: React.FC<Props> = ({
                       return (
                         <div
                           key={aIdx}
-                          className="p-3.5 rounded-xl border border-darkroom-border/60 bg-darkroom-bg/70 hover:border-zinc-600/80 transition-all flex flex-col justify-between space-y-3"
+                          className="p-3.5 rounded-xl border border-darkroom-border/60 bg-darkroom-card/60 hover:border-zinc-600/80 transition-all flex flex-col justify-between space-y-3"
                         >
                           <div className="space-y-2">
-                            <span className="text-[10px] font-mono font-semibold uppercase tracking-wider text-orange-400 block">
+                            <span className="text-xs font-mono font-medium text-tool-diligence block">
                               {award.awardName}
                             </span>
                             <div className="flex items-start gap-2.5">
                               {/* Winner Avatar */}
-                              <div className="relative shrink-0 size-9 rounded-lg overflow-hidden bg-darkroom-card border border-darkroom-border shadow-xs mt-0.5">
+                              <div className="relative shrink-0 size-9 rounded-xl overflow-hidden bg-darkroom-card border border-darkroom-border shadow-xs mt-0.5">
                                 {award.recipientAvatarUrl && !hasImgErr ? (
                                   <img
                                     src={award.recipientAvatarUrl}
@@ -169,18 +169,18 @@ export const PreviousEditionsSection: React.FC<Props> = ({
                                     className="size-full object-cover"
                                   />
                                 ) : (
-                                  <div className="size-full flex items-center justify-center font-mono font-bold text-[11px] bg-indigo-950/60 text-indigo-200">
-                                    {initials || <User className="size-4 text-indigo-300" />}
+                                  <div className="size-full flex items-center justify-center font-bold text-xs bg-midnight-royal/40 text-white font-mono">
+                                    {initials || <User className="size-4 text-slate-300" />}
                                   </div>
                                 )}
                               </div>
 
                               <div className="min-w-0 flex-1">
-                                <h5 className="text-xs font-bold text-white font-sans truncate">
+                                <h5 className="text-sm font-bold text-white font-sans truncate">
                                   {award.winnerTitle}
                                 </h5>
                                 {award.recipientName && (
-                                  <p className="text-[11px] text-slate-400 mt-0.5 truncate">
+                                  <p className="text-xs text-slate-400 mt-0.5 truncate">
                                     Directed by <span className="text-slate-200 font-medium">{award.recipientName}</span>
                                   </p>
                                 )}
@@ -195,11 +195,11 @@ export const PreviousEditionsSection: React.FC<Props> = ({
                                 href={award.imdbUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#080d1a] border border-indigo-900/40 text-[10px] font-mono text-indigo-300 hover:text-white hover:border-indigo-500/60 transition-colors"
+                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#080d1a] border border-indigo-900/40 text-xs font-mono text-indigo-300 hover:text-white hover:border-indigo-500/60 transition-colors"
                               >
-                                <Film className="size-2.5 text-indigo-400" />
-                                <span>IMDb Title / Bio</span>
-                                <ExternalLink className="size-2 opacity-60" />
+                                <Film className="size-3 text-slate-400" />
+                                <span>IMDb</span>
+                                <ExternalLink className="size-2.5 opacity-60" />
                               </a>
                             )}
                             {award.winnerUrl && (
@@ -207,10 +207,10 @@ export const PreviousEditionsSection: React.FC<Props> = ({
                                 href={award.winnerUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#080d1a] border border-indigo-900/40 text-[10px] font-mono text-indigo-300 hover:text-white hover:border-indigo-500/60 transition-colors"
+                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#080d1a] border border-indigo-900/40 text-xs font-mono text-indigo-300 hover:text-white hover:border-indigo-500/60 transition-colors"
                               >
-                                <span>Official Film Page</span>
-                                <ExternalLink className="size-2 opacity-60" />
+                                <span>Film Page</span>
+                                <ExternalLink className="size-2.5 opacity-60" />
                               </a>
                             )}
                           </div>
@@ -221,11 +221,11 @@ export const PreviousEditionsSection: React.FC<Props> = ({
                 </div>
               )}
 
-              {/* Press Coverage & Articles (Minimal Flat Links) */}
+              {/* Press Coverage & Articles */}
               {edition.pressCoverage && edition.pressCoverage.length > 0 && (
                 <div className="space-y-2 pt-1">
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-1.5">
-                    <Newspaper className="size-3 text-indigo-400" />
+                  <span className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-1.5">
+                    <Newspaper className="size-3.5 text-slate-400" />
                     <span>Press Coverage &amp; Articles</span>
                   </span>
                   <div className="flex flex-wrap gap-2">
@@ -237,7 +237,7 @@ export const PreviousEditionsSection: React.FC<Props> = ({
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border hover:border-slate-600 text-xs text-slate-300 hover:text-white transition-all group"
                       >
-                        <span className="text-slate-400 font-mono text-[11px]">
+                        <span className="text-slate-400 font-mono text-xs">
                           {press.publisher}:
                         </span>
                         <span className="truncate max-w-[240px] sm:max-w-xs">{press.headline}</span>
@@ -248,7 +248,7 @@ export const PreviousEditionsSection: React.FC<Props> = ({
                 </div>
               )}
 
-              {/* Notes / Logistics Corroboration (Clean Typography) */}
+              {/* Notes / Logistics Corroboration */}
               {edition.notes && (
                 <p className="text-xs text-slate-400 italic pt-1 border-t border-darkroom-border/40">
                   {edition.notes}

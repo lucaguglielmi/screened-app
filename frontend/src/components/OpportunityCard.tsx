@@ -120,7 +120,7 @@ export const OpportunityCard: React.FC<Props> = ({ opportunity, onDeepScreen }) 
           <div>
             <h3 className="font-serif text-xl font-bold text-white">{opportunity.name}</h3>
             <div className="flex items-center gap-1.5 text-xs font-mono text-slate-400 mt-1">
-              <MapPin className="size-3.5 text-tool-diligence" />
+              <MapPin className="size-3.5 text-slate-400" />
               <span>{opportunity.cityCountry}</span>
             </div>
           </div>
@@ -141,7 +141,7 @@ export const OpportunityCard: React.FC<Props> = ({ opportunity, onDeepScreen }) 
         {/* Deadline Banner with Add to Calendar */}
         <div className="p-3.5 rounded-2xl bg-darkroom-card flex items-center justify-between text-xs gap-2">
           <span className="font-mono text-slate-400 flex items-center gap-2">
-            <Calendar className="size-4 text-tool-diligence" />
+            <Calendar className="size-4 text-slate-400" />
             <span>{opportunity.deadlineTier}:</span>
           </span>
           <div className="flex items-center gap-3">

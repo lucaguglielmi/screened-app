@@ -409,11 +409,7 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
                   }`}>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1.5 text-xs font-bold text-white">
-                        <Building2 className={`size-3.5 ${
-                          dossier.corporateEntity?.flags && dossier.corporateEntity.flags.length > 0
-                            ? 'text-rose-400'
-                            : 'text-indigo-400'
-                        }`} />
+                        <Building2 className="size-3.5 text-tool-diligence" />
                         <span>Corporate Registry</span>
                       </div>
                       <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded border ${
@@ -446,7 +442,7 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
                   }`}>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1.5 text-xs font-bold text-white">
-                        <MapPin className={`size-3.5 ${hasDisputes ? 'text-orange-400' : 'text-indigo-400'}`} />
+                        <MapPin className="size-3.5 text-tool-diligence" />
                         <span>Venue Verification</span>
                       </div>
                       <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded border ${
