@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Search, Coins, MailWarning, UploadCloud } from 'lucide-react';
+import { Search, Coins, UploadCloud } from 'lucide-react';
 import {
   ChatMessage,
   DueDiligenceArgs,
@@ -19,11 +19,6 @@ const ACTION_TABS = [
     label: 'Find a grant',
     icon: Coins,
     query: 'Help me find film grants and funding opportunities',
-  },
-  {
-    label: 'Analyze an invitation',
-    icon: MailWarning,
-    query: 'I received a festival invitation email I want to analyze',
   },
 ];
 
@@ -215,15 +210,14 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
 
           {/* Quick Action Tabs (Under First Greeting Bubble) - Full Width on Mobile */}
           {message.id === 'initial-greeting-01' && (
-            <div className="mt-3.5 space-y-2.5 w-full">
+            <div className="mt-3.5 space-y-2 w-full">
               <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider block">
                 Quick Actions:
               </span>
-              <div className="flex flex-col sm:flex-row items-stretch gap-2.5 w-full">
-                
-                {/* Upload Box */}
+              <div className="flex flex-wrap items-center gap-2 w-full">
+                {/* Upload Action Pill */}
                 <div 
-                  className="group relative shrink-0 w-full sm:w-auto"
+                  className="group relative"
                   onDragEnter={handleDrag}
                   onDragLeave={handleDrag}
                   onDragOver={handleDrag}
@@ -238,16 +232,14 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className={`flex flex-row sm:flex-col items-center justify-center text-center p-3 sm:p-2 rounded-2xl border border-dashed text-slate-300 hover:text-white transition-all text-xs font-mono cursor-pointer shadow-sm active:scale-95 w-full sm:w-[92px] sm:aspect-square gap-2 sm:gap-0 ${
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-dashed text-slate-300 hover:text-white transition-all text-xs font-mono cursor-pointer shadow-2xs active:scale-95 ${
                       dragActive 
                         ? 'border-indigo-400 bg-indigo-500/15 text-indigo-200 shadow-indigo-500/20 shadow-md' 
-                        : 'border-slate-500/40 hover:border-indigo-400/70 bg-transparent hover:bg-white/[0.03]'
+                        : 'border-slate-500/50 hover:border-indigo-400/80 bg-darkroom-card/50 hover:bg-darkroom-surface'
                     }`}
                   >
-                    <UploadCloud className={`size-4.5 sm:mb-1 shrink-0 ${dragActive ? 'text-indigo-400 animate-bounce' : 'text-slate-400 group-hover:text-indigo-300'}`} />
-                    <span className="text-[11px] sm:text-[10px] leading-tight text-slate-400 group-hover:text-slate-200">
-                      {isProcessing ? 'Processing...' : 'or drag any document'}
-                    </span>
+                    <UploadCloud className={`size-3.5 shrink-0 ${dragActive ? 'text-indigo-400 animate-bounce' : 'text-slate-400 group-hover:text-indigo-300'}`} />
+                    <span>{isProcessing ? 'Processing...' : 'Upload or drop document'}</span>
                   </button>
 
                   {/* Tooltip */}
@@ -256,33 +248,31 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
                       Upload Document
                     </div>
                     <p className="text-slate-300 leading-relaxed font-sans text-xs">
-                      You can start your search by uploading any document: An E-mail invitation, a festival prospectus, or your notes.
+                      Start your search by uploading an invitation email, festival prospectus, or notes.
                     </p>
                   </div>
                 </div>
 
-                {/* Action Pills Grid */}
-                <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 w-full flex-1">
-                  {ACTION_TABS.map((tab, idx) => {
-                    const Icon = tab.icon;
-                    return (
-                      <button
-                        key={idx}
-                        type="button"
-                        onClick={() => {
-                          soundEffects.playClick();
-                          if (onLaunchCustomPrompt) {
-                            onLaunchCustomPrompt(tab.query);
-                          }
-                        }}
-                        className="flex items-center gap-2 px-3.5 py-2.5 sm:py-1.5 rounded-xl bg-darkroom-card hover:bg-midnight-royal border border-darkroom-border text-slate-300 hover:text-white transition-all text-xs font-mono cursor-pointer shadow-sm active:scale-95 w-full sm:w-auto text-left"
-                      >
-                        <Icon className="size-3.5 text-indigo-400 group-hover:text-white shrink-0" />
-                        <span>{tab.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
+                {/* Primary Action Pills */}
+                {ACTION_TABS.map((tab, idx) => {
+                  const Icon = tab.icon;
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => {
+                        soundEffects.playClick();
+                        if (onLaunchCustomPrompt) {
+                          onLaunchCustomPrompt(tab.query);
+                        }
+                      }}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border hover:border-slate-600 text-slate-300 hover:text-white transition-all text-xs font-mono cursor-pointer shadow-2xs active:scale-95"
+                    >
+                      <Icon className="size-3.5 text-slate-400 group-hover:text-white shrink-0" />
+                      <span>{tab.label}</span>
+                    </button>
+                  );
+                })}
               </div>
               {uploadError && (
                 <div className="text-xs text-rose-400 mt-1 animate-pulse">
