@@ -1,284 +1,325 @@
 import React, { useMemo } from 'react';
-import {
-  ReactFlow,
-  Background,
-  Edge,
-  Node,
-  MarkerType,
-  Handle,
-  Position,
-} from '@xyflow/react';
-import '@xyflow/react/dist/style.css';
 import { KeyPerson } from '../../types/investigation';
 import {
   AlertTriangle,
   Building2,
-  Ticket,
+  Film,
   User,
   ShieldAlert,
-  Network,
+  ShieldCheck,
+  ArrowRight,
+  Sparkles,
+  Link2,
 } from 'lucide-react';
-import clsx from 'clsx';
-
-interface PersonNodeData extends Record<string, unknown> {
-  name: string;
-  roles: string[];
-  isSuspect: boolean;
-  isFestivalMillSuspect: boolean;
-  hasDistributionOverlap: boolean;
-}
-
-interface BasicNodeData extends Record<string, unknown> {
-  name: string;
-}
-
-// Custom Nodes for Canvas Mode
-const PersonNode = ({ data }: { data: PersonNodeData }) => {
-  return (
-    <div
-      className={clsx(
-        'px-4 py-3 rounded-2xl border shadow-xl w-72 backdrop-blur-md transition-all',
-        data.isSuspect
-          ? 'bg-rose-950/60 border-rose-500/60 shadow-rose-950/40'
-          : 'bg-darkroom-surface/95 border-zinc-700/80 shadow-black/40',
-      )}
-    >
-      <Handle type="source" position={Position.Right} id="right-source" className="opacity-0" />
-      <Handle type="source" position={Position.Left} id="left-source" className="opacity-0" />
-      <div className="flex items-center gap-3">
-        <div
-          className={clsx(
-            'p-2.5 rounded-xl shrink-0',
-            data.isSuspect ? 'bg-rose-500/20 text-rose-400' : 'bg-indigo-500/20 text-indigo-400',
-          )}
-        >
-          <User className="size-5" />
-        </div>
-        <div className="min-w-0">
-          <div className="font-bold text-white text-sm truncate">{data.name}</div>
-          <div className="text-[11px] text-zinc-400 font-mono mt-0.5 truncate">
-            {data.roles.join(', ')}
-          </div>
-        </div>
-      </div>
-      {data.isSuspect && (
-        <div className="mt-3 pt-3 border-t border-rose-500/20 flex flex-col gap-1.5">
-          {data.isFestivalMillSuspect && (
-            <div className="flex items-center gap-1.5 text-xs text-rose-300 font-medium">
-              <AlertTriangle className="size-3.5 text-rose-400 shrink-0" />
-              <span>Festival Mill Suspect</span>
-            </div>
-          )}
-          {data.hasDistributionOverlap && (
-            <div className="flex items-center gap-1.5 text-xs text-rose-300 font-medium">
-              <ShieldAlert className="size-3.5 text-rose-400 shrink-0" />
-              <span>Distribution Overlap</span>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-};
-
-const CompanyNode = ({ data }: { data: BasicNodeData }) => {
-  return (
-    <div className="px-4 py-2.5 rounded-xl bg-zinc-900/90 border border-zinc-700/80 shadow-lg flex items-center gap-2.5 max-w-xs">
-      <Handle type="target" position={Position.Left} className="opacity-0" />
-      <div className="p-1.5 bg-emerald-500/15 text-emerald-400 rounded-lg shrink-0">
-        <Building2 className="size-4" />
-      </div>
-      <div className="font-medium text-zinc-200 text-xs truncate">{data.name}</div>
-    </div>
-  );
-};
-
-const FestivalNode = ({ data }: { data: BasicNodeData }) => {
-  return (
-    <div className="px-4 py-2.5 rounded-xl bg-zinc-900/90 border border-zinc-700/80 shadow-lg flex items-center gap-2.5 max-w-xs">
-      <Handle type="target" position={Position.Right} className="opacity-0" />
-      <div className="p-1.5 bg-amber-500/15 text-amber-400 rounded-lg shrink-0">
-        <Ticket className="size-4" />
-      </div>
-      <div className="font-medium text-zinc-200 text-xs truncate">{data.name}</div>
-    </div>
-  );
-};
-
-const nodeTypes = {
-  person: PersonNode,
-  company: CompanyNode,
-  festival: FestivalNode,
-};
 
 interface Props {
   keyPersonnel: KeyPerson[];
 }
 
 export const PersonnelNetworkDiagram: React.FC<Props> = ({ keyPersonnel }) => {
-  // Compute graph nodes and edges with generous spacing
-  const { nodes, edges } = useMemo(() => {
-    const newNodes: Node[] = [];
-    const newEdges: Edge[] = [];
-
-    const companySet = new Set<string>();
-    const festivalSet = new Set<string>();
+  // Aggregate unique companies, festivals, and shared directorships
+  const { companyMap, festivalMap, sharedEntities, hasSuspects } = useMemo(() => {
+    const companies = new Map<string, string[]>();
+    const festivals = new Map<string, string[]>();
 
     keyPersonnel.forEach((person) => {
-      (person.companies || []).forEach((c) => companySet.add(c));
-      (person.associatedFestivals || []).forEach((f) => festivalSet.add(f));
-    });
-
-    const companyArray = Array.from(companySet);
-    const festivalArray = Array.from(festivalSet);
-
-    // X positions with generous horizontal clearance
-    const FESTIVAL_X = -120;
-    const PERSON_X = 400;
-    const COMPANY_X = 920;
-
-    // Y spacing
-    const Y_SPACING = Math.max(220, (Math.max(companyArray.length, festivalArray.length) * 100) / Math.max(1, keyPersonnel.length));
-    const ITEM_Y_SPACING = 95;
-
-    // Place People in the middle column
-    keyPersonnel.forEach((person, idx) => {
-      const isSuspect = person.isFestivalMillSuspect || person.hasDistributionOverlap;
-      newNodes.push({
-        id: `person-${idx}`,
-        type: 'person',
-        position: { x: PERSON_X, y: idx * Y_SPACING },
-        data: {
-          name: person.name,
-          roles: person.roles,
-          isSuspect,
-          isFestivalMillSuspect: person.isFestivalMillSuspect,
-          hasDistributionOverlap: person.hasDistributionOverlap,
-        },
+      (person.companies || []).forEach((comp) => {
+        const list = companies.get(comp) || [];
+        list.push(person.name);
+        companies.set(comp, list);
       });
 
-      // Connect to companies
-      (person.companies || []).forEach((company) => {
-        newEdges.push({
-          id: `edge-${idx}-company-${company}`,
-          source: `person-${idx}`,
-          target: `company-${company}`,
-          sourceHandle: 'right-source',
-          animated: isSuspect,
-          style: {
-            stroke: isSuspect ? 'var(--color-rose-500)' : 'var(--color-indigo-500)',
-            strokeWidth: 2,
-          },
-          markerEnd: {
-            type: MarkerType.ArrowClosed,
-            color: isSuspect ? 'var(--color-rose-500)' : 'var(--color-indigo-500)',
-          },
-        });
-      });
-
-      // Connect to festivals
-      (person.associatedFestivals || []).forEach((festival) => {
-        newEdges.push({
-          id: `edge-${idx}-festival-${festival}`,
-          source: `person-${idx}`,
-          target: `festival-${festival}`,
-          sourceHandle: 'left-source',
-          animated: isSuspect,
-          style: {
-            stroke: isSuspect ? 'var(--color-rose-500)' : 'var(--color-indigo-500)',
-            strokeWidth: 2,
-          },
-          markerEnd: {
-            type: MarkerType.ArrowClosed,
-            color: isSuspect ? 'var(--color-rose-500)' : 'var(--color-indigo-500)',
-          },
-        });
+      (person.associatedFestivals || []).forEach((fest) => {
+        const list = festivals.get(fest) || [];
+        list.push(person.name);
+        festivals.set(fest, list);
       });
     });
 
-    // Place Companies
-    companyArray.forEach((company, idx) => {
-      newNodes.push({
-        id: `company-${company}`,
-        type: 'company',
-        position: { x: COMPANY_X, y: idx * ITEM_Y_SPACING },
-        data: { name: company },
-      });
+    // Detect shared entities between multiple people
+    const shared: Array<{ entity: string; type: 'COMPANY' | 'FESTIVAL'; people: string[] }> = [];
+    companies.forEach((people, entity) => {
+      if (people.length > 1) {
+        shared.push({ entity, type: 'COMPANY', people });
+      }
+    });
+    festivals.forEach((people, entity) => {
+      if (people.length > 1) {
+        shared.push({ entity, type: 'FESTIVAL', people });
+      }
     });
 
-    // Place Festivals
-    festivalArray.forEach((festival, idx) => {
-      newNodes.push({
-        id: `festival-${festival}`,
-        type: 'festival',
-        position: { x: FESTIVAL_X, y: idx * ITEM_Y_SPACING },
-        data: { name: festival },
-      });
-    });
+    const suspectFound = keyPersonnel.some(
+      (p) => p.isFestivalMillSuspect || p.hasDistributionOverlap || (p.flags && p.flags.length > 0),
+    );
 
-    return { nodes: newNodes, edges: newEdges };
+    return {
+      companyMap: companies,
+      festivalMap: festivals,
+      sharedEntities: shared,
+      hasSuspects: suspectFound,
+    };
   }, [keyPersonnel]);
 
-  const hasSuspects = useMemo(
-    () => keyPersonnel.some((p) => p.isFestivalMillSuspect || p.hasDistributionOverlap),
-    [keyPersonnel],
-  );
-
-  if (keyPersonnel.length === 0) return null;
+  if (!keyPersonnel || keyPersonnel.length === 0) return null;
 
   return (
-    <div className="space-y-3">
-      {/* Header */}
-      <div className="border-b border-darkroom-border pb-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <div className="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-400">
-            <Network className="size-4" />
+    <div className="space-y-4">
+      {/* Network Topology Summary Strip */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+        <div className="py-2.5 px-3 rounded-xl bg-darkroom-surface/80 border border-darkroom-border/80 text-center">
+          <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400">Individuals</div>
+          <div className="text-base font-semibold text-slate-100 font-mono flex items-center justify-center gap-1 mt-0.5">
+            <User className="size-3.5 text-indigo-400" />
+            <span>{keyPersonnel.length}</span>
           </div>
-          <div>
-            <h4 className="text-sm font-bold text-white font-serif">Entity &amp; Directorship Connection Network</h4>
-            <span className="text-[11px] text-slate-400 block">
-              Structural cross-entity linkages, shared corporate directorships, and sister festival networks.
-            </span>
+        </div>
+
+        <div className="py-2.5 px-3 rounded-xl bg-darkroom-surface/80 border border-darkroom-border/80 text-center">
+          <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400">Entities &amp; Filings</div>
+          <div className="text-base font-semibold text-emerald-400 font-mono flex items-center justify-center gap-1 mt-0.5">
+            <Building2 className="size-3.5 text-emerald-400" />
+            <span>{companyMap.size > 0 ? companyMap.size : '1 Direct'}</span>
+          </div>
+        </div>
+
+        <div className="py-2.5 px-3 rounded-xl bg-darkroom-surface/80 border border-darkroom-border/80 text-center">
+          <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400">Sister Festivals</div>
+          <div className="text-base font-semibold text-amber-400 font-mono flex items-center justify-center gap-1 mt-0.5">
+            <Film className="size-3.5 text-amber-400" />
+            <span>{festivalMap.size > 0 ? festivalMap.size : '0 Network'}</span>
+          </div>
+        </div>
+
+        <div className="py-2.5 px-3 rounded-xl bg-darkroom-surface/80 border border-darkroom-border/80 text-center">
+          <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400">Governance</div>
+          <div className="text-xs font-semibold font-mono flex items-center justify-center gap-1 mt-1 truncate">
+            {hasSuspects ? (
+              <span className="text-rose-400 flex items-center gap-1">
+                <AlertTriangle className="size-3 text-rose-400" /> Overlap Risk
+              </span>
+            ) : (
+              <span className="text-emerald-400 flex items-center gap-1">
+                <ShieldCheck className="size-3 text-emerald-400" /> Independent
+              </span>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Embedded Non-Hijacking Diagram */}
-      <div className="w-full h-[400px] sm:h-[450px] rounded-2xl border border-darkroom-border/60 bg-darkroom-bg overflow-hidden shadow-2xl">
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          nodeTypes={nodeTypes}
-          fitView
-          fitViewOptions={{ padding: 0.15 }}
-          minZoom={0.25}
-          maxZoom={1.2}
-          zoomOnScroll={false}
-          panOnScroll={false}
-          zoomOnPinch={true}
-          panOnDrag={true}
-          nodesDraggable={false}
-          nodesConnectable={false}
-          elementsSelectable={true}
-          proOptions={{ hideAttribution: true }}
-          colorMode="dark"
-        >
-          <Background color="var(--color-midnight-base)" gap={20} size={1.2} />
-        </ReactFlow>
-      </div>
-
-      {/* Forensic Takeaway Footer */}
-      {hasSuspects && (
-        <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-xs text-slate-200 leading-relaxed flex items-start gap-3">
-          <ShieldAlert className="size-4 text-rose-400 shrink-0 mt-0.5" />
-          <div>
-            <strong className="text-rose-300">Forensic Network Assessment:</strong> Key personnel
-            hold concurrent directorships across multiple festival entities and commercial sales
-            companies. Screened recommends verifying jury independence and checking for paid
-            consultancy solicitations.
+      {/* Shared Directorship Callout (When multiple personnel connect to the same entity) */}
+      {sharedEntities.length > 0 && (
+        <div className="p-3.5 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 text-xs text-slate-200 space-y-2">
+          <div className="flex items-center gap-2 text-indigo-300 font-mono font-semibold text-xs">
+            <Link2 className="size-4 text-indigo-400" />
+            <span>Shared Corporate Directorships &amp; Interlocking Governance</span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+            {sharedEntities.map((item, sIdx) => (
+              <div
+                key={sIdx}
+                className="p-2.5 rounded-xl bg-darkroom-surface/90 border border-darkroom-border flex items-start gap-2.5"
+              >
+                {item.type === 'COMPANY' ? (
+                  <Building2 className="size-4 text-emerald-400 shrink-0 mt-0.5" />
+                ) : (
+                  <Film className="size-4 text-amber-400 shrink-0 mt-0.5" />
+                )}
+                <div className="min-w-0 flex-1">
+                  <div className="font-semibold text-white truncate">{item.entity}</div>
+                  <div className="text-[11px] font-mono text-slate-400 mt-0.5">
+                    Co-directed by: <strong className="text-indigo-300">{item.people.join(', ')}</strong>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}
+
+      {/* Inline Relational Architecture Grid (Height Auto, Clean, Visible) */}
+      <div className="space-y-3">
+        {keyPersonnel.map((person, pIdx) => {
+          const initials = person.name
+            .split(' ')
+            .map((n) => n[0])
+            .join('')
+            .toUpperCase()
+            .slice(0, 2);
+
+          const isSuspect = Boolean(
+            person.isFestivalMillSuspect ||
+            person.hasDistributionOverlap ||
+            (person.flags && person.flags.length > 0),
+          );
+
+          const companies = person.companies || [];
+          const festivals = person.associatedFestivals || [];
+
+          return (
+            <div
+              key={pIdx}
+              className={`p-4 rounded-2xl border transition-all space-y-3 ${
+                isSuspect
+                  ? 'bg-rose-950/20 border-rose-500/40 shadow-sm shadow-rose-950/20'
+                  : 'bg-darkroom-surface/90 border-darkroom-border/80 hover:border-zinc-700/80 shadow-sm'
+              }`}
+            >
+              {/* Row 1: Person Identity & Role */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-darkroom-border/50 pb-3">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className={`size-10 rounded-xl flex items-center justify-center font-bold text-xs font-mono shrink-0 border ${
+                    isSuspect
+                      ? 'bg-rose-500/20 text-rose-300 border-rose-500/30'
+                      : 'bg-midnight-royal/40 text-white border-indigo-900/40'
+                  }`}>
+                    {initials || <User className="size-4 text-slate-300" />}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h5 className="text-sm sm:text-base font-bold text-white font-sans truncate">{person.name}</h5>
+                      {isSuspect && (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40">
+                          <AlertTriangle className="size-2.5" /> Conflict Flag
+                        </span>
+                      )}
+                    </div>
+                    <div className="text-xs font-mono text-indigo-300 mt-0.5 truncate">
+                      {person.roles && person.roles.length > 0 ? person.roles.join(' • ') : 'Festival Leadership'}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Directorship Status Tag */}
+                <div className="self-start sm:self-auto shrink-0">
+                  <span className={`text-[11px] font-mono px-2.5 py-1 rounded-lg border flex items-center gap-1.5 ${
+                    isSuspect
+                      ? 'bg-rose-500/15 border-rose-500/30 text-rose-300'
+                      : 'bg-darkroom-card border-darkroom-border text-slate-300'
+                  }`}>
+                    {isSuspect ? (
+                      <>
+                        <ShieldAlert className="size-3 text-rose-400" />
+                        <span>Corporate Overlap</span>
+                      </>
+                    ) : (
+                      <>
+                        <ShieldCheck className="size-3 text-emerald-400" />
+                        <span>Independent Record</span>
+                      </>
+                    )}
+                  </span>
+                </div>
+              </div>
+
+              {/* Row 2: Directorship Connections & Associated Entities */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-0.5">
+                {/* Connected Companies / Entities */}
+                <div className="p-3 rounded-xl bg-darkroom-card/60 border border-darkroom-border/60 space-y-1.5">
+                  <div className="flex items-center gap-1.5 text-xs font-mono font-medium text-slate-400">
+                    <Building2 className="size-3.5 text-emerald-400" />
+                    <span>Corporate Entities &amp; Filings</span>
+                  </div>
+                  {companies.length > 0 ? (
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      {companies.map((comp, cIdx) => (
+                        <span
+                          key={cIdx}
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-950/30 border border-emerald-500/30 text-emerald-300 font-mono text-xs font-medium"
+                        >
+                          <ArrowRight className="size-2.5 text-emerald-400" />
+                          <span>{comp}</span>
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs font-mono text-slate-400 italic pt-0.5">
+                      Direct individual capacity (No separate corporate directorship found).
+                    </p>
+                  )}
+                </div>
+
+                {/* Connected Sister Festivals */}
+                <div className="p-3 rounded-xl bg-darkroom-card/60 border border-darkroom-border/60 space-y-1.5">
+                  <div className="flex items-center gap-1.5 text-xs font-mono font-medium text-slate-400">
+                    <Film className="size-3.5 text-amber-400" />
+                    <span>Sister Festivals &amp; Networks</span>
+                  </div>
+                  {festivals.length > 0 ? (
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      {festivals.map((fest, fIdx) => (
+                        <span
+                          key={fIdx}
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-950/30 border border-amber-500/30 text-amber-300 font-mono text-xs font-medium"
+                        >
+                          <ArrowRight className="size-2.5 text-amber-400" />
+                          <span>{fest}</span>
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs font-mono text-slate-400 italic pt-0.5">
+                      Single festival focus (No cross-festival directorship overlap).
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Flags / Notes */}
+              {((person.flags && person.flags.length > 0) || person.notes) && (
+                <div className="pt-1 border-t border-darkroom-border/40 space-y-1.5">
+                  {person.flags && person.flags.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5">
+                      {person.flags.map((flag, flIdx) => (
+                        <span
+                          key={flIdx}
+                          className="inline-flex items-center gap-1 text-xs font-mono px-2 py-0.5 rounded bg-rose-500/15 text-rose-300 border border-rose-500/30"
+                        >
+                          <ShieldAlert className="size-3 text-rose-400" />
+                          <span>{flag}</span>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  {person.notes && person.notes.trim().length > 0 && (
+                    <p className="text-xs text-slate-300 italic">
+                      &ldquo;{person.notes}&rdquo;
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Forensic Governance Assessment Card */}
+      <div className={`p-4 rounded-2xl border text-xs text-slate-200 leading-relaxed flex items-start gap-3 ${
+        hasSuspects
+          ? 'bg-rose-500/10 border-rose-500/30'
+          : 'bg-darkroom-surface/80 border-darkroom-border'
+      }`}>
+        {hasSuspects ? (
+          <ShieldAlert className="size-4.5 text-rose-400 shrink-0 mt-0.5" />
+        ) : (
+          <Sparkles className="size-4.5 text-indigo-400 shrink-0 mt-0.5" />
+        )}
+        <div className="space-y-1">
+          <strong className={hasSuspects ? 'text-rose-300' : 'text-white'}>
+            Forensic Governance Assessment:
+          </strong>{' '}
+          {hasSuspects ? (
+            <span>
+              Autonomous cross-examination discovered overlapping commercial entities or festival network ties. Screened recommends verifying jury independence and confirming that entry fees are processed directly by the verified organization.
+            </span>
+          ) : (
+            <span>
+              All identified leadership personnel verified with transparent directorship profiles and zero conflicted auxiliary sales entities across corporate registries.
+            </span>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
+

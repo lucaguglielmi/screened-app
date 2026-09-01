@@ -20,6 +20,7 @@ import {
   Camera,
   Award,
   Sparkles,
+  Network,
 } from 'lucide-react';
 import {
   DeepVettingReport,
@@ -661,11 +662,16 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
             subtitle="Verified individuals, corporate directorships, and risk flags extracted across trade databases."
           />
 
-          <div className="pt-4">
-            <h3 className="text-base font-bold text-white font-serif mb-1">Entity & Directorship Connection Network</h3>
-            <p className="text-xs text-slate-400 mb-4">
-              Interactive topological graph visualizing relationships between individuals, companies, and festivals.
-            </p>
+          <div className="pt-4 space-y-3">
+            <div className="border-b border-darkroom-border pb-2.5">
+              <h3 className="text-base sm:text-lg font-bold text-white font-serif flex items-center gap-2">
+                <Network className="size-4 text-tool-diligence" />
+                <span>Entity &amp; Directorship Connection Network</span>
+              </h3>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Structural cross-entity linkages, shared corporate directorships, and sister festival networks.
+              </p>
+            </div>
             <PersonnelNetworkDiagram keyPersonnel={activeReport.keyPersonnel} />
           </div>
         </div>
