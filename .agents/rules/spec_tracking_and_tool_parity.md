@@ -9,7 +9,7 @@ Whenever the user asks:
 
 You **MUST ALWAYS**:
 1. Check `WHAT_THE_HUMAN_SHOULD_DO.md` for any pending decisions, test assets, or actions required from the user.
-2. Review all active specs in `docs/` (especially `docs/SPEC_PARALLEL_ADK_EVIDENCE_ENGINE.md`) to list unfinished/in-flight specs and completed ones.
+2. Review all active specs in `docs/` (especially `docs/SPEC_CINEMA_DILIGENCE_AND_GRANT_RESEARCH.md`, and completed specs in `docs/done/`) to list unfinished/in-flight specs and completed ones.
 3. If any spec is fully concluded, ask the human creator if they wish to mark it completed or archive it.
 4. Add 2–3 concise, high-value ideas of your own (keep them short; only expand if the user asks for more).
 
@@ -30,9 +30,9 @@ You **MUST ALWAYS**:
 ---
 
 ## 4. Standard 2-Stage In-Chat Tool Pattern Mandate
-The main AI interface is **Mission Control**. Individual tools each possess their own page/workspace, but can also be invoked directly inside Mission Control via this mandatory 2-stage interaction pattern:
+The main AI interface is **Screened AI**. Individual tools each possess their own page/workspace, but can also be invoked directly inside Screened AI via this mandatory 2-stage interaction pattern:
 
-1. **User Inquiry**: User asks something in Mission Control chat.
+1. **User Inquiry**: User asks something in Screened AI chat.
 2. **Agent Tool Selection**: Agent decides which tool is required and mounts the tool card.
 3. **Stage 1 (Requirements Gathering UI)**: The mounted card displays inputs, sliders, file dropzone, and investigative checkboxes.
 4. **Stage 2 (Review / Launch Confirmation UI)**: Once parameters are confirmed, the card switches to a concise summary card displaying parsed parameters, investigative directives, and the destination page.

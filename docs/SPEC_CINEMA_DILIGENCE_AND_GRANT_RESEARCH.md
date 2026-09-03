@@ -1,8 +1,8 @@
 # 🎬 Product & Technical Specification: Streamlined Cinema Due Diligence & Grant Research
 
-> **Document Version**: 1.0.0-SPEC  
+> **Document Version**: 1.1.0-SPEC  
 > **Target System**: Screened — Agentic Cinema Due Diligence & Funding Intelligence  
-> **Status**: Specification Phase — *Draft / Under Review (Awaiting User Execution Approval)*  
+> **Status**: Core Hackathon Foundation Completed · Advanced Grant Tools: *To Do After the Hackathon*  
 > **Architecture Pattern**: Vertex AI (Gemini 2.5 Pro & Flash) + Google ADK Orchestration + Parallel Evidence Engine (Search & Extract) + React 19 / TypeScript SPA
 
 ---
@@ -278,14 +278,18 @@ All changes to the Screened platform must meet these automated quality gates:
 
 ---
 
-## 6. Implementation Roadmap (Pending User Approval)
-
-* [x] **Phase 1: Architecture Design & Spec Formalization** *(Completed)*
-* [ ] **Phase 2: Deep Grant Database Enriched Ingestion** *(Awaiting User Trigger)*
-  * Expanded indexing of regional European and North American fellowship deadlines.
-  * Direct PDF grant guidelines parsing via Gemini Flash.
-* [ ] **Phase 3: Automated Grant Application Checklist Exporter** *(Awaiting User Trigger)*
-  * Export project packaging checklists (treatment, budget breakdown, cultural test) tailored to specific grant funds.
+## 6. Implementation Roadmap
+ 
+* [x] **Phase 1: Architecture Design & Core Foundations** *(Completed for Hackathon)*
+  * Unified 3 core pillars (`Screened AI`, `Festival Due Diligence`, `Grant & Funding Research`).
+  * Direct low-friction intake, tool registry pruning, Pinco Pallino demo mode, Parallel search integration, and full verification suite.
+* [ ] **Phase 2: Deep Grant Database Enriched Ingestion** *(To Do After the Hackathon)*
+  * Expanded database/indexing of regional European and North American fellowship deadlines (beyond UK/international core templates).
+  * Direct PDF grant guidelines parsing via Gemini Flash for deep clause-by-clause analysis.
+  * Dedicated standalone `/api/grants/scout` endpoint router with advanced pagination.
+* [ ] **Phase 3: Automated Grant Application Checklist Exporter** *(To Do After the Hackathon)*
+  * Export customized project packaging checklists (treatment, budget breakdown, cultural test, director statement) tailored to specific grant funds.
+  * 1-Click tailored grant submission readiness kit PDF/Markdown exporter.
 
 ---
 
@@ -319,7 +323,7 @@ All changes to the Screened platform must meet these automated quality gates:
 - [x] **No Interrogation Forms**: Due Diligence intake reduced to Festival Name + Freeform Clues Text Area.
 - [x] **Direct Email Ingestion**: Uploaded emails immediately launch due diligence search without extraneous intermediary cards.
 - [x] **Single Gold-Standard Demo Entity**: Pinco Pallino Film Festival verified as the sole demonstration mock.
-- [x] **100% Automated Backend Tests Passing**: 36 / 36 unit and integration tests passing (`PYTHONPATH=. .venv/bin/pytest tests/`).
+- [x] **100% Automated Backend Tests Passing**: 62 / 62 unit and integration tests passing (`PYTHONPATH=. .venv/bin/pytest tests/`).
 - [x] **Zero ESLint Errors/Warnings**: Clean TypeScript compilation (`npm run lint`).
 - [x] **Production Bundle Validated**: Vite build compiles in < 2 seconds (`npm run build`).
 - [x] **Privacy Guard**: Client-side & backend PII Vault active to mask filmmaker personal data before external calls.

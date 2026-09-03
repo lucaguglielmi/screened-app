@@ -18,7 +18,7 @@
   <a href="https://github.com/lucaguglielmi/screened-app">
     <img src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" />
   </a>
-  <img src="https://img.shields.io/badge/Tests-29_Passed_100%25-10B981?style=for-the-badge&logo=pytest&logoColor=white" alt="Test Status" />
+  <img src="https://img.shields.io/badge/Tests-62_Passed_100%25-10B981?style=for-the-badge&logo=pytest&logoColor=white" alt="Test Status" />
   <img src="https://img.shields.io/badge/Diagrams-React_Flow_v12-6366F1?style=for-the-badge&logo=react&logoColor=white" alt="React Flow Diagrams" />
   <img src="https://img.shields.io/badge/License-Apache_2.0-818CF8?style=for-the-badge&logo=apache&logoColor=white" alt="License" />
 </p>
@@ -30,11 +30,11 @@
 Every year, independent filmmakers spend thousands of pounds on festival submission fees, only to encounter opaque screening venues, predatory organizers, deceptive premiere policies, or awards that fail to qualify for major honors (BAFTA, BIFA, Oscars).
 
 **Screened** transforms cinema due-diligence from guesswork into an autonomous, transparent multi-agent investigation. Rather than assigning an arbitrary or blackbox "trust score", Screened functions as an investigative research room:
-1. **The Producer Desk (Conversational Agent)**: Talks with filmmakers, analyzes queries or uploaded PDF scripts/emails, and autonomously dispatches specialized tools via **Gemini Function Calling API**.
+1. **Screened AI (Conversational Agent Hub)**: Talks with filmmakers, analyzes queries or uploaded PDF scripts/emails, and autonomously dispatches specialized tools via **Gemini Function Calling API**.
 2. **Dissects Subject Entities**: Scrutinizes legal identity, physical venues, fee schedules, jury prestige, and filmmaker community feedback.
 3. **Gathers Public Evidence**: Pulls verified data from official registries, festival archives, major trade publications (Variety, ScreenDaily), and community forums.
 4. **Cites Every Atomic Claim**: Direct links to verbatim quotes with source tier tags, retrieval timestamps, and SHA-256 report fingerprints.
-5. **Scouts Strategic Opportunities**: Matches film profiles (genre, runtime, premiere goals) to verified open calls, qualification roadmaps, and deadline calendar (`.ics`) exports.
+5. **Scouts Strategic Opportunities & Grants**: Matches film profiles to verified open calls and public institutional grant funds (BFI, Screen Scotland, Arts Council, Sundance) with `.ics` calendar exports.
 
 ---
 
@@ -59,12 +59,12 @@ Screened operates an orchestrated pipeline of specialized autonomous agents usin
 
 ## 🚀 Key Innovations
 
-### 1. The Producer Desk & Generative Mini-UIs
+### 1. Screened AI & Low-Friction Intake
 - Autonomous conversational entry point powered by **Gemini 2.5 Pro Function Calling**.
-- Embeds interactive **Generative Mini-App cards** inside chat bubbles:
-  - **`MiniDueDiligence`**: Pre-flight probe with target resolution and concern tracks (`#00D29E`).
-  - **`MiniScoutCard`**: Film profile matrix with interactive runtime and budget sliders (`#F43F5E`).
-  - **`MiniCompareArena`**: Side-by-side head-to-head match-up card (e.g., *Raindance vs LIFF*).
+- Embeds streamlined **Generative Mini-App cards** inside chat bubbles:
+  - **`MiniDueDiligence`**: Low-friction pre-flight intake card (Festival Name + Freeform context).
+  - **`GrantIntakeCard`**: Institutional funding and public grant matcher (BFI, Screen Scotland, Arts Council, Sundance).
+  - **`DocumentDropzone`**: Multimodal extraction for PDF scripts, treatments, and invitation correspondence.
 - **1-Click Workspace Transition**: Seamlessly launches full research pipelines with pre-populated parameters.
 
 ### 2. 4-Tier Magic Toolbar ("How Much Data Do You Want To See?")
@@ -137,18 +137,22 @@ PYTHONPATH=. .venv/bin/pytest tests/
 ```
 
 ### Test Results Summary:
-- `tests/test_chat.py`: Producer Desk agent & Gemini Function Calling tools (6/6 passed)
-- `tests/test_deep_vetting.py`: 360° Forensic Deep Vetting ADK synthesis (2/2 passed)
-- `tests/test_document_analysis.py`: PDF dossier extraction & contradiction detection (3/3 passed)
-- `tests/test_interactive_followup.py`: Multi-turn conversational follow-up questions (2/2 passed)
-- `tests/test_monitor_watch.py`: Autonomous watchlists, notification dispatch & drift checks (3/3 passed)
 - `tests/test_backend.py`: Healthz probe & test pipeline validation (4/4 passed)
+- `tests/test_chat.py`: Screened AI agent & Gemini Function Calling tools (7/7 passed)
+- `tests/test_claim_pipeline_resilience.py`: Claim extraction, basis mapping & source tier resilience (5/5 passed)
+- `tests/test_deep_vetting.py`: 360° Forensic Deep Vetting ADK synthesis (4/4 passed)
+- `tests/test_deep_vetting_full_dataflow.py`: Full dataflow vetting matrix and source attribution (2/2 passed)
+- `tests/test_demo_mode.py`: Pinco Pallino demo mode, SSE timings & legacy entity sanitization (11/11 passed)
+- `tests/test_document_analysis.py`: PDF dossier extraction & multimodal email analysis (4/4 passed)
 - `tests/test_end_to_end.py`: Asynchronous multi-agent investigation lifecycle (1/1 passed)
 - `tests/test_export.py`: Archival Markdown export & SHA-256 digest seal (1/1 passed)
+- `tests/test_monitor_watch.py`: Autonomous watchlists, notification dispatch & drift checks (3/3 passed)
 - `tests/test_multi_agent.py`: Disambiguator, Planner, and API routes (3/3 passed)
+- `tests/test_notifications.py`: Web Push & in-app SSE notification streams (4/4 passed)
 - `tests/test_outreach.py`: SHA-256 payload hashing & sandbox approval verification (2/2 passed)
-- `tests/test_scout.py`: FilmProfile validation & `/api/scout` opportunity discovery (2/2 passed)
-- **Total: 29 / 29 tests passed (100%)**
+- `tests/test_pipeline_stages_and_progress.py`: Live progress SSE sequence & event broadcasting (8/8 passed)
+- `tests/test_scout.py`: FilmProfile validation & `/api/scout` opportunity discovery (3/3 passed)
+- **Total: 62 / 62 tests passed (100%)**
 
 ---
 
