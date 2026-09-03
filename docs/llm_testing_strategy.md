@@ -23,10 +23,28 @@ Because LLM pipelines are non-deterministic and involve complex JSON schemas (e.
 * **Keep Cassettes Updated:** If the underlying implementation of a tool, agent, prompt, or response schema changes in the future, the tests MUST change too. You must delete the outdated cassette and re-record it (`pytest --record-mode=rewrite`) to ensure the recorded traffic matches the new architecture. 
 * **Complete Tool Coverage:** The test suite must exercise **every single tool we have**. We must ensure that cassettes capture the usage of all tools to prove they work seamlessly across both isolated unit tests and full pipelines.
 
-## Implementation Steps (Pending)
-When we are ready to implement this, the following steps are required:
-1. Remove the aggressive blanket mock of `google.genai.Client` in `tests/conftest.py`.
-2. Configure VCR globally in `tests/conftest.py` to filter out sensitive headers (`x-goog-api-key`, `authorization`), query params (`key`), and ignore local ASGI requests (`http://test`, `localhost`, `127.0.0.1`).
-3. Apply `@pytest.mark.vcr` across **all unit test files** (`test_backend.py`, `test_chat.py`, `test_deep_vetting.py`, `test_scout.py`, `test_outreach.py`, `test_document_analysis.py`, etc.) and integration tests (`test_end_to_end.py`).
-4. Run tests in record mode with a valid `GEMINI_API_KEY` to generate initial cassettes for every tool and agent.
-5. Verify in offline mode (dummy/unset API key) that all unit and integration tests pass cleanly via cassette replay with $0 API cost.
+## Implementation & Enable / Disable Architecture (Implemented)
+
+The VCR Record & Replay architecture is implemented with a strict **Enable / Disable Toggle** to guarantee backward compatibility with existing unit tests and fast offline CI runs:
+
+1. **Default Mode (VCR Disabled - Fast & In-Memory)**:
+   - Run: `pytest` or `./scripts/test_vcr.sh mock`
+   - Strips `vcr` markers and runs with the instant in-memory client mock in `tests/conftest.py`.
+   - 100% offline, zero network requests, $0 API spend.
+
+2. **VCR Replay Mode (VCR Enabled)**:
+   - Run: `pytest --use-vcr` or `SCREENED_VCR_ENABLED=1 pytest` or `./scripts/test_vcr.sh replay`
+   - Deactivates the blanket in-memory patcher and replays pre-recorded HTTP requests from `tests/cassettes/`.
+   - Deterministic real-response testing with $0 API spend.
+
+3. **VCR Record Mode (Generate New Cassettes)**:
+   - Run: `SCREENED_VCR_ENABLED=1 pytest --use-vcr --record-mode=rewrite` or `./scripts/test_vcr.sh record`
+   - Requires a valid `GEMINI_API_KEY`.
+   - Sends real requests to Gemini, capturing live multi-agent responses.
+   - **Automatic Token & PII Scrubbing**: `vcr_config` in `tests/conftest.py` automatically scrubs `x-goog-api-key`, `authorization`, `cookie`, `user-agent`, and query parameter `key`, ensuring no API keys or credentials can ever be committed to the repository.
+   - Ignores local test server traffic (`testserver`, `localhost`, `127.0.0.1`, `test`).
+
+4. **Force Disable Override**:
+   - Run: `pytest --disable-vcr`
+   - Explicitly forces the in-memory mock even if `SCREENED_VCR_ENABLED=1` is set in the environment.
+

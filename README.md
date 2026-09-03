@@ -18,7 +18,7 @@
   <a href="https://github.com/lucaguglielmi/screened-app">
     <img src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" />
   </a>
-  <img src="https://img.shields.io/badge/Tests-62_Passed_100%25-10B981?style=for-the-badge&logo=pytest&logoColor=white" alt="Test Status" />
+  <img src="https://img.shields.io/badge/Tests-69_Passed_100%25-10B981?style=for-the-badge&logo=pytest&logoColor=white" alt="Test Status" />
   <img src="https://img.shields.io/badge/Diagrams-React_Flow_v12-6366F1?style=for-the-badge&logo=react&logoColor=white" alt="React Flow Diagrams" />
   <img src="https://img.shields.io/badge/License-Apache_2.0-818CF8?style=for-the-badge&logo=apache&logoColor=white" alt="License" />
 </p>
@@ -152,7 +152,10 @@ PYTHONPATH=. .venv/bin/pytest tests/
 - `tests/test_outreach.py`: SHA-256 payload hashing & sandbox approval verification (2/2 passed)
 - `tests/test_pipeline_stages_and_progress.py`: Live progress SSE sequence & event broadcasting (8/8 passed)
 - `tests/test_scout.py`: FilmProfile validation & `/api/scout` opportunity discovery (3/3 passed)
-- **Total: 62 / 62 tests passed (100%)**
+- `tests/test_vcr_toggle.py`: LLM Record & Replay VCR toggle, cassette configuration & credential scrubbing (5/5 passed)
+- `backend/tests/test_architecture_endpoint.py`: Architecture diagram node/edge generation endpoint (1/1 passed)
+- `backend/tests/test_cloud_tasks.py`: Google Cloud Tasks async dispatch & fallback handlers (1/1 passed)
+- **Total: 69 / 69 tests passed (100%)**
 
 ---
 
