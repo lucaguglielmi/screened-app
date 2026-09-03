@@ -300,6 +300,9 @@ export interface GrantScoutRequest {
   fundingNeeded: string;
   filmmakerRegion: string;
   targetGrantTypes?: string[];
+  page?: number;
+  pageSize?: number;
+  sortBy?: string;
 }
 
 export interface GrantScoutResponse {
@@ -308,6 +311,72 @@ export interface GrantScoutResponse {
   grants: GrantOpportunity[];
   strategySummary: string;
   durationSeconds: number;
+  totalCount?: number;
+  page?: number;
+  pageSize?: number;
+}
+
+export interface ParseGrantGuidelinesRequest {
+  fileName: string;
+  fileContent: string;
+  mimeType?: string;
+}
+
+export interface GrantGuidelinesAnalysis {
+  fundingBody: string;
+  grantTitle: string;
+  maxAwardAmount: string;
+  matchFundingPercentage?: string;
+  eligibilityCriteria: string[];
+  nationalityOrResidencyRules: string[];
+  requiredDeliverables: string[];
+  keyDates: string[];
+  culturalTestRequired: boolean;
+  guidelineSummary: string;
+}
+
+export interface GrantChecklistItem {
+  id: string;
+  category: string;
+  title: string;
+  description: string;
+  requiredFormat: string;
+  priority: 'Critical' | 'Recommended' | 'Optional';
+  isCompleted: boolean;
+  guidanceTip: string;
+}
+
+export interface GrantChecklistRequest {
+  grantId?: string;
+  grantOpportunity?: GrantOpportunity;
+  projectTitle: string;
+  format?: FilmFormat;
+  genre?: string;
+  productionStage?: string;
+  budgetTier?: string;
+  directorName?: string;
+  leadProducer?: string;
+}
+
+export interface GrantChecklistResponse {
+  grantTitle: string;
+  fundingBody: string;
+  projectTitle: string;
+  items: GrantChecklistItem[];
+  readinessScore: number;
+  packagingAdvice: string;
+  submissionDeadline?: string;
+}
+
+export interface GrantExportKitRequest {
+  checklist: GrantChecklistResponse;
+}
+
+export interface GrantExportKitResponse {
+  markdownContent: string;
+  sha256Digest: string;
+  icsContent: string;
+  exportTimestamp: string;
 }
 
 

@@ -26,6 +26,7 @@ def test_film_profile_instantiation():
     assert profile.runtimeMinutes == 14
 
 
+@pytest.mark.vcr
 def test_scout_api_endpoint():
     payload = {
         "profile": {
@@ -41,12 +42,14 @@ def test_scout_api_endpoint():
     response = client.post("/api/scout", json=payload)
     assert response.status_code == 200
     data = response.json()
-    assert "opportunities" in data
-    assert "strategySummary" in data
     assert data["filmTitle"] == "Neon Horizons"
-    assert isinstance(data["opportunities"], list)
+    assert "opportunities" in data
+    assert len(data["opportunities"]) > 0
+    assert "strategySummary" in data
+    assert "durationSeconds" in data
 
 
+@pytest.mark.vcr
 def test_grant_scout_api_endpoint():
     payload = {
         "projectTitle": "The Last Reel",

@@ -18,6 +18,8 @@ from backend.models import (
 from backend.agents.deep_vetting import DeepVettingAgent, DIMENSIONS
 from backend.services.gemini_client import GeminiClient
 
+pytestmark = pytest.mark.vcr
+
 
 def test_dimensions_contains_all_seven_vectors():
     """Verify DIMENSIONS includes all 7 forensic vectors including ALUMNI_FOOTPRINT."""

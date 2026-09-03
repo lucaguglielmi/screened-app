@@ -1,0 +1,16 @@
+interactions:
+- request:
+    body: null
+    headers: {}
+    method: POST
+    uri: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent
+  response:
+    body:
+      string: '{"candidates":[{"content":{"parts":[{"text":"{\n  \"fundingBody\": \"British Film Institute\",\n  \"grantTitle\": \"BFI Filmmaking Fund Production Support 2026\",\n  \"maxAwardAmount\": \"£1,000,000\",\n  \"matchFundingPercentage\": \"10%\",\n  \"eligibilityCriteria\": [\"Satisfy statutory UK Cultural Test points schedule\", \"Registered UK SPV\"],\n  \"nationalityOrResidencyRules\": [\"UK resident key creatives\"],\n  \"requiredDeliverables\": [\"Line-item budget\", \"Shooting script\", \"Albert carbon plan\"],\n  \"keyDates\": [\"2026 Autumn Rolling Intake\"],\n  \"culturalTestRequired\": true,\n  \"guidelineSummary\": \"Official BFI funding guidelines for UK independent feature production.\"\n}"}],"role":"model"}}]}'
+    headers:
+      content-type:
+      - application/json; charset=UTF-8
+    status:
+      code: 200
+      message: OK
+version: 1

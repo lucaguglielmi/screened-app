@@ -89,6 +89,7 @@ mock_instance.vertexai = False
 default_aio = MagicMock()
 default_aio.models.generate_content = AsyncMock(return_value=_build_default_mock_response())
 mock_instance.aio = default_aio
+mock_instance.models.generate_content = MagicMock(return_value=_build_default_mock_response())
 mock_client_class.return_value = mock_instance
 
 def pytest_configure(config):
@@ -119,10 +120,17 @@ def vcr_config():
         "filter_query_parameters": [
             "key",
         ],
+        "filter_post_data_parameters": [
+            "refresh_token",
+            "client_secret",
+            "code",
+            "access_token",
+        ],
         "ignore_localhost": True,
         "ignore_hosts": ["testserver", "localhost", "127.0.0.1", "test"],
         "record_mode": os.getenv("VCR_RECORD_MODE", "once"),
         "match_on": ["method", "scheme", "host", "port", "path", "query"],
+        "allow_playback_repeats": True,
     }
 
 @pytest.fixture(autouse=True)

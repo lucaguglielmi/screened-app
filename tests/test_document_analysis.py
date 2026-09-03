@@ -9,6 +9,8 @@ from backend.models import (
 )
 from backend.agents.producer_desk import producer_desk_agent
 
+pytestmark = pytest.mark.vcr
+
 
 @pytest.mark.asyncio
 async def test_script_treatment_extraction_fallback():

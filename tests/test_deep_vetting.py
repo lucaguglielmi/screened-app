@@ -11,6 +11,8 @@ from backend.models import (
 from backend.agents.deep_vetting import DeepVettingAgent
 from backend.services.gemini_client import GeminiClient
 
+pytestmark = pytest.mark.vcr
+
 
 @pytest.fixture
 def mock_gemini():

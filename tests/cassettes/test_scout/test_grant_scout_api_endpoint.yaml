@@ -1,0 +1,16 @@
+interactions:
+- request:
+    body: null
+    headers: {}
+    method: POST
+    uri: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent
+  response:
+    body:
+      string: '{"candidates":[{"content":{"parts":[{"text":"{\n  \"strategySummary\": \"Strategic grant portfolio for The Last Reel.\",\n  \"grants\": []\n}"}],"role":"model"}}]}'
+    headers:
+      content-type:
+      - application/json; charset=UTF-8
+    status:
+      code: 200
+      message: OK
+version: 1

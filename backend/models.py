@@ -354,6 +354,9 @@ class GrantScoutRequest(BaseModel):
     fundingNeeded: str = "£25,000"
     filmmakerRegion: str = "UK & Europe"
     targetGrantTypes: List[str] = Field(default_factory=list)
+    page: int = 1
+    pageSize: int = 10
+    sortBy: Optional[str] = "fitScore"
 
 
 class GrantScoutResponse(BaseModel):
@@ -362,6 +365,72 @@ class GrantScoutResponse(BaseModel):
     grants: List[GrantOpportunity]
     strategySummary: str
     durationSeconds: float
+    totalCount: Optional[int] = None
+    page: Optional[int] = 1
+    pageSize: Optional[int] = 10
+
+
+class ParseGrantGuidelinesRequest(BaseModel):
+    fileName: str
+    fileContent: str  # Plain text or base64
+    mimeType: Optional[str] = "text/plain"
+
+
+class GrantGuidelinesAnalysis(BaseModel):
+    fundingBody: str
+    grantTitle: str
+    maxAwardAmount: str
+    matchFundingPercentage: Optional[str] = None
+    eligibilityCriteria: List[str] = Field(default_factory=list)
+    nationalityOrResidencyRules: List[str] = Field(default_factory=list)
+    requiredDeliverables: List[str] = Field(default_factory=list)
+    keyDates: List[str] = Field(default_factory=list)
+    culturalTestRequired: bool = False
+    guidelineSummary: str
+
+
+class GrantChecklistItem(BaseModel):
+    id: str = Field(default_factory=generate_uuid)
+    category: str  # Creative Packaging, Financial & Budget, Legal & Chain of Title, Cultural & Mandate Alignment
+    title: str
+    description: str
+    requiredFormat: str
+    priority: str = "Critical"  # Critical, Recommended, Optional
+    isCompleted: bool = False
+    guidanceTip: str = ""
+
+
+class GrantChecklistRequest(BaseModel):
+    grantId: Optional[str] = None
+    grantOpportunity: Optional[GrantOpportunity] = None
+    projectTitle: str
+    format: FilmFormat = FilmFormat.FEATURE
+    genre: str = "Drama"
+    productionStage: str = "Production"
+    budgetTier: str = "Low (< £250k)"
+    directorName: Optional[str] = None
+    leadProducer: Optional[str] = None
+
+
+class GrantChecklistResponse(BaseModel):
+    grantTitle: str
+    fundingBody: str
+    projectTitle: str
+    items: List[GrantChecklistItem] = Field(default_factory=list)
+    readinessScore: int = 0
+    packagingAdvice: str
+    submissionDeadline: Optional[str] = None
+
+
+class GrantExportKitRequest(BaseModel):
+    checklist: GrantChecklistResponse
+
+
+class GrantExportKitResponse(BaseModel):
+    markdownContent: str
+    sha256Digest: str
+    icsContent: str
+    exportTimestamp: str
 
 
 class TestPipelineRequest(BaseModel):

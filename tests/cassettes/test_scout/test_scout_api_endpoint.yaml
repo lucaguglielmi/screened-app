@@ -1,0 +1,44 @@
+interactions:
+- request:
+    body: null
+    headers: {}
+    method: POST
+    uri: https://oauth2.googleapis.com/token
+  response:
+    body:
+      string: '{"access_token":"ya29.vcr_cassette_test_token","expires_in":3599,"token_type":"Bearer"}'
+    headers:
+      content-type:
+      - application/json; charset=UTF-8
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers: {}
+    method: POST
+    uri: https://europe-west2-aiplatform.googleapis.com/v1beta1/projects/screened-hackathon/locations/europe-west2/publishers/google/models/gemini-2.5-flash:generateContent
+  response:
+    body:
+      string: '{"candidates":[{"content":{"parts":[{"text":"{\n  \"opportunities\": [\n    {\n      \"festivalName\": \"BFI London Film Festival\",\n      \"category\": \"Official Competition\",\n      \"deadline\": \"2026-08-01\",\n      \"fee\": \"£45\",\n      \"fitScore\": 94,\n      \"rationale\": \"Strong thematic resonance and premiere status\"\n    }\n  ],\n  \"strategySummary\": \"Strategic premiere roadmap for Neon Horizons.\"\n}"}],"role":"model"}}]}'
+    headers:
+      content-type:
+      - application/json; charset=UTF-8
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers: {}
+    method: POST
+    uri: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent
+  response:
+    body:
+      string: '{"candidates":[{"content":{"parts":[{"text":"{\n  \"opportunities\": [\n    {\n      \"festivalName\": \"BFI London Film Festival\",\n      \"category\": \"Official Competition\",\n      \"deadline\": \"2026-08-01\",\n      \"fee\": \"£45\",\n      \"fitScore\": 94,\n      \"rationale\": \"Strong thematic resonance and premiere status\"\n    }\n  ],\n  \"strategySummary\": \"Strategic premiere roadmap for Neon Horizons.\"\n}"}],"role":"model"}}]}'
+    headers:
+      content-type:
+      - application/json; charset=UTF-8
+    status:
+      code: 200
+      message: OK
+version: 1

@@ -1,8 +1,8 @@
 # 🎬 Product & Technical Specification: Streamlined Cinema Due Diligence & Grant Research
 
-> **Document Version**: 1.1.0-SPEC  
+> **Document Version**: 2.0.0-COMPLETE  
 > **Target System**: Screened — Agentic Cinema Due Diligence & Funding Intelligence  
-> **Status**: Core Hackathon Foundation Completed · Advanced Grant Tools: *To Do After the Hackathon*  
+> **Status**: Completed (Phases 1, 2, and 3 Built & Tested) · 74 / 74 Tests Passing (100%)  
 > **Architecture Pattern**: Vertex AI (Gemini 2.5 Pro & Flash) + Google ADK Orchestration + Parallel Evidence Engine (Search & Extract) + React 19 / TypeScript SPA
 
 ---
@@ -283,13 +283,13 @@ All changes to the Screened platform must meet these automated quality gates:
 * [x] **Phase 1: Architecture Design & Core Foundations** *(Completed for Hackathon)*
   * Unified 3 core pillars (`Screened AI`, `Festival Due Diligence`, `Grant & Funding Research`).
   * Direct low-friction intake, tool registry pruning, Pinco Pallino demo mode, Parallel search integration, and full verification suite.
-* [ ] **Phase 2: Deep Grant Database Enriched Ingestion** *(To Do After the Hackathon)*
-  * Expanded database/indexing of regional European and North American fellowship deadlines (beyond UK/international core templates).
-  * Direct PDF grant guidelines parsing via Gemini Flash for deep clause-by-clause analysis.
-  * Dedicated standalone `/api/grants/scout` endpoint router with advanced pagination.
-* [ ] **Phase 3: Automated Grant Application Checklist Exporter** *(To Do After the Hackathon)*
-  * Export customized project packaging checklists (treatment, budget breakdown, cultural test, director statement) tailored to specific grant funds.
-  * 1-Click tailored grant submission readiness kit PDF/Markdown exporter.
+* [x] **Phase 2: Deep Grant Database Enriched Ingestion** *(Completed)*
+  * Expanded multi-territory database covering European, North American, UK, and international funds (Eurimages, Telefilm Canada, Creative Europe MEDIA, Hubert Bals, Berlinale WCF, Catapult, Tribeca, BFI, Screen Scotland, Ffilm Cymru Wales, Northern Ireland Screen).
+  * Direct multimodal grant guidelines parsing via Gemini Flash for clause-by-clause analysis.
+  * Dedicated standalone `/api/grants` router (`backend/routers/grants.py`) with pagination and sorting.
+* [x] **Phase 3: Automated Grant Application Checklist Exporter** *(Completed)*
+  * Interactive 4-pillar project packaging checklist (Creative Packaging, Financial & Budget, Legal & Chain of Title, Cultural & Mandate Alignment) with live readiness scoring.
+  * 1-Click tailored grant submission readiness kit (`.md` binder + `.ics` milestone calendar) with SHA-256 provenance seal.
 
 ---
 

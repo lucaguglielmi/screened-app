@@ -5,6 +5,8 @@ from backend.main import app
 from backend.models import ChatRequest, ChatMessage, ToolCallType
 from backend.agents.producer_desk import producer_desk_agent
 
+pytestmark = pytest.mark.vcr
+
 
 @pytest.mark.asyncio
 async def test_producer_desk_agent_due_diligence_tool():
