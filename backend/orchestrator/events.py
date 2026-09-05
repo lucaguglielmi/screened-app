@@ -107,12 +107,36 @@ class EventBroadcaster:
 
     async def event_generator(self, investigation_id: str) -> AsyncGenerator[str, None]:
         queue = await self.subscribe(investigation_id)
+        seen_event_ids = set()
         try:
             while True:
-                event: ActivityEvent = await queue.get()
-                payload = json.dumps(event.model_dump())
-                yield f"event: message\ndata: {payload}\n\n"
-                queue.task_done()
+                try:
+                    event: ActivityEvent = await asyncio.wait_for(queue.get(), timeout=2.5)
+                    if event.id not in seen_event_ids:
+                        seen_event_ids.add(event.id)
+                        payload = json.dumps(event.model_dump())
+                        yield f"event: message\ndata: {payload}\n\n"
+                    queue.task_done()
+                except asyncio.TimeoutError:
+                    # Multi-instance synchronization check:
+                    # Query Firestore/DB for events saved by worker containers
+                    try:
+                        persisted_events = await db.get_events(investigation_id)
+                        for evt_data in persisted_events:
+                            eid = evt_data.get("id")
+                            if eid and eid not in seen_event_ids:
+                                seen_event_ids.add(eid)
+                                try:
+                                    evt = ActivityEvent(**evt_data)
+                                    payload = json.dumps(evt.model_dump())
+                                    yield f"event: message\ndata: {payload}\n\n"
+                                except Exception:
+                                    pass
+                    except Exception as sync_err:
+                        logger.debug(f"Cross-instance event sync check error: {sync_err}")
+
+                    # Heartbeat comment to keep Cloud Run connection active
+                    yield ": ping\n\n"
         except asyncio.CancelledError:
             pass
         finally:

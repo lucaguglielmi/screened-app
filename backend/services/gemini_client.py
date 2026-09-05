@@ -1,4 +1,8 @@
-"""Gemini client using google-genai SDK on Vertex AI."""
+"""Gemini client using google-genai SDK on Vertex AI.
+
+NOTE: Prompt / response semantic caching and claim extraction caching with TTL
+is planned as a future improvement after initial launch to accelerate repeated festival analyses.
+"""
 import json
 import logging
 from typing import List, Optional

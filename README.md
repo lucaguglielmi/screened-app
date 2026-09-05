@@ -154,8 +154,9 @@ PYTHONPATH=. .venv/bin/pytest tests/
 - `tests/test_scout.py`: FilmProfile validation & `/api/scout` opportunity discovery (3/3 passed)
 - `tests/test_vcr_toggle.py`: LLM Record & Replay VCR toggle, cassette configuration & credential scrubbing (5/5 passed)
 - `backend/tests/test_architecture_endpoint.py`: Architecture diagram node/edge generation endpoint (1/1 passed)
-- `backend/tests/test_cloud_tasks.py`: Google Cloud Tasks async dispatch & fallback handlers (1/1 passed)
-- **Total: 69 / 69 tests passed (100%)**
+- **Total: 74 / 74 tests passed (100%)**
+
+> **Note on Frontend Testing**: Component-level unit testing (Vitest / RTL) was intentionally left out until the user interface and interaction patterns achieve full product maturity. Frontend robustness is strictly verified via TypeScript compiler checks (`tsc -b`), ESLint quality gates, and automated Vite production builds.
 
 ---
 

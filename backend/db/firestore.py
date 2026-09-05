@@ -125,10 +125,13 @@ class Database:
             self._memory_store["events"][investigation_id].append(event_data)
             return
         try:
-            doc_ref = self.client.collection("events").document(event_data["id"])
-            batch = self.client.batch()
-            batch.set(doc_ref, event_data)
-            batch.commit()
+            doc_ref = (
+                self.client.collection("investigations")
+                .document(investigation_id)
+                .collection("events")
+                .document(event_data["id"])
+            )
+            doc_ref.set(event_data)
         except Exception as e:
             logger.exception(f"Firestore save_event failed: {e}")
             if investigation_id not in self._memory_store["events"]:

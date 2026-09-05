@@ -1,4 +1,9 @@
-"""Parallel Search Tool Integration using the official parallel-web SDK."""
+"""Parallel Search Tool Integration using the official parallel-web SDK.
+
+NOTE: Query / search caching with a persistent TTL (e.g. Firestore or Redis cache)
+is planned as a future improvement after initial launch to optimize latency and
+external API token/search quota consumption across repeated festival queries.
+"""
 import hashlib
 import logging
 from typing import List, Optional

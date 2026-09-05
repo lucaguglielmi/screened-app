@@ -342,7 +342,22 @@ class GrantOpportunity(BaseModel):
     guidelinesUrl: Optional[str] = None
     applicationPortalUrl: Optional[str] = None
     fitScore: int = 85
-    fitRationale: str
+    fitRationale: str = ""
+    officialUrl: Optional[str] = None
+    matchScore: Optional[int] = None
+    matchReason: Optional[str] = None
+    keyRequirements: List[str] = Field(default_factory=list)
+    grantKind: Optional[str] = None
+
+    def model_post_init(self, __context: Any) -> None:
+        if self.matchScore is not None and (self.fitScore == 85 or self.fitScore is None):
+            self.fitScore = self.matchScore
+        if not self.fitRationale and self.matchReason:
+            self.fitRationale = self.matchReason
+        if not self.guidelinesUrl and self.officialUrl:
+            self.guidelinesUrl = self.officialUrl
+        if not self.keyCriteria and self.keyRequirements:
+            self.keyCriteria = self.keyRequirements
 
 
 class GrantScoutRequest(BaseModel):
@@ -361,13 +376,25 @@ class GrantScoutRequest(BaseModel):
 
 class GrantScoutResponse(BaseModel):
     projectTitle: str
-    grantsFound: int
-    grants: List[GrantOpportunity]
+    grantsFound: int = 0
+    grants: List[GrantOpportunity] = Field(default_factory=list)
     strategySummary: str
     durationSeconds: float
     totalCount: Optional[int] = None
     page: Optional[int] = 1
     pageSize: Optional[int] = 10
+    hasMore: Optional[bool] = False
+    opportunitiesFound: Optional[int] = None
+    opportunities: Optional[List[GrantOpportunity]] = None
+
+    def model_post_init(self, __context: Any) -> None:
+        if not self.grants and self.opportunities:
+            self.grants = self.opportunities
+        if not self.grantsFound and self.opportunitiesFound:
+            self.grantsFound = self.opportunitiesFound
+        if self.totalCount is None:
+            self.totalCount = self.grantsFound
+
 
 
 class ParseGrantGuidelinesRequest(BaseModel):
