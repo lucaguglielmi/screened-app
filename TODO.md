@@ -2,7 +2,8 @@
 
 ## High-Priority Items
 
-- [ ] **Frontend Testing for Dossier Page**:
-  - Set up component testing (e.g. Vitest + React Testing Library) for `EvidenceDossier` and its modular subcomponents (`DossierHero`, `DossierStickyNav`, `EvidenceLedger`, `AiDossierView`, `CredibilityRadar`, `ContradictionPanel`).
-  - Add test coverage for view mode transitions (Executive Brief vs Deep Forensic Evidence vs Machine AI Ingestion).
-  - Add end-to-end / visual snapshot tests for dossier rendering against both demo mock fixtures and real-time SSE stream outputs.
+- [x] **Frontend Testing for Dossier Page**:
+  - [x] Setup Vitest 3.2 + React Testing Library + JSDOM harness in `frontend/` with `npm run test` script.
+  - [x] Add unit & component tests for new forensic modules (`PremiereBurnGauge`, `FeeEscalationVisualizer`, `ForensicIntelligenceBrief`).
+  - [x] Add component tests for 3-mode density switcher (`DetailDial` Short / Full / Agent transitions).
+  - [ ] Expand snapshot / integration test coverage for SSE stream output fixtures.

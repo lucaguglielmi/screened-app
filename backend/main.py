@@ -632,12 +632,16 @@ async def approve_outreach_inquiry(investigation_id: str, req: ApproveOutreachRe
 @app.get("/api/investigations/{investigation_id}/export")
 async def export_investigation_dossier(investigation_id: str):
     """Export the complete signed investigation dossier as an archival Markdown report."""
-    inv = await db.get_investigation(investigation_id)
-    if not inv:
-        raise HTTPException(status_code=404, detail="Investigation not found")
-
-    claims = await db.get_claims(investigation_id)
-    sources = await db.get_sources(investigation_id)
+    if demo_service.is_demo_id(investigation_id):
+        inv = demo_service.get_demo_full_dossier()
+        claims = inv.get("claims", [])
+        sources = inv.get("sources", [])
+    else:
+        inv = await db.get_investigation(investigation_id)
+        if not inv:
+            raise HTTPException(status_code=404, detail="Investigation not found")
+        claims = await db.get_claims(investigation_id)
+        sources = await db.get_sources(investigation_id)
 
     markdown_content = export_service.generate_markdown(
         investigation_id=investigation_id,
@@ -646,6 +650,9 @@ async def export_investigation_dossier(investigation_id: str):
         claims=claims,
         sources=sources,
         disputes=inv.get("disputes", []),
+        premiere_risk=inv.get("premiereRisk") or inv.get("report", {}).get("premiereRisk") or inv.get("dossier", {}).get("premiereRisk"),
+        fee_escalation=inv.get("feeEscalation") or inv.get("report", {}).get("feeEscalation") or inv.get("dossier", {}).get("feeEscalation"),
+        forensic_summary=inv.get("forensicSummary") or inv.get("report", {}).get("forensicSummary") or inv.get("dossier", {}).get("forensicSummary"),
     )
 
     filename = f"screened-dossier-{investigation_id[:8]}.md"

@@ -552,7 +552,12 @@ export default function App() {
                       sourceIds: [],
                     }
                   }
-                  dossier={investigation.dossier}
+                  dossier={{
+                    ...investigation.dossier,
+                    premiereRisk: investigation.dossier.premiereRisk || investigation.premiereRisk,
+                    feeEscalation: investigation.dossier.feeEscalation || investigation.feeEscalation,
+                    forensicSummary: investigation.dossier.forensicSummary || investigation.forensicSummary,
+                  }}
                   claims={investigation.claims || []}
                   sources={investigation.sources || []}
                   disputes={investigation.disputes || []}

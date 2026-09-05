@@ -1,7 +1,7 @@
 """Export Service for generating archival Markdown and Plaintext investigation reports."""
 import hashlib
 from datetime import datetime, timezone
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 from backend.models import (
     AtomicClaim,
     CandidateEntity,
@@ -19,6 +19,9 @@ class ExportService:
         claims: List[Dict[str, Any]],
         sources: List[Dict[str, Any]],
         disputes: List[Dict[str, Any]],
+        premiere_risk: Optional[Dict[str, Any]] = None,
+        fee_escalation: Optional[Dict[str, Any]] = None,
+        forensic_summary: Optional[Dict[str, Any]] = None,
     ) -> str:
         name = entity_data.get("name", "Unknown Festival")
         location = entity_data.get("cityCountry", "Unspecified")
@@ -32,6 +35,11 @@ class ExportService:
         checklist = dossier_data.get("filmmakerChecklist", [])
         unresolved = dossier_data.get("unresolvedQuestions", [])
 
+        # Fallback to dossier_data or report keys if not directly supplied
+        p_risk = premiere_risk or dossier_data.get("premiereRisk")
+        f_escalation = fee_escalation or dossier_data.get("feeEscalation")
+        f_summary = forensic_summary or dossier_data.get("forensicSummary")
+
         lines = [
             f"# Screened Investigation Dossier: {name}",
             f"**Generated**: {now} | **Investigation ID**: `{investigation_id}`",
@@ -43,6 +51,114 @@ class ExportService:
             exec_summary,
             "",
         ]
+
+        # Forensic Intelligence Brief (3-Vector Triad)
+        if f_summary:
+            lines.extend([
+                "## 🕵️ Forensic Intelligence Brief (Scam Realities)",
+                "",
+            ])
+            scam = f_summary.get("scamPattern")
+            if scam:
+                status_icon = "🔴 RED FLAG" if scam.get("status") in ["RED_FLAG", "MISMATCH"] else "⚠️ CAUTION"
+                lines.extend([
+                    f"### 1. Scam Patterns & Shell Network [{status_icon}]",
+                    f"**{scam.get('headline', 'Corporate Structure Analysis')}**",
+                    f"> {scam.get('summary', '')}",
+                    "",
+                    f"*Industry Context*: {scam.get('educationalContext', '')}",
+                    "",
+                ])
+                signals = scam.get("signals", [])
+                if signals:
+                    lines.append("**Key Signals**:")
+                    for sig in signals:
+                        lines.append(f"- {sig}")
+                    lines.append("")
+
+            jury = f_summary.get("juryConflict")
+            if jury:
+                status_icon = "🔴 RED FLAG" if jury.get("status") in ["RED_FLAG", "MISMATCH"] else "⚠️ CAUTION"
+                lines.extend([
+                    f"### 2. Jury Conflict & Nepotism [{status_icon}]",
+                    f"**{jury.get('headline', 'Adjudication Independence Analysis')}**",
+                    f"> {jury.get('summary', '')}",
+                    "",
+                    f"*Industry Context*: {jury.get('educationalContext', '')}",
+                    "",
+                ])
+                signals = jury.get("signals", [])
+                if signals:
+                    lines.append("**Key Signals**:")
+                    for sig in signals:
+                        lines.append(f"- {sig}")
+                    lines.append("")
+
+            venue = f_summary.get("venueReality")
+            if venue:
+                status_icon = "🔴 MISMATCH" if venue.get("status") in ["RED_FLAG", "MISMATCH"] else "⚠️ CAUTION"
+                lines.extend([
+                    f"### 3. Curated Cinema vs. 4-Wall Rental Reality [{status_icon}]",
+                    f"**{venue.get('headline', 'Screening Venue Ground Truth')}**",
+                    f"> {venue.get('summary', '')}",
+                    "",
+                    f"*Industry Context*: {venue.get('educationalContext', '')}",
+                    "",
+                ])
+                signals = venue.get("signals", [])
+                if signals:
+                    lines.append("**Key Signals**:")
+                    for sig in signals:
+                        lines.append(f"- {sig}")
+                    lines.append("")
+
+        # Premiere Burn Risk Assessment
+        if p_risk:
+            score = p_risk.get("riskScore", 0)
+            level = p_risk.get("riskLevel", "LOW_RISK")
+            lines.extend([
+                "## ⚖️ Premiere Value vs. Burn Risk Assessment",
+                "",
+                f"- **Burn Risk Score**: **{score} / 100** (`{level}`)",
+                f"- **Exclusivity Demanded**: {p_risk.get('premiereDemand', 'Not specified')}",
+                f"- **Accreditation Standing**: {p_risk.get('accreditationStatus', 'Unaccredited')}",
+                f"- **Buyer & Press Footprint**: {p_risk.get('buyerPressFootprint', 'Not verified')}",
+                f"- **Verdict Rationale**: {p_risk.get('verdictRationale', '')}",
+                f"- **Filmmaker Recommendation**: {p_risk.get('recommendation', '')}",
+                "",
+            ])
+
+        # Fee Escalation Timeline
+        if f_escalation:
+            tiers = f_escalation.get("tiers", [])
+            currency = f_escalation.get("currency", "£")
+            lines.extend([
+                "## 💰 Submission Fee Trajectory & Escalation Schedule",
+                "",
+            ])
+            if f_escalation.get("spikeAlert"):
+                lines.extend([
+                    f"> ⚠️ **Price Spike Alert**: {f_escalation.get('spikeAlert')}",
+                    "",
+                ])
+            if tiers:
+                lines.extend([
+                    "| Deadline Tier | Deadline Date | Fee | Surge Spike |",
+                    "| :--- | :--- | :--- | :--- |",
+                ])
+                for t in tiers:
+                    tier_name = t.get("tierName", "Tier")
+                    date = t.get("deadlineDate", "N/A")
+                    amt = f"{currency}{t.get('amount', 0)}"
+                    surge = f"+{t.get('surgePercentage', 0)}%" if t.get('surgePercentage', 0) > 0 else "Baseline"
+                    lines.append(f"| {tier_name} | {date} | **{amt}** | {surge} |")
+                lines.append("")
+            if f_escalation.get("averageMarketFee"):
+                percentile_str = f" ({f_escalation.get('percentile')}th percentile)" if f_escalation.get('percentile') else ""
+                lines.extend([
+                    f"*Benchmark*: {f_escalation.get('averageMarketFee')}{percentile_str}",
+                    "",
+                ])
 
         if disputes:
             lines.extend([

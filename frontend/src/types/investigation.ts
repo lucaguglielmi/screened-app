@@ -2,7 +2,13 @@ export type ResearchDomain = 'FESTIVAL' | 'ORGANIZER' | 'PARTICIPANTS' | 'FEES' 
 
 export type ClaimKind = 'FACT' | 'ALLEGATION' | 'OPINION';
 
-export type VerificationStatus = 'CORROBORATED' | 'SUPPORTED' | 'DISPUTED' | 'UNVERIFIED';
+export type VerificationStatus =
+  | 'CORROBORATED'
+  | 'SUPPORTED'
+  | 'DISPUTED'
+  | 'UNVERIFIED'
+  | 'VERIFIED_MATCH'
+  | 'UNVERIFIED_EXCERPT';
 
 export type Stance = 'SUPPORTS' | 'CONTRADICTS' | 'MENTIONS';
 
@@ -443,7 +449,12 @@ export interface ActivityEvent {
 }
 
 export type VettingSignalStatus =
-  'VERIFIED_AUTHENTIC' | 'INFORMATIONAL' | 'AMBER_WARNING' | 'RED_FLAG' | 'INCONCLUSIVE';
+  | 'VERIFIED_AUTHENTIC'
+  | 'INFORMATIONAL'
+  | 'AMBER_WARNING'
+  | 'RED_FLAG'
+  | 'MISMATCH'
+  | 'INCONCLUSIVE';
 
 export interface KeyPerson {
   name: string;
@@ -548,4 +559,7 @@ export interface Investigation {
   outreachDrafts?: OutreachDraft[];
   deepVetting?: DeepVettingReport;
   auditHealth?: InvestigationAuditHealth;
+  premiereRisk?: PremiereRiskAssessment;
+  feeEscalation?: FeeEscalationModel;
+  forensicSummary?: ForensicIntelligenceSummary;
 }

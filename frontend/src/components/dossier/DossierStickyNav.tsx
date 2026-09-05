@@ -104,7 +104,7 @@ export const DossierStickyNav: React.FC<Props> = ({
     { id: 'section-forensic-brief', name: 'Forensic Intelligence Brief', icon: ShieldAlert },
     { id: 'section-overview', name: 'Executive Overview', icon: FileText, condition: normalizedDensity !== 'SIMPLIFIED' },
     { id: 'section-forensic-matrix', name: '360° Forensic Matrix (7 Vectors)', icon: Fingerprint, condition: normalizedDensity !== 'SIMPLIFIED' },
-    { id: 'section-previous-editions', name: 'Previous Editions & Track Record', icon: Calendar },
+    { id: 'section-previous-editions', name: 'Previous Editions & Track Record', icon: Calendar, condition: normalizedDensity !== 'SIMPLIFIED' && Boolean(dossier?.previousEditions && dossier.previousEditions.length > 0) },
     { id: 'section-disputes', name: 'Contradictions & Disputes', icon: AlertTriangle, condition: disputesCount > 0 },
     { id: 'section-network', name: 'Entity Architecture & Network', icon: Layers, condition: normalizedDensity === 'FULL_EVIDENCE' },
     { id: 'section-domains', name: '3-Domain Synthesis', icon: Globe, condition: normalizedDensity === 'FULL_EVIDENCE' },

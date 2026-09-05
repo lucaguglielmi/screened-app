@@ -24,9 +24,9 @@ logger = logging.getLogger("screened.agents.report_writer")
 
 class DossierReport(BaseModel):
     executiveSummary: str
-    festivalOverview: str
-    organizerProfile: str
-    participantFeedback: str
+    festivalOverview: str = ""
+    organizerProfile: str = ""
+    participantFeedback: str = ""
     unresolvedQuestions: List[str] = Field(default_factory=list)
     filmmakerChecklist: List[str] = Field(default_factory=list)
     keyPersons: List[str] = Field(default_factory=list)
@@ -105,14 +105,21 @@ Disputed / Contradictory Points:
 
 Sources Count: {len(sources)}
 
-CRITICAL EDITORIAL RULES:
+CRITICAL EDITORIAL & ANTI-REDUNDANCY RULES:
 1. Strict neutrality. Do not give an overall score or subjective trust rating.
-2. Never use banned emotional words (like 'scam', 'fraudulent', 'legit', 'fake').
+2. Never use banned emotional words (like 'scam', 'fraudulent', 'legit', 'fake'). State the objective factual mechanism.
 3. HARD FACTS DENSITY: Prioritize concrete data points in every sentence—exact monetary submission amounts (£, $, €), company registration numbers, exact filing dates, venue physical addresses, acceptance percentages, and direct quoted phrases from public records.
-4. Eliminate AI generalities, speculative fluff, and filler transitions (e.g. avoid 'It is important to note', 'Screened investigated', 'Filmmakers should be mindful').
-5. Keep all sections dense, factual, and concise (1-2 structured paragraphs max per section).
-6. Extract key organizers, directors, or prominent individuals associated with the festival from the evidence into a list of strings formatted as 'Name - Role' (e.g. 'Arthur Smith - Festival Director'). If none are found, return an empty list.
-7. PREVIOUS EDITIONS: Extract past edition history, screening venues/dates, and official award winners with film titles and URLs if present in the evidence.
+4. ANTI-REDUNDANCY ENFORCEMENT: Enforce strict Single Responsibility across report sections. Do NOT repeat identical facts across multiple sections:
+   - executiveSummary: Synthesizes high-level operational status, core risk verdict, and bottom-line submission advice. Do NOT list detailed individual fees or raw dispute quotes here.
+   - festivalOverview: Strictly physical venues, physical addresses, screening formats, and screening schedule reality. Do NOT discuss corporate registration or fee deadlines here.
+   - organizerProfile: Strictly registered corporate entity numbers, Companies House/state filings, active/resigned directors, and registered office addresses. Do NOT repeat venue details here.
+   - participantFeedback: Strictly quoted filmmaker community reviews, communication turnaround times, and award delivery logs. Do NOT repeat corporate numbers here.
+   - premiereRisk: Dedicated assessment of premiere exclusivity demand vs industry buyer presence and accreditation.
+   - feeEscalation: Dedicated timeline of deadline price tiers, late surge spikes, and market benchmarks.
+   - forensicSummary: Dedicated analysis of the 3 specific fraud/scam mechanics (shell entity network, jury self-dealing/nepotism, and 4-wall private rental realities).
+   - filmmakerChecklist: Actionable due diligence steps formatted as imperative commands (e.g. 'Verify DCP screening format with box office'). Do NOT restate historical facts.
+5. Extract key organizers, directors, or prominent individuals associated with the festival into 'keyPersons' formatted as 'Name - Role'.
+6. PREVIOUS EDITIONS: Extract past edition history, screening venues/dates, and official award winners with film titles and URLs if present in the evidence.
 
 Return a JSON object conforming to this schema:
 {{
@@ -121,7 +128,7 @@ Return a JSON object conforming to this schema:
   "organizerProfile": "string (1-2 concise paragraphs on registered corporate entity numbers, Companies House filings, leadership directors, and cross-company ties)",
   "participantFeedback": "string (1-2 concise paragraphs citing specific quoted filmmaker testimonies, delay lengths in weeks, and communication logs)",
   "unresolvedQuestions": ["factual question 1", "factual question 2"],
-  "filmmakerChecklist": ["actionable due-diligence step 1", "actionable step 2"],
+  "filmmakerChecklist": ["actionable due-diligence step 1", "actionable due-diligence step 2"],
   "keyPersons": ["Name - Role"],
   "previousEditions": [
     {{
@@ -146,18 +153,102 @@ Return a JSON object conforming to this schema:
       ],
       "notes": "string"
     }}
-  ]
+  ],
+  "premiereRisk": {{
+    "riskScore": 75,
+    "riskLevel": "HIGH_BURN_RISK" | "MODERATE_RISK" | "LOW_RISK",
+    "premiereDemand": "World or UK Premiere Demanded",
+    "accreditationStatus": "Unaccredited (Not BAFTA/BIFA Qualifying)",
+    "buyerPressFootprint": "Zero verified trade press or distributors",
+    "verdictRationale": "Exclusivity demanded without distributor presence or trade leverage.",
+    "recommendation": "Do not burn your World Premiere here. Save for accredited festivals."
+  }},
+  "feeEscalation": {{
+    "currency": "£",
+    "tiers": [
+      {{
+        "tierName": "Super Early Bird",
+        "amount": 28,
+        "currency": "£",
+        "deadlineDate": "15 Jan",
+        "surgePercentage": 0
+      }},
+      {{
+        "tierName": "Early Bird",
+        "amount": 38,
+        "currency": "£",
+        "deadlineDate": "1 Mar",
+        "surgePercentage": 35
+      }},
+      {{
+        "tierName": "Late Deadline",
+        "amount": 85,
+        "currency": "£",
+        "deadlineDate": "1 Aug",
+        "surgePercentage": 203
+      }}
+    ],
+    "spikeAlert": "Aggressive 203% fee surge detected in late submission windows (£28 -> £85).",
+    "averageMarketFee": "£32 average for UK indie short film entries",
+    "percentile": 92
+  }},
+  "forensicSummary": {{
+    "scamPattern": {{
+      "status": "RED_FLAG" | "AMBER_WARNING" | "VERIFIED_AUTHENTIC",
+      "headline": "Dissolved Corporate Entity & Virtual Maildrop Footprint",
+      "summary": "Operating company was dissolved while continuing to solicit entry fees.",
+      "educationalContext": "Shell Entity Scheme: Predatory festivals frequently register entities at mass maildrop forwarding addresses, dissolve them to evade refund liabilities, and operate through clone networks.",
+      "signals": [
+        "Operating entity dissolved on Companies House",
+        "Registered office at mass corporate mailbox"
+      ],
+      "relatedEntities": ["Operating Entity Ltd"]
+    }},
+    "juryConflict": {{
+      "status": "RED_FLAG" | "AMBER_WARNING" | "VERIFIED_AUTHENTIC",
+      "headline": "Undisclosed Commercial Ties & Self-Dealing Laureates",
+      "summary": "Festival leadership co-owns PR or consulting firms awarding laurels to commercial clients.",
+      "educationalContext": "Jury Independence Standard: Legitimate festivals maintain strict recusal policies prohibiting jury members from awarding honors to business partners or clients.",
+      "signals": [
+        "Programmer co-owns consulting firm targeting submitters",
+        "Winner co-produced commercial project with leadership"
+      ],
+      "relatedEntities": ["Consulting Firm Ltd"]
+    }},
+    "venueReality": {{
+      "status": "MISMATCH" | "AMBER_WARNING" | "VERIFIED_AUTHENTIC",
+      "headline": "Advertised Theatrical Gala vs. 4-Wall Private Room Reality",
+      "summary": "Festival marketing advertises red-carpet galas at major institutions, but records reveal only an hourly private room hire or unlisted Vimeo links.",
+      "educationalContext": "Curated Cinema Selection vs. 4-Wall Rental: In an authentic festival, the cinema directly curates, tickets, and publishes the festival on its box office schedule. A 4-wall rental is an hourly room hire that anyone can buy with zero programming vetting.",
+      "signals": [
+        "Institution screening claim refuted: No box office ticket listing",
+        "Venue manifest indicates private room hire, not curated season"
+      ],
+      "relatedEntities": ["Institution Cinema"]
+    }}
+  }}
 }}
 """
         try:
-            response = self.gemini.client.models.generate_content(
-                model="gemini-2.5-flash",
-                contents=prompt,
-                config=types.GenerateContentConfig(
-                    response_mime_type="application/json",
-                    temperature=0.1,
-                ),
-            )
+            try:
+                response = self.gemini.client.models.generate_content(
+                    model="gemini-2.5-pro",
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        response_mime_type="application/json",
+                        temperature=0.1,
+                    ),
+                )
+            except Exception as pro_err:
+                logger.warning(f"gemini-2.5-pro synthesis attempt failed ({pro_err}), falling back to gemini-2.5-flash")
+                response = self.gemini.client.models.generate_content(
+                    model="gemini-2.5-flash",
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        response_mime_type="application/json",
+                        temperature=0.1,
+                    ),
+                )
 
             raw = json.loads(response.text or "{}")
             

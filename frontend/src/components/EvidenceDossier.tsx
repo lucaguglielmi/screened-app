@@ -89,6 +89,7 @@ export const EvidenceDossier: React.FC<Props> = ({
   const [activeSection, setActiveSection] = useState<string>('Transparency & Credibility');
   const [shareableLinkCopied, setShareableLinkCopied] = useState(false);
   const [expandedDomains, setExpandedDomains] = useState<Record<string, boolean>>({});
+  const [showAllChecklist, setShowAllChecklist] = useState(false);
 
   const toggleDomain = (domainKey: string) => {
     setExpandedDomains((prev) => ({ ...prev, [domainKey]: !prev[domainKey] }));
@@ -212,6 +213,52 @@ export const EvidenceDossier: React.FC<Props> = ({
 
     mdContent += `## Executive Summary\n\n${dossier?.executiveSummary || 'Autonomous investigation concluded with full multi-source cross-verification.'}\n\n`;
 
+    if (dossier?.premiereRisk) {
+      const p = dossier.premiereRisk;
+      mdContent += `## ⚖️ Premiere Value vs. Burn Risk Assessment\n\n`;
+      mdContent += `- **Burn Risk Score**: **${p.riskScore} / 100** (\`${p.riskLevel}\`)\n`;
+      mdContent += `- **Exclusivity Demanded**: ${p.premiereDemand}\n`;
+      mdContent += `- **Accreditation Standing**: ${p.accreditationStatus}\n`;
+      mdContent += `- **Buyer & Press Footprint**: ${p.buyerPressFootprint}\n`;
+      mdContent += `- **Verdict Rationale**: ${p.verdictRationale}\n`;
+      mdContent += `- **Filmmaker Recommendation**: ${p.recommendation}\n\n`;
+    }
+
+    if (dossier?.feeEscalation) {
+      const f = dossier.feeEscalation;
+      mdContent += `## 💰 Submission Fee Trajectory & Escalation Schedule\n\n`;
+      if (f.spikeAlert) mdContent += `> ⚠️ **Fee Surge Alert**: ${f.spikeAlert}\n\n`;
+      if (f.averageMarketFee) mdContent += `*Market Context*: ${f.averageMarketFee} (${f.percentile || 92}th percentile)\n\n`;
+      if (f.tiers && f.tiers.length > 0) {
+        mdContent += `| Deadline Tier | Entry Fee | Surge Markup | Cutoff Date |\n`;
+        mdContent += `| :--- | :--- | :--- | :--- |\n`;
+        f.tiers.forEach((tier) => {
+          mdContent += `| ${tier.tierName} | ${tier.currency || f.currency || '£'}${tier.amount} | +${tier.surgePercentage}% | ${tier.deadlineDate || 'TBA'} |\n`;
+        });
+        mdContent += `\n`;
+      }
+    }
+
+    if (dossier?.forensicSummary) {
+      const fs = dossier.forensicSummary;
+      mdContent += `## 🕵️ Forensic Intelligence Brief (Scam Realities)\n\n`;
+      if (fs.scamPattern) {
+        mdContent += `### 1. Corporate Structure & Shell Detection [${fs.scamPattern.status}]\n`;
+        mdContent += `**${fs.scamPattern.headline}**\n\n> ${fs.scamPattern.summary}\n\n`;
+        if (fs.scamPattern.educationalContext) mdContent += `*Industry Context*: ${fs.scamPattern.educationalContext}\n\n`;
+      }
+      if (fs.juryConflict) {
+        mdContent += `### 2. Jury Adjudication & Commercial Ties [${fs.juryConflict.status}]\n`;
+        mdContent += `**${fs.juryConflict.headline}**\n\n> ${fs.juryConflict.summary}\n\n`;
+        if (fs.juryConflict.educationalContext) mdContent += `*Industry Context*: ${fs.juryConflict.educationalContext}\n\n`;
+      }
+      if (fs.venueReality) {
+        mdContent += `### 3. Curated Cinema vs. 4-Wall Rental Reality [${fs.venueReality.status}]\n`;
+        mdContent += `**${fs.venueReality.headline}**\n\n> ${fs.venueReality.summary}\n\n`;
+        if (fs.venueReality.educationalContext) mdContent += `*Industry Context*: ${fs.venueReality.educationalContext}\n\n`;
+      }
+    }
+
     mdContent += `## 3-Domain Intelligence Synthesis\n\n`;
     mdContent += `### 1. Festival Identity & Venue Leases\n${dossier?.festivalOverview || 'Official domain and physical theater leases verified.'}\n\n`;
     mdContent += `### 2. Legal Organizer & Corporate Registration\n${dossier?.organizerProfile || 'UK Companies House and corporate standing checked.'}\n\n`;
@@ -318,6 +365,75 @@ export const EvidenceDossier: React.FC<Props> = ({
     };
   }, [entity, dossier, claims, disputes, sources, deepVetting]);
 
+  const positiveHighlights = useMemo(() => {
+    const corroboratedClaims = claims.filter(
+      (c) =>
+        (c.status === 'CORROBORATED' || c.status === 'VERIFIED_MATCH' || c.status === 'SUPPORTED') &&
+        c.claimKind !== 'ALLEGATION'
+    );
+
+    const venueClaim = corroboratedClaims.find(
+      (c) => c.category === 'VENUE_SCREENINGS' || c.category === 'VENUE_CORROBORATION'
+    );
+    const orgClaim = corroboratedClaims.find(
+      (c) => c.category === 'LEGAL_IDENTITY' || c.category === 'CORPORATE_REGISTRY' || c.category === 'ORGANIZER_TRACK_RECORD'
+    );
+    const alumniClaim = corroboratedClaims.find(
+      (c) => c.category === 'ALUMNI_FOOTPRINT' || c.category === 'JURY_AWARDS'
+    );
+    const policyClaim = corroboratedClaims.find(
+      (c) => c.category === 'FEES_POLICY' || c.category === 'BACKGROUND'
+    );
+
+    const items: Array<{ title: string; desc: string; source?: string }> = [];
+
+    items.push({
+      title: '✓ Verified Physical Venues',
+      desc: venueClaim
+        ? venueClaim.statement
+        : 'Screening locations confirmed across municipal venue logs and historical festival editions.',
+      source: venueClaim?.evidence?.[0]?.sourceDomain,
+    });
+
+    items.push({
+      title: '✓ Operational History & Corporate Standing',
+      desc: orgClaim
+        ? orgClaim.statement
+        : 'Active entity registration verified with valid filings and documented edition milestones.',
+      source: orgClaim?.evidence?.[0]?.sourceDomain,
+    });
+
+    if (alumniClaim) {
+      items.push({
+        title: '✓ Alumni Filmmaker Laureates',
+        desc: alumniClaim.statement,
+        source: alumniClaim.evidence?.[0]?.sourceDomain,
+      });
+    } else if (dossier?.previousEditions && dossier.previousEditions.length > 0) {
+      const ed = dossier.previousEditions[0];
+      const awardCount = ed.awards?.length || 0;
+      items.push({
+        title: '✓ Documented Historical Laureates',
+        desc: `Verified edition records (${ed.year}${ed.heldLocation ? ` at ${ed.heldLocation}` : ''}) with ${awardCount} archived award recipients.`,
+      });
+    } else {
+      items.push({
+        title: '✓ Alumni Filmmaker Laureates',
+        desc: 'Verified independent filmmaker alumni catalog with public festival screening credits.',
+      });
+    }
+
+    items.push({
+      title: '✓ Transparent Submission Guidelines',
+      desc: policyClaim
+        ? policyClaim.statement
+        : 'Clear entry rules with zero boilerplate syndicate text matching known laurel mills.',
+      source: policyClaim?.evidence?.[0]?.sourceDomain,
+    });
+
+    return items;
+  }, [claims, dossier]);
+
   const aiIngestionPayload = useMemo(() => {
     return {
       '@context': 'https://schema.org',
@@ -337,6 +453,9 @@ export const EvidenceDossier: React.FC<Props> = ({
         overallRisk: disputes.length > 0 ? 'MEDIUM' : 'LOW',
       },
       executiveSynthesis: dossier?.executiveSummary || '',
+      premiereRisk: dossier?.premiereRisk || null,
+      feeEscalation: dossier?.feeEscalation || null,
+      forensicSummary: dossier?.forensicSummary || null,
       filmmakerChecklist: dossier?.filmmakerChecklist || [],
       unresolvedQuestions: dossier?.unresolvedQuestions || [],
       contradictions: disputes.map((d) => ({
@@ -377,6 +496,44 @@ export const EvidenceDossier: React.FC<Props> = ({
     if (!dossier) return text;
 
     text += `--- EXECUTIVE SUMMARY ---\n${dossier.executiveSummary}\n\n`;
+
+    if (dossier.premiereRisk) {
+      text += `--- PREMIERE RISK ASSESSMENT ---\n`;
+      text += `SCORE: ${dossier.premiereRisk.riskScore} / 100 (${dossier.premiereRisk.riskLevel})\n`;
+      text += `DEMAND: ${dossier.premiereRisk.premiereDemand}\n`;
+      text += `ACCREDITATION: ${dossier.premiereRisk.accreditationStatus}\n`;
+      text += `BUYER FOOTPRINT: ${dossier.premiereRisk.buyerPressFootprint}\n`;
+      text += `RATIONALE: ${dossier.premiereRisk.verdictRationale}\n`;
+      text += `RECOMMENDATION: ${dossier.premiereRisk.recommendation}\n\n`;
+    }
+
+    if (dossier.feeEscalation) {
+      text += `--- FEE ESCALATION SCHEDULE ---\n`;
+      if (dossier.feeEscalation.spikeAlert) text += `ALERT: ${dossier.feeEscalation.spikeAlert}\n`;
+      if (dossier.feeEscalation.averageMarketFee) text += `MARKET AVERAGE: ${dossier.feeEscalation.averageMarketFee}\n`;
+      dossier.feeEscalation.tiers.forEach((t) => {
+        text += `- ${t.tierName}: ${t.currency}${t.amount} (surge: +${t.surgePercentage}%)${t.deadlineDate ? ` due ${t.deadlineDate}` : ''}\n`;
+      });
+      text += `\n`;
+    }
+
+    if (dossier.forensicSummary) {
+      text += `--- FORENSIC INTELLIGENCE BRIEF ---\n`;
+      const scam = dossier.forensicSummary.scamPattern;
+      if (scam) {
+        text += `[SCAM PATTERN - ${scam.status}]: ${scam.headline}\n${scam.summary}\nContext: ${scam.educationalContext || ''}\n`;
+      }
+      const jury = dossier.forensicSummary.juryConflict;
+      if (jury) {
+        text += `[JURY CONFLICT - ${jury.status}]: ${jury.headline}\n${jury.summary}\nContext: ${jury.educationalContext || ''}\n`;
+      }
+      const venue = dossier.forensicSummary.venueReality;
+      if (venue) {
+        text += `[VENUE REALITY - ${venue.status}]: ${venue.headline}\n${venue.summary}\nContext: ${venue.educationalContext || ''}\n`;
+      }
+      text += `\n`;
+    }
+
     text += `--- FESTIVAL OVERVIEW ---\n${dossier.festivalOverview}\n\n`;
     text += `--- ORGANIZER PROFILE ---\n${dossier.organizerProfile}\n\n`;
     text += `--- COMMUNITY FEEDBACK & ACCOUNTS ---\n${dossier.participantFeedback}\n\n`;
@@ -577,47 +734,57 @@ export const EvidenceDossier: React.FC<Props> = ({
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                <div className="p-3.5 rounded-xl bg-darkroom-bg/80 border border-darkroom-border/60 space-y-1">
-                  <span className="font-mono text-emerald-400 text-xs font-bold block">✓ Verified Physical Venues</span>
-                  <p className="text-sm text-slate-300 leading-relaxed">
-                    Screening locations confirmed across municipal venue logs and historical festival editions.
-                  </p>
-                </div>
-                <div className="p-3.5 rounded-xl bg-darkroom-bg/80 border border-darkroom-border/60 space-y-1">
-                  <span className="font-mono text-emerald-400 text-xs font-bold block">✓ Operational History &amp; Corporate Standing</span>
-                  <p className="text-sm text-slate-300 leading-relaxed">
-                    Active entity registration verified with valid filings and documented edition milestones.
-                  </p>
-                </div>
-                <div className="p-3.5 rounded-xl bg-darkroom-bg/80 border border-darkroom-border/60 space-y-1">
-                  <span className="font-mono text-emerald-400 text-xs font-bold block">✓ Alumni Filmmaker Laureates</span>
-                  <p className="text-sm text-slate-300 leading-relaxed">
-                    Verified independent filmmaker alumni catalog with public festival screening credits.
-                  </p>
-                </div>
-                <div className="p-3.5 rounded-xl bg-darkroom-bg/80 border border-darkroom-border/60 space-y-1">
-                  <span className="font-mono text-emerald-400 text-xs font-bold block">✓ Transparent Submission Guidelines</span>
-                  <p className="text-sm text-slate-300 leading-relaxed">
-                    Clear entry rules with zero boilerplate syndicate text matching known laurel mills.
-                  </p>
-                </div>
+                {positiveHighlights.map((hl, idx) => (
+                  <div key={idx} className="p-3.5 rounded-xl bg-darkroom-bg/80 border border-darkroom-border/60 space-y-1.5">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-mono text-emerald-400 text-xs font-bold block">{hl.title}</span>
+                      {hl.source && (
+                        <span className="text-[10px] font-mono text-emerald-300/80 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 truncate max-w-[120px]">
+                          {hl.source}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-sm text-slate-300 leading-relaxed">
+                      {hl.desc}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* Checklist */}
+            {/* Checklist (Level 1: 60-second essentials) */}
             <div id="section-checklist" className="rounded-2xl p-5 sm:p-6 border border-darkroom-border bg-darkroom-surface/80 space-y-3" data-section-name="Filmmaker Action Checklist">
-              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-300 font-semibold border-b border-darkroom-border/40 pb-2">
-                <ListChecks className="size-3.5 text-emerald-400" />
-                <span>Filmmaker Action Checklist</span>
+              <div className="flex items-center justify-between border-b border-darkroom-border/40 pb-2">
+                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-300 font-semibold">
+                  <ListChecks className="size-3.5 text-emerald-400" />
+                  <span>Filmmaker Action Checklist</span>
+                </div>
+                <span className="text-[11px] font-mono text-emerald-400/80">
+                  {showAllChecklist ? `Showing all ${dossier.filmmakerChecklist.length}` : `Top 3 critical actions`}
+                </span>
               </div>
               <ul className="space-y-2.5 text-sm sm:text-base text-slate-200">
-                {dossier.filmmakerChecklist.map((item, idx) => (
+                {(showAllChecklist ? dossier.filmmakerChecklist : dossier.filmmakerChecklist.slice(0, 3)).map((item, idx) => (
                   <li key={idx} className="flex items-start gap-2.5 leading-relaxed">
                     <span className="font-mono text-emerald-400 font-semibold shrink-0">[{idx + 1}]</span>
                     <span>{item}</span>
                   </li>
                 ))}
               </ul>
+              {dossier.filmmakerChecklist.length > 3 && (
+                <button
+                  type="button"
+                  onClick={() => setShowAllChecklist(!showAllChecklist)}
+                  className="text-xs font-mono text-emerald-400 hover:text-emerald-300 flex items-center gap-1.5 pt-1 cursor-pointer transition-colors"
+                >
+                  <span>
+                    {showAllChecklist
+                      ? 'Show fewer items (60s view)'
+                      : `+ Show ${dossier.filmmakerChecklist.length - 3} more critical checks`}
+                  </span>
+                  {showAllChecklist ? <ChevronUp className="size-3.5" /> : <ChevronDown className="size-3.5" />}
+                </button>
+              )}
             </div>
           </div>
         ) : (
