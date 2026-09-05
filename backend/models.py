@@ -260,6 +260,53 @@ class DeepVettingReport(BaseModel):
     degraded: bool = False
 
 
+class PremiereRiskLevel(str, Enum):
+    LOW_RISK = "LOW_RISK"
+    MODERATE_RISK = "MODERATE_RISK"
+    HIGH_BURN_RISK = "HIGH_BURN_RISK"
+
+
+class PremiereRiskAssessment(BaseModel):
+    riskScore: int = Field(default=50, ge=0, le=100)
+    riskLevel: PremiereRiskLevel = PremiereRiskLevel.MODERATE_RISK
+    premiereDemand: str = "No Premiere Requirement"
+    accreditationStatus: str = "Unaccredited"
+    buyerPressFootprint: str = "Limited trade and buyer presence"
+    verdictRationale: str = ""
+    recommendation: str = ""
+
+
+class FeeTier(BaseModel):
+    tierName: str
+    amount: float
+    currency: str = "£"
+    deadlineDate: Optional[str] = None
+    surgePercentage: int = 0
+
+
+class FeeEscalationModel(BaseModel):
+    currency: str = "£"
+    tiers: List[FeeTier] = Field(default_factory=list)
+    spikeAlert: Optional[str] = None
+    averageMarketFee: Optional[str] = None
+    percentile: Optional[int] = None
+
+
+class ForensicTrioItem(BaseModel):
+    status: VettingSignalStatus = VettingSignalStatus.INFORMATIONAL
+    headline: str
+    summary: str
+    educationalContext: Optional[str] = None
+    signals: List[str] = Field(default_factory=list)
+    relatedEntities: List[str] = Field(default_factory=list)
+
+
+class ForensicIntelligenceSummary(BaseModel):
+    scamPattern: ForensicTrioItem
+    juryConflict: ForensicTrioItem
+    venueReality: ForensicTrioItem
+
+
 class OutreachDraft(BaseModel):
     id: str = Field(default_factory=generate_uuid)
     investigationId: str

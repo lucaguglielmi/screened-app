@@ -146,6 +146,49 @@ export interface PreviousEditionRecord {
   notes?: string;
 }
 
+export type PremiereRiskLevel = 'LOW_RISK' | 'MODERATE_RISK' | 'HIGH_BURN_RISK';
+
+export interface PremiereRiskAssessment {
+  riskScore: number;
+  riskLevel: PremiereRiskLevel;
+  premiereDemand: string;
+  accreditationStatus: string;
+  buyerPressFootprint: string;
+  verdictRationale: string;
+  recommendation: string;
+}
+
+export interface FeeTier {
+  tierName: string;
+  amount: number;
+  currency: string;
+  deadlineDate?: string;
+  surgePercentage: number;
+}
+
+export interface FeeEscalationModel {
+  currency: string;
+  tiers: FeeTier[];
+  spikeAlert?: string;
+  averageMarketFee?: string;
+  percentile?: number;
+}
+
+export interface ForensicTrioItem {
+  status: 'VERIFIED_AUTHENTIC' | 'INFORMATIONAL' | 'AMBER_WARNING' | 'RED_FLAG' | 'MISMATCH';
+  headline: string;
+  summary: string;
+  educationalContext?: string;
+  signals: string[];
+  relatedEntities?: string[];
+}
+
+export interface ForensicIntelligenceSummary {
+  scamPattern: ForensicTrioItem;
+  juryConflict: ForensicTrioItem;
+  venueReality: ForensicTrioItem;
+}
+
 export interface DossierReport {
   executiveSummary: string;
   festivalOverview: string;
@@ -156,6 +199,9 @@ export interface DossierReport {
   keyPersons?: string[];
   previousEditions?: PreviousEditionRecord[];
   corporateEntity?: CorporateEntity;
+  premiereRisk?: PremiereRiskAssessment;
+  feeEscalation?: FeeEscalationModel;
+  forensicSummary?: ForensicIntelligenceSummary;
 }
 
 export interface TransparencyMetric {
@@ -206,6 +252,9 @@ export interface EvidenceDossier {
   deepVetting?: DeepVettingReport;
   corporateEntity?: CorporateEntity;
   previousEditions?: PreviousEditionRecord[];
+  premiereRisk?: PremiereRiskAssessment;
+  feeEscalation?: FeeEscalationModel;
+  forensicSummary?: ForensicIntelligenceSummary;
   generatedAt?: string;
 }
 

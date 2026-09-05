@@ -458,6 +458,66 @@ def get_demo_full_dossier():
         "confirmedEntity": get_demo_investigation()["candidates"][0],
         "sourcesCount": 42,
         "claimsCount": len(claims),
+        "premiereRisk": {
+            "riskScore": 82,
+            "riskLevel": "HIGH_BURN_RISK",
+            "premiereDemand": "World or UK Premiere Demanded for Competition",
+            "accreditationStatus": "Unaccredited (Not BAFTA/BIFA Qualifying)",
+            "buyerPressFootprint": "Zero verified sales agents, distributors, or accredited trade press",
+            "verdictRationale": "The festival demands premiere exclusivity while delivering zero industry acquisition leverage. Surrendering a World or UK Premiere here burns premiere eligibility for major UK accredited festivals without theatrical trade exposure.",
+            "recommendation": "Do NOT submit as World or UK Premiere. If already premiered elsewhere, submit only under low early-bird tiers."
+        },
+        "feeEscalation": {
+            "currency": "£",
+            "tiers": [
+                {"tierName": "Super Early Bird", "amount": 28, "currency": "£", "deadlineDate": "15 Jan 2024", "surgePercentage": 0},
+                {"tierName": "Early Bird", "amount": 38, "currency": "£", "deadlineDate": "1 Mar 2024", "surgePercentage": 35},
+                {"tierName": "Regular Deadline", "amount": 55, "currency": "£", "deadlineDate": "15 May 2024", "surgePercentage": 96},
+                {"tierName": "Late Deadline", "amount": 85, "currency": "£", "deadlineDate": "1 Aug 2024", "surgePercentage": 203},
+                {"tierName": "Extended / Last Chance", "amount": 98, "currency": "£", "deadlineDate": "15 Sep 2024", "surgePercentage": 250}
+            ],
+            "spikeAlert": "Aggressive 203% fee surge in late submission windows (£28 -> £85).",
+            "averageMarketFee": "£32 average for UK indie short film entries",
+            "percentile": 92
+        },
+        "forensicSummary": {
+            "scamPattern": {
+                "status": "RED_FLAG",
+                "headline": "Dissolved Entity & Virtual Maildrop Footprint",
+                "summary": "Operating company Pallino Media Lab Ltd (Company No. 13984712) was dissolved via compulsory strike-off in March 2024. The registered office at 71-75 Shelton Street, London is a mass-registration virtual office shared with over 2,000 corporate mailboxes.",
+                "educationalContext": "Predatory festivals frequently operate through dissolved shell entities or mail forwarding services to evade chargebacks, refund liability, and legal service of process once fees are collected.",
+                "signals": [
+                    "Operating entity dissolved on 14 March 2024 (Companies House)",
+                    "71-75 Shelton Street virtual office address with no physical festival staff",
+                    "Shared director ties to sister festival 'London Indie Shorts Review'"
+                ],
+                "relatedEntities": ["Pallino Media Lab Ltd", "London Indie Shorts Review", "Shelton Mail Services Ltd"]
+            },
+            "juryConflict": {
+                "status": "RED_FLAG",
+                "headline": "Jury Self-Dealing & Repeat Winner Anomaly",
+                "summary": "Festival Programmer Arthur Smith actively operates IndiePitch Consulting, marketing paid script and DCP services to festival applicants. Furthermore, the 2024 Best Short winner is a direct business associate and co-producer who also received top awards in the 2023 edition.",
+                "educationalContext": "Legitimate festivals maintain strict recusal policies prohibiting jury members and programmers from awarding honors to business partners, clients, or co-producers. Repeat laureates with commercial ties signal vanity award milling.",
+                "signals": [
+                    "Arthur Smith co-owns IndiePitch Consulting targeting submitting filmmakers",
+                    "2024 Best Short Winner co-produced a past commercial project with Lead Programmer",
+                    "Same director won top prize across consecutive 2023 and 2024 editions"
+                ],
+                "relatedEntities": ["IndiePitch Consulting", "Arthur Smith", "Pallino Media Lab Ltd"]
+            },
+            "venueReality": {
+                "status": "MISMATCH",
+                "headline": "Advertised Theatrical Gala vs. 4-Wall Private Room Reality",
+                "summary": "Festival marketing advertises red-carpet galas at 'BFI Southbank NFT1'. Corroboration reveals zero contract with BFI. Historical bookings show only a 2-hour 4-wall hire of Studio 4 at Genesis Cinema, with filmmaker reports confirming substitution of unlisted Vimeo links with under 5 views.",
+                "educationalContext": "Curated Cinema Selection vs. 4-Wall Rental: In an authentic festival, the cinema directly curates, tickets, and publishes the festival on its box office schedule. A 4-wall rental is an hourly room hire that anyone can buy with zero cinema programming vetting. Predatory organizers use 4-wall bookings to take promo photos, then quietly pivot submitters to cheap unlisted Vimeo links.",
+                "signals": [
+                    "BFI Southbank NFT1 claim refuted: No municipal screening permit or BFI box office entry",
+                    "Genesis Cinema manifest indicates private room hire, not curated public festival season",
+                    "Filmmaker testimonies document unlisted Vimeo password-protected links with < 5 views"
+                ],
+                "relatedEntities": ["BFI Southbank", "Genesis Cinema Studio 4", "Vimeo On-Demand"]
+            }
+        },
         
         "disputes": [
             {
@@ -845,7 +905,70 @@ def get_demo_full_dossier():
                     ],
                     "notes": "Inaugural physical screening following the 2021 virtual pandemic launch."
                 }
-            ]
+            ],
+
+            "premiereRisk": {
+                "riskScore": 82,
+                "riskLevel": "HIGH_BURN_RISK",
+                "premiereDemand": "World or UK Premiere Demanded for Competition",
+                "accreditationStatus": "Unaccredited (Not BAFTA/BIFA Qualifying)",
+                "buyerPressFootprint": "Zero verified sales agents, distributors, or accredited trade press",
+                "verdictRationale": "The festival demands premiere exclusivity while delivering zero industry acquisition leverage. Surrendering a World or UK Premiere here burns premiere eligibility for major UK accredited festivals without theatrical trade exposure.",
+                "recommendation": "Do NOT submit as World or UK Premiere. If already premiered elsewhere, submit only under low early-bird tiers."
+            },
+
+            "feeEscalation": {
+                "currency": "£",
+                "tiers": [
+                    {"tierName": "Super Early Bird", "amount": 28, "currency": "£", "deadlineDate": "15 Jan 2024", "surgePercentage": 0},
+                    {"tierName": "Early Bird", "amount": 38, "currency": "£", "deadlineDate": "1 Mar 2024", "surgePercentage": 35},
+                    {"tierName": "Regular Deadline", "amount": 55, "currency": "£", "deadlineDate": "15 May 2024", "surgePercentage": 96},
+                    {"tierName": "Late Deadline", "amount": 85, "currency": "£", "deadlineDate": "1 Aug 2024", "surgePercentage": 203},
+                    {"tierName": "Extended / Last Chance", "amount": 98, "currency": "£", "deadlineDate": "15 Sep 2024", "surgePercentage": 250}
+                ],
+                "spikeAlert": "Aggressive 203% fee surge in late submission windows (£28 -> £85).",
+                "averageMarketFee": "£32 average for UK indie short film entries",
+                "percentile": 92
+            },
+
+            "forensicSummary": {
+                "scamPattern": {
+                    "status": "RED_FLAG",
+                    "headline": "Dissolved Entity & Virtual Maildrop Footprint",
+                    "summary": "Operating company Pallino Media Lab Ltd (Company No. 13984712) was dissolved via compulsory strike-off in March 2024. The registered office at 71-75 Shelton Street, London is a mass-registration virtual office shared with over 2,000 corporate mailboxes.",
+                    "educationalContext": "Predatory festivals frequently operate through dissolved shell entities or mail forwarding services to evade chargebacks, refund liability, and legal service of process once fees are collected.",
+                    "signals": [
+                        "Operating entity dissolved on 14 March 2024 (Companies House)",
+                        "71-75 Shelton Street virtual office address with no physical festival staff",
+                        "Shared director ties to sister festival 'London Indie Shorts Review'"
+                    ],
+                    "relatedEntities": ["Pallino Media Lab Ltd", "London Indie Shorts Review", "Shelton Mail Services Ltd"]
+                },
+                "juryConflict": {
+                    "status": "RED_FLAG",
+                    "headline": "Jury Self-Dealing & Repeat Winner Anomaly",
+                    "summary": "Festival Programmer Arthur Smith actively operates IndiePitch Consulting, marketing paid script and DCP services to festival applicants. Furthermore, the 2024 Best Short winner is a direct business associate and co-producer who also received top awards in the 2023 edition.",
+                    "educationalContext": "Legitimate festivals maintain strict recusal policies prohibiting jury members and programmers from awarding honors to business partners, clients, or co-producers. Repeat laureates with commercial ties signal vanity award milling.",
+                    "signals": [
+                        "Arthur Smith co-owns IndiePitch Consulting targeting submitting filmmakers",
+                        "2024 Best Short Winner co-produced a past commercial project with Lead Programmer",
+                        "Same director won top prize across consecutive 2023 and 2024 editions"
+                    ],
+                    "relatedEntities": ["IndiePitch Consulting", "Arthur Smith", "Pallino Media Lab Ltd"]
+                },
+                "venueReality": {
+                    "status": "MISMATCH",
+                    "headline": "Advertised Theatrical Gala vs. 4-Wall Private Room Reality",
+                    "summary": "Festival marketing advertises red-carpet galas at 'BFI Southbank NFT1'. Corroboration reveals zero contract with BFI. Historical bookings show only a 2-hour 4-wall hire of Studio 4 at Genesis Cinema, with filmmaker reports confirming substitution of unlisted Vimeo links with under 5 views.",
+                    "educationalContext": "Curated Cinema Selection vs. 4-Wall Rental: In an authentic festival, the cinema directly curates, tickets, and publishes the festival on its box office schedule. A 4-wall rental is an hourly room hire that anyone can buy with zero cinema programming vetting. Predatory organizers use 4-wall bookings to take promo photos, then quietly pivot submitters to cheap unlisted Vimeo links.",
+                    "signals": [
+                        "BFI Southbank NFT1 claim refuted: No municipal screening permit or BFI box office entry",
+                        "Genesis Cinema manifest indicates private room hire, not curated public festival season",
+                        "Filmmaker testimonies document unlisted Vimeo password-protected links with < 5 views"
+                    ],
+                    "relatedEntities": ["BFI Southbank", "Genesis Cinema Studio 4", "Vimeo On-Demand"]
+                }
+            }
         },
 
         "deepVetting": {

@@ -12,6 +12,7 @@ import {
   Layers,
   Command as CommandIcon,
 } from 'lucide-react';
+import { FEATURES } from '../config/features';
 
 interface Props {
   onNavigateToDesk: () => void;
@@ -283,13 +284,15 @@ export const WhyScreened: React.FC<Props> = ({
                 <ShieldCheck className="size-4" />
                 <span>Due Diligence</span>
               </button>
-              <button
-                onClick={onNavigateToScout}
-                className="px-5 py-2.5 bg-darkroom-card hover:bg-darkroom-surface text-white border border-darkroom-border font-bold text-sm rounded-xl transition-all active:scale-95 flex items-center gap-2 cursor-pointer"
-              >
-                <Coins className="size-4 text-emerald-400" />
-                <span>Grant Research</span>
-              </button>
+              {FEATURES.ENABLE_GRANT_SCOUT && (
+                <button
+                  onClick={onNavigateToScout}
+                  className="px-5 py-2.5 bg-darkroom-card hover:bg-darkroom-surface text-white border border-darkroom-border font-bold text-sm rounded-xl transition-all active:scale-95 flex items-center gap-2 cursor-pointer"
+                >
+                  <Coins className="size-4 text-emerald-400" />
+                  <span>Grant Research</span>
+                </button>
+              )}
               <button
                 onClick={onNavigateToDesk}
                 className="px-5 py-2.5 bg-midnight-royal hover:bg-midnight-royal/80 text-white font-bold text-sm rounded-xl transition-all active:scale-95 flex items-center gap-2 cursor-pointer"

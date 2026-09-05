@@ -12,14 +12,19 @@ import { InvitationEmailCard } from './tools/InvitationEmailCard';
 import { AgentAvatar } from './AgentAvatar';
 import { soundEffects } from '../../utils/audio';
 import { useFileUpload, AttachedFileState } from '../../hooks/useFileUpload';
+import { FEATURES } from '../../config/features';
 
 const ACTION_TABS = [
   { label: 'Research a festival', icon: Search, query: 'I want to research a film festival' },
-  {
-    label: 'Find a grant',
-    icon: Coins,
-    query: 'Help me find film grants and funding opportunities',
-  },
+  ...(FEATURES.ENABLE_GRANT_SCOUT
+    ? [
+        {
+          label: 'Find a grant',
+          icon: Coins,
+          query: 'Help me find film grants and funding opportunities',
+        },
+      ]
+    : []),
 ];
 
 interface ChatBubbleProps {

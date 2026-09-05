@@ -46,6 +46,9 @@ import { DossierStickyNav } from './dossier/DossierStickyNav';
 import { DossierHero } from './dossier/DossierHero';
 import { EvidenceLedger } from './dossier/EvidenceLedger';
 import { AiDossierView } from './dossier/AiDossierView';
+import { PremiereBurnGauge } from './dossier/PremiereBurnGauge';
+import { FeeEscalationVisualizer } from './dossier/FeeEscalationVisualizer';
+import { ForensicIntelligenceBrief } from './dossier/ForensicIntelligenceBrief';
 
 interface Props {
   entity: CandidateEntity;
@@ -288,6 +291,9 @@ export const EvidenceDossier: React.FC<Props> = ({
       deepVetting: deepVetting || undefined,
       corporateEntity: dossier?.corporateEntity || undefined,
       previousEditions: dossier?.previousEditions || undefined,
+      premiereRisk: dossier?.premiereRisk,
+      feeEscalation: dossier?.feeEscalation,
+      forensicSummary: dossier?.forensicSummary,
       transparencyIndex: {
         score: deepVetting?.overallAuthenticityScore || 85,
         confidenceLevel: 'HIGH',
@@ -512,6 +518,17 @@ export const EvidenceDossier: React.FC<Props> = ({
               <CredibilityRadar claims={claims} disputes={disputes} />
             </div>
 
+            {/* Premiere Burn Gauge & Fee Escalation Visualizer */}
+            <div id="section-premiere-fee" className="grid grid-cols-1 lg:grid-cols-2 gap-6 scroll-mt-28 sm:scroll-mt-32" data-section-name="Premiere Risk & Fee Escalation">
+              <PremiereBurnGauge assessment={dossier.premiereRisk} festivalName={entity.name} />
+              <FeeEscalationVisualizer model={dossier.feeEscalation} festivalName={entity.name} />
+            </div>
+
+            {/* Forensic Intelligence Brief (Scam Patterns, Jury Conflict & 4-Wall Reality) */}
+            <div id="section-forensic-brief" className="scroll-mt-28 sm:scroll-mt-32" data-section-name="Forensic Intelligence Brief">
+              <ForensicIntelligenceBrief summary={dossier.forensicSummary} festivalName={entity.name} />
+            </div>
+
             {/* Chapter 1 */}
             <div className="rounded-2xl p-4 sm:p-6 border border-orange-500/30 bg-darkroom-surface/90 space-y-4 shadow-xl">
               <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5 border-b border-darkroom-border/60 pb-3">
@@ -618,6 +635,17 @@ export const EvidenceDossier: React.FC<Props> = ({
               <p className="font-serif text-base sm:text-lg text-slate-100 leading-relaxed whitespace-pre-line">
                 {dossier.executiveSummary}
               </p>
+            </div>
+
+            {/* Premiere Burn Gauge & Fee Escalation Visualizer */}
+            <div id="section-premiere-fee" className="grid grid-cols-1 lg:grid-cols-2 gap-6 py-4 scroll-mt-28 sm:scroll-mt-32 border-b border-darkroom-border/30 pb-6" data-section-name="Premiere Risk & Fee Escalation">
+              <PremiereBurnGauge assessment={dossier.premiereRisk} festivalName={entity.name} />
+              <FeeEscalationVisualizer model={dossier.feeEscalation} festivalName={entity.name} />
+            </div>
+
+            {/* Forensic Intelligence Brief (Scam Patterns, Jury Conflict & 4-Wall Reality) */}
+            <div id="section-forensic-brief" className="py-4 scroll-mt-28 sm:scroll-mt-32 border-b border-darkroom-border/30 pb-6" data-section-name="Forensic Intelligence Brief">
+              <ForensicIntelligenceBrief summary={dossier.forensicSummary} festivalName={entity.name} />
             </div>
 
             <div id="section-forensic-matrix" className="scroll-mt-28 sm:scroll-mt-32" data-section-name="360° Forensic Matrix (7 Vectors)">

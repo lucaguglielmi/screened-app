@@ -2,6 +2,7 @@ import React from 'react';
 import { ActiveTool } from '../types/investigation';
 import { ShieldCheck, Coins, Sparkles } from 'lucide-react';
 import { soundEffects } from '../utils/audio';
+import { FEATURES } from '../config/features';
 
 interface Props {
   activeTool: ActiveTool;
@@ -46,17 +47,19 @@ export const ToolSwitcher: React.FC<Props> = ({ activeTool, onChange }) => {
       </button>
 
       {/* Grant & Funding Research */}
-      <button
-        onClick={() => handleSwitch('GRANT_SCOUT')}
-        className={`px-3 sm:px-4 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
-          activeTool === 'GRANT_SCOUT'
-            ? 'bg-darkroom-surface text-tool-diligence shadow-xs font-bold border border-tool-diligence/30'
-            : 'text-slate-400 hover:text-white'
-        }`}
-      >
-        <Coins className="size-3.5 text-tool-diligence" />
-        <span>Grant Research</span>
-      </button>
+      {FEATURES.ENABLE_GRANT_SCOUT && (
+        <button
+          onClick={() => handleSwitch('GRANT_SCOUT')}
+          className={`px-3 sm:px-4 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
+            activeTool === 'GRANT_SCOUT'
+              ? 'bg-darkroom-surface text-tool-diligence shadow-xs font-bold border border-tool-diligence/30'
+              : 'text-slate-400 hover:text-white'
+          }`}
+        >
+          <Coins className="size-3.5 text-tool-diligence" />
+          <span>Grant Research</span>
+        </button>
+      )}
     </div>
   );
 };

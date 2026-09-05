@@ -42,6 +42,7 @@ import { AnimatedEE } from './components/animations/AnimatedEE';
 import { UpdateNotifier } from './components/common/UpdateNotifier';
 import { isSoundMuted, setSoundMuted, playSuccessChime } from './utils/audio';
 import { track } from './utils/analytics';
+import { FEATURES } from './config/features';
 
 export default function App() {
   const [soundMuted, setSoundMutedState] = useState<boolean>(() => isSoundMuted());
@@ -412,7 +413,7 @@ export default function App() {
           )}
 
           {/* View 2: Grant & Funding Research (First-Class Workspace) */}
-          {(activeTool === 'GRANT_SCOUT' || activeTool === 'OPPORTUNITY_SCOUT') && (
+          {FEATURES.ENABLE_GRANT_SCOUT && (activeTool === 'GRANT_SCOUT' || activeTool === 'OPPORTUNITY_SCOUT') && (
             <Suspense fallback={<div className="p-8 text-center text-slate-500">Loading Grant Research...</div>}>
               <GrantScout
                 initialTitle="Untitled Cinema Project"

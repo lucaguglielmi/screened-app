@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { ActiveTool } from '../../types/investigation';
 import { soundEffects } from '../../utils/audio';
+import { FEATURES } from '../../config/features';
 
 interface Props {
   activeTool: ActiveTool;
@@ -98,29 +99,31 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
         </div>
 
         {/* 3. Grant & Funding Research */}
-        <div className="relative">
-          <button
-            onClick={() => handleSelectTool('GRANT_SCOUT')}
-            onMouseEnter={() => setActiveTooltip('Grant & Funding Research')}
-            onMouseLeave={() => setActiveTooltip(null)}
-            className={`relative p-3 rounded-2xl transition-all cursor-pointer ${
-              activeTool === 'GRANT_SCOUT'
-                ? 'bg-darkroom-card text-tool-diligence shadow-lg shadow-[var(--color-tool-diligence)]/20 ring-1 ring-tool-diligence/50 border border-tool-diligence/40'
-                : 'hover:bg-darkroom-surface text-slate-400 hover:text-slate-100'
-            }`}
-            title="Grant & Funding Research"
-          >
-            <Coins className="size-5" />
-            {activeTool === 'GRANT_SCOUT' && (
-              <span className="absolute -right-1 -top-1 size-2.5 rounded-full bg-tool-diligence ring-2 ring-darkroom-bg" />
+        {FEATURES.ENABLE_GRANT_SCOUT && (
+          <div className="relative">
+            <button
+              onClick={() => handleSelectTool('GRANT_SCOUT')}
+              onMouseEnter={() => setActiveTooltip('Grant & Funding Research')}
+              onMouseLeave={() => setActiveTooltip(null)}
+              className={`relative p-3 rounded-2xl transition-all cursor-pointer ${
+                activeTool === 'GRANT_SCOUT'
+                  ? 'bg-darkroom-card text-tool-diligence shadow-lg shadow-[var(--color-tool-diligence)]/20 ring-1 ring-tool-diligence/50 border border-tool-diligence/40'
+                  : 'hover:bg-darkroom-surface text-slate-400 hover:text-slate-100'
+              }`}
+              title="Grant & Funding Research"
+            >
+              <Coins className="size-5" />
+              {activeTool === 'GRANT_SCOUT' && (
+                <span className="absolute -right-1 -top-1 size-2.5 rounded-full bg-tool-diligence ring-2 ring-darkroom-bg" />
+              )}
+            </button>
+            {activeTooltip === 'Grant & Funding Research' && (
+              <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-darkroom-surface text-slate-100 text-sm font-medium whitespace-nowrap shadow-xl border border-darkroom-border z-50 pointer-events-none">
+                Grant & Funding Research (Public Funds Match)
+              </div>
             )}
-          </button>
-          {activeTooltip === 'Grant & Funding Research' && (
-            <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-darkroom-surface text-slate-100 text-sm font-medium whitespace-nowrap shadow-xl border border-darkroom-border z-50 pointer-events-none">
-              Grant & Funding Research (Public Funds Match)
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Bottom Section: Why Screened & Deployment Status */}

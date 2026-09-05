@@ -12,6 +12,9 @@ from backend.models import (
     PreviousEditionRecord,
     PreviousEditionAward,
     PreviousEditionPress,
+    PremiereRiskAssessment,
+    FeeEscalationModel,
+    ForensicIntelligenceSummary,
 )
 from backend.agents.contradiction_analyst import DisputeRecord
 from backend.services.gemini_client import GeminiClient
@@ -28,6 +31,9 @@ class DossierReport(BaseModel):
     filmmakerChecklist: List[str] = Field(default_factory=list)
     keyPersons: List[str] = Field(default_factory=list)
     previousEditions: List[PreviousEditionRecord] = Field(default_factory=list)
+    premiereRisk: Optional[PremiereRiskAssessment] = None
+    feeEscalation: Optional[FeeEscalationModel] = None
+    forensicSummary: Optional[ForensicIntelligenceSummary] = None
 
 
 class ReportWriterAgent:
@@ -164,6 +170,27 @@ Return a JSON object conforming to this schema:
                     except Exception:
                         pass
 
+            parsed_premiere_risk = None
+            if isinstance(raw.get("premiereRisk"), dict):
+                try:
+                    parsed_premiere_risk = PremiereRiskAssessment.model_validate(raw["premiereRisk"])
+                except Exception:
+                    pass
+
+            parsed_fee_escalation = None
+            if isinstance(raw.get("feeEscalation"), dict):
+                try:
+                    parsed_fee_escalation = FeeEscalationModel.model_validate(raw["feeEscalation"])
+                except Exception:
+                    pass
+
+            parsed_forensic_summary = None
+            if isinstance(raw.get("forensicSummary"), dict):
+                try:
+                    parsed_forensic_summary = ForensicIntelligenceSummary.model_validate(raw["forensicSummary"])
+                except Exception:
+                    pass
+
             return DossierReport(
                 executiveSummary=raw.get("executiveSummary", f"Investigation completed for {entity.name} with {len(claims)} verified claims."),
                 festivalOverview=raw.get("festivalOverview", "Verified festival details compiled from public records."),
@@ -177,6 +204,9 @@ Return a JSON object conforming to this schema:
                 ]),
                 keyPersons=raw.get("keyPersons", []),
                 previousEditions=parsed_editions,
+                premiereRisk=parsed_premiere_risk,
+                feeEscalation=parsed_fee_escalation,
+                forensicSummary=parsed_forensic_summary,
             )
         except Exception as e:
             logger.exception(f"ReportWriter failed: {e}")

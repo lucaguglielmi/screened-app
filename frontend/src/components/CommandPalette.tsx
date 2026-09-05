@@ -11,6 +11,7 @@ import {
   Keyboard,
 } from 'lucide-react';
 import { ActiveTool } from '../types/investigation';
+import { FEATURES } from '../config/features';
 
 interface CommandPaletteProps {
   isOpen: boolean;
@@ -63,17 +64,21 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         onClose();
       },
     },
-    {
-      id: 'grants',
-      label: 'Grant & Funding Research (Public Funds & Lottery)',
-      category: 'Workspaces',
-      icon: Coins,
-      iconColor: 'text-tool-diligence',
-      action: () => {
-        onSelectTool('GRANT_SCOUT');
-        onClose();
-      },
-    },
+    ...(FEATURES.ENABLE_GRANT_SCOUT
+      ? [
+          {
+            id: 'grants',
+            label: 'Grant & Funding Research (Public Funds & Lottery)',
+            category: 'Workspaces',
+            icon: Coins,
+            iconColor: 'text-tool-diligence',
+            action: () => {
+              onSelectTool('GRANT_SCOUT');
+              onClose();
+            },
+          },
+        ]
+      : []),
     {
       id: 'protection',
       label: 'How to Protect Yourself (Scam & Risk Defense Guide)',

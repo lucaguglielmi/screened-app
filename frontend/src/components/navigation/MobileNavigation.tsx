@@ -17,6 +17,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import { ActiveTool } from '../../types/investigation';
 import { soundEffects } from '../../utils/audio';
+import { FEATURES } from '../../config/features';
 
 interface MobileNavigationProps {
   activeTool: ActiveTool;
@@ -191,30 +192,32 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                 </button>
 
                 {/* 3. Grant Research */}
-                <button
-                  type="button"
-                  onClick={() => handleSelect('GRANT_SCOUT')}
-                  className={`w-full p-3.5 rounded-2xl flex items-center gap-3.5 transition-all text-left cursor-pointer ${
-                    activeTool === 'GRANT_SCOUT'
-                      ? 'bg-darkroom-card border border-tool-diligence/80 text-white shadow-lg shadow-[var(--color-tool-diligence)]/20'
-                      : 'bg-darkroom-surface hover:bg-darkroom-card border border-darkroom-border text-slate-300'
-                  }`}
-                >
-                  <div className="size-10 rounded-xl bg-gradient-to-tr from-tool-diligence to-tool-diligence-hover flex items-center justify-center text-slate-950 shadow-md shrink-0">
-                    <Coins className="size-5 text-slate-950" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-base font-bold text-white">Grant Research</h4>
-                      {activeTool === 'GRANT_SCOUT' && (
-                        <Check className="size-4 text-tool-diligence" />
-                      )}
+                {FEATURES.ENABLE_GRANT_SCOUT && (
+                  <button
+                    type="button"
+                    onClick={() => handleSelect('GRANT_SCOUT')}
+                    className={`w-full p-3.5 rounded-2xl flex items-center gap-3.5 transition-all text-left cursor-pointer ${
+                      activeTool === 'GRANT_SCOUT'
+                        ? 'bg-darkroom-card border border-tool-diligence/80 text-white shadow-lg shadow-[var(--color-tool-diligence)]/20'
+                        : 'bg-darkroom-surface hover:bg-darkroom-card border border-darkroom-border text-slate-300'
+                    }`}
+                  >
+                    <div className="size-10 rounded-xl bg-gradient-to-tr from-tool-diligence to-tool-diligence-hover flex items-center justify-center text-slate-950 shadow-md shrink-0">
+                      <Coins className="size-5 text-slate-950" />
                     </div>
-                    <p className="text-xs text-slate-400 line-clamp-1">
-                      Public Funds, Lottery & Subsidies
-                    </p>
-                  </div>
-                </button>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-base font-bold text-white">Grant Research</h4>
+                        {activeTool === 'GRANT_SCOUT' && (
+                          <Check className="size-4 text-tool-diligence" />
+                        )}
+                      </div>
+                      <p className="text-xs text-slate-400 line-clamp-1">
+                        Public Funds, Lottery & Subsidies
+                      </p>
+                    </div>
+                  </button>
+                )}
               </div>
 
               {/* Secondary Reference Links */}
