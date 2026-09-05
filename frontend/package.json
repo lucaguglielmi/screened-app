@@ -11,7 +11,9 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "generate-contracts": "python3 ../scripts/generate_contracts.py",
+    "check-contracts": "python3 ../scripts/generate_contracts.py --check"
   },
   "dependencies": {
     "@fontsource/fraunces": "^5.1.0",

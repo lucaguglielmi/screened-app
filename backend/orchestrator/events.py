@@ -8,42 +8,9 @@ from typing import AsyncGenerator, Dict, List, Optional
 from pydantic import BaseModel, Field
 import uuid
 from backend.db.firestore import db
+from backend.models import EventType, ActivityEvent
 
-logger = logging.getLogger("screened.orchestrator.events")
-
-
-class EventType(str, Enum):
-    INVESTIGATION_STARTED = "INVESTIGATION_STARTED"
-    DISAMBIGUATING = "DISAMBIGUATING"
-    CANDIDATES_FOUND = "CANDIDATES_FOUND"
-    ENTITY_CONFIRMED = "ENTITY_CONFIRMED"
-    PLANNING_STARTED = "PLANNING_STARTED"
-    PLAN_READY = "PLAN_READY"
-    DOMAIN_SEARCH_STARTED = "DOMAIN_SEARCH_STARTED"
-    DOMAIN_SEARCH_COMPLETED = "DOMAIN_SEARCH_COMPLETED"
-    CLAIMS_EXTRACTING = "CLAIMS_EXTRACTING"
-    CLAIMS_EXTRACTED = "CLAIMS_EXTRACTED"
-    CONTRADICTIONS_ANALYZING = "CONTRADICTIONS_ANALYZING"
-    CONTRADICTION_DETECTED = "CONTRADICTION_DETECTED"
-    DOSSIER_SYNTHESIZING = "DOSSIER_SYNTHESIZING"
-    DEEP_VETTING_ANALYZING = "DEEP_VETTING_ANALYZING"
-    DEEP_VETTING_COMPLETED = "DEEP_VETTING_COMPLETED"
-    DOSSIER_READY = "DOSSIER_READY"
-    WATCHDOG_ESCALATION = "WATCHDOG_ESCALATION"
-    WATCH_EVENT_RECEIVED = "WATCH_EVENT_RECEIVED"
-    TASK_RUN_PROGRESS = "TASK_RUN_PROGRESS"
-    TASK_RUN_SOURCE_STATS = "TASK_RUN_SOURCE_STATS"
-    ERROR = "ERROR"
-
-
-class ActivityEvent(BaseModel):
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    investigationId: str
-    timestamp: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
-    eventType: EventType
-    agentName: str
-    message: str
-    details: Optional[Dict] = None
+logger = logging.getLogger(__name__)
 
 
 class EventBroadcaster:

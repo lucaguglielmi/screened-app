@@ -6,22 +6,10 @@ from pydantic import BaseModel, Field
 from google.genai import types
 import uuid
 
-from backend.models import AtomicClaim, ClaimEvidence, VerificationStatus
+from backend.models import AtomicClaim, ClaimEvidence, VerificationStatus, DisputeRecord
 from backend.services.gemini_client import GeminiClient
 
 logger = logging.getLogger("screened.agents.contradiction_analyst")
-
-
-class DisputeRecord(BaseModel):
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    pointOfContention: str
-    category: str
-    editionYear: Optional[int] = None
-    claimA: str
-    evidenceA: List[ClaimEvidence] = Field(default_factory=list)
-    claimB: str
-    evidenceB: List[ClaimEvidence] = Field(default_factory=list)
-    guidance: str
 
 
 class ContradictionAnalystAgent:

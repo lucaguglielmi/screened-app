@@ -15,25 +15,12 @@ from backend.models import (
     PremiereRiskAssessment,
     FeeEscalationModel,
     ForensicIntelligenceSummary,
+    DossierReport,
+    DisputeRecord,
 )
-from backend.agents.contradiction_analyst import DisputeRecord
 from backend.services.gemini_client import GeminiClient
 
 logger = logging.getLogger("screened.agents.report_writer")
-
-
-class DossierReport(BaseModel):
-    executiveSummary: str
-    festivalOverview: str = ""
-    organizerProfile: str = ""
-    participantFeedback: str = ""
-    unresolvedQuestions: List[str] = Field(default_factory=list)
-    filmmakerChecklist: List[str] = Field(default_factory=list)
-    keyPersons: List[str] = Field(default_factory=list)
-    previousEditions: List[PreviousEditionRecord] = Field(default_factory=list)
-    premiereRisk: Optional[PremiereRiskAssessment] = None
-    feeEscalation: Optional[FeeEscalationModel] = None
-    forensicSummary: Optional[ForensicIntelligenceSummary] = None
 
 
 class ReportWriterAgent:

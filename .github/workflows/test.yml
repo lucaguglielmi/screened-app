@@ -35,6 +35,11 @@ jobs:
         run: |
           PYTHONPATH=. pytest
 
+      - name: Verify TypeScript Contract Drift
+        run: |
+          python scripts/generate_contracts.py --check
+
+
   frontend-gate:
     name: Frontend Quality Gate
     runs-on: ubuntu-latest

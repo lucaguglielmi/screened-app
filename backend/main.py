@@ -41,6 +41,11 @@ from backend.models import (
     FeedbackItem,
     FeedbackCreateRequest,
     NotificationSubscriptionRequest,
+    CreateInvestigationRequest,
+    ConfirmEntityRequest,
+    TaskDisambiguatePayload,
+    TaskPipelinePayload,
+    Investigation,
 )
 from backend.db.firestore import db
 from backend.tools.parallel_search import ParallelSearchTool
@@ -188,21 +193,6 @@ opportunity_scout = OpportunityScoutAgent(parallel_tool, gemini_client)
 deep_vetting_agent = DeepVettingAgent(gemini_client)
 
 
-class CreateInvestigationRequest(BaseModel):
-    query: str = Field(..., max_length=200)
-    optionalUrl: Optional[str] = Field(None, max_length=500)
-    intent: str = Field("Vet before submitting", max_length=100)
-
-
-class ConfirmEntityRequest(BaseModel):
-    name: str = Field(..., max_length=200)
-    entityType: str = Field("FESTIVAL", max_length=50)
-    officialDomain: Optional[str] = Field(None, max_length=500)
-    cityCountry: Optional[str] = Field(None, max_length=200)
-    foundedYear: Optional[int] = None
-    descriptor: str = Field("", max_length=1000)
-
-
 # Include routers
 app.include_router(webhooks.router)
 from backend.routers.grants import router as grants_router
@@ -322,16 +312,6 @@ async def get_diagnostics(authorization: str = Header(None)):
         }
     }
 
-
-class TaskDisambiguatePayload(BaseModel):
-    investigation_id: str
-    query: str
-    optional_url: Optional[str] = None
-
-class TaskPipelinePayload(BaseModel):
-    investigation_id: str
-    entity: dict
-    intent: str
 
 @app.post("/api/internal/tasks/disambiguate")
 async def task_disambiguate(payload: TaskDisambiguatePayload, request: Request):
