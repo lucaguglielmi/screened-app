@@ -1,4 +1,6 @@
 """Canonical Pydantic models for Screened investigation data."""
+from __future__ import annotations
+
 from datetime import datetime, timezone
 from enum import Enum
 from typing import Any, Dict, List, Optional, Union
@@ -485,6 +487,34 @@ class InvestigationAuditHealth(BaseModel):
     executionDurationMs: int = 0
 
 
+class OutreachDraft(BaseModel):
+    id: str = Field(default_factory=generate_uuid)
+    investigationId: str
+    claimId: Optional[str] = None
+    targetAudience: str = "Festival Management"
+    recipientEmail: str
+    recipientName: str
+    subject: str
+    body: str
+    payloadHash: str = ""
+    status: ApprovalStatus = ApprovalStatus.PENDING_APPROVAL
+    createdAt: str = Field(default_factory=get_current_iso)
+    executedAt: Optional[str] = None
+
+
+class DraftOutreachRequest(BaseModel):
+    claimId: Optional[str] = None
+    disputeId: Optional[str] = None
+    targetType: str = "FESTIVAL_ORGANIZER"
+    filmmakerNote: Optional[str] = None
+
+
+class ApproveOutreachRequest(BaseModel):
+    draftId: str
+    payloadHash: str
+    userConfirmed: bool = True
+
+
 class Investigation(BaseModel):
     id: str = Field(default_factory=generate_uuid)
     status: InvestigationStatus = InvestigationStatus.DRAFT
@@ -534,34 +564,6 @@ class TaskPipelinePayload(BaseModel):
     investigation_id: str
     entity: Dict[str, Any] = Field(default_factory=dict)
     intent: str = "Vet before submitting"
-
-
-class OutreachDraft(BaseModel):
-    id: str = Field(default_factory=generate_uuid)
-    investigationId: str
-    claimId: Optional[str] = None
-    targetAudience: str = "Festival Management"
-    recipientEmail: str
-    recipientName: str
-    subject: str
-    body: str
-    payloadHash: str = ""
-    status: ApprovalStatus = ApprovalStatus.PENDING_APPROVAL
-    createdAt: str = Field(default_factory=get_current_iso)
-    executedAt: Optional[str] = None
-
-
-class DraftOutreachRequest(BaseModel):
-    claimId: Optional[str] = None
-    disputeId: Optional[str] = None
-    targetType: str = "FESTIVAL_ORGANIZER"
-    filmmakerNote: Optional[str] = None
-
-
-class ApproveOutreachRequest(BaseModel):
-    draftId: str
-    payloadHash: str
-    userConfirmed: bool = True
 
 
 # --- Milestone M4: Opportunity Scout Models ---
