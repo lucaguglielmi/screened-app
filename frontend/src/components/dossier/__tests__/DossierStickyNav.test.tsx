@@ -73,4 +73,21 @@ describe('DossierStickyNav Component', () => {
     fireEvent.click(screen.getByRole('button', { name: /Summary/i }));
     expect(onDensityChange).toHaveBeenCalledWith('SIMPLIFIED');
   });
+
+  it('renders authenticity score pill and section jump anchors in FULL_EVIDENCE mode', () => {
+    render(
+      <DossierStickyNav
+        dossier={mockDossier}
+        entityName="Pinco Pallino Film Festival"
+        density="FULL_EVIDENCE"
+        onDensityChange={vi.fn()}
+        authenticityScore={68}
+      />
+    );
+
+    expect(screen.getByText('Score: 68/100')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Radar' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Fees & Premiere' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '7-Vectors' })).toBeInTheDocument();
+  });
 });

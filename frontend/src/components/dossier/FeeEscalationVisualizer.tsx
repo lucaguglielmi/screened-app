@@ -38,6 +38,34 @@ export const FeeEscalationVisualizer: React.FC<Props> = ({
 
   const isHighSurge = totalSurge >= 150 || (data.percentile && data.percentile >= 80);
 
+  const getDeadlineBadge = (tierIndex: number, deadlineDate?: string) => {
+    if (!deadlineDate) return null;
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    let targetDate = new Date(deadlineDate);
+    if (isNaN(targetDate.getTime())) {
+      targetDate = new Date(`${deadlineDate} ${currentYear}`);
+    }
+
+    if (!isNaN(targetDate.getTime())) {
+      const diffMs = targetDate.getTime() - now.getTime();
+      const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+      if (diffDays < 0) {
+        return { text: 'Passed', style: 'bg-slate-800/80 text-slate-400 border-slate-700/60' };
+      } else if (diffDays <= 7) {
+        return { text: `Closes in ${diffDays}d`, style: 'bg-rose-500/20 text-rose-300 border-rose-500/40 font-bold' };
+      } else if (diffDays <= 30) {
+        return { text: `In ${diffDays}d`, style: 'bg-orange-500/20 text-orange-300 border-orange-500/40' };
+      } else {
+        return { text: 'Upcoming', style: 'bg-darkroom-surface text-slate-400 border-darkroom-border/60' };
+      }
+    }
+
+    if (tierIndex === 0) return { text: 'Passed', style: 'bg-slate-800/80 text-slate-400 border-slate-700/60' };
+    if (tierIndex === 1) return { text: 'Active Tier', style: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 font-semibold' };
+    return { text: 'Upcoming', style: 'bg-darkroom-surface text-slate-400 border-darkroom-border/60' };
+  };
+
   // Mode: Summary View (only show the +250% fee inflation, on click sends user to Full)
   if (isSummary) {
     return (
@@ -126,6 +154,7 @@ export const FeeEscalationVisualizer: React.FC<Props> = ({
           {data.tiers.map((tier, idx) => {
             const heightPercent = Math.max(25, Math.round((tier.amount / maxAmount) * 100));
             const isLate = idx >= data.tiers.length - 2;
+            const badge = getDeadlineBadge(idx, tier.deadlineDate);
 
             return (
               <div
@@ -137,9 +166,16 @@ export const FeeEscalationVisualizer: React.FC<Props> = ({
                 }`}
               >
                 {/* Tier Title & Deadline */}
-                <div className="space-y-0.5">
-                  <div className="text-[11px] font-mono uppercase text-slate-400 font-medium truncate">
-                    {tier.tierName}
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between gap-1">
+                    <div className="text-[11px] font-mono uppercase text-slate-400 font-medium truncate">
+                      {tier.tierName}
+                    </div>
+                    {badge && (
+                      <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded border ${badge.style} shrink-0`}>
+                        {badge.text}
+                      </span>
+                    )}
                   </div>
                   {tier.deadlineDate && (
                     <div className="text-[10px] font-mono text-slate-500 flex items-center gap-1">

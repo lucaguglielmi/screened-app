@@ -418,3 +418,29 @@ code {
 .hover-soft-pulse:hover {
   animation: soft-pulse 2s infinite ease-in-out;
 }
+
+/* Shimmer Animation for Wireframe Skeletons */
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Accessible Focus Rings (WCAG 2.1 AA) */
+:focus-visible {
+  outline: 2px solid var(--color-tool-diligence);
+  outline-offset: 2px;
+}
+
+/* Global Prefers Reduced Motion Compliance */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+

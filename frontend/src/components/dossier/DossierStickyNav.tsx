@@ -32,6 +32,7 @@ export interface DossierStickyNavProps {
   density: DetailDensity;
   onDensityChange: (newDensity: DetailDensity) => void;
   onExport?: () => void;
+  authenticityScore?: number;
 
   // Optional overrides
   scrollProgress?: number;
@@ -58,6 +59,8 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
   density,
   onDensityChange,
   onExport: onExportProp,
+  authenticityScore,
+  disputes,
   scrollProgress: scrollProgressProp,
   isActionsMenuOpen: isActionsMenuOpenProp,
   copiedSummary: copiedSummaryProp,
@@ -210,12 +213,33 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
     setTimeout(() => setInternalCopiedRaw(false), 2000);
   };
 
+  const jumpAnchors = [
+    { id: 'section-radar', label: 'Radar' },
+    { id: 'section-premiere-fee', label: 'Fees & Premiere' },
+    { id: 'section-forensic-brief', label: 'Forensic Brief' },
+    { id: 'section-forensic-matrix', label: '7-Vectors' },
+    { id: 'section-previous-editions', label: 'Editions' },
+    ...(disputes && disputes.length > 0 ? [{ id: 'section-disputes', label: 'Disputes' }] : []),
+    { id: 'section-claims', label: 'Claims' },
+    { id: 'section-checklist', label: 'Checklist' },
+  ];
+
+  const handleJumpToSection = (id: string) => {
+    soundEffects.playClick();
+    const el = document.getElementById(id);
+    if (el) {
+      const yOffset = -140;
+      const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  };
+
   if (!dossier) return null;
 
   return (
     <nav
       aria-label="Dossier Reading Control and Tools"
-      className="sticky top-16 z-20 w-full bg-[#070b14]/95 backdrop-blur-xl border-b border-darkroom-border shadow-md shadow-black/40 no-print transition-all"
+      className="sticky top-16 z-20 w-full bg-midnight-base/95 backdrop-blur-xl border-b border-darkroom-border shadow-md shadow-black/40 no-print transition-all"
     >
       {/* Reading Scroll Progress Line */}
       <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-darkroom-border/40 pointer-events-none">
@@ -239,6 +263,33 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
             {officialDomain && (
               <span className="hidden sm:inline-block text-[11px] font-mono text-slate-400 truncate max-w-[180px]">
                 {officialDomain}
+              </span>
+            )}
+            {authenticityScore !== undefined && (
+              <span
+                className="hidden sm:inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg border text-[11px] font-mono font-semibold shrink-0"
+                style={{
+                  color:
+                    authenticityScore >= 75
+                      ? 'var(--color-tool-diligence)'
+                      : authenticityScore >= 50
+                      ? 'rgb(245, 158, 11)'
+                      : 'rgb(244, 63, 94)',
+                  backgroundColor:
+                    authenticityScore >= 75
+                      ? 'rgba(16, 229, 153, 0.1)'
+                      : authenticityScore >= 50
+                      ? 'rgba(245, 158, 11, 0.1)'
+                      : 'rgba(244, 63, 94, 0.1)',
+                  borderColor:
+                    authenticityScore >= 75
+                      ? 'rgba(16, 229, 153, 0.3)'
+                      : authenticityScore >= 50
+                      ? 'rgba(245, 158, 11, 0.3)'
+                      : 'rgba(244, 63, 94, 0.3)',
+                }}
+              >
+                <span>Score: {authenticityScore}/100</span>
               </span>
             )}
           </div>
@@ -382,6 +433,25 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
       <div className="w-full max-w-lg mx-auto sm:max-w-none">
         <DetailDial density={density} onChange={onDensityChange} />
       </div>
+
+      {/* Row 3: Section Jump Anchors (Visible in Full Evidence mode) */}
+      {(density === 'FULL_EVIDENCE' || density === 'EVIDENCE') && (
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none border-t border-darkroom-border/40 pt-1.5">
+          <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider pl-1 shrink-0 font-medium">
+            Jump:
+          </span>
+          {jumpAnchors.map((anchor) => (
+            <button
+              key={anchor.id}
+              type="button"
+              onClick={() => handleJumpToSection(anchor.id)}
+              className="px-2.5 py-0.5 rounded-lg bg-darkroom-surface/80 hover:bg-darkroom-card text-[11px] font-mono text-slate-300 hover:text-tool-diligence border border-darkroom-border/60 hover:border-tool-diligence/40 transition-all cursor-pointer shrink-0 active:scale-95"
+            >
+              {anchor.label}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   </nav>
   );

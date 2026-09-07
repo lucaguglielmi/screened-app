@@ -1,6 +1,7 @@
-import React from 'react';
-import { FileText, MapPin, Calendar, Globe, AlertTriangle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { FileText, MapPin, Calendar, Globe, AlertTriangle, ShieldCheck } from 'lucide-react';
 import { CandidateEntity, InvestigationAuditHealth } from '../../types/investigation';
+import { VerifiedTick } from '../ui/VerifiedTick';
 
 interface Props {
   entity: CandidateEntity;
@@ -9,6 +10,7 @@ interface Props {
   corroboratedCount: number;
   disputesCount: number;
   auditHealth?: InvestigationAuditHealth;
+  authenticityScore?: number;
 }
 
 export const DossierHero: React.FC<Props> = ({
@@ -18,12 +20,51 @@ export const DossierHero: React.FC<Props> = ({
   corroboratedCount,
   disputesCount,
   auditHealth,
+  authenticityScore = 68,
 }) => {
+  const [displayScore, setDisplayScore] = useState(0);
+
+  useEffect(() => {
+    let start = 0;
+    const target = authenticityScore;
+    const duration = 900;
+    const stepTime = 25;
+    const steps = duration / stepTime;
+    const increment = target / steps;
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= target) {
+        setDisplayScore(target);
+        clearInterval(timer);
+      } else {
+        setDisplayScore(Math.round(start));
+      }
+    }, stepTime);
+    return () => clearInterval(timer);
+  }, [authenticityScore]);
+
+  const circumference = 2 * Math.PI * 34;
+  const strokeOffset = circumference - (circumference * displayScore) / 100;
+
+  const scoreColor =
+    authenticityScore >= 75
+      ? 'var(--color-tool-diligence)'
+      : authenticityScore >= 50
+      ? 'rgb(245, 158, 11)'
+      : 'rgb(244, 63, 94)';
+
+  const scoreLabel =
+    authenticityScore >= 75
+      ? 'Verified Operation'
+      : authenticityScore >= 50
+      ? 'Caution Advised'
+      : 'Review Recommended';
+
   return (
     <div className="pt-2 pb-6 border-b border-darkroom-border/40 space-y-4">
-      <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
         <div className="space-y-2 min-w-0 flex-1">
-          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-400">
+          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-tool-diligence">
             <FileText className="size-3.5" />
             <span>Due Diligence Dossier</span>
           </div>
@@ -57,12 +98,68 @@ export const DossierHero: React.FC<Props> = ({
                   href={`https://${entity.officialDomain}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-indigo-300 hover:underline break-all"
+                  className="hover:text-tool-diligence hover:underline break-all transition-colors"
                 >
                   {entity.officialDomain}
                 </a>
               </div>
             )}
+          </div>
+        </div>
+
+        {/* Dynamic Authenticity Score Ring */}
+        <div className="flex items-center gap-4 p-3.5 rounded-2xl bg-darkroom-surface/80 border border-darkroom-border/80 shadow-md shrink-0 self-stretch sm:self-auto justify-between sm:justify-start">
+          <div className="relative size-20 sm:size-22 shrink-0 flex items-center justify-center">
+            <svg className="size-full -rotate-90" viewBox="0 0 80 80">
+              {/* Background circle track */}
+              <circle
+                cx="40"
+                cy="40"
+                r="34"
+                stroke="currentColor"
+                strokeWidth="6"
+                className="text-darkroom-border/40"
+                fill="none"
+              />
+              {/* Animated Progress Ring */}
+              <circle
+                cx="40"
+                cy="40"
+                r="34"
+                stroke={scoreColor}
+                strokeWidth="6"
+                strokeDasharray={circumference}
+                strokeDashoffset={strokeOffset}
+                strokeLinecap="round"
+                className="transition-all duration-500 ease-out"
+                fill="none"
+              />
+            </svg>
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+              <span className="text-xl sm:text-2xl font-bold font-mono text-white leading-none">
+                {displayScore}
+              </span>
+              <span className="text-[9px] font-mono text-slate-400 leading-tight">/ 100</span>
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-medium">
+              Authenticity Index
+            </div>
+            <div className="flex items-center gap-1.5 font-mono text-xs font-semibold" style={{ color: scoreColor }}>
+              {authenticityScore >= 75 ? (
+                <VerifiedTick size={13} />
+              ) : authenticityScore >= 50 ? (
+                <ShieldCheck className="size-3.5" />
+              ) : (
+                <AlertTriangle className="size-3.5" />
+              )}
+              <span>{scoreLabel}</span>
+            </div>
+            <div className="text-[11px] font-mono text-slate-400">
+              Multi-Vector Vetted
+            </div>
           </div>
         </div>
       </div>

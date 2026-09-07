@@ -229,3 +229,92 @@ export const OrbitalReactorLoader: React.FC<{ size?: number; label?: string }> =
     </div>
   );
 };
+
+// ============================================================================
+// 6. Multi-Card Shimmer Dossier Skeleton Loader
+// ============================================================================
+export const DossierSkeletonLoader: React.FC<{ festivalName?: string }> = ({
+  festivalName,
+}) => {
+  const reducedMotion = useReducedMotion();
+  const shimmerClass = reducedMotion
+    ? ''
+    : 'relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/5 before:to-transparent';
+
+  return (
+    <div
+      className="space-y-6 w-full animate-fade-in"
+      aria-busy="true"
+      aria-label="Loading investigation dossier..."
+    >
+      {/* Dossier Header Skeleton */}
+      <div
+        className={`p-6 rounded-3xl bg-darkroom-surface/80 border border-darkroom-border/60 space-y-4 shadow-xl ${shimmerClass}`}
+      >
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+          <div className="space-y-2.5 flex-1 w-full">
+            <div className="h-3.5 w-36 bg-tool-diligence/20 rounded-md animate-pulse" />
+            <div className="h-7 w-3/4 max-w-sm bg-slate-700/60 rounded-lg animate-pulse">
+              {festivalName && (
+                <span className="text-sm font-serif font-bold text-slate-400 pl-3 leading-7">
+                  Synthesizing {festivalName}...
+                </span>
+              )}
+            </div>
+            <div className="h-3.5 w-1/2 max-w-xs bg-slate-800 rounded-md" />
+          </div>
+
+          {/* Radial score ring skeleton */}
+          <div className="size-20 rounded-2xl bg-darkroom-bg/80 border border-darkroom-border/50 flex items-center justify-center shrink-0 self-center sm:self-auto">
+            <div className="size-12 rounded-full border-2 border-dashed border-slate-700/80 animate-spin" />
+          </div>
+        </div>
+
+        {/* 4-Stat Metric Strip */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-darkroom-border/40">
+          {[...Array(4)].map((_, i) => (
+            <div
+              key={i}
+              className="h-14 bg-darkroom-bg/60 rounded-xl border border-darkroom-border/30 animate-pulse"
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Grid: Radar & Fee / Premiere Skeletons */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div
+          className={`p-6 rounded-2xl bg-darkroom-surface/80 border border-darkroom-border/60 space-y-4 h-64 shadow-xl flex flex-col justify-between ${shimmerClass}`}
+        >
+          <div className="h-4 w-40 bg-slate-800 rounded-md" />
+          <div className="size-36 mx-auto rounded-full bg-slate-800/40 border border-darkroom-border/50 animate-pulse" />
+          <div className="h-3 w-32 bg-slate-800/60 rounded-md self-center" />
+        </div>
+
+        <div
+          className={`p-6 rounded-2xl bg-darkroom-surface/80 border border-darkroom-border/60 space-y-4 h-64 shadow-xl flex flex-col justify-between ${shimmerClass}`}
+        >
+          <div className="h-4 w-44 bg-slate-800 rounded-md" />
+          <div className="space-y-3 pt-2">
+            <div className="h-3.5 w-full bg-slate-800/60 rounded-md" />
+            <div className="h-10 w-full bg-slate-800/40 rounded-xl border border-darkroom-border/30" />
+            <div className="h-10 w-full bg-slate-800/40 rounded-xl border border-darkroom-border/30" />
+          </div>
+          <div className="h-3 w-48 bg-slate-800/60 rounded-md" />
+        </div>
+      </div>
+
+      {/* Chapters Preview Skeleton */}
+      <div
+        className={`p-6 rounded-2xl bg-darkroom-surface/80 border border-darkroom-border/60 space-y-4 shadow-xl ${shimmerClass}`}
+      >
+        <div className="h-4 w-48 bg-slate-800 rounded-md" />
+        <div className="space-y-3">
+          <div className="h-16 w-full bg-darkroom-bg/60 rounded-xl border border-darkroom-border/40 animate-pulse" />
+          <div className="h-16 w-full bg-darkroom-bg/60 rounded-xl border border-darkroom-border/40 animate-pulse" />
+        </div>
+      </div>
+    </div>
+  );
+};
+

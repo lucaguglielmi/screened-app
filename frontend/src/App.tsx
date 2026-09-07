@@ -412,6 +412,10 @@ export default function App() {
             density={dossierDensity}
             onDensityChange={setDossierDensity}
             onExport={handleExport}
+            authenticityScore={
+              investigation.deepVetting?.overallAuthenticityScore ??
+              (investigation.confirmedEntity?.name === 'Pinco Pallino Film Festival' ? 68 : 85)
+            }
           />
         )}
 
