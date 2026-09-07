@@ -597,8 +597,8 @@ export const EvidenceDossier: React.FC<Props> = ({
               </button>
             </div>
 
-            {/* Premiere Burn Gauge & Fee Escalation Visualizer (Streamlined Summary View) */}
-            <div id="section-premiere-fee" className="grid grid-cols-1 lg:grid-cols-2 gap-6 scroll-mt-28 sm:scroll-mt-32" data-section-name="Premiere Risk & Fee Escalation">
+            {/* Premiere Burn Gauge & Fee Escalation Visualizer (Streamlined Summary View - Two Separate Full-Width Rows) */}
+            <div id="section-premiere-fee" className="flex flex-col gap-6 scroll-mt-28 sm:scroll-mt-32" data-section-name="Premiere Risk & Fee Escalation">
               <PremiereBurnGauge
                 assessment={dossier.premiereRisk}
                 festivalName={entity.name}
@@ -792,8 +792,8 @@ export const EvidenceDossier: React.FC<Props> = ({
               </p>
             </div>
 
-            {/* Premiere Burn Gauge & Fee Escalation Visualizer */}
-            <div id="section-premiere-fee" className="grid grid-cols-1 lg:grid-cols-2 gap-6 py-4 scroll-mt-28 sm:scroll-mt-32 border-b border-darkroom-border/30 pb-6" data-section-name="Premiere Risk & Fee Escalation">
+            {/* Premiere Burn Gauge & Fee Escalation Visualizer (Two Separate Full-Width Rows) */}
+            <div id="section-premiere-fee" className="flex flex-col gap-6 py-4 scroll-mt-28 sm:scroll-mt-32 border-b border-darkroom-border/30 pb-6" data-section-name="Premiere Risk & Fee Escalation">
               <PremiereBurnGauge assessment={dossier.premiereRisk} festivalName={entity.name} isSummary={false} />
               <FeeEscalationVisualizer model={dossier.feeEscalation} festivalName={entity.name} isSummary={false} />
             </div>
