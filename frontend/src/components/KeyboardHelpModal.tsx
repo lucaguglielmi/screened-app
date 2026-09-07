@@ -30,8 +30,8 @@ export const KeyboardHelpModal: React.FC<Props> = ({ isOpen, onClose }) => {
     {
       title: 'Global Utilities & Audio',
       items: [
-        { key: '⌘ / Ctrl + K', description: 'Open Command Palette & Quick Search', icon: Command },
-        { key: '?', description: 'Open / Close this Keyboard Shortcuts modal', icon: Keyboard },
+        { key: '⌘ / Ctrl + K', description: 'Open / Close Keyboard Shortcuts modal', icon: Command },
+        { key: '?', description: 'Toggle Keyboard Shortcuts modal', icon: Keyboard },
         { key: 'T', description: 'Toggle Dark / Light Cinema Mode', icon: Sun },
         { key: 'M', description: 'Mute / Unmute Audio Sound Effects', icon: Volume2 },
         { key: 'F', description: 'Toggle Funky Cursor', icon: MousePointer2 },

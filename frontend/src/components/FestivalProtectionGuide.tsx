@@ -12,7 +12,6 @@ import {
   Award,
   Sparkles,
   ArrowRight,
-  Command as CommandIcon,
 } from 'lucide-react';
 import { VerifiedTick } from './ui/VerifiedTick';
 import { OrganicBlobBackground } from './common/OrganicBlobBackground';
@@ -20,7 +19,6 @@ import { OrganicBlobBackground } from './common/OrganicBlobBackground';
 interface Props {
   onNavigateToDiligence: () => void;
   onNavigateToDesk: () => void;
-  onOpenCommandPalette?: () => void;
 }
 
 const RISK_ARCHETYPES = [
@@ -119,7 +117,6 @@ const DEFENSE_STEPS = [
 export const FestivalProtectionGuide: React.FC<Props> = ({
   onNavigateToDiligence,
   onNavigateToDesk,
-  onOpenCommandPalette,
 }) => {
   return (
     <div className="relative w-full min-h-screen text-slate-100 px-4 py-12 sm:py-20 animate-fade-in overflow-hidden">
@@ -295,25 +292,29 @@ export const FestivalProtectionGuide: React.FC<Props> = ({
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="rounded-3xl p-8 sm:p-10 bg-gradient-to-br from-indigo-950/80 via-darkroom-surface to-darkroom-card border border-indigo-500/30 text-center space-y-6 shadow-2xl">
-          <div className="space-y-2 max-w-xl mx-auto">
-            <Sparkles className="size-6 text-indigo-400 mx-auto" />
+        {/* Closing CTA */}
+        <section className="text-center p-8 sm:p-12 rounded-3xl bg-midnight-surface/80 border border-orange-500/30 space-y-6 shadow-2xl relative overflow-hidden">
+          <div className="space-y-2 relative z-10">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-500/10 text-orange-300 font-mono text-xs border border-orange-500/20">
+              <VerifiedTick size={14} />
+              <span>Evidence-Based Screening Verification</span>
+            </div>
             <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white">
-              Vetting a Festival Right Now?
+              Run Due Diligence on Your Next Festival
             </h2>
-            <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-sans">
-              Run an autonomous multi-vector due diligence audit with Screened. We cross-examine corporate filings, venue manifests, and filmmaker sentiment in seconds.
+            <p className="text-sm text-slate-400 max-w-xl mx-auto">
+              Screened cross-references screening venues, Companies House filings, and filmmaker sentiment in seconds.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+          <div className="flex flex-wrap items-center justify-center gap-4 relative z-10">
             <button
               type="button"
               onClick={onNavigateToDiligence}
-              className="px-5 py-3 rounded-xl bg-midnight-royal hover:bg-indigo-600 text-white text-xs font-mono font-semibold flex items-center gap-2 transition-all shadow-lg hover:shadow-indigo-500/25 cursor-pointer active:scale-95"
+              className="px-6 py-3 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-semibold text-sm flex items-center gap-2 transition-all shadow-lg shadow-orange-600/30 cursor-pointer active:scale-95"
             >
-              <span>Launch Festival Due Diligence</span>
+              <ShieldCheck className="size-4" />
+              <span>Verify a Festival Now</span>
               <ArrowRight className="size-4" />
             </button>
 
@@ -325,17 +326,6 @@ export const FestivalProtectionGuide: React.FC<Props> = ({
               <Sparkles className="size-3.5 text-indigo-400" />
               <span>Ask Screened AI</span>
             </button>
-
-            {onOpenCommandPalette && (
-              <button
-                type="button"
-                onClick={onOpenCommandPalette}
-                className="px-4 py-3 rounded-xl bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border text-slate-300 hover:text-white text-xs font-mono flex items-center gap-2 transition-all cursor-pointer active:scale-95"
-              >
-                <CommandIcon className="size-3.5" />
-                <span>Quick Actions (⌘K)</span>
-              </button>
-            )}
           </div>
         </section>
       </div>

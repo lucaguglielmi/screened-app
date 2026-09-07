@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import { Node, Edge, MarkerType } from '@xyflow/react';
 import { ScreenedFlowCanvas } from './ScreenedFlowCanvas';
 import { SyndicateInspector, SyndicateNodeData } from './SyndicateInspector';
@@ -20,6 +20,8 @@ import {
   Film,
   DollarSign,
   ChevronRight,
+  X,
+  ExternalLink,
 } from 'lucide-react';
 
 interface Props {
@@ -48,6 +50,9 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
   const [selectedSyndicateNode, setSelectedSyndicateNode] = useState<SyndicateNodeData | null>(null);
   const [filterMode, setFilterMode] = useState<'ALL' | 'VERIFIED' | 'DISPUTES'>('ALL');
   const [syndicateFilter, setSyndicateFilter] = useState<'ALL' | 'RED_FLAGS' | 'SISTERS'>('ALL');
+
+  const syndicateInspectorRef = useRef<HTMLDivElement>(null);
+  const provenanceInspectorRef = useRef<HTMLDivElement>(null);
 
   const festivalName = dossier.festivalName || 'Target Entity';
   const hasDisputes = Boolean(dossier.contradictions && dossier.contradictions.length > 0);
@@ -222,16 +227,41 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
             ),
         );
 
-      const claimX = 60 + idx * 230;
+      const claimX = 40 + idx * 235;
       rawNodes.push({
         id: `claim-${claim.id}`,
         position: { x: claimX, y: 280 },
         data: {
-          label: `${claim.researchDomain}: ${claim.statement.slice(0, 50)}...`,
+          label: (
+            <div className="space-y-1 text-left select-none" title={claim.statement}>
+              <div className="flex items-center justify-between gap-1">
+                <span className="font-mono text-[9px] uppercase tracking-wider text-tool-diligence font-bold">
+                  {claim.researchDomain}
+                </span>
+                <span
+                  className={`text-[8px] font-mono px-1 py-0.5 rounded ${
+                    isClaimDisputed
+                      ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                      : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                  }`}
+                >
+                  {claim.status}
+                </span>
+              </div>
+              <p className="text-[10px] text-slate-200 leading-snug line-clamp-3 break-words font-sans">
+                {claim.statement}
+              </p>
+              <div className="text-[9px] font-mono text-indigo-400 flex items-center gap-0.5 pt-0.5">
+                <span>Click for full text &amp; ledger →</span>
+              </div>
+            </div>
+          ),
           sublabel: `${claim.claimKind} • ${claim.status}`,
           status: isClaimDisputed ? 'DISPUTED' : 'VERIFIED',
           details: claim.statement,
           claimId: claim.id,
+          researchDomain: claim.researchDomain,
+          claimKind: claim.claimKind,
         },
         style: {
           background: 'var(--color-darkroom-surface)',
@@ -239,10 +269,10 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
           border: isClaimDisputed
             ? '1.5px solid var(--color-state-disputed)'
             : '1px solid var(--color-darkroom-border)',
-          borderRadius: '10px',
-          padding: '8px 12px',
-          width: 190,
-          fontSize: '10px',
+          borderRadius: '12px',
+          padding: '10px 12px',
+          width: 220,
+          cursor: 'pointer',
         },
       });
 
@@ -753,12 +783,18 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
     if (node.data?.claimId && onSelectClaim) {
       onSelectClaim(node.data.claimId as string);
     }
+    setTimeout(() => {
+      provenanceInspectorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 60);
   };
 
   const handleSyndicateNodeClick = (_e: React.MouseEvent, node: Node) => {
     const data = syndicateDataMap[node.id];
     if (data) {
       setSelectedSyndicateNode(data);
+      setTimeout(() => {
+        syndicateInspectorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 60);
     }
   };
 
@@ -908,16 +944,75 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
           />
 
           {selectedNodeData && (
-            <div className="p-3.5 rounded-xl bg-darkroom-card text-xs space-y-1 animate-fade-in border border-darkroom-border">
-              <div className="flex items-center justify-between gap-2">
-                <span className="font-bold text-white font-serif">{selectedNodeData.label}</span>
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-indigo-500/20 text-indigo-300">
-                  {selectedNodeData.status || 'NODE'}
-                </span>
+            <div
+              ref={provenanceInspectorRef}
+              className="p-4 rounded-2xl bg-darkroom-card text-xs space-y-2.5 animate-fade-in border border-darkroom-border shadow-xl scroll-mt-24"
+            >
+              <div className="flex items-center justify-between gap-2 border-b border-darkroom-border/60 pb-2">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-bold text-white font-serif text-sm">
+                    {typeof selectedNodeData.label === 'string'
+                      ? selectedNodeData.label
+                      : selectedNodeData.researchDomain
+                        ? `${selectedNodeData.researchDomain} Evidence Claim`
+                        : 'Evidence Node Details'}
+                  </span>
+                  {Boolean(selectedNodeData.claimKind) && (
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-darkroom-surface text-slate-300 border border-darkroom-border">
+                      {String(selectedNodeData.claimKind)}
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span
+                    className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
+                      selectedNodeData.status === 'DISPUTED'
+                        ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                        : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                    }`}
+                  >
+                    {String(selectedNodeData.status || 'VERIFIED')}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedNodeData(null)}
+                    className="p-1 rounded-md text-slate-400 hover:text-white hover:bg-darkroom-surface transition-colors cursor-pointer"
+                    aria-label="Close"
+                  >
+                    <X className="size-4" />
+                  </button>
+                </div>
               </div>
-              <p className="text-slate-300">
-                {selectedNodeData.details || selectedNodeData.role || selectedNodeData.sublabel}
+
+              {/* Full unabridged text */}
+              <p className="text-slate-200 leading-relaxed text-xs sm:text-sm font-sans">
+                {String(selectedNodeData.details || selectedNodeData.role || selectedNodeData.sublabel || '')}
               </p>
+
+              {/* Action Button to Ledger if claim */}
+              {selectedNodeData.claimId && (
+                <div className="pt-2 border-t border-darkroom-border/40 flex items-center justify-between flex-wrap gap-2">
+                  <span className="font-mono text-[10px] text-slate-400">
+                    Claim ID: {String(selectedNodeData.claimId)}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (onSelectClaim) {
+                        onSelectClaim(String(selectedNodeData.claimId));
+                      }
+                      const ledgerEl = document.getElementById('section-ledger');
+                      if (ledgerEl) {
+                        ledgerEl.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-500/40 text-indigo-300 hover:text-white font-mono text-xs transition-colors cursor-pointer"
+                  >
+                    <span>Inspect Full Claim in Ledger</span>
+                    <ExternalLink className="size-3" />
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -1090,10 +1185,18 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
 
           {/* Node Inspector Drawer */}
           {selectedSyndicateNode && (
-            <SyndicateInspector
-              data={selectedSyndicateNode}
-              onClose={() => setSelectedSyndicateNode(null)}
-            />
+            <div ref={syndicateInspectorRef} className="scroll-mt-24">
+              <SyndicateInspector
+                data={selectedSyndicateNode}
+                onClose={() => setSelectedSyndicateNode(null)}
+                onNavigateToLedger={() => {
+                  const ledgerEl = document.getElementById('section-ledger');
+                  if (ledgerEl) {
+                    ledgerEl.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+              />
+            </div>
           )}
         </div>
       )}

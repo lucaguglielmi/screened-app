@@ -1,13 +1,11 @@
-import { useState, useRef, Suspense } from 'react';
+import { useState, useRef, Suspense, useCallback } from 'react';
 import {
   Search,
   AlertTriangle,
   History,
   ShieldCheck,
-  Command as CommandIcon,
   Volume2,
   VolumeX,
-  Keyboard,
 } from 'lucide-react';
 
 import {
@@ -30,7 +28,6 @@ import { ChatContainer } from './components/chat/ChatContainer';
 import { WhyScreened } from './components/WhyScreened';
 import { FestivalProtectionGuide } from './components/FestivalProtectionGuide';
 import { HowToUse } from './components/HowToUse';
-import { CommandPalette } from './components/CommandPalette';
 import { HistorySidebar } from './components/HistorySidebar';
 import { DossierStickyNav } from './components/dossier/DossierStickyNav';
 
@@ -48,8 +45,10 @@ import { track } from './utils/analytics';
 import { triggerAppNotification } from './utils/pwaNotifications';
 import { FEATURES } from './config/features';
 import { useAppRouter } from './router/useAppRouter';
+import { useVectorFieldConfig } from './hooks/useVectorFieldConfig';
 
 export default function App() {
+  const { config: vfConfig } = useVectorFieldConfig();
   const [soundMuted, setSoundMutedState] = useState<boolean>(() => isSoundMuted());
   const [isKeyboardHelpOpen, setIsKeyboardHelpOpen] = useState(false);
   const [isFunkyCursorEnabled, setIsFunkyCursorEnabled] = useState(false);
@@ -78,8 +77,7 @@ export default function App() {
   const [isOutreachOpen, setIsOutreachOpen] = useState(false);
   const [outreachLoading, setOutreachLoading] = useState(false);
 
-  // Command Palette & Keyboard state
-  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+  // Navigation & History state
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isCelebrating, setIsCelebrating] = useState(false);
   const [dossierDensity, setDossierDensity] = useState<DetailDensity>('FULL_EVIDENCE');
@@ -94,10 +92,33 @@ export default function App() {
     error,
     setError,
     recentSearches,
+    hasPastSearches,
+    setHasPastSearches,
     fetchInvestigation,
     startInvestigation,
     confirmEntity,
   } = useInvestigation();
+
+  const completedRef = useRef<string | null>(null);
+
+  const handleInvestigationComplete = useCallback(
+    (invId: string, invQuery: string) => {
+      if (completedRef.current === invId) return;
+      completedRef.current = invId;
+      playSuccessChime();
+      setIsCelebrating(true);
+      setTimeout(() => {
+        fetchInvestigation(invId);
+        setTimeout(() => setIsCelebrating(false), 500); // 500ms celebration delay
+      }, 100);
+      triggerAppNotification('Screened — Investigation Complete', {
+        body: `Due diligence dossier for ${invQuery} is ready to view.`,
+        icon: '/icon.svg',
+        data: { url: window.location.href },
+      });
+    },
+    [fetchInvestigation],
+  );
 
   const { events, setEvents } = useSSEEvents({
     investigation,
@@ -112,19 +133,7 @@ export default function App() {
           : null,
       );
     },
-    onDossierReady: (invId, invQuery) => {
-      playSuccessChime();
-      setIsCelebrating(true);
-      setTimeout(() => {
-        fetchInvestigation(invId);
-        setTimeout(() => setIsCelebrating(false), 500); // 500ms celebration delay
-      }, 100);
-      triggerAppNotification('Screened — Investigation Complete', {
-        body: `Due diligence dossier for ${invQuery} is ready to view.`,
-        icon: '/icon.svg',
-        data: { url: window.location.href },
-      });
-    },
+    onDossierReady: handleInvestigationComplete,
     onStatusChange: (status) => {
       setInvestigation((prev) => (prev && prev.status !== 'READY' ? { ...prev, status } : prev));
     },
@@ -145,9 +154,7 @@ export default function App() {
   };
 
   useKeyboardShortcuts({
-    onToggleCommandPalette: () => setIsCommandPaletteOpen((prev) => !prev),
     onCloseModals: () => {
-      setIsCommandPaletteOpen(false);
       setIsKeyboardHelpOpen(false);
       setIsOutreachOpen(false);
     },
@@ -178,6 +185,7 @@ export default function App() {
       | 'command_palette_deep_screen'
       | 'grant_scout_deep_screen',
   ) => {
+    completedRef.current = null;
     setEvents([]);
     const inv = await startInvestigation(subjectQuery, entryPoint, optionalUrl);
     if (inv?.id) {
@@ -256,6 +264,7 @@ export default function App() {
   };
 
   const handleReset = () => {
+    completedRef.current = null;
     setInvestigation(null);
     setEvents([]);
     setError(null);
@@ -293,9 +302,19 @@ export default function App() {
       {/* Live System Update Notifier */}
       <UpdateNotifier />
 
-      {/* Global Organic Morphing Mesh Gradient Background */}
-      {activeTool !== 'DESIGN_PLAYGROUND' && (
-        <VectorFieldBackground className="fixed inset-0 pointer-events-none z-0" />
+      {/* Global Organic Magnetic Vector Field Laboratory Background */}
+      {activeTool !== 'DESIGN_PLAYGROUND' && vfConfig.enabledOnChat && (
+        <VectorFieldBackground
+          position="fixed"
+          color={vfConfig.color}
+          speed={vfConfig.speed}
+          amplitude={vfConfig.amplitude}
+          gridSpacing={vfConfig.gridSpacing}
+          dropletLength={vfConfig.dropletLength}
+          blobCoverage={vfConfig.blobCoverage}
+          opacity={vfConfig.opacity}
+          className="fixed inset-0 pointer-events-none z-0"
+        />
       )}
 
       {/* Left Vertical Navigation Rail & Expandable Flyout */}
@@ -334,30 +353,19 @@ export default function App() {
               </div>
             </div>
 
-            {/* Header Right: Command Palette, Sound Toggle, Theme Toggle, Shortcuts Hint & Mobile Navigation */}
+            {/* Header Right: Sound Toggle, Past Searches & Mobile Navigation */}
             <div className="flex items-center gap-2 sm:gap-2.5">
-              {/* Quick Search / Command Palette (⌘K) */}
-              <button
-                onClick={() => setIsCommandPaletteOpen(true)}
-                className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-darkroom-surface hover:bg-darkroom-card text-slate-400 hover:text-slate-200 border border-darkroom-border transition-colors cursor-pointer text-xs font-mono"
-                title="Command Palette (⌘K)"
-              >
-                <Search className="size-3.5 text-indigo-400" />
-                <span>Search or jump to...</span>
-                <span className="flex items-center gap-0.5 text-[10px] bg-paper-border bg-darkroom-border text-slate-400 px-1.5 py-0.5 rounded border border-darkroom-border">
-                  <CommandIcon className="size-2.5" /> K
-                </span>
-              </button>
-
-              {/* History Button */}
-              <button
-                onClick={() => setIsHistoryOpen(true)}
-                className="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-darkroom-surface hover:bg-darkroom-card text-slate-400 hover:text-indigo-300 border border-darkroom-border hover:border-indigo-500/40 transition-colors cursor-pointer text-xs font-mono flex items-center gap-1.5"
-                title="View Past Searches"
-              >
-                <History className="size-4 text-indigo-400" />
-                <span className="hidden sm:inline">Past Searches</span>
-              </button>
+              {/* History Button (Shown only when at least one dossier exists) */}
+              {hasPastSearches && (
+                <button
+                  onClick={() => setIsHistoryOpen(true)}
+                  className="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-darkroom-surface hover:bg-darkroom-card text-slate-400 hover:text-indigo-300 border border-darkroom-border hover:border-indigo-500/40 transition-colors cursor-pointer text-xs font-mono flex items-center gap-1.5"
+                  title="View Past Searches"
+                >
+                  <History className="size-4 text-indigo-400" />
+                  <span className="hidden sm:inline">Past Searches</span>
+                </button>
+              )}
 
               {/* Sound Effect Toggle Button (M) */}
               <button
@@ -376,16 +384,6 @@ export default function App() {
                 )}
               </button>
 
-
-              {/* Keyboard Shortcuts Quick Helper Hint */}
-              <button
-                onClick={() => setIsKeyboardHelpOpen(true)}
-                className="hidden md:flex p-2 items-center justify-center rounded-xl bg-darkroom-surface hover:bg-darkroom-card text-slate-400 hover:text-indigo-300 border border-darkroom-border hover:border-indigo-500/40 transition-all cursor-pointer text-xs font-mono"
-                title="Keyboard Shortcuts Cheat Sheet (Press ?)"
-              >
-                <Keyboard className="size-4 text-indigo-400" />
-              </button>
-
               {/* Mobile Menu Drawer Button */}
               <MobileNavigation
                 activeTool={activeTool}
@@ -393,8 +391,6 @@ export default function App() {
                 onNavigateHome={handleReset}
                 soundMuted={soundMuted}
                 onToggleSound={toggleSound}
-                onOpenKeyboardHelp={() => setIsKeyboardHelpOpen(true)}
-                onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
               />
             </div>
           </div>
@@ -474,7 +470,6 @@ export default function App() {
               onNavigateToDesk={handleReset}
               onNavigateToDiligence={() => handleSelectTool('DUE_DILIGENCE')}
               onNavigateToScout={() => handleSelectTool('GRANT_SCOUT')}
-              onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
             />
           )}
 
@@ -483,7 +478,6 @@ export default function App() {
             <FestivalProtectionGuide
               onNavigateToDesk={handleReset}
               onNavigateToDiligence={() => handleSelectTool('DUE_DILIGENCE')}
-              onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
             />
           )}
 
@@ -571,6 +565,7 @@ export default function App() {
                   investigationId={investigation.id}
                   isCelebrating={isCelebrating}
                   onCancel={handleReset}
+                  onComplete={() => handleInvestigationComplete(investigation.id, investigation.query)}
                 />
               )}
 
@@ -640,14 +635,6 @@ export default function App() {
           )}
         </main>
 
-        {/* Global Command Palette (⌘K) */}
-        <CommandPalette
-          isOpen={isCommandPaletteOpen}
-          onClose={() => setIsCommandPaletteOpen(false)}
-          onSelectTool={handleSelectTool}
-          onSearchFestival={(q) => handleDeepScreen(q, 'command_palette')}
-        />
-
         {/* Outreach Sandbox Approval Modal */}
         <OutreachModal
           draft={outreachDraft}
@@ -669,6 +656,7 @@ export default function App() {
         <HistorySidebar
           isOpen={isHistoryOpen}
           onClose={() => setIsHistoryOpen(false)}
+          onHistoryCleared={() => setHasPastSearches(false)}
           onSelectInvestigation={(id) => {
             navigate(`/diligence/${encodeURIComponent(id)}`);
             setIsHistoryOpen(false);

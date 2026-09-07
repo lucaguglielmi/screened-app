@@ -8,9 +8,7 @@ import {
   Coins,
   Volume2,
   VolumeX,
-  Search,
   Scale,
-  Keyboard,
   Check,
   ExternalLink,
   Palette,
@@ -27,8 +25,6 @@ interface MobileNavigationProps {
   onNavigateHome?: () => void;
   soundMuted: boolean;
   onToggleSound: () => void;
-  onOpenKeyboardHelp: () => void;
-  onOpenCommandPalette: () => void;
 }
 
 const subscribe = () => () => {};
@@ -39,8 +35,6 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
   onNavigateHome,
   soundMuted,
   onToggleSound,
-  onOpenKeyboardHelp,
-  onOpenCommandPalette,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const isMounted = useSyncExternalStore(subscribe, () => true, () => false);
@@ -128,26 +122,6 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                   aria-label="Close menu"
                 >
                   <X className="size-5" />
-                </button>
-              </div>
-
-              {/* Quick Search Action */}
-              <div className="mt-4">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsOpen(false);
-                    onOpenCommandPalette();
-                  }}
-                  className="w-full py-3 px-4 rounded-2xl bg-darkroom-surface hover:bg-darkroom-card border border-darkroom-border text-left flex items-center justify-between text-base text-slate-300 transition-colors cursor-pointer"
-                >
-                  <div className="flex items-center gap-3">
-                    <Search className="size-5 text-indigo-400" />
-                    <span>Quick Search (⌘K)</span>
-                  </div>
-                  <span className="text-xs font-mono px-2 py-0.5 rounded bg-paper-border bg-darkroom-border text-slate-400 border border-darkroom-border">
-                    ⌘K
-                  </span>
                 </button>
               </div>
 
@@ -330,20 +304,6 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                   )}
                 </button>
               </div>
-
-              {/* Keyboard Shortcuts Icon Button */}
-              <button
-                type="button"
-                onClick={() => {
-                  setIsOpen(false);
-                  onOpenKeyboardHelp();
-                }}
-                className="p-2.5 rounded-xl bg-darkroom-surface hover:bg-darkroom-card border border-darkroom-border text-slate-300 hover:text-white transition-colors cursor-pointer"
-                title="Keyboard Shortcuts (?)"
-                aria-label="Keyboard Shortcuts"
-              >
-                <Keyboard className="size-4 text-indigo-400" />
-              </button>
             </div>
           </motion.div>
         </div>

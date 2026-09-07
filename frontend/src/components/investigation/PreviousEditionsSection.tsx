@@ -195,7 +195,7 @@ export const PreviousEditionsSection: React.FC<Props> = ({
                                 href={award.imdbUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#080d1a] border border-indigo-900/40 text-xs font-mono text-indigo-300 hover:text-white hover:border-indigo-500/60 transition-colors"
+                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#080d1a] border border-indigo-900/40 text-xs font-mono text-indigo-300 hover:text-white hover:border-indigo-500/60 transition-colors cursor-pointer"
                               >
                                 <Film className="size-3 text-slate-400" />
                                 <span>IMDb</span>
@@ -207,7 +207,7 @@ export const PreviousEditionsSection: React.FC<Props> = ({
                                 href={award.winnerUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#080d1a] border border-indigo-900/40 text-xs font-mono text-indigo-300 hover:text-white hover:border-indigo-500/60 transition-colors"
+                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#080d1a] border border-indigo-900/40 text-xs font-mono text-indigo-300 hover:text-white hover:border-indigo-500/60 transition-colors cursor-pointer"
                               >
                                 <span>Film Page</span>
                                 <ExternalLink className="size-2.5 opacity-60" />
@@ -235,7 +235,7 @@ export const PreviousEditionsSection: React.FC<Props> = ({
                         href={press.url || '#'}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border hover:border-slate-600 text-xs text-slate-300 hover:text-white transition-all group"
+                        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border hover:border-slate-600 text-xs text-slate-300 hover:text-white transition-all group cursor-pointer"
                       >
                         <span className="text-slate-400 font-mono text-xs">
                           {press.publisher}:

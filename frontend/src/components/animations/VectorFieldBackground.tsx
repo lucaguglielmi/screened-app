@@ -2,21 +2,22 @@ import React, { useEffect, useRef } from 'react';
 import { useReducedMotion } from '../../utils/motionTokens';
 
 export interface LivingBackgroundProps {
-  primaryColor?: string; // Shade 1: Deep Midnight Navy (default: '#0a1936')
-  secondaryColor?: string; // Shade 2: Abyssal Deep Navy (default: '#040a17')
-  accentColor?: string; // Subtle complimentary dark navy (default: '#0d2248')
-  speed?: number; // Fluid drift speed (default: 0.35)
-  organicScale?: number; // Spread & size of the living fluid membrane (default: 1.0)
-  opacity?: number; // Base opacity (default: 0.5)
-  interactive?: boolean; // Smooth liquid ripple on mouse move (default: true)
-  position?: 'fixed' | 'absolute';
+  color?: string; // Needle & glow accent color (supports CSS variables, hex, rgb)
+  speed?: number; // Oscillation & transit speed (default: 0.6)
+  amplitude?: number; // Wave amplitude (default: 0.22)
+  gridSpacing?: number; // Space between needles in px (default: 30)
+  dropletLength?: number; // Length of each needle in px (default: 8)
+  blobCoverage?: number; // Coverage of the morphing blob mask (0.3 to 1.0, default: 0.8)
+  opacity?: number; // Overall field opacity (default: 0.45)
+  interactive?: boolean; // React to mouse movement (default: true)
+  position?: 'fixed' | 'absolute'; // 'fixed' for viewport background, 'absolute' for card previews
   className?: string;
-  // Backward-compatible props for playgrounds
-  color?: string;
-  amplitude?: number;
-  gridSpacing?: number;
-  dropletLength?: number;
-  blobCoverage?: number;
+
+  // Backward-compatible props
+  primaryColor?: string;
+  secondaryColor?: string;
+  accentColor?: string;
+  organicScale?: number;
 }
 
 interface Mote {
@@ -31,34 +32,34 @@ interface Mote {
 }
 
 export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
-  primaryColor = 'var(--color-midnight-surface)',
-  secondaryColor = 'var(--color-midnight-base)',
-  accentColor = 'var(--color-midnight-card)',
-  speed = 0.35,
-  organicScale = 1.0,
-  opacity = 0.5,
+  color,
+  speed = 0.6,
+  amplitude = 0.22,
+  gridSpacing = 30,
+  dropletLength = 8,
+  blobCoverage = 0.8,
+  opacity = 0.45,
   interactive = true,
   position = 'fixed',
   className = '',
   // Backward compatibility
-  color,
+  primaryColor = 'var(--color-tool-scout)',
 }) => {
   const reducedMotion = useReducedMotion();
   const effectiveSpeed = reducedMotion ? 0 : speed;
   const effectiveInteractive = reducedMotion ? false : interactive;
 
-  const activePrimary = color || primaryColor;
+  const activeColor = color || primaryColor;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Mouse fluid interaction state with spring physics
+  // Mouse fluid interaction state with smooth spring interpolation
   const mouseState = useRef({
     x: -1000,
     y: -1000,
     targetX: -1000,
     targetY: -1000,
     active: false,
-    velocity: 0,
     influence: 0,
     targetInfluence: 0,
   });
@@ -73,25 +74,33 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
     let width = 0;
     let height = 0;
 
-    // Initialize floating light motes (subtle cold-white / icy blue dust)
-    const motesCount = 28;
+    // Initialize subtle projector motes (cinematic stardust)
+    const motesCount = 20;
     const motes: Mote[] = Array.from({ length: motesCount }, () => ({
       x: Math.random(),
       y: Math.random(),
-      vx: (Math.random() - 0.5) * 0.00012,
-      vy: (Math.random() - 0.5) * 0.0001 - 0.00006, // gentle upward drift
-      size: 0.8 + Math.random() * 1.6,
-      baseAlpha: 0.12 + Math.random() * 0.28,
-      pulseSpeed: 0.4 + Math.random() * 1.0,
+      vx: (Math.random() - 0.5) * 0.0001,
+      vy: (Math.random() - 0.5) * 0.00008 - 0.00005,
+      size: 0.8 + Math.random() * 1.4,
+      baseAlpha: 0.15 + Math.random() * 0.25,
+      pulseSpeed: 0.5 + Math.random() * 0.8,
       phase: Math.random() * Math.PI * 2,
     }));
 
+    const isAbsolute = position === 'absolute' || className.includes('absolute');
+
     const handleResize = () => {
-      if (!canvas || !containerRef.current) return;
+      if (!canvas) return;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const rect = containerRef.current.getBoundingClientRect();
-      width = rect.width || window.innerWidth;
-      height = rect.height || window.innerHeight;
+      if (isAbsolute && containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        width = Math.floor(rect.width) || 300;
+        height = Math.floor(rect.height) || 200;
+      } else {
+        width = window.innerWidth;
+        height = window.innerHeight;
+      }
+
       canvas.width = Math.floor(width * dpr);
       canvas.height = Math.floor(height * dpr);
       ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -101,31 +110,30 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
     handleResize();
     window.addEventListener('resize', handleResize);
 
-    let lastMouseX = -1000;
-    let lastMouseY = -1000;
-    let lastMouseTime = performance.now();
-
     const handleMouseMove = (e: MouseEvent) => {
       if (!canvas) return;
-      const rect = canvas.getBoundingClientRect();
-      const curX = e.clientX - rect.left;
-      const curY = e.clientY - rect.top;
-      const now = performance.now();
-      const dt = Math.max(1, now - lastMouseTime);
+      let curX = e.clientX;
+      let curY = e.clientY;
 
-      const dx = curX - lastMouseX;
-      const dy = curY - lastMouseY;
-      const speedPx = Math.sqrt(dx * dx + dy * dy) / dt;
+      if (isAbsolute) {
+        const rect = canvas.getBoundingClientRect();
+        curX = e.clientX - rect.left;
+        curY = e.clientY - rect.top;
+
+        // Verify if cursor is inside or near the preview card
+        const isInside =
+          curX >= -30 && curX <= rect.width + 30 && curY >= -30 && curY <= rect.height + 30;
+        if (!isInside) {
+          mouseState.current.targetInfluence = 0.0;
+          mouseState.current.active = false;
+          return;
+        }
+      }
 
       mouseState.current.targetX = curX;
       mouseState.current.targetY = curY;
-      mouseState.current.velocity = Math.min(speedPx * 12, 180);
       mouseState.current.active = true;
       mouseState.current.targetInfluence = 1.0;
-
-      lastMouseX = curX;
-      lastMouseY = curY;
-      lastMouseTime = now;
     };
 
     const handleMouseLeave = () => {
@@ -138,7 +146,8 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
       window.addEventListener('mouseleave', handleMouseLeave, { passive: true });
     }
 
-    const resolveColor = (c: string) => {
+    // Dynamic color resolution helper for CSS variables
+    const resolveColor = (c: string): string => {
       if (c.startsWith('var(')) {
         const match = c.match(/var\((.*?)\)/);
         if (match) {
@@ -149,34 +158,41 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
       return c;
     };
 
-    const colorWithAlpha = (colorStr: string, alpha: number) => {
-      const clampedAlpha = Math.max(0, Math.min(1, alpha));
+    const parseColorToRgb = (colorStr: string): { r: number; g: number; b: number } => {
       const resolved = resolveColor(colorStr);
       if (resolved.startsWith('#')) {
         const hex = resolved.replace('#', '');
-        let r = 0, g = 0, b = 0;
         if (hex.length === 3) {
-          r = parseInt(hex[0] + hex[0], 16);
-          g = parseInt(hex[1] + hex[1], 16);
-          b = parseInt(hex[2] + hex[2], 16);
+          return {
+            r: parseInt(hex[0] + hex[0], 16),
+            g: parseInt(hex[1] + hex[1], 16),
+            b: parseInt(hex[2] + hex[2], 16),
+          };
         } else if (hex.length >= 6) {
-          r = parseInt(hex.substring(0, 2), 16);
-          g = parseInt(hex.substring(2, 4), 16);
-          b = parseInt(hex.substring(4, 6), 16);
+          return {
+            r: parseInt(hex.substring(0, 2), 16),
+            g: parseInt(hex.substring(2, 4), 16),
+            b: parseInt(hex.substring(4, 6), 16),
+          };
         }
-        return `rgba(${r}, ${g}, ${b}, ${clampedAlpha.toFixed(3)})`;
       } else if (resolved.startsWith('rgb')) {
         const match = resolved.match(/\d+/g);
         if (match && match.length >= 3) {
-          return `rgba(${match[0]}, ${match[1]}, ${match[2]}, ${clampedAlpha.toFixed(3)})`;
+          return {
+            r: parseInt(match[0], 10),
+            g: parseInt(match[1], 10),
+            b: parseInt(match[2], 10),
+          };
         }
       }
-      return resolved;
+      return { r: 16, g: 229, b: 153 }; // default scout mint
     };
 
-    const resolvedPrimary = resolveColor(activePrimary);
-    const resolvedSecondary = resolveColor(secondaryColor);
-    const resolvedAccent = resolveColor(accentColor);
+    const colorWithAlpha = (colorStr: string, alpha: number): string => {
+      const { r, g, b } = parseColorToRgb(colorStr);
+      const clamped = Math.max(0, Math.min(1, alpha));
+      return `rgba(${r}, ${g}, ${b}, ${clamped.toFixed(3)})`;
+    };
 
     const startTime = performance.now();
 
@@ -185,169 +201,199 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
         handleResize();
       }
 
+      // If document tab is hidden, pause heavy animation calculations
+      if (document.visibilityState === 'hidden') {
+        animationFrameId = requestAnimationFrame(render);
+        return;
+      }
+
       const elapsed = ((time - startTime) / 1000) * effectiveSpeed;
 
       // Smooth spring interpolation for mouse interaction
       const m = mouseState.current;
-      m.x += (m.targetX - m.x) * 0.06;
-      m.y += (m.targetY - m.y) * 0.06;
-      m.influence += (m.targetInfluence - m.influence) * 0.04;
-      m.velocity *= 0.94; // decay
+      m.x += (m.targetX - m.x) * 0.08;
+      m.y += (m.targetY - m.y) * 0.08;
+      m.influence += (m.targetInfluence - m.influence) * 0.05;
 
-      // Clear canvas
       ctx.clearRect(0, 0, width, height);
 
-      const diag = Math.sqrt(width * width + height * height);
-      const baseScale = diag * 0.48 * organicScale;
+      // --- 1. ORGANIC MORPHING BLOB DRIFT PHYSICS ---
+      // Lissajous curve drift of the primary organic attractor
+      const blobCenterX =
+        width * 0.5 +
+        Math.sin(elapsed * 0.38) * width * 0.15 +
+        Math.cos(elapsed * 0.25) * width * 0.08;
+      const blobCenterY =
+        height * 0.48 +
+        Math.cos(elapsed * 0.32) * height * 0.14 +
+        Math.sin(elapsed * 0.45) * height * 0.06;
 
-      // --- 1. DEFINING ORGANIC LIVING NODES (Harmonic Dark Blue Fluid Bodies) ---
-      // Node 1: Primary Dark Blue Core (Breathing & drifting in Lissajous curve)
-      const n1X =
-        width * 0.52 +
-        Math.sin(elapsed * 0.35) * width * 0.18 +
-        Math.cos(elapsed * 0.22) * width * 0.08;
-      const n1Y =
-        height * 0.44 +
-        Math.cos(elapsed * 0.28) * height * 0.15 +
-        Math.sin(elapsed * 0.48) * height * 0.06;
-      const n1R = baseScale * (0.85 + Math.sin(elapsed * 0.55) * 0.12);
+      const screenDiag = Math.sqrt(width * width + height * height);
+      const baseRadius = screenDiag * 0.38 * Math.max(0.2, Math.min(1.2, blobCoverage));
 
-      // Node 2: Abyssal Dark Navy Ambient Swell (Counter-orbiting bottom left)
-      const n2X = width * 0.32 + Math.cos(elapsed * 0.42 + 1.2) * width * 0.16;
-      const n2Y = height * 0.62 + Math.sin(elapsed * 0.38 + 0.8) * height * 0.14;
-      const n2R = baseScale * (1.1 + Math.cos(elapsed * 0.45) * 0.15);
+      // --- 2. SUBTERRANEAN MOVING MAGNETIC POLES ---
+      // Pole 1: North Attractor (orbiting around blob center)
+      const pole1X = blobCenterX + Math.cos(elapsed * 0.85) * (baseRadius * 0.48);
+      const pole1Y = blobCenterY + Math.sin(elapsed * 0.85) * (baseRadius * 0.48);
 
-      // Node 3: Complimentary Dark Blue Glow (Top right)
-      const n3X = width * 0.68 + Math.sin(elapsed * 0.52 + 2.4) * width * 0.14;
-      const n3Y = height * 0.32 + Math.cos(elapsed * 0.48 + 1.8) * height * 0.12;
-      const n3R = baseScale * (0.65 + Math.sin(elapsed * 0.62) * 0.1);
+      // Pole 2: South Vortex Magnet (counter-rotating with tangential twist)
+      const pole2X = blobCenterX + Math.sin(elapsed * 1.1) * (baseRadius * 0.58);
+      const pole2Y = blobCenterY - Math.cos(elapsed * 1.1) * (baseRadius * 0.4);
 
-      // Node 4: Secondary Dark Navy Tendril (Floating harmonic wave)
-      const n4X = width * 0.45 + Math.cos(elapsed * 0.25 + 3.1) * width * 0.22;
-      const n4Y = height * 0.56 + Math.sin(elapsed * 0.32 + 2.2) * height * 0.18;
-      const n4R = baseScale * (0.9 + Math.cos(elapsed * 0.38) * 0.14);
+      // Pole 3: Central Pulsing Pole
+      const pole3X = blobCenterX + Math.cos(elapsed * 0.45) * (baseRadius * 0.2);
+      const pole3Y = blobCenterY + Math.sin(elapsed * 0.55) * (baseRadius * 0.2);
 
-      // --- 2. MOUSE FLUID DEFLECTION ---
-      let mouseDisplaceX1 = 0;
-      let mouseDisplaceY1 = 0;
-      let mouseRippleGlow = 0;
-
-      if (effectiveInteractive && m.influence > 0.01) {
-        const dx = m.x - n1X;
-        const dy = m.y - n1Y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const maxDist = diag * 0.45;
-        if (dist < maxDist) {
-          const force = (1 - dist / maxDist) * m.influence;
-          mouseDisplaceX1 = (-dx / (dist || 1)) * force * 45;
-          mouseDisplaceY1 = (-dy / (dist || 1)) * force * 45;
-          mouseRippleGlow = force * 0.18;
-        }
-      }
-
+      // --- 3. AMBIENT LUMINESCENT CORE GLOW (Underneath Needles) ---
       ctx.save();
-      ctx.globalCompositeOperation = 'screen';
-
-      // --- 3. LAYER 1: DEEP ABYSSAL NAVY AMBIENCE (Background Foundation) ---
-      const gradIndigo = ctx.createRadialGradient(n2X, n2Y, n2R * 0.08, n2X, n2Y, n2R);
-      gradIndigo.addColorStop(0, colorWithAlpha(resolvedSecondary, opacity * 0.8));
-      gradIndigo.addColorStop(0.45, colorWithAlpha(resolvedSecondary, opacity * 0.4));
-      gradIndigo.addColorStop(0.85, colorWithAlpha(resolvedSecondary, opacity * 0.1));
-      gradIndigo.addColorStop(1, 'transparent');
-
-      ctx.fillStyle = gradIndigo;
+      const glowGrad = ctx.createRadialGradient(
+        blobCenterX,
+        blobCenterY,
+        baseRadius * 0.05,
+        blobCenterX,
+        blobCenterY,
+        baseRadius * 0.8,
+      );
+      glowGrad.addColorStop(0, colorWithAlpha(activeColor, opacity * 0.15));
+      glowGrad.addColorStop(0.5, colorWithAlpha(activeColor, opacity * 0.05));
+      glowGrad.addColorStop(1, 'transparent');
+      ctx.fillStyle = glowGrad;
       ctx.beginPath();
-      ctx.arc(n2X, n2Y, n2R, 0, Math.PI * 2);
+      ctx.arc(blobCenterX, blobCenterY, baseRadius * 0.8, 0, Math.PI * 2);
       ctx.fill();
+      ctx.restore();
 
-      // --- 4. LAYER 2: SECONDARY DARK NAVY HARMONIC WAVE (Node 4) ---
-      const gradNode4 = ctx.createRadialGradient(n4X, n4Y, n4R * 0.05, n4X, n4Y, n4R);
-      const node4Alpha = opacity * 0.5;
-      gradNode4.addColorStop(0, colorWithAlpha(resolvedSecondary, node4Alpha));
-      gradNode4.addColorStop(0.5, colorWithAlpha(resolvedPrimary, node4Alpha * 0.4));
-      gradNode4.addColorStop(1, 'transparent');
+      // --- 4. MAGNETIC VECTOR FIELD NEEDLE GRID ---
+      const effectiveSpacing = Math.max(16, Math.min(60, gridSpacing));
+      const effectiveLength = Math.max(4, Math.min(24, dropletLength));
 
-      ctx.fillStyle = gradNode4;
-      ctx.beginPath();
-      ctx.arc(n4X, n4Y, n4R, 0, Math.PI * 2);
-      ctx.fill();
+      const cols = Math.ceil(width / effectiveSpacing) + 2;
+      const rows = Math.ceil(height / effectiveSpacing) + 2;
+      const offsetX = (width % effectiveSpacing) / 2;
+      const offsetY = (height % effectiveSpacing) / 2;
 
-      // --- 5. LAYER 3: PRIMARY MIDNIGHT NAVY MEMBRANE (The Living Body) ---
-      const coreX = n1X + mouseDisplaceX1;
-      const coreY = n1Y + mouseDisplaceY1;
-      const coreR = n1R;
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const x = c * effectiveSpacing + offsetX - effectiveSpacing / 2;
+          const y = r * effectiveSpacing + offsetY - effectiveSpacing / 2;
 
-      const gradRuby = ctx.createRadialGradient(coreX, coreY, coreR * 0.05, coreX, coreY, coreR);
-      const primaryAlpha = Math.min(1.0, opacity * (0.9 + mouseRippleGlow));
-      gradRuby.addColorStop(0, colorWithAlpha(resolvedPrimary, primaryAlpha));
-      gradRuby.addColorStop(0.35, colorWithAlpha(resolvedPrimary, primaryAlpha * 0.6));
-      gradRuby.addColorStop(0.7, colorWithAlpha(resolvedPrimary, primaryAlpha * 0.2));
-      gradRuby.addColorStop(1, 'transparent');
+          // Compute angle & distance to morphing blob center
+          const dxBlob = x - blobCenterX;
+          const dyBlob = y - blobCenterY;
+          const distToBlob = Math.sqrt(dxBlob * dxBlob + dyBlob * dyBlob);
+          const angleToBlob = Math.atan2(dyBlob, dxBlob);
 
-      ctx.fillStyle = gradRuby;
-      ctx.beginPath();
-      ctx.arc(coreX, coreY, coreR, 0, Math.PI * 2);
-      ctx.fill();
+          // Harmonic Fourier expansion for undulating organic blob perimeter
+          const morphFactor =
+            1.0 +
+            0.16 * Math.sin(3 * angleToBlob + elapsed * 0.8) +
+            0.12 * Math.cos(2 * angleToBlob - elapsed * 0.5) +
+            0.08 * Math.sin(5 * angleToBlob + elapsed * 1.2) +
+            0.05 * Math.cos(4 * angleToBlob - elapsed * 0.9);
 
-      // --- 6. LAYER 4: COMPLIMENTARY DARK BLUE AMBIENT EMBER ---
-      const gradAmber = ctx.createRadialGradient(n3X, n3Y, n3R * 0.05, n3X, n3Y, n3R);
-      const accentAlpha = opacity * 0.6;
-      gradAmber.addColorStop(0, colorWithAlpha(resolvedAccent, accentAlpha));
-      gradAmber.addColorStop(0.4, colorWithAlpha(resolvedAccent, accentAlpha * 0.35));
-      gradAmber.addColorStop(0.8, colorWithAlpha(resolvedAccent, accentAlpha * 0.08));
-      gradAmber.addColorStop(1, 'transparent');
+          const currentBlobRadius = baseRadius * morphFactor;
 
-      ctx.fillStyle = gradAmber;
-      ctx.beginPath();
-      ctx.arc(n3X, n3Y, n3R, 0, Math.PI * 2);
-      ctx.fill();
+          // Feathered falloff at blob perimeter
+          const featherDistance = baseRadius * 0.32;
+          const delta = currentBlobRadius - distToBlob;
 
-      // --- 7. LAYER 5: MORPHING ORGANIC CONTOUR WAVE (Smooth Dark Blue Ribbons) ---
-      ctx.globalCompositeOperation = 'lighter';
-      const contourAlpha = opacity * 0.3;
-      ctx.strokeStyle = colorWithAlpha(resolvedPrimary, contourAlpha);
-      ctx.lineWidth = 1.5;
+          if (delta <= -featherDistance) {
+            continue; // Outside organic boundary
+          }
 
-      const pointsCount = 12;
-      const contourPoints: { x: number; y: number }[] = [];
-      const contourBaseRadius = coreR * 0.62;
+          let blobAlpha = 1.0;
+          if (delta < featherDistance) {
+            const tNorm = Math.max(0, Math.min(1, (delta + featherDistance) / (featherDistance * 2)));
+            blobAlpha = tNorm * tNorm * (3 - 2 * tNorm); // Hermite smoothstep
+          }
 
-      for (let i = 0; i < pointsCount; i++) {
-        const theta = (i / pointsCount) * Math.PI * 2;
-        const harmonic =
-          Math.sin(theta * 3 + elapsed * 1.2) * 0.14 +
-          Math.cos(theta * 2 - elapsed * 0.8) * 0.1 +
-          Math.sin(theta * 5 + elapsed * 1.6) * 0.06;
+          if (blobAlpha <= 0.02) continue;
 
-        const rCurrent = contourBaseRadius * (1.0 + harmonic);
-        contourPoints.push({
-          x: coreX + Math.cos(theta) * rCurrent,
-          y: coreY + Math.sin(theta) * rCurrent,
-        });
-      }
+          // --- 5. MAGNETIC FIELD COMPUTATION B(x,y) ---
+          // Contribution from Pole 1 (Attractor)
+          const dx1 = x - pole1X;
+          const dy1 = y - pole1Y;
+          const dist1 = Math.sqrt(dx1 * dx1 + dy1 * dy1) + 25;
+          const b1X = (dx1 / (dist1 * 1.5)) * 90;
+          const b1Y = (dy1 / (dist1 * 1.5)) * 90;
 
-      ctx.beginPath();
-      for (let i = 0; i < pointsCount; i++) {
-        const p0 = contourPoints[i];
-        const p1 = contourPoints[(i + 1) % pointsCount];
-        const midX = (p0.x + p1.x) / 2;
-        const midY = (p0.y + p1.y) / 2;
-        if (i === 0) {
-          ctx.moveTo(midX, midY);
-        } else {
-          ctx.quadraticCurveTo(p0.x, p0.y, midX, midY);
+          // Contribution from Pole 2 (Rotational Vortex / Swirl)
+          const dx2 = x - pole2X;
+          const dy2 = y - pole2Y;
+          const dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2) + 25;
+          const b2X = (-dy2 / (dist2 * 1.4)) * 120;
+          const b2Y = (dx2 / (dist2 * 1.4)) * 120;
+
+          // Contribution from Pole 3 (Pulsar)
+          const dx3 = x - pole3X;
+          const dy3 = y - pole3Y;
+          const dist3 = Math.sqrt(dx3 * dx3 + dy3 * dy3) + 30;
+          const b3X = (dx3 / dist3) * 35;
+          const b3Y = (dy3 / dist3) * 35;
+
+          // Harmonic spatial waves
+          const nx = x / (width || 1);
+          const ny = y / (height || 1);
+          const waveX = Math.cos(elapsed * 1.8 + nx * 4.2 + ny * 2.8) * amplitude * 80;
+          const waveY = Math.sin(elapsed * 1.8 + nx * 2.8 - ny * 3.5) * amplitude * 80;
+
+          let netBx = b1X + b2X + b3X + waveX;
+          let netBy = b1Y + b2Y + b3Y + waveY;
+
+          // Interactive Cursor High-Intensity Magnetic Dipole
+          if (effectiveInteractive && m.influence > 0.01) {
+            const dxM = x - m.x;
+            const dyM = y - m.y;
+            const distM = Math.sqrt(dxM * dxM + dyM * dyM) + 10;
+            const mouseRadius = isAbsolute ? 140 : 260;
+            if (distM < mouseRadius) {
+              const mousePower = (1 - distM / mouseRadius) * 280 * m.influence;
+              netBx += (-dyM / distM) * mousePower * 1.2 - (dxM / distM) * mousePower * 0.4;
+              netBy += (dxM / distM) * mousePower * 1.2 - (dyM / distM) * mousePower * 0.4;
+            }
+          }
+
+          // Net angle of needle alignment
+          const angle = Math.atan2(netBy, netBx);
+
+          // --- 6. SHARP & COMPACT NEEDLE RENDERING ---
+          const halfLen = effectiveLength / 2;
+          const x1 = x - Math.cos(angle) * halfLen;
+          const y1 = y - Math.sin(angle) * halfLen;
+          const x2 = x + Math.cos(angle) * halfLen;
+          const y2 = y + Math.sin(angle) * halfLen;
+
+          const currentOpacity = opacity * blobAlpha;
+
+          // Needle stroke gradient from subtle tail to bright head
+          const needleGrad = ctx.createLinearGradient(x1, y1, x2, y2);
+          needleGrad.addColorStop(0, colorWithAlpha(activeColor, currentOpacity * 0.08));
+          needleGrad.addColorStop(0.5, colorWithAlpha(activeColor, currentOpacity * 0.65));
+          needleGrad.addColorStop(1, colorWithAlpha(activeColor, currentOpacity));
+
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x2, y2);
+          ctx.strokeStyle = needleGrad;
+          ctx.lineWidth = 1.2;
+          ctx.lineCap = 'round';
+          ctx.stroke();
+
+          // Tiny glowing tip beacon dot
+          const tipOpacity = Math.min(1.0, currentOpacity * 1.7);
+          ctx.beginPath();
+          ctx.arc(x2, y2, 0.9, 0, Math.PI * 2);
+          ctx.fillStyle = colorWithAlpha(activeColor, tipOpacity);
+          ctx.fill();
         }
       }
-      ctx.closePath();
-      ctx.stroke();
 
-      // --- 8. LAYER 6: FLOATING SUBTLE PROJECTOR MOTES ---
+      // --- 7. FLOATING SUBTLE PROJECTOR MOTES ---
       for (let i = 0; i < motes.length; i++) {
         const mote = motes[i];
         mote.x += mote.vx;
         mote.y += mote.vy;
 
-        // Wrap around screen bounds
         if (mote.x < 0) mote.x = 1;
         if (mote.x > 1) mote.x = 0;
         if (mote.y < 0) mote.y = 1;
@@ -355,50 +401,33 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
 
         const posX = mote.x * width;
         const posY = mote.y * height;
-
-        // Pulsing luminance
         const pulse = 0.5 + 0.5 * Math.sin(elapsed * mote.pulseSpeed + mote.phase);
-        const moteAlpha = opacity * mote.baseAlpha * pulse * 0.65;
+        const moteAlpha = opacity * mote.baseAlpha * pulse * 0.7;
 
-        ctx.fillStyle = `rgba(200, 225, 255, ${moteAlpha.toFixed(3)})`;
+        ctx.fillStyle = colorWithAlpha(activeColor, moteAlpha);
         ctx.beginPath();
         ctx.arc(posX, posY, mote.size, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      // --- 9. LAYER 7: INTERACTIVE CURSOR LUMINESCENT HALO ---
-      if (effectiveInteractive && m.active && m.influence > 0.02) {
-        const mouseGlowRadius = 160 + m.velocity * 0.4;
-        const mouseGrad = ctx.createRadialGradient(m.x, m.y, 4, m.x, m.y, mouseGlowRadius);
-        const cursorAlpha = opacity * 0.45 * m.influence;
-        mouseGrad.addColorStop(0, colorWithAlpha(resolvedPrimary, cursorAlpha));
-        mouseGrad.addColorStop(0.5, colorWithAlpha(resolvedSecondary, cursorAlpha * 0.4));
-        mouseGrad.addColorStop(1, 'transparent');
-
-        ctx.fillStyle = mouseGrad;
-        ctx.beginPath();
-        ctx.arc(m.x, m.y, mouseGlowRadius, 0, Math.PI * 2);
-        ctx.fill();
+      // --- 8. CENTER CLARITY VIGNETTE (Keeps Content 100% Legible) ---
+      if (!isAbsolute) {
+        ctx.save();
+        const vignetteGrad = ctx.createRadialGradient(
+          width * 0.5,
+          height * 0.48,
+          width * 0.15,
+          width * 0.5,
+          height * 0.48,
+          width * 0.75,
+        );
+        vignetteGrad.addColorStop(0, 'rgba(4, 10, 23, 0.16)');
+        vignetteGrad.addColorStop(0.65, 'rgba(4, 10, 23, 0.05)');
+        vignetteGrad.addColorStop(1, 'rgba(4, 10, 23, 0.0)');
+        ctx.fillStyle = vignetteGrad;
+        ctx.fillRect(0, 0, width, height);
+        ctx.restore();
       }
-
-      ctx.restore();
-
-      // --- 10. CENTER CLARITY MASK (Gentle Vignette in Deep Midnight Tone) ---
-      ctx.save();
-      const vignetteGrad = ctx.createRadialGradient(
-        width * 0.5,
-        height * 0.48,
-        width * 0.2,
-        width * 0.5,
-        height * 0.48,
-        width * 0.7,
-      );
-      vignetteGrad.addColorStop(0, 'rgba(4, 10, 23, 0.18)');
-      vignetteGrad.addColorStop(0.65, 'rgba(4, 10, 23, 0.05)');
-      vignetteGrad.addColorStop(1, 'rgba(4, 10, 23, 0.0)');
-      ctx.fillStyle = vignetteGrad;
-      ctx.fillRect(0, 0, width, height);
-      ctx.restore();
 
       animationFrameId = requestAnimationFrame(render);
     };
@@ -414,13 +443,16 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
       }
     };
   }, [
-    activePrimary,
-    secondaryColor,
-    accentColor,
+    activeColor,
     effectiveSpeed,
-    organicScale,
+    amplitude,
+    gridSpacing,
+    dropletLength,
+    blobCoverage,
     opacity,
     effectiveInteractive,
+    position,
+    className,
   ]);
 
   const isAbsolute = position === 'absolute' || className.includes('absolute');

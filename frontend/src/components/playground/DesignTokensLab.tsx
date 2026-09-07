@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Copy, Check, Sparkles, ShieldCheck, Compass, Palette } from 'lucide-react';
+import { Copy, Check, Sparkles, ShieldCheck, Compass, Palette, RotateCcw } from 'lucide-react';
 import {
   NeonCyberBar,
   PipelineStepperBar,
@@ -8,6 +8,7 @@ import {
   OrbitalReactorLoader,
 } from '../animations/AnimatedLoaders';
 import { VectorFieldBackground } from '../animations/VectorFieldBackground';
+import { useVectorFieldConfig } from '../../hooks/useVectorFieldConfig';
 import { soundEffects } from '../../utils/audio';
 
 const UI_PALETTE_1 = [
@@ -67,14 +68,12 @@ const TOOL_PALETTE_2 = [
 export const DesignTokensLab: React.FC = () => {
   const [copiedHex, setCopiedHex] = useState<string | null>(null);
 
-  // Vector field interactive state
-  const [vfColor, setVfColor] = useState('var(--color-tool-scout)');
-  const [vfSpeed, setVfSpeed] = useState(0.6);
-  const [vfAmplitude, setVfAmplitude] = useState(0.24);
-  const [vfSpacing, setVfSpacing] = useState(28);
-  const [vfLength, setVfLength] = useState(7);
-  const [vfOpacity, setVfOpacity] = useState(0.7);
-  const [vfBlobCoverage, setVfBlobCoverage] = useState(0.75);
+  // Vector field interactive state synchronized with live app background
+  const {
+    config: vfConfig,
+    updateConfig: updateVfConfig,
+    resetConfig: resetVfConfig,
+  } = useVectorFieldConfig();
 
   // Loader interactive state
   const [progressVal, setProgressVal] = useState(68);
@@ -254,21 +253,50 @@ export const DesignTokensLab: React.FC = () => {
               and cursor dipole) masked within an independently morphing 70% organic fluid blob.
             </p>
           </div>
+
+          <div className="flex items-center gap-2 self-start sm:self-auto">
+            <button
+              onClick={() => {
+                updateVfConfig({ enabledOnChat: !vfConfig.enabledOnChat });
+                soundEffects.playClick();
+              }}
+              className={`px-3 py-1.5 rounded-xl text-xs font-mono border transition-colors cursor-pointer flex items-center gap-1.5 ${
+                vfConfig.enabledOnChat
+                  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                  : 'bg-zinc-800 text-zinc-400 border-zinc-700'
+              }`}
+            >
+              <Sparkles className="size-3.5" />
+              <span>{vfConfig.enabledOnChat ? 'Active on Chat' : 'Paused on Chat'}</span>
+            </button>
+
+            <button
+              onClick={() => {
+                resetVfConfig();
+                soundEffects.playSuccess();
+              }}
+              className="px-3 py-1.5 rounded-xl text-xs font-mono bg-darkroom-card hover:bg-darkroom-border border border-darkroom-border text-slate-300 transition-colors cursor-pointer flex items-center gap-1"
+              title="Reset to default vector field settings"
+            >
+              <RotateCcw className="size-3.5" />
+              <span>Reset</span>
+            </button>
+          </div>
         </div>
 
         {/* Live Vector Field Container */}
         <div className="relative h-80 w-full rounded-3xl bg-darkroom-bg overflow-hidden shadow-2xl flex items-center justify-center">
           <VectorFieldBackground
             position="absolute"
-            color={vfColor}
-            speed={vfSpeed}
-            amplitude={vfAmplitude}
-            gridSpacing={vfSpacing}
-            dropletLength={vfLength}
-            blobCoverage={vfBlobCoverage}
-            opacity={vfOpacity}
+            color={vfConfig.color}
+            speed={vfConfig.speed}
+            amplitude={vfConfig.amplitude}
+            gridSpacing={vfConfig.gridSpacing}
+            dropletLength={vfConfig.dropletLength}
+            blobCoverage={vfConfig.blobCoverage}
+            opacity={vfConfig.opacity}
           />
-          <div className="relative z-10 text-center space-y-2 p-6 rounded-2xl bg-darkroom-bg/85 backdrop-blur-md border border-darkroom-border max-w-md shadow-2xl">
+          <div className="relative z-10 text-center space-y-2 p-6 rounded-2xl bg-darkroom-bg/85 backdrop-blur-md border border-darkroom-border max-w-md shadow-2xl pointer-events-none">
             <h4 className="font-serif text-lg font-bold text-white">
               Subterranean Magnet Simulation
             </h4>
@@ -285,12 +313,12 @@ export const DesignTokensLab: React.FC = () => {
           <div className="space-y-2">
             <label className="text-xs font-mono text-slate-400 uppercase">Needle Glow Color</label>
             <div className="flex items-center gap-2">
-              {['var(--color-tool-scout)', 'var(--color-tool-scout)', 'var(--color-midnight-royal)', 'var(--color-tool-diligence)', 'var(--color-royal-violet)'].map((c) => (
+              {['var(--color-tool-scout)', 'var(--color-midnight-royal)', 'var(--color-tool-diligence)', 'var(--color-royal-violet)'].map((c) => (
                 <button
                   key={c}
-                  onClick={() => setVfColor(c)}
+                  onClick={() => updateVfConfig({ color: c })}
                   className={`size-7 rounded-full border-2 transition-transform cursor-pointer ${
-                    vfColor === c
+                    vfConfig.color === c
                       ? 'scale-125 border-white shadow-lg'
                       : 'border-transparent opacity-70 hover:opacity-100'
                   }`}
@@ -304,15 +332,15 @@ export const DesignTokensLab: React.FC = () => {
           <div className="space-y-2">
             <div className="flex justify-between text-xs font-mono text-slate-400">
               <span>Magnet Transit Speed</span>
-              <span>{vfSpeed.toFixed(1)}x</span>
+              <span>{vfConfig.speed.toFixed(1)}x</span>
             </div>
             <input
               type="range"
               min={0.1}
               max={2.5}
               step={0.1}
-              value={vfSpeed}
-              onChange={(e) => setVfSpeed(parseFloat(e.target.value))}
+              value={vfConfig.speed}
+              onChange={(e) => updateVfConfig({ speed: parseFloat(e.target.value) })}
               className="w-full accent-rose-500 cursor-pointer"
             />
           </div>
@@ -321,15 +349,15 @@ export const DesignTokensLab: React.FC = () => {
           <div className="space-y-2">
             <div className="flex justify-between text-xs font-mono text-slate-400">
               <span>Wave Amplitude</span>
-              <span>{(vfAmplitude * 100).toFixed(0)}%</span>
+              <span>{(vfConfig.amplitude * 100).toFixed(0)}%</span>
             </div>
             <input
               type="range"
               min={0.05}
               max={0.8}
               step={0.05}
-              value={vfAmplitude}
-              onChange={(e) => setVfAmplitude(parseFloat(e.target.value))}
+              value={vfConfig.amplitude}
+              onChange={(e) => updateVfConfig({ amplitude: parseFloat(e.target.value) })}
               className="w-full accent-rose-500 cursor-pointer"
             />
           </div>
@@ -338,15 +366,15 @@ export const DesignTokensLab: React.FC = () => {
           <div className="space-y-2">
             <div className="flex justify-between text-xs font-mono text-slate-400">
               <span>Organic Blob Span</span>
-              <span>{(vfBlobCoverage * 100).toFixed(0)}%</span>
+              <span>{(vfConfig.blobCoverage * 100).toFixed(0)}%</span>
             </div>
             <input
               type="range"
               min={0.3}
               max={1.0}
               step={0.05}
-              value={vfBlobCoverage}
-              onChange={(e) => setVfBlobCoverage(parseFloat(e.target.value))}
+              value={vfConfig.blobCoverage}
+              onChange={(e) => updateVfConfig({ blobCoverage: parseFloat(e.target.value) })}
               className="w-full accent-rose-500 cursor-pointer"
             />
           </div>
@@ -355,15 +383,15 @@ export const DesignTokensLab: React.FC = () => {
           <div className="space-y-2">
             <div className="flex justify-between text-xs font-mono text-slate-400">
               <span>Grid Density (Sharp)</span>
-              <span>{vfSpacing}px</span>
+              <span>{vfConfig.gridSpacing}px</span>
             </div>
             <input
               type="range"
-              min={20}
+              min={18}
               max={50}
               step={2}
-              value={vfSpacing}
-              onChange={(e) => setVfSpacing(parseInt(e.target.value))}
+              value={vfConfig.gridSpacing}
+              onChange={(e) => updateVfConfig({ gridSpacing: parseInt(e.target.value) })}
               className="w-full accent-rose-500 cursor-pointer"
             />
           </div>
@@ -372,15 +400,15 @@ export const DesignTokensLab: React.FC = () => {
           <div className="space-y-2">
             <div className="flex justify-between text-xs font-mono text-slate-400">
               <span>Needle Length (Micro)</span>
-              <span>{vfLength}px</span>
+              <span>{vfConfig.dropletLength}px</span>
             </div>
             <input
               type="range"
               min={4}
               max={24}
               step={1}
-              value={vfLength}
-              onChange={(e) => setVfLength(parseInt(e.target.value))}
+              value={vfConfig.dropletLength}
+              onChange={(e) => updateVfConfig({ dropletLength: parseInt(e.target.value) })}
               className="w-full accent-rose-500 cursor-pointer"
             />
           </div>
@@ -389,15 +417,15 @@ export const DesignTokensLab: React.FC = () => {
           <div className="space-y-2">
             <div className="flex justify-between text-xs font-mono text-slate-400">
               <span>Field Opacity</span>
-              <span>{(vfOpacity * 100).toFixed(0)}%</span>
+              <span>{(vfConfig.opacity * 100).toFixed(0)}%</span>
             </div>
             <input
               type="range"
               min={0.1}
               max={1.0}
               step={0.05}
-              value={vfOpacity}
-              onChange={(e) => setVfOpacity(parseFloat(e.target.value))}
+              value={vfConfig.opacity}
+              onChange={(e) => updateVfConfig({ opacity: parseFloat(e.target.value) })}
               className="w-full accent-rose-500 cursor-pointer"
             />
           </div>

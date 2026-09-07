@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 
 export interface UseKeyboardShortcutsOptions {
-  onToggleCommandPalette: () => void;
   onCloseModals: () => void;
   onFocusSearch: () => void;
   onToggleHelp: () => void;
@@ -11,7 +10,6 @@ export interface UseKeyboardShortcutsOptions {
 }
 
 export function useKeyboardShortcuts({
-  onToggleCommandPalette,
   onCloseModals,
   onFocusSearch,
   onToggleHelp,
@@ -40,7 +38,7 @@ export function useKeyboardShortcuts({
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
-        onToggleCommandPalette();
+        onToggleHelp();
         return;
       }
 
@@ -76,7 +74,6 @@ export function useKeyboardShortcuts({
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [
-    onToggleCommandPalette,
     onCloseModals,
     onFocusSearch,
     onToggleHelp,

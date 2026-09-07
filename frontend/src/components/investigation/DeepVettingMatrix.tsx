@@ -483,7 +483,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
                   <button
                     type="button"
                     aria-label={isExpanded ? 'Collapse dimension' : 'Expand dimension'}
-                    className="p-1.5 rounded-lg bg-darkroom-card/80 hover:bg-darkroom-card border border-darkroom-border/60 text-slate-400 hover:text-white shrink-0 transition-all"
+                    className="p-1.5 rounded-lg bg-darkroom-card/80 hover:bg-darkroom-card border border-darkroom-border/60 text-slate-400 hover:text-white shrink-0 transition-all cursor-pointer"
                   >
                     <ChevronDown
                       className={`w-4 h-4 transition-transform duration-200 ${
@@ -634,15 +634,24 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
                           </span>
                         </div>
                         <div className="flex items-center gap-1.5 flex-wrap">
-                          {dim.corroboratingSources.map((src, srcIdx) => (
-                            <span
-                              key={srcIdx}
-                              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-darkroom-surface border border-darkroom-border/80 text-[11px] font-mono text-slate-300 hover:text-white hover:border-slate-500 transition-colors"
-                            >
-                              <span>{src}</span>
-                              <ExternalLink className="w-3 h-3 opacity-60" />
-                            </span>
-                          ))}
+                          {dim.corroboratingSources.map((src, srcIdx) => {
+                            const href = src.startsWith('http://') || src.startsWith('https://')
+                              ? src
+                              : `https://${src}`;
+                            return (
+                              <a
+                                key={srcIdx}
+                                href={href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-darkroom-surface border border-darkroom-border/80 text-[11px] font-mono text-slate-300 hover:text-white hover:border-slate-500 transition-colors cursor-pointer group"
+                                title={`Open ${src} in new tab`}
+                              >
+                                <span className="group-hover:underline">{src}</span>
+                                <ExternalLink className="w-3 h-3 opacity-60 group-hover:opacity-100" />
+                              </a>
+                            );
+                          })}
                         </div>
                       </div>
                     )}

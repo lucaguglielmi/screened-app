@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { Button, ButtonVariant, ButtonSize, IconAnimationType } from '../ui/Button';
 import { TextLink } from '../ui/TextLink';
 import { VectorFieldBackground } from '../animations/VectorFieldBackground';
+import { useVectorFieldConfig } from '../../hooks/useVectorFieldConfig';
 import { soundEffects } from '../../utils/audio';
-import { Copy, Check, Sparkles, ShieldCheck, Compass } from 'lucide-react';
+import { Copy, Check, Sparkles, ShieldCheck, Compass, RotateCcw } from 'lucide-react';
 
 const UI_PALETTE_1 = [
   { name: 'Void Black', hex: 'var(--color-void)', role: 'Deepest backdrop canvas', text: 'var(--color-white)' },
@@ -72,14 +73,12 @@ export const UiGalleryLab: React.FC = () => {
     'Hover any button or link to test icon-specific micro-animations.',
   );
 
-  // Vector field interactive state
-  const [vfColor, setVfColor] = useState('var(--color-tool-scout)');
-  const [vfSpeed, setVfSpeed] = useState(0.6);
-  const [vfAmplitude, setVfAmplitude] = useState(0.24);
-  const [vfSpacing, setVfSpacing] = useState(28);
-  const [vfLength, setVfLength] = useState(7);
-  const [vfOpacity, setVfOpacity] = useState(0.7);
-  const [vfBlobCoverage, setVfBlobCoverage] = useState(0.75);
+  // Vector field interactive state synchronized with live app background
+  const {
+    config: vfConfig,
+    updateConfig: updateVfConfig,
+    resetConfig: resetVfConfig,
+  } = useVectorFieldConfig();
 
   const logAction = (msg: string) => {
     setStatusLog(`[${new Date().toLocaleTimeString()}] ${msg}`);
@@ -610,31 +609,64 @@ export const UiGalleryLab: React.FC = () => {
 
       {/* SECTION 5: CONTAINED VECTOR FIELD LAB */}
       <section className="space-y-4 pt-4 border-t border-zinc-800">
-        <div>
-          <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider font-mono flex items-center gap-2">
-            <span>5. Organic Magnetic Vector Field Laboratory</span>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">
-              Contained Card Preview
-            </span>
-          </h3>
-          <p className="text-xs text-zinc-400">
-            Interactive ferrofluid field lines masked within a contained preview canvas.
-          </p>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider font-mono flex items-center gap-2">
+              <span>5. Organic Magnetic Vector Field Laboratory</span>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                Live Chat Background Sync
+              </span>
+            </h3>
+            <p className="text-xs text-zinc-400">
+              Interactive ferrofluid field lines aligning to subterranean magnetic poles and cursor dipole. Real-time changes sync to the main AI chat page background.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 self-start sm:self-auto">
+            <button
+              onClick={() => {
+                updateVfConfig({ enabledOnChat: !vfConfig.enabledOnChat });
+                soundEffects.playClick();
+                logAction(vfConfig.enabledOnChat ? 'Disabled Vector Field on Chat' : 'Enabled Vector Field on Chat');
+              }}
+              className={`px-2.5 py-1 rounded-lg text-xs font-mono border transition-colors cursor-pointer flex items-center gap-1.5 ${
+                vfConfig.enabledOnChat
+                  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                  : 'bg-zinc-800 text-zinc-400 border-zinc-700'
+              }`}
+            >
+              <Sparkles className="size-3" />
+              <span>{vfConfig.enabledOnChat ? 'Active on Chat' : 'Paused on Chat'}</span>
+            </button>
+
+            <button
+              onClick={() => {
+                resetVfConfig();
+                soundEffects.playSuccess();
+                logAction('Reset Vector Field to default settings');
+              }}
+              className="px-2.5 py-1 rounded-lg text-xs font-mono bg-darkroom-card hover:bg-darkroom-border border border-darkroom-border text-slate-300 transition-colors cursor-pointer flex items-center gap-1"
+              title="Reset to default vector field settings"
+            >
+              <RotateCcw className="size-3" />
+              <span>Reset</span>
+            </button>
+          </div>
         </div>
 
         {/* Live Vector Field Container - strictly constrained */}
         <div className="relative h-64 w-full rounded-2xl bg-darkroom-bg overflow-hidden shadow-2xl flex items-center justify-center border border-darkroom-border">
           <VectorFieldBackground
             position="absolute"
-            color={vfColor}
-            speed={vfSpeed}
-            amplitude={vfAmplitude}
-            gridSpacing={vfSpacing}
-            dropletLength={vfLength}
-            blobCoverage={vfBlobCoverage}
-            opacity={vfOpacity}
+            color={vfConfig.color}
+            speed={vfConfig.speed}
+            amplitude={vfConfig.amplitude}
+            gridSpacing={vfConfig.gridSpacing}
+            dropletLength={vfConfig.dropletLength}
+            blobCoverage={vfConfig.blobCoverage}
+            opacity={vfConfig.opacity}
           />
-          <div className="relative z-10 text-center space-y-1.5 p-4 rounded-xl bg-darkroom-bg/85 backdrop-blur-md border border-darkroom-border max-w-sm shadow-xl">
+          <div className="relative z-10 text-center space-y-1.5 p-4 rounded-xl bg-darkroom-bg/85 backdrop-blur-md border border-darkroom-border max-w-sm shadow-xl pointer-events-none">
             <h4 className="font-serif text-sm font-bold text-white">
               Subterranean Magnet Simulation
             </h4>
@@ -652,9 +684,9 @@ export const UiGalleryLab: React.FC = () => {
               {['var(--color-tool-scout)', 'var(--color-midnight-royal)', 'var(--color-tool-diligence)', 'var(--color-royal-violet)'].map((c) => (
                 <button
                   key={c}
-                  onClick={() => setVfColor(c)}
+                  onClick={() => updateVfConfig({ color: c })}
                   className={`size-6 rounded-full border transition-transform cursor-pointer ${
-                    vfColor === c ? 'scale-125 border-white shadow-md' : 'border-transparent opacity-70'
+                    vfConfig.color === c ? 'scale-125 border-white shadow-md' : 'border-transparent opacity-70'
                   }`}
                   style={{ backgroundColor: c }}
                 />
@@ -665,15 +697,15 @@ export const UiGalleryLab: React.FC = () => {
           <div className="space-y-1.5">
             <div className="flex justify-between font-mono text-slate-400">
               <span>Speed</span>
-              <span>{vfSpeed.toFixed(1)}x</span>
+              <span>{vfConfig.speed.toFixed(1)}x</span>
             </div>
             <input
               type="range"
               min={0.1}
               max={2.0}
               step={0.1}
-              value={vfSpeed}
-              onChange={(e) => setVfSpeed(parseFloat(e.target.value))}
+              value={vfConfig.speed}
+              onChange={(e) => updateVfConfig({ speed: parseFloat(e.target.value) })}
               className="w-full accent-purple-500 cursor-pointer"
             />
           </div>
@@ -681,15 +713,15 @@ export const UiGalleryLab: React.FC = () => {
           <div className="space-y-1.5">
             <div className="flex justify-between font-mono text-slate-400">
               <span>Wave Amplitude</span>
-              <span>{(vfAmplitude * 100).toFixed(0)}%</span>
+              <span>{(vfConfig.amplitude * 100).toFixed(0)}%</span>
             </div>
             <input
               type="range"
               min={0.05}
               max={0.8}
               step={0.05}
-              value={vfAmplitude}
-              onChange={(e) => setVfAmplitude(parseFloat(e.target.value))}
+              value={vfConfig.amplitude}
+              onChange={(e) => updateVfConfig({ amplitude: parseFloat(e.target.value) })}
               className="w-full accent-purple-500 cursor-pointer"
             />
           </div>
@@ -697,15 +729,15 @@ export const UiGalleryLab: React.FC = () => {
           <div className="space-y-1.5">
             <div className="flex justify-between font-mono text-slate-400">
               <span>Blob Coverage</span>
-              <span>{(vfBlobCoverage * 100).toFixed(0)}%</span>
+              <span>{(vfConfig.blobCoverage * 100).toFixed(0)}%</span>
             </div>
             <input
               type="range"
               min={0.3}
               max={1.0}
               step={0.05}
-              value={vfBlobCoverage}
-              onChange={(e) => setVfBlobCoverage(parseFloat(e.target.value))}
+              value={vfConfig.blobCoverage}
+              onChange={(e) => updateVfConfig({ blobCoverage: parseFloat(e.target.value) })}
               className="w-full accent-purple-500 cursor-pointer"
             />
           </div>
@@ -713,15 +745,15 @@ export const UiGalleryLab: React.FC = () => {
           <div className="space-y-1.5">
             <div className="flex justify-between font-mono text-slate-400">
               <span>Grid Density</span>
-              <span>{vfSpacing}px</span>
+              <span>{vfConfig.gridSpacing}px</span>
             </div>
             <input
               type="range"
-              min={20}
+              min={18}
               max={50}
               step={2}
-              value={vfSpacing}
-              onChange={(e) => setVfSpacing(parseInt(e.target.value))}
+              value={vfConfig.gridSpacing}
+              onChange={(e) => updateVfConfig({ gridSpacing: parseInt(e.target.value) })}
               className="w-full accent-purple-500 cursor-pointer"
             />
           </div>
@@ -729,15 +761,15 @@ export const UiGalleryLab: React.FC = () => {
           <div className="space-y-1.5">
             <div className="flex justify-between font-mono text-slate-400">
               <span>Needle Length</span>
-              <span>{vfLength}px</span>
+              <span>{vfConfig.dropletLength}px</span>
             </div>
             <input
               type="range"
               min={4}
               max={20}
               step={1}
-              value={vfLength}
-              onChange={(e) => setVfLength(parseInt(e.target.value))}
+              value={vfConfig.dropletLength}
+              onChange={(e) => updateVfConfig({ dropletLength: parseInt(e.target.value) })}
               className="w-full accent-purple-500 cursor-pointer"
             />
           </div>
@@ -745,15 +777,15 @@ export const UiGalleryLab: React.FC = () => {
           <div className="space-y-1.5">
             <div className="flex justify-between font-mono text-slate-400">
               <span>Field Opacity</span>
-              <span>{(vfOpacity * 100).toFixed(0)}%</span>
+              <span>{(vfConfig.opacity * 100).toFixed(0)}%</span>
             </div>
             <input
               type="range"
               min={0.1}
               max={1.0}
               step={0.05}
-              value={vfOpacity}
-              onChange={(e) => setVfOpacity(parseFloat(e.target.value))}
+              value={vfConfig.opacity}
+              onChange={(e) => updateVfConfig({ opacity: parseFloat(e.target.value) })}
               className="w-full accent-purple-500 cursor-pointer"
             />
           </div>

@@ -7,9 +7,15 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   onSelectInvestigation: (id: string) => void;
+  onHistoryCleared?: () => void;
 }
 
-export const HistorySidebar: React.FC<Props> = ({ isOpen, onClose, onSelectInvestigation }) => {
+export const HistorySidebar: React.FC<Props> = ({
+  isOpen,
+  onClose,
+  onSelectInvestigation,
+  onHistoryCleared,
+}) => {
   const [investigations, setInvestigations] = useState<Investigation[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -21,6 +27,7 @@ export const HistorySidebar: React.FC<Props> = ({ isOpen, onClose, onSelectInves
       // Ignore localStorage error
     }
     setInvestigations([]);
+    onHistoryCleared?.();
   };
 
   useEffect(() => {

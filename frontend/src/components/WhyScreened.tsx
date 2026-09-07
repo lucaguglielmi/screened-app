@@ -10,7 +10,6 @@ import {
   CheckCircle2,
   TrendingDown,
   Layers,
-  Command as CommandIcon,
 } from 'lucide-react';
 import { FEATURES } from '../config/features';
 import { OrganicBlobBackground } from './common/OrganicBlobBackground';
@@ -19,7 +18,6 @@ interface Props {
   onNavigateToDesk: () => void;
   onNavigateToDiligence: () => void;
   onNavigateToScout: () => void;
-  onOpenCommandPalette?: () => void;
 }
 
 const RESEARCH_THEMES = [
@@ -69,7 +67,6 @@ export const WhyScreened: React.FC<Props> = ({
   onNavigateToDesk,
   onNavigateToDiligence,
   onNavigateToScout,
-  onOpenCommandPalette,
 }) => {
   return (
     <div className="relative w-full min-h-screen text-slate-100 px-4 py-12 sm:py-20 animate-fade-in overflow-hidden">
@@ -314,15 +311,6 @@ export const WhyScreened: React.FC<Props> = ({
               <Scale className="size-3.5" />
               <span>Why Screened exists</span>
             </span>
-            {onOpenCommandPalette && (
-              <button
-                onClick={onOpenCommandPalette}
-                className="inline-flex items-center gap-1.5 text-slate-300 hover:text-tool-diligence transition-colors cursor-pointer underline font-mono text-xs"
-              >
-                <CommandIcon className="size-3.5" />
-                <span>Command Menu (⌘K)</span>
-              </button>
-            )}
           </div>
           <div className="text-xs text-slate-400">
             All findings are cryptographically hashed and cited to verified web excerpts.

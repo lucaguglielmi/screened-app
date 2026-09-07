@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { ActivityEvent, InvestigationStatus } from '../types/investigation';
+import { ActivityEvent, EventType, InvestigationStatus } from '../types/investigation';
 import {
   Search,
   Sparkles,
@@ -33,6 +33,7 @@ interface Props {
   investigationId?: string;
   isCelebrating?: boolean;
   onCancel?: () => void;
+  onComplete?: () => void;
 }
 
 interface TimelineStep {
@@ -229,11 +230,100 @@ function getSegmentState(
   return 'PENDING';
 }
 
-export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, investigationId, isCelebrating, onCancel }) => {
+const DEMO_LOG_EVENTS: Array<{
+  atSecond: number;
+  agentName: string;
+  message: string;
+  eventType: EventType;
+}> = [
+  {
+    atSecond: 0,
+    agentName: 'DemoOrchestrator',
+    message: 'Formulating parallel investigation strategy across 3 core domains...',
+    eventType: 'PLANNING_STARTED',
+  },
+  {
+    atSecond: 2,
+    agentName: 'StrategyPlanner',
+    message: 'Identifying target research domains: Corporate Registry, Venue Corroboration, Filmmaker Sentiment...',
+    eventType: 'PLAN_READY',
+  },
+  {
+    atSecond: 4,
+    agentName: 'ParallelSearch',
+    message: 'Dispatching parallel sub-agents across 42 public and commercial sources...',
+    eventType: 'DOMAIN_SEARCH_STARTED',
+  },
+  {
+    atSecond: 5,
+    agentName: 'VenueAgent',
+    message: 'VenueAgent: Harvested Genesis Cinema box office manifests and Studio 4 technical specs.',
+    eventType: 'TASK_RUN_PROGRESS',
+  },
+  {
+    atSecond: 7,
+    agentName: 'CorporateAgent',
+    message: 'CorporateAgent: Verified Companies House filings for Pinco Pallino Film CIC.',
+    eventType: 'TASK_RUN_PROGRESS',
+  },
+  {
+    atSecond: 8,
+    agentName: 'ClaimExtractor',
+    message: 'Extracting atomic claims and verbatim quotes from 42 harvested sources...',
+    eventType: 'CLAIMS_EXTRACTING',
+  },
+  {
+    atSecond: 10,
+    agentName: 'ClaimExtractor',
+    message: 'ClaimExtractor: Corroborated 363 atomic claims against primary documents and registry filings.',
+    eventType: 'CLAIMS_EXTRACTED',
+  },
+  {
+    atSecond: 12,
+    agentName: 'ContradictionAnalyst',
+    message: 'Cross-referencing 363 atomic claims against public registers and market baselines...',
+    eventType: 'CONTRADICTIONS_ANALYZING',
+  },
+  {
+    atSecond: 14,
+    agentName: 'ForensicScorer',
+    message: 'ForensicScorer: Flagged fee escalation anomaly (+168% surge) and virtual registered address at 71-75 Shelton St.',
+    eventType: 'CONTRADICTION_DETECTED',
+  },
+  {
+    atSecond: 16,
+    agentName: 'DossierSynthesizer',
+    message: 'Assembling finalized evidence dossier with 42 verified sources and risk index...',
+    eventType: 'DOSSIER_SYNTHESIZING',
+  },
+  {
+    atSecond: 18,
+    agentName: 'ExecutiveSummaryAgent',
+    message: 'ExecutiveSummaryAgent: Generated multi-domain due diligence dossier. Overall Authenticity Score: 68/100.',
+    eventType: 'DEEP_VETTING_ANALYZING',
+  },
+  {
+    atSecond: 20,
+    agentName: 'DossierSynthesizer',
+    message: 'Investigation complete. Final due diligence dossier ready for review.',
+    eventType: 'DOSSIER_READY',
+  },
+];
+
+export const LiveProgress: React.FC<Props> = ({
+  status,
+  events,
+  festivalName,
+  investigationId,
+  isCelebrating,
+  onCancel,
+  onComplete,
+}) => {
   const reducedMotion = useReducedMotion();
   const [hoveredStepIndex, setHoveredStepIndex] = useState<number | null>(null);
   const [selectedStepIndex, setSelectedStepIndex] = useState<number | null>(null);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [demoStartTime] = useState<number>(() => Date.now());
   const [showEventLogTooltip, setShowEventLogTooltip] = useState(false);
   const [eventCategoryFilter, setEventCategoryFilter] = useState<'ALL' | 'QUERIES' | 'CLAIMS' | 'DISPUTES'>('ALL');
   const [, setIsHoveringLog] = useState(false);
@@ -254,9 +344,6 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
     } catch {
       // ignore
     }
-    if ((festivalName && festivalName.toLowerCase().includes('pinco')) || investigationId === 'demo_pinco_pallino') {
-      return 'carciofomobile@gmail.com';
-    }
     return '';
   });
   const [isNotified, setIsNotified] = useState(false);
@@ -275,7 +362,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
     status !== 'FAILED' &&
     status !== 'CANCELLED';
 
-  // Trigger sticky bottom drawer: immediately (600ms) for Pinco Pallino demo, or 3s for live investigations
+  // Trigger sticky bottom drawer: 600ms for demo, or 3s for live investigations
   useEffect(() => {
     if (!isPostDisambiguationRunning || stickyDismissed) {
       return;
@@ -287,7 +374,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
     return () => clearTimeout(timer);
   }, [isPostDisambiguationRunning, stickyDismissed, isPincoDemo]);
 
-  const effectiveEmail = notifyEmail || (isPincoDemo ? 'carciofomobile@gmail.com' : '');
+  const effectiveEmail = notifyEmail;
 
   const handleRegisterEmail = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -326,32 +413,27 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
 
   const eventsEndRef = useRef<HTMLDivElement>(null);
 
-  // Timer
+  // Timer (runs 20s for demo mode, or continuous for live investigations)
   useEffect(() => {
-    if (status === 'READY' || status === 'FAILED' || status === 'CANCELLED') return;
+    if (status === 'READY' || status === 'FAILED' || status === 'CANCELLED' || isCelebrating) return;
     const interval = setInterval(() => {
-      setElapsedSeconds((prev) => prev + 1);
+      setElapsedSeconds((prev) => {
+        const next = prev + 1;
+        if (isPincoDemo && next >= 20) {
+          onComplete?.();
+        }
+        return next;
+      });
     }, 1000);
     return () => clearInterval(interval);
-  }, [status]);
+  }, [status, isCelebrating, isPincoDemo, onComplete]);
 
-  // Deduplicated display events for stream console, reversed so newest is at the top
-  const displayEvents = useMemo(() => {
-    const deduped = events.filter((evt, i, arr) => !i || arr[i - 1].message !== evt.message);
-    const reversed = [...deduped].reverse();
-    if (eventCategoryFilter === 'QUERIES') {
-      return reversed.filter(e => e.message.includes('Search') || e.message.includes('Query') || e.message.includes('Visited'));
-    }
-    if (eventCategoryFilter === 'CLAIMS') {
-      return reversed.filter(e => e.message.toLowerCase().includes('claim') || e.message.includes('Extract') || e.eventType === 'CLAIMS_EXTRACTED');
-    }
-    if (eventCategoryFilter === 'DISPUTES') {
-      return reversed.filter(e => e.message.toLowerCase().includes('contradiction') || e.message.toLowerCase().includes('conflict') || e.message.toLowerCase().includes('dispute') || e.eventType === 'CONTRADICTIONS_ANALYZING');
-    }
-    return reversed;
-  }, [events, eventCategoryFilter]);
-
-  const isRunning = status !== 'READY' && status !== 'FAILED' && status !== 'CANCELLED';
+  // Demo 5-stage progression (4s per stage)
+  const demoPhaseIdx = useMemo(() => {
+    if (!isPincoDemo) return -1;
+    if (status === 'READY' || isCelebrating || elapsedSeconds >= 20) return 5;
+    return Math.min(4, Math.floor(elapsedSeconds / 4));
+  }, [isPincoDemo, status, isCelebrating, elapsedSeconds]);
 
   // Compute last active status from events for FAILED states
   const lastActiveStatus = useMemo(() => {
@@ -373,35 +455,124 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
     return 'PLANNING';
   }, [status, events]);
 
+  const getEffectiveStepState = (
+    step: TimelineStep,
+    stepIdx: number,
+  ): 'COMPLETED' | 'ACTIVE' | 'PENDING' | 'FAILED' => {
+    if (isCelebrating || status === 'READY') return 'COMPLETED';
+    if (isPincoDemo) {
+      if (demoPhaseIdx >= 5 || stepIdx < demoPhaseIdx) return 'COMPLETED';
+      if (stepIdx === demoPhaseIdx) return 'ACTIVE';
+      return 'PENDING';
+    }
+    return getStepState(step, status, events, lastActiveStatus);
+  };
+
+  const getEffectiveSegmentState = (
+    stepIdx: number,
+  ): 'COMPLETED' | 'ACTIVE' | 'PENDING' | 'FAILED' => {
+    if (stepIdx >= TIMELINE_STEPS.length - 1) return 'PENDING';
+    if (isCelebrating || status === 'READY') return 'COMPLETED';
+    if (isPincoDemo) {
+      if (demoPhaseIdx >= 5 || stepIdx < demoPhaseIdx) return 'COMPLETED';
+      if (stepIdx === demoPhaseIdx) return 'ACTIVE';
+      return 'PENDING';
+    }
+    return getSegmentState(stepIdx, TIMELINE_STEPS, status, events, lastActiveStatus);
+  };
+
+  // Deduplicated display events for stream console, with simulated demo logs rolling continuously
+  const displayEvents = useMemo(() => {
+    let sourceEvents: ActivityEvent[] = events;
+    if (isPincoDemo) {
+      const simulated: ActivityEvent[] = DEMO_LOG_EVENTS
+        .filter((item) => item.atSecond <= elapsedSeconds)
+        .map((item, idx) => ({
+          id: `demo_log_${idx}`,
+          investigationId: investigationId || 'demo_pinco_pallino',
+          timestamp: new Date(demoStartTime + item.atSecond * 1000).toISOString(),
+          eventType: item.eventType,
+          agentName: item.agentName,
+          message: item.message,
+        }));
+      const combined = [...sourceEvents];
+      for (const sim of simulated) {
+        if (!combined.some((e) => e.message === sim.message)) {
+          combined.push(sim);
+        }
+      }
+      sourceEvents = combined;
+    }
+
+    const deduped = sourceEvents.filter((evt, i, arr) => !i || arr[i - 1].message !== evt.message);
+    const reversed = [...deduped].reverse();
+    if (eventCategoryFilter === 'QUERIES') {
+      return reversed.filter(e => e.message.includes('Search') || e.message.includes('Query') || e.message.includes('Visited') || e.message.includes('domains'));
+    }
+    if (eventCategoryFilter === 'CLAIMS') {
+      return reversed.filter(e => e.message.toLowerCase().includes('claim') || e.message.includes('Extract') || e.eventType === 'CLAIMS_EXTRACTED' || e.eventType === 'CLAIMS_EXTRACTING');
+    }
+    if (eventCategoryFilter === 'DISPUTES') {
+      return reversed.filter(e => e.message.toLowerCase().includes('contradiction') || e.message.toLowerCase().includes('conflict') || e.message.toLowerCase().includes('dispute') || e.message.toLowerCase().includes('anomaly') || e.eventType === 'CONTRADICTIONS_ANALYZING');
+    }
+    return reversed;
+  }, [events, isPincoDemo, elapsedSeconds, investigationId, eventCategoryFilter, demoStartTime]);
+
+  const isRunning = status !== 'READY' && status !== 'FAILED' && status !== 'CANCELLED';
+
   // Auto-select the active step on status change if user hasn't manually selected
   useEffect(() => {
-    const activeIdx = TIMELINE_STEPS.findIndex(
-      (s) =>
-        getStepState(s, status, events, lastActiveStatus) === 'ACTIVE' ||
-        getStepState(s, status, events, lastActiveStatus) === 'FAILED',
-    );
+    const activeIdx = isPincoDemo
+      ? (demoPhaseIdx >= 5 ? -1 : demoPhaseIdx)
+      : TIMELINE_STEPS.findIndex(
+          (s) =>
+            getStepState(s, status, events, lastActiveStatus) === 'ACTIVE' ||
+            getStepState(s, status, events, lastActiveStatus) === 'FAILED',
+        );
     if (activeIdx !== -1 && selectedStepIndex === null) {
       // Keep focused on active
     }
-  }, [status, events, selectedStepIndex, lastActiveStatus]);
-
+  }, [status, events, selectedStepIndex, lastActiveStatus, isPincoDemo, demoPhaseIdx]);
 
   // Compute overall progress percentage
-  const activeStepIdx = TIMELINE_STEPS.findIndex(
-    (s) =>
-      getStepState(s, status, events, lastActiveStatus) === 'ACTIVE' ||
-      getStepState(s, status, events, lastActiveStatus) === 'FAILED',
-  );
-  const completedCount = TIMELINE_STEPS.filter(
-    (s) => getStepState(s, status, events, lastActiveStatus) === 'COMPLETED',
-  ).length;
+  const activeStepIdx = isPincoDemo
+    ? (demoPhaseIdx >= 5 ? -1 : demoPhaseIdx)
+    : TIMELINE_STEPS.findIndex(
+        (s) =>
+          getStepState(s, status, events, lastActiveStatus) === 'ACTIVE' ||
+          getStepState(s, status, events, lastActiveStatus) === 'FAILED',
+      );
+  const completedCount = isPincoDemo
+    ? (demoPhaseIdx >= 5 ? 5 : demoPhaseIdx)
+    : TIMELINE_STEPS.filter(
+        (s) => getStepState(s, status, events, lastActiveStatus) === 'COMPLETED',
+      ).length;
 
-  const progressPercent =
-    status === 'READY' || isCelebrating
-      ? 100
-      : activeStepIdx >= 0
-        ? Math.round(((activeStepIdx + 0.5) / TIMELINE_STEPS.length) * 100)
-        : Math.round((completedCount / TIMELINE_STEPS.length) * 100);
+  const progressPercent = useMemo(() => {
+    if (status === 'READY' || isCelebrating || (isPincoDemo && elapsedSeconds >= 20)) {
+      return 100;
+    }
+    if (isPincoDemo) {
+      return Math.min(98, Math.max(5, Math.round((elapsedSeconds / 20) * 100)));
+    }
+    return activeStepIdx >= 0
+      ? Math.round(((activeStepIdx + 0.5) / TIMELINE_STEPS.length) * 100)
+      : Math.round((completedCount / TIMELINE_STEPS.length) * 100);
+  }, [status, isCelebrating, isPincoDemo, elapsedSeconds, activeStepIdx, completedCount]);
+
+  const demoStatusLabels = [
+    'PLANNING',
+    'RESEARCHING',
+    'EXTRACTION',
+    'ANALYZING',
+    'SYNTHESIZING',
+    'COMPLETED',
+  ];
+  const effectiveStatusLabel = isCelebrating
+    ? 'COMPLETED'
+    : isPincoDemo
+      ? demoStatusLabels[demoPhaseIdx] || 'RESEARCHING'
+      : status;
 
   // Active step or selected step for inspection spotlight
   const inspectedStepIndex =
@@ -411,10 +582,10 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
         ? selectedStepIndex
         : activeStepIdx >= 0
           ? activeStepIdx
-          : 0;
+          : (isPincoDemo && demoPhaseIdx < 5 ? demoPhaseIdx : 0);
 
   const activeStep = TIMELINE_STEPS[inspectedStepIndex] || TIMELINE_STEPS[0];
-  const activeStepState = isCelebrating ? 'COMPLETED' : getStepState(activeStep, status, events, lastActiveStatus);
+  const activeStepState = isCelebrating ? 'COMPLETED' : getEffectiveStepState(activeStep, inspectedStepIndex);
 
 
 
@@ -470,7 +641,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
 
             <div className="px-3.5 py-1.5 rounded-xl bg-tool-diligence/15 text-tool-diligence text-xs sm:text-sm font-mono font-semibold flex items-center gap-2">
               <span className={`size-2 rounded-full bg-tool-diligence ${reducedMotion || isCelebrating || status === 'FAILED' ? '' : 'animate-pulse'}`} />
-              <span>{isCelebrating ? 'COMPLETED' : status}</span>
+              <span>{effectiveStatusLabel}</span>
               <span className="text-white font-semibold ml-1">{progressPercent}%</span>
             </div>
           </div>
@@ -493,8 +664,8 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
           {/* Timeline Nodes - 5 Columns Grid */}
           <div className="relative z-10 grid grid-cols-5 gap-1 sm:gap-2 w-full">
             {TIMELINE_STEPS.map((step, idx) => {
-              const state = getStepState(step, status, events, lastActiveStatus);
-              const segmentState = getSegmentState(idx, TIMELINE_STEPS, status, events, lastActiveStatus);
+              const state = getEffectiveStepState(step, idx);
+              const segmentState = getEffectiveSegmentState(idx);
               const isHovered = hoveredStepIndex === idx;
               const isSelected = selectedStepIndex === idx;
               const isInspected = inspectedStepIndex === idx;
@@ -709,7 +880,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
       </div>
 
       {/* Live SSE Activity Stream Console (Preserved Card Container) */}
-      {events.length > 0 && (
+      {(events.length > 0 || isPincoDemo) && (
         <div className="rounded-3xl bg-darkroom-surface overflow-hidden shadow-2xl shadow-black/80 border border-darkroom-border/60">
           <div className="p-4 sm:px-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-darkroom-border/60">
             <span className="font-mono text-xs sm:text-sm uppercase tracking-wider text-slate-200 flex items-center gap-2 font-semibold">

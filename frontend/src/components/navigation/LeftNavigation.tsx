@@ -20,8 +20,6 @@ interface Props {
   onToggleTheme?: () => void;
   soundMuted?: boolean;
   onToggleSound?: () => void;
-  onOpenKeyboardHelp?: () => void;
-  onOpenCommandPalette?: () => void;
 }
 
 export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange, onNavigateHome }) => {

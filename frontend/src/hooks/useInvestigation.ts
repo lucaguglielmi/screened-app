@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { CandidateEntity, Investigation } from '../types/investigation';
 import { track } from '../utils/analytics';
 import { piiVault } from '../utils/pii';
@@ -18,6 +18,23 @@ export function useInvestigation() {
   const [investigation, setInvestigation] = useState<Investigation | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const activeInvestigationIdRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    activeInvestigationIdRef.current = investigation?.id || null;
+  }, [investigation?.id]);
+
+  const [hasPastSearches, setHasPastSearches] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('screened_investigation_ids');
+      if (!saved) return false;
+      const ids: string[] = JSON.parse(saved);
+      return Array.isArray(ids) && ids.length > 0;
+    } catch {
+      return false;
+    }
+  });
 
   const [recentSearches, setRecentSearches] = useState<string[]>(() => {
     try {
@@ -43,6 +60,9 @@ export function useInvestigation() {
       if (!prevIds.includes(id)) {
         const updated = [id, ...prevIds].slice(0, 20);
         localStorage.setItem('screened_investigation_ids', JSON.stringify(updated));
+        setHasPastSearches(true);
+      } else if (prevIds.length > 0) {
+        setHasPastSearches(true);
       }
     } catch {
       // ignore
@@ -104,8 +124,11 @@ export function useInvestigation() {
     const handleLocationChange = () => {
       const route = parseCurrentRoute();
       if (route.investigationId) {
-        fetchInvestigation(route.investigationId);
+        if (activeInvestigationIdRef.current !== route.investigationId) {
+          fetchInvestigation(route.investigationId);
+        }
       } else {
+        activeInvestigationIdRef.current = null;
         setInvestigation(null);
       }
     };
@@ -149,7 +172,12 @@ export function useInvestigation() {
   // Re-poll on tab focus / visibility change
   useEffect(() => {
     const handleVisibilityOrFocus = () => {
-      if (document.visibilityState === 'visible' && investigation?.id && investigation.status !== 'READY') {
+      if (
+        document.visibilityState === 'visible' &&
+        investigation?.id &&
+        investigation.id !== 'demo_pinco_pallino' &&
+        investigation.status !== 'READY'
+      ) {
         fetchInvestigation(investigation.id);
       }
     };
@@ -206,6 +234,7 @@ export function useInvestigation() {
       const invString = JSON.stringify(rawInv);
       const unmaskedInvString = piiVault.unmask(invString);
       const inv: Investigation = JSON.parse(unmaskedInvString);
+      activeInvestigationIdRef.current = inv.id;
       setInvestigation(inv);
       saveRecentInvestigation(inv.id);
       return inv;
@@ -235,6 +264,16 @@ export function useInvestigation() {
       }
 
       const updatedInv: Investigation = await res.json();
+      if (investigation.id === 'demo_pinco_pallino') {
+        const demoInv: Investigation = {
+          ...updatedInv,
+          status: 'PLANNING',
+          confirmedEntity: entity,
+        };
+        activeInvestigationIdRef.current = 'demo_pinco_pallino';
+        setInvestigation(demoInv);
+        return demoInv;
+      }
       setInvestigation(updatedInv);
       return updatedInv;
     } catch (err) {
@@ -276,6 +315,8 @@ export function useInvestigation() {
     setError,
     recentSearches,
     saveRecentSearch,
+    hasPastSearches,
+    setHasPastSearches,
     fetchInvestigation,
     startInvestigation,
     confirmEntity,

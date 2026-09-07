@@ -1,12 +1,13 @@
 import asyncio
 import json
 from datetime import datetime, timezone
+from typing import List, Dict, Any
 
 DEMO_INVESTIGATION_ID = "demo_pinco_pallino"
 
 
-def generate_demo_claims():
-    """Generates a comprehensive corpus of 300 atomic claims across all 6 core categories for Pinco Pallino."""
+def generate_demo_claims() -> List[Dict[str, Any]]:
+    """Generates a comprehensive corpus of 363 atomic claims across all 6 core categories for Pinco Pallino."""
     core_claims = [
         {
             "id": "claim_1",
@@ -320,15 +321,15 @@ def generate_demo_claims():
     ]
 
     all_templates = (
-        venue_templates * 5 +
-        corporate_templates * 6 +
-        fees_templates * 6 +
-        jury_templates * 5 +
-        sentiment_templates * 5 +
-        milestone_templates * 4
+        venue_templates * 7 +
+        corporate_templates * 7 +
+        fees_templates * 7 +
+        jury_templates * 6 +
+        sentiment_templates * 6 +
+        milestone_templates * 5
     )
 
-    for i, (stmt, domain, cat, status, yr) in enumerate(all_templates[:290], start=11):
+    for i, (stmt, domain, cat, status, yr) in enumerate(all_templates[:353], start=11):
         cid = f"claim_{i}"
         claims.append({
             "id": cid,
@@ -384,56 +385,54 @@ def get_demo_investigation():
 
 
 async def demo_sse_generator():
-    """Generates a 20-second simulated live-progress SSE stream for the Demo Mode (5s per stage)."""
+    """Generates a 20-second simulated live-progress SSE stream for the Demo Mode (4s per stage)."""
     
-    def format_event(event_type: str, message: str, details: dict = None):
+    def format_event(event_type: str, message: str, details: dict = None, agent: str = "DemoOrchestrator"):
         payload = {
             "id": "evt_demo",
             "investigationId": DEMO_INVESTIGATION_ID,
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "eventType": event_type,
-            "agentName": "DemoOrchestrator",
+            "agentName": agent,
             "message": message,
             "details": details or {},
         }
         return f"data: {json.dumps(payload)}\n\n"
 
-    # Stage 1: Planning (5s)
-    yield format_event("PLANNING_STARTED", "Formulating parallel investigation strategy across 3 core domains...")
-    await asyncio.sleep(1.5)
-    yield format_event("PLANNING_STEP", "Identifying target research domains: Corporate Registry, Venue Corroboration, Filmmaker Sentiment...", {"queriesCount": 12, "sourcesCount": 14})
+    # Stage 1: Strategy & Planning (0s - 4s)
+    yield format_event("PLANNING_STARTED", "Formulating parallel investigation strategy across 3 core domains...", agent="DemoOrchestrator")
     await asyncio.sleep(2.0)
-    yield format_event("PLANNING_STEP", "Found candidate entity. Ready for confirmation.", {"candidates": get_demo_investigation()["candidates"], "sourcesCount": 18})
-    await asyncio.sleep(1.5)
-
-    # Stage 2: Researching (5s)
-    yield format_event("DOMAIN_SEARCH_STARTED", "Dispatching parallel sub-agents across 42 public and commercial sources...", {"sourcesCount": 42, "queriesCount": 12})
-    await asyncio.sleep(1.25)
-    yield format_event("AGENT_UPDATE", "VenueAgent: Harvested Genesis Cinema box office manifests and Studio 4 specs (12 sources).", {"agent": "VenueAgent", "sourcesCount": 24, "claimsCount": 85})
-    await asyncio.sleep(1.25)
-    yield format_event("AGENT_UPDATE", "CorporateAgent: Verified Companies House filings for Pinco Pallino Film CIC (14 sources).", {"agent": "CorporateAgent", "sourcesCount": 32, "claimsCount": 160})
-    await asyncio.sleep(1.25)
-    yield format_event("AGENT_UPDATE", "SentimentAgent: Aggregated filmmaker reviews from FilmFreeway, Reddit & Letterboxd (16 sources).", {"agent": "SentimentAgent", "sourcesCount": 42, "claimsCount": 300})
-    await asyncio.sleep(1.25)
-
-    # Stage 3: Analyzing (5s)
-    yield format_event("CONTRADICTIONS_ANALYZING", "Cross-referencing 300 atomic claims against 42 multi-domain sources...", {"sourcesCount": 42, "claimsCount": 300, "contradictionsCount": 2})
-    await asyncio.sleep(1.5)
-    yield format_event("AGENT_UPDATE", "VerificationAgent: Verified physical Genesis Cinema projection manifests and 40-seat room capacity.", {"agent": "VerificationAgent", "sourcesCount": 42, "claimsCount": 300})
-    await asyncio.sleep(1.5)
-    yield format_event("AGENT_UPDATE", "PolicyAgent: Identified moderate late-entry fee escalation and informal jury evaluation guidelines.", {"agent": "PolicyAgent", "sourcesCount": 42, "claimsCount": 300, "contradictionsCount": 2})
+    yield format_event("PLANNING_STEP", "Identifying target research domains: Corporate Registry, Venue Corroboration, Filmmaker Sentiment...", {"queriesCount": 12, "sourcesCount": 14}, agent="StrategyPlanner")
     await asyncio.sleep(2.0)
 
-    # Stage 4: Synthesizing (5s)
-    yield format_event("DOSSIER_SYNTHESIZING", "Assembling finalized evidence dossier with 42 verified sources and 300 claims...", {"sourcesCount": 42, "claimsCount": 300, "contradictionsCount": 2})
+    # Stage 2: Parallel Search / Data Fetch (4s - 8s)
+    yield format_event("DOMAIN_SEARCH_STARTED", "Dispatching parallel sub-agents across 42 public and commercial sources...", {"sourcesCount": 42, "queriesCount": 12}, agent="ParallelSearch")
     await asyncio.sleep(1.5)
-    yield format_event("AGENT_UPDATE", "SynthesisAgent: Finalizing full due diligence dossier and executive summary.", {"agent": "SynthesisAgent", "sourcesCount": 42, "claimsCount": 300})
-    await asyncio.sleep(2.0)
-    yield format_event("AGENT_UPDATE", "SynthesisAgent: Reviewing final output for accuracy and source citations...", {"agent": "SynthesisAgent", "sourcesCount": 42, "claimsCount": 300})
+    yield format_event("AGENT_UPDATE", "VenueAgent: Harvested Genesis Cinema box office manifests and Studio 4 technical specs.", {"agent": "VenueAgent", "sourcesCount": 24, "claimsCount": 85}, agent="VenueAgent")
     await asyncio.sleep(1.5)
+    yield format_event("AGENT_UPDATE", "CorporateAgent: Verified Companies House filings for Pinco Pallino Film CIC.", {"agent": "CorporateAgent", "sourcesCount": 32, "claimsCount": 160}, agent="CorporateAgent")
+    await asyncio.sleep(1.0)
 
-    # Complete
-    yield format_event("DOSSIER_READY", "Investigation complete. Generating final dossier.", {"sourcesCount": 42, "claimsCount": 300, "contradictionsCount": 2})
+    # Stage 3: Claim & Evidence Extraction (8s - 12s)
+    yield format_event("CLAIMS_EXTRACTING", "Extracting atomic claims and verbatim quotes from 42 harvested sources...", {"sourcesCount": 42, "claimsCount": 210}, agent="ClaimExtractor")
+    await asyncio.sleep(2.0)
+    yield format_event("AGENT_UPDATE", "ClaimExtractor: Corroborated 363 atomic claims against primary documents and registry filings.", {"agent": "ClaimExtractor", "sourcesCount": 42, "claimsCount": 363}, agent="ClaimExtractor")
+    await asyncio.sleep(2.0)
+
+    # Stage 4: Contradiction Analysis & Forensics (12s - 16s)
+    yield format_event("CONTRADICTIONS_ANALYZING", "Cross-referencing 363 atomic claims against public registers and market baselines...", {"sourcesCount": 42, "claimsCount": 363, "contradictionsCount": 2}, agent="ContradictionAnalyst")
+    await asyncio.sleep(2.0)
+    yield format_event("AGENT_UPDATE", "ForensicScorer: Flagged fee escalation anomaly (+168% surge) and virtual registered address at 71-75 Shelton St.", {"agent": "ForensicScorer", "sourcesCount": 42, "claimsCount": 363, "contradictionsCount": 2}, agent="ForensicScorer")
+    await asyncio.sleep(2.0)
+
+    # Stage 5: Report Synthesis & Risk Scoring (16s - 20s)
+    yield format_event("DOSSIER_SYNTHESIZING", "Assembling finalized evidence dossier with 42 verified sources and risk index...", {"sourcesCount": 42, "claimsCount": 363, "contradictionsCount": 2}, agent="DossierSynthesizer")
+    await asyncio.sleep(2.0)
+    yield format_event("AGENT_UPDATE", "ExecutiveSummaryAgent: Generated multi-domain due diligence dossier. Overall Authenticity Score: 68/100.", {"agent": "ExecutiveSummaryAgent", "sourcesCount": 42, "claimsCount": 363}, agent="ExecutiveSummaryAgent")
+    await asyncio.sleep(2.0)
+
+    # Complete (20s)
+    yield format_event("DOSSIER_READY", "Investigation complete. Generating final due diligence dossier.", {"sourcesCount": 42, "claimsCount": 363, "contradictionsCount": 2}, agent="DossierSynthesizer")
 
 
 def get_demo_full_dossier():
@@ -1102,8 +1101,8 @@ def get_demo_full_dossier():
         },
         "auditHealth": {
             "status": "HEALTHY",
-            "rawDomainClaimsReceived": 300,
-            "assembledClaimsCount": 300,
+            "rawDomainClaimsReceived": 363,
+            "assembledClaimsCount": 363,
             "sourcesCount": 8,
             "validationErrorsCount": 0,
             "validationErrors": [],

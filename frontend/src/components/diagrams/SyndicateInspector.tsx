@@ -39,9 +39,10 @@ export interface SyndicateNodeData {
 interface Props {
   data: SyndicateNodeData | null;
   onClose: () => void;
+  onNavigateToLedger?: () => void;
 }
 
-export const SyndicateInspector: React.FC<Props> = ({ data, onClose }) => {
+export const SyndicateInspector: React.FC<Props> = ({ data, onClose, onNavigateToLedger }) => {
   if (!data) return null;
 
   const getStatusBadge = () => {
@@ -188,10 +189,21 @@ export const SyndicateInspector: React.FC<Props> = ({ data, onClose }) => {
         <span className="font-mono text-[10px]">
           Click another node to inspect connection
         </span>
-        <span className="text-tool-diligence hover:text-white transition-colors flex items-center gap-1 cursor-pointer">
-          <span>Cross-reference in ledger</span>
-          <ExternalLink className="size-3" />
-        </span>
+        {onNavigateToLedger ? (
+          <button
+            type="button"
+            onClick={onNavigateToLedger}
+            className="text-tool-diligence hover:text-white transition-colors flex items-center gap-1 cursor-pointer"
+          >
+            <span>Cross-reference in ledger</span>
+            <ExternalLink className="size-3" />
+          </button>
+        ) : (
+          <span className="text-tool-diligence hover:text-white transition-colors flex items-center gap-1 cursor-pointer">
+            <span>Cross-reference in ledger</span>
+            <ExternalLink className="size-3" />
+          </span>
+        )}
       </div>
     </div>
   );

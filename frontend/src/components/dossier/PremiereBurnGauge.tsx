@@ -112,7 +112,7 @@ export const PremiereBurnGauge: React.FC<Props> = ({
               <Info className="size-3 text-slate-400" />
               <span>Exclusivity Demand</span>
             </div>
-            <div className="text-xs sm:text-sm font-semibold text-slate-200 line-clamp-2">
+            <div className="text-xs sm:text-sm font-semibold text-slate-200 leading-snug break-words">
               {data.premiereDemand}
             </div>
           </div>
@@ -122,7 +122,7 @@ export const PremiereBurnGauge: React.FC<Props> = ({
               <Award className="size-3 text-slate-400" />
               <span>Accreditation Standing</span>
             </div>
-            <div className="text-xs sm:text-sm font-semibold text-slate-200 line-clamp-2">
+            <div className="text-xs sm:text-sm font-semibold text-slate-200 leading-snug break-words">
               {data.accreditationStatus}
             </div>
           </div>
@@ -132,7 +132,7 @@ export const PremiereBurnGauge: React.FC<Props> = ({
               <ShieldCheck className="size-3 text-slate-400" />
               <span>Buyer &amp; Press Density</span>
             </div>
-            <div className="text-xs sm:text-sm font-semibold text-slate-200 line-clamp-2">
+            <div className="text-xs sm:text-sm font-semibold text-slate-200 leading-snug break-words">
               {data.buyerPressFootprint}
             </div>
           </div>

@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { DisputeRecord } from '../types/investigation';
-import { AlertTriangle, ExternalLink, Scale } from 'lucide-react';
+import { AlertTriangle, ChevronDown, ExternalLink, Scale } from 'lucide-react';
 
 interface Props {
   disputes: DisputeRecord[];
@@ -49,9 +49,23 @@ function resolveEvidence(ev: FlexibleEvidence) {
 }
 
 export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+
   if (!disputes || disputes.length === 0) {
     return null;
   }
+
+  const toggleExpand = (id: string) => {
+    setExpandedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
 
   return (
     <div className="py-4 space-y-4 border-b border-darkroom-border/30 pb-6">
@@ -65,25 +79,71 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
         </span>
       </div>
 
-      <div className="space-y-4">
-        {disputes.map((dispute, idx) => (
-          <div
-            key={dispute.id || idx}
-            className="p-4 sm:p-5 rounded-2xl bg-darkroom-surface/60 border border-darkroom-border/60 space-y-3.5"
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/30">
-                  {dispute.category}
-                </span>
-                <h3 className="font-serif font-semibold text-base text-white mt-1.5">
-                  {dispute.pointOfContention}
-                </h3>
-              </div>
-            </div>
+      <div className="space-y-3">
+        {disputes.map((dispute, idx) => {
+          const itemId = dispute.id || `dispute-${idx}`;
+          const isExpanded = expandedIds.has(itemId);
 
-            {/* Split Comparison Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          return (
+            <div
+              key={itemId}
+              className={`rounded-2xl border transition-all duration-200 overflow-hidden ${
+                isExpanded
+                  ? 'bg-darkroom-surface/80 border-slate-600/80 shadow-lg'
+                  : 'bg-darkroom-surface/50 border-darkroom-border/60 hover:border-slate-600/60 hover:bg-darkroom-surface/70'
+              }`}
+            >
+              {/* Clickable Header: Collapsed by Default */}
+              <button
+                type="button"
+                onClick={() => toggleExpand(itemId)}
+                className="w-full text-left p-4 sm:p-5 flex items-start justify-between gap-3 cursor-pointer select-none transition-colors"
+                aria-expanded={isExpanded}
+              >
+                <div className="space-y-1.5 flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/30 font-semibold">
+                      {dispute.category}
+                    </span>
+                    {!isExpanded && (
+                      <span className="font-mono text-[10px] text-slate-400">
+                        Click to inspect conflicting claims & evidence
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="font-serif font-semibold text-sm sm:text-base text-white break-words">
+                    {dispute.pointOfContention}
+                  </h3>
+
+                  {/* Summary Preview Pills when Collapsed */}
+                  {!isExpanded && (
+                    <div className="flex flex-wrap items-center gap-2 pt-1 text-[11px] font-sans text-slate-300">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 font-mono text-[10px]">
+                        <strong>Pos A:</strong> {dispute.claimA.length > 50 ? `${dispute.claimA.slice(0, 50)}...` : dispute.claimA}
+                      </span>
+                      <span className="text-slate-500 font-mono text-[10px]">vs</span>
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-orange-500/10 border border-orange-500/20 text-orange-300 font-mono text-[10px]">
+                        <strong>Pos B:</strong> {dispute.claimB.length > 50 ? `${dispute.claimB.slice(0, 50)}...` : dispute.claimB}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="p-1.5 rounded-lg bg-darkroom-card/80 border border-darkroom-border/60 text-slate-400 shrink-0 mt-0.5">
+                  <ChevronDown
+                    className={`size-4 transition-transform duration-200 ${
+                      isExpanded ? 'rotate-180 text-white' : ''
+                    }`}
+                  />
+                </div>
+              </button>
+
+              {/* Expanded Inspection Section */}
+              {isExpanded && (
+                <div className="p-4 sm:p-5 pt-0 sm:pt-0 space-y-3.5 border-t border-darkroom-border/40 mt-1">
+                  <div className="pt-3">
+                    {/* Split Comparison Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {/* Claim A */}
               <div className="p-3 rounded-xl bg-darkroom-bg/70 border border-darkroom-border/40 space-y-1.5">
                 <div className="text-[10px] font-mono uppercase text-indigo-300 font-semibold flex items-center gap-1.5">
@@ -183,8 +243,12 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
                 </div>
               </div>
             )}
-          </div>
-        ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

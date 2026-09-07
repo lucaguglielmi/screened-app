@@ -221,17 +221,17 @@ export const FeeEscalationVisualizer: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Comparative Market Benchmark Strip - Streamlined without nested card borders */}
-      <div className="pt-3 border-t border-darkroom-border/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
-        <div className="flex items-center gap-2.5 text-slate-300">
-          <TrendingUp className="size-4 text-orange-400 shrink-0" />
-          <span>
+      {/* Comparative Market Benchmark Strip - Streamlined on two separate rows to prevent horizontal squashing */}
+      <div className="pt-3 border-t border-darkroom-border/50 flex flex-col gap-2 text-xs">
+        <div className="flex items-start sm:items-center gap-2.5 text-slate-300">
+          <TrendingUp className="size-4 text-orange-400 shrink-0 mt-0.5 sm:mt-0" />
+          <span className="leading-relaxed">
             {data.spikeAlert || `Early bird entries begin at ${data.currency}${minAmount}, escalating to ${data.currency}${maxAmount}.`}
           </span>
         </div>
 
         {data.percentile && (
-          <div className="flex items-center gap-2 text-slate-400 font-mono text-[11px] shrink-0">
+          <div className="flex items-center gap-2 text-slate-400 font-mono text-[11px] pl-6.5 sm:pl-6.5">
             <span>Market Benchmark:</span>
             <span className="font-bold text-orange-400">{data.percentile}th percentile</span>
             <span className="text-slate-500">({data.averageMarketFee || '£32 UK avg'})</span>
