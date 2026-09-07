@@ -13,7 +13,6 @@ import {
   Info,
   HelpCircle,
   ChevronDown,
-  ChevronUp,
   ExternalLink,
   ShieldCheck,
   Search,
@@ -222,23 +221,24 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
   };
 
   const getDimensionIcon = (key: string) => {
+    const iconClass = "w-5 h-5 text-slate-300";
     switch (key) {
       case 'CORPORATE_REGISTRY':
-        return <Building2 className="w-5 h-5 text-indigo-400" />;
+        return <Building2 className={iconClass} />;
       case 'DOMAIN_PROVENANCE':
-        return <Globe className="w-5 h-5 text-blue-400" />;
+        return <Globe className={iconClass} />;
       case 'BOILERPLATE_PLAGIARISM':
-        return <CopyCheck className="w-5 h-5 text-cyan-400" />;
+        return <CopyCheck className={iconClass} />;
       case 'PERSONNEL_DOSSIER':
-        return <Users className="w-5 h-5 text-indigo-300" />;
+        return <Users className={iconClass} />;
       case 'VENUE_CORROBORATION':
-        return <Ticket className="w-5 h-5 text-emerald-400" />;
+        return <Ticket className={iconClass} />;
       case 'ALUMNI_FOOTPRINT':
-        return <GraduationCap className="w-5 h-5 text-purple-400" />;
+        return <GraduationCap className={iconClass} />;
       case 'IMAGE_PROVENANCE':
-        return <ImageIcon className="w-5 h-5 text-pink-400" />;
+        return <ImageIcon className={iconClass} />;
       default:
-        return <ShieldCheck className="w-5 h-5 text-zinc-400" />;
+        return <ShieldCheck className={iconClass} />;
     }
   };
 
@@ -267,8 +267,8 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
         );
       case 'INFORMATIONAL':
         return (
-          <span className="inline-flex items-center gap-1 text-xs font-mono font-medium text-indigo-300">
-            <Info className="w-3.5 h-3.5 text-indigo-400" />
+          <span className="inline-flex items-center gap-1 text-xs font-mono font-medium text-slate-300">
+            <Info className="w-3.5 h-3.5 text-slate-400" />
             <span>Corroborated</span>
           </span>
         );
@@ -283,19 +283,20 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
   };
 
   const getImageAssetIcon = (assetType: ImageAssetType) => {
+    const iconClass = "w-3.5 h-3.5 text-slate-400";
     switch (assetType) {
       case 'LAUREL_GRAPHIC':
-        return <Award className="w-3.5 h-3.5 text-orange-400" />;
+        return <Award className={iconClass} />;
       case 'VENUE_PHOTO':
-        return <Ticket className="w-3.5 h-3.5 text-emerald-400" />;
+        return <Ticket className={iconClass} />;
       case 'RED_CARPET':
-        return <Camera className="w-3.5 h-3.5 text-pink-400" />;
+        return <Camera className={iconClass} />;
       case 'AWARD_TROPHY':
-        return <Award className="w-3.5 h-3.5 text-purple-400" />;
+        return <Award className={iconClass} />;
       case 'JURY_HEADSHOT':
-        return <Users className="w-3.5 h-3.5 text-indigo-400" />;
+        return <Users className={iconClass} />;
       default:
-        return <ImageIcon className="w-3.5 h-3.5 text-zinc-400" />;
+        return <ImageIcon className={iconClass} />;
     }
   };
 
@@ -441,10 +442,10 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2, delay: idx * 0.04 }}
-              className={`rounded-2xl border transition-all ${
+              className={`rounded-2xl border transition-all duration-200 overflow-hidden ${
                 isExpanded
-                  ? 'bg-black/95 border-indigo-500/60 shadow-lg shadow-indigo-500/10'
-                  : 'bg-darkroom-bg border-darkroom-border hover:border-midnight-violet'
+                  ? 'bg-darkroom-surface border-slate-600/80 shadow-lg shadow-black/40'
+                  : 'bg-darkroom-surface/80 border-darkroom-border/80 hover:border-slate-600/80 hover:bg-darkroom-surface shadow-xs'
               }`}
             >
               {/* Collapsed Header */}
@@ -453,7 +454,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
                 className="p-4 sm:p-5 flex items-start justify-between gap-3 cursor-pointer select-none"
               >
                 <div className="flex items-start gap-3 sm:gap-3.5 min-w-0 flex-1">
-                  <div className="p-2.5 rounded-xl bg-white/[0.04] shrink-0 mt-0.5">
+                  <div className="p-2.5 rounded-xl bg-darkroom-card border border-darkroom-border/80 text-slate-300 shrink-0 mt-0.5 shadow-2xs">
                     {getDimensionIcon(dim.dimensionKey)}
                   </div>
                   <div className="min-w-0 flex-1">
@@ -482,30 +483,30 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
                   <button
                     type="button"
                     aria-label={isExpanded ? 'Collapse dimension' : 'Expand dimension'}
-                    className="p-1.5 rounded-lg bg-white/[0.04] text-zinc-400 hover:text-white shrink-0"
+                    className="p-1.5 rounded-lg bg-darkroom-card/80 hover:bg-darkroom-card border border-darkroom-border/60 text-slate-400 hover:text-white shrink-0 transition-all"
                   >
-                    {isExpanded ? (
-                      <ChevronUp className="w-4 h-4" />
-                    ) : (
-                      <ChevronDown className="w-4 h-4" />
-                    )}
+                    <ChevronDown
+                      className={`w-4 h-4 transition-transform duration-200 ${
+                        isExpanded ? 'rotate-180 text-white' : ''
+                      }`}
+                    />
                   </button>
                 </div>
               </div>
 
-              {/* Expanded Inspection Drawer (Uniform Solid Black Background, Flat Structure) */}
+              {/* Expanded Inspection Drawer (Uniform Darkroom Surface Background) */}
               <AnimatePresence>
                 {isExpanded && (
                   <motion.div
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="border-t border-darkroom-border/60 p-5 space-y-4 text-xs overflow-hidden bg-black/95 rounded-b-2xl"
+                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                    className="border-t border-darkroom-border/60 p-5 space-y-4 text-xs overflow-hidden bg-darkroom-bg/50 rounded-b-2xl"
                   >
                     {/* Full Summary */}
                     <div className="space-y-1 border-b border-darkroom-border/40 pb-3">
-                      <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-indigo-400 block">
+                      <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-tool-diligence block">
                         Executive Forensic Summary
                       </span>
                       <p className="text-zinc-200 leading-relaxed font-sans text-xs sm:text-sm">{dim.summary}</p>
@@ -522,8 +523,8 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
                         <div className="space-y-3 pt-1 border-b border-darkroom-border/40 pb-4">
                           <div className="flex items-center justify-between flex-wrap gap-2">
                             <div className="flex items-center gap-2">
-                              <Camera className="size-4 text-pink-400" />
-                              <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-pink-300">
+                              <Camera className="size-4 text-slate-400" />
+                              <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-300">
                                 Reverse Image Search &amp; Asset Provenance ({imageArtifacts.length} Assets Analyzed)
                               </span>
                             </div>
@@ -536,7 +537,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
                             {imageArtifacts.map((artifact: ImageForensicRecord) => (
                               <div
                                 key={artifact.id}
-                                className="p-3.5 rounded-xl bg-[#070b14] border border-darkroom-border/80 space-y-3 hover:border-indigo-500/40 transition-all"
+                                className="p-3.5 rounded-xl bg-darkroom-card/90 border border-darkroom-border/80 space-y-3 hover:border-slate-600 transition-all"
                               >
                                 {/* Asset Header */}
                                 <div className="flex items-center justify-between gap-2 flex-wrap">
@@ -568,12 +569,12 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
 
                                     {artifact.originMatchUrl && (
                                       <div className="text-[11px] font-mono text-slate-400 space-y-0.5">
-                                        <div className="text-indigo-400 font-medium">Discovered Web Match:</div>
+                                        <div className="text-slate-300 font-medium">Discovered Web Match:</div>
                                         <a
                                           href={artifact.originMatchUrl}
                                           target="_blank"
                                           rel="noopener noreferrer"
-                                          className="text-indigo-300 hover:text-white hover:underline flex items-center gap-1 truncate"
+                                          className="text-tool-diligence hover:text-white hover:underline flex items-center gap-1 truncate"
                                         >
                                           <span className="truncate">{artifact.originMatchTitle || artifact.originMatchUrl}</span>
                                           <ExternalLink className="size-3 shrink-0" />
@@ -584,7 +585,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
                                 </div>
 
                                 {/* Forensic Notes */}
-                                <div className="p-2.5 rounded-lg bg-black/40 border border-darkroom-border/40 text-[11px] font-sans text-slate-300 leading-relaxed">
+                                <div className="p-2.5 rounded-lg bg-darkroom-surface/50 border border-darkroom-border/60 text-[11px] font-sans text-slate-300 leading-relaxed">
                                   <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-semibold mb-0.5">
                                     Forensic Findings:
                                   </div>
@@ -636,7 +637,7 @@ export const DeepVettingMatrix: React.FC<DeepVettingMatrixProps> = ({ report, fe
                           {dim.corroboratingSources.map((src, srcIdx) => (
                             <span
                               key={srcIdx}
-                              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#080d1a] border border-indigo-900/40 text-[11px] font-mono text-indigo-300 hover:text-white transition-colors"
+                              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-darkroom-surface border border-darkroom-border/80 text-[11px] font-mono text-slate-300 hover:text-white hover:border-slate-500 transition-colors"
                             >
                               <span>{src}</span>
                               <ExternalLink className="w-3 h-3 opacity-60" />

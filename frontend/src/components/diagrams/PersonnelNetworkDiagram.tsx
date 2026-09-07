@@ -192,10 +192,10 @@ export const PersonnelNetworkDiagram: React.FC<Props> = ({ keyPersonnel }) => {
             return (
               <div
                 key={pIdx}
-                className={`p-4 rounded-2xl border transition-all space-y-3 ${
+                className={`p-4 sm:p-5 rounded-2xl border transition-all duration-200 space-y-3 ${
                   isSuspect
                     ? 'bg-rose-950/20 border-rose-500/40 shadow-sm shadow-rose-950/20'
-                    : 'bg-darkroom-surface/90 border-darkroom-border/80 hover:border-zinc-700/80 shadow-sm'
+                    : 'bg-darkroom-surface/80 border-darkroom-border/80 hover:border-slate-600/80 shadow-sm'
                 }`}
               >
                 {/* Row 1: Person Identity & Role */}
@@ -204,7 +204,7 @@ export const PersonnelNetworkDiagram: React.FC<Props> = ({ keyPersonnel }) => {
                     <div className={`size-10 rounded-xl flex items-center justify-center font-bold text-xs font-mono shrink-0 border ${
                       isSuspect
                         ? 'bg-rose-500/20 text-rose-300 border-rose-500/30'
-                        : 'bg-midnight-royal/40 text-white border-indigo-900/40'
+                        : 'bg-darkroom-card text-white border-darkroom-border/80 shadow-2xs'
                     }`}>
                       {initials || <User className="size-4 text-slate-300" />}
                     </div>
@@ -217,7 +217,7 @@ export const PersonnelNetworkDiagram: React.FC<Props> = ({ keyPersonnel }) => {
                           </span>
                         )}
                       </div>
-                      <div className="text-xs font-mono text-indigo-300 mt-0.5 truncate">
+                      <div className="text-xs font-mono text-slate-400 mt-0.5 truncate">
                         {person.roles && person.roles.length > 0 ? person.roles.join(' • ') : 'Festival Leadership'}
                       </div>
                     </div>
@@ -248,7 +248,7 @@ export const PersonnelNetworkDiagram: React.FC<Props> = ({ keyPersonnel }) => {
                 {/* Row 2: Directorship Connections & Associated Entities */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-0.5">
                   {/* Connected Companies / Entities */}
-                  <div className="p-3 rounded-xl bg-darkroom-card/60 border border-darkroom-border/60 space-y-1.5">
+                  <div className="p-3.5 rounded-xl bg-darkroom-bg/50 border border-darkroom-border/60 space-y-1.5">
                     <div className="flex items-center gap-1.5 text-xs font-mono font-medium text-slate-400">
                       <Building2 className="size-3.5 text-slate-400" />
                       <span>Corporate Entities &amp; Filings</span>
@@ -258,7 +258,7 @@ export const PersonnelNetworkDiagram: React.FC<Props> = ({ keyPersonnel }) => {
                         {companies.map((comp, cIdx) => (
                           <span
                             key={cIdx}
-                            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-950/30 border border-emerald-500/30 text-emerald-300 font-mono text-xs font-medium"
+                            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-darkroom-surface border border-darkroom-border/80 text-emerald-400 font-mono text-xs font-medium"
                           >
                             <ArrowRight className="size-2.5 text-emerald-400" />
                             <span>{comp}</span>
@@ -273,7 +273,7 @@ export const PersonnelNetworkDiagram: React.FC<Props> = ({ keyPersonnel }) => {
                   </div>
 
                   {/* Connected Sister Festivals */}
-                  <div className="p-3 rounded-xl bg-darkroom-card/60 border border-darkroom-border/60 space-y-1.5">
+                  <div className="p-3.5 rounded-xl bg-darkroom-bg/50 border border-darkroom-border/60 space-y-1.5">
                     <div className="flex items-center gap-1.5 text-xs font-mono font-medium text-slate-400">
                       <Film className="size-3.5 text-slate-400" />
                       <span>Sister Festivals &amp; Networks</span>
@@ -283,7 +283,7 @@ export const PersonnelNetworkDiagram: React.FC<Props> = ({ keyPersonnel }) => {
                         {festivals.map((fest, fIdx) => (
                           <span
                             key={fIdx}
-                            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-950/30 border border-amber-500/30 text-amber-300 font-mono text-xs font-medium"
+                            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-darkroom-surface border border-darkroom-border/80 text-amber-400 font-mono text-xs font-medium"
                           >
                             <ArrowRight className="size-2.5 text-amber-400" />
                             <span>{fest}</span>
@@ -388,9 +388,9 @@ export const PersonnelNetworkDiagram: React.FC<Props> = ({ keyPersonnel }) => {
                 return (
                   <div
                     key={cIdx}
-                    className="p-3.5 rounded-xl bg-darkroom-surface/90 border border-darkroom-border/80 flex items-start gap-3"
+                    className="p-3.5 rounded-xl bg-darkroom-surface/80 border border-darkroom-border/80 flex items-start gap-3 shadow-2xs"
                   >
-                    <div className="size-9 rounded-xl flex items-center justify-center font-bold text-xs font-mono shrink-0 bg-midnight-royal/40 text-white border border-indigo-900/40">
+                    <div className="size-9 rounded-xl flex items-center justify-center font-bold text-xs font-mono shrink-0 bg-darkroom-card text-white border border-darkroom-border/80 shadow-2xs">
                       {initials || <User className="size-4 text-slate-300" />}
                     </div>
                     <div className="min-w-0 flex-1">
@@ -423,7 +423,7 @@ export const PersonnelNetworkDiagram: React.FC<Props> = ({ keyPersonnel }) => {
         {hasSuspects ? (
           <ShieldAlert className="size-4.5 text-rose-400 shrink-0 mt-0.5" />
         ) : (
-          <Sparkles className="size-4.5 text-indigo-400 shrink-0 mt-0.5" />
+          <Sparkles className="size-4.5 text-tool-diligence shrink-0 mt-0.5" />
         )}
         <div className="space-y-1">
           <strong className={hasSuspects ? 'text-rose-300' : 'text-white'}>

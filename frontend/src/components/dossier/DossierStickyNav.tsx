@@ -54,6 +54,7 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
   dossier,
   entityName,
   entityId,
+  officialDomain,
   density,
   onDensityChange,
   onExport: onExportProp,
@@ -224,38 +225,50 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
         />
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-2.5 flex items-center justify-between gap-3">
-        {/* Detail Dial: Summary / Full / Agent */}
-        <div className="flex-1 max-w-xs sm:max-w-sm md:max-w-md">
-          <DetailDial density={density} onChange={onDensityChange} />
-        </div>
+      <div className="max-w-6xl mx-auto px-3 sm:px-6 md:px-8 py-2 space-y-2">
+        {/* Row 1: Actions & Context Metadata */}
+        <div className="flex items-center justify-between gap-2">
+          {/* Left: Entity identifier / status badge */}
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-darkroom-surface border border-darkroom-border/80 text-[11px] font-mono text-slate-300 max-w-[210px] sm:max-w-sm truncate shadow-2xs">
+              <span className="size-1.5 rounded-full bg-tool-diligence shrink-0 animate-pulse" />
+              <span className="truncate font-semibold text-white">
+                {entityName || 'Dossier Overview'}
+              </span>
+            </span>
+            {officialDomain && (
+              <span className="hidden sm:inline-block text-[11px] font-mono text-slate-400 truncate max-w-[180px]">
+                {officialDomain}
+              </span>
+            )}
+          </div>
 
-        {/* Actions Dropdown Menu */}
-        <div className="relative shrink-0" ref={menuRef}>
-          <button
-            type="button"
-            onClick={toggleMenu}
-            className="px-3 py-1.5 rounded-xl bg-darkroom-card/90 hover:bg-darkroom-surface border border-darkroom-border text-xs font-mono font-medium text-slate-200 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95"
-            aria-expanded={isMenuOpen}
-          >
-            <Sparkles className="size-3.5 text-indigo-400 shrink-0" />
-            <span>Actions</span>
-            <ChevronDown
-              className={`size-3.5 text-slate-400 transition-transform duration-200 shrink-0 ${
-                isMenuOpen ? 'rotate-180 text-white' : ''
-              }`}
-            />
-          </button>
+          {/* Right: Actions Dropdown Menu */}
+          <div className="relative shrink-0" ref={menuRef}>
+            <button
+              type="button"
+              onClick={toggleMenu}
+              className="px-3 py-1.5 rounded-xl bg-darkroom-card/90 hover:bg-darkroom-surface border border-darkroom-border text-xs font-mono font-medium text-slate-200 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95"
+              aria-expanded={isMenuOpen}
+            >
+              <Sparkles className="size-3.5 text-tool-diligence shrink-0" />
+              <span>Actions</span>
+              <ChevronDown
+                className={`size-3.5 text-slate-400 transition-transform duration-200 shrink-0 ${
+                  isMenuOpen ? 'rotate-180 text-white' : ''
+                }`}
+              />
+            </button>
 
-          <AnimatePresence>
-            {isMenuOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: 8, scale: 0.96 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 8, scale: 0.96 }}
-                transition={{ duration: 0.15, ease: 'easeOut' }}
-                className="absolute right-0 top-full mt-2 w-[calc(100vw-2rem)] max-w-xs sm:w-72 p-1.5 rounded-2xl bg-darkroom-surface/98 backdrop-blur-xl border border-darkroom-border shadow-2xl shadow-black/80 z-50 space-y-1 font-sans text-xs"
-              >
+            <AnimatePresence>
+              {isMenuOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 6, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 6, scale: 0.96 }}
+                  transition={{ duration: 0.15, ease: 'easeOut' }}
+                  className="absolute right-0 top-full mt-2 w-[calc(100vw-2rem)] max-w-xs sm:w-72 p-1.5 rounded-2xl bg-darkroom-surface/98 backdrop-blur-xl border border-darkroom-border shadow-2xl shadow-black/80 z-50 space-y-1 font-sans text-xs"
+                >
                 <button
                   type="button"
                   onClick={() => {
@@ -364,6 +377,12 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
           </AnimatePresence>
         </div>
       </div>
-    </nav>
+
+      {/* Row 2: Detail Dial Tabs (Summary / Full / Agent) */}
+      <div className="w-full max-w-lg mx-auto sm:max-w-none">
+        <DetailDial density={density} onChange={onDensityChange} />
+      </div>
+    </div>
+  </nav>
   );
 };

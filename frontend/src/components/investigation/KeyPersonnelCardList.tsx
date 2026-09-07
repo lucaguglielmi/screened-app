@@ -75,7 +75,7 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
       <div
         key={idx}
         id={anchorId}
-        className="py-3 px-1 sm:p-4 sm:rounded-2xl sm:border sm:border-darkroom-border/80 sm:bg-darkroom-surface/90 sm:hover:border-zinc-700/80 sm:shadow-sm transition-all flex flex-col justify-start scroll-mt-32 space-y-2.5"
+        className="p-4 sm:p-5 rounded-2xl border border-darkroom-border/80 bg-darkroom-surface/80 hover:border-slate-600/80 shadow-sm transition-all duration-200 flex flex-col justify-start scroll-mt-32 space-y-3"
       >
         {/* Header: Avatar & Name & Roles */}
         <div className="flex items-start gap-3">
@@ -98,7 +98,7 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
                 />
               </>
             ) : (
-              <div className="size-full flex items-center justify-center font-bold text-xs sm:text-sm bg-midnight-royal/40 text-white">
+              <div className="size-full flex items-center justify-center font-bold text-xs sm:text-sm bg-darkroom-card text-white">
                 {initials || <User className="size-4.5 text-slate-300" />}
               </div>
             )}
@@ -115,7 +115,7 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
                 person.roles.map((r, rIdx) => (
                   <span
                     key={rIdx}
-                    className="text-xs font-mono px-2 py-0.5 rounded-md bg-[#080d1a] border border-indigo-900/40 text-indigo-300"
+                    className="text-xs font-mono px-2 py-0.5 rounded-md bg-darkroom-surface border border-darkroom-border/80 text-slate-300"
                   >
                     {r}
                   </span>
@@ -135,7 +135,7 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
                 href={person.linkedinUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#080d1a] border border-indigo-900/40 text-indigo-300 font-mono text-xs font-medium hover:scale-105 active:scale-95 transition-all duration-200 ease-out hover:border-indigo-500/60 hover:text-white hover:bg-indigo-950/60 shadow-sm cursor-pointer group"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border text-slate-300 font-mono text-xs font-medium hover:scale-105 active:scale-95 transition-all duration-200 ease-out hover:border-slate-500 hover:text-white shadow-xs cursor-pointer group"
                 title={`View ${person.name}'s LinkedIn Profile`}
               >
                 <svg className="size-3 fill-current opacity-80 group-hover:opacity-100" viewBox="0 0 24 24">
@@ -151,7 +151,7 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
                 href={person.companiesHouseUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#080d1a] border border-indigo-900/40 text-indigo-300 font-mono text-xs font-medium hover:scale-105 active:scale-95 transition-all duration-200 ease-out hover:border-indigo-500/60 hover:text-white hover:bg-indigo-950/60 shadow-sm cursor-pointer group"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border text-slate-300 font-mono text-xs font-medium hover:scale-105 active:scale-95 transition-all duration-200 ease-out hover:border-slate-500 hover:text-white shadow-xs cursor-pointer group"
                 title="View Official Corporate Filings & Directorships"
               >
                 <Building2 className="size-3 text-slate-400" />
@@ -165,7 +165,7 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
                 href={person.facebookUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#080d1a] border border-indigo-900/40 text-indigo-300 font-mono text-xs font-medium hover:scale-105 active:scale-95 transition-all duration-200 ease-out hover:border-indigo-500/60 hover:text-white hover:bg-indigo-950/60 shadow-sm cursor-pointer group"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border text-slate-300 font-mono text-xs font-medium hover:scale-105 active:scale-95 transition-all duration-200 ease-out hover:border-slate-500 hover:text-white shadow-xs cursor-pointer group"
                 title={`View ${person.name}'s Facebook Profile`}
               >
                 <svg className="size-3 fill-current opacity-80 group-hover:opacity-100" viewBox="0 0 24 24">
@@ -181,7 +181,7 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
                 href={person.websiteUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#080d1a] border border-indigo-900/40 text-indigo-300 font-mono text-xs font-medium hover:scale-105 active:scale-95 transition-all duration-200 ease-out hover:border-indigo-500/60 hover:text-white hover:bg-indigo-950/60 shadow-sm cursor-pointer group"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border text-slate-300 font-mono text-xs font-medium hover:scale-105 active:scale-95 transition-all duration-200 ease-out hover:border-slate-500 hover:text-white shadow-xs cursor-pointer group"
                 title={`Visit ${person.name}'s Personal Website`}
               >
                 <Globe className="size-3 text-slate-400" />
@@ -195,7 +195,7 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
                 href={person.imdbUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#080d1a] border border-indigo-900/40 text-indigo-300 font-mono text-xs font-medium hover:scale-105 active:scale-95 transition-all duration-200 ease-out hover:border-indigo-500/60 hover:text-white hover:bg-indigo-950/60 shadow-sm cursor-pointer group"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border text-slate-300 font-mono text-xs font-medium hover:scale-105 active:scale-95 transition-all duration-200 ease-out hover:border-slate-500 hover:text-white shadow-xs cursor-pointer group"
                 title={`View ${person.name}'s IMDb Profile`}
               >
                 <Film className="size-3 text-slate-400" />
@@ -209,7 +209,7 @@ export const KeyPersonnelCardList: React.FC<Props> = ({
                 href={person.twitterUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#080d1a] border border-indigo-900/40 text-indigo-300 font-mono text-xs font-medium hover:scale-105 active:scale-95 transition-all duration-200 ease-out hover:border-indigo-500/60 hover:text-white hover:bg-indigo-950/60 shadow-sm cursor-pointer group"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border text-slate-300 font-mono text-xs font-medium hover:scale-105 active:scale-95 transition-all duration-200 ease-out hover:border-slate-500 hover:text-white shadow-xs cursor-pointer group"
                 title={`View ${person.name} on X/Twitter`}
               >
                 <span className="font-bold text-[11px]">𝕏</span>
