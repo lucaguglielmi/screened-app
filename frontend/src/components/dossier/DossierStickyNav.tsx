@@ -158,7 +158,7 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
       return;
     }
     soundEffects.playClick();
-    const canonicalUrl = `${window.location.origin}/?id=${encodeURIComponent(entityId || 'inv-001')}`;
+    const canonicalUrl = `${window.location.origin}/diligence/${encodeURIComponent(entityId || 'inv-001')}`;
     navigator.clipboard.writeText(canonicalUrl);
     setInternalCopiedLink(true);
     soundEffects.playSuccess();

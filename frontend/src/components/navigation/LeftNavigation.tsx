@@ -14,6 +14,7 @@ import { FEATURES } from '../../config/features';
 interface Props {
   activeTool: ActiveTool;
   onChange: (tool: ActiveTool) => void;
+  onNavigateHome?: () => void;
   theme?: 'dark' | 'light';
   onToggleTheme?: () => void;
   soundMuted?: boolean;
@@ -22,7 +23,7 @@ interface Props {
   onOpenCommandPalette?: () => void;
 }
 
-export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
+export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange, onNavigateHome }) => {
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
 
   const handleSelectTool = (tool: ActiveTool) => {
@@ -35,7 +36,14 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
       {/* Top Section: App Logo */}
       <div className="flex flex-col items-center gap-4 w-full">
         <button
-          onClick={() => handleSelectTool('CONVERSATIONAL_DESK')}
+          onClick={() => {
+            soundEffects.playClick();
+            if (onNavigateHome) {
+              onNavigateHome();
+            } else {
+              handleSelectTool('CONVERSATIONAL_DESK');
+            }
+          }}
           className="relative group p-2.5 rounded-2xl bg-gradient-to-b from-midnight-royal/25 to-midnight-indigo/20 border border-midnight-royal/40 hover:border-midnight-royal/80 shadow-lg shadow-[var(--color-midnight-royal)]/20 transition-all cursor-pointer"
           title="Screened Home"
         >

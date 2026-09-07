@@ -22,6 +22,7 @@ import { FEATURES } from '../../config/features';
 interface MobileNavigationProps {
   activeTool: ActiveTool;
   onChange: (tool: ActiveTool) => void;
+  onNavigateHome?: () => void;
   soundMuted: boolean;
   onToggleSound: () => void;
   onOpenKeyboardHelp: () => void;
@@ -33,6 +34,7 @@ const subscribe = () => () => {};
 export const MobileNavigation: React.FC<MobileNavigationProps> = ({
   activeTool,
   onChange,
+  onNavigateHome,
   soundMuted,
   onToggleSound,
   onOpenKeyboardHelp,
@@ -92,12 +94,24 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
             {/* Top Bar inside Drawer */}
             <div>
               <div className="flex items-center justify-between pb-5 border-b border-darkroom-border">
-                <div className="flex items-center gap-3">
-                  <div className="size-9 rounded-xl bg-midnight-royal flex items-center justify-center text-white font-serif font-bold text-lg shadow-md shadow-[var(--color-midnight-royal)]/50">
+                <div 
+                  onClick={() => {
+                    soundEffects.playClick();
+                    setIsOpen(false);
+                    if (onNavigateHome) {
+                      onNavigateHome();
+                    } else {
+                      handleSelect('CONVERSATIONAL_DESK');
+                    }
+                  }}
+                  className="flex items-center gap-3 cursor-pointer group"
+                  title="Go to Screened Home"
+                >
+                  <div className="size-9 rounded-xl bg-midnight-royal flex items-center justify-center text-white font-serif font-bold text-lg shadow-md shadow-[var(--color-midnight-royal)]/50 group-hover:scale-105 transition-transform">
                     S
                   </div>
                   <div>
-                    <h3 className="font-serif text-lg font-bold text-white tracking-tight">
+                    <h3 className="font-serif text-lg font-bold text-white tracking-tight group-hover:text-tool-diligence transition-colors">
                       Screened
                     </h3>
                     <p className="text-xs text-slate-400 font-mono">

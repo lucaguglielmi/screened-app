@@ -3,6 +3,8 @@ import { CandidateEntity, Investigation } from '../types/investigation';
 import { track } from '../utils/analytics';
 import { piiVault } from '../utils/pii';
 
+import { parseCurrentRoute } from '../router/Router';
+
 export type InvestigationEntryPoint =
   | 'search_form'
   | 'starter_chip'
@@ -47,19 +49,6 @@ export function useInvestigation() {
     }
   }, []);
 
-  const updateUrlForInvestigation = useCallback((id: string) => {
-    try {
-      const currentParams = new URLSearchParams(window.location.search);
-      if (currentParams.get('id') !== id) {
-        currentParams.set('id', id);
-        const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
-        window.history.pushState({ investigationId: id }, '', newUrl);
-      }
-    } catch {
-      // ignore
-    }
-  }, []);
-
   const fetchInvestigation = useCallback(
     async (id: string) => {
       try {
@@ -68,7 +57,6 @@ export function useInvestigation() {
           const data: Investigation = await res.json();
           setInvestigation(data);
           saveRecentInvestigation(data.id);
-          updateUrlForInvestigation(data.id);
           if (data.confirmedEntity?.name) {
             saveRecentSearch(data.confirmedEntity.name);
           }
@@ -77,18 +65,16 @@ export function useInvestigation() {
         console.error('Failed to fetch investigation:', e);
       }
     },
-    [saveRecentInvestigation, saveRecentSearch, updateUrlForInvestigation],
+    [saveRecentInvestigation, saveRecentSearch],
   );
 
-  // Hydrate investigation from URL parameter (?id=... or /investigation/...)
+  // Hydrate investigation from route (/diligence/:id or normalized legacy ?id=...)
   useEffect(() => {
     let isMounted = true;
     const loadInitialInvestigation = async () => {
       try {
-        const params = new URLSearchParams(window.location.search);
-        const idParam = params.get('id') || params.get('investigationId');
-        const pathMatch = window.location.pathname.match(/\/investigation\/([^/]+)/);
-        const initialId = idParam || (pathMatch ? pathMatch[1] : null);
+        const route = parseCurrentRoute();
+        const initialId = route.investigationId;
 
         if (initialId && isMounted) {
           const res = await fetch(`/api/investigations/${initialId}`);
@@ -96,7 +82,6 @@ export function useInvestigation() {
             const data: Investigation = await res.json();
             setInvestigation(data);
             saveRecentInvestigation(data.id);
-            updateUrlForInvestigation(data.id);
             if (data.confirmedEntity?.name) {
               saveRecentSearch(data.confirmedEntity.name);
             }
@@ -112,21 +97,24 @@ export function useInvestigation() {
     return () => {
       isMounted = false;
     };
-  }, [saveRecentInvestigation, saveRecentSearch, updateUrlForInvestigation]);
+  }, [saveRecentInvestigation, saveRecentSearch]);
 
-  // Handle browser back / forward navigation
+  // Handle browser back / forward navigation and custom navigation
   useEffect(() => {
-    const handlePopState = () => {
-      const params = new URLSearchParams(window.location.search);
-      const idParam = params.get('id') || params.get('investigationId');
-      if (idParam) {
-        fetchInvestigation(idParam);
+    const handleLocationChange = () => {
+      const route = parseCurrentRoute();
+      if (route.investigationId) {
+        fetchInvestigation(route.investigationId);
       } else {
         setInvestigation(null);
       }
     };
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    window.addEventListener('popstate', handleLocationChange);
+    window.addEventListener('screened:navigate', handleLocationChange);
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+      window.removeEventListener('screened:navigate', handleLocationChange);
+    };
   }, [fetchInvestigation]);
 
   // Fallback polling every 3s while investigation is active

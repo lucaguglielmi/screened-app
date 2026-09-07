@@ -141,7 +141,7 @@ export const EvidenceDossier: React.FC<Props> = ({
     mdContent += `**Corroborated Web Sources**: ${sources.length} sources\n`;
     mdContent += `**Extracted Atomic Claims**: ${claims.length} claims\n`;
     mdContent += `**Disputed Contradictions**: ${disputes.length} points\n`;
-    mdContent += `**Permanent Canonical URL**: ${window.location.origin}/?id=${encodeURIComponent(entity.id || 'inv-001')}\n`;
+    mdContent += `**Permanent Canonical URL**: ${window.location.origin}/diligence/${encodeURIComponent(entity.id || 'inv-001')}\n`;
     mdContent += `**Audit SHA-256 Digest**: \`${digestHex}\`\n\n`;
 
     mdContent += `## Executive Summary\n\n${dossier?.executiveSummary || 'Autonomous investigation concluded with full multi-source cross-verification.'}\n\n`;

@@ -46,6 +46,7 @@ import { isSoundMuted, setSoundMuted, playSuccessChime } from './utils/audio';
 import { track } from './utils/analytics';
 import { triggerAppNotification } from './utils/pwaNotifications';
 import { FEATURES } from './config/features';
+import { useAppRouter } from './router/useAppRouter';
 
 export default function App() {
   const [soundMuted, setSoundMutedState] = useState<boolean>(() => isSoundMuted());
@@ -53,19 +54,21 @@ export default function App() {
   const [isFunkyCursorEnabled, setIsFunkyCursorEnabled] = useState(false);
   const [isNavLogoHovered, setIsNavLogoHovered] = useState(false);
 
-  const [activeTool, setActiveTool] = useState<ActiveTool>(() => {
-    try {
-      if (typeof window !== 'undefined') {
-        const params = new URLSearchParams(window.location.search);
-        if (params.get('id') || params.get('investigationId') || window.location.pathname.startsWith('/investigation/')) {
-          return 'DUE_DILIGENCE';
-        }
-      }
-    } catch {
-      // ignore
+  const {
+    activeTool,
+    investigationId: routeInvestigationId,
+    navigate,
+    navigateToTool,
+  } = useAppRouter();
+
+  const handleSelectTool = (tool: ActiveTool) => {
+    if (tool === 'CONVERSATIONAL_DESK') {
+      handleReset();
+    } else {
+      navigateToTool(tool);
     }
-    return 'CONVERSATIONAL_DESK';
-  });
+  };
+
   const [query, setQuery] = useState('');
   const [optionalUrl] = useState('');
 
@@ -148,14 +151,14 @@ export default function App() {
       setIsOutreachOpen(false);
     },
     onFocusSearch: () => {
-      setActiveTool('DUE_DILIGENCE');
+      handleSelectTool('DUE_DILIGENCE');
       searchInputRef.current?.focus();
     },
     onToggleHelp: () => setIsKeyboardHelpOpen((prev) => !prev),
     onToggleFunkyCursor: () => setIsFunkyCursorEnabled((prev) => !prev),
     onToggleSound: toggleSound,
     onPasteQuery: (pastedText) => {
-      setActiveTool('DUE_DILIGENCE');
+      handleSelectTool('DUE_DILIGENCE');
       setQuery(pastedText);
       setTimeout(() => {
         searchInputRef.current?.focus();
@@ -175,7 +178,10 @@ export default function App() {
       | 'grant_scout_deep_screen',
   ) => {
     setEvents([]);
-    await startInvestigation(subjectQuery, entryPoint, optionalUrl);
+    const inv = await startInvestigation(subjectQuery, entryPoint, optionalUrl);
+    if (inv?.id) {
+      navigate(`/diligence/${encodeURIComponent(inv.id)}`);
+    }
   };
 
   const handleConfirmEntity = async (entity: CandidateEntity) => {
@@ -254,7 +260,7 @@ export default function App() {
     setError(null);
     setOutreachDraft(null);
     setIsOutreachOpen(false);
-    setActiveTool('CONVERSATIONAL_DESK');
+    navigate('/');
   };
 
   const handleDeepScreen = (festivalName: string, sourceTool: 'chat' | 'scout' | 'command_palette' | 'grant_scout') => {
@@ -263,7 +269,6 @@ export default function App() {
     setError(null);
     setOutreachDraft(null);
     setIsOutreachOpen(false);
-    setActiveTool('DUE_DILIGENCE');
     setQuery(festivalName);
     const entryPoint = `${sourceTool}_deep_screen` as
       | 'chat_deep_screen'
@@ -293,7 +298,11 @@ export default function App() {
       )}
 
       {/* Left Vertical Navigation Rail & Expandable Flyout */}
-      <LeftNavigation activeTool={activeTool} onChange={setActiveTool} />
+      <LeftNavigation
+        activeTool={activeTool}
+        onChange={handleSelectTool}
+        onNavigateHome={handleReset}
+      />
 
       {/* Main Workspace Container */}
       <div
@@ -313,6 +322,7 @@ export default function App() {
               onMouseEnter={() => setIsNavLogoHovered(true)}
               onMouseLeave={() => setIsNavLogoHovered(false)}
               className="flex items-center gap-3 cursor-pointer shrink-0 group"
+              title="Return to Screened Home"
             >
               <div className="flex items-center gap-2.5">
                 <span className="font-serif text-2xl font-black tracking-normal text-darkroom-text flex items-center">
@@ -378,7 +388,8 @@ export default function App() {
               {/* Mobile Menu Drawer Button */}
               <MobileNavigation
                 activeTool={activeTool}
-                onChange={setActiveTool}
+                onChange={handleSelectTool}
+                onNavigateHome={handleReset}
                 soundMuted={soundMuted}
                 onToggleSound={toggleSound}
                 onOpenKeyboardHelp={() => setIsKeyboardHelpOpen(true)}
@@ -389,7 +400,7 @@ export default function App() {
         </header>
 
         {/* Dossier Sticky Toolbar: Summary / Full / Agent */}
-        {activeTool === 'DUE_DILIGENCE' && investigation && currentStatus === 'READY' && !isCelebrating && investigation.dossier && (
+        {activeTool === 'DUE_DILIGENCE' && routeInvestigationId && investigation && currentStatus === 'READY' && !isCelebrating && investigation.dossier && (
           <DossierStickyNav
             dossier={investigation.dossier}
             entityName={investigation.confirmedEntity?.name || investigation.query}
@@ -416,9 +427,20 @@ export default function App() {
         >
           {/* Error Notification */}
           {error && (
-            <div className="max-w-3xl mx-auto p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-600 text-rose-400 text-base flex items-center gap-3">
-              <AlertTriangle className="size-5 shrink-0" />
-              <div>{error}</div>
+            <div className="max-w-3xl mx-auto p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-600 text-rose-400 text-base flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <AlertTriangle className="size-5 shrink-0" />
+                <div>{error}</div>
+              </div>
+              <button
+                onClick={() => {
+                  setError(null);
+                  navigate('/diligence');
+                }}
+                className="px-3 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-xs font-mono transition-colors cursor-pointer"
+              >
+                Start New Search
+              </button>
             </div>
           )}
 
@@ -426,7 +448,7 @@ export default function App() {
           {activeTool === 'CONVERSATIONAL_DESK' && (
             <ChatContainer
               onLaunchDueDiligence={(q) => handleDeepScreen(q, 'chat')}
-              onNavigateToPlaygroundFeedback={() => setActiveTool('WHY_SCREENED')}
+              onNavigateToPlaygroundFeedback={() => handleSelectTool('WHY_SCREENED')}
               onOpenKeyboardHelp={() => setIsKeyboardHelpOpen(true)}
             />
           )}
@@ -444,9 +466,9 @@ export default function App() {
           {/* View 3: Why Screened Exists */}
           {activeTool === 'WHY_SCREENED' && (
             <WhyScreened
-              onNavigateToDesk={() => setActiveTool('CONVERSATIONAL_DESK')}
-              onNavigateToDiligence={() => setActiveTool('DUE_DILIGENCE')}
-              onNavigateToScout={() => setActiveTool('GRANT_SCOUT')}
+              onNavigateToDesk={handleReset}
+              onNavigateToDiligence={() => handleSelectTool('DUE_DILIGENCE')}
+              onNavigateToScout={() => handleSelectTool('GRANT_SCOUT')}
               onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
             />
           )}
@@ -454,8 +476,8 @@ export default function App() {
           {/* View 4: Scam & Risk Defense Guide */}
           {activeTool === 'FESTIVAL_PROTECTION_GUIDE' && (
             <FestivalProtectionGuide
-              onNavigateToDesk={() => setActiveTool('CONVERSATIONAL_DESK')}
-              onNavigateToDiligence={() => setActiveTool('DUE_DILIGENCE')}
+              onNavigateToDesk={handleReset}
+              onNavigateToDiligence={() => handleSelectTool('DUE_DILIGENCE')}
               onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
             />
           )}
@@ -463,7 +485,7 @@ export default function App() {
           {/* View 5: Due Diligence */}
           {activeTool === 'DUE_DILIGENCE' && (
             <>
-              {!investigation && (
+              {(!investigation || !routeInvestigationId) && (
                 <div className="space-y-12">
                   {/* Hero */}
                   <section className="text-center max-w-2xl mx-auto space-y-6 pt-4">
@@ -536,7 +558,7 @@ export default function App() {
               )}
 
               {/* State 1 & 2 Unified: Live Progress */}
-              {investigation && currentStatus !== 'AWAITING_ENTITY_CONFIRMATION' && (currentStatus !== 'READY' || isCelebrating) && (
+              {investigation && routeInvestigationId && currentStatus !== 'AWAITING_ENTITY_CONFIRMATION' && (currentStatus !== 'READY' || isCelebrating) && (
                 <LiveProgress
                   status={currentStatus}
                   events={events}
@@ -548,7 +570,7 @@ export default function App() {
               )}
 
               {/* Awaiting Confirmation */}
-              {investigation && currentStatus === 'AWAITING_ENTITY_CONFIRMATION' && (
+              {investigation && routeInvestigationId && currentStatus === 'AWAITING_ENTITY_CONFIRMATION' && (
                 <Suspense fallback={<div className="p-8 text-center text-slate-500">Loading Confirmation...</div>}>
                   <EntityConfirmation
                     candidates={investigation.candidates}
@@ -560,7 +582,7 @@ export default function App() {
               )}
 
               {/* State 3: Dossier Ready */}
-              {investigation && currentStatus === 'READY' && !isCelebrating && investigation.dossier && (
+              {investigation && routeInvestigationId && currentStatus === 'READY' && !isCelebrating && investigation.dossier && (
                 <EvidenceDossier
                   entity={
                     investigation.confirmedEntity || {
@@ -584,7 +606,12 @@ export default function App() {
                   auditHealth={investigation.auditHealth}
                   density={dossierDensity}
                   onDensityChange={setDossierDensity}
-                  onNewInvestigation={handleReset}
+                  onNewInvestigation={() => {
+                    setInvestigation(null);
+                    setEvents([]);
+                    setError(null);
+                    navigate('/diligence');
+                  }}
                   onDraftOutreach={handleDraftOutreach}
                   onExport={handleExport}
                 />
@@ -594,9 +621,9 @@ export default function App() {
 
           {activeTool === 'HOW_TO_USE' && (
             <HowToUse
-              onNavigateToDesk={() => setActiveTool('CONVERSATIONAL_DESK')}
-              onNavigateToDiligence={() => setActiveTool('DUE_DILIGENCE')}
-              onNavigateToScout={() => setActiveTool('OPPORTUNITY_SCOUT')}
+              onNavigateToDesk={handleReset}
+              onNavigateToDiligence={() => handleSelectTool('DUE_DILIGENCE')}
+              onNavigateToScout={() => handleSelectTool('GRANT_SCOUT')}
             />
           )}
         </main>
@@ -605,7 +632,7 @@ export default function App() {
         <CommandPalette
           isOpen={isCommandPaletteOpen}
           onClose={() => setIsCommandPaletteOpen(false)}
-          onSelectTool={setActiveTool}
+          onSelectTool={handleSelectTool}
           onSearchFestival={(q) => handleDeepScreen(q, 'command_palette')}
         />
 
@@ -631,8 +658,8 @@ export default function App() {
           isOpen={isHistoryOpen}
           onClose={() => setIsHistoryOpen(false)}
           onSelectInvestigation={(id) => {
-            fetchInvestigation(id);
-            setActiveTool('DUE_DILIGENCE');
+            navigate(`/diligence/${encodeURIComponent(id)}`);
+            setIsHistoryOpen(false);
           }}
         />
       </div>

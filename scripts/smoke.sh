@@ -45,5 +45,14 @@ if ! echo "${SSE_FIRST_EVENT}" | grep -q "data:"; then
 fi
 
 echo ""
+echo "[5/5] Testing Direct Dossier Deep Link (GET /diligence/demo_pinco_pallino)..."
+SPA_RESP=$(curl -s -f -I "${BASE_URL}/diligence/demo_pinco_pallino")
+echo "Deep Link Headers: $(echo "${SPA_RESP}" | head -n 1)"
+if ! echo "${SPA_RESP}" | grep -q "200 OK"; then
+  echo "❌ SPA deep link failed: direct hit to /diligence/demo_pinco_pallino did not return 200 OK"
+  exit 1
+fi
+
+echo ""
 echo "✅ All Screened smoke tests passed successfully!"
 exit 0
