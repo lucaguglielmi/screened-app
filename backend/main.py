@@ -845,7 +845,8 @@ async def get_agent_tree():
 
 
 # Mount Frontend static files if built
-if frontend_dist.exists():
+assets_dir = frontend_dist / "assets"
+if assets_dir.exists():
     class CacheControlledStaticFiles(StaticFiles):
         """Custom StaticFiles class that adds immutable long-cache headers to Vite chunk assets."""
         def file_response(self, *args, **kwargs) -> Response:
@@ -853,12 +854,12 @@ if frontend_dist.exists():
             response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
             return response
 
-    assets_dir = frontend_dist / "assets"
-    if assets_dir.exists():
-        app.mount("/assets", CacheControlledStaticFiles(directory=assets_dir), name="assets")
+    app.mount("/assets", CacheControlledStaticFiles(directory=assets_dir), name="assets")
 
-    @app.get("/{full_path:path}")
-    async def serve_spa(full_path: str):
+
+@app.get("/{full_path:path}")
+async def serve_spa(full_path: str):
+    if frontend_dist.exists():
         file_path = frontend_dist / full_path
         if file_path.exists() and file_path.is_file():
             # Never cache HTML, JSON, or manifest files
@@ -870,5 +871,5 @@ if frontend_dist.exists():
         index_file = frontend_dist / "index.html"
         if index_file.exists():
             return FileResponse(index_file, headers=NO_CACHE_HEADERS)
-        return PlainTextResponse("Screened Frontend is building or dist is not available.", status_code=200)
+    return PlainTextResponse("Screened Frontend is building or dist is not available.", status_code=200)
 
