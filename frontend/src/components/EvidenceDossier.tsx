@@ -14,7 +14,7 @@
  * ============================================================================
  */
 
-import React, { useState, useMemo, useEffect, useRef, lazy, Suspense } from 'react';
+import React, { useState, useMemo, useEffect, lazy, Suspense } from 'react';
 import {
   AtomicClaim,
   CandidateEntity,
@@ -42,7 +42,6 @@ import {
   HelpCircle,
   Check,
 } from 'lucide-react';
-import { DossierStickyNav } from './dossier/DossierStickyNav';
 import { DossierHero } from './dossier/DossierHero';
 import { EvidenceLedger } from './dossier/EvidenceLedger';
 import { AiDossierView } from './dossier/AiDossierView';
@@ -61,6 +60,8 @@ interface Props {
   onNewInvestigation?: () => void;
   onDraftOutreach: (claim?: AtomicClaim) => void;
   onExport: () => void;
+  density?: DetailDensity;
+  onDensityChange?: (newDensity: DetailDensity) => void;
 }
 
 export const EvidenceDossier: React.FC<Props> = ({
@@ -71,17 +72,15 @@ export const EvidenceDossier: React.FC<Props> = ({
   disputes,
   deepVetting,
   auditHealth,
+  density: propDensity,
+  onDensityChange: propOnDensityChange,
   onDraftOutreach,
-  onExport,
 }) => {
-  const [density, setDensity] = useState<DetailDensity>('FULL_EVIDENCE');
-  const [copiedSummary, setCopiedSummary] = useState(false);
+  const [internalDensity, setInternalDensity] = useState<DetailDensity>('FULL_EVIDENCE');
+  const activeDensity = propDensity !== undefined ? propDensity : internalDensity;
   const [copiedAiPayload, setCopiedAiPayload] = useState(false);
   const [copiedRawText, setCopiedRawText] = useState(false);
   const [downloadingMd, setDownloadingMd] = useState(false);
-  const [isActionsMenuOpen, setIsActionsMenuOpen] = useState(false);
-  const actionsMenuRef = useRef<HTMLDivElement>(null);
-  const [shareableLinkCopied, setShareableLinkCopied] = useState(false);
   const [expandedDomains, setExpandedDomains] = useState<Record<string, boolean>>({});
   const [showAllChecklist, setShowAllChecklist] = useState(false);
 
@@ -89,46 +88,22 @@ export const EvidenceDossier: React.FC<Props> = ({
     setExpandedDomains((prev) => ({ ...prev, [domainKey]: !prev[domainKey] }));
   };
 
-  const [scrollProgress, setScrollProgress] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (totalHeight > 0) {
-        const currentProgress = (window.scrollY / totalHeight) * 100;
-        setScrollProgress(Math.min(100, Math.max(0, currentProgress)));
-      }
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (actionsMenuRef.current && !actionsMenuRef.current.contains(event.target as Node)) {
-        setIsActionsMenuOpen(false);
-      }
-    };
-    if (isActionsMenuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isActionsMenuOpen]);
-
   const normalizedDensity: DetailDensity =
-    density === 'SUMMARY'
+    activeDensity === 'SUMMARY'
       ? 'SIMPLIFIED'
-      : density === 'STANDARD'
+      : activeDensity === 'STANDARD'
         ? 'BALANCED'
-        : density === 'EVIDENCE'
+        : activeDensity === 'EVIDENCE'
           ? 'FULL_EVIDENCE'
-          : density;
+          : activeDensity;
 
   const handleDensityChange = (newDensity: DetailDensity) => {
     playDialClick();
-    setDensity(newDensity);
+    if (propOnDensityChange) {
+      propOnDensityChange(newDensity);
+    } else {
+      setInternalDensity(newDensity);
+    }
   };
 
   const handleNavigateToSection = (sectionId: string) => {
@@ -142,26 +117,6 @@ export const EvidenceDossier: React.FC<Props> = ({
         window.scrollTo({ top: y, behavior: 'smooth' });
       }
     }, 120);
-  };
-
-  const handleCopySummary = () => {
-    if (!dossier) return;
-    const text = `# ${entity.name} — Screened Due-Diligence Summary\n\n${dossier.executiveSummary}\n\n## Action Checklist:\n${dossier.filmmakerChecklist.map((c, i) => `${i + 1}. ${c}`).join('\n')}\n\nGenerated with Screened (Agentic Cinema Due-Diligence)`;
-    navigator.clipboard.writeText(text);
-    setCopiedSummary(true);
-    setTimeout(() => setCopiedSummary(false), 2000);
-  };
-
-  const handleCopyShareableLink = () => {
-    const canonicalUrl = `${window.location.origin}/?id=${encodeURIComponent(entity.id || 'inv-001')}`;
-    navigator.clipboard.writeText(canonicalUrl);
-    setShareableLinkCopied(true);
-    soundEffects.playSuccess();
-    setTimeout(() => setShareableLinkCopied(false), 2500);
-  };
-
-  const handlePrint = () => {
-    window.print();
   };
 
   const handleDownloadMarkdown = async () => {
@@ -578,27 +533,6 @@ export const EvidenceDossier: React.FC<Props> = ({
 
   return (
     <div className="space-y-6">
-      <DossierStickyNav
-        dossier={dossier}
-        scrollProgress={scrollProgress}
-        isActionsMenuOpen={isActionsMenuOpen}
-        density={density}
-        copiedSummary={copiedSummary}
-        shareableLinkCopied={shareableLinkCopied}
-        copiedAiPayload={copiedAiPayload}
-        copiedRawText={copiedRawText}
-        onToggleActionsMenu={() => setIsActionsMenuOpen(!isActionsMenuOpen)}
-        onCloseActionsMenu={() => setIsActionsMenuOpen(false)}
-        onDensityChange={handleDensityChange}
-        onCopySummary={handleCopySummary}
-        onCopyShareableLink={handleCopyShareableLink}
-        onPrint={handlePrint}
-        onExport={onExport}
-        onCopyAiPayload={handleCopyAiPayload}
-        onCopyRawText={handleCopyRawText}
-        actionsMenuRef={actionsMenuRef}
-      />
-
       {/* Main Content Container */}
       <div className="max-w-5xl mx-auto space-y-6">
         <DossierHero

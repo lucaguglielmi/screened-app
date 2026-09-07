@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   ChevronDown,
@@ -12,86 +12,243 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { DetailDial } from '../DetailDial';
-import { DetailDensity, DossierReport } from '../../types/investigation';
+import {
+  DetailDensity,
+  DossierReport,
+  AtomicClaim,
+  SourceRecord,
+  DisputeRecord,
+} from '../../types/investigation';
+import { soundEffects } from '../../utils/audio';
 
-interface Props {
+export interface DossierStickyNavProps {
   dossier?: DossierReport;
-  scrollProgress: number;
-  isActionsMenuOpen: boolean;
+  entityName?: string;
+  entityId?: string;
+  officialDomain?: string;
+  claims?: AtomicClaim[];
+  sources?: SourceRecord[];
+  disputes?: DisputeRecord[];
   density: DetailDensity;
-  copiedSummary: boolean;
-  shareableLinkCopied: boolean;
-  copiedAiPayload: boolean;
-  copiedRawText: boolean;
-  onToggleActionsMenu: () => void;
-  onCloseActionsMenu: () => void;
   onDensityChange: (newDensity: DetailDensity) => void;
-  onCopySummary: () => void;
-  onCopyShareableLink: () => void;
-  onPrint: () => void;
-  onExport: () => void;
-  onCopyAiPayload: () => void;
-  onCopyRawText: () => void;
-  actionsMenuRef: React.RefObject<HTMLDivElement | null>;
+  onExport?: () => void;
+
+  // Optional overrides
+  scrollProgress?: number;
+  isActionsMenuOpen?: boolean;
+  copiedSummary?: boolean;
+  shareableLinkCopied?: boolean;
+  copiedAiPayload?: boolean;
+  copiedRawText?: boolean;
+  onToggleActionsMenu?: () => void;
+  onCloseActionsMenu?: () => void;
+  onCopySummary?: () => void;
+  onCopyShareableLink?: () => void;
+  onPrint?: () => void;
+  onCopyAiPayload?: () => void;
+  onCopyRawText?: () => void;
+  actionsMenuRef?: React.RefObject<HTMLDivElement | null>;
 }
 
-export const DossierStickyNav: React.FC<Props> = ({
+export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
   dossier,
-  scrollProgress,
-  isActionsMenuOpen,
+  entityName,
+  entityId,
   density,
-  copiedSummary,
-  shareableLinkCopied,
-  copiedAiPayload,
-  copiedRawText,
-  onToggleActionsMenu,
-  onCloseActionsMenu,
   onDensityChange,
-  onCopySummary,
-  onCopyShareableLink,
-  onPrint,
-  onExport,
-  onCopyAiPayload,
-  onCopyRawText,
-  actionsMenuRef,
+  onExport: onExportProp,
+  scrollProgress: scrollProgressProp,
+  isActionsMenuOpen: isActionsMenuOpenProp,
+  copiedSummary: copiedSummaryProp,
+  shareableLinkCopied: shareableLinkCopiedProp,
+  copiedAiPayload: copiedAiPayloadProp,
+  copiedRawText: copiedRawTextProp,
+  onToggleActionsMenu: onToggleActionsMenuProp,
+  onCloseActionsMenu: onCloseActionsMenuProp,
+  onCopySummary: onCopySummaryProp,
+  onCopyShareableLink: onCopyShareableLinkProp,
+  onPrint: onPrintProp,
+  onCopyAiPayload: onCopyAiPayloadProp,
+  onCopyRawText: onCopyRawTextProp,
+  actionsMenuRef: actionsMenuRefProp,
 }) => {
+  // Auto-scroll progress tracking if not provided externally
+  const [internalScrollProgress, setInternalScrollProgress] = useState(0);
+  const activeScrollProgress =
+    scrollProgressProp !== undefined ? scrollProgressProp : internalScrollProgress;
+
+  useEffect(() => {
+    if (scrollProgressProp !== undefined) return;
+    const handleScroll = () => {
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalHeight > 0) {
+        const currentProgress = (window.scrollY / totalHeight) * 100;
+        setInternalScrollProgress(Math.min(100, Math.max(0, currentProgress)));
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [scrollProgressProp]);
+
+  // Actions dropdown menu state
+  const [internalMenuOpen, setInternalMenuOpen] = useState(false);
+  const internalMenuRef = useRef<HTMLDivElement>(null);
+  const isMenuOpen =
+    isActionsMenuOpenProp !== undefined ? isActionsMenuOpenProp : internalMenuOpen;
+  const menuRef = actionsMenuRefProp || internalMenuRef;
+
+  const toggleMenu =
+    onToggleActionsMenuProp || (() => setInternalMenuOpen((prev) => !prev));
+  const closeMenu = useCallback(() => {
+    if (onCloseActionsMenuProp) {
+      onCloseActionsMenuProp();
+    } else {
+      setInternalMenuOpen(false);
+    }
+  }, [onCloseActionsMenuProp]);
+
+  useEffect(() => {
+    if (isActionsMenuOpenProp !== undefined) return;
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        closeMenu();
+      }
+    };
+    if (isMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMenuOpen, isActionsMenuOpenProp, menuRef, closeMenu]);
+
+  // Copy feedback states
+  const [internalCopiedSummary, setInternalCopiedSummary] = useState(false);
+  const [internalCopiedLink, setInternalCopiedLink] = useState(false);
+  const [internalCopiedAi, setInternalCopiedAi] = useState(false);
+  const [internalCopiedRaw, setInternalCopiedRaw] = useState(false);
+
+  const copiedSummary =
+    copiedSummaryProp !== undefined ? copiedSummaryProp : internalCopiedSummary;
+  const shareableLinkCopied =
+    shareableLinkCopiedProp !== undefined ? shareableLinkCopiedProp : internalCopiedLink;
+  const copiedAiPayload =
+    copiedAiPayloadProp !== undefined ? copiedAiPayloadProp : internalCopiedAi;
+  const copiedRawText =
+    copiedRawTextProp !== undefined ? copiedRawTextProp : internalCopiedRaw;
+
+  const handleCopySummary = () => {
+    if (onCopySummaryProp) {
+      onCopySummaryProp();
+      return;
+    }
+    if (!dossier) return;
+    soundEffects.playClick();
+    const festName = entityName || 'Festival';
+    const text = `# ${festName} — Screened Due-Diligence Summary\n\n${dossier.executiveSummary || ''}\n\n## Action Checklist:\n${(dossier.filmmakerChecklist || []).map((c, i) => `${i + 1}. ${c}`).join('\n')}\n\nGenerated with Screened (Agentic Cinema Due-Diligence)`;
+    navigator.clipboard.writeText(text);
+    setInternalCopiedSummary(true);
+    soundEffects.playSuccess();
+    setTimeout(() => setInternalCopiedSummary(false), 2000);
+  };
+
+  const handleCopyShareableLink = () => {
+    if (onCopyShareableLinkProp) {
+      onCopyShareableLinkProp();
+      return;
+    }
+    soundEffects.playClick();
+    const canonicalUrl = `${window.location.origin}/?id=${encodeURIComponent(entityId || 'inv-001')}`;
+    navigator.clipboard.writeText(canonicalUrl);
+    setInternalCopiedLink(true);
+    soundEffects.playSuccess();
+    setTimeout(() => setInternalCopiedLink(false), 2500);
+  };
+
+  const handlePrint = () => {
+    if (onPrintProp) {
+      onPrintProp();
+      return;
+    }
+    window.print();
+  };
+
+  const handleExport = () => {
+    if (onExportProp) {
+      onExportProp();
+    }
+  };
+
+  const handleCopyAiPayload = () => {
+    if (onCopyAiPayloadProp) {
+      onCopyAiPayloadProp();
+      return;
+    }
+    soundEffects.playClick();
+    const globalPayload = (window as unknown as { __SCREENED_INTEL__?: { jsonLd?: unknown } })
+      .__SCREENED_INTEL__?.jsonLd;
+    const payload = globalPayload || dossier;
+    navigator.clipboard.writeText(JSON.stringify(payload, null, 2));
+    setInternalCopiedAi(true);
+    soundEffects.playSuccess();
+    setTimeout(() => setInternalCopiedAi(false), 2000);
+  };
+
+  const handleCopyRawText = () => {
+    if (onCopyRawTextProp) {
+      onCopyRawTextProp();
+      return;
+    }
+    soundEffects.playClick();
+    const globalRaw = (window as unknown as { __SCREENED_INTEL__?: { rawText?: string } })
+      .__SCREENED_INTEL__?.rawText;
+    const rawText = globalRaw || dossier?.executiveSummary || '';
+    navigator.clipboard.writeText(rawText);
+    setInternalCopiedRaw(true);
+    soundEffects.playSuccess();
+    setTimeout(() => setInternalCopiedRaw(false), 2000);
+  };
+
   if (!dossier) return null;
 
   return (
-    <div className="sticky top-16 z-30 -mx-4 sm:-mx-6 md:-mx-8 px-4 sm:px-6 md:px-8 py-2.5 bg-[#070b14]/95 backdrop-blur-xl border-b border-darkroom-border shadow-lg shadow-black/60 no-print transition-all">
+    <nav
+      aria-label="Dossier Reading Control and Tools"
+      className="sticky top-16 z-20 w-full bg-[#070b14]/95 backdrop-blur-xl border-b border-darkroom-border shadow-md shadow-black/40 no-print transition-all"
+    >
       {/* Reading Scroll Progress Line */}
       <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-darkroom-border/40 pointer-events-none">
         <div
           className="h-full bg-gradient-to-r from-tool-diligence via-emerald-400 to-indigo-400 transition-all duration-150 ease-out"
-          style={{ width: `${scrollProgress}%` }}
+          style={{ width: `${activeScrollProgress}%` }}
         />
       </div>
 
-      <div className="max-w-5xl mx-auto flex items-center justify-between gap-3">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-2.5 flex items-center justify-between gap-3">
         {/* Detail Dial: Summary / Full / Agent */}
-        <div className="flex-1 max-w-sm sm:max-w-md">
+        <div className="flex-1 max-w-xs sm:max-w-sm md:max-w-md">
           <DetailDial density={density} onChange={onDensityChange} />
         </div>
 
         {/* Actions Dropdown Menu */}
-        <div className="relative shrink-0" ref={actionsMenuRef}>
+        <div className="relative shrink-0" ref={menuRef}>
           <button
             type="button"
-            onClick={onToggleActionsMenu}
+            onClick={toggleMenu}
             className="px-3 py-1.5 rounded-xl bg-darkroom-card/90 hover:bg-darkroom-surface border border-darkroom-border text-xs font-mono font-medium text-slate-200 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95"
-            aria-expanded={isActionsMenuOpen}
+            aria-expanded={isMenuOpen}
           >
             <Sparkles className="size-3.5 text-indigo-400 shrink-0" />
             <span>Actions</span>
             <ChevronDown
               className={`size-3.5 text-slate-400 transition-transform duration-200 shrink-0 ${
-                isActionsMenuOpen ? 'rotate-180 text-white' : ''
+                isMenuOpen ? 'rotate-180 text-white' : ''
               }`}
             />
           </button>
 
           <AnimatePresence>
-            {isActionsMenuOpen && (
+            {isMenuOpen && (
               <motion.div
                 initial={{ opacity: 0, y: 8, scale: 0.96 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -102,8 +259,8 @@ export const DossierStickyNav: React.FC<Props> = ({
                 <button
                   type="button"
                   onClick={() => {
-                    onCopySummary();
-                    onCloseActionsMenu();
+                    handleCopySummary();
+                    closeMenu();
                   }}
                   className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
                 >
@@ -121,8 +278,8 @@ export const DossierStickyNav: React.FC<Props> = ({
                 <button
                   type="button"
                   onClick={() => {
-                    onCopyShareableLink();
-                    onCloseActionsMenu();
+                    handleCopyShareableLink();
+                    closeMenu();
                   }}
                   className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
                 >
@@ -140,8 +297,8 @@ export const DossierStickyNav: React.FC<Props> = ({
                 <button
                   type="button"
                   onClick={() => {
-                    onPrint();
-                    onCloseActionsMenu();
+                    handlePrint();
+                    closeMenu();
                   }}
                   className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
                 >
@@ -154,30 +311,32 @@ export const DossierStickyNav: React.FC<Props> = ({
                   </div>
                 </button>
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    onExport();
-                    onCloseActionsMenu();
-                  }}
-                  className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
-                >
-                  <div className="p-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 group-hover:bg-emerald-500/25">
-                    <Download className="size-3.5" />
-                  </div>
-                  <div className="flex flex-col min-w-0">
-                    <span className="font-semibold text-slate-100">Export Signed Archive</span>
-                    <span className="text-[11px] text-slate-400 truncate">Markdown archive with SHA-256 seal</span>
-                  </div>
-                </button>
+                {onExportProp && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleExport();
+                      closeMenu();
+                    }}
+                    className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                  >
+                    <div className="p-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 group-hover:bg-emerald-500/25">
+                      <Download className="size-3.5" />
+                    </div>
+                    <div className="flex flex-col min-w-0">
+                      <span className="font-semibold text-slate-100">Export Signed Archive</span>
+                      <span className="text-[11px] text-slate-400 truncate">Markdown archive with SHA-256 seal</span>
+                    </div>
+                  </button>
+                )}
 
                 <div className="border-t border-darkroom-border my-1 pt-1" />
 
                 <button
                   type="button"
                   onClick={() => {
-                    onCopyAiPayload();
-                    onCloseActionsMenu();
+                    handleCopyAiPayload();
+                    closeMenu();
                   }}
                   className="w-full text-left px-3 py-2 rounded-xl hover:bg-darkroom-card text-slate-300 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
                 >
@@ -190,8 +349,8 @@ export const DossierStickyNav: React.FC<Props> = ({
                 <button
                   type="button"
                   onClick={() => {
-                    onCopyRawText();
-                    onCloseActionsMenu();
+                    handleCopyRawText();
+                    closeMenu();
                   }}
                   className="w-full text-left px-3 py-2 rounded-xl hover:bg-darkroom-card text-slate-300 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
                 >
@@ -205,6 +364,6 @@ export const DossierStickyNav: React.FC<Props> = ({
           </AnimatePresence>
         </div>
       </div>
-    </div>
+    </nav>
   );
 };

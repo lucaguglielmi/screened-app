@@ -14,6 +14,7 @@ import {
   ActiveTool,
   AtomicClaim,
   CandidateEntity,
+  DetailDensity,
   OutreachDraft,
 } from './types/investigation';
 import { useInvestigation } from './hooks/useInvestigation';
@@ -31,6 +32,7 @@ import { FestivalProtectionGuide } from './components/FestivalProtectionGuide';
 import { HowToUse } from './components/HowToUse';
 import { CommandPalette } from './components/CommandPalette';
 import { HistorySidebar } from './components/HistorySidebar';
+import { DossierStickyNav } from './components/dossier/DossierStickyNav';
 
 import { lazyWithRetry } from './utils/lazyWithRetry';
 
@@ -76,6 +78,7 @@ export default function App() {
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isCelebrating, setIsCelebrating] = useState(false);
+  const [dossierDensity, setDossierDensity] = useState<DetailDensity>('FULL_EVIDENCE');
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -385,6 +388,22 @@ export default function App() {
           </div>
         </header>
 
+        {/* Dossier Sticky Toolbar: Summary / Full / Agent */}
+        {activeTool === 'DUE_DILIGENCE' && investigation && currentStatus === 'READY' && !isCelebrating && investigation.dossier && (
+          <DossierStickyNav
+            dossier={investigation.dossier}
+            entityName={investigation.confirmedEntity?.name || investigation.query}
+            entityId={investigation.confirmedEntity?.id || investigation.id}
+            officialDomain={investigation.confirmedEntity?.officialDomain}
+            claims={investigation.claims || []}
+            sources={investigation.sources || []}
+            disputes={investigation.disputes || []}
+            density={dossierDensity}
+            onDensityChange={setDossierDensity}
+            onExport={handleExport}
+          />
+        )}
+
         {/* Main Workspace Area */}
         <main
           className={`${
@@ -563,6 +582,8 @@ export default function App() {
                   disputes={investigation.disputes || []}
                   deepVetting={investigation.deepVetting}
                   auditHealth={investigation.auditHealth}
+                  density={dossierDensity}
+                  onDensityChange={setDossierDensity}
                   onNewInvestigation={handleReset}
                   onDraftOutreach={handleDraftOutreach}
                   onExport={handleExport}
