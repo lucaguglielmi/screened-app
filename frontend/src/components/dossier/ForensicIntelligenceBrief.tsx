@@ -75,28 +75,28 @@ export const ForensicIntelligenceBrief: React.FC<Props> = ({ summary, festivalNa
       case 'RED_FLAG':
       case 'MISMATCH':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-400 text-[11px] font-mono font-semibold uppercase">
-            <AlertTriangle className="size-3" />
+          <span className="inline-flex items-center gap-1 text-rose-400 text-[11px] font-mono font-bold uppercase">
+            <AlertTriangle className="size-3 text-rose-400 shrink-0" />
             <span>Red Flag Alert</span>
           </span>
         );
       case 'AMBER_WARNING':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[11px] font-mono font-semibold uppercase">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[11px] font-mono font-semibold uppercase">
             <AlertTriangle className="size-3" />
             <span>Caution</span>
           </span>
         );
       case 'VERIFIED_AUTHENTIC':
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[11px] font-mono font-semibold uppercase">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[11px] font-mono font-semibold uppercase">
             <CheckCircle2 className="size-3" />
             <span>Verified</span>
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-[11px] font-mono font-semibold uppercase">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-[11px] font-mono font-semibold uppercase">
             <Info className="size-3" />
             <span>Informational</span>
           </span>
@@ -135,9 +135,9 @@ export const ForensicIntelligenceBrief: React.FC<Props> = ({ summary, festivalNa
   ];
 
   return (
-    <div className="rounded-2xl bg-darkroom-surface/90 border border-darkroom-border/80 p-5 sm:p-6 space-y-5 shadow-xl transition-all">
+    <div className="py-2 space-y-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-darkroom-border/60 pb-3">
+      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-darkroom-border/50 pb-3">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <span className="p-1.5 rounded-lg bg-orange-500/10 border border-orange-500/20 text-orange-400">
@@ -156,7 +156,7 @@ export const ForensicIntelligenceBrief: React.FC<Props> = ({ summary, festivalNa
         </span>
       </div>
 
-      {/* 3-Card Grid */}
+      {/* 3 Standalone Cards (No nested outer card) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {cards.map((card) => {
           const Icon = card.icon;
@@ -166,7 +166,7 @@ export const ForensicIntelligenceBrief: React.FC<Props> = ({ summary, festivalNa
           return (
             <div
               key={card.key}
-              className={`rounded-xl bg-darkroom-card/70 border border-darkroom-border/80 p-4 space-y-3.5 flex flex-col justify-between transition-all ${card.bgGlow}`}
+              className={`rounded-xl bg-darkroom-surface/80 border border-darkroom-border/80 p-4 sm:p-5 space-y-3.5 flex flex-col justify-between shadow-lg transition-all ${card.bgGlow}`}
             >
               {/* Card Header */}
               <div className="space-y-2">
@@ -204,10 +204,10 @@ export const ForensicIntelligenceBrief: React.FC<Props> = ({ summary, festivalNa
 
                 {isExpanded && (
                   <div className="space-y-2.5 pt-2 text-xs font-sans animate-fade-in">
-                    {/* Educational Definition */}
+                    {/* Educational Definition - Left accent border without nested box */}
                     {item.educationalContext && (
-                      <div className="p-2.5 rounded-lg bg-darkroom-bg/90 border border-darkroom-border/60 text-[11px] text-slate-300 leading-relaxed space-y-1">
-                        <span className="font-mono text-orange-400 font-bold block uppercase">
+                      <div className="pl-3 border-l-2 border-orange-500/50 py-1 text-[11px] text-slate-300 leading-relaxed space-y-0.5">
+                        <span className="font-mono text-orange-400 font-bold block uppercase tracking-wider text-[10px]">
                           The Industry Pattern:
                         </span>
                         <span>{item.educationalContext}</span>
@@ -216,7 +216,7 @@ export const ForensicIntelligenceBrief: React.FC<Props> = ({ summary, festivalNa
 
                     {/* Bullet Signals */}
                     {item.signals && item.signals.length > 0 && (
-                      <ul className="space-y-1.5 text-[11px] text-slate-300">
+                      <ul className="space-y-1.5 text-[11px] text-slate-300 pt-1">
                         {item.signals.map((sig, idx) => (
                           <li key={idx} className="flex items-start gap-1.5">
                             <span className="text-rose-400 font-bold shrink-0">•</span>

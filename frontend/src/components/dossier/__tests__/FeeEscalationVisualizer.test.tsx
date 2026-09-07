@@ -33,4 +33,26 @@ describe('FeeEscalationVisualizer Component', () => {
     expect(screen.getByText(/Predatory 300% markup detected/i)).toBeInTheDocument();
     expect(screen.getByText(/95th percentile/i)).toBeInTheDocument();
   });
+
+  it('renders summary mode with +250% fee inflation badge and responds to click', () => {
+    let navigated = false;
+    render(
+      <FeeEscalationVisualizer
+        festivalName="Pinco Pallino"
+        isSummary={true}
+        onNavigateToFull={() => { navigated = true; }}
+      />
+    );
+
+    expect(screen.getByText('Fee Escalation')).toBeInTheDocument();
+    expect(screen.getByText('+250% Fee Inflation')).toBeInTheDocument();
+    expect(screen.getByText(/View complete fee tier schedule in Full Dossier/i)).toBeInTheDocument();
+    // Verification that full tier timeline grid is hidden in summary mode
+    expect(screen.queryByText('Tier History & Surge Trajectory')).not.toBeInTheDocument();
+
+    screen.getByText(/View complete fee tier schedule in Full Dossier/i).click();
+    expect(navigated).toBe(true);
+  });
 });
+
+

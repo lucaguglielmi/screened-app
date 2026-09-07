@@ -7,16 +7,16 @@ describe('DetailDial Component', () => {
     const onChange = vi.fn();
     render(<DetailDial density="FULL_EVIDENCE" onChange={onChange} />);
 
-    expect(screen.getByRole('button', { name: /Short/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Summary/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Full/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Agent/i })).toBeInTheDocument();
   });
 
-  it('triggers onChange with SIMPLIFIED when clicking Short button', () => {
+  it('triggers onChange with SIMPLIFIED when clicking Summary button', () => {
     const onChange = vi.fn();
     render(<DetailDial density="FULL_EVIDENCE" onChange={onChange} />);
 
-    fireEvent.click(screen.getByRole('button', { name: /Short/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Summary/i }));
     expect(onChange).toHaveBeenCalledWith('SIMPLIFIED');
   });
 
@@ -28,7 +28,7 @@ describe('DetailDial Component', () => {
     expect(onChange).toHaveBeenCalledWith('MACHINE_AI_INGESTION');
   });
 
-  it('triggers onChange with FULL_EVIDENCE when clicking Full button from Short mode', () => {
+  it('triggers onChange with FULL_EVIDENCE when clicking Full button from Summary mode', () => {
     const onChange = vi.fn();
     render(<DetailDial density="SIMPLIFIED" onChange={onChange} />);
 

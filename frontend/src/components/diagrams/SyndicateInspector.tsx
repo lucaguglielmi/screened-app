@@ -49,7 +49,7 @@ export const SyndicateInspector: React.FC<Props> = ({ data, onClose }) => {
       case 'RED_FLAG':
       case 'DISPUTED':
         return (
-          <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30 flex items-center gap-1">
+          <span className="text-[10px] font-mono font-bold text-rose-400 flex items-center gap-1">
             <ShieldAlert className="size-3 text-rose-400" />
             <span>RED FLAG / HIGH RISK</span>
           </span>

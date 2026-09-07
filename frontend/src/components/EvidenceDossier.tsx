@@ -58,7 +58,7 @@ interface Props {
   disputes: DisputeRecord[];
   deepVetting?: DeepVettingReport;
   auditHealth?: InvestigationAuditHealth;
-  onNewInvestigation: () => void;
+  onNewInvestigation?: () => void;
   onDraftOutreach: (claim?: AtomicClaim) => void;
   onExport: () => void;
 }
@@ -71,7 +71,6 @@ export const EvidenceDossier: React.FC<Props> = ({
   disputes,
   deepVetting,
   auditHealth,
-  onNewInvestigation,
   onDraftOutreach,
   onExport,
 }) => {
@@ -81,12 +80,7 @@ export const EvidenceDossier: React.FC<Props> = ({
   const [copiedRawText, setCopiedRawText] = useState(false);
   const [downloadingMd, setDownloadingMd] = useState(false);
   const [isActionsMenuOpen, setIsActionsMenuOpen] = useState(false);
-  const [isNewSearchMenuOpen, setIsNewSearchMenuOpen] = useState(false);
-  const [isNavOpen, setIsNavOpen] = useState(false);
-  const newSearchMenuRef = useRef<HTMLDivElement>(null);
-  const navMenuRef = useRef<HTMLDivElement>(null);
   const actionsMenuRef = useRef<HTMLDivElement>(null);
-  const [activeSection, setActiveSection] = useState<string>('Transparency & Credibility');
   const [shareableLinkCopied, setShareableLinkCopied] = useState(false);
   const [expandedDomains, setExpandedDomains] = useState<Record<string, boolean>>({});
   const [showAllChecklist, setShowAllChecklist] = useState(false);
@@ -95,7 +89,6 @@ export const EvidenceDossier: React.FC<Props> = ({
     setExpandedDomains((prev) => ({ ...prev, [domainKey]: !prev[domainKey] }));
   };
 
-  const observerRef = useRef<IntersectionObserver | null>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
@@ -115,42 +108,14 @@ export const EvidenceDossier: React.FC<Props> = ({
       if (actionsMenuRef.current && !actionsMenuRef.current.contains(event.target as Node)) {
         setIsActionsMenuOpen(false);
       }
-      if (newSearchMenuRef.current && !newSearchMenuRef.current.contains(event.target as Node)) {
-        setIsNewSearchMenuOpen(false);
-      }
-      if (navMenuRef.current && !navMenuRef.current.contains(event.target as Node)) {
-        setIsNavOpen(false);
-      }
     };
-    if (isActionsMenuOpen || isNewSearchMenuOpen || isNavOpen) {
+    if (isActionsMenuOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isActionsMenuOpen, isNewSearchMenuOpen, isNavOpen]);
-
-  useEffect(() => {
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        const visibleEntries = entries.filter((e) => e.isIntersecting);
-        if (visibleEntries.length > 0) {
-          const topEntry = visibleEntries.reduce((prev, curr) =>
-            curr.boundingClientRect.top < prev.boundingClientRect.top ? curr : prev
-          );
-          if (topEntry.target.getAttribute('data-section-name')) {
-            setActiveSection(topEntry.target.getAttribute('data-section-name')!);
-          }
-        }
-      },
-      { rootMargin: '-100px 0px -60% 0px', threshold: 0.1 }
-    );
-
-    const sections = document.querySelectorAll('[data-section-name]');
-    sections.forEach((s) => observerRef.current?.observe(s));
-
-    return () => observerRef.current?.disconnect();
-  }, [density]);
+  }, [isActionsMenuOpen]);
 
   const normalizedDensity: DetailDensity =
     density === 'SUMMARY'
@@ -164,6 +129,19 @@ export const EvidenceDossier: React.FC<Props> = ({
   const handleDensityChange = (newDensity: DetailDensity) => {
     playDialClick();
     setDensity(newDensity);
+  };
+
+  const handleNavigateToSection = (sectionId: string) => {
+    soundEffects.playClick();
+    handleDensityChange('FULL_EVIDENCE');
+    setTimeout(() => {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        const yOffset = -140;
+        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }, 120);
   };
 
   const handleCopySummary = () => {
@@ -603,25 +581,14 @@ export const EvidenceDossier: React.FC<Props> = ({
       <DossierStickyNav
         dossier={dossier}
         scrollProgress={scrollProgress}
-        activeSection={activeSection}
-        isNavOpen={isNavOpen}
         isActionsMenuOpen={isActionsMenuOpen}
-        isNewSearchMenuOpen={isNewSearchMenuOpen}
         density={density}
-        normalizedDensity={normalizedDensity}
-        disputesCount={disputes.length}
-        claimsCount={claims.length}
-        sourcesCount={sources.length}
         copiedSummary={copiedSummary}
         shareableLinkCopied={shareableLinkCopied}
         copiedAiPayload={copiedAiPayload}
         copiedRawText={copiedRawText}
-        onToggleNav={() => setIsNavOpen(!isNavOpen)}
         onToggleActionsMenu={() => setIsActionsMenuOpen(!isActionsMenuOpen)}
-        onToggleNewSearchMenu={() => setIsNewSearchMenuOpen(!isNewSearchMenuOpen)}
-        onCloseNav={() => setIsNavOpen(false)}
         onCloseActionsMenu={() => setIsActionsMenuOpen(false)}
-        onCloseNewSearchMenu={() => setIsNewSearchMenuOpen(false)}
         onDensityChange={handleDensityChange}
         onCopySummary={handleCopySummary}
         onCopyShareableLink={handleCopyShareableLink}
@@ -629,10 +596,7 @@ export const EvidenceDossier: React.FC<Props> = ({
         onExport={onExport}
         onCopyAiPayload={handleCopyAiPayload}
         onCopyRawText={handleCopyRawText}
-        onNewInvestigation={onNewInvestigation}
-        navMenuRef={navMenuRef}
         actionsMenuRef={actionsMenuRef}
-        newSearchMenuRef={newSearchMenuRef}
       />
 
       {/* Main Content Container */}
@@ -671,23 +635,35 @@ export const EvidenceDossier: React.FC<Props> = ({
         ) : normalizedDensity === 'SIMPLIFIED' ? (
           /* MODE 1: Simplified Summary in 2 Chapters */
           <div className="space-y-6 animate-fade-in" data-density="SIMPLIFIED">
-            <div id="section-radar" className="scroll-mt-28 sm:scroll-mt-32" data-section-name="Transparency & Credibility">
+            <div id="section-radar" className="scroll-mt-28 sm:scroll-mt-32 space-y-2" data-section-name="Transparency & Credibility">
               <CredibilityRadar claims={claims} disputes={disputes} />
+              <button
+                type="button"
+                onClick={() => handleNavigateToSection('section-forensic-matrix')}
+                className="text-xs font-mono text-indigo-400 hover:text-indigo-300 flex items-center gap-1.5 pl-1 cursor-pointer transition-colors"
+              >
+                <span>Explore full 360° Forensic Matrix (7 Vectors) &rarr;</span>
+              </button>
             </div>
 
-            {/* Premiere Burn Gauge & Fee Escalation Visualizer */}
+            {/* Premiere Burn Gauge & Fee Escalation Visualizer (Streamlined Summary View) */}
             <div id="section-premiere-fee" className="grid grid-cols-1 lg:grid-cols-2 gap-6 scroll-mt-28 sm:scroll-mt-32" data-section-name="Premiere Risk & Fee Escalation">
-              <PremiereBurnGauge assessment={dossier.premiereRisk} festivalName={entity.name} />
-              <FeeEscalationVisualizer model={dossier.feeEscalation} festivalName={entity.name} />
+              <PremiereBurnGauge
+                assessment={dossier.premiereRisk}
+                festivalName={entity.name}
+                isSummary={true}
+                onNavigateToFull={() => handleNavigateToSection('section-premiere-fee')}
+              />
+              <FeeEscalationVisualizer
+                model={dossier.feeEscalation}
+                festivalName={entity.name}
+                isSummary={true}
+                onNavigateToFull={() => handleNavigateToSection('section-premiere-fee')}
+              />
             </div>
 
-            {/* Forensic Intelligence Brief (Scam Patterns, Jury Conflict & 4-Wall Reality) */}
-            <div id="section-forensic-brief" className="scroll-mt-28 sm:scroll-mt-32" data-section-name="Forensic Intelligence Brief">
-              <ForensicIntelligenceBrief summary={dossier.forensicSummary} festivalName={entity.name} />
-            </div>
-
-            {/* Chapter 1 */}
-            <div className="rounded-2xl p-4 sm:p-6 border border-orange-500/30 bg-darkroom-surface/90 space-y-4 shadow-xl">
+            {/* Chapter 1: Un-nested layout with left-accent borders */}
+            <div className="rounded-2xl p-4 sm:p-6 border border-darkroom-border/80 bg-darkroom-surface/80 space-y-4 shadow-xl">
               <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5 border-b border-darkroom-border/60 pb-3">
                 <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-orange-400 font-semibold">
                   <AlertTriangle className="size-4 text-orange-400 shrink-0" />
@@ -701,28 +677,38 @@ export const EvidenceDossier: React.FC<Props> = ({
               <div className="space-y-3">
                 {disputes.length > 0 ? (
                   disputes.map((disp, idx) => (
-                    <div key={idx} className="p-3.5 rounded-xl bg-darkroom-bg/80 border border-darkroom-border/60 space-y-2">
-                      <div className="flex flex-col items-start gap-1.5">
-                        <span className="text-xs font-mono uppercase px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/30 shrink-0">
+                    <div key={idx} className="py-2.5 px-3.5 border-l-2 border-orange-500/60 bg-darkroom-bg/40 space-y-1.5 rounded-r-xl">
+                      <div className="flex flex-col items-start gap-1">
+                        <span className="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-orange-500/10 text-orange-400 font-semibold shrink-0">
                           {disp.category}
                         </span>
                         <h4 className="text-sm sm:text-base font-bold text-white font-sans break-words">{disp.pointOfContention}</h4>
                       </div>
-                      <p className="text-sm text-slate-300 leading-relaxed pt-0.5 break-words">
+                      <p className="text-xs sm:text-sm text-slate-300 leading-relaxed pt-0.5 break-words">
                         {disp.guidance || `Discrepancy detected between claimed promotional statements ("${disp.claimA}") and verified records ("${disp.claimB}").`}
                       </p>
                     </div>
                   ))
                 ) : (
-                  <div className="p-3.5 rounded-xl bg-darkroom-bg/80 border border-darkroom-border/60 text-sm text-slate-300 leading-relaxed">
+                  <div className="py-2.5 px-3 text-sm text-slate-300 leading-relaxed">
                     No critical corporate disputes or venue contradictions flagged in current public records.
                   </div>
                 )}
               </div>
+
+              {disputes.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => handleNavigateToSection('section-disputes')}
+                  className="text-xs font-mono text-orange-400 hover:text-orange-300 flex items-center gap-1.5 pt-1 cursor-pointer transition-colors"
+                >
+                  <span>Examine side-by-side cross-examination in Full Dossier &rarr;</span>
+                </button>
+              )}
             </div>
 
-            {/* Chapter 2 */}
-            <div className="rounded-2xl p-4 sm:p-6 border border-emerald-500/30 bg-darkroom-surface/90 space-y-4 shadow-xl">
+            {/* Chapter 2: Un-nested layout with left-accent borders */}
+            <div className="rounded-2xl p-4 sm:p-6 border border-darkroom-border/80 bg-darkroom-surface/80 space-y-4 shadow-xl">
               <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5 border-b border-darkroom-border/60 pb-3">
                 <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-emerald-400 font-semibold">
                   <Check className="size-4 text-emerald-400 shrink-0" />
@@ -735,21 +721,29 @@ export const EvidenceDossier: React.FC<Props> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                 {positiveHighlights.map((hl, idx) => (
-                  <div key={idx} className="p-3.5 rounded-xl bg-darkroom-bg/80 border border-darkroom-border/60 space-y-1.5">
+                  <div key={idx} className="py-2.5 px-3.5 border-l-2 border-emerald-500/60 bg-darkroom-bg/40 space-y-1 rounded-r-xl">
                     <div className="flex items-center justify-between gap-2">
                       <span className="font-mono text-emerald-400 text-xs font-bold block">{hl.title}</span>
                       {hl.source && (
-                        <span className="text-[10px] font-mono text-emerald-300/80 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 truncate max-w-[120px]">
+                        <span className="text-[10px] font-mono text-emerald-300/80 bg-emerald-500/10 px-1.5 py-0.5 rounded truncate max-w-[120px]">
                           {hl.source}
                         </span>
                       )}
                     </div>
-                    <p className="text-sm text-slate-300 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
                       {hl.desc}
                     </p>
                   </div>
                 ))}
               </div>
+
+              <button
+                type="button"
+                onClick={() => handleNavigateToSection('section-claims')}
+                className="text-xs font-mono text-emerald-400 hover:text-emerald-300 flex items-center gap-1.5 pt-1 cursor-pointer transition-colors"
+              >
+                <span>Inspect all atomic claims &amp; citations in Full Dossier &rarr;</span>
+              </button>
             </div>
 
             {/* Checklist (Level 1: 60-second essentials) */}
@@ -771,20 +765,30 @@ export const EvidenceDossier: React.FC<Props> = ({
                   </li>
                 ))}
               </ul>
-              {dossier.filmmakerChecklist.length > 3 && (
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-darkroom-border/40">
+                {dossier.filmmakerChecklist.length > 3 ? (
+                  <button
+                    type="button"
+                    onClick={() => setShowAllChecklist(!showAllChecklist)}
+                    className="text-xs font-mono text-emerald-400 hover:text-emerald-300 flex items-center gap-1.5 cursor-pointer transition-colors"
+                  >
+                    <span>
+                      {showAllChecklist
+                        ? 'Show fewer items (60s view)'
+                        : `+ Show ${dossier.filmmakerChecklist.length - 3} more critical checks`}
+                    </span>
+                    {showAllChecklist ? <ChevronUp className="size-3.5" /> : <ChevronDown className="size-3.5" />}
+                  </button>
+                ) : <div />}
+
                 <button
                   type="button"
-                  onClick={() => setShowAllChecklist(!showAllChecklist)}
-                  className="text-xs font-mono text-emerald-400 hover:text-emerald-300 flex items-center gap-1.5 pt-1 cursor-pointer transition-colors"
+                  onClick={() => handleNavigateToSection('section-checklist')}
+                  className="text-xs font-mono text-indigo-400 hover:text-indigo-300 flex items-center gap-1 cursor-pointer transition-colors"
                 >
-                  <span>
-                    {showAllChecklist
-                      ? 'Show fewer items (60s view)'
-                      : `+ Show ${dossier.filmmakerChecklist.length - 3} more critical checks`}
-                  </span>
-                  {showAllChecklist ? <ChevronUp className="size-3.5" /> : <ChevronDown className="size-3.5" />}
+                  <span>View comprehensive checklist &amp; questions in Full Dossier &rarr;</span>
                 </button>
-              )}
+              </div>
             </div>
           </div>
         ) : (
@@ -806,8 +810,8 @@ export const EvidenceDossier: React.FC<Props> = ({
 
             {/* Premiere Burn Gauge & Fee Escalation Visualizer */}
             <div id="section-premiere-fee" className="grid grid-cols-1 lg:grid-cols-2 gap-6 py-4 scroll-mt-28 sm:scroll-mt-32 border-b border-darkroom-border/30 pb-6" data-section-name="Premiere Risk & Fee Escalation">
-              <PremiereBurnGauge assessment={dossier.premiereRisk} festivalName={entity.name} />
-              <FeeEscalationVisualizer model={dossier.feeEscalation} festivalName={entity.name} />
+              <PremiereBurnGauge assessment={dossier.premiereRisk} festivalName={entity.name} isSummary={false} />
+              <FeeEscalationVisualizer model={dossier.feeEscalation} festivalName={entity.name} isSummary={false} />
             </div>
 
             {/* Forensic Intelligence Brief (Scam Patterns, Jury Conflict & 4-Wall Reality) */}

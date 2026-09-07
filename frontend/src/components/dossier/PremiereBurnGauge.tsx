@@ -1,13 +1,20 @@
 import React from 'react';
-import { Award, AlertTriangle, ShieldCheck, Flame, Info, CheckCircle2, XCircle } from 'lucide-react';
+import { Award, AlertTriangle, ShieldCheck, Flame, Info, CheckCircle2, XCircle, ArrowRight } from 'lucide-react';
 import { PremiereRiskAssessment } from '../../types/investigation';
 
 interface Props {
   assessment?: PremiereRiskAssessment;
   festivalName?: string;
+  isSummary?: boolean;
+  onNavigateToFull?: () => void;
 }
 
-export const PremiereBurnGauge: React.FC<Props> = ({ assessment, festivalName = 'This Festival' }) => {
+export const PremiereBurnGauge: React.FC<Props> = ({
+  assessment,
+  festivalName = 'This Festival',
+  isSummary = false,
+  onNavigateToFull,
+}) => {
   // Default fallback fixture if not explicitly parsed
   const data: PremiereRiskAssessment = assessment || {
     riskScore: 78,
@@ -55,7 +62,7 @@ export const PremiereBurnGauge: React.FC<Props> = ({ assessment, festivalName = 
 
   return (
     <div
-      className={`rounded-2xl bg-darkroom-surface/80 border border-darkroom-border/80 p-5 sm:p-6 space-y-5 transition-all ${colorConfig.glow}`}
+      className={`rounded-2xl bg-darkroom-surface/80 border border-darkroom-border/80 p-5 sm:p-6 space-y-4 transition-all ${colorConfig.glow}`}
     >
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-darkroom-border/60 pb-4">
@@ -82,7 +89,7 @@ export const PremiereBurnGauge: React.FC<Props> = ({ assessment, festivalName = 
         </div>
       </div>
 
-      {/* Meter Bar */}
+      {/* Critical Burn Meter Bar */}
       <div className="space-y-2">
         <div className="flex justify-between items-center text-xs font-mono text-slate-400">
           <span>Protected Premiere (0)</span>
@@ -97,41 +104,43 @@ export const PremiereBurnGauge: React.FC<Props> = ({ assessment, festivalName = 
         </div>
       </div>
 
-      {/* 3 Parameter Breakdown Columns */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-        <div className="p-3 rounded-xl bg-darkroom-card/50 border border-darkroom-border/60 space-y-1">
-          <div className="text-[11px] font-mono uppercase text-slate-400 flex items-center gap-1.5">
-            <Info className="size-3 text-slate-400" />
-            <span>Exclusivity Demand</span>
+      {/* 3 Parameter Breakdown Columns - Hidden in Summary mode */}
+      {!isSummary && (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+          <div className="p-3 rounded-xl sm:bg-darkroom-card/50 sm:border sm:border-darkroom-border/60 bg-darkroom-bg/50 space-y-1">
+            <div className="text-[11px] font-mono uppercase text-slate-400 flex items-center gap-1.5">
+              <Info className="size-3 text-slate-400" />
+              <span>Exclusivity Demand</span>
+            </div>
+            <div className="text-xs sm:text-sm font-semibold text-slate-200 line-clamp-2">
+              {data.premiereDemand}
+            </div>
           </div>
-          <div className="text-xs sm:text-sm font-semibold text-slate-200 line-clamp-2">
-            {data.premiereDemand}
+
+          <div className="p-3 rounded-xl sm:bg-darkroom-card/50 sm:border sm:border-darkroom-border/60 bg-darkroom-bg/50 space-y-1">
+            <div className="text-[11px] font-mono uppercase text-slate-400 flex items-center gap-1.5">
+              <Award className="size-3 text-slate-400" />
+              <span>Accreditation Standing</span>
+            </div>
+            <div className="text-xs sm:text-sm font-semibold text-slate-200 line-clamp-2">
+              {data.accreditationStatus}
+            </div>
+          </div>
+
+          <div className="p-3 rounded-xl sm:bg-darkroom-card/50 sm:border sm:border-darkroom-border/60 bg-darkroom-bg/50 space-y-1">
+            <div className="text-[11px] font-mono uppercase text-slate-400 flex items-center gap-1.5">
+              <ShieldCheck className="size-3 text-slate-400" />
+              <span>Buyer &amp; Press Density</span>
+            </div>
+            <div className="text-xs sm:text-sm font-semibold text-slate-200 line-clamp-2">
+              {data.buyerPressFootprint}
+            </div>
           </div>
         </div>
+      )}
 
-        <div className="p-3 rounded-xl bg-darkroom-card/50 border border-darkroom-border/60 space-y-1">
-          <div className="text-[11px] font-mono uppercase text-slate-400 flex items-center gap-1.5">
-            <Award className="size-3 text-slate-400" />
-            <span>Accreditation Standing</span>
-          </div>
-          <div className="text-xs sm:text-sm font-semibold text-slate-200 line-clamp-2">
-            {data.accreditationStatus}
-          </div>
-        </div>
-
-        <div className="p-3 rounded-xl bg-darkroom-card/50 border border-darkroom-border/60 space-y-1">
-          <div className="text-[11px] font-mono uppercase text-slate-400 flex items-center gap-1.5">
-            <ShieldCheck className="size-3 text-slate-400" />
-            <span>Buyer & Press Density</span>
-          </div>
-          <div className="text-xs sm:text-sm font-semibold text-slate-200 line-clamp-2">
-            {data.buyerPressFootprint}
-          </div>
-        </div>
-      </div>
-
-      {/* Rationale & Actionable Advice Card */}
-      <div className="p-4 rounded-xl bg-darkroom-card/80 border border-darkroom-border/80 space-y-2.5">
+      {/* Rationale & Actionable Advice - Streamlined without nested card borders */}
+      <div className="pt-2 border-t border-darkroom-border/50 space-y-3">
         <div className="flex items-start gap-2.5">
           {isHigh ? (
             <XCircle className="size-4 text-rose-400 shrink-0 mt-0.5" />
@@ -140,7 +149,7 @@ export const PremiereBurnGauge: React.FC<Props> = ({ assessment, festivalName = 
           ) : (
             <CheckCircle2 className="size-4 text-emerald-400 shrink-0 mt-0.5" />
           )}
-          <div className="space-y-1">
+          <div className="space-y-1 flex-1">
             <div className="text-xs font-mono uppercase tracking-wider font-semibold text-slate-300">
               Verdict Rationale
             </div>
@@ -150,15 +159,28 @@ export const PremiereBurnGauge: React.FC<Props> = ({ assessment, festivalName = 
           </div>
         </div>
 
+        {/* Guidance: Title strictly on its own row for mobile clarity */}
         {data.recommendation && (
-          <div className="mt-2 pt-2.5 border-t border-darkroom-border/60 flex items-start gap-2.5 text-xs sm:text-sm">
-            <span className="font-mono text-tool-diligence font-bold uppercase shrink-0">
+          <div className="mt-2 pt-2 border-t border-darkroom-border/40 space-y-1 text-xs sm:text-sm">
+            <div className="font-mono text-tool-diligence font-bold uppercase tracking-wider text-[11px]">
               Guidance:
-            </span>
-            <span className="text-slate-200 leading-relaxed font-sans">
+            </div>
+            <p className="text-slate-200 leading-relaxed font-sans">
               {data.recommendation}
-            </span>
+            </p>
           </div>
+        )}
+
+        {/* Link to Full tab if in Summary mode */}
+        {isSummary && onNavigateToFull && (
+          <button
+            type="button"
+            onClick={onNavigateToFull}
+            className="text-xs font-mono text-indigo-400 hover:text-indigo-300 flex items-center gap-1 pt-1 cursor-pointer transition-colors group"
+          >
+            <span>View full accreditation &amp; industry footprint</span>
+            <ArrowRight className="size-3.5 group-hover:translate-x-0.5 transition-transform" />
+          </button>
         )}
       </div>
     </div>

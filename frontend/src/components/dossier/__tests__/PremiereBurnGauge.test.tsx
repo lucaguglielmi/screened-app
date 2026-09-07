@@ -49,4 +49,26 @@ describe('PremiereBurnGauge Component', () => {
     expect(screen.getByText(/Protected Leverage/i)).toBeInTheDocument();
     expect(screen.getByText('BAFTA Qualifying (A-List)')).toBeInTheDocument();
   });
+
+  it('renders concise summary mode with verdict, guidance and onNavigateToFull trigger', () => {
+    let navigated = false;
+    render(
+      <PremiereBurnGauge
+        festivalName="Pinco Pallino"
+        isSummary={true}
+        onNavigateToFull={() => { navigated = true; }}
+      />
+    );
+
+    expect(screen.getByText('Premiere Value vs. Burn Risk')).toBeInTheDocument();
+    expect(screen.getByText('Guidance:')).toBeInTheDocument();
+    expect(screen.getByText(/View full accreditation & industry footprint/i)).toBeInTheDocument();
+    // Verification that full metrics grid is hidden in summary mode
+    expect(screen.queryByText('Festival Demands')).not.toBeInTheDocument();
+
+    screen.getByText(/View full accreditation & industry footprint/i).click();
+    expect(navigated).toBe(true);
+  });
 });
+
+

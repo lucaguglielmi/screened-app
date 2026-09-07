@@ -21,7 +21,7 @@ export const DetailDial: React.FC<Props> = ({ density, onChange }) => {
     <div className="w-full">
       {/* 3-Mode Segmented Control */}
       <div className="grid grid-cols-3 p-1 rounded-xl bg-[#060a15]/90 border border-darkroom-border/60 shadow-inner gap-1">
-        {/* Mode 1: Short summary */}
+        {/* Mode 1: Summary */}
         <button
           type="button"
           onClick={() => {
@@ -33,10 +33,10 @@ export const DetailDial: React.FC<Props> = ({ density, onChange }) => {
               ? 'bg-midnight-royal text-white font-bold shadow-xs'
               : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.03]'
           }`}
-          title="Short executive summary & key checklist"
+          title="Summary executive overview & key checklist"
         >
           <BookOpen className="size-3.5 shrink-0" />
-          <span>Short</span>
+          <span>Summary</span>
         </button>
 
         {/* Mode 2: Full research (Default) */}

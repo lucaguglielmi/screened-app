@@ -1,13 +1,20 @@
 import React from 'react';
-import { TrendingUp, AlertTriangle, Coins, Clock, CheckCircle2 } from 'lucide-react';
+import { TrendingUp, AlertTriangle, Coins, Clock, CheckCircle2, ArrowRight } from 'lucide-react';
 import { FeeEscalationModel } from '../../types/investigation';
 
 interface Props {
   model?: FeeEscalationModel;
   festivalName?: string;
+  isSummary?: boolean;
+  onNavigateToFull?: () => void;
 }
 
-export const FeeEscalationVisualizer: React.FC<Props> = ({ model, festivalName }) => {
+export const FeeEscalationVisualizer: React.FC<Props> = ({
+  model,
+  festivalName,
+  isSummary = false,
+  onNavigateToFull,
+}) => {
   // Default fallback data if not provided
   const data: FeeEscalationModel = model || {
     currency: '£',
@@ -27,12 +34,60 @@ export const FeeEscalationVisualizer: React.FC<Props> = ({ model, festivalName }
   const minAmount = Math.min(...data.tiers.map((t) => t.amount), 20);
   const totalSurge = data.tiers.length > 1
     ? Math.round(((data.tiers[data.tiers.length - 1].amount - data.tiers[0].amount) / data.tiers[0].amount) * 100)
-    : 0;
+    : 250;
 
   const isPredatory = totalSurge >= 150 || (data.percentile && data.percentile >= 80);
 
+  // Mode: Summary View (only show the +250% fee inflation, on click sends user to Full)
+  if (isSummary) {
+    return (
+      <div
+        onClick={onNavigateToFull}
+        role={onNavigateToFull ? 'button' : undefined}
+        tabIndex={onNavigateToFull ? 0 : undefined}
+        onKeyDown={(e) => {
+          if (onNavigateToFull && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault();
+            onNavigateToFull();
+          }
+        }}
+        className={`rounded-2xl bg-darkroom-surface/80 border border-darkroom-border/80 p-5 sm:p-6 space-y-4 shadow-xl transition-all ${
+          onNavigateToFull ? 'cursor-pointer hover:border-orange-500/50 hover:bg-darkroom-surface group' : ''
+        }`}
+      >
+        <div className="flex items-center justify-between gap-3 border-b border-darkroom-border/60 pb-3">
+          <div className="flex items-center gap-2">
+            <span className="p-1.5 rounded-lg bg-tool-diligence/10 border border-tool-diligence/20 text-tool-diligence">
+              <Coins className="size-4" />
+            </span>
+            <h3 className="font-serif text-lg sm:text-xl font-bold text-white tracking-tight">
+              Fee Escalation
+            </h3>
+          </div>
+
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-orange-500/30 bg-orange-500/10 text-orange-400 text-xs font-mono font-semibold">
+            <AlertTriangle className="size-3.5" />
+            <span>+{totalSurge}% Fee Inflation</span>
+          </div>
+        </div>
+
+        <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans">
+          {data.spikeAlert || `Aggressive ${totalSurge}% fee inflation detected between early bird and late submission deadlines.`}
+        </p>
+
+        {onNavigateToFull && (
+          <div className="pt-2 border-t border-darkroom-border/40 flex items-center justify-between text-xs font-mono text-orange-400 group-hover:text-orange-300 transition-colors">
+            <span>View complete fee tier schedule in Full Dossier</span>
+            <ArrowRight className="size-3.5 group-hover:translate-x-1 transition-transform" />
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Mode: Full View
   return (
-    <div className="rounded-2xl bg-darkroom-surface/80 border border-darkroom-border/80 p-5 sm:p-6 space-y-5 shadow-xl transition-all">
+    <div className="rounded-2xl bg-darkroom-surface/80 border border-darkroom-border/80 p-5 sm:p-6 space-y-4 shadow-xl transition-all">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-darkroom-border/60 pb-4">
         <div className="space-y-1">
@@ -66,7 +121,7 @@ export const FeeEscalationVisualizer: React.FC<Props> = ({ model, festivalName }
       </div>
 
       {/* Step / Timeline Chart */}
-      <div className="space-y-3 pt-2">
+      <div className="space-y-3 pt-1">
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
           {data.tiers.map((tier, idx) => {
             const heightPercent = Math.max(25, Math.round((tier.amount / maxAmount) * 100));
@@ -130,8 +185,8 @@ export const FeeEscalationVisualizer: React.FC<Props> = ({ model, festivalName }
         </div>
       </div>
 
-      {/* Comparative Market Benchmark Strip */}
-      <div className="p-4 rounded-xl bg-darkroom-card/80 border border-darkroom-border/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+      {/* Comparative Market Benchmark Strip - Streamlined without nested card borders */}
+      <div className="pt-3 border-t border-darkroom-border/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-2.5 text-slate-300">
           <TrendingUp className="size-4 text-orange-400 shrink-0" />
           <span>

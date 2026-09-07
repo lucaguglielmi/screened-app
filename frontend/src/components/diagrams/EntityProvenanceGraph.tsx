@@ -1164,12 +1164,12 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
                     </span>
                   </div>
                   <span
-                    className={`text-[9px] font-mono px-1.5 py-0.5 rounded border ${
+                    className={`text-[9px] font-mono ${
                       item.status === 'RED_FLAG'
-                        ? 'bg-rose-500/20 text-rose-300 border-rose-500/30'
+                        ? 'text-rose-400 font-bold'
                         : item.status === 'AMBER_WARNING'
-                        ? 'bg-amber-500/20 text-amber-300 border-amber-500/30'
-                        : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                        ? 'px-1.5 py-0.5 rounded border bg-amber-500/20 text-amber-300 border-amber-500/30'
+                        : 'px-1.5 py-0.5 rounded border bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
                     }`}
                   >
                     {item.status}
