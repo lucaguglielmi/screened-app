@@ -20,10 +20,6 @@ export function useKeyboardShortcuts({
   onPasteQuery,
 }: UseKeyboardShortcutsOptions) {
   useEffect(() => {
-    if ('Notification' in window && Notification.permission === 'default') {
-      Notification.requestPermission();
-    }
-
     const handleOpenKeyboardShortcuts = () => onToggleHelp();
     window.addEventListener('open-keyboard-shortcuts', handleOpenKeyboardShortcuts);
 

@@ -9,6 +9,7 @@ import {
   Command,
   X,
   Keyboard,
+  Palette,
 } from 'lucide-react';
 import { ActiveTool } from '../types/investigation';
 import { FEATURES } from '../config/features';
@@ -136,6 +137,18 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       iconColor: 'text-tool-diligence',
       action: () => {
         onSelectTool('HOW_TO_USE');
+        onClose();
+      },
+    },
+    {
+      id: 'playground',
+      label: 'Design Playground (/playground)',
+      description: 'Interactive UI components, loaders, agent traces & feedback log',
+      category: 'Evidence & Research',
+      icon: Palette,
+      iconColor: 'text-purple-400',
+      action: () => {
+        onSelectTool('DESIGN_PLAYGROUND');
         onClose();
       },
     },

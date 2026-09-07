@@ -296,18 +296,6 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
     try {
       localStorage.setItem('screened_notification_email', effectiveEmail);
 
-      // If notification permission is default, also request device / PWA alerts
-      if (notificationSupported && getNotificationPermission() === 'default') {
-        const perm = await requestNotificationPermission();
-        if (perm === 'granted') {
-          setPushEnabled(true);
-          await triggerAppNotification('Screened — Alert Registered', {
-            body: `We will alert you on this device as soon as ${festivalName} is ready.`,
-            icon: '/icon.svg',
-          });
-        }
-      }
-
       await fetch(`/api/investigations/${investigationId}/notifications`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -915,7 +903,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
                 </button>
               </div>
             ) : (
-              <div className="space-y-2.5">
+              <div className="space-y-3">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2.5 min-w-0">
                     <div className="p-1.5 rounded-lg bg-midnight-royal/50 border border-tool-diligence/40 text-tool-diligence shrink-0">
@@ -933,30 +921,12 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
                         )}
                       </div>
                       <span className="text-[11px] text-slate-400 block truncate">
-                        {isPwa
-                          ? 'Progressive Web App active — get device alerts when the dossier is ready.'
-                          : 'Feel free to close this tab — get notified when the dossier is ready.'}
+                        Choose how to be notified when the dossier is ready — you can safely close this tab!
                       </span>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-1.5 shrink-0">
-                    {notificationSupported && (
-                      <button
-                        type="button"
-                        onClick={handleEnableBrowserPush}
-                        disabled={pushEnabled}
-                        className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-mono transition-all cursor-pointer ${
-                          pushEnabled
-                            ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
-                            : 'bg-white/[0.08] hover:bg-white/[0.15] border border-white/15 text-slate-200 hover:text-white'
-                        }`}
-                        title={isPwa ? 'Toggle Progressive Web App push alerts' : 'Toggle browser push notifications'}
-                      >
-                        {pushEnabled ? <VerifiedTick size={11} /> : <Bell className="size-3 text-tool-diligence" />}
-                        <span>{pushEnabled ? (isPwa ? 'PWA Alerts On' : 'Push On') : (isPwa ? 'Enable Alerts' : 'Push')}</span>
-                      </button>
-                    )}
                     <button
                       type="button"
                       onClick={() => {
@@ -971,6 +941,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
                   </div>
                 </div>
 
+                {/* Option 1: E-mail Notification */}
                 <form onSubmit={handleRegisterEmail} className="flex items-center gap-2">
                   <div className="relative flex-1">
                     <Mail className="size-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
@@ -989,9 +960,37 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
                     className="px-3.5 py-1.5 rounded-xl text-xs font-mono font-semibold transition-all flex items-center gap-1.5 cursor-pointer shrink-0 bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm disabled:opacity-40"
                   >
                     <Mail className="size-3" />
-                    <span>{isSubmittingNotify ? 'Saving...' : 'Notify Me'}</span>
+                    <span>{isSubmittingNotify ? 'Saving...' : 'Email Dossier'}</span>
                   </button>
                 </form>
+
+                {/* Option 2: Browser / PWA Push Notification (Triggered ONLY on explicit user click) */}
+                {notificationSupported && (
+                  <div className="flex items-center justify-between gap-2 pt-1 border-t border-white/[0.06] text-xs">
+                    <div className="flex items-center gap-2 text-[11px] text-slate-400">
+                      <Bell className="size-3 text-tool-diligence shrink-0" />
+                      <span>
+                        {pushEnabled
+                          ? 'Browser alerts active for this device.'
+                          : 'Prefer device alerts? Get a one-time browser ping when ready.'}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleEnableBrowserPush}
+                      disabled={pushEnabled}
+                      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-mono font-medium transition-all cursor-pointer shrink-0 ${
+                        pushEnabled
+                          ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 cursor-default'
+                          : 'bg-white/[0.08] hover:bg-white/[0.16] border border-white/20 text-slate-200 hover:text-white active:scale-95'
+                      }`}
+                      title={pushEnabled ? 'Browser alerts already active' : 'Click to grant browser notification permission'}
+                    >
+                      {pushEnabled ? <VerifiedTick size={12} /> : <Bell className="size-3 text-tool-diligence" />}
+                      <span>{pushEnabled ? (isPwa ? 'PWA Alerts Active' : 'Browser Alerts Active') : 'Enable Browser Alert'}</span>
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </motion.div>

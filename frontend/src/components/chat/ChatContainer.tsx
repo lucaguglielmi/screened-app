@@ -26,7 +26,7 @@ const INITIAL_HARDCODED_MESSAGE: ChatMessage = {
   id: 'initial-greeting-01',
   role: 'assistant',
   content:
-    'Screened AI online. Enter a festival name to investigate, request a grant/funding scan, or drop an invitation email or treatment PDF.',
+    'Screened AI online. Enter a festival name to investigate, inquire about upcoming tools like grant scouting, or drop an invitation email or screenplay synopsis.',
   timestamp: new Date().toISOString(),
 };
 

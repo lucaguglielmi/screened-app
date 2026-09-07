@@ -766,6 +766,16 @@ class ToolCallType(str, Enum):
     COMPARE_FESTIVALS_ARENA = "compare_festivals_arena"
     CONFIGURE_GRANT_SCOUT = "configure_grant_scout"
     ANALYZE_INVITATION_EMAIL = "analyze_invitation_email"
+    COLLECT_FEATURE_FEEDBACK = "collect_feature_feedback"
+
+
+class FeatureFeedbackToolArgs(BaseModel):
+    """Arguments for the Fake Door Test feedback tool."""
+    feature_name: str
+    pitch: str = "We are currently evaluating this feature for our next release cycle."
+    prompt_question: str = "What would you like and what are you trying to achieve?"
+    suggested_options: List[str] = Field(default_factory=list)
+    prefill_category: str = "FEATURE_REQUEST"
 
 
 class DueDiligenceToolArgs(BaseModel):

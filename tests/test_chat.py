@@ -110,9 +110,28 @@ async def test_specific_festival_name_without_question_triggers_tool():
     full_text = "".join(t["token"] for t in token_events).strip()
     assert len(full_text) > 0
     assert len(tool_events) == 1
-
     tool_call = tool_events[0]["toolCall"]
     assert tool_call["toolName"] == ToolCallType.CONFIGURE_DUE_DILIGENCE.value
     assert "Parma" in tool_call["args"]["festival_name"]
+
+
+@pytest.mark.asyncio
+async def test_unsupported_feature_triggers_fake_door_feedback():
+    """Verify that asking about unreleased capabilities triggers the fake door feedback tool and response."""
+    req = ChatRequest(message="Can you analyze a film distribution contract or evaluate a sales agent?")
+    events = []
+    async for event in producer_desk_agent.process_chat(req):
+        events.append(event)
+
+    token_events = [e for e in events if e.get("type") == "TOKEN"]
+    tool_events = [e for e in events if e.get("type") == "TOOL_CALL"]
+
+    full_text = "".join(t["token"] for t in token_events).strip()
+    assert "We are currently considering this feature" in full_text
+    assert "what you are trying to achieve" in full_text
+    assert len(tool_events) == 1
+    tool_call = tool_events[0]["toolCall"]
+    assert tool_call["toolName"] == ToolCallType.COLLECT_FEATURE_FEEDBACK.value
+
 
 

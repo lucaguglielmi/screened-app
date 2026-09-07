@@ -39,6 +39,7 @@ import { lazyWithRetry } from './utils/lazyWithRetry';
 const EvidenceDossier = lazyWithRetry(() => import('./components/EvidenceDossier').then(m => ({ default: m.EvidenceDossier })));
 const GrantScout = lazyWithRetry(() => import('./components/GrantScout').then(m => ({ default: m.GrantScout })));
 const EntityConfirmation = lazyWithRetry(() => import('./components/EntityConfirmation').then(m => ({ default: m.EntityConfirmation })));
+const DesignPlayground = lazyWithRetry(() => import('./components/playground/DesignPlayground').then(m => ({ default: m.DesignPlayground })));
 import { VectorFieldBackground } from './components/animations/VectorFieldBackground';
 import { AnimatedEE } from './components/animations/AnimatedEE';
 import { UpdateNotifier } from './components/common/UpdateNotifier';
@@ -629,6 +630,13 @@ export default function App() {
               onNavigateToDiligence={() => handleSelectTool('DUE_DILIGENCE')}
               onNavigateToScout={() => handleSelectTool('GRANT_SCOUT')}
             />
+          )}
+
+          {/* View 7: Design Playground (Public Workbench) */}
+          {activeTool === 'DESIGN_PLAYGROUND' && (
+            <Suspense fallback={<div className="p-8 text-center text-slate-500 font-mono text-sm">Loading Design Playground...</div>}>
+              <DesignPlayground />
+            </Suspense>
           )}
         </main>
 

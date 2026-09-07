@@ -5,6 +5,7 @@ import {
   ShieldAlert,
   Coins,
   Scale,
+  Palette,
   Radio,
 } from 'lucide-react';
 import { ActiveTool } from '../../types/investigation';
@@ -176,6 +177,28 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange, onNaviga
           {activeTooltip === 'Why Screened Exists' && (
             <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-darkroom-surface text-slate-100 text-sm font-medium whitespace-nowrap shadow-xl border border-darkroom-border z-50 pointer-events-none">
               Why Screened Exists (Baseline Matrix)
+            </div>
+          )}
+        </div>
+
+        {/* Design Playground Link */}
+        <div className="relative">
+          <button
+            onClick={() => handleSelectTool('DESIGN_PLAYGROUND')}
+            onMouseEnter={() => setActiveTooltip('Design Playground')}
+            onMouseLeave={() => setActiveTooltip(null)}
+            className={`p-2.5 rounded-xl transition-all cursor-pointer ${
+              activeTool === 'DESIGN_PLAYGROUND'
+                ? 'bg-darkroom-card text-purple-400 border border-purple-500/40'
+                : 'hover:bg-darkroom-surface text-slate-500 hover:text-slate-300'
+            }`}
+            title="Design Playground (/playground)"
+          >
+            <Palette className="size-4.5" />
+          </button>
+          {activeTooltip === 'Design Playground' && (
+            <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-darkroom-surface text-slate-100 text-sm font-medium whitespace-nowrap shadow-xl border border-darkroom-border z-50 pointer-events-none">
+              Design Playground (Workbench &amp; Feedback Log)
             </div>
           )}
         </div>

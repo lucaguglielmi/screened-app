@@ -3,7 +3,7 @@
  *
  * Generated from canonical Pydantic v2 models in backend/models.py
  * Generator: scripts/generate_contracts.py
- * Timestamp: 2026-09-05T10:28:41Z
+ * Timestamp: 2026-09-07T21:29:55Z
  *
  * To regenerate, run:
  *   npm run generate-contracts  (from frontend/)
@@ -304,7 +304,8 @@ export type ToolCallType =
   | 'configure_opportunity_scout'
   | 'compare_festivals_arena'
   | 'configure_grant_scout'
-  | 'analyze_invitation_email';
+  | 'analyze_invitation_email'
+  | 'collect_feature_feedback';
 
 export const TOOL_CALL_TYPES = [
   'configure_due_diligence',
@@ -312,6 +313,7 @@ export const TOOL_CALL_TYPES = [
   'compare_festivals_arena',
   'configure_grant_scout',
   'analyze_invitation_email',
+  'collect_feature_feedback',
 ] as const;
 
 export type VerificationStatus =
@@ -757,6 +759,15 @@ export interface EvidenceDossier {
   feeEscalation?: FeeEscalationModel;
   forensicSummary?: ForensicIntelligenceSummary;
   generatedAt?: string;
+}
+
+/** Arguments for the Fake Door Test feedback tool. */
+export interface FeatureFeedbackToolArgs {
+  feature_name: string;
+  pitch: string;
+  prompt_question: string;
+  suggested_options: string[];
+  prefill_category: string;
 }
 
 export interface FeedbackCreateRequest {

@@ -62,4 +62,8 @@ research/
 [Rr]esearch*
 Antigravity-specs/
 contest-rules/
+.firebaserc
+firebase.json
+public_hosting/
+
 

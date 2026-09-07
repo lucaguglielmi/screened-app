@@ -5,10 +5,12 @@ import {
   DueDiligenceArgs,
   GrantScoutArgs,
   InvitationEmailArgs,
+  FeatureFeedbackToolArgs,
 } from '../../types/chat';
 import { FestivalIntakeCard } from './tools/FestivalIntakeCard';
 import { GrantIntakeCard } from './tools/GrantIntakeCard';
 import { InvitationEmailCard } from './tools/InvitationEmailCard';
+import { FeatureFeedbackCard } from './tools/FeatureFeedbackCard';
 import { AgentAvatar } from './AgentAvatar';
 import { soundEffects } from '../../utils/audio';
 import { useFileUpload, AttachedFileState } from '../../hooks/useFileUpload';
@@ -348,6 +350,12 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
                 <InvitationEmailCard
                   args={message.toolCall.args as unknown as InvitationEmailArgs}
                   onLaunchInvestigation={(name) => onLaunchDueDiligence(name)}
+                />
+              )}
+
+              {message.toolCall.toolName === 'collect_feature_feedback' && (
+                <FeatureFeedbackCard
+                  args={message.toolCall.args as unknown as FeatureFeedbackToolArgs}
                 />
               )}
             </div>
