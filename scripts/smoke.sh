@@ -46,10 +46,10 @@ fi
 
 echo ""
 echo "[5/5] Testing Direct Dossier Deep Link (GET /diligence/demo_pinco_pallino)..."
-SPA_RESP=$(curl -s -f -I "${BASE_URL}/diligence/demo_pinco_pallino")
-echo "Deep Link Headers: $(echo "${SPA_RESP}" | head -n 1)"
-if ! echo "${SPA_RESP}" | grep -q "200 OK"; then
-  echo "❌ SPA deep link failed: direct hit to /diligence/demo_pinco_pallino did not return 200 OK"
+HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "${BASE_URL}/diligence/demo_pinco_pallino")
+echo "Deep Link HTTP Code: ${HTTP_CODE}"
+if [ "${HTTP_CODE}" != "200" ]; then
+  echo "❌ SPA deep link failed: direct hit to /diligence/demo_pinco_pallino returned ${HTTP_CODE}"
   exit 1
 fi
 

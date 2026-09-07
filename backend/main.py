@@ -857,7 +857,7 @@ if assets_dir.exists():
     app.mount("/assets", CacheControlledStaticFiles(directory=assets_dir), name="assets")
 
 
-@app.get("/{full_path:path}")
+@app.api_route("/{full_path:path}", methods=["GET", "HEAD"])
 async def serve_spa(full_path: str):
     if frontend_dist.exists():
         file_path = frontend_dist / full_path
