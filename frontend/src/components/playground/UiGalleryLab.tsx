@@ -607,18 +607,18 @@ export const UiGalleryLab: React.FC = () => {
         </div>
       </section>
 
-      {/* SECTION 5: CONTAINED VECTOR FIELD LAB */}
+      {/* SECTION 5: AMBIENT ORGANIC BLOB CONTOUR LAB */}
       <section className="space-y-4 pt-4 border-t border-zinc-800">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h3 className="text-sm font-bold text-zinc-200 uppercase tracking-wider font-mono flex items-center gap-2">
-              <span>5. Organic Magnetic Vector Field Laboratory</span>
+              <span>5. Ambient Organic Blob Contour Laboratory</span>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">
                 Live Chat Background Sync
               </span>
             </h3>
             <p className="text-xs text-zinc-400">
-              Interactive ferrofluid field lines aligning to subterranean magnetic poles and cursor dipole. Real-time changes sync to the main AI chat page background.
+              Subtle, drifting organic blob contour line giving spatial depth to the darkroom background without visual clutter. Real-time changes sync to the main AI chat page background.
             </p>
           </div>
 
@@ -627,7 +627,7 @@ export const UiGalleryLab: React.FC = () => {
               onClick={() => {
                 updateVfConfig({ enabledOnChat: !vfConfig.enabledOnChat });
                 soundEffects.playClick();
-                logAction(vfConfig.enabledOnChat ? 'Disabled Vector Field on Chat' : 'Enabled Vector Field on Chat');
+                logAction(vfConfig.enabledOnChat ? 'Disabled Background Contour on Chat' : 'Enabled Background Contour on Chat');
               }}
               className={`px-2.5 py-1 rounded-lg text-xs font-mono border transition-colors cursor-pointer flex items-center gap-1.5 ${
                 vfConfig.enabledOnChat
@@ -643,10 +643,10 @@ export const UiGalleryLab: React.FC = () => {
               onClick={() => {
                 resetVfConfig();
                 soundEffects.playSuccess();
-                logAction('Reset Vector Field to default settings');
+                logAction('Reset Background Contour to default settings');
               }}
               className="px-2.5 py-1 rounded-lg text-xs font-mono bg-darkroom-card hover:bg-darkroom-border border border-darkroom-border text-slate-300 transition-colors cursor-pointer flex items-center gap-1"
-              title="Reset to default vector field settings"
+              title="Reset to default contour settings"
             >
               <RotateCcw className="size-3" />
               <span>Reset</span>
@@ -668,10 +668,10 @@ export const UiGalleryLab: React.FC = () => {
           />
           <div className="relative z-10 text-center space-y-1.5 p-4 rounded-xl bg-darkroom-bg/85 backdrop-blur-md border border-darkroom-border max-w-sm shadow-xl pointer-events-none">
             <h4 className="font-serif text-sm font-bold text-white">
-              Subterranean Magnet Simulation
+              Ambient Organic Blob Simulation
             </h4>
             <p className="text-xs text-slate-300">
-              Move cursor across this card to see magnetic deflection in real-time.
+              Move cursor across this card to see smooth membrane deflection in real-time.
             </p>
           </div>
         </div>
@@ -679,7 +679,7 @@ export const UiGalleryLab: React.FC = () => {
         {/* Vector Field Controls */}
         <div className="p-4 rounded-2xl bg-darkroom-surface grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 border border-darkroom-border text-xs">
           <div className="space-y-1.5">
-            <label className="text-[11px] font-mono text-slate-400 uppercase">Needle Color</label>
+            <label className="text-[11px] font-mono text-slate-400 uppercase">Contour Color</label>
             <div className="flex items-center gap-2">
               {['var(--color-tool-scout)', 'var(--color-midnight-royal)', 'var(--color-tool-diligence)', 'var(--color-royal-violet)'].map((c) => (
                 <button
@@ -696,7 +696,7 @@ export const UiGalleryLab: React.FC = () => {
 
           <div className="space-y-1.5">
             <div className="flex justify-between font-mono text-slate-400">
-              <span>Speed</span>
+              <span>Drift Speed</span>
               <span>{vfConfig.speed.toFixed(1)}x</span>
             </div>
             <input
@@ -712,7 +712,7 @@ export const UiGalleryLab: React.FC = () => {
 
           <div className="space-y-1.5">
             <div className="flex justify-between font-mono text-slate-400">
-              <span>Wave Amplitude</span>
+              <span>Morph Amplitude</span>
               <span>{(vfConfig.amplitude * 100).toFixed(0)}%</span>
             </div>
             <input
@@ -744,45 +744,13 @@ export const UiGalleryLab: React.FC = () => {
 
           <div className="space-y-1.5">
             <div className="flex justify-between font-mono text-slate-400">
-              <span>Grid Density</span>
-              <span>{vfConfig.gridSpacing}px</span>
-            </div>
-            <input
-              type="range"
-              min={18}
-              max={50}
-              step={2}
-              value={vfConfig.gridSpacing}
-              onChange={(e) => updateVfConfig({ gridSpacing: parseInt(e.target.value) })}
-              className="w-full accent-purple-500 cursor-pointer"
-            />
-          </div>
-
-          <div className="space-y-1.5">
-            <div className="flex justify-between font-mono text-slate-400">
-              <span>Needle Length</span>
-              <span>{vfConfig.dropletLength}px</span>
-            </div>
-            <input
-              type="range"
-              min={4}
-              max={20}
-              step={1}
-              value={vfConfig.dropletLength}
-              onChange={(e) => updateVfConfig({ dropletLength: parseInt(e.target.value) })}
-              className="w-full accent-purple-500 cursor-pointer"
-            />
-          </div>
-
-          <div className="space-y-1.5">
-            <div className="flex justify-between font-mono text-slate-400">
-              <span>Field Opacity</span>
+              <span>Contour Opacity</span>
               <span>{(vfConfig.opacity * 100).toFixed(0)}%</span>
             </div>
             <input
               type="range"
-              min={0.1}
-              max={1.0}
+              min={0.05}
+              max={0.8}
               step={0.05}
               value={vfConfig.opacity}
               onChange={(e) => updateVfConfig({ opacity: parseFloat(e.target.value) })}

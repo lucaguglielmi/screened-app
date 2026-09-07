@@ -13,16 +13,16 @@ export interface VectorFieldConfig {
 
 export const DEFAULT_VECTOR_FIELD_CONFIG: VectorFieldConfig = {
   color: 'var(--color-tool-scout)',
-  speed: 0.6,
+  speed: 0.4,
   amplitude: 0.22,
   gridSpacing: 30,
   dropletLength: 8,
-  blobCoverage: 0.8,
-  opacity: 0.45,
+  blobCoverage: 0.75,
+  opacity: 0.20,
   enabledOnChat: true,
 };
 
-const STORAGE_KEY = 'screened_vector_field_config_v1';
+const STORAGE_KEY = 'screened_vector_field_config_v2';
 const SYNC_EVENT = 'screened_vector_field_sync';
 
 function readStoredConfig(): VectorFieldConfig {

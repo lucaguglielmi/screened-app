@@ -32,7 +32,7 @@ describe('useVectorFieldConfig', () => {
     expect(result.current.config.speed).toBe(1.2);
     expect(result.current.config.gridSpacing).toBe(38);
 
-    const stored = JSON.parse(localStorage.getItem('screened_vector_field_config_v1') || '{}');
+    const stored = JSON.parse(localStorage.getItem('screened_vector_field_config_v2') || '{}');
     expect(stored.color).toBe('var(--color-midnight-royal)');
     expect(stored.speed).toBe(1.2);
     expect(stored.gridSpacing).toBe(38);

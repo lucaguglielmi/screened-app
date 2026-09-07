@@ -197,6 +197,9 @@ deep_vetting_agent = DeepVettingAgent(gemini_client)
 app.include_router(webhooks.router)
 from backend.routers.grants import router as grants_router
 app.include_router(grants_router)
+from backend.routers.mcp import router as mcp_router
+app.include_router(mcp_router)
+
 
 # Anti-caching headers for HTML, version JSON, and SPA responses
 NO_CACHE_HEADERS = {

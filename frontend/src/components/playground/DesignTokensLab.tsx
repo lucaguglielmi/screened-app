@@ -237,20 +237,20 @@ export const DesignTokensLab: React.FC = () => {
       </section>
 
       {/* ========================================================================= */}
-      {/* 3. ANIMATED DROPLET VECTOR FIELD LABORATORY (Reference Image Animation) */}
+      {/* ========================================================================= */}
+      {/* 3. AMBIENT ORGANIC BLOB CONTOUR LABORATORY */}
       {/* ========================================================================= */}
       <section className="space-y-4 pt-4 border-t border-darkroom-border">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h3 className="text-xl font-bold text-white flex items-center gap-2">
-              <span>🧲 Organic Magnetic Vector Field</span>
-              <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
-                Interactive Ferrofluid Mask
+              <span>🌊 Ambient Organic Blob Contour</span>
+              <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                Subtle Depth Contour
               </span>
             </h3>
             <p className="text-sm text-slate-400 mt-1">
-              Sharp micro-needles aligning to subterranean moving magnetic poles (attractor, vortex,
-              and cursor dipole) masked within an independently morphing 70% organic fluid blob.
+              Subtle organic blob contour line drifting across the darkroom canvas to provide depth to the background without visual noise or distraction.
             </p>
           </div>
 
@@ -276,7 +276,7 @@ export const DesignTokensLab: React.FC = () => {
                 soundEffects.playSuccess();
               }}
               className="px-3 py-1.5 rounded-xl text-xs font-mono bg-darkroom-card hover:bg-darkroom-border border border-darkroom-border text-slate-300 transition-colors cursor-pointer flex items-center gap-1"
-              title="Reset to default vector field settings"
+              title="Reset to default contour settings"
             >
               <RotateCcw className="size-3.5" />
               <span>Reset</span>
@@ -298,11 +298,10 @@ export const DesignTokensLab: React.FC = () => {
           />
           <div className="relative z-10 text-center space-y-2 p-6 rounded-2xl bg-darkroom-bg/85 backdrop-blur-md border border-darkroom-border max-w-md shadow-2xl pointer-events-none">
             <h4 className="font-serif text-lg font-bold text-white">
-              Subterranean Magnet Simulation
+              Ambient Organic Contour Simulation
             </h4>
             <p className="text-xs text-slate-300">
-              Move your mouse across this area to see the interactive magnetic dipole distort the
-              ferrofluid field lines in real-time.
+              Move your mouse across this area to see the smooth membrane deflect in real-time.
             </p>
           </div>
         </div>
@@ -311,7 +310,7 @@ export const DesignTokensLab: React.FC = () => {
         <div className="p-6 rounded-3xl bg-darkroom-surface grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Color Selector */}
           <div className="space-y-2">
-            <label className="text-xs font-mono text-slate-400 uppercase">Needle Glow Color</label>
+            <label className="text-xs font-mono text-slate-400 uppercase">Contour Glow Color</label>
             <div className="flex items-center gap-2">
               {['var(--color-tool-scout)', 'var(--color-midnight-royal)', 'var(--color-tool-diligence)', 'var(--color-royal-violet)'].map((c) => (
                 <button
@@ -331,7 +330,7 @@ export const DesignTokensLab: React.FC = () => {
           {/* Speed */}
           <div className="space-y-2">
             <div className="flex justify-between text-xs font-mono text-slate-400">
-              <span>Magnet Transit Speed</span>
+              <span>Drift Speed</span>
               <span>{vfConfig.speed.toFixed(1)}x</span>
             </div>
             <input
@@ -341,7 +340,7 @@ export const DesignTokensLab: React.FC = () => {
               step={0.1}
               value={vfConfig.speed}
               onChange={(e) => updateVfConfig({ speed: parseFloat(e.target.value) })}
-              className="w-full accent-rose-500 cursor-pointer"
+              className="w-full accent-purple-500 cursor-pointer"
             />
           </div>
 
@@ -358,14 +357,14 @@ export const DesignTokensLab: React.FC = () => {
               step={0.05}
               value={vfConfig.amplitude}
               onChange={(e) => updateVfConfig({ amplitude: parseFloat(e.target.value) })}
-              className="w-full accent-rose-500 cursor-pointer"
+              className="w-full accent-purple-500 cursor-pointer"
             />
           </div>
 
           {/* Blob Coverage */}
           <div className="space-y-2">
             <div className="flex justify-between text-xs font-mono text-slate-400">
-              <span>Organic Blob Span</span>
+              <span>Blob Coverage</span>
               <span>{(vfConfig.blobCoverage * 100).toFixed(0)}%</span>
             </div>
             <input
@@ -375,58 +374,24 @@ export const DesignTokensLab: React.FC = () => {
               step={0.05}
               value={vfConfig.blobCoverage}
               onChange={(e) => updateVfConfig({ blobCoverage: parseFloat(e.target.value) })}
-              className="w-full accent-rose-500 cursor-pointer"
-            />
-          </div>
-
-          {/* Grid Spacing */}
-          <div className="space-y-2">
-            <div className="flex justify-between text-xs font-mono text-slate-400">
-              <span>Grid Density (Sharp)</span>
-              <span>{vfConfig.gridSpacing}px</span>
-            </div>
-            <input
-              type="range"
-              min={18}
-              max={50}
-              step={2}
-              value={vfConfig.gridSpacing}
-              onChange={(e) => updateVfConfig({ gridSpacing: parseInt(e.target.value) })}
-              className="w-full accent-rose-500 cursor-pointer"
-            />
-          </div>
-
-          {/* Needle Length */}
-          <div className="space-y-2">
-            <div className="flex justify-between text-xs font-mono text-slate-400">
-              <span>Needle Length (Micro)</span>
-              <span>{vfConfig.dropletLength}px</span>
-            </div>
-            <input
-              type="range"
-              min={4}
-              max={24}
-              step={1}
-              value={vfConfig.dropletLength}
-              onChange={(e) => updateVfConfig({ dropletLength: parseInt(e.target.value) })}
-              className="w-full accent-rose-500 cursor-pointer"
+              className="w-full accent-purple-500 cursor-pointer"
             />
           </div>
 
           {/* Opacity */}
           <div className="space-y-2">
             <div className="flex justify-between text-xs font-mono text-slate-400">
-              <span>Field Opacity</span>
+              <span>Contour Opacity</span>
               <span>{(vfConfig.opacity * 100).toFixed(0)}%</span>
             </div>
             <input
               type="range"
-              min={0.1}
-              max={1.0}
+              min={0.05}
+              max={0.8}
               step={0.05}
               value={vfConfig.opacity}
               onChange={(e) => updateVfConfig({ opacity: parseFloat(e.target.value) })}
-              className="w-full accent-rose-500 cursor-pointer"
+              className="w-full accent-purple-500 cursor-pointer"
             />
           </div>
         </div>
