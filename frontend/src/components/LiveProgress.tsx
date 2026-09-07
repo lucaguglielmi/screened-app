@@ -18,6 +18,13 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useReducedMotion } from '../utils/motionTokens';
 import { soundEffects } from '../utils/audio';
 import { VerifiedTick } from './ui/VerifiedTick';
+import {
+  isPwaInstalled,
+  isNotificationSupported,
+  getNotificationPermission,
+  requestNotificationPermission,
+  triggerAppNotification,
+} from '../utils/pwaNotifications';
 
 interface Props {
   status: InvestigationStatus;
@@ -230,17 +237,32 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
   const [showEventLogTooltip, setShowEventLogTooltip] = useState(false);
   const [eventCategoryFilter, setEventCategoryFilter] = useState<'ALL' | 'QUERIES' | 'CLAIMS' | 'DISPUTES'>('ALL');
   const [, setIsHoveringLog] = useState(false);
+  const isPincoDemo = useMemo(() => {
+    return (
+      (festivalName && festivalName.toLowerCase().includes('pinco')) ||
+      investigationId === 'demo_pinco_pallino'
+    );
+  }, [festivalName, investigationId]);
+
+  const isPwa = useMemo(() => isPwaInstalled(), []);
+  const notificationSupported = useMemo(() => isNotificationSupported(), []);
+
   const [notifyEmail, setNotifyEmail] = useState<string>(() => {
     try {
-      return localStorage.getItem('screened_notification_email') || '';
+      const stored = localStorage.getItem('screened_notification_email');
+      if (stored) return stored;
     } catch {
-      return '';
+      // ignore
     }
+    if ((festivalName && festivalName.toLowerCase().includes('pinco')) || investigationId === 'demo_pinco_pallino') {
+      return 'carciofomobile@gmail.com';
+    }
+    return '';
   });
   const [isNotified, setIsNotified] = useState(false);
   const [isSubmittingNotify, setIsSubmittingNotify] = useState(false);
   const [pushEnabled, setPushEnabled] = useState<boolean>(() => {
-    return typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted';
+    return getNotificationPermission() === 'granted';
   });
   const [stickyDismissed, setStickyDismissed] = useState(false);
   const [showStickyNotify, setShowStickyNotify] = useState(false);
@@ -253,28 +275,45 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
     status !== 'FAILED' &&
     status !== 'CANCELLED';
 
-  // Trigger sticky bottom drawer 10 seconds after disambiguation finishes
+  // Trigger sticky bottom drawer: immediately (600ms) for Pinco Pallino demo, or 3s for live investigations
   useEffect(() => {
     if (!isPostDisambiguationRunning || stickyDismissed) {
       return;
     }
+    const delay = isPincoDemo ? 600 : 3000;
     const timer = setTimeout(() => {
       setShowStickyNotify(true);
-    }, 10000);
+    }, delay);
     return () => clearTimeout(timer);
-  }, [isPostDisambiguationRunning, stickyDismissed]);
+  }, [isPostDisambiguationRunning, stickyDismissed, isPincoDemo]);
+
+  const effectiveEmail = notifyEmail || (isPincoDemo ? 'carciofomobile@gmail.com' : '');
 
   const handleRegisterEmail = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!notifyEmail || !notifyEmail.includes('@') || !investigationId) return;
+    if (!effectiveEmail || !effectiveEmail.includes('@') || !investigationId) return;
     setIsSubmittingNotify(true);
     try {
-      localStorage.setItem('screened_notification_email', notifyEmail);
+      localStorage.setItem('screened_notification_email', effectiveEmail);
+
+      // If notification permission is default, also request device / PWA alerts
+      if (notificationSupported && getNotificationPermission() === 'default') {
+        const perm = await requestNotificationPermission();
+        if (perm === 'granted') {
+          setPushEnabled(true);
+          await triggerAppNotification('Screened — Alert Registered', {
+            body: `We will alert you on this device as soon as ${festivalName} is ready.`,
+            icon: '/icon.svg',
+          });
+        }
+      }
+
       await fetch(`/api/investigations/${investigationId}/notifications`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: notifyEmail }),
+        body: JSON.stringify({ email: effectiveEmail }),
       });
+      setNotifyEmail(effectiveEmail);
       setIsNotified(true);
       soundEffects.playSuccess();
     } catch (err) {
@@ -285,13 +324,15 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
   };
 
   const handleEnableBrowserPush = async () => {
-    if ('Notification' in window) {
-      soundEffects.playClick();
-      const perm = await Notification.requestPermission();
-      if (perm === 'granted') {
-        setPushEnabled(true);
-        soundEffects.playSuccess();
-      }
+    soundEffects.playClick();
+    const perm = await requestNotificationPermission();
+    if (perm === 'granted') {
+      setPushEnabled(true);
+      soundEffects.playSuccess();
+      await triggerAppNotification('Screened — Alerts Active', {
+        body: `We will notify you on this device when ${festivalName} is ready.`,
+        icon: '/icon.svg',
+      });
     }
   };
 
@@ -679,95 +720,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
         </AnimatePresence>
       </div>
 
-      {/* 2. Come Back Later & Background Notifications (Streamlined, Integrated) */}
-      {isRunning && (
-        <div className="rounded-2xl bg-darkroom-surface/40 border border-darkroom-border/40 p-4 sm:p-5 space-y-3.5 shadow-sm">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-darkroom-border/40 pb-3">
-            <div className="flex items-start sm:items-center gap-3">
-              <div
-                className={`p-2.5 rounded-xl border shrink-0 mt-0.5 sm:mt-0 ${
-                  isNotified
-                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                    : 'bg-midnight-royal/40 border-tool-diligence/30 text-tool-diligence'
-                }`}
-              >
-                {isNotified ? <VerifiedTick size={18} /> : <Bell className="size-4.5" />}
-              </div>
-              <div className="min-w-0 flex-1">
-                <h4 className="text-sm sm:text-base font-bold text-white font-sans flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                  <span>{isNotified ? 'Background Notification Active' : 'Come Back Later & Get Notified'}</span>
-                  {isNotified && (
-                    <span className="text-xs font-mono text-emerald-400 font-normal">
-                      (Will notify when ready)
-                    </span>
-                  )}
-                </h4>
-                <p className="text-sm text-slate-300 mt-1 break-words font-sans leading-relaxed">
-                  {isNotified
-                    ? `Registered to ${notifyEmail}. Feel free to close or bookmark this tab — we'll notify you as soon as the dossier is ready.`
-                    : 'Feel free to close this tab. We can notify you via push and email as soon as the dossier is ready.'}
-                </p>
-              </div>
-            </div>
-
-            {/* PWA / Browser Notification Button */}
-            {'Notification' in window && (
-              <button
-                type="button"
-                onClick={handleEnableBrowserPush}
-                disabled={pushEnabled}
-                className={`px-3.5 py-2 rounded-xl border text-xs sm:text-sm font-mono transition-all flex items-center gap-1.5 cursor-pointer shrink-0 ${
-                  pushEnabled
-                    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                    : 'bg-darkroom-card hover:bg-darkroom-bg text-slate-200 hover:text-white border-darkroom-border'
-                }`}
-              >
-                {pushEnabled ? <VerifiedTick size={14} /> : <Bell className="size-4 text-tool-diligence" />}
-                <span>{pushEnabled ? 'Push Enabled' : 'Enable Browser Push'}</span>
-              </button>
-            )}
-          </div>
-
-          {/* Email Notification Form or Permanent Confirmation Banner */}
-          {isNotified ? (
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-sm text-emerald-300 font-mono">
-              <div className="flex items-start gap-2.5 min-w-0">
-                <VerifiedTick size={16} className="shrink-0 mt-0.5" />
-                <span className="break-all">
-                  We&apos;ll email the direct dossier link to: <strong className="text-white">{notifyEmail}</strong>
-                </span>
-              </div>
-              <span className="text-xs text-emerald-400/90 px-2.5 py-0.5 rounded bg-emerald-500/15 border border-emerald-500/30 shrink-0 self-start sm:self-auto">
-                Pending Synthesis
-              </span>
-            </div>
-          ) : (
-            <form onSubmit={handleRegisterEmail} className="flex flex-col sm:flex-row items-center gap-2.5">
-              <div className="relative flex-1 w-full">
-                <Mail className="size-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input
-                  type="email"
-                  value={notifyEmail}
-                  onChange={(e) => setNotifyEmail(e.target.value)}
-                  placeholder="Enter your email for direct dossier link..."
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-darkroom-bg border border-darkroom-border text-sm text-white placeholder-slate-400 focus:outline-none focus:border-tool-diligence/50 font-mono"
-                  disabled={isSubmittingNotify}
-                />
-              </div>
-              <button
-                type="submit"
-                disabled={isSubmittingNotify || !notifyEmail.includes('@')}
-                className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs sm:text-sm font-mono font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0 bg-midnight-royal hover:bg-midnight-royal/80 text-white border border-tool-diligence/40 shadow-sm disabled:opacity-40"
-              >
-                <Mail className="size-4 text-tool-diligence" />
-                <span>{isSubmittingNotify ? 'Registering...' : 'Email Me When Ready'}</span>
-              </button>
-            </form>
-          )}
-        </div>
-      )}
-
-      {/* 3. Live SSE Activity Stream Console (Preserved Card Container) */}
+      {/* Live SSE Activity Stream Console (Preserved Card Container) */}
       {events.length > 0 && (
         <div className="rounded-3xl bg-darkroom-surface overflow-hidden shadow-2xl shadow-black/80 border border-darkroom-border/60">
           <div className="p-4 sm:px-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-darkroom-border/60">
@@ -935,11 +888,18 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
                     <VerifiedTick size={16} />
                   </div>
                   <div className="min-w-0">
-                    <div className="text-xs font-semibold text-white truncate">
-                      Notification Active for {notifyEmail}
+                    <div className="text-xs font-semibold text-white flex items-center gap-2 flex-wrap truncate">
+                      <span>Notification Active for {notifyEmail}</span>
+                      {pushEnabled && (
+                        <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                          {isPwa ? 'PWA Alerts On' : 'Device Alerts On'}
+                        </span>
+                      )}
                     </div>
                     <div className="text-[11px] text-slate-400 truncate">
-                      We&apos;ll email you the dossier as soon as it&apos;s ready. Feel free to close this tab!
+                      {pushEnabled
+                        ? "We'll alert you on this device and email you the dossier as soon as it's ready!"
+                        : "We'll email you the dossier as soon as it's ready. Feel free to close this tab!"}
                     </div>
                   </div>
                 </div>
@@ -962,29 +922,39 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
                       <Bell className="size-3.5" />
                     </div>
                     <div className="min-w-0">
-                      <span className="text-xs font-bold text-white block truncate">
-                        Deep Research Running in Background
-                      </span>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-xs font-bold text-white block truncate">
+                          Deep Research Running in Background
+                        </span>
+                        {isPwa && (
+                          <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-medium bg-tool-diligence/15 text-tool-diligence border border-tool-diligence/30">
+                            PWA Mode
+                          </span>
+                        )}
+                      </div>
                       <span className="text-[11px] text-slate-400 block truncate">
-                        Feel free to close this tab — get notified when the dossier is ready.
+                        {isPwa
+                          ? 'Progressive Web App active — get device alerts when the dossier is ready.'
+                          : 'Feel free to close this tab — get notified when the dossier is ready.'}
                       </span>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-1.5 shrink-0">
-                    {'Notification' in window && (
+                    {notificationSupported && (
                       <button
                         type="button"
                         onClick={handleEnableBrowserPush}
                         disabled={pushEnabled}
-                        className={`hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-mono transition-all cursor-pointer ${
+                        className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-mono transition-all cursor-pointer ${
                           pushEnabled
                             ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
-                            : 'bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 text-slate-300 hover:text-white'
+                            : 'bg-white/[0.08] hover:bg-white/[0.15] border border-white/15 text-slate-200 hover:text-white'
                         }`}
+                        title={isPwa ? 'Toggle Progressive Web App push alerts' : 'Toggle browser push notifications'}
                       >
                         {pushEnabled ? <VerifiedTick size={11} /> : <Bell className="size-3 text-tool-diligence" />}
-                        <span>{pushEnabled ? 'Push On' : 'Push'}</span>
+                        <span>{pushEnabled ? (isPwa ? 'PWA Alerts On' : 'Push On') : (isPwa ? 'Enable Alerts' : 'Push')}</span>
                       </button>
                     )}
                     <button
@@ -1006,7 +976,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
                     <Mail className="size-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
                     <input
                       type="email"
-                      value={notifyEmail}
+                      value={effectiveEmail}
                       onChange={(e) => setNotifyEmail(e.target.value)}
                       placeholder="Enter your email for direct dossier link..."
                       className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-black/60 border border-darkroom-border text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400 font-mono"
@@ -1015,7 +985,7 @@ export const LiveProgress: React.FC<Props> = ({ status, events, festivalName, in
                   </div>
                   <button
                     type="submit"
-                    disabled={isSubmittingNotify || !notifyEmail.includes('@')}
+                    disabled={isSubmittingNotify || !effectiveEmail.includes('@')}
                     className="px-3.5 py-1.5 rounded-xl text-xs font-mono font-semibold transition-all flex items-center gap-1.5 cursor-pointer shrink-0 bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm disabled:opacity-40"
                   >
                     <Mail className="size-3" />

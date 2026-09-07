@@ -1,0 +1,23 @@
+{
+  "name": "Screened — Cinema Due Diligence",
+  "short_name": "Screened",
+  "description": "Agentic due diligence and credibility intelligence for independent cinema.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#030712",
+  "theme_color": "#030712",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/screened-logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

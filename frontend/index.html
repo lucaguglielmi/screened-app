@@ -3,6 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/assets/screened-logo.svg" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#030712" />
+    <link rel="apple-touch-icon" href="/icon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Screened — Agentic Cinema Due-Diligence</title>
     <meta
@@ -58,24 +61,17 @@
           }
         } catch (e) {}
 
-        // Immediate Service Worker and Cache Purge (Clean up legacy PWA caches)
+        // Register Service Worker for PWA Push & In-App Notifications
         try {
           if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(function (registrations) {
-              for (let registration of registrations) {
-                registration.unregister();
-              }
-            });
-          }
-          if ('caches' in window) {
-            caches.keys().then(function (keys) {
-              keys.forEach(function (key) {
-                caches.delete(key);
+            window.addEventListener('load', function () {
+              navigator.serviceWorker.register('/sw.js').catch(function (err) {
+                console.warn('Service worker registration failed:', err);
               });
             });
           }
         } catch (e) {
-          console.warn('Cache purge error:', e);
+          console.warn('Service worker init error:', e);
         }
       })();
     </script>

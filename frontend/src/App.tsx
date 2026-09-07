@@ -42,6 +42,7 @@ import { AnimatedEE } from './components/animations/AnimatedEE';
 import { UpdateNotifier } from './components/common/UpdateNotifier';
 import { isSoundMuted, setSoundMuted, playSuccessChime } from './utils/audio';
 import { track } from './utils/analytics';
+import { triggerAppNotification } from './utils/pwaNotifications';
 import { FEATURES } from './config/features';
 
 export default function App() {
@@ -111,12 +112,11 @@ export default function App() {
         fetchInvestigation(invId);
         setTimeout(() => setIsCelebrating(false), 500); // 500ms celebration delay
       }, 100);
-      if ('Notification' in window && Notification.permission === 'granted') {
-        new Notification('Screened', {
-          body: `Investigation for ${invQuery} is complete.`,
-          icon: '/icon.svg',
-        });
-      }
+      triggerAppNotification('Screened — Investigation Complete', {
+        body: `Due diligence dossier for ${invQuery} is ready to view.`,
+        icon: '/icon.svg',
+        data: { url: window.location.href },
+      });
     },
     onStatusChange: (status) => {
       setInvestigation((prev) => (prev && prev.status !== 'READY' ? { ...prev, status } : prev));
