@@ -7,10 +7,10 @@ describe('ForensicIntelligenceBrief Component', () => {
   it('renders the 3-vector forensic triad cards', () => {
     render(<ForensicIntelligenceBrief festivalName="Pinco Pallino" />);
 
-    expect(screen.getByText('Forensic Intelligence Brief (Key Scam Realities)')).toBeInTheDocument();
-    expect(screen.getByText('Scam Patterns & Shell Network')).toBeInTheDocument();
-    expect(screen.getByText('Jury Conflict & Nepotism')).toBeInTheDocument();
-    expect(screen.getByText('Curated Cinema vs. 4-Wall Rental')).toBeInTheDocument();
+    expect(screen.getByText('Operational & Organization Assessment')).toBeInTheDocument();
+    expect(screen.getByText('Operating Entity & Registration')).toBeInTheDocument();
+    expect(screen.getByText('Jury & Award Process')).toBeInTheDocument();
+    expect(screen.getByText('Screening Venue & Format')).toBeInTheDocument();
   });
 
   it('allows expanding cards to inspect educational context and forensic signals', () => {

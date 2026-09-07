@@ -107,8 +107,8 @@ export const ForensicIntelligenceBrief: React.FC<Props> = ({ summary, festivalNa
   const cards = [
     {
       key: 'scam',
-      title: 'Scam Patterns & Shell Network',
-      subtitle: 'Corporate registration & syndicate detection',
+      title: 'Operating Entity & Registration',
+      subtitle: 'Corporate registration & organizer history',
       icon: Building2,
       item: data.scamPattern,
       iconColor: 'text-amber-400',
@@ -116,8 +116,8 @@ export const ForensicIntelligenceBrief: React.FC<Props> = ({ summary, festivalNa
     },
     {
       key: 'jury',
-      title: 'Jury Conflict & Nepotism',
-      subtitle: 'Self-dealing & repeat laureate analysis',
+      title: 'Jury & Award Process',
+      subtitle: 'Review process & award patterns',
       icon: Users2,
       item: data.juryConflict,
       iconColor: 'text-orange-400',
@@ -125,8 +125,8 @@ export const ForensicIntelligenceBrief: React.FC<Props> = ({ summary, festivalNa
     },
     {
       key: 'venue',
-      title: 'Curated Cinema vs. 4-Wall Rental',
-      subtitle: 'Physical theater screening corroboration',
+      title: 'Screening Venue & Format',
+      subtitle: 'Physical venue & screening verification',
       icon: Film,
       item: data.venueReality,
       iconColor: 'text-rose-400',
@@ -144,15 +144,15 @@ export const ForensicIntelligenceBrief: React.FC<Props> = ({ summary, festivalNa
               <ShieldAlert className="size-4" />
             </span>
             <h3 className="font-serif text-lg sm:text-xl font-bold text-white tracking-tight">
-              Forensic Intelligence Brief (Key Scam Realities)
+              Operational & Organization Assessment
             </h3>
           </div>
           <p className="text-xs text-slate-400 font-sans">
-            Critical analysis for {festivalName} across shell entity syndicates, jury nepotism, and 4-wall private rental realities.
+            Independent verification for {festivalName} across registered entity status, jury review process, and physical screening format.
           </p>
         </div>
         <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider">
-          3-Vector Forensic Triad
+          3 Core Verification Areas
         </span>
       </div>
 

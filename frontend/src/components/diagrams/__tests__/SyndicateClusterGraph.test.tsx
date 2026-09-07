@@ -96,21 +96,21 @@ describe('SyndicateClusterGraph and Inspector Integration', () => {
 
     // Check header buttons
     expect(screen.getByRole('button', { name: /Evidence Provenance/i })).toBeInTheDocument();
-    const syndicateTabBtn = screen.getByRole('button', { name: /Syndicate Cluster Map/i });
+    const syndicateTabBtn = screen.getByRole('button', { name: /Connected Entity Map/i });
     expect(syndicateTabBtn).toBeInTheDocument();
 
-    // Click Syndicate Cluster Map tab
+    // Click Connected Entity Map tab
     fireEvent.click(syndicateTabBtn);
 
-    // Header badge indicates syndicate detected
-    expect(screen.getByText(/Syndicate & Maildrop Network Detected/i)).toBeInTheDocument();
+    // Header badge indicates network detected
+    expect(screen.getByText(/Shared Address & Network Detected/i)).toBeInTheDocument();
   });
 
   it('renders full Syndicate architecture in Responsive In-Page Flow mode', () => {
     render(<EntityProvenanceGraph dossier={mockSyndicateDossier} />);
 
-    // Switch to Syndicate tab
-    fireEvent.click(screen.getByRole('button', { name: /Syndicate Cluster Map/i }));
+    // Switch to Connected Entity tab
+    fireEvent.click(screen.getByRole('button', { name: /Connected Entity Map/i }));
 
     // Switch to In-Page Flow mode
     const flowToggleBtn = screen.getByRole('button', { name: /In-Page Flow/i });
@@ -133,8 +133,8 @@ describe('SyndicateClusterGraph and Inspector Integration', () => {
   it('opens SyndicateInspector when a network card is clicked', () => {
     render(<EntityProvenanceGraph dossier={mockSyndicateDossier} />);
 
-    // Switch to Syndicate tab and In-Page Flow
-    fireEvent.click(screen.getByRole('button', { name: /Syndicate Cluster Map/i }));
+    // Switch to Connected Entity tab and In-Page Flow
+    fireEvent.click(screen.getByRole('button', { name: /Connected Entity Map/i }));
     fireEvent.click(screen.getByRole('button', { name: /In-Page Flow/i }));
 
     // Click the Virtual Mailbox Hub card (the first matching element)
@@ -158,8 +158,8 @@ describe('SyndicateClusterGraph and Inspector Integration', () => {
   it('renders verified clean standalone architecture for legitimate festivals', () => {
     render(<EntityProvenanceGraph dossier={mockStandaloneDossier} />);
 
-    // Switch to Syndicate tab
-    fireEvent.click(screen.getByRole('button', { name: /Syndicate Cluster Map/i }));
+    // Switch to Connected Entity Map tab
+    fireEvent.click(screen.getByRole('button', { name: /Connected Entity Map|Syndicate Cluster Map/i }));
 
     // Switch to In-Page Flow
     fireEvent.click(screen.getByRole('button', { name: /In-Page Flow/i }));

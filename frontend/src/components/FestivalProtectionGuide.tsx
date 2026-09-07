@@ -22,57 +22,57 @@ interface Props {
   onOpenCommandPalette?: () => void;
 }
 
-const SCAM_ARCHETYPES = [
+const RISK_ARCHETYPES = [
   {
-    title: 'Phantom Screening Galas',
+    title: 'Unverified Screening Venues',
     icon: Film,
-    subtitle: 'Claiming West End & Landmark Cinemas with Zero Live Audience',
-    risk: 'EXTREME',
+    subtitle: 'Claiming Landmark Cinemas Without Confirmed Theater Manifests',
+    risk: 'HIGH',
     description:
-      'Organizers advertise prestigious theatrical venues (e.g. BFI Southbank, Curzon Soho, TCL Chinese Theater) in entry promotional materials, only to quietly email an unlisted private Vimeo/YouTube link 48 hours prior with zero physical screening.',
+      'Festivals advertising prominent theatrical venues in promotional materials that later switch to unlisted online links or private rooms without a public theatrical screening.',
     tellSigns: [
-      'Venue name appears in promo graphics but has no box office event listing on the theater’s website',
-      'No physical theater auditorium or screening schedule published 2 weeks prior to event date',
-      'Filmmakers asked to accept "digital streaming laurels" without physical DCP projection',
+      'Venue name appears on promotional material but does not appear on the theater box office schedule',
+      'No specific auditorium or screening schedule is published prior to the event date',
+      'Screening is delivered via password-protected streaming links without public projection',
     ],
   },
   {
-    title: 'The Laurel Mill & Vanity Trophy Trap',
+    title: 'High Acceptance Rates & Paid Trophies',
     icon: Award,
-    subtitle: '95%+ Acceptance Rates Solely to Upsell £150+ Trophies & Certificates',
-    risk: 'HIGH',
+    subtitle: 'High Acceptance Volumes Coupled with Paid Awards & Trophies',
+    risk: 'EVALUATE',
     description:
-      'Festivals that accept virtually every submission within 6 to 24 hours regardless of quality. The business model is not cinema curation, but aggressively upselling custom physical laurel statues (£120–£250), gold certificates, and paid PR interview packages.',
+      'Events that accept a very high proportion of entries with rapid turnaround, where the primary offering centers on purchasing physical awards (£120–£250), custom certificates, and interview packages.',
     tellSigns: [
-      'Acceptance email arrives within hours of submitting, before review deadlines pass',
-      'Email contains prominent payment links for physical laurel statuettes, trophies, and badges',
-      'Over 80+ obscure award categories (e.g. "Best 1st-Time Director under 30 in a Drama Short")',
+      'Acceptance notifications arrive shortly after submission, before standard review periods close',
+      'Notification emails prioritize paid options for physical laurel statuettes, trophies, or certificates',
+      'Unusually large numbers of award categories with limited public competition details',
     ],
   },
   {
-    title: 'Extractive Fee Escalations & AI Bot Feedback',
+    title: 'Steep Fee Escalation & Automated Feedback',
     icon: AlertTriangle,
-    subtitle: '£80+ Late Fees with Generic Automated Rejection Copy',
-    risk: 'HIGH',
+    subtitle: 'Substantial Late Fee Increases with Generic Feedback',
+    risk: 'EVALUATE',
     description:
-      'Submission fees start modest (£15) and surge 300%+ into late submission windows (£75–£110). Submissions requesting paid "Jury Written Feedback" (£60+) receive generic, copy-pasted AI-generated praise paragraphs with zero scene-specific feedback.',
+      'Entry fees increase sharply between early deadlines and late closing windows. When paid feedback options are purchased, reports indicate generic commentary with few scene-specific details.',
     tellSigns: [
-      'Submission fee tiers surge steeply into closing deadlines',
-      'Paid jury feedback consists of generic compliments with zero character or plot citations',
-      'Disavowed corporate sponsorships (ARRI, Sony, BAFTA logos displayed without permission)',
+      'Submission fees surge significantly as deadlines approach',
+      'Paid reader feedback provides high-level general commentary rather than specific script or film notes',
+      'Accreditation or partnership logos displayed without formal confirmation from qualifying bodies',
     ],
   },
   {
-    title: 'Ghost Organizers & Shell Entities',
+    title: 'Inactive Corporate Registrations',
     icon: Building2,
-    subtitle: 'Dissolved Companies with Impunity and Zero Refund Accountability',
-    risk: 'CRITICAL',
+    subtitle: 'Unverified Entity Status & Limited Organizer Background',
+    risk: 'HIGH',
     description:
-      'Operations run by dissolved Companies House entities or anonymous offshore shell corporations with no named directors, shielding operators from refund claims, cancellation liabilities, or legal recourse.',
+      'Organizations operating under dissolved corporate entities, shared mail-drop addresses, or unverified directors, reducing clarity on refund policies and legal accountability.',
     tellSigns: [
-      'Operating company name is missing or dissolved on national corporate registries',
-      'Directors hide behind unmonitored generic web contact forms and ProtonMail addresses',
-      'Zero documented public presence or legitimate film industry credits for festival founders',
+      'Operating company name is unlisted or shows dissolved status on official corporate registries',
+      'Contact channels are limited to generic web forms with no identified organizing team',
+      'Limited verifiable industry track record or screening credits for festival directors',
     ],
   },
 ];
@@ -127,32 +127,32 @@ export const FestivalProtectionGuide: React.FC<Props> = ({
         <section className="space-y-6 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/30 text-orange-400 text-xs font-mono font-semibold uppercase tracking-widest">
             <ShieldAlert className="size-3.5 text-orange-400" />
-            <span>Empirical Filmmaker Self-Defense Guide</span>
+            <span>Filmmaker Due Diligence Guide</span>
           </div>
           <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight">
-            How to Protect Yourself: Festival Due Diligence Manual
+            How to Evaluate Film Festivals: Due Diligence Guide
           </h1>
           <p className="text-lg sm:text-xl text-slate-200 leading-relaxed max-w-3xl mx-auto font-normal">
             Independent filmmakers spend thousands in hard-earned budget on submission fees every season.
-            This manual provides actionable intelligence to protect your films against{' '}
-            <strong className="text-white font-bold bg-white/10 px-1.5 py-0.5 rounded">predatory laurel mills</strong>,{' '}
-            <strong className="text-white font-bold bg-white/10 px-1.5 py-0.5 rounded">phantom venues</strong>, and extractive schemes.
+            This guide provides practical steps to verify festivals and protect your work against{' '}
+            <strong className="text-white font-bold bg-white/10 px-1.5 py-0.5 rounded">unverified venues</strong>,{' '}
+            <strong className="text-white font-bold bg-white/10 px-1.5 py-0.5 rounded">high-volume acceptance mills</strong>, and steep fee increases.
           </p>
         </section>
 
-        {/* 4 Primary Scam Archetypes */}
+        {/* 4 Primary Risk Archetypes */}
         <section className="space-y-10">
           <div className="text-center space-y-2">
             <span className="text-slate-400 font-mono uppercase tracking-widest text-xs font-semibold">
-              Forensic Pattern Recognition
+              Key Risk Indicators
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl font-bold text-white">
-              The 4 Major Festival Scam Archetypes
+              4 Common Festival Risk Profiles
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {SCAM_ARCHETYPES.map((arch, idx) => {
+            {RISK_ARCHETYPES.map((arch, idx) => {
               const Icon = arch.icon;
               return (
                 <div

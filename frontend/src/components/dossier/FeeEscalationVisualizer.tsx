@@ -25,7 +25,7 @@ export const FeeEscalationVisualizer: React.FC<Props> = ({
       { tierName: 'Late Window', amount: 85, currency: '£', deadlineDate: '1 Aug', surgePercentage: 203 },
       { tierName: 'Extended Late', amount: 98, currency: '£', deadlineDate: '15 Sep', surgePercentage: 250 },
     ],
-    spikeAlert: 'Aggressive 203% fee surge detected in late submission windows (£28 -> £85).',
+    spikeAlert: 'Significant 203% fee increase detected between early and late deadlines (£28 -> £85).',
     averageMarketFee: '£32 average for UK indie short film entries',
     percentile: 92,
   };
@@ -36,7 +36,7 @@ export const FeeEscalationVisualizer: React.FC<Props> = ({
     ? Math.round(((data.tiers[data.tiers.length - 1].amount - data.tiers[0].amount) / data.tiers[0].amount) * 100)
     : 250;
 
-  const isPredatory = totalSurge >= 150 || (data.percentile && data.percentile >= 80);
+  const isHighSurge = totalSurge >= 150 || (data.percentile && data.percentile >= 80);
 
   // Mode: Summary View (only show the +250% fee inflation, on click sends user to Full)
   if (isSummary) {
@@ -72,7 +72,7 @@ export const FeeEscalationVisualizer: React.FC<Props> = ({
         </div>
 
         <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans">
-          {data.spikeAlert || `Aggressive ${totalSurge}% fee inflation detected between early bird and late submission deadlines.`}
+          {data.spikeAlert || `Significant ${totalSurge}% fee increase detected between early and late submission deadlines.`}
         </p>
 
         {onNavigateToFull && (
@@ -100,13 +100,13 @@ export const FeeEscalationVisualizer: React.FC<Props> = ({
             </h3>
           </div>
           <p className="text-xs text-slate-400 font-sans">
-            Tracks submission fee trajectory for {festivalName || 'this festival'} across deadline tiers to expose predatory late-entry inflation.
+            Tracks submission fees for {festivalName || 'this festival'} across deadline tiers to show late-entry fee increases.
           </p>
         </div>
 
         {/* Total Surge Indicator */}
         <div className="flex items-center gap-2 self-start sm:self-auto">
-          {isPredatory ? (
+          {isHighSurge ? (
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-orange-500/30 bg-orange-500/10 text-orange-400 text-xs font-mono font-semibold">
               <AlertTriangle className="size-3.5" />
               <span>+{totalSurge}% Fee Inflation</span>
@@ -131,7 +131,7 @@ export const FeeEscalationVisualizer: React.FC<Props> = ({
               <div
                 key={idx}
                 className={`p-3.5 rounded-xl border flex flex-col justify-between space-y-3 transition-all ${
-                  isLate && isPredatory
+                  isLate && isHighSurge
                     ? 'bg-orange-500/10 border-orange-500/40 shadow-sm'
                     : 'bg-darkroom-card/50 border-darkroom-border/60 hover:border-darkroom-border'
                 }`}
@@ -154,8 +154,8 @@ export const FeeEscalationVisualizer: React.FC<Props> = ({
                   <div className="h-1.5 w-full bg-darkroom-bg rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full ${
-                        isLate && isPredatory
-                          ? 'bg-gradient-to-r from-orange-500 to-rose-500'
+                        isLate && isHighSurge
+                          ? 'bg-gradient-to-r from-orange-500 to-rose-500 shadow-xs'
                           : 'bg-tool-diligence'
                       }`}
                       style={{ width: `${heightPercent}%` }}

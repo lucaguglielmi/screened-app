@@ -4,37 +4,38 @@ from datetime import datetime, timezone
 
 DEMO_INVESTIGATION_ID = "demo_pinco_pallino"
 
+
 def generate_demo_claims():
-    """Generates a comprehensive corpus of 300 atomic claims across all 6 core categories."""
+    """Generates a comprehensive corpus of 300 atomic claims across all 6 core categories for Pinco Pallino."""
     core_claims = [
         {
             "id": "claim_1",
             "investigationId": DEMO_INVESTIGATION_ID,
             "researchDomain": "FESTIVAL",
             "category": "VENUE_SCREENINGS",
-            "statement": "The festival claims theatrical gala screenings at BFI Southbank NFT1 and Genesis Cinema Studio 4.",
+            "statement": "The festival hosts physical screenings at Genesis Cinema (Studio 4) in East London with standard 2K DCP projection.",
             "claimKind": "FACT",
             "status": "CORROBORATED",
             "editionYear": 2024,
-            "attributedTo": "FilmFreeway Submissions Overview",
+            "attributedTo": "Genesis Cinema Venue Hire Manifest & Festival Schedule",
             "evidence": [
+                {
+                    "sourceId": "src_genesis_manifest",
+                    "sourceUrl": "https://genesiscinema.co.uk/events/2024-screenings/pinco-pallino",
+                    "sourceDomain": "genesiscinema.co.uk",
+                    "sourceTitle": "Genesis Cinema Events Booking Schedule",
+                    "stance": "SUPPORTS",
+                    "exactExcerpt": "Confirmed private screening hire for Studio 4 booked under Pinco Pallino Film CIC for Oct 12-14, 2024.",
+                    "note": "Venue manifest confirms physical theatrical booking with DCP projection."
+                },
                 {
                     "sourceId": "src_ff_overview",
                     "sourceUrl": "https://www.filmfreeway.com/PincoPallinoFilmFestival",
                     "sourceDomain": "filmfreeway.com",
                     "sourceTitle": "Pinco Pallino London Submissions Overview",
                     "stance": "SUPPORTS",
-                    "exactExcerpt": "All selected short and feature films will be screened on the big screen at the legendary BFI Southbank in Central London followed by an industry red-carpet awards reception.",
-                    "note": "Promotional claim made directly to submitting filmmakers."
-                },
-                {
-                    "sourceId": "src_genesis_hire",
-                    "sourceUrl": "https://genesiscinema.co.uk/events/2024-private-hires",
-                    "sourceDomain": "genesiscinema.co.uk",
-                    "sourceTitle": "Genesis Cinema Events Booking Schedule",
-                    "stance": "SUPPORTS",
-                    "exactExcerpt": "Confirmed private screening hire for Studio 4 booked under Pinco Pallino Media for Oct 13, 2024.",
-                    "note": "Venue manifest confirms physical private booking."
+                    "exactExcerpt": "Selected films screen theatrically at East London's historic Genesis Cinema in an intimate boutique setting followed by filmmaker Q&As.",
+                    "note": "Promotional copy matches verified venue."
                 }
             ]
         },
@@ -43,29 +44,20 @@ def generate_demo_claims():
             "investigationId": DEMO_INVESTIGATION_ID,
             "researchDomain": "PARTICIPANTS",
             "category": "EXPERIENCE_FEEDBACK",
-            "statement": "Filmmakers receive an unlisted private Vimeo link with fewer than 5 views in lieu of advertised theatrical screenings.",
+            "statement": "Screenings take place in Studio 4, a boutique screening room with 40-seat capacity suited for networking and debut shorts.",
             "claimKind": "FACT",
             "status": "CORROBORATED",
             "editionYear": 2024,
-            "attributedTo": "Verified Filmmaker Testimonies",
+            "attributedTo": "Filmmaker Community Forum & Venue Technical Specs",
             "evidence": [
                 {
-                    "sourceId": "src_reddit_warning",
-                    "sourceUrl": "https://www.reddit.com/r/Filmmakers/comments/18m2b1/pinco_pallino_festival_warning",
+                    "sourceId": "src_reddit_reviews",
+                    "sourceUrl": "https://www.reddit.com/r/Filmmakers/comments/18m2b1/pinco_pallino_festival_experience",
                     "sourceDomain": "reddit.com",
-                    "sourceTitle": "r/Filmmakers - Anyone submitted to Pinco Pallino London?",
+                    "sourceTitle": "r/Filmmakers - Anyone attended Pinco Pallino London?",
                     "stance": "SUPPORTS",
-                    "exactExcerpt": "We paid £85 for a Gala Premiere category. Two days before, they emailed an unlisted Vimeo link with 3 total views. The cinema venue they advertised had no record of them.",
-                    "note": "Firsthand filmmaker testimony confirmed by receipt."
-                },
-                {
-                    "sourceId": "src_stage32_thread",
-                    "sourceUrl": "https://www.stage32.com/lounge/screenwriting/pinco-pallino-festival-experience",
-                    "sourceDomain": "stage32.com",
-                    "sourceTitle": "Stage 32 Community Forum - London Festival Vetting",
-                    "stance": "SUPPORTS",
-                    "exactExcerpt": "Confirmed: no live audience or physical cinema was ever booked. An unlisted Vimeo link password 'laurel2024' was emailed 48 hours prior with only 2 total impressions.",
-                    "note": "Independent corroboration from debut producer."
+                    "exactExcerpt": "Attended with our short film. Studio 4 is cozy (around 40 velvet seats) and sound/projection was solid. Great bar networking afterwards, though only 2 badges per film.",
+                    "note": "Firsthand filmmaker testimony confirms positive atmosphere with limited seating."
                 }
             ]
         },
@@ -74,7 +66,7 @@ def generate_demo_claims():
             "investigationId": DEMO_INVESTIGATION_ID,
             "researchDomain": "ORGANIZER",
             "category": "LEGAL_IDENTITY",
-            "statement": "Operating entity Pallino Media Lab Ltd (Company No. 13984712) was dissolved via compulsory strike-off on 14 March 2024.",
+            "statement": "Operating entity Pinco Pallino Film CIC (Company No. 13984712) is an active UK Community Interest Company registered in London.",
             "claimKind": "FACT",
             "status": "CORROBORATED",
             "editionYear": 2024,
@@ -84,10 +76,10 @@ def generate_demo_claims():
                     "sourceId": "src_ch_filing",
                     "sourceUrl": "https://find-and-update.company-information.service.gov.uk/company/13984712",
                     "sourceDomain": "gov.uk",
-                    "sourceTitle": "Companies House - Pallino Media Lab Ltd Filing History",
+                    "sourceTitle": "Companies House - Pinco Pallino Film CIC Filing History",
                     "stance": "SUPPORTS",
-                    "exactExcerpt": "Final Gazette notice: Pallino Media Lab Ltd (Company number 13984712) dissolved via Compulsory Strike-off on 14 March 2024. Registered office: 71-75 Shelton Street, London, WC2H 9JQ.",
-                    "note": "Official corporate register confirms entity dissolved prior to current festival cycle."
+                    "exactExcerpt": "Pinco Pallino Film CIC (Company number 13984712): Active Community Interest Company. Annual confirmation statement and micro-entity accounts filed on time.",
+                    "note": "Official corporate register confirms active non-profit status."
                 }
             ]
         },
@@ -96,20 +88,20 @@ def generate_demo_claims():
             "investigationId": DEMO_INVESTIGATION_ID,
             "researchDomain": "ORGANIZER",
             "category": "ORGANIZER_TRACK_RECORD",
-            "statement": "Festival Director Arthur Smith is subject to an individual bankruptcy order filed in November 2022.",
+            "statement": "Festival Director Arthur Smith has curated four consecutive annual London editions with verifiable independent filmmaking credits.",
             "claimKind": "FACT",
-            "status": "SUPPORTED",
-            "editionYear": 2022,
-            "attributedTo": "The London Gazette",
+            "status": "CORROBORATED",
+            "editionYear": 2024,
+            "attributedTo": "IMDb & Film London Public Listings",
             "evidence": [
                 {
-                    "sourceId": "src_gazette_notice",
-                    "sourceUrl": "https://www.thegazette.co.uk/notice/23849102",
-                    "sourceDomain": "thegazette.co.uk",
-                    "sourceTitle": "The London Gazette - Official Public Record of Insolvencies",
+                    "sourceId": "src_film_london",
+                    "sourceUrl": "https://filmlondon.org.uk/community-listings/pinco-pallino-2024",
+                    "sourceDomain": "filmlondon.org.uk",
+                    "sourceTitle": "Film London Community Cinema Listings",
                     "stance": "SUPPORTS",
-                    "exactExcerpt": "Insolvency Service Notice 23849102: Bankruptcy order dated 11 November 2022 against Arthur Smith (trading as Pallino Media & Events). Case No: 0491-2022.",
-                    "note": "Official UK government public record confirms active bankruptcy proceeding."
+                    "exactExcerpt": "Curated by London-based producer Arthur Smith, Pinco Pallino enters its fourth year supporting debut short filmmakers in East London.",
+                    "note": "Regional screen agency confirms multi-year operational continuity."
                 }
             ]
         },
@@ -118,20 +110,20 @@ def generate_demo_claims():
             "investigationId": DEMO_INVESTIGATION_ID,
             "researchDomain": "FEES",
             "category": "FEES_POLICY",
-            "statement": "Submission fee tiers escalate from £35 Early Bird to £95 Late Deadline, plus a £180 mandatory trophy package fee.",
+            "statement": "Submission fees progress from £28 Super Early Bird to £75 Late Deadline across short film categories.",
             "claimKind": "FACT",
             "status": "CORROBORATED",
-            "editionYear": 2025,
-            "attributedTo": "FilmFreeway Rules & Pricing Manifest",
+            "editionYear": 2024,
+            "attributedTo": "FilmFreeway Dates & Deadlines Schedule",
             "evidence": [
                 {
                     "sourceId": "src_ff_rules",
-                    "sourceUrl": "https://www.filmfreeway.com/PincoPallinoFilmFestival/rules",
+                    "sourceUrl": "https://www.filmfreeway.com/PincoPallinoFilmFestival/dates-fees",
                     "sourceDomain": "filmfreeway.com",
                     "sourceTitle": "FilmFreeway Submission Rules & Deadline Schedule",
                     "stance": "SUPPORTS",
-                    "exactExcerpt": "Fee Deadlines: Early Bird £35, Regular £65, Late £95, Extended £120. Official Laurel Trophy Package available for £180 plus £35 international shipping.",
-                    "note": "Official fee schedule reflects high rate of fee escalation and ancillary trophy monetization."
+                    "exactExcerpt": "Submission Deadlines: Super Early Bird £28, Early Bird £38, Regular £55, Late £75, Extended £85. Student discount: £20.",
+                    "note": "Published schedule reflects standard indie tier progression with a moderate late surge."
                 }
             ]
         },
@@ -139,21 +131,21 @@ def generate_demo_claims():
             "id": "claim_6",
             "investigationId": DEMO_INVESTIGATION_ID,
             "researchDomain": "ORGANIZER",
-            "category": "ORGANIZER_TRACK_RECORD",
-            "statement": "Jury Chair Benjamin Jones actively markets £120 paid script consulting to rejected festival submitters via IndiePitch Consulting.",
+            "category": "JURY_AWARDS",
+            "statement": "Jury panel comprises 5 working UK independent filmmakers and programmers using peer scoring.",
             "claimKind": "FACT",
-            "status": "CORROBORATED",
-            "editionYear": 2025,
-            "attributedTo": "IndiePitch Consulting Direct Manifest",
+            "status": "SUPPORTED",
+            "editionYear": 2024,
+            "attributedTo": "Official Festival Program & Jury Guide",
             "evidence": [
                 {
-                    "sourceId": "src_indiepitch",
-                    "sourceUrl": "https://www.indiepitchconsulting.co.uk/services",
-                    "sourceDomain": "indiepitchconsulting.co.uk",
-                    "sourceTitle": "IndiePitch Consulting Services & Rates",
+                    "sourceId": "src_ff_overview",
+                    "sourceUrl": "https://www.filmfreeway.com/PincoPallinoFilmFestival",
+                    "sourceDomain": "filmfreeway.com",
+                    "sourceTitle": "Pinco Pallino London Submissions Overview",
                     "stance": "SUPPORTS",
-                    "exactExcerpt": "Senior Jury Consultant: Benjamin Jones. Festival Rejection Recovery Pitch Audit: £120 per script. Direct submission feedback available within 48 hours of notification.",
-                    "note": "Cross-commercial commercial conflict of interest documented on business website."
+                    "exactExcerpt": "All selected titles are evaluated by our rotating panel of 5 working UK independent filmmakers, writers, and guest curators.",
+                    "note": "Evaluation is peer-reviewed rather than mechanized."
                 }
             ]
         },
@@ -162,20 +154,20 @@ def generate_demo_claims():
             "investigationId": DEMO_INVESTIGATION_ID,
             "researchDomain": "ORGANIZER",
             "category": "JURY_AWARDS",
-            "statement": "Associate Producer Martin Sterling won 'Best International Short' in consecutive years (2024 and 2025) despite claimed 1.2% acceptance rate.",
+            "statement": "The 2024 Best Short winner 'The Echo Chamber' was selected by the jury and subsequently screened at regional UK festivals.",
             "claimKind": "FACT",
             "status": "CORROBORATED",
-            "editionYear": 2025,
-            "attributedTo": "Official Awards Archive",
+            "editionYear": 2024,
+            "attributedTo": "Official Awards Archive & Letterboxd",
             "evidence": [
                 {
                     "sourceId": "src_winners_archive",
-                    "sourceUrl": "https://www.pincopallinofilmfestival.com/past-winners-2024-2025",
+                    "sourceUrl": "https://www.pincopallinofilmfestival.com/past-winners",
                     "sourceDomain": "pincopallinofilmfestival.com",
                     "sourceTitle": "Pinco Pallino Past Editions Winners Archive",
                     "stance": "SUPPORTS",
-                    "exactExcerpt": "2024 Best International Short: 'The Echo Chamber' directed by Martin Sterling. 2025 Best International Short: 'Shadow Puppets' directed by Martin Sterling.",
-                    "note": "Official catalog archives show identical director receiving top award in back-to-back editions."
+                    "exactExcerpt": "2024 Best Narrative Short: 'The Echo Chamber' directed by Martin Sterling. Special Mention: 'Echoes in Amber' directed by Chloe Laurent.",
+                    "note": "Official catalog records verified indie winners."
                 }
             ]
         },
@@ -184,20 +176,20 @@ def generate_demo_claims():
             "investigationId": DEMO_INVESTIGATION_ID,
             "researchDomain": "ORGANIZER",
             "category": "ORGANIZER_TRACK_RECORD",
-            "statement": "Claimed 'Official Platinum Sponsorships' from ARRI and Sony Cinema were formally denied by manufacturer PR representatives.",
+            "statement": "Festival promotional literature references community partnerships with local East London camera and post-production facilities.",
             "claimKind": "FACT",
-            "status": "CORROBORATED",
+            "status": "SUPPORTED",
             "editionYear": 2024,
-            "attributedTo": "ARRI & Sony Corporate Communications",
+            "attributedTo": "Festival Printed Program & Website",
             "evidence": [
                 {
-                    "sourceId": "src_arri_statement",
-                    "sourceUrl": "https://twitter.com/ARRIChannel/status/1234567890",
-                    "sourceDomain": "twitter.com",
-                    "sourceTitle": "ARRI Official Corporate Communications",
+                    "sourceId": "src_ff_overview",
+                    "sourceUrl": "https://www.filmfreeway.com/PincoPallinoFilmFestival",
+                    "sourceDomain": "filmfreeway.com",
+                    "sourceTitle": "Pinco Pallino London Submissions Overview",
                     "stance": "SUPPORTS",
-                    "exactExcerpt": "@PincoPallinoFest is not an authorized or official ARRI festival partner. We have issued a formal trademark cease-and-desist request for logo removal.",
-                    "note": "Manufacturer explicitly denies sponsorship affiliation."
+                    "exactExcerpt": "Supported by East London creative spaces and local equipment rental partners providing in-kind filmmaker discount vouchers.",
+                    "note": "Community-level grassroots partnerships verified."
                 }
             ]
         },
@@ -206,20 +198,20 @@ def generate_demo_claims():
             "investigationId": DEMO_INVESTIGATION_ID,
             "researchDomain": "PARTICIPANTS",
             "category": "EXPERIENCE_FEEDBACK",
-            "statement": "Over 42 independent filmmakers document 3–5 week communication blackouts following submission fee processing.",
+            "statement": "Filmmaker sentiment indicates responsive Q&A sessions, with occasional 1–2 week email response lags close to deadlines.",
             "claimKind": "FACT",
             "status": "SUPPORTED",
             "editionYear": 2024,
-            "attributedTo": "TrustPilot & Reddit Aggregated Accounts",
+            "attributedTo": "Letterboxd & FilmFreeway Aggregated Reviews",
             "evidence": [
                 {
-                    "sourceId": "src_trustpilot_reviews",
-                    "sourceUrl": "https://www.trustpilot.com/review/pincopallino.com",
-                    "sourceDomain": "trustpilot.com",
-                    "sourceTitle": "TrustPilot - Pinco Pallino Festival Reviews (Score: 1.4/5)",
+                    "sourceId": "src_letterboxd_reviews",
+                    "sourceUrl": "https://letterboxd.com/festival/pinco-pallino-2024",
+                    "sourceDomain": "letterboxd.com",
+                    "sourceTitle": "Letterboxd - Pinco Pallino 2024 Selected Shorts Reviews",
                     "stance": "SUPPORTS",
-                    "exactExcerpt": "42 separate filmmaker reviews report zero communication for over a month past the stated notification date, followed by automated upsell templates.",
-                    "note": "Aggregated consumer protection reviews indicate recurring communication pattern."
+                    "exactExcerpt": "Community rating: 3.6/5 stars across 34 reviews. Praise for thoughtful Q&A moderation and screening quality; minor comments on email reply delays in August.",
+                    "note": "Balanced user sentiment showing legitimate operations with minor logistical growing pains."
                 }
             ]
         },
@@ -228,20 +220,20 @@ def generate_demo_claims():
             "investigationId": DEMO_INVESTIGATION_ID,
             "researchDomain": "FEES",
             "category": "FEES_POLICY",
-            "statement": "Festival policy stipulates zero entry fee refunds under any circumstances, including canceled physical screenings.",
+            "statement": "Festival submission policy provides clear categories and standard non-refundable entry terms with student discounts.",
             "claimKind": "FACT",
             "status": "CORROBORATED",
-            "editionYear": 2025,
+            "editionYear": 2024,
             "attributedTo": "Official Submission Terms & Conditions",
             "evidence": [
                 {
-                    "sourceId": "src_terms_conditions",
-                    "sourceUrl": "https://www.pincopallinofilmfestival.com/terms-and-conditions",
-                    "sourceDomain": "pincopallinofilmfestival.com",
-                    "sourceTitle": "Pinco Pallino Terms & Conditions - Section 4.2",
+                    "sourceId": "src_ff_rules",
+                    "sourceUrl": "https://www.filmfreeway.com/PincoPallinoFilmFestival/rules",
+                    "sourceDomain": "filmfreeway.com",
+                    "sourceTitle": "Pinco Pallino Rules & Terms",
                     "stance": "SUPPORTS",
-                    "exactExcerpt": "Section 4.2: All entry fees, trophy packaging fees, and review fees are strictly non-refundable regardless of screening format adaptations, venue changes, or program cancellations.",
-                    "note": "Non-refundable indemnity clause protects organizer against venue cancellations."
+                    "exactExcerpt": "Section 3.1: All submission fees are non-refundable once films enter programming review. Student concessions available upon institutional ID submission.",
+                    "note": "Standard independent festival submission policy."
                 }
             ]
         }
@@ -251,80 +243,80 @@ def generate_demo_claims():
 
     venue_templates = [
         ("Genesis Cinema Studio 4 DCP server test completed for 2K short film projection block.", "FESTIVAL", "VENUE_SCREENINGS", "CORROBORATED", 2024),
-        ("BFI Southbank NFT3 hire agreement executed for 3-hour private evening screening window.", "FESTIVAL", "VENUE_SCREENINGS", "CORROBORATED", 2024),
-        ("Watermans Arts Centre hosted 2022 edition with 120 recorded theater ticket admissions.", "FESTIVAL", "VENUE_SCREENINGS", "CORROBORATED", 2022),
+        ("Genesis Cinema Studio 4 hosted 2024 edition short film blocks across October 12-14.", "FESTIVAL", "VENUE_SCREENINGS", "CORROBORATED", 2024),
+        ("Genesis Cinema bar and lounge reserved for evening filmmaker networking reception.", "FESTIVAL", "VENUE_SCREENINGS", "CORROBORATED", 2024),
+        ("BFI Southbank NFT3 was hired for a single 3-hour special guest retrospective block in 2024.", "FESTIVAL", "VENUE_SCREENINGS", "CORROBORATED", 2024),
+        ("Watermans Arts Centre hosted 2022 edition with 110 recorded theater ticket admissions.", "FESTIVAL", "VENUE_SCREENINGS", "CORROBORATED", 2022),
         ("Genesis Cinema Studio 2 hosted 2023 edition short film competition block on October 15.", "FESTIVAL", "VENUE_SCREENINGS", "CORROBORATED", 2023),
-        ("Rich Mix Cinema venue inquiry log shows no formal rental deposit paid for claimed 2025 dates.", "FESTIVAL", "VENUE_SCREENINGS", "SUPPORTED", 2025),
-        ("Curzon Soho management confirms zero affiliation or booking for advertised gala premiere.", "FESTIVAL", "VENUE_SCREENINGS", "DISPUTED", 2025),
-        ("Regent Street Cinema confirmed initial date hold was canceled due to non-payment of balance.", "FESTIVAL", "VENUE_SCREENINGS", "DISPUTED", 2024),
-        ("Genesis Cinema projectionist noted 4 audio sync failures during uncalibrated short film playlist playback.", "PARTICIPANTS", "VENUE_SCREENINGS", "SUPPORTED", 2024),
-        ("Private screening room capacity at Genesis Studio 4 is capped at 40 seats for 180 accepted directors.", "FESTIVAL", "VENUE_SCREENINGS", "CORROBORATED", 2024),
-        ("BFI Southbank security logs record no red carpet or outdoor banner setup permission granted.", "FESTIVAL", "VENUE_SCREENINGS", "CORROBORATED", 2024),
+        ("Private screening room capacity at Genesis Studio 4 is capped at 40 seats with 2 complimentary passes per director.", "FESTIVAL", "VENUE_SCREENINGS", "CORROBORATED", 2024),
+        ("Projectionist logged clear 5.1 audio playback during short film competition blocks.", "PARTICIPANTS", "VENUE_SCREENINGS", "SUPPORTED", 2024),
+        ("Rich Mix Cinema held initial booking discussions for 2025 expansion, pending scheduling.", "FESTIVAL", "VENUE_SCREENINGS", "SUPPORTED", 2025),
+        ("Genesis Cinema box office confirmed on-site ticket sales for public attendance blocks.", "FESTIVAL", "VENUE_SCREENINGS", "CORROBORATED", 2024),
     ]
 
     corporate_templates = [
-        ("Pallino Media Lab Ltd incorporated on 12 April 2022 with 100 ordinary shares at £1.00 each.", "ORGANIZER", "LEGAL_IDENTITY", "CORROBORATED", 2022),
-        ("Registered office changed to 71-75 Shelton Street, Covent Garden, a known virtual mailbox provider.", "ORGANIZER", "LEGAL_IDENTITY", "CORROBORATED", 2022),
-        ("First Gazette notice for compulsory strike-off issued by Registrar on 28 November 2023.", "ORGANIZER", "LEGAL_IDENTITY", "CORROBORATED", 2023),
-        ("Strike-off action temporarily suspended on 15 December 2023 following creditor objection.", "ORGANIZER", "LEGAL_IDENTITY", "CORROBORATED", 2023),
-        ("Final dissolution notice published in The London Gazette under notice ID 4591024.", "ORGANIZER", "LEGAL_IDENTITY", "CORROBORATED", 2024),
-        ("Director Arthur Smith listed with occupation 'Film Producer' and UK resident status.", "ORGANIZER", "LEGAL_IDENTITY", "CORROBORATED", 2022),
-        ("PSC register lists Arthur Smith with 75% or more voting rights and significant influence.", "ORGANIZER", "LEGAL_IDENTITY", "CORROBORATED", 2022),
-        ("Pinco Pallino Film CIC registered as Community Interest Company in January 2024.", "ORGANIZER", "LEGAL_IDENTITY", "CORROBORATED", 2024),
-        ("IndiePitch Consulting registered as trading name under unregistered sole proprietorship.", "ORGANIZER", "LEGAL_IDENTITY", "SUPPORTED", 2024),
-        ("Companies House accounts overdue notice issued on 12 January 2024 prior to dissolution.", "ORGANIZER", "LEGAL_IDENTITY", "CORROBORATED", 2024),
+        ("Pinco Pallino Film CIC registered as Community Interest Company in London.", "ORGANIZER", "LEGAL_IDENTITY", "CORROBORATED", 2022),
+        ("Registered office at 71-75 Shelton Street, Covent Garden, a standard central London business mailbox.", "ORGANIZER", "LEGAL_IDENTITY", "CORROBORATED", 2022),
+        ("Annual confirmation statement and micro-entity accounts filed on time with Companies House.", "ORGANIZER", "LEGAL_IDENTITY", "CORROBORATED", 2024),
+        ("Director Arthur Smith listed with UK resident status and verified producer credits.", "ORGANIZER", "LEGAL_IDENTITY", "CORROBORATED", 2022),
+        ("Articles of Association declare asset lock dedicating surplus funds to grassroots filmmaker initiatives.", "ORGANIZER", "LEGAL_IDENTITY", "CORROBORATED", 2022),
+        ("Previous commercial shell Pallino Media Lab Ltd dissolved in 2024 to consolidate all operations under the non-profit CIC.", "ORGANIZER", "LEGAL_IDENTITY", "CORROBORATED", 2024),
+        ("Public liability insurance policy active for London cinema screening dates.", "ORGANIZER", "LEGAL_IDENTITY", "SUPPORTED", 2024),
+        ("Event licensing coordinated in accordance with Tower Hamlets municipal cinema regulations.", "ORGANIZER", "LEGAL_IDENTITY", "CORROBORATED", 2024),
+        ("FilmFreeway Gold Festival status maintained based on positive user reviews.", "ORGANIZER", "LEGAL_IDENTITY", "CORROBORATED", 2024),
+        ("Bank account held with registered UK clearing bank under Community Interest Company name.", "ORGANIZER", "LEGAL_IDENTITY", "CORROBORATED", 2024),
     ]
 
     fees_templates = [
-        ("Early Bird submission fee for student shorts set at £22 on FilmFreeway platform.", "FEES", "FEES_POLICY", "CORROBORATED", 2024),
-        ("Regular submission fee for narrative shorts set at £45 across all standard genres.", "FEES", "FEES_POLICY", "CORROBORATED", 2024),
-        ("Late deadline fee increased by 111% to £95 during the final 14 days before closing.", "FEES", "FEES_POLICY", "CORROBORATED", 2024),
-        ("Extended deadline surcharge of £120 introduced for post-deadline emergency entries.", "FEES", "FEES_POLICY", "CORROBORATED", 2024),
-        ("Fast-Track 48-Hour Jury Review add-on priced at £65 per submitted title.", "FEES", "FEES_POLICY", "CORROBORATED", 2024),
-        ("Official Laurel Trophy physical statuette priced at £180 plus £35 international courier fee.", "FEES", "FEES_POLICY", "CORROBORATED", 2024),
-        ("Certificate of Official Selection printed parchment offered for £45 fee.", "FEES", "FEES_POLICY", "CORROBORATED", 2024),
-        ("Filmmaker Red Carpet VIP admission wristband charged at £30 per individual attendee.", "FEES", "FEES_POLICY", "CORROBORATED", 2024),
-        ("Waiver discount codes offered via cold Instagram DMs with 20% discount on £95 fee.", "PARTICIPANTS", "FEES_POLICY", "SUPPORTED", 2024),
-        ("Submission fee refund requests automatically rejected citing Section 4.2 terms.", "PARTICIPANTS", "FEES_POLICY", "CORROBORATED", 2024),
+        ("Super Early Bird fee set at £28 for short films under 20 minutes.", "FEES", "FEES_POLICY", "CORROBORATED", 2024),
+        ("Early Bird fee set at £38 for regular short film competition categories.", "FEES", "FEES_POLICY", "CORROBORATED", 2024),
+        ("Regular submission deadline fee set at £55 across narrative and documentary categories.", "FEES", "FEES_POLICY", "CORROBORATED", 2024),
+        ("Late deadline fee increased to £75 during the final 3 weeks before submissions close.", "FEES", "FEES_POLICY", "CORROBORATED", 2024),
+        ("Student category discount offered at £20 with verified institutional ID.", "FEES", "FEES_POLICY", "CORROBORATED", 2024),
+        ("Standard laurel package provided in high-resolution digital format at zero additional charge.", "FEES", "FEES_POLICY", "CORROBORATED", 2024),
+        ("Optional engraved physical award statuette offered for winners requesting physical keepsake (£65).", "FEES", "FEES_POLICY", "CORROBORATED", 2024),
+        ("Filmmaker pass includes admission for 2 team members to all screened competition blocks.", "FEES", "FEES_POLICY", "CORROBORATED", 2024),
+        ("Clear refund policy states entry fees are non-refundable once films enter programming review.", "FEES", "FEES_POLICY", "CORROBORATED", 2024),
+        ("Festival rules clearly outline technical delivery specifications for accepted DCP files.", "FEES", "FEES_POLICY", "CORROBORATED", 2024),
     ]
 
     jury_templates = [
-        ("Jury panel advertised with 7 international industry jurors on festival promotional graphics.", "ORGANIZER", "JURY_AWARDS", "SUPPORTED", 2024),
-        ("2 of 7 named jurors confirmed they had not reviewed any submissions or attended screenings.", "ORGANIZER", "JURY_AWARDS", "DISPUTED", 2024),
-        ("Jury Chair Benjamin Jones credited as producer on 3 past winning short films.", "ORGANIZER", "JURY_AWARDS", "CORROBORATED", 2024),
-        ("Best Narrative Short award granted to 'The Echo Chamber' in 2024 edition.", "ORGANIZER", "JURY_AWARDS", "CORROBORATED", 2024),
-        ("Best Narrative Short award granted to 'Shadow Puppets' by same director in 2025 edition.", "ORGANIZER", "JURY_AWARDS", "CORROBORATED", 2025),
-        ("Over 65 distinct award categories created including 'Best Sound Design in a Micro-Budget Horror'.", "FESTIVAL", "JURY_AWARDS", "CORROBORATED", 2024),
-        ("Blind evaluation protocol claimed in festival rules not implemented in judging software.", "ORGANIZER", "JURY_AWARDS", "DISPUTED", 2024),
-        ("Written jury feedback contains identical template phrasing across 14 independent submissions.", "PARTICIPANTS", "JURY_AWARDS", "SUPPORTED", 2024),
-        ("Jury members receive zero financial remuneration for judging duties according to alumni juror.", "ORGANIZER", "JURY_AWARDS", "SUPPORTED", 2023),
-        ("Audience Choice Award tallied via Instagram poll with no ticket-holder validation.", "FESTIVAL", "JURY_AWARDS", "CORROBORATED", 2024),
+        ("Jury panel comprises 5 independent filmmakers with active UK industry credits.", "ORGANIZER", "JURY_AWARDS", "SUPPORTED", 2024),
+        ("Jury scoring rubric evaluates narrative structure, cinematography, and original voice.", "ORGANIZER", "JURY_AWARDS", "SUPPORTED", 2024),
+        ("Grand Jury Prize for Best Narrative Short awarded to 'The Echo Chamber' in 2024 edition.", "ORGANIZER", "JURY_AWARDS", "CORROBORATED", 2024),
+        ("Best Documentary Short awarded to 'Under The Flyover' by Sarah Jenkins in 2023 edition.", "ORGANIZER", "JURY_AWARDS", "CORROBORATED", 2023),
+        ("Filmmaker Q&A sessions moderated by jury members following each screening block.", "ORGANIZER", "JURY_AWARDS", "CORROBORATED", 2024),
+        ("Guest programmer recused from scoring category where a former short film collaborator was nominated.", "ORGANIZER", "JURY_AWARDS", "SUPPORTED", 2024),
+        ("Jury selections announced via official press release and FilmFreeway portal.", "ORGANIZER", "JURY_AWARDS", "CORROBORATED", 2024),
+        ("Best Cinematography award presented in partnership with local equipment hire facility.", "ORGANIZER", "JURY_AWARDS", "CORROBORATED", 2024),
+        ("Audience Choice award voted via ticket-holder ballots at Genesis Cinema box office.", "FESTIVAL", "JURY_AWARDS", "CORROBORATED", 2024),
+        ("Program longlist curated by screening committee before final jury deliberation.", "ORGANIZER", "JURY_AWARDS", "SUPPORTED", 2024),
     ]
 
     sentiment_templates = [
-        ("Filmmaker forum thread logs 18 complaints regarding unannounced screening schedule changes.", "PARTICIPANTS", "EXPERIENCE_FEEDBACK", "SUPPORTED", 2024),
-        ("TrustPilot review score averages 1.4/5 stars across 42 verified submitter submissions.", "PARTICIPANTS", "EXPERIENCE_FEEDBACK", "CORROBORATED", 2024),
-        ("Submitters report receiving unsolicited marketing emails from IndiePitch Consulting within 48 hours.", "PARTICIPANTS", "EXPERIENCE_FEEDBACK", "CORROBORATED", 2024),
-        ("Reddit r/Filmmakers thread advises first-time directors against submitting to Pinco Pallino.", "PARTICIPANTS", "EXPERIENCE_FEEDBACK", "SUPPORTED", 2024),
-        ("Filmmaker in attendance reported only 8 people in the auditorium during feature premiere.", "PARTICIPANTS", "EXPERIENCE_FEEDBACK", "SUPPORTED", 2024),
-        ("Festival organizer failed to respond to 12 formal email inquiries regarding DCP delivery specs.", "PARTICIPANTS", "EXPERIENCE_FEEDBACK", "SUPPORTED", 2024),
-        ("Instagram comments disabled on festival account following filmmaker dispute over laurel sales.", "PARTICIPANTS", "EXPERIENCE_FEEDBACK", "CORROBORATED", 2024),
-        ("Letterboxd reviews for 2024 winning shorts show average community rating of 3.4/5.", "PARTICIPANTS", "EXPERIENCE_FEEDBACK", "SUPPORTED", 2024),
-        ("Cinematography forum post confirms receipt of automated acceptance letter within 4 hours of submission.", "PARTICIPANTS", "EXPERIENCE_FEEDBACK", "SUPPORTED", 2024),
-        ("Filmmaker received laurel graphic with misspelled festival name on official PNG file.", "PARTICIPANTS", "EXPERIENCE_FEEDBACK", "SUPPORTED", 2024),
+        ("Letterboxd reviews for 2024 selected shorts show positive community feedback (average 3.6/5).", "PARTICIPANTS", "EXPERIENCE_FEEDBACK", "SUPPORTED", 2024),
+        ("Filmmakers on Reddit r/Filmmakers describe festival as good London networking for debut directors.", "PARTICIPANTS", "EXPERIENCE_FEEDBACK", "SUPPORTED", 2024),
+        ("Attendees note lively post-screening drinks and networking at Genesis Cinema Bar.", "PARTICIPANTS", "EXPERIENCE_FEEDBACK", "CORROBORATED", 2024),
+        ("Submitters note communication can take 10-14 days during final deadline rush.", "PARTICIPANTS", "EXPERIENCE_FEEDBACK", "SUPPORTED", 2024),
+        ("Selected directors report high satisfaction with DCP projection quality and sound mix in Studio 4.", "PARTICIPANTS", "EXPERIENCE_FEEDBACK", "CORROBORATED", 2024),
+        ("Feedback suggests advance ticket reservations are essential due to 40-seat screening room.", "PARTICIPANTS", "EXPERIENCE_FEEDBACK", "CORROBORATED", 2024),
+        ("Debut directors highlight helpful networking connections made with local London crew.", "PARTICIPANTS", "EXPERIENCE_FEEDBACK", "SUPPORTED", 2024),
+        ("Event photography shared widely on social media with active filmmaker engagement.", "PARTICIPANTS", "EXPERIENCE_FEEDBACK", "CORROBORATED", 2024),
+        ("Submitters recommend entering early to avoid the £75 late submission deadline fee.", "PARTICIPANTS", "EXPERIENCE_FEEDBACK", "SUPPORTED", 2024),
+        ("Filmmakers appreciate thoughtful program curation grouping thematically aligned shorts.", "PARTICIPANTS", "EXPERIENCE_FEEDBACK", "SUPPORTED", 2024),
     ]
 
     milestone_templates = [
-        ("Inaugural 2021 virtual edition streamed 24 short films via password-protected Vimeo showcase.", "FESTIVAL", "ORGANIZER_TRACK_RECORD", "CORROBORATED", 2021),
-        ("2022 edition expanded to in-person screenings at Watermans Arts Centre in West London.", "FESTIVAL", "ORGANIZER_TRACK_RECORD", "CORROBORATED", 2022),
-        ("2023 edition introduced FilmFreeway Gold Festival status badge on submission page.", "FESTIVAL", "ORGANIZER_TRACK_RECORD", "CORROBORATED", 2023),
-        ("2024 edition reported receiving 3,200 submissions from 48 countries in press release.", "FESTIVAL", "ORGANIZER_TRACK_RECORD", "SUPPORTED", 2024),
-        ("Official festival catalogue distributed in digital PDF format to all selected filmmakers.", "FESTIVAL", "ORGANIZER_TRACK_RECORD", "CORROBORATED", 2024),
-        ("2025 Call for Entries opened on FilmFreeway with 4 deadline phases.", "FESTIVAL", "ORGANIZER_TRACK_RECORD", "CORROBORATED", 2025),
-        ("Press release published on IndieWire Community wire announcing 2024 jury longlist.", "FESTIVAL", "ORGANIZER_TRACK_RECORD", "SUPPORTED", 2024),
-        ("Festival established official YouTube channel featuring 12 trailer compilations.", "FESTIVAL", "ORGANIZER_TRACK_RECORD", "CORROBORATED", 2023),
-        ("Official poster art updated annually with custom graphic design for London skyline motif.", "FESTIVAL", "ORGANIZER_TRACK_RECORD", "CORROBORATED", 2024),
-        ("Festival announced new 'Green Cinema' sustainability initiative in 2024 program guide.", "FESTIVAL", "ORGANIZER_TRACK_RECORD", "SUPPORTED", 2024),
+        ("Inaugural 2021 virtual edition hosted online screenings during pandemic period.", "FESTIVAL", "ORGANIZER_TRACK_RECORD", "CORROBORATED", 2021),
+        ("2022 edition transitioned to in-person screenings at Watermans Arts Centre.", "FESTIVAL", "ORGANIZER_TRACK_RECORD", "CORROBORATED", 2022),
+        ("2023 edition partnered with Genesis Cinema Studio 2 in East London.", "FESTIVAL", "ORGANIZER_TRACK_RECORD", "CORROBORATED", 2023),
+        ("2024 edition screened 24 shorts across 3 days at Genesis Cinema Studio 4.", "FESTIVAL", "ORGANIZER_TRACK_RECORD", "CORROBORATED", 2024),
+        ("Digital festival program published with director bios and synopsis for each title.", "FESTIVAL", "ORGANIZER_TRACK_RECORD", "CORROBORATED", 2024),
+        ("2025 Call for Entries launched on FilmFreeway with 4 submission phases.", "FESTIVAL", "ORGANIZER_TRACK_RECORD", "CORROBORATED", 2025),
+        ("Official festival trailer published on YouTube highlighting past selected filmmakers.", "FESTIVAL", "ORGANIZER_TRACK_RECORD", "CORROBORATED", 2024),
+        ("Festival poster and program branding designed by local London graphic artist.", "FESTIVAL", "ORGANIZER_TRACK_RECORD", "CORROBORATED", 2024),
+        ("Panel discussion on low-budget distribution hosted during 2024 weekend program.", "FESTIVAL", "ORGANIZER_TRACK_RECORD", "CORROBORATED", 2024),
+        ("Festival joined the London Independent Cinema Network for regional cross-promotion.", "FESTIVAL", "ORGANIZER_TRACK_RECORD", "CORROBORATED", 2024),
     ]
 
     all_templates = (
@@ -347,16 +339,16 @@ def generate_demo_claims():
             "claimKind": "FACT",
             "status": status,
             "editionYear": yr,
-            "attributedTo": f"Public Record & Forensic Extraction #{i}",
+            "attributedTo": f"Public Record & Corroboration #{i}",
             "evidence": [
                 {
                     "sourceId": f"src_evidence_{i}",
-                    "sourceUrl": "https://pincopallinofilmfestival.com/evidence-archive",
-                    "sourceDomain": "pincopallinofilmfestival.com" if domain == "FESTIVAL" else ("gov.uk" if domain == "ORGANIZER" else "reddit.com"),
+                    "sourceUrl": "https://genesiscinema.co.uk/events/archive" if domain == "FESTIVAL" else ("https://find-and-update.company-information.service.gov.uk" if domain == "ORGANIZER" else "https://filmfreeway.com"),
+                    "sourceDomain": "genesiscinema.co.uk" if domain == "FESTIVAL" else ("gov.uk" if domain == "ORGANIZER" else "filmfreeway.com"),
                     "sourceTitle": f"Corroboration Record #{i}",
                     "stance": "SUPPORTS" if status != "DISPUTED" else "CONTRADICTS",
                     "exactExcerpt": stmt,
-                    "note": f"Forensically extracted claim verification node #{i}."
+                    "note": f"Extracted due diligence claim node #{i}."
                 }
             ]
         })
@@ -380,7 +372,7 @@ def get_demo_investigation():
                 "entityType": "FESTIVAL",
                 "cityCountry": "London, UK",
                 "foundedYear": 2021,
-                "descriptor": "An independent film festival claiming theatrical screenings at Genesis Cinema and BFI Southbank.",
+                "descriptor": "An emerging independent film festival hosting theatrical screenings at Genesis Cinema in East London.",
                 "sourceIds": []
             }
         ],
@@ -409,7 +401,7 @@ async def demo_sse_generator():
     # Stage 1: Planning (5s)
     yield format_event("PLANNING_STARTED", "Formulating parallel investigation strategy across 3 core domains...")
     await asyncio.sleep(1.5)
-    yield format_event("PLANNING_STEP", "Identifying target research domains: Corporate Shells, Venue Verification, Filmmaker Sentiment...", {"queriesCount": 12, "sourcesCount": 14})
+    yield format_event("PLANNING_STEP", "Identifying target research domains: Corporate Registry, Venue Corroboration, Filmmaker Sentiment...", {"queriesCount": 12, "sourcesCount": 14})
     await asyncio.sleep(2.0)
     yield format_event("PLANNING_STEP", "Found candidate entity. Ready for confirmation.", {"candidates": get_demo_investigation()["candidates"], "sourcesCount": 18})
     await asyncio.sleep(1.5)
@@ -417,35 +409,35 @@ async def demo_sse_generator():
     # Stage 2: Researching (5s)
     yield format_event("DOMAIN_SEARCH_STARTED", "Dispatching parallel sub-agents across 42 public and commercial sources...", {"sourcesCount": 42, "queriesCount": 12})
     await asyncio.sleep(1.25)
-    yield format_event("AGENT_UPDATE", "VenueAgent: Harvested BFI Southbank & Genesis Cinema box office manifests (12 sources).", {"agent": "VenueAgent", "sourcesCount": 24, "claimsCount": 85})
+    yield format_event("AGENT_UPDATE", "VenueAgent: Harvested Genesis Cinema box office manifests and Studio 4 specs (12 sources).", {"agent": "VenueAgent", "sourcesCount": 24, "claimsCount": 85})
     await asyncio.sleep(1.25)
-    yield format_event("AGENT_UPDATE", "CorporateAgent: Retrieved Companies House & London Gazette filings for Pallino Media Lab (14 sources).", {"agent": "CorporateAgent", "sourcesCount": 32, "claimsCount": 160})
+    yield format_event("AGENT_UPDATE", "CorporateAgent: Verified Companies House filings for Pinco Pallino Film CIC (14 sources).", {"agent": "CorporateAgent", "sourcesCount": 32, "claimsCount": 160})
     await asyncio.sleep(1.25)
-    yield format_event("AGENT_UPDATE", "SentimentAgent: Aggregated 42+ filmmaker testimonies from Reddit r/Filmmakers, Stage 32 & TrustPilot (16 sources).", {"agent": "SentimentAgent", "sourcesCount": 42, "claimsCount": 300})
+    yield format_event("AGENT_UPDATE", "SentimentAgent: Aggregated filmmaker reviews from FilmFreeway, Reddit & Letterboxd (16 sources).", {"agent": "SentimentAgent", "sourcesCount": 42, "claimsCount": 300})
     await asyncio.sleep(1.25)
 
     # Stage 3: Analyzing (5s)
-    yield format_event("CONTRADICTIONS_ANALYZING", "Cross-referencing 300 atomic claims against 42 multi-domain sources...", {"sourcesCount": 42, "claimsCount": 300, "contradictionsCount": 4})
+    yield format_event("CONTRADICTIONS_ANALYZING", "Cross-referencing 300 atomic claims against 42 multi-domain sources...", {"sourcesCount": 42, "claimsCount": 300, "contradictionsCount": 2})
     await asyncio.sleep(1.5)
-    yield format_event("AGENT_UPDATE", "VerificationAgent: Verified manufacturer sponsorship disavowals with ARRI & Sony.", {"agent": "VerificationAgent", "sourcesCount": 42, "claimsCount": 300})
+    yield format_event("AGENT_UPDATE", "VerificationAgent: Verified physical Genesis Cinema projection manifests and 40-seat room capacity.", {"agent": "VerificationAgent", "sourcesCount": 42, "claimsCount": 300})
     await asyncio.sleep(1.5)
-    yield format_event("AGENT_UPDATE", "FraudAgent: Flagged conflict of interest anomaly in jury records & consulting upsells.", {"agent": "FraudAgent", "sourcesCount": 42, "claimsCount": 300, "contradictionsCount": 4})
+    yield format_event("AGENT_UPDATE", "PolicyAgent: Identified moderate late-entry fee escalation and informal jury evaluation guidelines.", {"agent": "PolicyAgent", "sourcesCount": 42, "claimsCount": 300, "contradictionsCount": 2})
     await asyncio.sleep(2.0)
 
     # Stage 4: Synthesizing (5s)
-    yield format_event("DOSSIER_SYNTHESIZING", "Assembling finalized evidence dossier with 42 verified sources and 300 claims...", {"sourcesCount": 42, "claimsCount": 300, "contradictionsCount": 4})
+    yield format_event("DOSSIER_SYNTHESIZING", "Assembling finalized evidence dossier with 42 verified sources and 300 claims...", {"sourcesCount": 42, "claimsCount": 300, "contradictionsCount": 2})
     await asyncio.sleep(1.5)
-    yield format_event("AGENT_UPDATE", "SynthesisAgent: Finalizing full forensic dossier and executive summary.", {"agent": "SynthesisAgent", "sourcesCount": 42, "claimsCount": 300})
+    yield format_event("AGENT_UPDATE", "SynthesisAgent: Finalizing full due diligence dossier and executive summary.", {"agent": "SynthesisAgent", "sourcesCount": 42, "claimsCount": 300})
     await asyncio.sleep(2.0)
     yield format_event("AGENT_UPDATE", "SynthesisAgent: Reviewing final output for accuracy and source citations...", {"agent": "SynthesisAgent", "sourcesCount": 42, "claimsCount": 300})
     await asyncio.sleep(1.5)
 
     # Complete
-    yield format_event("DOSSIER_READY", "Investigation complete. Generating final dossier.", {"sourcesCount": 42, "claimsCount": 300, "contradictionsCount": 4})
+    yield format_event("DOSSIER_READY", "Investigation complete. Generating final dossier.", {"sourcesCount": 42, "claimsCount": 300, "contradictionsCount": 2})
 
 
 def get_demo_full_dossier():
-    """Returns the finalized, highly detailed mock investigation state."""
+    """Returns the finalized, realistic mock investigation state for Pinco Pallino."""
     now_iso = datetime.now(timezone.utc).isoformat()
     claims = generate_demo_claims()
     
@@ -459,13 +451,13 @@ def get_demo_full_dossier():
         "sourcesCount": 42,
         "claimsCount": len(claims),
         "premiereRisk": {
-            "riskScore": 82,
-            "riskLevel": "HIGH_BURN_RISK",
-            "premiereDemand": "World or UK Premiere Demanded for Competition",
-            "accreditationStatus": "Unaccredited (Not BAFTA/BIFA Qualifying)",
-            "buyerPressFootprint": "Zero verified sales agents, distributors, or accredited trade press",
-            "verdictRationale": "The festival demands premiere exclusivity while delivering zero industry acquisition leverage. Surrendering a World or UK Premiere here burns premiere eligibility for major UK accredited festivals without theatrical trade exposure.",
-            "recommendation": "Do NOT submit as World or UK Premiere. If already premiered elsewhere, submit only under low early-bird tiers."
+            "riskScore": 45,
+            "riskLevel": "MODERATE_CAUTION",
+            "premiereDemand": "London / Regional Premiere Preferred (Flexible)",
+            "accreditationStatus": "Independent Grassroots Showcase (Non-BAFTA Qualifying)",
+            "buyerPressFootprint": "Emerging film bloggers, Film London community dispatch, local indie press",
+            "verdictRationale": "A legitimate, grassroots London independent festival with real theatrical screenings. However, because it is not BAFTA-qualifying and trade buyers are limited, filmmakers should avoid burning a World or UK Premiere here if targeting major Tier-1 festivals.",
+            "recommendation": "Recommended for UK debut shorts and London networking under Early Bird tiers. If targeting Tier-1 festivals, retain World Premiere status."
         },
         "feeEscalation": {
             "currency": "£",
@@ -473,148 +465,58 @@ def get_demo_full_dossier():
                 {"tierName": "Super Early Bird", "amount": 28, "currency": "£", "deadlineDate": "15 Jan 2024", "surgePercentage": 0},
                 {"tierName": "Early Bird", "amount": 38, "currency": "£", "deadlineDate": "1 Mar 2024", "surgePercentage": 35},
                 {"tierName": "Regular Deadline", "amount": 55, "currency": "£", "deadlineDate": "15 May 2024", "surgePercentage": 96},
-                {"tierName": "Late Deadline", "amount": 85, "currency": "£", "deadlineDate": "1 Aug 2024", "surgePercentage": 203},
-                {"tierName": "Extended / Last Chance", "amount": 98, "currency": "£", "deadlineDate": "15 Sep 2024", "surgePercentage": 250}
+                {"tierName": "Late Deadline", "amount": 75, "currency": "£", "deadlineDate": "1 Aug 2024", "surgePercentage": 168},
+                {"tierName": "Extended / Last Chance", "amount": 85, "currency": "£", "deadlineDate": "15 Sep 2024", "surgePercentage": 203}
             ],
-            "spikeAlert": "Aggressive 203% fee surge in late submission windows (£28 -> £85).",
+            "spikeAlert": "Moderate fee increase in late submission windows (£28 -> £75). Early submission recommended.",
             "averageMarketFee": "£32 average for UK indie short film entries",
-            "percentile": 92
+            "percentile": 65
         },
         "forensicSummary": {
             "scamPattern": {
-                "status": "RED_FLAG",
-                "headline": "Dissolved Entity & Virtual Maildrop Footprint",
-                "summary": "Operating company Pallino Media Lab Ltd (Company No. 13984712) was dissolved via compulsory strike-off in March 2024. The registered office at 71-75 Shelton Street, London is a mass-registration virtual office shared with over 2,000 corporate mailboxes.",
-                "educationalContext": "Predatory festivals frequently operate through dissolved shell entities or mail forwarding services to evade chargebacks, refund liability, and legal service of process once fees are collected.",
+                "status": "AMBER_WARNING",
+                "headline": "Grassroots Operational Footprint",
+                "summary": "Pinco Pallino operates through Pinco Pallino Film CIC, an active UK Community Interest Company. Its registered address at 71-75 Shelton Street is a shared central London commercial address, common among early-stage arts organizations. Annual filings are maintained and up to date.",
+                "educationalContext": "Community Interest Companies (CICs) are regulated UK non-profit entities with an asset lock. While a shared virtual office is common for emerging festivals, filmmakers should confirm physical event venues.",
                 "signals": [
-                    "Operating entity dissolved on 14 March 2024 (Companies House)",
-                    "71-75 Shelton Street virtual office address with no physical festival staff",
-                    "Shared director ties to sister festival 'London Indie Shorts Review'"
+                    "Active UK Community Interest Company (Pinco Pallino Film CIC)",
+                    "Registered office at 71-75 Shelton Street shared commercial address",
+                    "Previous trading entity dissolved in 2024 to consolidate non-profit CIC operations"
                 ],
-                "relatedEntities": ["Pallino Media Lab Ltd", "London Indie Shorts Review", "Shelton Mail Services Ltd"]
+                "relatedEntities": ["Pinco Pallino Film CIC", "Pallino Media Lab Ltd", "Genesis Cinema Studio 4"]
             },
             "juryConflict": {
-                "status": "RED_FLAG",
-                "headline": "Jury Self-Dealing & Repeat Winner Anomaly",
-                "summary": "Festival Programmer Arthur Smith actively operates IndiePitch Consulting, marketing paid script and DCP services to festival applicants. Furthermore, the 2024 Best Short winner is a direct business associate and co-producer who also received top awards in the 2023 edition.",
-                "educationalContext": "Legitimate festivals maintain strict recusal policies prohibiting jury members and programmers from awarding honors to business partners, clients, or co-producers. Repeat laureates with commercial ties signal vanity award milling.",
+                "status": "AMBER_WARNING",
+                "headline": "Informal Jury & Programming Governance",
+                "summary": "The jury consists of working UK independent filmmakers and programmers. While selections are peer-reviewed, the festival relies on informal recusal rather than an automated blind-scoring portal. An associate producer screened a short in an earlier non-competitive showcase in 2023.",
+                "educationalContext": "Grassroots festivals often draw jurors from their local filmmaker community. Transparent recusal policies ensure impartial scoring.",
                 "signals": [
-                    "Arthur Smith co-owns IndiePitch Consulting targeting submitting filmmakers",
-                    "2024 Best Short Winner co-produced a past commercial project with Lead Programmer",
-                    "Same director won top prize across consecutive 2023 and 2024 editions"
+                    "Jury members have active independent production credits",
+                    "Informal recusal protocols rather than blind evaluation software",
+                    "2023 showcase included an associate producer's non-competitive short"
                 ],
-                "relatedEntities": ["IndiePitch Consulting", "Arthur Smith", "Pallino Media Lab Ltd"]
+                "relatedEntities": ["Arthur Smith", "Benjamin Jones", "Genesis Cinema Studio 4"]
             },
             "venueReality": {
-                "status": "MISMATCH",
-                "headline": "Advertised Theatrical Gala vs. 4-Wall Private Room Reality",
-                "summary": "Festival marketing advertises red-carpet galas at 'BFI Southbank NFT1'. Corroboration reveals zero contract with BFI. Historical bookings show only a 2-hour 4-wall hire of Studio 4 at Genesis Cinema, with filmmaker reports confirming substitution of unlisted Vimeo links with under 5 views.",
-                "educationalContext": "Curated Cinema Selection vs. 4-Wall Rental: In an authentic festival, the cinema directly curates, tickets, and publishes the festival on its box office schedule. A 4-wall rental is an hourly room hire that anyone can buy with zero cinema programming vetting. Predatory organizers use 4-wall bookings to take promo photos, then quietly pivot submitters to cheap unlisted Vimeo links.",
+                "status": "AMBER_WARNING",
+                "headline": "Boutique Screening Room vs. Gala Marketing",
+                "summary": "The festival delivers authentic physical screenings at Genesis Cinema (Studio 4) in East London with verified 2K DCP projection and enthusiastic filmmaker attendance. However, marketing references to 'London Gala Showcases' should be understood as an intimate 40-seat boutique screening room rather than a West End palace.",
+                "educationalContext": "Boutique cinema rentals provide genuine big-screen DCP projection and intimate peer networking, but filmmakers should expect limited crew ticket allocations.",
                 "signals": [
-                    "BFI Southbank NFT1 claim refuted: No municipal screening permit or BFI box office entry",
-                    "Genesis Cinema manifest indicates private room hire, not curated public festival season",
-                    "Filmmaker testimonies document unlisted Vimeo password-protected links with < 5 views"
+                    "Verified physical DCP screenings at Genesis Cinema Studio 4",
+                    "Intimate 40-seat auditorium capacity",
+                    "One-off 3-hour private hire at BFI Southbank NFT3 in 2024"
                 ],
-                "relatedEntities": ["BFI Southbank", "Genesis Cinema Studio 4", "Vimeo On-Demand"]
+                "relatedEntities": ["Genesis Cinema Studio 4", "BFI Southbank NFT3"]
             }
         },
         
         "disputes": [
             {
-                "id": "disp_conflict",
-                "pointOfContention": "Jury & Organizer Conflict of Interest",
-                "category": "JURY_AWARDS",
-                "claimA": "The festival claims an impartial, independent, blind-judging jury.",
-                "evidenceA": [
-                    {
-                        "sourceId": "src_jury_rules",
-                        "sourceUrl": "https://pincopallino.com/jury",
-                        "sourceDomain": "pincopallino.com",
-                        "sourceTitle": "Pinco Pallino Rules & Regulations / Jury Charter",
-                        "stance": "SUPPORTS",
-                        "exactExcerpt": "Our independent jury evaluates all films blindly and without prejudice across all competition categories.",
-                        "snippet": "Our independent jury evaluates all films blindly and without prejudice across all competition categories."
-                    }
-                ],
-                "claimB": "Companies House records show 3 key organizers and jurors co-own Pallino Media Lab Ltd, aggressively upselling PR & distribution packages to applicants.",
-                "evidenceB": [
-                    {
-                        "sourceId": "src_ch_filing",
-                        "sourceUrl": "https://find-and-update.company-information.service.gov.uk/company/13984712",
-                        "sourceDomain": "gov.uk",
-                        "sourceTitle": "Companies House - Pallino Media Lab Ltd (13984712)",
-                        "stance": "CONTRADICTS",
-                        "exactExcerpt": "Active Officers & PSC: A. Smith (Festival Director), B. Jones (Jury Chair), C. Davis (Programmer). Nature of control: 75% or more shares with joint commercial consultancy rights.",
-                        "snippet": "Active Officers & PSC: A. Smith (Festival Director), B. Jones (Jury Chair), C. Davis (Programmer). Nature of control: 75% or more shares with joint commercial consultancy rights."
-                    }
-                ],
-                "guidance": "High Risk. Key festival personnel co-own an external consultancy actively monetizing and upselling distribution services to submitting filmmakers."
-            },
-            {
-                "id": "disp_fees",
-                "pointOfContention": "Aggressive Fee Escalation",
-                "category": "FEES_POLICY",
-                "claimA": "Early bird entry fee is advertised as a highly accessible £28.",
-                "evidenceA": [
-                    {
-                        "sourceId": "src_ff_fees",
-                        "sourceUrl": "https://filmfreeway.com/PincoPallinoFilmFestival",
-                        "sourceDomain": "filmfreeway.com",
-                        "sourceTitle": "FilmFreeway - Pinco Pallino Entry Fees",
-                        "stance": "SUPPORTS",
-                        "exactExcerpt": "Early Bird Deadline: £28 for all short film categories. Standard: £45.",
-                        "snippet": "Early Bird Deadline: £28 for all short film categories. Standard: £45."
-                    }
-                ],
-                "claimB": "Late fees spike aggressively to £85 in the final 10 days, accounting for 65% of their total annual revenue according to leaked financial summaries.",
-                "evidenceB": [
-                    {
-                        "sourceId": "src_ff_late",
-                        "sourceUrl": "https://filmfreeway.com/PincoPallinoFilmFestival/dates-fees",
-                        "sourceDomain": "filmfreeway.com",
-                        "sourceTitle": "FilmFreeway - Pinco Pallino Late Deadline Breakdown",
-                        "stance": "CONTRADICTS",
-                        "exactExcerpt": "Extended Late Fee: £85 for shorts, £115 for features. Expedited jury review add-on: £65.",
-                        "snippet": "Extended Late Fee: £85 for shorts, £115 for features. Expedited jury review add-on: £65."
-                    }
-                ],
-                "guidance": "Attention Item. The late fee tier surges 200% above base rates; filmmakers should avoid late entry windows."
-            },
-            {
-                "id": "disp_sponsors",
-                "pointOfContention": "Fabricated Platinum Sponsorships",
-                "category": "ORGANIZER_TRACK_RECORD",
-                "claimA": "Promotional banners claim official Platinum partnerships with Sony Cinema and ARRI.",
-                "evidenceA": [
-                    {
-                        "sourceId": "src_fest_home",
-                        "sourceUrl": "https://pincopallino.com/sponsors",
-                        "sourceDomain": "pincopallino.com",
-                        "sourceTitle": "Pinco Pallino Festival Sponsor Showcase",
-                        "stance": "SUPPORTS",
-                        "exactExcerpt": "Official 2024 Platinum Industry Partners: Sony CineAlta & ARRI Rental London.",
-                        "snippet": "Official 2024 Platinum Industry Partners: Sony CineAlta & ARRI Rental London."
-                    }
-                ],
-                "claimB": "ARRI official PR communications issued a formal denial and trademark cease-and-desist regarding unauthorized logo usage.",
-                "evidenceB": [
-                    {
-                        "sourceId": "src_arri_tweet",
-                        "sourceUrl": "https://twitter.com/ARRIChannel/status/1234567890",
-                        "sourceDomain": "twitter.com",
-                        "sourceTitle": "ARRI Official Communications",
-                        "stance": "CONTRADICTS",
-                        "exactExcerpt": "@PincoPallinoFest is not an authorized or official ARRI festival partner. We have issued a formal trademark cease-and-desist request.",
-                        "snippet": "@PincoPallinoFest is not an authorized or official ARRI festival partner. We have issued a formal trademark cease-and-desist request."
-                    }
-                ],
-                "guidance": "Critical Warning. Festival claims brand endorsements that have been formally repudiated by the manufacturers."
-            },
-            {
                 "id": "disp_venue",
-                "pointOfContention": "Promotional Screening Scope vs. Venue Reality",
+                "pointOfContention": "Screening Scope & Room Capacity",
                 "category": "VENUE_SCREENINGS",
-                "claimA": "All selected short and feature films are promised full theatrical projection at BFI Southbank.",
+                "claimA": "Promotional headlines advertise London cinema showcase on the big screen.",
                 "evidenceA": [
                     {
                         "sourceId": "src_ff_promo",
@@ -622,23 +524,53 @@ def get_demo_full_dossier():
                         "sourceDomain": "filmfreeway.com",
                         "sourceTitle": "FilmFreeway Promotional Headline",
                         "stance": "SUPPORTS",
-                        "exactExcerpt": "Screen your film on London's premier cinema screen at BFI Southbank.",
-                        "snippet": "Screen your film on London's premier cinema screen at BFI Southbank."
+                        "exactExcerpt": "Screen your film on the big screen in vibrant East London with live Q&A.",
+                        "snippet": "Screen your film on the big screen in vibrant East London with live Q&A."
                     }
                 ],
-                "claimB": "Venue manifests confirm BFI Southbank private hire was restricted to a single 3-hour NFT3 slot for 2 feature titles; remaining 40+ shorts received unlisted Vimeo links.",
+                "claimB": "Physical screenings take place in Genesis Cinema Studio 4, a boutique screening room with 40-seat capacity.",
                 "evidenceB": [
                     {
-                        "sourceId": "src_bfi_manifest",
-                        "sourceUrl": "https://www.bfi.org.uk/venue-hire/southbank/calendar-2024",
-                        "sourceDomain": "bfi.org.uk",
-                        "sourceTitle": "BFI Southbank Private Hire Booking Archive",
+                        "sourceId": "src_genesis_manifest",
+                        "sourceUrl": "https://genesiscinema.co.uk/events/2024-screenings/pinco-pallino",
+                        "sourceDomain": "genesiscinema.co.uk",
+                        "sourceTitle": "Genesis Cinema Events Booking Schedule",
                         "stance": "CONTRADICTS",
-                        "exactExcerpt": "NFT3 private hire: 3 hours allocated on Oct 14, 2024 for private screening. Capacity: 130 seats.",
-                        "snippet": "NFT3 private hire: 3 hours allocated on Oct 14, 2024 for private screening. Capacity: 130 seats."
+                        "exactExcerpt": "Confirmed private screening hire for Studio 4 (40 luxury armchair capacity) booked for Oct 12-14, 2024.",
+                        "snippet": "Confirmed private screening hire for Studio 4 (40 luxury armchair capacity) booked for Oct 12-14, 2024."
                     }
                 ],
-                "guidance": "Material Discrepancy. Physical theatrical screening is severely restricted compared to broad promotional promises."
+                "guidance": "Expectation Management. Physical screenings are authentic with verified DCP projection, but seating capacity is intimate."
+            },
+            {
+                "id": "disp_fees",
+                "pointOfContention": "Late Deadline Fee Markup",
+                "category": "FEES_POLICY",
+                "claimA": "Early bird entry fee is accessible at £28 for short films.",
+                "evidenceA": [
+                    {
+                        "sourceId": "src_ff_fees",
+                        "sourceUrl": "https://filmfreeway.com/PincoPallinoFilmFestival",
+                        "sourceDomain": "filmfreeway.com",
+                        "sourceTitle": "FilmFreeway - Pinco Pallino Entry Fees",
+                        "stance": "SUPPORTS",
+                        "exactExcerpt": "Super Early Bird Deadline: £28 for all short film categories.",
+                        "snippet": "Super Early Bird Deadline: £28 for all short film categories."
+                    }
+                ],
+                "claimB": "Late deadline fee escalates to £75 in the final weeks before submissions close.",
+                "evidenceB": [
+                    {
+                        "sourceId": "src_ff_late",
+                        "sourceUrl": "https://filmfreeway.com/PincoPallinoFilmFestival/dates-fees",
+                        "sourceDomain": "filmfreeway.com",
+                        "sourceTitle": "FilmFreeway - Pinco Pallino Late Deadline Breakdown",
+                        "stance": "CONTRADICTS",
+                        "exactExcerpt": "Late Deadline: £75 for short films. Extended: £85.",
+                        "snippet": "Late Deadline: £75 for short films. Extended: £85."
+                    }
+                ],
+                "guidance": "Advisory Note. Standard late fee surge; filmmakers should submit early to maximize budget value."
             }
         ],
 
@@ -646,173 +578,132 @@ def get_demo_full_dossier():
 
         "sources": [
             {
-                "id": "src_bfi_calendar",
-                "url": "https://www.bfi.org.uk/venue-hire/southbank/calendar-2025",
-                "domain": "bfi.org.uk",
-                "title": "BFI Southbank Venue Hire & Event Manifest Archive",
+                "id": "src_genesis_manifest",
+                "url": "https://genesiscinema.co.uk/events/2024-screenings/pinco-pallino",
+                "domain": "genesiscinema.co.uk",
+                "title": "Genesis Cinema Events Booking Schedule & Technical Specs",
                 "sourceTier": 1,
                 "retrievedAt": now_iso,
-                "excerpts": ["BFI Southbank NFT1/NFT2/NFT3 screening manifests for October 12-14 show zero public bookings for 'Pinco Pallino Film Festival'."],
-                "contentHash": "hash_bfi_1"
+                "excerpts": ["Confirmed private screening hire for Studio 4 booked under Pinco Pallino Film CIC for Oct 12-14, 2024."],
+                "contentHash": "hash_gen_1"
             },
             {
                 "id": "src_ch_filing",
                 "url": "https://find-and-update.company-information.service.gov.uk/company/13984712",
                 "domain": "gov.uk",
-                "title": "Companies House - Pallino Media Lab Ltd Filing History",
+                "title": "Companies House - Pinco Pallino Film CIC Filing History",
                 "sourceTier": 1,
                 "retrievedAt": now_iso,
-                "excerpts": ["Final Gazette notice: Pallino Media Lab Ltd (Company number 13984712) dissolved via Compulsory Strike-off on 14 March 2024."],
+                "excerpts": ["Pinco Pallino Film CIC (Company number 13984712): Active Community Interest Company with up-to-date micro-entity filings."],
                 "contentHash": "hash_ch_2"
-            },
-            {
-                "id": "src_gazette_notice",
-                "url": "https://www.thegazette.co.uk/notice/23849102",
-                "domain": "thegazette.co.uk",
-                "title": "The London Gazette - Official Public Record of Insolvencies",
-                "sourceTier": 1,
-                "retrievedAt": now_iso,
-                "excerpts": ["Insolvency Service Notice 23849102: Bankruptcy order dated 11 November 2022 against Arthur Smith (trading as Pallino Media & Events)."],
-                "contentHash": "hash_gaz_3"
             },
             {
                 "id": "src_ff_overview",
                 "url": "https://www.filmfreeway.com/PincoPallinoFilmFestival",
                 "domain": "filmfreeway.com",
-                "title": "Pinco Pallino London Submissions Overview",
+                "title": "FilmFreeway - Pinco Pallino London Submissions Overview",
                 "sourceTier": 2,
                 "retrievedAt": now_iso,
-                "excerpts": ["All selected short and feature films will be screened on the big screen at the legendary BFI Southbank in Central London."],
-                "contentHash": "hash_ff_4"
+                "excerpts": ["Selected films screen theatrically at East London's historic Genesis Cinema in an intimate boutique setting."],
+                "contentHash": "hash_ff_3"
             },
             {
                 "id": "src_ff_rules",
-                "url": "https://www.filmfreeway.com/PincoPallinoFilmFestival/rules",
+                "url": "https://www.filmfreeway.com/PincoPallinoFilmFestival/dates-fees",
                 "domain": "filmfreeway.com",
-                "title": "FilmFreeway Submission Rules & Deadlines",
+                "title": "FilmFreeway - Submission Rules & Deadlines",
                 "sourceTier": 2,
                 "retrievedAt": now_iso,
-                "excerpts": ["Fee Deadlines: Early Bird £35, Regular £65, Late £95, Extended £120. Official Laurel Trophy Package available for £180 plus shipping."],
-                "contentHash": "hash_ff_5"
+                "excerpts": ["Submission Deadlines: Super Early Bird £28, Early Bird £38, Regular £55, Late £75, Extended £85."],
+                "contentHash": "hash_ff_4"
             },
             {
-                "id": "src_reddit_warning",
-                "url": "https://www.reddit.com/r/Filmmakers/comments/18m2b1/pinco_pallino_festival_warning",
+                "id": "src_reddit_reviews",
+                "url": "https://www.reddit.com/r/Filmmakers/comments/18m2b1/pinco_pallino_festival_experience",
                 "domain": "reddit.com",
-                "title": "r/Filmmakers - Anyone submitted to Pinco Pallino London?",
+                "title": "r/Filmmakers - Anyone attended Pinco Pallino London?",
                 "sourceTier": 3,
                 "retrievedAt": now_iso,
-                "excerpts": ["We paid £85 for a Gala Premiere category. Two days before, they emailed an unlisted Vimeo link with 3 total views. The cinema venue they advertised had no record of them."],
-                "contentHash": "hash_red_6"
+                "excerpts": ["Studio 4 is cozy (around 40 velvet seats) and sound/projection was solid. Great bar networking afterwards."],
+                "contentHash": "hash_red_5"
             },
             {
-                "id": "src_stage32_thread",
-                "url": "https://www.stage32.com/lounge/screenwriting/pinco-pallino-festival-experience",
-                "domain": "stage32.com",
-                "title": "Stage 32 Community Forum - London Festival Vetting",
+                "id": "src_letterboxd_reviews",
+                "url": "https://letterboxd.com/festival/pinco-pallino-2024",
+                "domain": "letterboxd.com",
+                "title": "Letterboxd - Pinco Pallino Festival Selected Shorts Reviews",
                 "sourceTier": 3,
                 "retrievedAt": now_iso,
-                "excerpts": ["Confirmed: no live audience or physical cinema was ever booked. An unlisted Vimeo link password 'laurel2024' was emailed 48 hours prior with only 2 total impressions."],
-                "contentHash": "hash_st32_7"
-            },
-            {
-                "id": "src_indiepitch",
-                "url": "https://www.indiepitchconsulting.co.uk/services",
-                "domain": "indiepitchconsulting.co.uk",
-                "title": "IndiePitch Consulting Services & Rates",
-                "sourceTier": 2,
-                "retrievedAt": now_iso,
-                "excerpts": ["Senior Jury Consultant: Benjamin Jones. Festival Rejection Recovery Pitch Audit: £120 per script."],
-                "contentHash": "hash_ind_8"
+                "excerpts": ["Community rating: 3.6/5 stars across 34 reviews. Praise for thoughtful Q&A moderation and screening quality."],
+                "contentHash": "hash_let_6"
             },
             {
                 "id": "src_winners_archive",
-                "url": "https://www.pincopallinofilmfestival.com/past-winners-2024-2025",
+                "url": "https://www.pincopallinofilmfestival.com/past-winners",
                 "domain": "pincopallinofilmfestival.com",
                 "title": "Pinco Pallino Past Editions Winners Archive",
                 "sourceTier": 2,
                 "retrievedAt": now_iso,
-                "excerpts": ["2024 Best International Short: 'The Echo Chamber' directed by Martin Sterling. 2025 Best International Short: 'Shadow Puppets' directed by Martin Sterling."],
-                "contentHash": "hash_win_9"
+                "excerpts": ["2024 Best Narrative Short: 'The Echo Chamber' directed by Martin Sterling."],
+                "contentHash": "hash_win_7"
             },
             {
-                "id": "src_arri_statement",
-                "url": "https://twitter.com/ARRIChannel/status/1234567890",
-                "domain": "twitter.com",
-                "title": "ARRI Official Corporate Communications",
+                "id": "src_film_london",
+                "url": "https://filmlondon.org.uk/community-listings/pinco-pallino-2024",
+                "domain": "filmlondon.org.uk",
+                "title": "Film London Community Cinema Listings",
                 "sourceTier": 1,
                 "retrievedAt": now_iso,
-                "excerpts": ["@PincoPallinoFest is not an authorized or official ARRI festival partner. We have issued a formal trademark cease-and-desist request for logo removal."],
-                "contentHash": "hash_arri_10"
-            },
-            {
-                "id": "src_trustpilot_reviews",
-                "url": "https://www.trustpilot.com/review/pincopallino.com",
-                "domain": "trustpilot.com",
-                "title": "TrustPilot - Pinco Pallino Festival Reviews",
-                "sourceTier": 3,
-                "retrievedAt": now_iso,
-                "excerpts": ["42 separate filmmaker reviews report zero communication for over a month past the stated notification date, followed by automated upsell templates."],
-                "contentHash": "hash_tp_11"
-            },
-            {
-                "id": "src_terms_conditions",
-                "url": "https://www.pincopallinofilmfestival.com/terms-and-conditions",
-                "domain": "pincopallinofilmfestival.com",
-                "title": "Pinco Pallino Terms & Conditions - Section 4.2",
-                "sourceTier": 2,
-                "retrievedAt": now_iso,
-                "excerpts": ["Section 4.2: All entry fees, trophy packaging fees, and review fees are strictly non-refundable regardless of screening format adaptations, venue changes, or program cancellations."],
-                "contentHash": "hash_tc_12"
+                "excerpts": ["Pinco Pallino enters its fourth year supporting debut short filmmakers in East London."],
+                "contentHash": "hash_fl_8"
             }
         ],
 
         "dossier": {
-            "executiveSummary": "Pinco Pallino Film Festival presents a concerning profile characterized by material conflicts of interest, predatory fee structures, and disavowed manufacturer affiliations. While the festival does execute private room bookings (including Genesis Cinema Studio 4 and BFI Southbank private hires), these physical screenings are severely restricted compared to promotional literature.\n\nOur investigation corroborated that 3 key organizers and jurors co-own an auxiliary media consulting firm actively upselling PR and script pitch reviews to rejected submitters within 48 hours of notification. Furthermore, anomalous award patterns reveal the same associate director winning the top prize in consecutive years (2024 and 2025). Filmmakers should exercise diligence.",
+            "executiveSummary": "Pinco Pallino Film Festival presents a typical emerging grassroots profile: an authentic, independently organized London showcase with genuine physical cinema screenings and positive community networking, tempered by a few standard indie limitations.\n\nOur investigation confirmed physical DCP screenings at Genesis Cinema (Studio 4) in East London, active UK corporate registration (Pinco Pallino Film CIC), and verifiable past alumni credits on IMDb. Key points of attention include intimate venue capacity (40 seats), a notable late-entry fee markup (£28 to £75), and an informal programming committee. Overall, it serves as a credible local showcase for emerging directors under early-bird submission tiers.",
             
-            "festivalOverview": "Established in 2021 in London, the Pinco Pallino Film Festival markets itself as an emerging international showcase for independent cinema. It claims over 3,000 annual entries and advertises 'Official Platinum Sponsorships' from ARRI and Sony Cinema.\n\nHowever, these sponsorships have been publicly disavowed by the manufacturers. The primary revenue driver is an aggressive fee escalation model, escalating from £28 to £95 in the final weeks, supplemented by £180 physical trophy packages. Screening logistics are verified but restricted in audience capacity.",
+            "festivalOverview": "Established in 2021 in London, the Pinco Pallino Film Festival is an annual multi-day indie event celebrating debut shorts and grassroots cinema. Over four editions, it has screened more than 80 independent short films and features, centered around East London's Genesis Cinema.\n\nThe festival operates transparent submission deadlines on FilmFreeway. Audience attendance is community-driven, offering valuable peer networking for debut creators, though buyer and major trade press presence remains modest.",
             
-            "organizerProfile": "The entity was registered as 'Pallino Media Lab Ltd' via UK Companies House. Directors Arthur Smith and Benjamin Jones are listed on public records. \n\nPublic filings reveal that Pallino Media Lab Ltd was dissolved via compulsory strike-off on 14 March 2024 while continuing to accept entry fees. Multiple submitters reported receiving unsolicited marketing emails from IndiePitch Consulting offering paid rejection audits. Additionally, Director Arthur Smith holds an individual bankruptcy filing dating to November 2022.",
+            "organizerProfile": "The festival is organized by Pinco Pallino Film CIC (UK Community Interest Company No. 13984712), directed by Arthur Smith and programmer Benjamin Jones. Both hold verifiable independent filmmaking and community cinema curation credits.\n\nPublic records show the Community Interest Company is active and compliant with annual micro-entity filings. A previous commercial vehicle (Pallino Media Lab Ltd) was dissolved in 2024 to centralize all festival operations under the non-profit CIC.",
             
-            "participantFeedback": "Aggregated sentiment across Reddit r/Filmmakers, TrustPilot, and Stage 32 is overwhelmingly cautionary (1.4/5 average score). The most frequent complaint (42 independent reports) centers on 3–5 week communication blackouts following payment processing.\n\nSecondary complaints focus on the screening format. Filmmakers accepted under 'Gala Premiere' categories reported receiving unlisted Vimeo links with single-digit view counts instead of physical cinema DCP projection.",
+            "participantFeedback": "Filmmaker sentiment across FilmFreeway, Letterboxd, and Reddit r/Filmmakers is broadly balanced (3.6/5 average). Attendees consistently praise the welcoming atmosphere, physical Q&As, and Genesis Cinema bar networking.\n\nConstructive feedback primarily cites communication latency during peak submission windows (1–2 week reply delays) and limited ticket allocations for filmmakers' extended crews due to the 40-seat auditorium size.",
             
             "corporateEntity": {
-                "legalName": "Pallino Media Lab Ltd",
+                "legalName": "Pinco Pallino Film CIC",
                 "registrationNumber": "13984712",
-                "status": "Dissolved via Compulsory Strike-off (14 March 2024)",
+                "status": "Active Community Interest Company",
                 "incorporationDate": "12 April 2022",
                 "registeredAddress": "71-75 Shelton Street, London, WC2H 9JQ, UK",
-                "associatedFestivals": ["Pinco Pallino Film Festival", "Apex Short Film Arena", "London Indie Excellence Awards"],
-                "connectedEntities": ["Pinco Pallino Film CIC", "IndiePitch Consulting", "Sterling Productions Ltd"],
+                "associatedFestivals": ["Pinco Pallino Film Festival", "East London Short Film Showcase"],
+                "connectedEntities": ["Pallino Media Lab Ltd", "East London Filmmakers Collective"],
                 "flags": [
-                    "Dissolved via Compulsory Strike-off",
                     "Virtual Mailbox Registered Address (Shelton Street)",
-                    "Director Active Insolvency Notice"
+                    "Sole Director Structure"
                 ],
-                "notes": "Registered to a well-known virtual office address. Entity was dissolved on the public register while active festival cycles were open for submission fees."
+                "notes": "Registered as a UK Community Interest Company with statutory asset lock. Annual accounts and confirmation statements are up to date."
             },
 
             "unresolvedQuestions": [
-                "Why was the 'Best International Short' awarded to the exact same director (Martin Sterling) in both 2024 and 2025?",
-                "How does the festival acquire filmmaker contact information to solicit paid IndiePitch Consulting packages?",
-                "Where is the £180 trophy packaging fee allocated given the reported 4-week communication delays?"
+                "Will physical screening allocations expand beyond Studio 4 for the upcoming edition?",
+                "Does the festival plan to implement a formalized blind jury evaluation rubric for student categories?",
+                "What proportion of selected filmmakers receive complimentary festival passes?"
             ],
             "filmmakerChecklist": [
-                "Avoid late deadline fees (£95+); they provide no marginal selection benefit.",
-                "Do not purchase unsolicited 'rejection audit' services from IndiePitch Consulting.",
-                "Disregard the disavowed ARRI/Sony sponsorships when evaluating festival prestige.",
-                "Request written confirmation of physical DCP screening room before attending."
+                "Submit during Super Early Bird or Early Bird windows (£28–£38) for best value.",
+                "Confirm screening room technical specs (Studio 4 DCP 2K projection) with organizers.",
+                "Reserve screening tickets early due to intimate 40-seat auditorium capacity.",
+                "Retain World Premiere status if targeting Tier-1 BAFTA-qualifying festivals."
             ],
             "previousEditions": [
                 {
                     "year": 2024,
                     "editionNumber": "4th Annual Edition",
-                    "heldLocation": "Genesis Cinema (Studio 4) & BFI Southbank (NFT3 private hire), London",
+                    "heldLocation": "Genesis Cinema (Studio 4), London",
                     "heldDates": "October 12-14, 2024",
                     "awards": [
                         {
-                            "awardName": "Grand Jury Prize (Best International Feature)",
-                            "winnerTitle": "The Iron Threshold",
+                            "awardName": "Grand Jury Prize (Best Narrative Short)",
+                            "winnerTitle": "The Echo Chamber",
                             "recipientName": "Martin Sterling",
                             "recipientAvatarUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&auto=format&fit=crop&q=80",
                             "winnerUrl": "https://www.imdb.com/title/tt2948194",
@@ -837,17 +728,17 @@ def get_demo_full_dossier():
                     ],
                     "pressCoverage": [
                         {
-                            "headline": "London Indie Festival Announces 2024 Winners Amidst Venue Shift",
-                            "publisher": "IndieWire Community Wire",
-                            "url": "https://www.indiewire.com"
+                            "headline": "London Grassroots Showcase Highlights Emerging Short Filmmakers",
+                            "publisher": "Film London News",
+                            "url": "https://filmlondon.org.uk"
                         },
                         {
-                            "headline": "Filmmakers Voice Mixed Reactions Following Genesis Cinema Screening",
-                            "publisher": "Screen International Dispatch",
-                            "url": "https://www.screendaily.com"
+                            "headline": "East London Indie Shorts Celebrate Community Screening",
+                            "publisher": "British Film Review",
+                            "url": "https://www.britishfilmreview.co.uk"
                         }
                     ],
-                    "notes": "Official catalog listed 18 screened shorts and 2 features. Multiple attendees reported AV projection glitches in Studio 4."
+                    "notes": "Official catalog listed 24 screened shorts across 3 blocks. Strong attendance with lively Q&A panels."
                 },
                 {
                     "year": 2023,
@@ -858,10 +749,10 @@ def get_demo_full_dossier():
                         {
                             "awardName": "Grand Jury Prize (Best Narrative Short)",
                             "winnerTitle": "Fading Horizon",
-                            "recipientName": "Martin Sterling",
-                            "recipientAvatarUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&auto=format&fit=crop&q=80",
+                            "recipientName": "Oliver Finch",
+                            "recipientAvatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&auto=format&fit=crop&q=80",
                             "winnerUrl": "https://www.imdb.com/title/tt1928472",
-                            "imdbUrl": "https://www.imdb.com/name/nm5829104"
+                            "imdbUrl": "https://www.imdb.com/name/nm4829102"
                         },
                         {
                             "awardName": "Best Student Documentary",
@@ -890,10 +781,10 @@ def get_demo_full_dossier():
                         {
                             "awardName": "Best UK Independent Short",
                             "winnerTitle": "Thames Drift",
-                            "recipientName": "Oliver Finch",
-                            "recipientAvatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&auto=format&fit=crop&q=80",
-                            "winnerUrl": "https://www.oliverfinchcinema.com",
-                            "imdbUrl": "https://www.imdb.com/name/nm4829102"
+                            "recipientName": "Chloe Laurent",
+                            "recipientAvatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80",
+                            "winnerUrl": "https://chloelaurentfilm.com",
+                            "imdbUrl": "https://www.imdb.com/name/nm8920141"
                         }
                     ],
                     "pressCoverage": [
@@ -908,13 +799,13 @@ def get_demo_full_dossier():
             ],
 
             "premiereRisk": {
-                "riskScore": 82,
-                "riskLevel": "HIGH_BURN_RISK",
-                "premiereDemand": "World or UK Premiere Demanded for Competition",
-                "accreditationStatus": "Unaccredited (Not BAFTA/BIFA Qualifying)",
-                "buyerPressFootprint": "Zero verified sales agents, distributors, or accredited trade press",
-                "verdictRationale": "The festival demands premiere exclusivity while delivering zero industry acquisition leverage. Surrendering a World or UK Premiere here burns premiere eligibility for major UK accredited festivals without theatrical trade exposure.",
-                "recommendation": "Do NOT submit as World or UK Premiere. If already premiered elsewhere, submit only under low early-bird tiers."
+                "riskScore": 45,
+                "riskLevel": "MODERATE_CAUTION",
+                "premiereDemand": "London / Regional Premiere Preferred (Flexible)",
+                "accreditationStatus": "Independent Grassroots Showcase (Non-BAFTA Qualifying)",
+                "buyerPressFootprint": "Emerging film bloggers, Film London community dispatch, local indie press",
+                "verdictRationale": "A legitimate, grassroots London independent festival with real theatrical screenings. However, because it is not BAFTA-qualifying and trade buyers are limited, filmmakers should avoid burning a World or UK Premiere here if targeting major Tier-1 festivals.",
+                "recommendation": "Recommended for UK debut shorts and London networking under Early Bird tiers. If targeting Tier-1 festivals, retain World Premiere status."
             },
 
             "feeEscalation": {
@@ -923,82 +814,82 @@ def get_demo_full_dossier():
                     {"tierName": "Super Early Bird", "amount": 28, "currency": "£", "deadlineDate": "15 Jan 2024", "surgePercentage": 0},
                     {"tierName": "Early Bird", "amount": 38, "currency": "£", "deadlineDate": "1 Mar 2024", "surgePercentage": 35},
                     {"tierName": "Regular Deadline", "amount": 55, "currency": "£", "deadlineDate": "15 May 2024", "surgePercentage": 96},
-                    {"tierName": "Late Deadline", "amount": 85, "currency": "£", "deadlineDate": "1 Aug 2024", "surgePercentage": 203},
-                    {"tierName": "Extended / Last Chance", "amount": 98, "currency": "£", "deadlineDate": "15 Sep 2024", "surgePercentage": 250}
+                    {"tierName": "Late Deadline", "amount": 75, "currency": "£", "deadlineDate": "1 Aug 2024", "surgePercentage": 168},
+                    {"tierName": "Extended / Last Chance", "amount": 85, "currency": "£", "deadlineDate": "15 Sep 2024", "surgePercentage": 203}
                 ],
-                "spikeAlert": "Aggressive 203% fee surge in late submission windows (£28 -> £85).",
+                "spikeAlert": "Moderate fee increase in late submission windows (£28 -> £75). Early submission recommended.",
                 "averageMarketFee": "£32 average for UK indie short film entries",
-                "percentile": 92
+                "percentile": 65
             },
 
             "forensicSummary": {
                 "scamPattern": {
-                    "status": "RED_FLAG",
-                    "headline": "Dissolved Entity & Virtual Maildrop Footprint",
-                    "summary": "Operating company Pallino Media Lab Ltd (Company No. 13984712) was dissolved via compulsory strike-off in March 2024. The registered office at 71-75 Shelton Street, London is a mass-registration virtual office shared with over 2,000 corporate mailboxes.",
-                    "educationalContext": "Predatory festivals frequently operate through dissolved shell entities or mail forwarding services to evade chargebacks, refund liability, and legal service of process once fees are collected.",
+                    "status": "AMBER_WARNING",
+                    "headline": "Grassroots Operational Footprint",
+                    "summary": "Pinco Pallino operates through Pinco Pallino Film CIC, an active UK Community Interest Company. Its registered address at 71-75 Shelton Street is a shared central London commercial address, common among early-stage arts organizations. Annual filings are maintained and up to date.",
+                    "educationalContext": "Community Interest Companies (CICs) are regulated UK non-profit entities with an asset lock. While a shared virtual office is common for emerging festivals, filmmakers should confirm physical event venues.",
                     "signals": [
-                        "Operating entity dissolved on 14 March 2024 (Companies House)",
-                        "71-75 Shelton Street virtual office address with no physical festival staff",
-                        "Shared director ties to sister festival 'London Indie Shorts Review'"
+                        "Active UK Community Interest Company (Pinco Pallino Film CIC)",
+                        "Registered office at 71-75 Shelton Street shared commercial address",
+                        "Previous trading entity dissolved in 2024 to consolidate non-profit CIC operations"
                     ],
-                    "relatedEntities": ["Pallino Media Lab Ltd", "London Indie Shorts Review", "Shelton Mail Services Ltd"]
+                    "relatedEntities": ["Pinco Pallino Film CIC", "Pallino Media Lab Ltd", "Genesis Cinema Studio 4"]
                 },
                 "juryConflict": {
-                    "status": "RED_FLAG",
-                    "headline": "Jury Self-Dealing & Repeat Winner Anomaly",
-                    "summary": "Festival Programmer Arthur Smith actively operates IndiePitch Consulting, marketing paid script and DCP services to festival applicants. Furthermore, the 2024 Best Short winner is a direct business associate and co-producer who also received top awards in the 2023 edition.",
-                    "educationalContext": "Legitimate festivals maintain strict recusal policies prohibiting jury members and programmers from awarding honors to business partners, clients, or co-producers. Repeat laureates with commercial ties signal vanity award milling.",
+                    "status": "AMBER_WARNING",
+                    "headline": "Informal Jury & Programming Governance",
+                    "summary": "The jury consists of working UK independent filmmakers and programmers. While selections are peer-reviewed, the festival relies on informal recusal rather than an automated blind-scoring portal. An associate producer screened a short in an earlier non-competitive showcase in 2023.",
+                    "educationalContext": "Grassroots festivals often draw jurors from their local filmmaker community. Transparent recusal policies ensure impartial scoring.",
                     "signals": [
-                        "Arthur Smith co-owns IndiePitch Consulting targeting submitting filmmakers",
-                        "2024 Best Short Winner co-produced a past commercial project with Lead Programmer",
-                        "Same director won top prize across consecutive 2023 and 2024 editions"
+                        "Jury members have active independent production credits",
+                        "Informal recusal protocols rather than blind evaluation software",
+                        "2023 showcase included an associate producer's non-competitive short"
                     ],
-                    "relatedEntities": ["IndiePitch Consulting", "Arthur Smith", "Pallino Media Lab Ltd"]
+                    "relatedEntities": ["Arthur Smith", "Benjamin Jones", "Genesis Cinema Studio 4"]
                 },
                 "venueReality": {
-                    "status": "MISMATCH",
-                    "headline": "Advertised Theatrical Gala vs. 4-Wall Private Room Reality",
-                    "summary": "Festival marketing advertises red-carpet galas at 'BFI Southbank NFT1'. Corroboration reveals zero contract with BFI. Historical bookings show only a 2-hour 4-wall hire of Studio 4 at Genesis Cinema, with filmmaker reports confirming substitution of unlisted Vimeo links with under 5 views.",
-                    "educationalContext": "Curated Cinema Selection vs. 4-Wall Rental: In an authentic festival, the cinema directly curates, tickets, and publishes the festival on its box office schedule. A 4-wall rental is an hourly room hire that anyone can buy with zero cinema programming vetting. Predatory organizers use 4-wall bookings to take promo photos, then quietly pivot submitters to cheap unlisted Vimeo links.",
+                    "status": "AMBER_WARNING",
+                    "headline": "Boutique Screening Room vs. Gala Marketing",
+                    "summary": "The festival delivers authentic physical screenings at Genesis Cinema (Studio 4) in East London with verified 2K DCP projection and enthusiastic filmmaker attendance. However, marketing references to 'London Gala Showcases' should be understood as an intimate 40-seat boutique screening room rather than a West End palace.",
+                    "educationalContext": "Boutique cinema rentals provide genuine big-screen DCP projection and intimate peer networking, but filmmakers should expect limited crew ticket allocations.",
                     "signals": [
-                        "BFI Southbank NFT1 claim refuted: No municipal screening permit or BFI box office entry",
-                        "Genesis Cinema manifest indicates private room hire, not curated public festival season",
-                        "Filmmaker testimonies document unlisted Vimeo password-protected links with < 5 views"
+                        "Verified physical DCP screenings at Genesis Cinema Studio 4",
+                        "Intimate 40-seat auditorium capacity",
+                        "One-off 3-hour private hire at BFI Southbank NFT3 in 2024"
                     ],
-                    "relatedEntities": ["BFI Southbank", "Genesis Cinema Studio 4", "Vimeo On-Demand"]
+                    "relatedEntities": ["Genesis Cinema Studio 4", "BFI Southbank NFT3"]
                 }
             }
         },
 
         "deepVetting": {
             "festivalName": "Pinco Pallino Film Festival",
-            "overallAuthenticityScore": 34,
-            "totalFlags": 12,
+            "overallAuthenticityScore": 68,
+            "totalFlags": 3,
             "dimensions": [
                 {
                     "id": "dim_corp",
                     "dimensionKey": "CORPORATE_REGISTRY",
                     "title": "Corporate & Legal Entity Verification",
                     "category": "ORGANIZER_TRACK_RECORD",
-                    "status": "RED_FLAG",
-                    "confidenceScore": 96,
-                    "summary": "Operating company Pallino Media Lab Ltd subjected to compulsory strike-off in 2022; active CIC filed late micro-entity accounts.",
-                    "signalsFound": ["2022 Insolvency notice", "Late micro-entity filing", "Multiple dormant entities"],
-                    "corroboratingSources": ["find-and-update.company-information.service.gov.uk", "thegazette.co.uk"],
-                    "riskWeight": "CRITICAL"
+                    "status": "VERIFIED_AUTHENTIC",
+                    "confidenceScore": 94,
+                    "summary": "Operating entity Pinco Pallino Film CIC is an active UK Community Interest Company with up-to-date micro-entity filings and non-profit asset lock.",
+                    "signalsFound": ["Active Community Interest Company status", "Timely confirmation statements", "Non-profit asset lock declared"],
+                    "corroboratingSources": ["find-and-update.company-information.service.gov.uk"],
+                    "riskWeight": "LOW"
                 },
                 {
                     "id": "dim_domain",
                     "dimensionKey": "DOMAIN_PROVENANCE",
                     "title": "Domain Age & WHOIS Provenance",
                     "category": "ORGANIZER_TRACK_RECORD",
-                    "status": "AMBER_WARNING",
-                    "confidenceScore": 92,
-                    "summary": "Domain pincopallinofilmfestival.com registered June 2021 despite claiming 15-year heritage since 2009.",
-                    "signalsFound": ["WHOIS Creation: 2021-06-14", "Claimed founded year: 2009 (12-year discrepancy)", "Privacy-protected registrant"],
-                    "corroboratingSources": ["whois.domaintools.com", "web.archive.org"],
-                    "riskWeight": "MEDIUM"
+                    "status": "VERIFIED_AUTHENTIC",
+                    "confidenceScore": 95,
+                    "summary": "Domain pincopallinofilmfestival.com registered June 2021, matching 4 years of continuous festival operations and valid SSL certification.",
+                    "signalsFound": ["Continuous registration since June 2021", "Active SSL security certificates", "Consistent DNS nameserver routing"],
+                    "corroboratingSources": ["rdap.org", "whois.iana.org"],
+                    "riskWeight": "LOW"
                 },
                 {
                     "id": "dim_venue",
@@ -1006,10 +897,10 @@ def get_demo_full_dossier():
                     "title": "Municipal Screening & Venue Corroboration",
                     "category": "VENUE_SCREENINGS",
                     "status": "VERIFIED_AUTHENTIC",
-                    "confidenceScore": 95,
-                    "summary": "Confirmed physical bookings at Genesis Cinema and BFI Southbank NFT3 via private hire manifests.",
-                    "signalsFound": ["BFI Private Hire manifest match", "Genesis Cinema website listing", "Confirmed DCP delivery guidelines"],
-                    "corroboratingSources": ["bfi.org.uk", "genesiscinema.co.uk"],
+                    "confidenceScore": 96,
+                    "summary": "Confirmed physical bookings at Genesis Cinema Studio 4 via private hire manifests and attendee box office records.",
+                    "signalsFound": ["Genesis Cinema private hire manifest match", "Verified 2K DCP projection", "Confirmed public ticketing schedule"],
+                    "corroboratingSources": ["genesiscinema.co.uk"],
                     "riskWeight": "LOW"
                 },
                 {
@@ -1017,97 +908,97 @@ def get_demo_full_dossier():
                     "dimensionKey": "PERSONNEL_DOSSIER",
                     "title": "Key Personnel & Jury Dossiers",
                     "category": "ORGANIZER_TRACK_RECORD",
-                    "status": "RED_FLAG",
-                    "confidenceScore": 90,
-                    "summary": "Key personnel cross-sell distribution services. Same filmmaker won in 2024 and 2025.",
-                    "signalsFound": ["Companies House directorship overlap", "Repeat winner anomaly", "Insolvency notice"],
-                    "corroboratingSources": ["gov.uk", "imdb.com", "thegazette.co.uk"],
-                    "riskWeight": "HIGH"
+                    "status": "AMBER_WARNING",
+                    "confidenceScore": 88,
+                    "summary": "Key personnel possess verifiable UK indie credits; recusal protocols are informal rather than independently audited.",
+                    "signalsFound": ["Verifiable IMDb producer/director credits", "Informal recusal guidelines", "Active local filmmaker network"],
+                    "corroboratingSources": ["imdb.com", "filmlondon.org.uk"],
+                    "riskWeight": "MEDIUM"
                 },
                 {
                     "id": "dim_plagiarism",
                     "dimensionKey": "BOILERPLATE_PLAGIARISM",
                     "title": "Boilerplate Rules & Text Duplication",
                     "category": "ORGANIZER_TRACK_RECORD",
-                    "status": "RED_FLAG",
-                    "confidenceScore": 94,
-                    "summary": "Terms and Conditions Section 4.2 copied verbatim from Apex Short Film Arena (97% semantic similarity).",
-                    "signalsFound": ["97% text duplication with Apex Short Film Arena", "Identical non-refundable indemnity clause", "Shared contact email pattern"],
-                    "corroboratingSources": ["filmfreeway.com/ApexShortFilmArena", "copyscape.com"],
-                    "riskWeight": "HIGH"
+                    "status": "INFORMATIONAL",
+                    "confidenceScore": 90,
+                    "summary": "Rules and terms follow standard FilmFreeway conventions with standard non-refundable entry stipulations.",
+                    "signalsFound": ["Standard FilmFreeway terms alignment", "Transparent eligibility dates", "Clear category breakdowns"],
+                    "corroboratingSources": ["filmfreeway.com"],
+                    "riskWeight": "LOW"
                 },
                 {
                     "id": "dim_alumni",
                     "dimensionKey": "ALUMNI_FOOTPRINT",
                     "title": "Alumni Filmmaker & Selection Footprint",
                     "category": "EXPERIENCE_FEEDBACK",
-                    "status": "INFORMATIONAL",
-                    "confidenceScore": 88,
-                    "summary": "18 verified past alumni on IMDb; however, 42 reviews highlight severe post-submission communication blackouts.",
-                    "signalsFound": ["18 confirmed alumni credits on IMDb", "42 negative reviews documenting communication delays", "Mixed festival forum sentiment"],
-                    "corroboratingSources": ["imdb.com", "trustpilot.com", "reddit.com"],
-                    "riskWeight": "MEDIUM"
+                    "status": "VERIFIED_AUTHENTIC",
+                    "confidenceScore": 91,
+                    "summary": "28 verified past alumni directors on IMDb and Letterboxd; positive community reviews averaging 3.6/5 stars.",
+                    "signalsFound": ["28 verified alumni credits on IMDb", "Positive attendee feedback on Genesis Cinema Q&As", "Letterboxd community engagement"],
+                    "corroboratingSources": ["imdb.com", "letterboxd.com"],
+                    "riskWeight": "LOW"
                 },
                 {
                     "id": "dim_images",
                     "dimensionKey": "IMAGE_PROVENANCE",
                     "title": "Promotional Image & Asset Authenticity",
                     "category": "IMAGE_PROVENANCE",
-                    "status": "RED_FLAG",
-                    "confidenceScore": 96,
-                    "summary": "Reverse image search detected stock auditorium photos from Shutterstock and generic laurel graphics cloned across 14 other festival mill sites.",
+                    "status": "AMBER_WARNING",
+                    "confidenceScore": 92,
+                    "summary": "Event and marquee photography from Genesis Cinema is authentic; website promotional header uses a stock cinema auditorium image.",
                     "signalsFound": [
-                        "Auditorium photo matches Shutterstock Asset #7192014 (2017)",
-                        "Laurel graphic identical to Canva template reused across 14 festivals",
-                        "Best Director Trophy is a synthetic 3D CGI TurboSquid render",
-                        "Venue marquee is a digitally superimposed iStock image"
+                        "Authentic event photography from Genesis Cinema Studio 4 Q&A",
+                        "Real step-and-repeat attendee photos verified",
+                        "Stock auditorium photo used on promotional web header",
+                        "Standard customizable Canva laurel template"
                     ],
-                    "corroboratingSources": ["shutterstock.com", "turbosquid.com", "istockphoto.com"],
-                    "riskWeight": "HIGH",
+                    "corroboratingSources": ["shutterstock.com", "genesiscinema.co.uk"],
+                    "riskWeight": "MEDIUM",
                     "imageArtifacts": [
                         {
                             "id": "img_art_1",
                             "assetType": "VENUE_PHOTO",
                             "claimedUrl": "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&auto=format&fit=crop&q=80",
-                            "claimedDescription": "2024 Gala Screening Audience at West End Curzon Soho",
+                            "claimedDescription": "Website Promotional Header Banner",
                             "classification": "STOCK_PHOTO",
                             "originMatchUrl": "https://www.shutterstock.com/image-photo/cinema-auditorium-crowd-watching-movie-7192014",
                             "originMatchTitle": "Shutterstock Asset #7192014 ('Crowd in Modern Cinema Auditorium')",
-                            "confidenceScore": 98,
-                            "forensicNotes": "Reverse image search identified identical stock photo on Shutterstock uploaded in 2017. Zero metadata or architectural geometry matches Curzon Soho Screen 1."
+                            "confidenceScore": 95,
+                            "forensicNotes": "Reverse image search identified identical stock photo on Shutterstock uploaded in 2017. Used as atmospheric website banner rather than depicting physical Genesis Cinema."
                         },
                         {
                             "id": "img_art_2",
                             "assetType": "LAUREL_GRAPHIC",
                             "claimedUrl": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=800&auto=format&fit=crop&q=80",
-                            "claimedDescription": "Official Selection & Winner Laurel Emblem 2024/2025",
-                            "classification": "CLONED_ACROSS_NETWORK",
+                            "claimedDescription": "Official Selection Laurel Emblem",
+                            "classification": "TEMPLATE_LAUREL",
                             "originMatchUrl": "https://filmfreeway.com/ApexShortFilmArena",
-                            "originMatchTitle": "Canva Template #FF-8812 & Apex Short Film Arena",
-                            "confidenceScore": 94,
-                            "forensicNotes": "Vector leaf structure matches standard free Canva laurel template reused verbatim across 14 other festivals operated by the same network."
+                            "originMatchTitle": "Canva Template #FF-8812",
+                            "confidenceScore": 88,
+                            "forensicNotes": "Vector leaf structure matches standard free Canva laurel template widely used across independent festival circuits."
                         },
                         {
                             "id": "img_art_3",
-                            "assetType": "AWARD_TROPHY",
-                            "claimedUrl": "https://images.unsplash.com/photo-1578269174936-2709b6aeb913?w=800&auto=format&fit=crop&q=80",
-                            "claimedDescription": "Heavy Cast Brass Best Director Award Trophy (£180 Option)",
-                            "classification": "SYNTHETIC_RENDER",
-                            "originMatchUrl": "https://www.turbosquid.com/3d-models/golden-trophy-statuette-cinema-189201",
-                            "originMatchTitle": "TurboSquid 3D Cinema Trophy Mockup #189201",
-                            "confidenceScore": 91,
-                            "forensicNotes": "Specular reflections and ambient occlusion indicate synthetic 3D CAD render. No physical casting foundry or manufacturing record found."
+                            "assetType": "VENUE_PHOTO",
+                            "claimedUrl": "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=800&auto=format&fit=crop&q=80",
+                            "claimedDescription": "Genesis Cinema Studio 4 Q&A Session",
+                            "classification": "AUTHENTIC_LIVE",
+                            "originMatchUrl": "https://genesiscinema.co.uk/events/archive",
+                            "originMatchTitle": "Genesis Cinema Studio 4 Event Photography",
+                            "confidenceScore": 96,
+                            "forensicNotes": "Verified authentic event photography from October 2024 edition showing filmmaker Q&A panel."
                         },
                         {
                             "id": "img_art_4",
-                            "assetType": "VENUE_PHOTO",
-                            "claimedUrl": "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=800&auto=format&fit=crop&q=80",
-                            "claimedDescription": "Opening Night Red Carpet Marquee at Prince Charles Cinema",
-                            "classification": "STOCK_PHOTO",
-                            "originMatchUrl": "https://www.istockphoto.com/photo/london-west-end-theater-entrance-gm182910",
-                            "originMatchTitle": "iStock by Getty Images ('London Theater Entrance by Night')",
-                            "confidenceScore": 96,
-                            "forensicNotes": "Photoshop layering and font kerning artifacts show 'Pinco Pallino Film Gala' digitally superimposed over a 2019 generic London theater entrance photo."
+                            "assetType": "RED_CARPET",
+                            "claimedUrl": "https://images.unsplash.com/photo-1578269174936-2709b6aeb913?w=800&auto=format&fit=crop&q=80",
+                            "claimedDescription": "Filmmaker Step-and-Repeat Foyer Photo",
+                            "classification": "AUTHENTIC_LIVE",
+                            "originMatchUrl": "https://pincopallinofilmfestival.com/gallery",
+                            "originMatchTitle": "Festival Foyer Step-and-Repeat Archive",
+                            "confidenceScore": 94,
+                            "forensicNotes": "Authentic on-site step-and-repeat backdrop with genuine attendee badges and festival programs."
                         }
                     ]
                 }
@@ -1117,45 +1008,45 @@ def get_demo_full_dossier():
                     "id": "img_art_1",
                     "assetType": "VENUE_PHOTO",
                     "claimedUrl": "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&auto=format&fit=crop&q=80",
-                    "claimedDescription": "2024 Gala Screening Audience at West End Curzon Soho",
+                    "claimedDescription": "Website Promotional Header Banner",
                     "classification": "STOCK_PHOTO",
                     "originMatchUrl": "https://www.shutterstock.com/image-photo/cinema-auditorium-crowd-watching-movie-7192014",
                     "originMatchTitle": "Shutterstock Asset #7192014 ('Crowd in Modern Cinema Auditorium')",
-                    "confidenceScore": 98,
-                    "forensicNotes": "Reverse image search identified identical stock photo on Shutterstock uploaded in 2017. Zero metadata or architectural geometry matches Curzon Soho Screen 1."
+                    "confidenceScore": 95,
+                    "forensicNotes": "Reverse image search identified identical stock photo on Shutterstock uploaded in 2017. Used as atmospheric website banner rather than depicting physical Genesis Cinema."
                 },
                 {
                     "id": "img_art_2",
                     "assetType": "LAUREL_GRAPHIC",
                     "claimedUrl": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=800&auto=format&fit=crop&q=80",
-                    "claimedDescription": "Official Selection & Winner Laurel Emblem 2024/2025",
-                    "classification": "CLONED_ACROSS_NETWORK",
+                    "claimedDescription": "Official Selection Laurel Emblem",
+                    "classification": "TEMPLATE_LAUREL",
                     "originMatchUrl": "https://filmfreeway.com/ApexShortFilmArena",
-                    "originMatchTitle": "Canva Template #FF-8812 & Apex Short Film Arena",
-                    "confidenceScore": 94,
-                    "forensicNotes": "Vector leaf structure matches standard free Canva laurel template reused verbatim across 14 other festivals operated by the same network."
+                    "originMatchTitle": "Canva Template #FF-8812",
+                    "confidenceScore": 88,
+                    "forensicNotes": "Vector leaf structure matches standard free Canva laurel template widely used across independent festival circuits."
                 },
                 {
                     "id": "img_art_3",
-                    "assetType": "AWARD_TROPHY",
-                    "claimedUrl": "https://images.unsplash.com/photo-1578269174936-2709b6aeb913?w=800&auto=format&fit=crop&q=80",
-                    "claimedDescription": "Heavy Cast Brass Best Director Award Trophy (£180 Option)",
-                    "classification": "SYNTHETIC_RENDER",
-                    "originMatchUrl": "https://www.turbosquid.com/3d-models/golden-trophy-statuette-cinema-189201",
-                    "originMatchTitle": "TurboSquid 3D Cinema Trophy Mockup #189201",
-                    "confidenceScore": 91,
-                    "forensicNotes": "Specular reflections and ambient occlusion indicate synthetic 3D CAD render. No physical casting foundry or manufacturing record found."
+                    "assetType": "VENUE_PHOTO",
+                    "claimedUrl": "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=800&auto=format&fit=crop&q=80",
+                    "claimedDescription": "Genesis Cinema Studio 4 Q&A Session",
+                    "classification": "AUTHENTIC_LIVE",
+                    "originMatchUrl": "https://genesiscinema.co.uk/events/archive",
+                    "originMatchTitle": "Genesis Cinema Studio 4 Event Photography",
+                    "confidenceScore": 96,
+                    "forensicNotes": "Verified authentic event photography from October 2024 edition showing filmmaker Q&A panel."
                 },
                 {
                     "id": "img_art_4",
-                    "assetType": "VENUE_PHOTO",
-                    "claimedUrl": "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=800&auto=format&fit=crop&q=80",
-                    "claimedDescription": "Opening Night Red Carpet Marquee at Prince Charles Cinema",
-                    "classification": "STOCK_PHOTO",
-                    "originMatchUrl": "https://www.istockphoto.com/photo/london-west-end-theater-entrance-gm182910",
-                    "originMatchTitle": "iStock by Getty Images ('London Theater Entrance by Night')",
-                    "confidenceScore": 96,
-                    "forensicNotes": "Photoshop layering and font kerning artifacts show 'Pinco Pallino Film Gala' digitally superimposed over a 2019 generic London theater entrance photo."
+                    "assetType": "RED_CARPET",
+                    "claimedUrl": "https://images.unsplash.com/photo-1578269174936-2709b6aeb913?w=800&auto=format&fit=crop&q=80",
+                    "claimedDescription": "Filmmaker Step-and-Repeat Foyer Photo",
+                    "classification": "AUTHENTIC_LIVE",
+                    "originMatchUrl": "https://pincopallinofilmfestival.com/gallery",
+                    "originMatchTitle": "Festival Foyer Step-and-Repeat Archive",
+                    "confidenceScore": 94,
+                    "forensicNotes": "Authentic on-site step-and-repeat backdrop with genuine attendee badges and festival programs."
                 }
             ],
             "keyPersonnel": [
@@ -1168,12 +1059,12 @@ def get_demo_full_dossier():
                     "websiteUrl": "https://arthursmithcinema.co.uk",
                     "twitterUrl": "https://twitter.com/arthursmithfilm",
                     "companiesHouseUrl": "https://find-and-update.company-information.service.gov.uk/company/13984712",
-                    "companies": ["Pinco Pallino Film CIC", "Pallino Media Lab Ltd"],
-                    "associatedFestivals": ["Pinco Pallino Film Festival", "Apex Short Film Arena"],
-                    "isFestivalMillSuspect": True,
-                    "hasDistributionOverlap": True,
-                    "flags": ["Distribution Upsell Overlap", "2022 Insolvency Notice", "Shell Entity Director"],
-                    "notes": "Co-director of Pallino Media Lab Ltd, upselling consulting packages to rejected applicants. Subject of a 2022 insolvency filing."
+                    "companies": ["Pinco Pallino Film CIC"],
+                    "associatedFestivals": ["Pinco Pallino Film Festival"],
+                    "isFestivalMillSuspect": False,
+                    "hasDistributionOverlap": False,
+                    "flags": ["Sole Directorship", "Grassroots Producer"],
+                    "notes": "London-based independent producer and curator with verified screening credits at Genesis Cinema."
                 },
                 {
                     "name": "Benjamin Jones",
@@ -1183,16 +1074,16 @@ def get_demo_full_dossier():
                     "websiteUrl": "https://benjaminjonesjury.com",
                     "imdbUrl": "https://www.imdb.com/name/nm2948192",
                     "companiesHouseUrl": "https://find-and-update.company-information.service.gov.uk/company/13984712",
-                    "companies": ["IndiePitch Consulting", "Pallino Media Lab Ltd"],
+                    "companies": ["Pinco Pallino Film CIC"],
                     "associatedFestivals": ["Pinco Pallino Film Festival"],
                     "isFestivalMillSuspect": False,
-                    "hasDistributionOverlap": True,
-                    "flags": ["Paid Pitch Consulting Upsell", "Directorship Conflict with Director"],
-                    "notes": "Jury chair offering paid pitch consulting to submitters within 48 hours of their rejection. Shares directorship with Festival Director."
+                    "hasDistributionOverlap": False,
+                    "flags": ["Informal Recusal Policy"],
+                    "notes": "Screenwriter and festival programmer with independent short film credits."
                 },
                 {
                     "name": "Martin Sterling",
-                    "roles": ["Repeat Winner (2024 & 2025)", "Associate Producer"],
+                    "roles": ["2024 Best Short Winner"],
                     "avatarUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&auto=format&fit=crop&q=80",
                     "linkedinUrl": "https://www.linkedin.com/in/martin-sterling-director",
                     "facebookUrl": "https://www.facebook.com/martinsterlingdirector",
@@ -1203,8 +1094,8 @@ def get_demo_full_dossier():
                     "associatedFestivals": ["Pinco Pallino Film Festival"],
                     "isFestivalMillSuspect": False,
                     "hasDistributionOverlap": False,
-                    "flags": ["Anomalous Consecutive Winner (2024, 2025)", "Family Tie to Jury Chair"],
-                    "notes": "Anomalous repeat winner of the top prize in consecutive years (2024, 2025) despite claimed 1.2% selection rate."
+                    "flags": ["Independent Director"],
+                    "notes": "Winner of 2024 Best Short for 'The Echo Chamber', subsequently screened at other regional UK festivals."
                 }
             ],
             "generatedAt": now_iso
@@ -1213,7 +1104,7 @@ def get_demo_full_dossier():
             "status": "HEALTHY",
             "rawDomainClaimsReceived": 300,
             "assembledClaimsCount": 300,
-            "sourcesCount": 12,
+            "sourcesCount": 8,
             "validationErrorsCount": 0,
             "validationErrors": [],
             "deepVettingVectorsCount": 7,

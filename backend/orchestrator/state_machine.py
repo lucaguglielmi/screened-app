@@ -91,6 +91,9 @@ def enqueue_task(path: str, payload: dict, fallback_task_func, *args):
             url = f"{worker_url}{path}"
             
             headers = {"Content-type": "application/json"}
+            internal_secret = os.environ.get("INTERNAL_TASK_SECRET")
+            if internal_secret:
+                headers["X-Internal-Task-Secret"] = internal_secret
             if inject:
                 inject(headers)
                 
@@ -606,7 +609,7 @@ class Orchestrator:
                             category=QuestionCategory.BACKGROUND,
                             statement=raw_claim.get("statement", "Unknown Statement"),
                             claimKind=kind_enum,
-                            status=VerificationStatus.SUPPORTED,
+                            status=VerificationStatus.UNVERIFIED,
                             evidence=[]
                         )
                         
@@ -617,8 +620,6 @@ class Orchestrator:
                             if f"[{i}]" in field_name or f".{i}." in field_name:
                                 matching_basis = b
                                 break
-                        if not matching_basis and domain_basis_list:
-                            matching_basis = domain_basis_list[i % len(domain_basis_list)]
                                 
                         if matching_basis:
                             citations = matching_basis.get("citations", [])
@@ -656,7 +657,7 @@ class Orchestrator:
                             claim.status = VerificationStatus.CORROBORATED
                         elif len(claim.evidence) == 1:
                             claim.status = VerificationStatus.SUPPORTED
-                        elif not matching_basis:
+                        else:
                             claim.status = VerificationStatus.UNVERIFIED
 
                         domain_atomic_claims.append(claim)

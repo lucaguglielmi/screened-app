@@ -237,7 +237,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                 >
                   <div className="flex items-center space-x-2">
                     <ShieldCheck className="w-4 h-4 text-orange-400" />
-                    <span>Scam &amp; Risk Defense Guide</span>
+                    <span>Festival Protection Guide</span>
                   </div>
                   <ExternalLink className="w-3.5 h-3.5 opacity-60" />
                 </button>

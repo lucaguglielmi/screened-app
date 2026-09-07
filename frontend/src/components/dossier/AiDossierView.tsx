@@ -68,7 +68,7 @@ export const AiDossierView: React.FC<Props> = ({
             type="button"
             onClick={onCopyAiPayload}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-xs font-mono text-emerald-300 hover:text-emerald-200 transition-all shadow-md cursor-pointer group active:scale-95 flex-1 sm:flex-initial justify-center"
-            title="Copy structured JSON-LD format for prompt injection"
+            title="Copy structured JSON-LD format for AI workflows"
           >
             {copiedAiPayload ? (
               <>

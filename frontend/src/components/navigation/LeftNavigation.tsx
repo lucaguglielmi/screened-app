@@ -128,24 +128,24 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange }) => {
 
       {/* Bottom Section: Why Screened & Deployment Status */}
       <div className="flex flex-col items-center gap-3 w-full pt-2">
-        {/* Scam & Protection Guide Link */}
+        {/* Festival Protection Guide Link */}
         <div className="relative">
           <button
             onClick={() => handleSelectTool('FESTIVAL_PROTECTION_GUIDE')}
-            onMouseEnter={() => setActiveTooltip('Scam & Risk Defense Guide')}
+            onMouseEnter={() => setActiveTooltip('Festival Protection Guide')}
             onMouseLeave={() => setActiveTooltip(null)}
             className={`p-2.5 rounded-xl transition-all cursor-pointer ${
               activeTool === 'FESTIVAL_PROTECTION_GUIDE'
                 ? 'bg-darkroom-card text-orange-400 border border-orange-500/40'
                 : 'hover:bg-darkroom-surface text-slate-500 hover:text-slate-300'
             }`}
-            title="Scam & Risk Defense Guide"
+            title="Festival Protection Guide"
           >
             <ShieldAlert className="size-4.5" />
           </button>
-          {activeTooltip === 'Scam & Risk Defense Guide' && (
+          {activeTooltip === 'Festival Protection Guide' && (
             <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-darkroom-surface text-slate-100 text-sm font-medium whitespace-nowrap shadow-xl border border-darkroom-border z-50 pointer-events-none">
-              Scam &amp; Risk Defense Guide
+              Festival Protection Guide
             </div>
           )}
         </div>

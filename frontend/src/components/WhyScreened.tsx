@@ -33,9 +33,9 @@ const RESEARCH_THEMES = [
     attribution: 'INDEPENDENT DOCUMENTARY DIRECTOR, UK',
   },
   {
-    theme: 'Laurel Mill & Vanity Certificate Schemes',
+    theme: 'High Acceptance Rates & Paid Trophies',
     description:
-      'Fabricated awards created exclusively to sell digital laurels, physical trophies (£150+), and paid press releases to micro-budget filmmakers seeking early validation.',
+      'Festivals structured primarily to offer digital laurels, physical trophies (£150+), and promotional packages with rapid turnaround and limited curation.',
     sourceCount: 45,
     dateRange: '2021 – 2026',
     quote:
@@ -43,9 +43,9 @@ const RESEARCH_THEMES = [
     attribution: 'DEBUT INDIE PRODUCER, BIFA LONGLIST CANDIDATE',
   },
   {
-    theme: 'Phantom Venue & Municipal Lease Contradictions',
+    theme: 'Unverified Venues & Schedule Mismatches',
     description:
-      'Promotional literature claiming historical cinema leases (e.g. IMAX, BFI Southbank, Curzon), contradicted by municipal licensing records and direct cinema manifests.',
+      'Promotional literature citing prominent cinema venues that do not match official theater manifests or box office schedules.',
     sourceCount: 29,
     dateRange: '2023 – 2026',
     quote:
@@ -53,9 +53,9 @@ const RESEARCH_THEMES = [
     attribution: 'NARRATIVE SHORT FILMMAKER, GLASGOW',
   },
   {
-    theme: 'Ghost Organizers & Impunity',
+    theme: 'Inactive Corporate Entities',
     description:
-      'Dissolved corporate entities with no public directors, unmonitored generic web forms, and zero refund accountability once fees are transferred.',
+      'Organizations operating under dissolved corporate entities, unmonitored generic forms, and limited clarity on refund policies.',
     sourceCount: 22,
     dateRange: '2022 – 2026',
     quote:
@@ -77,7 +77,7 @@ export const WhyScreened: React.FC<Props> = ({
         <section className="space-y-6 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-tool-diligence/10 border border-tool-diligence/30 text-tool-diligence text-xs font-mono font-semibold uppercase tracking-widest">
             <Scale className="size-3.5" />
-            <span>Empirical Impact & Problem Validation</span>
+            <span>Problem Overview &amp; Impact</span>
           </div>
           <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight">
             Why Screened Exists
@@ -86,7 +86,7 @@ export const WhyScreened: React.FC<Props> = ({
             Independent filmmakers spend over{' '}
             <strong className="text-white font-bold bg-white/10 px-1.5 py-0.5 rounded">£1,500 – £4,000</strong> per festival cycle in
             submission fees. Without transparent public evidence, micro-budget productions bear the
-            brunt of predatory laurel mills and phantom venue claims.
+            brunt of unverified claims, unlisted screenings, and high submission fees.
           </p>
         </section>
 
@@ -94,7 +94,7 @@ export const WhyScreened: React.FC<Props> = ({
         <section className="space-y-10">
           <div className="text-center space-y-2">
             <span className="text-slate-400 font-mono uppercase tracking-widest text-xs font-semibold">
-              Measured Workflow Baseline
+              Workflow Comparison
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl font-bold text-white">
               Manual Vetting vs. Autonomous Diligence
@@ -135,7 +135,7 @@ export const WhyScreened: React.FC<Props> = ({
                     <span>Ungrounded Risk</span>
                   </div>
                   <p className="text-sm text-slate-300 mt-1 ml-9">
-                    No cryptographic verification or citation index
+                    No verified source links or independent confirmation
                   </p>
                 </div>
               </div>

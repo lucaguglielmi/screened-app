@@ -8,8 +8,8 @@ describe('FeeEscalationVisualizer Component', () => {
     render(<FeeEscalationVisualizer festivalName="Pinco Pallino" />);
 
     expect(screen.getByText('Fee Escalation Visualizer')).toBeInTheDocument();
-    expect(screen.getByText(/Tracks submission fee trajectory for Pinco Pallino/i)).toBeInTheDocument();
-    expect(screen.getByText(/Aggressive 203% fee surge/i)).toBeInTheDocument();
+    expect(screen.getByText(/Tracks submission fees for Pinco Pallino/i)).toBeInTheDocument();
+    expect(screen.getByText(/Significant 203% fee increase/i)).toBeInTheDocument();
   });
 
   it('renders custom fee tiers with surge calculations', () => {

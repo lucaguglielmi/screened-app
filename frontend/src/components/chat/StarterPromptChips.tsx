@@ -10,7 +10,7 @@ const STARTER_PROMPTS = [
     icon: '🚨',
     title: 'Vet Pinco Pallino (Demo Entity)',
     prompt:
-      'Is Pinco Pallino Film Festival legitimate or a scam? Check their physical venue screening leases and entry fees.',
+      'Is Pinco Pallino Film Festival legitimate? Check their physical venue bookings and entry fees.',
     badge: 'Due Diligence',
     badgeClass: 'bg-tool-diligence/15 text-tool-diligence border border-tool-diligence/30',
   },

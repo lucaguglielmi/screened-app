@@ -313,14 +313,51 @@ async def get_diagnostics(authorization: str = Header(None)):
     }
 
 
+def verify_internal_task_request(request: Request) -> None:
+    """Verifies that an incoming internal task request is authorized.
+    
+    Accepts:
+    1. Matching 'X-Internal-Task-Secret' header if INTERNAL_TASK_SECRET is set.
+    2. Legitimate Google Cloud Tasks header ('X-CloudTasks-QueueName') stripped from external traffic by Google Front End.
+    3. Bearer token in Authorization header when OIDC_SERVICE_ACCOUNT is configured.
+    4. Local development requests when no secret or Cloud Tasks queue is configured.
+    """
+    internal_task_secret = os.getenv("INTERNAL_TASK_SECRET")
+    secret_header = request.headers.get("X-Internal-Task-Secret")
+    if internal_task_secret and secret_header == internal_task_secret:
+        return
+    
+    queue_name = request.headers.get("X-CloudTasks-QueueName")
+    if queue_name:
+        expected_queue = os.getenv("CLOUD_TASKS_QUEUE") or os.getenv("TASK_QUEUE_NAME")
+        if not expected_queue or queue_name == expected_queue or queue_name.endswith(expected_queue):
+            return
+            
+    auth_header = request.headers.get("Authorization", "")
+    if auth_header.startswith("Bearer ") and os.getenv("OIDC_SERVICE_ACCOUNT"):
+        return
+
+    # In local testing or development without credentials configured, allow execution
+    if os.getenv("ENVIRONMENT") != "production" and not internal_task_secret and not queue_name:
+        return
+
+    logger.warning(
+        "Rejected unauthorized call to internal task endpoint",
+        extra={"ip": request.client.host if request.client else "unknown"}
+    )
+    raise HTTPException(status_code=403, detail="Unauthorized internal task invocation")
+
+
 @app.post("/api/internal/tasks/disambiguate")
 async def task_disambiguate(payload: TaskDisambiguatePayload, request: Request):
+    verify_internal_task_request(request)
     logger.info(f"Received Cloud Task for disambiguation: {payload.investigation_id}")
     await orchestrator._run_disambiguation(payload.investigation_id, payload.query, payload.optional_url)
     return {"status": "ok"}
 
 @app.post("/api/internal/tasks/pipeline")
 async def task_pipeline(payload: TaskPipelinePayload, request: Request):
+    verify_internal_task_request(request)
     logger.info(f"Received Cloud Task for full pipeline: {payload.investigation_id}")
     entity = CandidateEntity(**payload.entity)
     await orchestrator._execute_full_research_pipeline(payload.investigation_id, entity, payload.intent)

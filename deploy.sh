@@ -69,7 +69,7 @@ gcloud run deploy "${SERVICE_NAME}" \
   --region="${REGION}" \
   --platform=managed \
   --allow-unauthenticated \
-  --set-env-vars="GOOGLE_CLOUD_PROJECT=${PROJECT_ID},GOOGLE_CLOUD_LOCATION=${REGION},ENVIRONMENT=production,COMMIT_SHA=${SHORT_SHA},VITE_GA4_MEASUREMENT_ID=${VITE_GA4_MEASUREMENT_ID},TASK_QUEUE_NAME=${TASK_QUEUE_NAME},WORKER_URL=${EXISTING_URL}" \
+  --set-env-vars="GOOGLE_CLOUD_PROJECT=${PROJECT_ID},GOOGLE_CLOUD_LOCATION=${REGION},ENVIRONMENT=production,COMMIT_SHA=${SHORT_SHA},VITE_GA4_MEASUREMENT_ID=${VITE_GA4_MEASUREMENT_ID},TASK_QUEUE_NAME=${TASK_QUEUE_NAME},CLOUD_TASKS_QUEUE=${TASK_QUEUE_NAME},WORKER_URL=${EXISTING_URL}" \
   --set-secrets="PARALLEL_API_KEY=parallel-api-key:latest,SESSION_SIGNING_KEY=session-signing-key:latest,DIAGNOSTICS_TOKEN=diagnostics-token:latest,PARALLEL_WEBHOOK_SECRET=parallel-webhook-secret:latest" \
   --memory=1Gi \
   --cpu=1 \

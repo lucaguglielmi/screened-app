@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://screened-pludf2u7yq-nw.a.run.app">
+  <a href="https://screened-786241671474.europe-west2.run.app">
     <img src="frontend/public/assets/screened-logo.svg" alt="Screened — Agentic Cinema Due Diligence" width="96" height="96" />
   </a>
 </p>
@@ -12,13 +12,13 @@
 </p>
 
 <p align="center">
-  <a href="https://screened-pludf2u7yq-nw.a.run.app">
+  <a href="https://screened-786241671474.europe-west2.run.app">
     <img src="https://img.shields.io/badge/Live_Demo-Cloud_Run_(London)-6366F1?style=for-the-badge&logo=googlecloud&logoColor=white" alt="Live Demo" />
   </a>
   <a href="https://github.com/lucaguglielmi/screened-app">
     <img src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" />
   </a>
-  <img src="https://img.shields.io/badge/Tests-74_Passed_100%25-10B981?style=for-the-badge&logo=pytest&logoColor=white" alt="Test Status" />
+  <img src="https://img.shields.io/badge/Tests-81_Passed_100%25-10B981?style=for-the-badge&logo=pytest&logoColor=white" alt="Test Status" />
   <img src="https://img.shields.io/badge/Diagrams-React_Flow_v12-6366F1?style=for-the-badge&logo=react&logoColor=white" alt="React Flow Diagrams" />
   <img src="https://img.shields.io/badge/License-Apache_2.0-818CF8?style=for-the-badge&logo=apache&logoColor=white" alt="License" />
 </p>
@@ -27,22 +27,22 @@
 
 ## 🎬 The Mission
 
-Every year, independent filmmakers spend thousands of pounds on festival submission fees, only to encounter opaque screening venues, predatory organizers, deceptive premiere policies, or awards that fail to qualify for major honors (BAFTA, BIFA, Oscars).
+Every year, independent filmmakers spend thousands of pounds on festival submission fees, often encountering unverified screening venues, steep fee escalations, unclear premiere policies, or awards that fail to qualify for major honors (BAFTA, BIFA, Oscars).
 
 **Screened** transforms cinema due-diligence from guesswork into an autonomous, transparent multi-agent investigation. Rather than assigning an arbitrary or blackbox "trust score", Screened functions as an investigative research room:
 1. **Screened AI (Conversational Agent Hub)**: Talks with filmmakers, analyzes queries or uploaded PDF scripts/emails, and autonomously dispatches specialized tools via **Gemini Function Calling API**.
-2. **Dissects Subject Entities**: Scrutinizes legal identity, physical venues, fee schedules, jury prestige, and filmmaker community feedback.
+2. **Dissects Subject Entities**: Scrutinizes legal identity, physical venues, fee schedules, jury background, and filmmaker community feedback.
 3. **Gathers Public Evidence**: Pulls verified data from official registries, festival archives, major trade publications (Variety, ScreenDaily), and community forums.
 4. **Cites Every Atomic Claim**: Direct links to verbatim quotes with source tier tags, retrieval timestamps, and SHA-256 report fingerprints.
-5. **Scouts Strategic Opportunities & Grants**: Matches film profiles to verified open calls and public institutional grant funds (BFI, Screen Scotland, Arts Council, Sundance) with `.ics` calendar exports.
+5. **Scouts Strategic Opportunities & Grants** *(Coming Soon — Post-Hackathon)*: Matches film profiles to verified open calls and public institutional grant funds (BFI, Screen Scotland, Arts Council, Sundance) with `.ics` calendar exports.
 
 ---
 
 ## ⚡ Live Demo & Quick Links
 
-- **🌐 Live Cloud Run Application**: [https://screened-pludf2u7yq-nw.a.run.app](https://screened-pludf2u7yq-nw.a.run.app)
-- **⚖️ Why Screened (Impact & Baseline Matrix)**: [https://screened-pludf2u7yq-nw.a.run.app](https://screened-pludf2u7yq-nw.a.run.app) (Click "Why Screened" in Left Nav)
-- **🎨 Interactive Design Playground & OTel Tracing Lab**: [https://screened-pludf2u7yq-nw.a.run.app](https://screened-pludf2u7yq-nw.a.run.app) (Click "Design Lab" in Nav)
+- **🌐 Live Cloud Run Application**: [https://screened-786241671474.europe-west2.run.app](https://screened-786241671474.europe-west2.run.app)
+- **⚖️ Why Screened (Impact & Baseline Matrix)**: [https://screened-786241671474.europe-west2.run.app](https://screened-786241671474.europe-west2.run.app) (Click "Why Screened" in Left Nav)
+- **🎨 Interactive Design Playground & OTel Tracing Lab** *(Developer Preview)*: Available in component showcase
 - **📦 GitHub Repository**: [https://github.com/lucaguglielmi/screened-app](https://github.com/lucaguglielmi/screened-app)
 - **🏢 Google Cloud Project**: `screened-hackathon` (`europe-west2` — London)
 
@@ -92,19 +92,19 @@ Screened operates an orchestrated pipeline of specialized autonomous agents usin
 - The user reviews the exact payload in the **Action Approval Gate Modal**.
 - Execution runs in **Sandbox Mode** with report fingerprint logging in Cloud Firestore.
 
-### 6. Opportunity Scout with `.ics` Calendar Export & Accreditation Tooltips
+### 6. Opportunity Scout with `.ics` Calendar Export *(Coming Soon — Post-Hackathon)*
 - Filmmakers enter their project profile (*Short, Feature, Documentary*, genre, runtime, budget tier).
 - Screened discovers open call-for-entries, deadline schedules, and qualification badges (*BAFTA*, *BIFA*, *Oscars*, *FIAPF*).
 - **`.ics` Calendar Generator**: 1-click export of deadlines with automatic reminders into Google Calendar / Apple Calendar.
 
 ### 7. Why Screened: Measured Baseline Matrix & Empirical Research
 - Direct comparison matrix of **Manual Due Diligence (3–5 Hours, £0–£180 in lost fees, zero auditable traces)** vs **Screened Autonomous Pipeline (< 45 Seconds, 100% quoted substring audit, zero fees at risk)**.
-- Features 4 documented empirical fraud themes from independent UK filmmakers (*Fee Without Screening*, *Laurel Mills*, *Phantom Venues*, *Ghost Organizers*).
+- Features 4 documented empirical themes from independent UK filmmakers (*Fee Without Screening*, *High Acceptance Laurel Mills*, *Unverified Venues*, *Inactive Corporate Entities*).
 
 ### 8. Global Command Palette (`⌘K` / `Ctrl+K`)
-- Instant keyboard-driven workspace teleportation, festival candidate jump-searches, theme toggles, audio controls, and export triggers accessible from anywhere.
+- Instant keyboard-driven workspace navigation, festival candidate searches, audio controls, and export triggers accessible from anywhere.
 
-### 9. Interactive Design Playground & Agent Observability Lab
+### 9. Interactive Design Playground & Agent Observability Lab *(Developer Preview)*
 - A dedicated visual component studio to review, test, state-cycle, and modify all chat bubbles, loaders, and mini-app cards with a live **Token Stream Simulator** and **OpenTelemetry Agent Span Visualizer**.
 
 ---
@@ -120,7 +120,7 @@ Screened operates an orchestrated pipeline of specialized autonomous agents usin
 | **Database** | Google Cloud Firestore (Native) | Real-time investigation state, audit trail, and cached source hash ledger |
 | **Secrets & Keys** | Google Cloud Secret Manager | Secure runtime injection of `parallel-api-key` and `session-signing-key` |
 | **Cloud Hosting** | Google Cloud Run | Serverless, auto-scaling container deployment in `europe-west2` (London) |
-| **Frontend UI** | React 19 + Vite + TypeScript | High-performance modern SPA with dark/light mode toggle |
+| **Frontend UI** | React 19 + Vite + TypeScript | High-performance modern SPA in cinematic darkroom theme (Theme toggle coming soon) |
 | **Navigation & Portals** | React Portals (`createPortal`) | Viewport-safe mobile slide-over drawer and modal stacking contexts |
 | **Audio Engine** | Web Audio API Oscillator Synthesis | Zero-latency synthesized dial clicks, chimes, and instant mute |
 | **Design System** | Tailwind CSS v4 (`@theme`) + Lucide Icons | Editorial theme (`Fraunces` serif, `Instrument Sans`, `Spline Sans Mono`) |
@@ -133,7 +133,7 @@ Screened includes full unit, integration, and end-to-end multi-agent test suites
 
 ```bash
 # Run pytest test suite
-PYTHONPATH=. .venv/bin/pytest tests/
+PYTHONPATH=. .venv/bin/pytest tests/ backend/tests/
 ```
 
 ### Test Results Summary:
@@ -146,17 +146,21 @@ PYTHONPATH=. .venv/bin/pytest tests/
 - `tests/test_document_analysis.py`: PDF dossier extraction & multimodal email analysis (4/4 passed)
 - `tests/test_end_to_end.py`: Asynchronous multi-agent investigation lifecycle (1/1 passed)
 - `tests/test_export.py`: Archival Markdown export & SHA-256 digest seal (1/1 passed)
+- `tests/test_grant_diligence.py`: Institutional funding and grant matching (5/5 passed)
 - `tests/test_monitor_watch.py`: Autonomous watchlists, notification dispatch & drift checks (3/3 passed)
 - `tests/test_multi_agent.py`: Disambiguator, Planner, and API routes (3/3 passed)
 - `tests/test_notifications.py`: Web Push & in-app SSE notification streams (4/4 passed)
 - `tests/test_outreach.py`: SHA-256 payload hashing & sandbox approval verification (2/2 passed)
 - `tests/test_pipeline_stages_and_progress.py`: Live progress SSE sequence & event broadcasting (8/8 passed)
+- `tests/test_report_writer.py`: Multi-domain narrative synthesis & Markdown export (2/2 passed)
 - `tests/test_scout.py`: FilmProfile validation & `/api/scout` opportunity discovery (3/3 passed)
 - `tests/test_vcr_toggle.py`: LLM Record & Replay VCR toggle, cassette configuration & credential scrubbing (5/5 passed)
 - `backend/tests/test_architecture_endpoint.py`: Architecture diagram node/edge generation endpoint (1/1 passed)
-- **Total: 74 / 74 tests passed (100%)**
+- `backend/tests/test_cloud_tasks.py`: Cloud Tasks worker URL, internal auth enforcement & task dispatching (4/4 passed)
+- **Total Backend Tests: 81 / 81 tests passed (100%)**
+- **Total Frontend Unit Tests: 19 / 19 component tests passed with Vitest (`npm test`)**
 
-> **Note on Frontend Testing**: Component-level unit testing (Vitest / RTL) was intentionally left out until the user interface and interaction patterns achieve full product maturity. Frontend robustness is strictly verified via TypeScript compiler checks (`tsc -b`), ESLint quality gates, and automated Vite production builds.
+> **Note on CI Workflow**: Continuous Integration enforces zero-tolerance TypeScript compilation (`tsc -b`), strict ESLint quality gates, and automated production builds, while unit test suites run during pre-commit and deployment verification.
 
 ---
 

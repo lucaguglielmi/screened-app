@@ -304,7 +304,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
                         onLaunchCustomPrompt(opt.promptText);
                       }
                     }}
-                    className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-paper-border bg-darkroom-border hover:bg-midnight-royal border border-midnight-violet hover:border-tool-ocean text-xs font-medium text-slate-200 hover:text-white transition-all shadow-sm cursor-pointer hover:shadow-indigo-500/20 text-left"
+                    className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-darkroom-card hover:bg-midnight-royal border border-midnight-violet hover:border-tool-ocean text-xs font-medium text-slate-200 hover:text-white transition-all shadow-sm cursor-pointer hover:shadow-indigo-500/20 text-left"
                   >
                     {opt.badge && (
                       <span className="px-1.5 py-0.5 rounded bg-indigo-500/20 group-hover:bg-white/20 text-[10px] font-mono text-indigo-300 group-hover:text-white">

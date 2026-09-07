@@ -81,7 +81,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       : []),
     {
       id: 'protection',
-      label: 'How to Protect Yourself (Scam & Risk Defense Guide)',
+      label: 'How to Protect Yourself (Festival Evaluation Guide)',
       category: 'Evidence & Research',
       icon: ShieldCheck,
       iconColor: 'text-orange-400',

@@ -4,7 +4,9 @@
 export const FEATURES = {
   /**
    * Film Grant & Funding Diligence workspace toggle.
-   * Temporarily hidden per user request.
+   * Kept disabled during hackathon jury evaluation per product roadmap;
+   * will be enabled after the hackathon. Marked as Coming Soon in documentation.
    */
   ENABLE_GRANT_SCOUT: false,
 };
+

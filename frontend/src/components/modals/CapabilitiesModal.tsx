@@ -56,13 +56,13 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
   const domains: CapabilityDomainData[] = [
     {
       id: 'due-diligence',
-      title: 'Vet Festivals to Avoid Scams',
+      title: 'Evaluate Festival Credibility',
       badge: 'Core Investigation',
       badgeColor: 'text-emerald-400 bg-emerald-500/10',
       icon: Search,
       iconColor: 'text-emerald-400',
       summary:
-        'Protect your budget. We automatically cross-check venue leases and business registries to make sure the festival is legitimate.',
+        'Protect your submission budget. We cross-check venue bookings and official business registries to verify festival authenticity.',
       tags: [
         {
           label: 'Venue Lease Tracing',
@@ -74,15 +74,15 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
         },
         {
           label: 'Fee Escalation Audit',
-          info: 'Scans past festival editions to detect aggressive late fee inflation and predatory pricing.',
+          info: 'Scans past festival editions to identify steep late fee increases over time.',
         },
         {
           label: 'Jury Credibility',
           info: 'Verifies published industry credits across IMDb, BAFTA rosters, and trade press records.',
         },
         {
-          label: 'Scam Forum Scrutiny',
-          info: 'Scans Reddit, Letterboxd, and filmmaker forums for red flags and unfulfilled prize reports.',
+          label: 'Community Feedback',
+          info: 'Checks filmmaker forums and community discussions for recurring concerns or unfulfilled promises.',
         },
         {
           label: 'Accreditation Status',
@@ -98,7 +98,7 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
         {
           label: 'Audit Pinco Pallino (Demo Entity)',
           promptText:
-            'Is Pinco Pallino Film Festival legitimate or a scam? Check their physical venue leases and entry fees.',
+            'Is Pinco Pallino Film Festival legitimate? Check their physical venue leases and entry fees.',
         },
         {
           label: 'Check Raindance credentials',
@@ -239,8 +239,8 @@ export const CapabilitiesModal: React.FC<CapabilitiesModalProps> = ({
         'We dig into a festival’s history, checking if their website age, past winners, and rules actually make sense.',
       tags: [
         {
-          label: 'Boilerplate Plagiarism',
-          info: 'Identifies copy-pasted rules and submission guidelines from known scam syndicates.',
+          label: 'Guideline Similarity',
+          info: 'Identifies duplicated rules and submission guidelines across organizer networks.',
         },
         {
           label: 'Domain WHOIS Longevity',

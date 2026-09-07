@@ -802,7 +802,7 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
               }`}
             >
               <Network className="size-3.5" />
-              <span>Syndicate Cluster Map</span>
+              <span>Connected Entity Map</span>
               {isSyndicateDetected && (
                 <span className="size-1.5 rounded-full bg-rose-500 animate-pulse ml-0.5" />
               )}
@@ -811,15 +811,15 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
 
           <div className="hidden lg:block text-xs text-slate-400">
             {activeTab === 'PROVENANCE' ? (
-              <span>Source-to-claim topological provenance</span>
+              <span>Sources and evidence map</span>
             ) : isSyndicateDetected ? (
               <span className="text-rose-400 font-mono flex items-center gap-1">
                 <AlertTriangle className="size-3" />
-                <span>Syndicate &amp; Maildrop Network Detected</span>
+                <span>Shared Address &amp; Network Detected</span>
               </span>
             ) : (
               <span className="text-emerald-400 font-mono">
-                Verified Standalone Cultural Entity
+                Independent Festival Entity
               </span>
             )}
           </div>
