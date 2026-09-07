@@ -28,6 +28,7 @@ def test_semantic_spa_routes_serve_html():
         "/grants",
         "/why-screened",
         "/guide",
+        "/agents",
         "/how-to-use",
     ]
 

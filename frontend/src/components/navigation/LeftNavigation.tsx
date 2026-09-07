@@ -203,13 +203,19 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange, onNaviga
           )}
         </div>
 
-        {/* Live Deployment Status Indicator */}
+        {/* Live Deployment Status Indicator (Link to /agents) */}
         <div className="relative flex flex-col items-center">
-          <div
+          <button
+            type="button"
+            onClick={() => handleSelectTool('AGENTS')}
             onMouseEnter={() => setActiveTooltip('Live Deployment')}
             onMouseLeave={() => setActiveTooltip(null)}
-            className="p-1.5 px-2 rounded-xl bg-darkroom-surface hover:bg-darkroom-card border border-darkroom-border flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors group"
-            title="Live Version Info"
+            className={`p-1.5 px-2 rounded-xl border flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors group ${
+              activeTool === 'AGENTS' || activeTool === 'HOW_TO_USE'
+                ? 'bg-darkroom-card border-tool-diligence/50 text-tool-diligence shadow-sm shadow-[var(--color-tool-diligence)]/10'
+                : 'bg-darkroom-surface hover:bg-darkroom-card border-darkroom-border text-slate-400 hover:text-tool-diligence'
+            }`}
+            title="Screened Agents & WebMCP Protocol (/agents)"
           >
             <div className="relative flex items-center justify-center">
               <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-tool-diligence opacity-75" />
@@ -222,12 +228,12 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange, onNaviga
                 ? `v${__APP_VERSION__}`
                 : 'v0.2'}
             </span>
-          </div>
+          </button>
           {activeTooltip === 'Live Deployment' && (
             <div className="absolute left-full ml-3 bottom-0 px-3 py-2.5 rounded-xl bg-darkroom-surface text-slate-100 text-xs font-mono whitespace-nowrap shadow-2xl border border-darkroom-border z-50 pointer-events-none">
               <div className="flex items-center gap-1.5 text-tool-diligence font-semibold">
                 <Radio className="size-3" />
-                <span>Live Deployment</span>
+                <span>Live Deployment • /agents</span>
               </div>
               <div className="text-[11px] text-slate-300 mt-1">
                 Version: <span className="text-white font-bold">{typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : '0.2.0'}</span>
@@ -239,13 +245,7 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange, onNaviga
                 </span>
               </div>
               <div className="text-[10px] text-slate-500 mt-0.5">
-                Built:{' '}
-                {typeof __BUILD_TIME__ !== 'undefined'
-                  ? new Date(__BUILD_TIME__).toLocaleString([], {
-                      dateStyle: 'short',
-                      timeStyle: 'short',
-                    })
-                  : 'live'}
+                Click to open Agents &amp; WebMCP Protocol
               </div>
             </div>
           )}

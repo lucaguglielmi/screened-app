@@ -24,6 +24,7 @@ describe("Router unit tests", () => {
       expect(normalizeLegacyUrl("/scout", "")).toBe("/grants");
       expect(normalizeLegacyUrl("/about", "")).toBe("/why-screened");
       expect(normalizeLegacyUrl("/protection-guide", "")).toBe("/guide");
+      expect(normalizeLegacyUrl("/how-to-use", "")).toBe("/agents");
     });
 
     it("returns null for standard canonical paths", () => {
@@ -31,6 +32,7 @@ describe("Router unit tests", () => {
       expect(normalizeLegacyUrl("/diligence", "")).toBeNull();
       expect(normalizeLegacyUrl("/diligence/inv-123", "")).toBeNull();
       expect(normalizeLegacyUrl("/grants", "")).toBeNull();
+      expect(normalizeLegacyUrl("/agents", "")).toBeNull();
     });
   });
 
@@ -60,7 +62,8 @@ describe("Router unit tests", () => {
       expect(parseCurrentRoute("/grants", "").tool).toBe("GRANT_SCOUT");
       expect(parseCurrentRoute("/why-screened", "").tool).toBe("WHY_SCREENED");
       expect(parseCurrentRoute("/guide", "").tool).toBe("FESTIVAL_PROTECTION_GUIDE");
-      expect(parseCurrentRoute("/how-to-use", "").tool).toBe("HOW_TO_USE");
+      expect(parseCurrentRoute("/agents", "").tool).toBe("AGENTS");
+      expect(parseCurrentRoute("/how-to-use", "").tool).toBe("AGENTS");
     });
 
     it("falls back to CONVERSATIONAL_DESK on unknown path", () => {
@@ -78,7 +81,8 @@ describe("Router unit tests", () => {
       expect(toolToPath("GRANT_SCOUT")).toBe("/grants");
       expect(toolToPath("WHY_SCREENED")).toBe("/why-screened");
       expect(toolToPath("FESTIVAL_PROTECTION_GUIDE")).toBe("/guide");
-      expect(toolToPath("HOW_TO_USE")).toBe("/how-to-use");
+      expect(toolToPath("AGENTS")).toBe("/agents");
+      expect(toolToPath("HOW_TO_USE")).toBe("/agents");
     });
   });
 });

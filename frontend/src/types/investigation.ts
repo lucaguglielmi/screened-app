@@ -21,7 +21,8 @@ export type ActiveTool =
   | 'DESIGN_PLAYGROUND'
   | 'WHY_SCREENED'
   | 'FESTIVAL_PROTECTION_GUIDE'
-  | 'HOW_TO_USE';
+  | 'HOW_TO_USE'
+  | 'AGENTS';
 
 export interface DiagramGraphPayload {
   nodes: Array<{

@@ -155,6 +155,56 @@ code {
   animation: subtleGradientMove 15s ease infinite;
 }
 
+/* Organic Morphing Dark Blob Animations */
+@keyframes organicBlob1 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+    border-radius: 54% 46% 62% 38% / 43% 58% 42% 57%;
+  }
+  33% {
+    transform: translate3d(40px, -30px, 0) scale(1.08) rotate(15deg);
+    border-radius: 42% 58% 49% 51% / 59% 41% 59% 41%;
+  }
+  66% {
+    transform: translate3d(-30px, 45px, 0) scale(0.95) rotate(-12deg);
+    border-radius: 63% 37% 55% 45% / 45% 62% 38% 55%;
+  }
+}
+
+@keyframes organicBlob2 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+    border-radius: 60% 40% 55% 45% / 45% 60% 40% 55%;
+  }
+  50% {
+    transform: translate3d(-50px, 35px, 0) scale(1.12) rotate(-18deg);
+    border-radius: 48% 52% 41% 59% / 54% 46% 54% 46%;
+  }
+}
+
+@keyframes organicBlob3 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+    border-radius: 45% 55% 60% 40% / 50% 45% 55% 50%;
+  }
+  50% {
+    transform: translate3d(35px, 40px, 0) scale(1.06) rotate(10deg);
+    border-radius: 58% 42% 48% 52% / 42% 58% 42% 58%;
+  }
+}
+
+.animate-organic-blob-1 {
+  animation: organicBlob1 22s ease-in-out infinite alternate;
+}
+
+.animate-organic-blob-2 {
+  animation: organicBlob2 28s ease-in-out infinite alternate;
+}
+
+.animate-organic-blob-3 {
+  animation: organicBlob3 25s ease-in-out infinite alternate;
+}
+
 .bg-card-gradient {
   background: linear-gradient(145deg, var(--color-darkroom-surface), var(--color-darkroom-card));
 }

@@ -15,6 +15,7 @@ import {
   Command as CommandIcon,
 } from 'lucide-react';
 import { VerifiedTick } from './ui/VerifiedTick';
+import { OrganicBlobBackground } from './common/OrganicBlobBackground';
 
 interface Props {
   onNavigateToDiligence: () => void;
@@ -121,18 +122,19 @@ export const FestivalProtectionGuide: React.FC<Props> = ({
   onOpenCommandPalette,
 }) => {
   return (
-    <div className="w-full min-h-screen bg-midnight-void text-slate-100 px-4 py-12 sm:py-20 animate-fade-in">
-      <div className="max-w-4xl mx-auto space-y-20">
+    <div className="relative w-full min-h-screen text-slate-100 px-4 py-12 sm:py-20 animate-fade-in overflow-hidden">
+      <OrganicBlobBackground />
+      <div className="relative z-10 max-w-4xl mx-auto space-y-16 sm:space-y-20">
         {/* Editorial Header */}
         <section className="space-y-6 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/30 text-orange-400 text-xs font-mono font-semibold uppercase tracking-widest">
             <ShieldAlert className="size-3.5 text-orange-400" />
             <span>Filmmaker Due Diligence Guide</span>
           </div>
-          <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight">
+          <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight">
             How to Evaluate Film Festivals: Due Diligence Guide
           </h1>
-          <p className="text-lg sm:text-xl text-slate-200 leading-relaxed max-w-3xl mx-auto font-normal">
+          <p className="text-base sm:text-lg text-slate-200 leading-relaxed max-w-3xl mx-auto font-normal">
             Independent filmmakers spend thousands in hard-earned budget on submission fees every season.
             This guide provides practical steps to verify festivals and protect your work against{' '}
             <strong className="text-white font-bold bg-white/10 px-1.5 py-0.5 rounded">unverified venues</strong>,{' '}
@@ -141,12 +143,12 @@ export const FestivalProtectionGuide: React.FC<Props> = ({
         </section>
 
         {/* 4 Primary Risk Archetypes */}
-        <section className="space-y-10">
+        <section className="space-y-8 sm:space-y-10">
           <div className="text-center space-y-2">
             <span className="text-slate-400 font-mono uppercase tracking-widest text-xs font-semibold">
               Key Risk Indicators
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-white">
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-white">
               4 Common Festival Risk Profiles
             </h2>
           </div>
@@ -170,22 +172,22 @@ export const FestivalProtectionGuide: React.FC<Props> = ({
                     </div>
 
                     <div>
-                      <h3 className="text-lg font-bold font-serif text-white">{arch.title}</h3>
-                      <p className="text-xs text-indigo-300 font-mono mt-0.5">{arch.subtitle}</p>
+                      <h3 className="text-lg sm:text-xl font-bold font-serif text-white">{arch.title}</h3>
+                      <p className="text-xs sm:text-sm text-indigo-300 font-mono mt-0.5">{arch.subtitle}</p>
                     </div>
 
-                    <p className="text-xs text-slate-300 leading-relaxed">{arch.description}</p>
+                    <p className="text-sm sm:text-base text-slate-300 leading-relaxed">{arch.description}</p>
                   </div>
 
                   <div className="pt-3 border-t border-darkroom-border/60 space-y-2">
-                    <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold block">
+                    <span className="text-xs sm:text-sm font-mono uppercase tracking-wider text-slate-400 font-semibold block">
                       Tell-Tale Warning Signs:
                     </span>
-                    <ul className="space-y-1.5 text-xs text-slate-300">
+                    <ul className="space-y-2 text-sm sm:text-base text-slate-300">
                       {arch.tellSigns.map((sign, sIdx) => (
                         <li key={sIdx} className="flex items-start gap-2">
-                          <AlertTriangle className="size-3 text-orange-400 shrink-0 mt-0.5" />
-                          <span>{sign}</span>
+                          <AlertTriangle className="size-4 text-orange-400 shrink-0 mt-0.5" />
+                          <span className="leading-snug">{sign}</span>
                         </li>
                       ))}
                     </ul>
@@ -197,15 +199,15 @@ export const FestivalProtectionGuide: React.FC<Props> = ({
         </section>
 
         {/* 5-Step Self-Defense Protocol */}
-        <section className="space-y-10">
+        <section className="space-y-8 sm:space-y-10">
           <div className="text-center space-y-2">
             <span className="text-slate-400 font-mono uppercase tracking-widest text-xs font-semibold">
               Actionable Protocol
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-white">
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-white">
               The 5-Step Self-Defense Protocol
             </h2>
-            <p className="text-xs text-slate-400 max-w-xl mx-auto">
+            <p className="text-sm sm:text-base text-slate-300 max-w-xl mx-auto">
               Run this 5-minute pre-submission checklist before paying fees on FilmFreeway, Festhome, or direct portals.
             </p>
           </div>
@@ -221,12 +223,12 @@ export const FestivalProtectionGuide: React.FC<Props> = ({
                   <div className="size-10 rounded-xl bg-midnight-royal/40 border border-tool-diligence/30 text-white font-mono font-bold flex items-center justify-center shrink-0">
                     0{step.step}
                   </div>
-                  <div className="space-y-1 flex-1 min-w-0">
+                  <div className="space-y-1.5 flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <Icon className="size-4 text-indigo-400 shrink-0" />
-                      <h3 className="text-sm sm:text-base font-bold text-white">{step.title}</h3>
+                      <Icon className="size-4.5 text-indigo-400 shrink-0" />
+                      <h3 className="text-base sm:text-lg font-bold text-white">{step.title}</h3>
                     </div>
-                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans">{step.action}</p>
+                    <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-sans">{step.action}</p>
                   </div>
                 </div>
               );
@@ -241,18 +243,18 @@ export const FestivalProtectionGuide: React.FC<Props> = ({
               <CreditCard className="size-5" />
             </div>
             <div>
-              <h2 className="text-xl font-bold font-serif text-white">
+              <h2 className="text-xl sm:text-2xl font-bold font-serif text-white">
                 Chargeback &amp; Dispute Playbook
               </h2>
-              <p className="text-xs text-slate-400 font-mono">
+              <p className="text-xs sm:text-sm text-slate-300 font-mono">
                 How to recover submission fees when a festival commits material misrepresentation.
               </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs text-slate-300 leading-relaxed">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm sm:text-base text-slate-300 leading-relaxed">
             <div className="space-y-2">
-              <h4 className="font-mono text-xs uppercase font-bold text-white flex items-center gap-1.5">
+              <h4 className="font-mono text-xs sm:text-sm uppercase font-bold text-white flex items-center gap-1.5">
                 <VerifiedTick size={14} />
                 <span>1. Preserve Immutable Evidence Immediately</span>
               </h4>
@@ -262,7 +264,7 @@ export const FestivalProtectionGuide: React.FC<Props> = ({
             </div>
 
             <div className="space-y-2">
-              <h4 className="font-mono text-xs uppercase font-bold text-white flex items-center gap-1.5">
+              <h4 className="font-mono text-xs sm:text-sm uppercase font-bold text-white flex items-center gap-1.5">
                 <VerifiedTick size={14} />
                 <span>2. File Written Platform Dispute</span>
               </h4>
@@ -272,7 +274,7 @@ export const FestivalProtectionGuide: React.FC<Props> = ({
             </div>
 
             <div className="space-y-2">
-              <h4 className="font-mono text-xs uppercase font-bold text-white flex items-center gap-1.5">
+              <h4 className="font-mono text-xs sm:text-sm uppercase font-bold text-white flex items-center gap-1.5">
                 <VerifiedTick size={14} />
                 <span>3. Credit Card Bank Chargeback (UK Section 75)</span>
               </h4>
@@ -282,7 +284,7 @@ export const FestivalProtectionGuide: React.FC<Props> = ({
             </div>
 
             <div className="space-y-2">
-              <h4 className="font-mono text-xs uppercase font-bold text-white flex items-center gap-1.5">
+              <h4 className="font-mono text-xs sm:text-sm uppercase font-bold text-white flex items-center gap-1.5">
                 <VerifiedTick size={14} />
                 <span>4. Report to Film Industry Watchdogs</span>
               </h4>
@@ -300,7 +302,7 @@ export const FestivalProtectionGuide: React.FC<Props> = ({
             <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white">
               Vetting a Festival Right Now?
             </h2>
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-sans">
+            <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-sans">
               Run an autonomous multi-vector due diligence audit with Screened. We cross-examine corporate filings, venue manifests, and filmmaker sentiment in seconds.
             </p>
           </div>

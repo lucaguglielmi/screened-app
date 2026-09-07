@@ -14,6 +14,7 @@ import {
   Check,
   ExternalLink,
   Palette,
+  Bot,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ActiveTool } from '../../types/investigation';
@@ -285,6 +286,22 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                   <div className="flex items-center space-x-2">
                     <Palette className="w-4 h-4 text-purple-400" />
                     <span>Design Playground (UI Workbench)</span>
+                  </div>
+                  <ExternalLink className="w-3.5 h-3.5 opacity-60" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleSelect('AGENTS')}
+                  className={`w-full px-3 py-2 rounded-xl flex items-center justify-between text-xs font-medium transition-colors ${
+                    activeTool === 'AGENTS' || activeTool === 'HOW_TO_USE'
+                      ? 'text-tool-diligence bg-tool-diligence/10 font-semibold border border-tool-diligence/30'
+                      : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
+                  }`}
+                >
+                  <div className="flex items-center space-x-2">
+                    <Bot className="w-4 h-4 text-tool-diligence" />
+                    <span>Screened Agents &amp; WebMCP (/agents)</span>
                   </div>
                   <ExternalLink className="w-3.5 h-3.5 opacity-60" />
                 </button>

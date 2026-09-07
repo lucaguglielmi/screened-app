@@ -294,7 +294,7 @@ export default function App() {
       <UpdateNotifier />
 
       {/* Global Organic Morphing Mesh Gradient Background */}
-      {activeTool !== 'DESIGN_PLAYGROUND' && activeTool !== 'WHY_SCREENED' && (
+      {activeTool !== 'DESIGN_PLAYGROUND' && (
         <VectorFieldBackground className="fixed inset-0 pointer-events-none z-0" />
       )}
 
@@ -356,7 +356,7 @@ export default function App() {
                 title="View Past Searches"
               >
                 <History className="size-4 text-indigo-400" />
-                <span className="hidden sm:inline">History</span>
+                <span className="hidden sm:inline">Past Searches</span>
               </button>
 
               {/* Sound Effect Toggle Button (M) */}
@@ -624,7 +624,7 @@ export default function App() {
             </>
           )}
 
-          {activeTool === 'HOW_TO_USE' && (
+          {(activeTool === 'HOW_TO_USE' || activeTool === 'AGENTS') && (
             <HowToUse
               onNavigateToDesk={handleReset}
               onNavigateToDiligence={() => handleSelectTool('DUE_DILIGENCE')}

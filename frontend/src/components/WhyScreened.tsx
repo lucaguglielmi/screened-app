@@ -13,6 +13,7 @@ import {
   Command as CommandIcon,
 } from 'lucide-react';
 import { FEATURES } from '../config/features';
+import { OrganicBlobBackground } from './common/OrganicBlobBackground';
 
 interface Props {
   onNavigateToDesk: () => void;
@@ -71,18 +72,19 @@ export const WhyScreened: React.FC<Props> = ({
   onOpenCommandPalette,
 }) => {
   return (
-    <div className="w-full min-h-screen bg-midnight-void text-slate-100 px-4 py-12 sm:py-20 animate-fade-in">
-      <div className="max-w-4xl mx-auto space-y-20">
+    <div className="relative w-full min-h-screen text-slate-100 px-4 py-12 sm:py-20 animate-fade-in overflow-hidden">
+      <OrganicBlobBackground />
+      <div className="relative z-10 max-w-4xl mx-auto space-y-16 sm:space-y-20">
         {/* Editorial Header */}
         <section className="space-y-6 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-tool-diligence/10 border border-tool-diligence/30 text-tool-diligence text-xs font-mono font-semibold uppercase tracking-widest">
             <Scale className="size-3.5" />
             <span>Problem Overview &amp; Impact</span>
           </div>
-          <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight">
+          <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight">
             Why Screened Exists
           </h1>
-          <p className="text-lg sm:text-xl text-slate-200 leading-relaxed max-w-3xl mx-auto font-normal">
+          <p className="text-base sm:text-lg text-slate-200 leading-relaxed max-w-3xl mx-auto font-normal">
             Independent filmmakers spend over{' '}
             <strong className="text-white font-bold bg-white/10 px-1.5 py-0.5 rounded">£1,500 – £4,000</strong> per festival cycle in
             submission fees. Without transparent public evidence, micro-budget productions bear the
@@ -91,12 +93,12 @@ export const WhyScreened: React.FC<Props> = ({
         </section>
 
         {/* Baseline Comparison: Manual vs Autonomous */}
-        <section className="space-y-10">
+        <section className="space-y-8 sm:space-y-10">
           <div className="text-center space-y-2">
             <span className="text-slate-400 font-mono uppercase tracking-widest text-xs font-semibold">
               Workflow Comparison
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-white">
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-white">
               Manual Vetting vs. Autonomous Diligence
             </h2>
           </div>
@@ -112,35 +114,35 @@ export const WhyScreened: React.FC<Props> = ({
 
               <div className="space-y-5">
                 <div>
-                  <div className="text-2xl font-bold text-white flex items-center gap-3">
+                  <div className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
                     <Clock className="size-6 text-rose-400 shrink-0" />
                     <span>45–75 Minutes</span>
                   </div>
-                  <p className="text-sm text-slate-300 mt-1 ml-9">Per festival submission decision</p>
+                  <p className="text-sm sm:text-base text-slate-300 mt-1 ml-9">Per festival submission decision</p>
                 </div>
 
                 <div>
-                  <div className="text-2xl font-bold text-white flex items-center gap-3">
+                  <div className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
                     <Layers className="size-6 text-orange-400 shrink-0" />
                     <span>20+ Browser Tabs</span>
                   </div>
-                  <p className="text-sm text-slate-300 mt-1 ml-9">
+                  <p className="text-sm sm:text-base text-slate-300 mt-1 ml-9">
                     Reddit, FilmFreeway, Companies House, blogs
                   </p>
                 </div>
 
                 <div>
-                  <div className="text-2xl font-bold text-white flex items-center gap-3">
+                  <div className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
                     <TrendingDown className="size-6 text-rose-400 shrink-0" />
                     <span>Ungrounded Risk</span>
                   </div>
-                  <p className="text-sm text-slate-300 mt-1 ml-9">
+                  <p className="text-sm sm:text-base text-slate-300 mt-1 ml-9">
                     No verified source links or independent confirmation
                   </p>
                 </div>
               </div>
 
-              <p className="text-sm text-slate-400 italic pt-5 border-t border-darkroom-border">
+              <p className="text-sm sm:text-base text-slate-300 italic pt-5 border-t border-darkroom-border leading-relaxed">
                 "You end up relying on fragmented hearsay in Facebook groups, or you just pay the £80
                 and hope for the best."
               </p>
@@ -156,35 +158,35 @@ export const WhyScreened: React.FC<Props> = ({
 
               <div className="space-y-5">
                 <div>
-                  <div className="text-2xl font-bold text-white flex items-center gap-3">
+                  <div className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
                     <Clock className="size-6 text-tool-diligence shrink-0" />
                     <span>~90 Seconds</span>
                   </div>
-                  <p className="text-sm text-slate-200 mt-1 ml-9">Complete multi-domain dossier</p>
+                  <p className="text-sm sm:text-base text-slate-200 mt-1 ml-9">Complete multi-domain dossier</p>
                 </div>
 
                 <div>
-                  <div className="text-2xl font-bold text-white flex items-center gap-3">
+                  <div className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
                     <CheckCircle2 className="size-6 text-tool-diligence shrink-0" />
                     <span>100% Verifiable Excerpts</span>
                   </div>
-                  <p className="text-sm text-slate-200 mt-1 ml-9">
-                    Every statement mapped to source dates & URLs
+                  <p className="text-sm sm:text-base text-slate-200 mt-1 ml-9">
+                    Every statement mapped to source dates &amp; URLs
                   </p>
                 </div>
 
                 <div>
-                  <div className="text-2xl font-bold text-white flex items-center gap-3">
+                  <div className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
                     <Scale className="size-6 text-tool-diligence shrink-0" />
                     <span>Contradiction Analysis</span>
                   </div>
-                  <p className="text-sm text-slate-200 mt-1 ml-9">
+                  <p className="text-sm sm:text-base text-slate-200 mt-1 ml-9">
                     Conflicting trade evidence reconciled neutrally
                   </p>
                 </div>
               </div>
 
-              <p className="text-sm text-emerald-300 font-medium pt-5 border-t border-darkroom-border">
+              <p className="text-sm sm:text-base text-emerald-300 font-medium pt-5 border-t border-darkroom-border leading-relaxed">
                 ✓ Zero subject score bias. Facts, allegations, and opinions isolated end-to-end.
               </p>
             </div>
@@ -197,10 +199,10 @@ export const WhyScreened: React.FC<Props> = ({
             <span className="text-tool-diligence font-mono uppercase tracking-widest text-xs font-semibold">
               Empirical Corpus
             </span>
-            <h2 className="text-3xl sm:text-4xl font-bold font-serif text-white leading-tight">
+            <h2 className="text-2xl sm:text-3xl font-bold font-serif text-white leading-tight">
               Common Grievance Vectors Harvested via Parallel Search
             </h2>
-            <p className="text-base text-slate-300">
+            <p className="text-sm sm:text-base text-slate-300">
               Representative qualitative accounts harvested across filmmaker forums (Reddit
               r/Filmmakers, FilmFreeway communities, Stage 32, and industry blogs).
             </p>
@@ -213,7 +215,7 @@ export const WhyScreened: React.FC<Props> = ({
                 className="bg-darkroom-surface/80 border border-darkroom-border hover:border-zinc-700/80 rounded-2xl p-6 space-y-4 transition-all"
               >
                 <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-darkroom-border pb-3">
-                  <h3 className="text-xl font-bold font-serif text-white">
+                  <h3 className="text-lg sm:text-xl font-bold font-serif text-white">
                     {idx + 1}. {item.theme}
                   </h3>
                   <div className="flex items-center gap-3 text-xs font-mono text-slate-400 font-semibold tracking-wide uppercase">
@@ -223,12 +225,12 @@ export const WhyScreened: React.FC<Props> = ({
                   </div>
                 </div>
 
-                <p className="text-base text-slate-200 leading-relaxed font-normal">{item.description}</p>
+                <p className="text-sm sm:text-base text-slate-200 leading-relaxed font-normal">{item.description}</p>
 
                 <div className="pl-4 sm:pl-6 border-l-2 border-tool-diligence/50 space-y-2 py-1 bg-darkroom-card/40 rounded-r-xl pr-4">
                   <div className="flex items-start gap-3">
                     <Quote className="size-4 text-tool-diligence shrink-0 mt-1" />
-                    <p className="text-base text-slate-300 italic leading-relaxed">{item.quote}</p>
+                    <p className="text-sm sm:text-base text-slate-300 italic leading-relaxed">{item.quote}</p>
                   </div>
                   <div className="text-xs font-mono font-semibold text-slate-400 uppercase tracking-widest pl-7">
                     — {item.attribution}
@@ -246,8 +248,8 @@ export const WhyScreened: React.FC<Props> = ({
               <FileText className="size-6" />
             </div>
             <div>
-              <h3 className="text-2xl font-bold font-serif text-white">
-                Methodology & Research Provenance
+              <h3 className="text-xl sm:text-2xl font-bold font-serif text-white">
+                Methodology &amp; Research Provenance
               </h3>
               <p className="text-xs font-mono font-semibold text-tool-diligence uppercase tracking-widest">
                 Self-Validating Research Architecture
@@ -255,7 +257,7 @@ export const WhyScreened: React.FC<Props> = ({
             </div>
           </div>
 
-          <p className="text-base text-slate-200 leading-relaxed font-normal">
+          <p className="text-sm sm:text-base text-slate-200 leading-relaxed font-normal">
             The research behind this problem framing was conducted using{' '}
             <strong className="text-white font-bold bg-white/10 px-1.5 py-0.5 rounded">Parallel Search</strong> — the exact same
             autonomous web-mining engine that powers Screened. By cross-examining public trade
@@ -263,7 +265,7 @@ export const WhyScreened: React.FC<Props> = ({
             accounts, Screened's agents apply forensic due diligence to protect indie productions.
           </p>
 
-          <p className="text-xs font-mono text-slate-400 italic">
+          <p className="text-xs sm:text-sm font-mono text-slate-400 italic">
             Note: The statistics, case counts, and quotes presented above are representative composites derived from autonomous research patterns across public forums, rather than verbatim data from individual identifiable users.
           </p>
 

@@ -13,7 +13,8 @@ export const ROUTE_TITLES: Record<ActiveTool, string> = {
   OPPORTUNITY_SCOUT: "Grant & Funding Research — Screened",
   WHY_SCREENED: "Why Screened Exists — Screened",
   FESTIVAL_PROTECTION_GUIDE: "Festival Protection Guide — Screened",
-  HOW_TO_USE: "How to Use — Screened",
+  HOW_TO_USE: "Screened Agents & WebMCP Protocol — Screened",
+  AGENTS: "Screened Agents & WebMCP Protocol — Screened",
   DESIGN_PLAYGROUND: "Design Playground — Screened",
 };
 
@@ -22,6 +23,7 @@ export const ROUTE_TITLES: Record<ActiveTool, string> = {
  * Example: /?id=foo -> /diligence/foo
  * Example: /investigation/foo -> /diligence/foo
  * Example: /scout -> /grants
+ * Example: /how-to-use -> /agents
  */
 export function normalizeLegacyUrl(pathname: string, search: string): string | null {
   const params = new URLSearchParams(search);
@@ -45,6 +47,7 @@ export function normalizeLegacyUrl(pathname: string, search: string): string | n
   if (cleanPath === "/scout") return `/grants${search}`;
   if (cleanPath === "/about") return `/why-screened${search}`;
   if (cleanPath === "/protection-guide" || cleanPath === "/festival-protection-guide") return `/guide${search}`;
+  if (cleanPath === "/how-to-use") return `/agents${search}`;
 
   return null;
 }
@@ -106,10 +109,10 @@ export function parseCurrentRoute(pathname = window.location.pathname, search = 
     };
   }
 
-  if (cleanPath === "/how-to-use") {
+  if (cleanPath === "/agents" || cleanPath === "/how-to-use") {
     return {
-      path: "/how-to-use",
-      tool: "HOW_TO_USE",
+      path: "/agents",
+      tool: "AGENTS",
       investigationId: null,
     };
   }
@@ -146,8 +149,9 @@ export function toolToPath(tool: ActiveTool, investigationId?: string | null): s
       return "/why-screened";
     case "FESTIVAL_PROTECTION_GUIDE":
       return "/guide";
+    case "AGENTS":
     case "HOW_TO_USE":
-      return "/how-to-use";
+      return "/agents";
     case "DESIGN_PLAYGROUND":
       return "/playground";
     default:

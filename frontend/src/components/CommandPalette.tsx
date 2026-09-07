@@ -130,13 +130,14 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       },
     },
     {
-      id: 'how',
-      label: 'How To Use Screened (AI Agent Page)',
+      id: 'agents',
+      label: 'Screened Agents & WebMCP Protocol (/agents)',
+      description: 'Agentic interoperability protocol, WebMCP browser hooks & tools',
       category: 'Evidence & Research',
       icon: Command,
       iconColor: 'text-tool-diligence',
       action: () => {
-        onSelectTool('HOW_TO_USE');
+        onSelectTool('AGENTS');
         onClose();
       },
     },
