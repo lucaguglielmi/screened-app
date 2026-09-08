@@ -66,6 +66,11 @@
   --color-kind-fact: #3B82F6;
   --color-kind-allegation: #0EA5E9;
   --color-kind-opinion: #6D28D9;
+
+  /* Subtle Living Contour Palette (Non-green, barely lighter than midnight) */
+  --color-contour-ice: #cbd5e1;
+  --color-contour-mist: #94a3b8;
+  --color-contour-sky: #bfdbfe;
 }
 
 :root {

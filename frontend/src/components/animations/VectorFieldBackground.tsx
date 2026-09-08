@@ -32,25 +32,36 @@ interface Mote {
 }
 
 // Color parsing helper supporting CSS vars, hex (#RGB, #RRGGBB), and rgb/rgba
+// Color parsing helper supporting CSS vars, hex (#RGB, #RRGGBB), and rgb/rgba
 function parseColorToRgb(colorStr: string): { r: number; g: number; b: number } {
-  let resolved = (colorStr || '').trim();
+  const resolved = (colorStr || '').trim();
+
+  // If a legacy green color is passed, replace it with subtle light ice slate
+  if (
+    resolved.includes('scout') ||
+    resolved.includes('diligence') ||
+    resolved.toLowerCase().includes('10e599') ||
+    resolved.toLowerCase().includes('34d399')
+  ) {
+    return { r: 203, g: 213, b: 225 }; // soft light ice slate (NOT green)
+  }
 
   if (resolved.startsWith('var(')) {
     const varName = resolved.slice(4, -1).trim();
     if (typeof document !== 'undefined') {
       const computed = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
       if (computed) {
-        resolved = computed;
+        return parseColorToRgb(computed);
       }
     }
-    if (resolved.startsWith('var(')) {
-      if (varName.includes('scout') || varName.includes('diligence')) {
-        return { r: 16, g: 229, b: 153 };
-      } else if (varName.includes('royal')) {
-        return { r: 29, g: 78, b: 216 };
-      } else {
-        return { r: 59, g: 130, b: 246 };
-      }
+    if (varName.includes('mist') || varName.includes('muted')) {
+      return { r: 148, g: 163, b: 184 }; // soft light mist
+    } else if (varName.includes('sky')) {
+      return { r: 191, g: 219, b: 254 }; // soft ice sky
+    } else if (varName.includes('royal') || varName.includes('indigo')) {
+      return { r: 147, g: 197, b: 253 }; // soft light blue
+    } else {
+      return { r: 203, g: 213, b: 225 }; // soft light ice slate
     }
   }
 
@@ -79,7 +90,7 @@ function parseColorToRgb(colorStr: string): { r: number; g: number; b: number } 
     }
   }
 
-  return { r: 16, g: 229, b: 153 }; // default scout mint
+  return { r: 203, g: 213, b: 225 }; // default soft light ice slate (neutral, slightly lighter than dark background)
 }
 
 function colorWithAlpha(colorStr: string, alpha: number): string {
@@ -89,15 +100,15 @@ function colorWithAlpha(colorStr: string, alpha: number): string {
 }
 
 export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
-  color,
-  speed = 0.4,
-  amplitude = 0.22,
-  blobCoverage = 0.75,
-  opacity = 0.20,
+  color = 'var(--color-contour-ice)',
+  speed = 0.55,
+  amplitude = 0.24,
+  blobCoverage = 0.70,
+  opacity = 0.08,
   interactive = true,
   position = 'fixed',
   className = '',
-  primaryColor = 'var(--color-tool-scout)',
+  primaryColor = 'var(--color-contour-ice)',
 }) => {
   const reducedMotion = useReducedMotion();
   const effectiveSpeed = reducedMotion ? 0 : speed;
@@ -225,115 +236,112 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
       ctx.closePath();
     };
 
-    // Helper to generate smooth multi-harmonic contour points for a blob
-    const generateBlobContour = (
-      centerX: number,
-      centerY: number,
-      radius: number,
-      harmonicFn: (theta: number) => number,
+    // Traumatic non-linear pulse function (sharp contrast between rapid snap and expansion)
+    const traumaticWave = (phase: number) => {
+      const sinVal = Math.sin(phase);
+      // Power shaping creates a rapid snap through zero and sudden cresting
+      const shaped = Math.sign(sinVal) * Math.pow(Math.abs(sinVal), 0.62);
+      // Second harmonic adds asymmetric acceleration surge
+      return shaped * 0.85 + Math.sin(2 * phase) * 0.25;
+    };
+
+    // Helper to generate smooth multi-harmonic contour points for a blob layer
+    const generateContourPoints = (
+      cx: number,
+      cy: number,
+      r: number,
+      rotationAngle: number,
+      harmonicFn: (rotatedTheta: number) => number,
       m: { x: number; y: number; influence: number },
     ) => {
       const pointCount = 96;
-      const primaryPoints: { x: number; y: number }[] = [];
-      const innerPoints: { x: number; y: number }[] = [];
-      const outerPoints: { x: number; y: number }[] = [];
+      const points: { x: number; y: number }[] = [];
 
       for (let i = 0; i < pointCount; i++) {
         const theta = (i / pointCount) * Math.PI * 2;
-        const harmonic = harmonicFn(theta);
-        const rScale = 1.0 + amplitude * harmonic;
-        const r = radius * rScale;
+        const rotatedTheta = theta + rotationAngle;
+        const harmonic = harmonicFn(rotatedTheta);
+        const currentR = r * (1.0 + amplitude * harmonic);
 
-        let px = centerX + Math.cos(theta) * r;
-        let py = centerY + Math.sin(theta) * r;
+        let px = cx + Math.cos(theta) * currentR;
+        let py = cy + Math.sin(theta) * currentR;
 
         // Interactive elastic membrane deflection from cursor
         if (effectiveInteractive && m.influence > 0.02) {
           const dxM = px - m.x;
           const dyM = py - m.y;
           const distM = Math.sqrt(dxM * dxM + dyM * dyM);
-          const pushRadius = isAbsolute ? 120 : 180;
+          const pushRadius = isAbsolute ? 110 : 160;
           if (distM < pushRadius && distM > 0.1) {
-            const pushFactor = Math.pow(1 - distM / pushRadius, 2) * 32 * m.influence;
+            const pushFactor = Math.pow(1 - distM / pushRadius, 2) * 28 * m.influence;
             px += (dxM / distM) * pushFactor;
             py += (dyM / distM) * pushFactor;
           }
         }
 
-        primaryPoints.push({ x: px, y: py });
-
-        // Inner echo (0.86x scale)
-        const innerR = r * 0.86;
-        innerPoints.push({
-          x: centerX + (px - centerX) * (innerR / r),
-          y: centerY + (py - centerY) * (innerR / r),
-        });
-
-        // Outer echo (1.14x scale)
-        const outerR = r * 1.14;
-        outerPoints.push({
-          x: centerX + (px - centerX) * (outerR / r),
-          y: centerY + (py - centerY) * (outerR / r),
-        });
+        points.push({ x: px, y: py });
       }
 
-      return { primaryPoints, innerPoints, outerPoints };
+      return points;
     };
 
-    // Helper to render a complete blob contour layer (ambient glow, echoes, primary line)
-    const drawBlobLayer = (
-      centerX: number,
-      centerY: number,
-      radius: number,
-      points: {
-        primaryPoints: { x: number; y: number }[];
-        innerPoints: { x: number; y: number }[];
-        outerPoints: { x: number; y: number }[];
-      },
+    // Helper to render a complete dual-layer blob system (ambient glow, outer echo, outer contour, inside rotating contour)
+    const drawBlobSystem = (
+      cx: number,
+      cy: number,
+      outerRadius: number,
+      outerPoints: { x: number; y: number }[],
+      innerPoints: { x: number; y: number }[],
     ) => {
-      // 1. Ambient luminescent core glow
+      // 1. Ambient luminescent core glow (ultra subtle)
       ctx.save();
       const glowGrad = ctx.createRadialGradient(
-        centerX,
-        centerY,
-        radius * 0.1,
-        centerX,
-        centerY,
-        radius * 1.25,
+        cx,
+        cy,
+        outerRadius * 0.1,
+        cx,
+        cy,
+        outerRadius * 1.25,
       );
-      glowGrad.addColorStop(0, colorWithAlpha(activeColor, opacity * 0.12));
-      glowGrad.addColorStop(0.5, colorWithAlpha(activeColor, opacity * 0.04));
+      glowGrad.addColorStop(0, colorWithAlpha(activeColor, opacity * 0.08));
+      glowGrad.addColorStop(0.55, colorWithAlpha(activeColor, opacity * 0.02));
       glowGrad.addColorStop(1, 'transparent');
       ctx.fillStyle = glowGrad;
       ctx.beginPath();
-      ctx.arc(centerX, centerY, radius * 1.25, 0, Math.PI * 2);
+      ctx.arc(cx, cy, outerRadius * 1.25, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
 
-      // 2. Outer Echo Line (Faint dashed blueprint contour)
+      // 2. Faint dashed outer echo line (blueprint depth)
       ctx.save();
-      ctx.setLineDash([4, 10]);
-      drawClosedBlob(points.outerPoints);
-      ctx.strokeStyle = colorWithAlpha(activeColor, opacity * 0.22);
-      ctx.lineWidth = 0.85;
+      ctx.setLineDash([3, 9]);
+      const echoPoints = outerPoints.map((p) => ({
+        x: cx + (p.x - cx) * 1.15,
+        y: cy + (p.y - cy) * 1.15,
+      }));
+      drawClosedBlob(echoPoints);
+      ctx.strokeStyle = colorWithAlpha(activeColor, opacity * 0.20);
+      ctx.lineWidth = 0.75;
       ctx.stroke();
       ctx.restore();
 
-      // 3. Inner Echo Line (Delicate hairline contour)
+      // 3. Primary outer blob contour line (subtle glowing contour)
       ctx.save();
-      drawClosedBlob(points.innerPoints);
-      ctx.strokeStyle = colorWithAlpha(activeColor, opacity * 0.30);
-      ctx.lineWidth = 0.85;
+      drawClosedBlob(outerPoints);
+      ctx.strokeStyle = colorWithAlpha(activeColor, opacity * 0.70);
+      ctx.lineWidth = 1.05;
+      ctx.shadowColor = colorWithAlpha(activeColor, opacity * 0.35);
+      ctx.shadowBlur = 4;
       ctx.stroke();
       ctx.restore();
 
-      // 4. Primary Flowing Blob Line (Crisp, subtle glowing contour)
+      // 4. Inside blob shape contour line (asynchronous & rotating on same axis at different speed)
       ctx.save();
-      drawClosedBlob(points.primaryPoints);
-      ctx.strokeStyle = colorWithAlpha(activeColor, opacity * 0.95);
-      ctx.lineWidth = 1.25;
-      ctx.shadowColor = colorWithAlpha(activeColor, opacity * 0.5);
-      ctx.shadowBlur = 6;
+      drawClosedBlob(innerPoints);
+      ctx.strokeStyle = colorWithAlpha(activeColor, opacity * 0.45);
+      ctx.lineWidth = 0.85;
+      ctx.shadowColor = colorWithAlpha(activeColor, opacity * 0.20);
+      ctx.shadowBlur = 3;
       ctx.stroke();
       ctx.restore();
     };
@@ -359,55 +367,103 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
 
       ctx.clearRect(0, 0, width, height);
 
-      // --- 1. DUAL ORGANIC SHAPES IN SEPARATE SCREEN AREAS (OUT-OF-PHASE PULSATION) ---
+      // --- 1. DUAL ASYNCHRONOUS ORGANIC BLOB SYSTEMS ---
       const minDim = Math.min(width, height);
       const coverage = Math.max(0.3, Math.min(1.2, blobCoverage));
 
-      // Blob 1: Upper-Left / Mid-Left Screen Area
+      // ----------------- BLOB 1 (Upper-Left / Mid-Left) -----------------
       const b1CenterX =
-        width * (0.30 + Math.sin(elapsed * 0.22 + 0.6) * 0.09 + Math.cos(elapsed * 0.11) * 0.05);
+        width * (0.30 + Math.sin(elapsed * 0.24 + 0.6) * 0.09 + Math.cos(elapsed * 0.12) * 0.05);
       const b1CenterY =
-        height * (0.36 + Math.cos(elapsed * 0.17 + 0.9) * 0.11 + Math.sin(elapsed * 0.26) * 0.04);
-      // Independent expansion & contraction: ~13s cycle (frequency 0.48 rad/s)
-      const b1Breathe = 1.0 + 0.16 * Math.sin(elapsed * 0.48);
-      const b1Radius = minDim * 0.28 * coverage * b1Breathe;
+        height * (0.36 + Math.cos(elapsed * 0.19 + 0.9) * 0.11 + Math.sin(elapsed * 0.28) * 0.04);
 
-      const blob1Points = generateBlobContour(
+      // Outer Blob 1: Traumatic, faster expansion/contraction (~6.8s period, w = 0.92 rad/s)
+      const b1OuterPhase = elapsed * 0.92;
+      const b1OuterBreathe = 1.0 + 0.26 * traumaticWave(b1OuterPhase);
+      const b1OuterRadius = minDim * 0.28 * coverage * b1OuterBreathe;
+      const b1OuterRotation = elapsed * 0.12;
+
+      // Inside Blob 1: Asynchronous pulsation (~5.4s period, w = 1.16 rad/s) + counter-rotating on same axis at -0.34 rad/s
+      const b1InnerPhase = elapsed * 1.16 + 1.5;
+      const b1InnerBreathe = 1.0 + 0.22 * traumaticWave(b1InnerPhase);
+      const b1InnerRadius = b1OuterRadius * 0.62 * (b1InnerBreathe / b1OuterBreathe);
+      const b1InnerRotation = elapsed * -0.34;
+
+      const b1OuterPoints = generateContourPoints(
         b1CenterX,
         b1CenterY,
-        b1Radius,
-        (theta) =>
-          0.30 * Math.sin(2 * theta + elapsed * 0.38) +
-          0.22 * Math.cos(3 * theta - elapsed * 0.26) +
-          0.15 * Math.sin(4 * theta + elapsed * 0.19) +
-          0.09 * Math.cos(5 * theta - elapsed * 0.13) +
-          0.05 * Math.sin(7 * theta + elapsed * 0.09),
+        b1OuterRadius,
+        b1OuterRotation,
+        (th) =>
+          0.30 * Math.sin(2 * th + elapsed * 0.38) +
+          0.22 * Math.cos(3 * th - elapsed * 0.26) +
+          0.15 * Math.sin(4 * th + elapsed * 0.19) +
+          0.09 * Math.cos(5 * th - elapsed * 0.13) +
+          0.05 * Math.sin(7 * th + elapsed * 0.09),
         m,
       );
-      drawBlobLayer(b1CenterX, b1CenterY, b1Radius, blob1Points);
 
-      // Blob 2: Lower-Right / Mid-Right Screen Area
+      const b1InnerPoints = generateContourPoints(
+        b1CenterX,
+        b1CenterY,
+        b1InnerRadius,
+        b1InnerRotation,
+        (th) =>
+          0.26 * Math.cos(2 * th - elapsed * 0.42) +
+          0.18 * Math.sin(3 * th + elapsed * 0.31 + 1.1) +
+          0.12 * Math.cos(4 * th - elapsed * 0.21) +
+          0.07 * Math.sin(5 * th + elapsed * 0.14),
+        m,
+      );
+
+      drawBlobSystem(b1CenterX, b1CenterY, b1OuterRadius, b1OuterPoints, b1InnerPoints);
+
+      // ----------------- BLOB 2 (Lower-Right / Mid-Right) -----------------
       const b2CenterX =
-        width * (0.70 + Math.cos(elapsed * 0.18 + 1.2) * 0.09 - Math.sin(elapsed * 0.13) * 0.05);
+        width * (0.70 + Math.cos(elapsed * 0.20 + 1.2) * 0.09 - Math.sin(elapsed * 0.14) * 0.05);
       const b2CenterY =
-        height * (0.64 + Math.sin(elapsed * 0.21 + 0.3) * 0.11 - Math.cos(elapsed * 0.24) * 0.04);
-      // Independent expansion & contraction: ~19s cycle (frequency 0.33 rad/s) with 2.4 rad phase offset
-      const b2Breathe = 1.0 + 0.16 * Math.sin(elapsed * 0.33 + 2.4);
-      const b2Radius = minDim * 0.25 * coverage * b2Breathe;
+        height * (0.64 + Math.sin(elapsed * 0.23 + 0.3) * 0.11 - Math.cos(elapsed * 0.26) * 0.04);
 
-      const blob2Points = generateBlobContour(
+      // Outer Blob 2: Traumatic, faster expansion/contraction (~8.7s period, w = 0.72 rad/s) with out-of-phase offset (+2.8 rad)
+      const b2OuterPhase = elapsed * 0.72 + 2.8;
+      const b2OuterBreathe = 1.0 + 0.26 * traumaticWave(b2OuterPhase);
+      const b2OuterRadius = minDim * 0.25 * coverage * b2OuterBreathe;
+      const b2OuterRotation = elapsed * -0.10;
+
+      // Inside Blob 2: Asynchronous pulsation (~6.5s period, w = 0.96 rad/s) + clockwise rotating on same axis at +0.36 rad/s
+      const b2InnerPhase = elapsed * 0.96 + 4.2;
+      const b2InnerBreathe = 1.0 + 0.22 * traumaticWave(b2InnerPhase);
+      const b2InnerRadius = b2OuterRadius * 0.60 * (b2InnerBreathe / b2OuterBreathe);
+      const b2InnerRotation = elapsed * 0.36;
+
+      const b2OuterPoints = generateContourPoints(
         b2CenterX,
         b2CenterY,
-        b2Radius,
-        (theta) =>
-          0.28 * Math.cos(2 * theta - elapsed * 0.32) +
-          0.20 * Math.sin(3 * theta + elapsed * 0.24 + 1.2) +
-          0.14 * Math.cos(4 * theta - elapsed * 0.17) +
-          0.08 * Math.sin(5 * theta + elapsed * 0.11) +
-          0.05 * Math.cos(7 * theta - elapsed * 0.08),
+        b2OuterRadius,
+        b2OuterRotation,
+        (th) =>
+          0.28 * Math.cos(2 * th - elapsed * 0.32) +
+          0.20 * Math.sin(3 * th + elapsed * 0.24 + 1.2) +
+          0.14 * Math.cos(4 * th - elapsed * 0.17) +
+          0.08 * Math.sin(5 * th + elapsed * 0.11) +
+          0.05 * Math.cos(7 * th - elapsed * 0.08),
         m,
       );
-      drawBlobLayer(b2CenterX, b2CenterY, b2Radius, blob2Points);
+
+      const b2InnerPoints = generateContourPoints(
+        b2CenterX,
+        b2CenterY,
+        b2InnerRadius,
+        b2InnerRotation,
+        (th) =>
+          0.25 * Math.sin(2 * th + elapsed * 0.44 + 0.8) +
+          0.19 * Math.cos(3 * th - elapsed * 0.29) +
+          0.13 * Math.sin(4 * th + elapsed * 0.22) +
+          0.07 * Math.cos(5 * th - elapsed * 0.15),
+        m,
+      );
+
+      drawBlobSystem(b2CenterX, b2CenterY, b2OuterRadius, b2OuterPoints, b2InnerPoints);
 
       // --- 2. FLOATING SUBTLE AMBIENT MOTES (Cinematic Depth) ---
       for (let i = 0; i < motes.length; i++) {
@@ -423,7 +479,7 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
         const posX = mote.x * width;
         const posY = mote.y * height;
         const pulse = 0.5 + 0.5 * Math.sin(elapsed * mote.pulseSpeed + mote.phase);
-        const moteAlpha = opacity * mote.baseAlpha * pulse * 0.8;
+        const moteAlpha = opacity * mote.baseAlpha * pulse * 0.4;
 
         ctx.fillStyle = colorWithAlpha(activeColor, moteAlpha);
         ctx.beginPath();

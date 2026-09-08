@@ -12,13 +12,13 @@ export interface VectorFieldConfig {
 }
 
 export const DEFAULT_VECTOR_FIELD_CONFIG: VectorFieldConfig = {
-  color: 'var(--color-tool-scout)',
-  speed: 0.4,
-  amplitude: 0.22,
+  color: 'var(--color-contour-ice)',
+  speed: 0.55,
+  amplitude: 0.24,
   gridSpacing: 30,
   dropletLength: 8,
-  blobCoverage: 0.75,
-  opacity: 0.20,
+  blobCoverage: 0.70,
+  opacity: 0.08,
   enabledOnChat: true,
 };
 
@@ -31,10 +31,23 @@ function readStoredConfig(): VectorFieldConfig {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return DEFAULT_VECTOR_FIELD_CONFIG;
     const parsed = JSON.parse(raw);
-    return {
+    const result = {
       ...DEFAULT_VECTOR_FIELD_CONFIG,
       ...parsed,
     };
+    // Migrate legacy green default to light subtle slate
+    if (
+      result.color.includes('scout') ||
+      result.color.includes('diligence') ||
+      result.color.includes('10E599')
+    ) {
+      result.color = DEFAULT_VECTOR_FIELD_CONFIG.color;
+    }
+    // Migrate legacy high opacity
+    if (result.opacity > 0.15) {
+      result.opacity = DEFAULT_VECTOR_FIELD_CONFIG.opacity;
+    }
+    return result;
   } catch {
     return DEFAULT_VECTOR_FIELD_CONFIG;
   }

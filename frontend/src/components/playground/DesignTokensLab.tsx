@@ -312,7 +312,12 @@ export const DesignTokensLab: React.FC = () => {
           <div className="space-y-2">
             <label className="text-xs font-mono text-slate-400 uppercase">Contour Glow Color</label>
             <div className="flex items-center gap-2">
-              {['var(--color-tool-scout)', 'var(--color-midnight-royal)', 'var(--color-tool-diligence)', 'var(--color-royal-violet)'].map((c) => (
+              {[
+                'var(--color-contour-ice)',
+                'var(--color-contour-mist)',
+                'var(--color-contour-sky)',
+                'var(--color-midnight-royal)',
+              ].map((c) => (
                 <button
                   key={c}
                   onClick={() => updateVfConfig({ color: c })}
@@ -322,6 +327,7 @@ export const DesignTokensLab: React.FC = () => {
                       : 'border-transparent opacity-70 hover:opacity-100'
                   }`}
                   style={{ backgroundColor: c }}
+                  title={c}
                 />
               ))}
             </div>
@@ -386,9 +392,9 @@ export const DesignTokensLab: React.FC = () => {
             </div>
             <input
               type="range"
-              min={0.05}
-              max={0.8}
-              step={0.05}
+              min={0.02}
+              max={0.35}
+              step={0.01}
               value={vfConfig.opacity}
               onChange={(e) => updateVfConfig({ opacity: parseFloat(e.target.value) })}
               className="w-full accent-purple-500 cursor-pointer"
