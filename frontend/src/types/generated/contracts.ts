@@ -3,7 +3,7 @@
  *
  * Generated from canonical Pydantic v2 models in backend/models.py
  * Generator: scripts/generate_contracts.py
- * Timestamp: 2026-09-07T21:29:55Z
+ * Timestamp: 2026-09-08T08:25:00Z
  *
  * To regenerate, run:
  *   npm run generate-contracts  (from frontend/)
@@ -420,6 +420,32 @@ export interface AttachedFileMeta {
   base64?: string;
   mimeType?: string;
   size?: number;
+}
+
+export interface BenchmarkSearchRequest {
+  target_name: string;
+  country?: string;
+  modes: string[];
+}
+
+export interface ModeBenchmarkMetric {
+  mode: string;
+  latency_ms: number;
+  records_found: number;
+  unique_domains: number;
+  mean_excerpt_chars: number;
+  estimated_cost_usd: number;
+  tier1_source_count: number;
+  top_domains: string[];
+  sample_titles: string[];
+  simulated_or_live: string;
+}
+
+export interface BenchmarkSearchResponse {
+  target_name: string;
+  timestamp: string;
+  comparisons: ModeBenchmarkMetric[];
+  key_takeaway: string;
 }
 
 export interface ChatToolCall {
@@ -1041,6 +1067,16 @@ export interface ScoutResponse {
   opportunities: FestivalOpportunity[];
   strategySummary: string;
   durationSeconds: number;
+}
+
+export interface SearchModeConfigResponse {
+  current_mode: string;
+  available_modes: string[];
+  cost_table: Record<string, string>;
+}
+
+export interface SetSearchModeRequest {
+  mode: string;
 }
 
 export interface TaskDisambiguatePayload {
