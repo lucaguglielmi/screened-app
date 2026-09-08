@@ -1037,5 +1037,37 @@ def safe_research_domain(val: Any) -> ResearchDomain:
         return ResearchDomain.FESTIVAL
 
 
+class SearchModeConfigResponse(BaseModel):
+    current_mode: str
+    available_modes: List[str] = ["fast", "basic", "advanced"]
+    cost_table: Dict[str, str]
 
 
+class SetSearchModeRequest(BaseModel):
+    mode: str
+
+
+class BenchmarkSearchRequest(BaseModel):
+    target_name: str
+    country: Optional[str] = None
+    modes: List[str] = ["fast", "basic", "advanced"]
+
+
+class ModeBenchmarkMetric(BaseModel):
+    mode: str
+    latency_ms: int
+    records_found: int
+    unique_domains: int
+    mean_excerpt_chars: int
+    estimated_cost_usd: float
+    tier1_source_count: int
+    top_domains: List[str] = Field(default_factory=list)
+    sample_titles: List[str] = Field(default_factory=list)
+    simulated_or_live: str = "live"
+
+
+class BenchmarkSearchResponse(BaseModel):
+    target_name: str
+    timestamp: str
+    comparisons: List[ModeBenchmarkMetric]
+    key_takeaway: str

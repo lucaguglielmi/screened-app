@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     # Parallel Search API Key
     parallel_api_key: str = ""
     parallel_webhook_secret: str = "dev-webhook-secret"
+    parallel_default_search_mode: str = "fast"
 
     # Google Cloud & Vertex AI
     google_genai_use_vertexai: bool = True

@@ -22,12 +22,13 @@ import { AgentObservabilityLab } from './AgentObservabilityLab';
 import { UiGalleryLab } from './UiGalleryLab';
 import { FeedbackLogTab } from './FeedbackLogTab';
 import { ArchitecturePage } from './ArchitecturePage';
+import { SearchBenchmarkPage } from './SearchBenchmarkPage';
 import { FeedbackModal } from '../modals/FeedbackModal';
 import { soundEffects } from '../../utils/audio';
-import { Workflow, Coins, MailWarning, ShieldCheck, Sparkles, Loader2, MessageSquare, Palette } from 'lucide-react';
+import { Workflow, Coins, MailWarning, ShieldCheck, Sparkles, Loader2, MessageSquare, Palette, Zap } from 'lucide-react';
 
 export const DesignPlayground: React.FC = () => {
-  const [activeSection, setActiveSection] = useState<'UI' | 'LOADERS' | 'CHAT' | 'ARCHITECTURE' | 'FEEDBACK' | 'ALL'>('UI');
+  const [activeSection, setActiveSection] = useState<'UI' | 'LOADERS' | 'CHAT' | 'ARCHITECTURE' | 'FEEDBACK' | 'BENCHMARK' | 'ALL'>('UI');
   const [activeToolSubtab, setActiveToolSubtab] = useState<
     'FESTIVAL' | 'GRANT' | 'INVITATION' | 'SCOUT' | 'COMPARE' | 'VETTING' | 'PROBES'
   >('FESTIVAL');
@@ -137,6 +138,7 @@ export const DesignPlayground: React.FC = () => {
             { id: 'LOADERS', label: 'Loaders', icon: Loader2 },
             { id: 'CHAT', label: 'Chat Related', icon: MessageSquare },
             { id: 'ARCHITECTURE', label: 'Architecture & Traces', icon: Workflow },
+            { id: 'BENCHMARK', label: 'Search Benchmark Lab', icon: Zap },
             { id: 'FEEDBACK', label: 'Feedback Log', icon: MessageSquare },
             { id: 'ALL', label: 'All Components', icon: Sparkles },
           ].map((tab) => {
@@ -757,6 +759,15 @@ export const DesignPlayground: React.FC = () => {
         {activeSection === 'FEEDBACK' && (
           <div className="p-6 rounded-3xl bg-darkroom-surface border border-darkroom-border animate-fade-in">
             <FeedbackLogTab onOpenFeedbackModal={() => setIsFeedbackModalOpen(true)} />
+          </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* 6. TOPIC: PARALLEL SEARCH BENCHMARK LAB */}
+        {/* ========================================================================= */}
+        {(activeSection === 'ALL' || activeSection === 'BENCHMARK') && (
+          <div className="p-6 rounded-3xl bg-darkroom-surface border border-darkroom-border animate-fade-in">
+            <SearchBenchmarkPage />
           </div>
         )}
 

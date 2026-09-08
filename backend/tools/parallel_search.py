@@ -28,6 +28,21 @@ def extract_registrable_domain(url: str) -> str:
     except Exception:
         return ""
 
+VALID_SEARCH_MODES = {"fast", "basic", "advanced"}
+
+def resolve_search_mode(requested_mode: Optional[str] = None) -> str:
+    """Resolves search mode hierarchically:
+    1. Explicit requested_mode (if provided and valid)
+    2. Global settings.parallel_default_search_mode (fallback to 'fast')
+    """
+    if requested_mode and str(requested_mode).lower() in VALID_SEARCH_MODES:
+        return str(requested_mode).lower()
+    default_mode = getattr(settings, "parallel_default_search_mode", "fast")
+    if default_mode in VALID_SEARCH_MODES:
+        return default_mode
+    return "fast"
+
+
 def compute_content_hash(text: str) -> str:
     return hashlib.sha256(text.strip().encode("utf-8")).hexdigest()
 
@@ -114,7 +129,7 @@ class ParallelSearchTool:
         self,
         queries: List[str],
         objective: str,
-        mode: str = "fast",
+        mode: Optional[str] = None,
         max_results_total: int = 10,
         max_results: Optional[int] = None,
         source_policy: Optional[dict] = None,
@@ -125,8 +140,9 @@ class ParallelSearchTool:
         if not queries:
             return []
 
+        effective_mode = resolve_search_mode(mode)
         limit = max_results if max_results is not None else max_results_total
-        logger.info(f"Executing Parallel Search ({mode} mode) for objective: {objective} with {len(queries)} queries")
+        logger.info(f"Executing Parallel Search ({effective_mode} mode) for objective: {objective} with {len(queries)} queries")
         advanced_settings = {
             "max_results": limit,
             "excerpt_settings": {"max_chars_per_result": 1500}
@@ -135,7 +151,7 @@ class ParallelSearchTool:
             advanced_settings["source_policy"] = source_policy
 
         tasks = [
-            self._search_single_query(q, objective, mode, advanced_settings, session_id)
+            self._search_single_query(q, objective, effective_mode, advanced_settings, session_id)
             for q in queries
         ]
         results_lists = await asyncio.gather(*tasks, return_exceptions=True)
