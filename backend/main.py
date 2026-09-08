@@ -44,6 +44,7 @@ from backend.models import (
     CreateInvestigationRequest,
     ConfirmEntityRequest,
     TaskDisambiguatePayload,
+    TaskPipelinePayload,
     Investigation,
     SearchModeConfigResponse,
     SetSearchModeRequest,
