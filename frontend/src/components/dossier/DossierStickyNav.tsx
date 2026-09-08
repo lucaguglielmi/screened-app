@@ -78,19 +78,43 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
 }) => {
   // Auto-scroll progress tracking if not provided externally
   const [internalScrollProgress, setInternalScrollProgress] = useState(0);
+  const [activeSection, setActiveSection] = useState<string>('section-radar');
   const activeScrollProgress =
     scrollProgressProp !== undefined ? scrollProgressProp : internalScrollProgress;
 
   useEffect(() => {
-    if (scrollProgressProp !== undefined) return;
     const handleScroll = () => {
       const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (totalHeight > 0) {
+      if (totalHeight > 0 && scrollProgressProp === undefined) {
         const currentProgress = (window.scrollY / totalHeight) * 100;
         setInternalScrollProgress(Math.min(100, Math.max(0, currentProgress)));
       }
+
+      // Track active section for jump anchors
+      const anchorIds = [
+        'section-radar',
+        'section-premiere-fee',
+        'section-forensic-brief',
+        'section-forensic-matrix',
+        'section-previous-editions',
+        'section-disputes',
+        'section-claims',
+        'section-checklist',
+      ];
+      let currentActive = anchorIds[0];
+      for (const id of anchorIds) {
+        const el = document.getElementById(id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= 200) {
+            currentActive = id;
+          }
+        }
+      }
+      setActiveSection(currentActive);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, [scrollProgressProp]);
 
@@ -242,9 +266,15 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
     soundEffects.playClick();
     const el = document.getElementById(id);
     if (el) {
+      setActiveSection(id);
       const yOffset = -140;
-      const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({ top: y, behavior: 'smooth' });
+      const targetY = Math.max(0, el.getBoundingClientRect().top + window.pageYOffset + yOffset);
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalHeight > 0) {
+        const targetProgress = Math.min(100, Math.max(0, (targetY / totalHeight) * 100));
+        setInternalScrollProgress(targetProgress);
+      }
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
     }
   };
 
@@ -468,16 +498,23 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
           <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider pl-1 shrink-0 font-medium">
             Jump:
           </span>
-          {jumpAnchors.map((anchor) => (
-            <button
-              key={anchor.id}
-              type="button"
-              onClick={() => handleJumpToSection(anchor.id)}
-              className="px-2.5 py-0.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[11px] font-mono text-slate-300 hover:text-tool-diligence border border-white/10 hover:border-tool-diligence/40 transition-all cursor-pointer shrink-0 active:scale-95"
-            >
-              {anchor.label}
-            </button>
-          ))}
+          {jumpAnchors.map((anchor) => {
+            const isActive = activeSection === anchor.id;
+            return (
+              <button
+                key={anchor.id}
+                type="button"
+                onClick={() => handleJumpToSection(anchor.id)}
+                className={`px-2.5 py-0.5 rounded-lg text-[11px] font-mono transition-all cursor-pointer shrink-0 active:scale-95 ${
+                  isActive
+                    ? 'bg-tool-diligence/20 text-tool-diligence border border-tool-diligence/60 font-semibold shadow-xs'
+                    : 'bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 hover:text-tool-diligence border border-white/10 hover:border-tool-diligence/40'
+                }`}
+              >
+                {anchor.label}
+              </button>
+            );
+          })}
         </div>
       )}
     </div>

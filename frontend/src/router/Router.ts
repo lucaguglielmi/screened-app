@@ -126,7 +126,7 @@ export function parseCurrentRoute(pathname = window.location.pathname, search = 
     };
   }
 
-  if (cleanPath === "/playground") {
+  if (cleanPath.startsWith("/playground")) {
     return {
       path: "/playground",
       tool: "DESIGN_PLAYGROUND",

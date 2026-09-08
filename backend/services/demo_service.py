@@ -36,7 +36,7 @@ def is_demo_query(query: Optional[str]) -> bool:
     q_clean = query.lower().strip()
     if q_clean in _DEMO_KEYWORDS:
         return True
-    if "pinco pallino" in q_clean or "pinco_pallino" in q_clean:
+    if "pinco" in q_clean:
         return True
     return False
 

@@ -19,7 +19,7 @@
  * ==============================================================================
  */
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Coins,
@@ -32,6 +32,8 @@ import {
   RotateCcw,
   Sparkles,
   ShieldCheck,
+  ChevronDown,
+  Check,
 } from 'lucide-react';
 import { GrantScoutArgs } from '../../../types/chat';
 import { soundEffects } from '../../../utils/audio';
@@ -56,15 +58,128 @@ interface GrantIntakeCardProps {
   onLaunchSearch: (searchSummary: string) => void;
 }
 
+interface DropdownOption {
+  value: string;
+  label: string;
+}
+
+const REGION_OPTIONS: DropdownOption[] = [
+  { value: 'ANY', label: 'Any Region / Worldwide' },
+  { value: 'UK & Northern Ireland', label: 'United Kingdom & NI (BFI/Lottery Focus)' },
+  { value: 'Screen Scotland', label: 'Scotland (Screen Scotland Focus)' },
+  { value: 'Creative Wales', label: 'Wales (Ffilm Cymru Focus)' },
+  { value: 'European Union', label: 'European Union (Eurimages / Creative Europe)' },
+  { value: 'North America', label: 'North America (Sundance / Film Independent)' },
+  { value: 'International / Worldwide', label: 'International / Worldwide' },
+];
+
+const STAGE_OPTIONS: DropdownOption[] = [
+  { value: 'ANY', label: 'Any Stage' },
+  { value: 'Development & Scriptwriting', label: 'Development & Scriptwriting' },
+  { value: 'Early Pre-Production', label: 'Early Pre-Production' },
+  { value: 'Production', label: 'Production & Principal Photography' },
+  { value: 'Post-Production & Completion', label: 'Post-Production & Completion Funds' },
+  { value: 'Distribution & Festival Travel', label: 'Distribution & Festival Travel' },
+];
+
+const MultiSelectDropdown: React.FC<{
+  label: string;
+  options: DropdownOption[];
+  selected: string[];
+  onChange: (selected: string[]) => void;
+  anyValue?: string;
+}> = ({ label, options, selected, onChange, anyValue = 'ANY' }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const toggleOption = (val: string) => {
+    if (val === anyValue) {
+      onChange([anyValue]);
+      return;
+    }
+    let next = selected.filter((s) => s !== anyValue);
+    if (next.includes(val)) {
+      next = next.filter((s) => s !== val);
+      if (next.length === 0) {
+        next = [anyValue];
+      }
+    } else {
+      next = [...next, val];
+    }
+    onChange(next);
+  };
+
+  const getDisplayText = () => {
+    if (selected.length === 0 || selected.includes(anyValue)) {
+      const anyOpt = options.find((o) => o.value === anyValue);
+      return anyOpt ? anyOpt.label : 'Any';
+    }
+    if (selected.length === 1) {
+      const opt = options.find((o) => o.value === selected[0]);
+      return opt ? opt.label : selected[0];
+    }
+    return `${selected.length} selected (${selected.map((s) => options.find((o) => o.value === s)?.label || s).join(', ')})`;
+  };
+
+  return (
+    <div className="relative space-y-1.5" ref={containerRef}>
+      <label className="block text-sm font-semibold text-slate-300">{label}</label>
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full bg-darkroom-bg border border-slate-700/60 hover:border-tool-diligence/50 focus:border-tool-diligence rounded-xl px-3.5 py-2.5 text-left text-sm text-white flex items-center justify-between transition-colors cursor-pointer"
+      >
+        <span className="truncate pr-2 font-medium">{getDisplayText()}</span>
+        <ChevronDown
+          className={`w-4 h-4 text-slate-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+        />
+      </button>
+
+      {isOpen && (
+        <div className="absolute z-50 mt-1 w-full rounded-xl bg-darkroom-surface border border-slate-700 shadow-2xl p-1.5 space-y-1 max-h-60 overflow-y-auto">
+          {options.map((opt) => {
+            const isSelected = selected.includes(opt.value);
+            return (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => toggleOption(opt.value)}
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-colors cursor-pointer text-left ${
+                  isSelected
+                    ? 'bg-tool-diligence/20 text-tool-diligence border border-tool-diligence/40'
+                    : 'text-slate-300 hover:bg-slate-800/80 hover:text-white border border-transparent'
+                }`}
+              >
+                <span>{opt.label}</span>
+                {isSelected && <Check className="w-3.5 h-3.5 text-tool-diligence shrink-0" />}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
+
 export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args }) => {
   const [projectTitle, setProjectTitle] = useState(args.project_title || 'Untitled Project');
   const [budgetTier, setBudgetTier] = useState<number>(50000); // £50k
   const [fundingNeeded, setFundingNeeded] = useState<number>(25000); // £25k
-  const [productionStage, setProductionStage] = useState<string>(
-    args.production_stage || 'Production',
+  const [selectedStages, setSelectedStages] = useState<string[]>(
+    args.production_stage ? [args.production_stage] : ['Production'],
   );
-  const [filmmakerRegion, setFilmmakerRegion] = useState<string>(
-    args.filmmaker_region || 'UK & Europe',
+  const [selectedRegions, setSelectedRegions] = useState<string[]>(
+    args.filmmaker_region ? [args.filmmaker_region] : ['UK & Northern Ireland'],
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -94,7 +209,6 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args }) => {
     const videoExtensions = ['.mp4', '.mov', '.avi', '.mkv', '.webm', '.m4v', '.wmv'];
     const fileNameLower = file.name.toLowerCase();
 
-    // Check if user dropped a video file
     if (
       videoExtensions.some((ext) => fileNameLower.endsWith(ext)) ||
       file.type.startsWith('video/')
@@ -106,7 +220,6 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args }) => {
       return;
     }
 
-    // Supported document
     soundEffects.playSuccess();
     const sizeInKb = Math.round(file.size / 1024);
     setAttachedFile({
@@ -117,6 +230,13 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args }) => {
 
   const handleLaunch = async () => {
     setIsSubmitting(true);
+    const regionParam = selectedRegions.includes('ANY')
+      ? 'Any Region / Worldwide'
+      : selectedRegions.join(', ');
+    const stageParam = selectedStages.includes('ANY')
+      ? 'Any Stage'
+      : selectedStages.join(', ');
+
     try {
       const res = await fetch('/api/grants/scout', {
         method: 'POST',
@@ -125,10 +245,10 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args }) => {
           projectTitle: projectTitle.trim() || 'Independent Production',
           format: 'Short',
           genre: 'Drama',
-          productionStage,
+          productionStage: stageParam,
           budgetTier: `£${budgetTier.toLocaleString()}`,
           fundingNeeded: `£${fundingNeeded.toLocaleString()}`,
-          filmmakerRegion,
+          filmmakerRegion: regionParam,
         }),
       });
 
@@ -147,7 +267,6 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args }) => {
       soundEffects.playSuccess();
     } catch (err) {
       console.warn('Grant scout API fallback triggered:', err);
-      // High-fidelity fallback with verified European & UK public funds
       setMatchedGrants([
         {
           id: 'bfi-fund-1',
@@ -200,7 +319,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args }) => {
         },
       ]);
       setStrategySummary(
-        `Target institutional non-dilutive public funds for "${projectTitle}" matching ${filmmakerRegion} residency and ${productionStage} stage.`,
+        `Target institutional non-dilutive public funds for "${projectTitle}" matching ${regionParam} residency and ${stageParam} stage.`,
       );
       setIsSubmitted(true);
       soundEffects.playSuccess();
@@ -218,26 +337,26 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args }) => {
       {/* Header */}
       <div className="flex items-center justify-between border-b border-tool-diligence/20 pb-3">
         <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 rounded-xl bg-tool-diligence/20 flex items-center justify-center text-tool-diligence font-bold border border-tool-diligence/40">
+          <div className="w-9 h-9 rounded-xl bg-amber-500/15 flex items-center justify-center text-amber-400 font-bold border border-amber-500/30">
             <Coins className="w-5 h-5" />
           </div>
           <div>
-            <div className="flex items-center space-x-2">
-              <span className="text-xs font-mono font-bold tracking-wider text-tool-diligence uppercase">
-                Film Grant & Sponsor Match
-              </span>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-mono font-semibold flex items-center gap-1">
-                <Sparkles className="w-3 h-3 text-emerald-400" />
-                Test Mode Active (/grantscout)
+            <div className="flex items-center gap-2">
+              <h3 className="text-base font-bold text-white font-serif">Grant Scout</h3>
+              <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 font-mono font-semibold flex items-center gap-1">
+                <Sparkles className="w-3 h-3 text-amber-400" />
+                Test Trial
               </span>
             </div>
-            <h3 className="text-base font-bold text-white font-serif">{projectTitle}</h3>
+            <p className="text-xs text-slate-400">
+              Institutional Public Fund & Subvention Matcher (Experimental Preview)
+            </p>
           </div>
         </div>
         <div className="text-right hidden sm:block">
           <span className="text-xs text-slate-400 font-mono flex items-center gap-1 justify-end">
             <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />
-            IP Protected (Zero PII)
+            Zero PII • IP Protected
           </span>
         </div>
       </div>
@@ -268,7 +387,7 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args }) => {
             {matchedGrants.map((grant) => (
               <div
                 key={grant.id}
-                className="p-4 rounded-xl bg-darkroom-bg/80 border border-tool-diligence/20 hover:border-tool-diligence/50 transition-all space-y-2.5"
+                className="p-4 rounded-xl bg-darkroom-bg/80 border border-tool-diligence/20 hover:border-tool-diligence/50 transition-all space-y-3"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
@@ -286,22 +405,22 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args }) => {
                 </div>
 
                 {grant.fitRationale && (
-                  <p className="text-xs text-slate-300 bg-slate-900/40 p-2.5 rounded-lg border border-slate-800">
+                  <p className="text-xs text-slate-300 bg-slate-900/50 p-2.5 rounded-lg border border-slate-800 leading-relaxed">
                     <strong className="text-tool-diligence">Match Analysis:</strong>{' '}
                     {grant.fitRationale}
                   </p>
                 )}
 
                 {grant.keyCriteria && grant.keyCriteria.length > 0 && (
-                  <div className="space-y-1">
-                    <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider font-mono">
-                      Eligibility & Mandate:
-                    </span>
-                    <ul className="text-xs text-slate-300 list-disc list-inside space-y-0.5">
-                      {grant.keyCriteria.map((c, i) => (
-                        <li key={i}>{c}</li>
-                      ))}
-                    </ul>
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {grant.keyCriteria.map((c, i) => (
+                      <span
+                        key={i}
+                        className="text-[11px] px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 border border-slate-700/60"
+                      >
+                        {c}
+                      </span>
+                    ))}
                   </div>
                 )}
 
@@ -334,8 +453,8 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args }) => {
               <RotateCcw className="w-3.5 h-3.5" />
               <span>Modify Parameters & Re-Scout</span>
             </button>
-            <span className="text-[11px] text-slate-400 font-mono">
-              Invoked via <code className="text-emerald-300">/grantscout</code>
+            <span className="text-[11px] text-amber-300/80 font-mono">
+              Test Trial Mode (/grantscout)
             </span>
           </div>
         </motion.div>
@@ -344,13 +463,15 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args }) => {
         <div className="space-y-4">
           {/* Project Title Input */}
           <div className="text-xs">
-            <label className="block text-sm font-semibold text-slate-300 mb-1.5">Project / Screenplay Title</label>
+            <label className="block text-sm font-semibold text-slate-300 mb-1.5">
+              Project / Screenplay Title
+            </label>
             <input
               type="text"
               value={projectTitle}
               onChange={(e) => setProjectTitle(e.target.value)}
               placeholder="e.g. Echoes of the Humber"
-              className="w-full bg-darkroom-bg border border-transparent focus:border-tool-diligence rounded-xl px-3.5 py-2.5 text-white text-base placeholder:text-zinc-500 focus:outline-none"
+              className="w-full bg-darkroom-bg border border-slate-700/60 focus:border-tool-diligence rounded-xl px-3.5 py-2.5 text-white text-base placeholder:text-zinc-500 focus:outline-none"
             />
           </div>
 
@@ -403,46 +524,21 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args }) => {
             </div>
           </div>
 
-          {/* Region and Stage Pickers */}
+          {/* Region and Stage Multi-Select Pickers */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
-            <div>
-              <label className="block text-sm font-semibold text-slate-300 mb-1.5">
-                Filmmaker / Producer Region
-              </label>
-              <select
-                value={filmmakerRegion}
-                onChange={(e) => setFilmmakerRegion(e.target.value)}
-                className="w-full bg-darkroom-bg border border-transparent focus:border-tool-diligence rounded-xl px-3 py-2.5 text-white text-base focus:outline-none cursor-pointer"
-              >
-                <option value="UK & Northern Ireland">
-                  United Kingdom & NI (BFI/Lottery Focus)
-                </option>
-                <option value="Screen Scotland">Scotland (Screen Scotland Focus)</option>
-                <option value="Creative Wales">Wales (Ffilm Cymru Focus)</option>
-                <option value="European Union">European Union (Eurimages / Creative Europe)</option>
-                <option value="North America">North America (Sundance / Film Independent)</option>
-                <option value="International / Worldwide">International Worldwide</option>
-              </select>
-            </div>
+            <MultiSelectDropdown
+              label="Filmmaker / Producer Region"
+              options={REGION_OPTIONS}
+              selected={selectedRegions}
+              onChange={setSelectedRegions}
+            />
 
-            <div>
-              <label className="block text-sm font-semibold text-slate-300 mb-1.5">Production Stage</label>
-              <select
-                value={productionStage}
-                onChange={(e) => setProductionStage(e.target.value)}
-                className="w-full bg-darkroom-bg border border-transparent focus:border-tool-diligence rounded-xl px-3 py-2.5 text-white text-base focus:outline-none cursor-pointer"
-              >
-                <option value="Development & Scriptwriting">Development & Scriptwriting</option>
-                <option value="Early Pre-Production">Early Pre-Production</option>
-                <option value="Production">Production & Principal Photography</option>
-                <option value="Post-Production & Completion">
-                  Post-Production & Completion Funds
-                </option>
-                <option value="Distribution & Festival Travel">
-                  Distribution & Festival Travel
-                </option>
-              </select>
-            </div>
+            <MultiSelectDropdown
+              label="Production Stage"
+              options={STAGE_OPTIONS}
+              selected={selectedStages}
+              onChange={setSelectedStages}
+            />
           </div>
 
           {/* Document Dropzone */}
@@ -510,7 +606,9 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args }) => {
               disabled={isSubmitting}
               className="w-full flex items-center justify-center space-x-2 py-3 px-6 rounded-xl bg-tool-diligence hover:bg-tool-diligence-hover text-slate-950 font-bold text-base shadow-md shadow-[var(--color-tool-diligence)]/30 transition-all hover:brightness-110 active:scale-95 group cursor-pointer disabled:opacity-50"
             >
-              <span>{isSubmitting ? 'Scouting Public Funds...' : 'Discover Matching Public Grants'}</span>
+              <span>
+                {isSubmitting ? 'Scouting Public Funds...' : 'Discover Matching Public Grants'}
+              </span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>

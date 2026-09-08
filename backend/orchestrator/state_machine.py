@@ -8,6 +8,7 @@ import uuid
 import os
 import traceback
 import json
+from backend.tools.source_tiers import determine_source_tier
 
 logger = logging.getLogger("screened.orchestrator.state_machine")
 try:
@@ -139,7 +140,6 @@ def _create_source_record(
     clean_url = url or "https://screened.app"
     domain = default_domain or extract_domain_from_url(clean_url)
     excerpts_list = [excerpt] if excerpt else []
-    from backend.tools.source_tiers import determine_source_tier
     tier = determine_source_tier(domain)
     return SourceRecord(
         id=source_id or str(uuid.uuid4()),

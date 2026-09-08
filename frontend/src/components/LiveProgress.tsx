@@ -244,66 +244,66 @@ const DEMO_LOG_EVENTS: Array<{
   },
   {
     atSecond: 2,
-    agentName: 'StrategyPlanner',
-    message: 'Identifying target research domains: Corporate Registry, Venue Corroboration, Filmmaker Sentiment...',
+    agentName: 'Disambiguator',
+    message: 'Entity Disambiguated: Verified Pinco Pallino Film Festival (Genesis Cinema, London).',
     eventType: 'PLAN_READY',
   },
   {
-    atSecond: 4,
+    atSecond: 5,
     agentName: 'ParallelSearch',
     message: 'Dispatching parallel sub-agents across 42 public and commercial sources...',
     eventType: 'DOMAIN_SEARCH_STARTED',
   },
   {
-    atSecond: 5,
+    atSecond: 7,
     agentName: 'VenueAgent',
     message: 'VenueAgent: Harvested Genesis Cinema box office manifests and Studio 4 technical specs.',
     eventType: 'TASK_RUN_PROGRESS',
   },
   {
-    atSecond: 7,
+    atSecond: 9,
     agentName: 'CorporateAgent',
     message: 'CorporateAgent: Verified Companies House filings for Pinco Pallino Film CIC.',
     eventType: 'TASK_RUN_PROGRESS',
   },
   {
-    atSecond: 8,
+    atSecond: 10,
     agentName: 'ClaimExtractor',
     message: 'Extracting atomic claims and verbatim quotes from 42 harvested sources...',
     eventType: 'CLAIMS_EXTRACTING',
   },
   {
-    atSecond: 10,
+    atSecond: 12,
     agentName: 'ClaimExtractor',
     message: 'ClaimExtractor: Corroborated 363 atomic claims against primary documents and registry filings.',
     eventType: 'CLAIMS_EXTRACTED',
   },
   {
-    atSecond: 12,
+    atSecond: 15,
     agentName: 'ContradictionAnalyst',
     message: 'Cross-referencing 363 atomic claims against public registers and market baselines...',
     eventType: 'CONTRADICTIONS_ANALYZING',
   },
   {
-    atSecond: 14,
+    atSecond: 17,
     agentName: 'ForensicScorer',
     message: 'ForensicScorer: Flagged fee escalation anomaly (+168% surge) and virtual registered address at 71-75 Shelton St.',
     eventType: 'CONTRADICTION_DETECTED',
   },
   {
-    atSecond: 16,
+    atSecond: 20,
     agentName: 'DossierSynthesizer',
     message: 'Assembling finalized evidence dossier with 42 verified sources and risk index...',
     eventType: 'DOSSIER_SYNTHESIZING',
   },
   {
-    atSecond: 18,
+    atSecond: 22,
     agentName: 'ExecutiveSummaryAgent',
     message: 'ExecutiveSummaryAgent: Generated multi-domain due diligence dossier. Overall Authenticity Score: 68/100.',
     eventType: 'DEEP_VETTING_ANALYZING',
   },
   {
-    atSecond: 20,
+    atSecond: 25,
     agentName: 'DossierSynthesizer',
     message: 'Investigation complete. Final due diligence dossier ready for review.',
     eventType: 'DOSSIER_READY',
@@ -329,7 +329,7 @@ export const LiveProgress: React.FC<Props> = ({
   const [, setIsHoveringLog] = useState(false);
   const isPincoDemo = useMemo(() => {
     return (
-      (festivalName && festivalName.toLowerCase().includes('pinco')) ||
+      (festivalName && (festivalName.toLowerCase().includes('pinco') || festivalName.toLowerCase().includes('demo'))) ||
       investigationId === 'demo_pinco_pallino'
     );
   }, [festivalName, investigationId]);
@@ -413,13 +413,13 @@ export const LiveProgress: React.FC<Props> = ({
 
   const eventsEndRef = useRef<HTMLDivElement>(null);
 
-  // Timer (runs 20s for demo mode, or continuous for live investigations)
+  // Timer (runs 25s for demo mode, or continuous for live investigations)
   useEffect(() => {
     if (status === 'READY' || status === 'FAILED' || status === 'CANCELLED' || isCelebrating) return;
     const interval = setInterval(() => {
       setElapsedSeconds((prev) => {
         const next = prev + 1;
-        if (isPincoDemo && next >= 20) {
+        if (isPincoDemo && next >= 25) {
           onComplete?.();
         }
         return next;
@@ -428,11 +428,11 @@ export const LiveProgress: React.FC<Props> = ({
     return () => clearInterval(interval);
   }, [status, isCelebrating, isPincoDemo, onComplete]);
 
-  // Demo 5-stage progression (4s per stage)
+  // Demo 5-stage progression (5s per stage: 25s total)
   const demoPhaseIdx = useMemo(() => {
     if (!isPincoDemo) return -1;
-    if (status === 'READY' || isCelebrating || elapsedSeconds >= 20) return 5;
-    return Math.min(4, Math.floor(elapsedSeconds / 4));
+    if (status === 'READY' || isCelebrating || elapsedSeconds >= 25) return 5;
+    return Math.min(4, Math.floor(elapsedSeconds / 5));
   }, [isPincoDemo, status, isCelebrating, elapsedSeconds]);
 
   // Compute last active status from events for FAILED states

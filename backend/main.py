@@ -21,6 +21,7 @@ from fastapi import Header
 from backend.config import settings
 from backend.routers import webhooks
 from backend.models import (
+    InvestigationAuditHealth,
     AtomicClaim,
     CandidateEntity,
     DraftOutreachRequest,
@@ -60,13 +61,13 @@ from backend.utils.security import validate_public_url
 from backend.services.gemini_client import GeminiClient
 from backend.services.approval_service import approval_service
 from backend.services.export_service import export_service
+from backend.services import demo_service
 from backend.agents.outreach_drafter import OutreachDrafterAgent
 from backend.agents.opportunity_scout import OpportunityScoutAgent
 from backend.agents.deep_vetting import DeepVettingAgent
 from backend.agents.producer_desk import producer_desk_agent
 from backend.orchestrator.events import broadcaster, EventType
 from backend.orchestrator.state_machine import orchestrator
-from backend.services import demo_service
 
 
 # LLM concurrency limiter
@@ -414,7 +415,6 @@ async def get_investigation(investigation_id: str):
     inv["claims"] = claims
     inv["sources"] = sources
     if "auditHealth" not in inv or not inv["auditHealth"]:
-        from backend.models import InvestigationAuditHealth
         is_ready = inv.get("status") == "READY"
         inv["auditHealth"] = InvestigationAuditHealth(
             status="HEALTHY" if len(claims) > 0 else ("EMPTY_WARNING" if is_ready else "HEALTHY"),
@@ -454,8 +454,6 @@ async def register_notification_subscriber(
     request: Request,
 ):
     """Registers an email or push subscription to be notified when the investigation completes."""
-    if demo_service.is_demo_id(investigation_id):
-        return {"status": "ok", "message": "Notification registered for demo"}
 
     update_data: Dict[str, Any] = {}
     if req.email:
@@ -509,7 +507,6 @@ async def confirm_entity(investigation_id: str, req: ConfirmEntityRequest, reque
 @app.get("/api/investigations/{investigation_id}/events")
 async def stream_investigation_events(investigation_id: str):
     """Server-Sent Events (SSE) streaming real-time multi-agent activity."""
-    # DEMO MODE INTERCEPTION
     if demo_service.is_demo_id(investigation_id):
         return StreamingResponse(
             demo_service.demo_sse_generator(),
@@ -549,8 +546,6 @@ async def register_festival_watch(
 ):
     """Register or activate a Parallel Monitor to watch the festival URL for policy or fee drift."""
     target_url = (req.targetUrl or "").strip()
-
-    # DEMO MODE INTERCEPTION
     if demo_service.is_demo_id(investigation_id):
         watch_status = demo_service.activate_demo_watch(
             target_url=target_url or "https://genesiscinema.co.uk",
@@ -643,8 +638,6 @@ async def trigger_festival_watch(
 ):
     """Trigger a Parallel Monitor check or simulate a policy drift alert for the festival."""
     now_iso = datetime.now(timezone.utc).isoformat()
-
-    # DEMO MODE INTERCEPTION
     if demo_service.is_demo_id(investigation_id):
         alert = {
             "alertId": f"drift_{int(time.time())}",
@@ -722,8 +715,6 @@ async def trigger_festival_watch(
 @app.get("/api/investigations/{investigation_id}/watch")
 async def get_festival_watch_status(investigation_id: str):
     """Retrieve current Festival Watch status and recent drift alerts."""
-    if demo_service.is_demo_id(investigation_id):
-        return demo_service.get_demo_watch_status()
 
     inv = await db.get_investigation(investigation_id)
     if not inv:

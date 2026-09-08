@@ -76,7 +76,12 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
     setIsLoading(true);
 
     const normalizedText = userText.trim().toLowerCase();
-    if (normalizedText === 'demo mode' || normalizedText === 'demo' || normalizedText === '/demo') {
+    if (
+      normalizedText === 'demo mode' ||
+      normalizedText === 'demo' ||
+      normalizedText === '/demo' ||
+      normalizedText.includes('pinco')
+    ) {
       const demoAssistantMsg: ChatMessage = {
         id: String(Date.now() + 1),
         role: 'assistant',
@@ -85,7 +90,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
           id: `call_${Date.now()}`,
           toolName: 'configure_due_diligence',
           args: {
-            festival_name: 'demo mode',
+            festival_name: 'Pinco Pallino Film Festival',
             preflight_summary: 'Initializing Demonstration Workspace for Pinco Pallino Film Festival. Click Launch to begin the accelerated simulation.'
           }
         },

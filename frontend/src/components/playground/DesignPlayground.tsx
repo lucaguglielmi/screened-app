@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChatMessage } from '../../types/chat';
 
 import { ChatBubble } from '../chat/ChatBubble';
@@ -25,14 +25,46 @@ import { ArchitecturePage } from './ArchitecturePage';
 import { SearchBenchmarkPage } from './SearchBenchmarkPage';
 import { FeedbackModal } from '../modals/FeedbackModal';
 import { soundEffects } from '../../utils/audio';
-import { Workflow, Coins, MailWarning, ShieldCheck, Sparkles, Loader2, MessageSquare, Palette, Zap } from 'lucide-react';
+import { Workflow, Coins, MailWarning, ShieldCheck, Loader2, MessageSquare, Palette, Zap } from 'lucide-react';
 
 export const DesignPlayground: React.FC = () => {
-  const [activeSection, setActiveSection] = useState<'UI' | 'LOADERS' | 'CHAT' | 'ARCHITECTURE' | 'FEEDBACK' | 'BENCHMARK' | 'ALL'>('UI');
   const [activeToolSubtab, setActiveToolSubtab] = useState<
     'FESTIVAL' | 'GRANT' | 'INVITATION' | 'SCOUT' | 'COMPARE' | 'VETTING' | 'PROBES'
   >('FESTIVAL');
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+
+  // Read active section from URL or default to UI
+  const getSectionFromPath = (): 'UI' | 'LOADERS' | 'CHAT' | 'ARCHITECTURE' | 'FEEDBACK' | 'BENCHMARK' => {
+    const path = window.location.pathname.replace(/\/+$/, '');
+    if (path.includes('/ui')) return 'UI';
+    if (path.includes('/loaders')) return 'LOADERS';
+    if (path.includes('/chat')) return 'CHAT';
+    if (path.includes('/architecture')) return 'ARCHITECTURE';
+    if (path.includes('/benchmark')) return 'BENCHMARK';
+    if (path.includes('/feedback')) return 'FEEDBACK';
+    return 'UI'; // default
+  };
+
+  const [activeSection, setActiveSection] = useState<'UI' | 'LOADERS' | 'CHAT' | 'ARCHITECTURE' | 'FEEDBACK' | 'BENCHMARK'>(getSectionFromPath());
+
+  useEffect(() => {
+    const handleNav = () => {
+      setActiveSection(getSectionFromPath());
+    };
+    window.addEventListener('popstate', handleNav);
+    window.addEventListener('screened:navigate', handleNav);
+    return () => {
+      window.removeEventListener('popstate', handleNav);
+      window.removeEventListener('screened:navigate', handleNav);
+    };
+  }, []);
+
+  const handleTabClick = (section: string) => {
+    // Navigate via History API to trigger our router
+    const path = `/playground/${section.toLowerCase()}`;
+    window.history.pushState(null, '', path);
+    window.dispatchEvent(new CustomEvent('screened:navigate', { detail: { path } }));
+  };
 
   // Avatar testing state
   const [avatarSimStatus, setAvatarSimStatus] = useState<AvatarStatus>('idle');
@@ -140,7 +172,6 @@ export const DesignPlayground: React.FC = () => {
             { id: 'ARCHITECTURE', label: 'Architecture & Traces', icon: Workflow },
             { id: 'BENCHMARK', label: 'Search Benchmark Lab', icon: Zap },
             { id: 'FEEDBACK', label: 'Feedback Log', icon: MessageSquare },
-            { id: 'ALL', label: 'All Components', icon: Sparkles },
           ].map((tab) => {
             const Icon = tab.icon;
             const isActive = activeSection === tab.id;
@@ -149,7 +180,7 @@ export const DesignPlayground: React.FC = () => {
                 key={tab.id}
                 onClick={() => {
                   soundEffects.playClick();
-                  setActiveSection(tab.id as 'UI' | 'LOADERS' | 'CHAT' | 'ARCHITECTURE' | 'FEEDBACK' | 'ALL');
+                  handleTabClick(tab.id);
                 }}
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold tracking-wide transition-all cursor-pointer whitespace-nowrap ${
                   isActive
@@ -169,12 +200,12 @@ export const DesignPlayground: React.FC = () => {
         {/* ========================================================================= */}
         {/* 1. TOPIC: UI COMPONENTS & DESIGN TOKENS */}
         {/* ========================================================================= */}
-        {(activeSection === 'ALL' || activeSection === 'UI') && <UiGalleryLab />}
+        {(activeSection === 'UI') && <UiGalleryLab />}
 
         {/* ========================================================================= */}
         {/* 2. TOPIC: LOADERS & PROGRESS INDICATORS */}
         {/* ========================================================================= */}
-        {(activeSection === 'ALL' || activeSection === 'LOADERS') && (
+        {(activeSection === 'LOADERS') && (
           <div className="space-y-8 animate-fade-in">
             {/* Loaders Header */}
             <div className="border-b border-darkroom-border pb-4">
@@ -291,7 +322,7 @@ export const DesignPlayground: React.FC = () => {
         {/* ========================================================================= */}
         {/* 3. TOPIC: CHAT RELATED (AVATAR, INPUT BAR, BUBBLES, MINI TOOLS) */}
         {/* ========================================================================= */}
-        {(activeSection === 'ALL' || activeSection === 'CHAT') && (
+        {(activeSection === 'CHAT') && (
           <div className="space-y-10 animate-fade-in">
             {/* Chat Related Header */}
             <div className="border-b border-darkroom-border pb-4">
@@ -687,7 +718,7 @@ export const DesignPlayground: React.FC = () => {
         {/* ========================================================================= */}
         {/* 4. TOPIC: ARCHITECTURE, TRACES & FEEDBACK */}
         {/* ========================================================================= */}
-        {(activeSection === 'ALL' || activeSection === 'ARCHITECTURE') && (
+        {(activeSection === 'ARCHITECTURE') && (
           <div className="space-y-10 animate-fade-in">
             {/* Architecture Header */}
             <div className="border-b border-darkroom-border pb-4">
@@ -765,7 +796,7 @@ export const DesignPlayground: React.FC = () => {
         {/* ========================================================================= */}
         {/* 6. TOPIC: PARALLEL SEARCH BENCHMARK LAB */}
         {/* ========================================================================= */}
-        {(activeSection === 'ALL' || activeSection === 'BENCHMARK') && (
+        {(activeSection === 'BENCHMARK') && (
           <div className="p-6 rounded-3xl bg-darkroom-surface border border-darkroom-border animate-fade-in">
             <SearchBenchmarkPage />
           </div>
