@@ -12,14 +12,13 @@ describe('DossierGeminiAgentCallout', () => {
     sourceIds: ['s1'],
   };
 
-  it('renders callout headline, prompt preview, and copy button', () => {
-    render(<DossierGeminiAgentCallout entity={mockEntity} claimsCount={14} />);
+  it('renders callout headline with WebMCP & MCP mention, and copy prompt button', () => {
+    render(<DossierGeminiAgentCallout entity={mockEntity} />);
 
     expect(
-      screen.getByText('Search this dossier with your Gemini Agent')
+      screen.getByText('Search this dossier with your Gemini & MCP Agent')
     ).toBeInTheDocument();
-    expect(screen.getByText(/Gemini & Antigravity Agent Ready/i)).toBeInTheDocument();
-    expect(screen.getByText(/14 Atomic Claims Indexed/i)).toBeInTheDocument();
+    expect(screen.getByText(/Gemini & WebMCP Agent Ready/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Copy prompt to clipboard/i })).toBeInTheDocument();
   });
 
@@ -31,7 +30,7 @@ describe('DossierGeminiAgentCallout', () => {
       },
     });
 
-    render(<DossierGeminiAgentCallout entity={mockEntity} claimsCount={14} />);
+    render(<DossierGeminiAgentCallout entity={mockEntity} />);
 
     const copyBtn = screen.getByRole('button', { name: /Copy prompt to clipboard/i });
     fireEvent.click(copyBtn);
@@ -40,18 +39,5 @@ describe('DossierGeminiAgentCallout', () => {
       expect.stringContaining('Audit the Pinco Pallino Film Festival dossier')
     );
     expect(screen.getByText('Copied Prompt!')).toBeInTheDocument();
-  });
-
-  it('expands details when details toggle button is clicked', () => {
-    render(<DossierGeminiAgentCallout entity={mockEntity} claimsCount={14} />);
-
-    expect(screen.queryByText(/screened_ask_dossier/i)).not.toBeInTheDocument();
-
-    const toggleBtn = screen.getByRole('button', { name: /Toggle agent instructions/i });
-    fireEvent.click(toggleBtn);
-
-    expect(screen.getByText(/screened_ask_dossier/i)).toBeInTheDocument();
-    expect(screen.getByText(/screened_inspect_claim/i)).toBeInTheDocument();
-    expect(screen.getByText(/rules\/AGENTS.md/i)).toBeInTheDocument();
   });
 });

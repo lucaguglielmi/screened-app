@@ -14,15 +14,28 @@ export const CookieConsentBanner: React.FC<Props> = ({
   onOpenPrivacy,
 }) => {
   const [isDismissed, setIsDismissed] = useState(false);
-  const [hasStoredConsent] = useState(() => {
+  const [hasStoredConsent, setHasStoredConsent] = useState(() => {
     if (typeof window === 'undefined') return true;
-    return Boolean(localStorage.getItem('screened_cookie_consent'));
+    try {
+      if (localStorage.getItem('screened_cookie_consent')) return true;
+    } catch {
+      // ignore
+    }
+    const match = document.cookie.match(/(?:^|;\s*)screened_cookie_consent=([^;]+)/);
+    return Boolean(match);
   });
 
   const isVisible = (forceOpen || !hasStoredConsent) && !isDismissed;
 
   const handleChoice = (choice: 'accepted' | 'declined') => {
-    localStorage.setItem('screened_cookie_consent', choice);
+    try {
+      localStorage.setItem('screened_cookie_consent', choice);
+    } catch {
+      // ignore
+    }
+    // Set cookie valid for 1 year across the entire domain
+    document.cookie = `screened_cookie_consent=${choice}; path=/; max-age=31536000; SameSite=Lax`;
+    setHasStoredConsent(true);
     setIsDismissed(true);
     if (onClose) onClose();
 

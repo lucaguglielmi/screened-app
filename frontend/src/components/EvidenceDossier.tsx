@@ -636,8 +636,8 @@ export const EvidenceDossier: React.FC<Props> = ({
               </button>
             </div>
 
-            {/* Premiere Burn Gauge & Fee Escalation Visualizer (Streamlined Summary View - Two Separate Full-Width Rows) */}
-            <div id="section-premiere-fee" className="flex flex-col gap-6 scroll-mt-28 sm:scroll-mt-32" data-section-name="Premiere Risk & Fee Escalation">
+            {/* Premiere Burn Gauge & Fee Escalation Visualizer (Compressed side-by-side grid in Summary) */}
+            <div id="section-premiere-fee" className="grid grid-cols-1 md:grid-cols-2 gap-4 scroll-mt-28 sm:scroll-mt-32" data-section-name="Premiere Risk & Fee Escalation">
               <PremiereBurnGauge
                 assessment={dossier.premiereRisk}
                 festivalName={entity.name}
@@ -660,9 +660,9 @@ export const EvidenceDossier: React.FC<Props> = ({
               deepVetting={deepVetting}
             />
 
-            {/* Chapter 1: Un-nested layout with left-accent borders */}
-            <div id="section-chapter-1" className="scroll-mt-28 sm:scroll-mt-32 rounded-2xl p-4 sm:p-6 bg-white/[0.02] space-y-4" data-section-name="Chapter 1: Attention Items">
-              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5 border-b border-white/[0.06] pb-3">
+            {/* Chapter 1: The Watchouts (Compressed for quick scanning) */}
+            <div id="section-chapter-1" className="scroll-mt-28 sm:scroll-mt-32 rounded-2xl p-4 sm:p-5 bg-white/[0.02] space-y-3" data-section-name="Chapter 1: Attention Items">
+              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5 border-b border-white/[0.06] pb-2.5">
                 <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-orange-400 font-semibold">
                   <AlertTriangle className="size-4 text-orange-400 shrink-0" />
                   <span>Chapter 1: Things You Should Look Into ({disputes.length || 1} Points)</span>
@@ -672,54 +672,22 @@ export const EvidenceDossier: React.FC<Props> = ({
                 </span>
               </div>
 
-              <div className="space-y-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                 {disputes.length > 0 ? (
                   disputes.map((disp, idx) => (
-                    <div key={idx} className="py-3 px-4 border-l-2 border-orange-500/60 bg-white/[0.02] space-y-2.5 rounded-r-xl">
-                      <div className="flex flex-col items-start gap-1">
+                    <div key={idx} className="py-2.5 px-3.5 border-l-2 border-orange-500/60 bg-white/[0.02] space-y-1.5 rounded-r-xl">
+                      <div className="flex items-center justify-between gap-2">
                         <span className="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-orange-500/10 text-orange-400 font-semibold shrink-0">
                           {disp.category}
                         </span>
-                        <h4 className="text-sm sm:text-base font-bold text-white font-sans break-words">{disp.pointOfContention}</h4>
                       </div>
-
-                      {/* Visual Diff: Promotional Claim vs Corroborated Public Record */}
-                      {(disp.claimA || disp.claimB) && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1 text-xs font-sans">
-                          {disp.claimA && (
-                            <div className="p-2.5 rounded-xl bg-orange-950/20 border border-orange-500/30 space-y-1">
-                              <div className="text-[10px] uppercase font-mono font-bold text-orange-400 flex items-center gap-1">
-                                <AlertTriangle className="size-3 shrink-0" />
-                                <span>Promotional Claim</span>
-                              </div>
-                              <div className="text-slate-300 text-xs leading-relaxed italic">
-                                "{disp.claimA}"
-                              </div>
-                            </div>
-                          )}
-                          {disp.claimB && (
-                            <div className="p-2.5 rounded-xl bg-emerald-950/20 border border-emerald-500/30 space-y-1">
-                              <div className="text-[10px] uppercase font-mono font-bold text-emerald-400 flex items-center gap-1">
-                                <Check className="size-3 shrink-0" />
-                                <span>Corroborated Public Record</span>
-                              </div>
-                              <div className="text-slate-300 text-xs leading-relaxed italic">
-                                "{disp.claimB}"
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      {disp.guidance && (
-                        <p className="text-xs text-slate-300 leading-relaxed pt-0.5 break-words">
-                          {disp.guidance}
-                        </p>
-                      )}
+                      <h4 className="text-xs sm:text-sm font-bold text-white font-sans leading-snug break-words">
+                        {disp.pointOfContention}
+                      </h4>
                     </div>
                   ))
                 ) : (
-                  <div className="py-2.5 px-3 text-sm text-slate-300 leading-relaxed">
+                  <div className="py-2.5 px-3 text-sm text-slate-300 leading-relaxed col-span-2">
                     No critical corporate disputes or venue contradictions flagged in current public records.
                   </div>
                 )}
@@ -729,16 +697,16 @@ export const EvidenceDossier: React.FC<Props> = ({
                 <button
                   type="button"
                   onClick={() => handleNavigateToSection('section-disputes')}
-                  className="text-xs font-mono text-orange-400 hover:text-orange-300 flex items-center gap-1.5 pt-1 cursor-pointer transition-colors"
+                  className="text-xs font-mono text-orange-400 hover:text-orange-300 flex items-center gap-1.5 pt-0.5 cursor-pointer transition-colors"
                 >
                   <span>Examine side-by-side cross-examination in Full Dossier &rarr;</span>
                 </button>
               )}
             </div>
 
-            {/* Chapter 2: Un-nested layout with left-accent borders */}
-            <div className="rounded-2xl p-4 sm:p-6 bg-white/[0.02] space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5 border-b border-white/[0.06] pb-3">
+            {/* Chapter 2: The Good Stuff (Compressed - only key titles surfaced) */}
+            <div className="rounded-2xl p-4 sm:p-5 bg-white/[0.02] space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5 border-b border-white/[0.06] pb-2.5">
                 <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-emerald-400 font-semibold">
                   <Check className="size-4 text-emerald-400 shrink-0" />
                   <span>Chapter 2: The Good Stuff</span>
@@ -750,20 +718,15 @@ export const EvidenceDossier: React.FC<Props> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                 {positiveHighlights.map((hl, idx) => (
-                  <div key={idx} className="py-2.5 px-3.5 border-l-2 border-emerald-500/60 bg-white/[0.02] space-y-1.5 rounded-r-xl">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="font-mono text-emerald-400 text-xs font-bold block">{hl.title}</span>
-                      {hl.evidence ? (
-                        <CitationPopover evidence={hl.evidence} sourceTier={hl.sourceTier} />
-                      ) : hl.source ? (
-                        <span className="text-[10px] font-mono text-emerald-300/80 bg-emerald-500/10 px-1.5 py-0.5 rounded truncate max-w-[120px]">
-                          {hl.source}
-                        </span>
-                      ) : null}
-                    </div>
-                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                      {hl.desc}
-                    </p>
+                  <div key={idx} className="py-3 px-3.5 border-l-2 border-emerald-500/60 bg-white/[0.02] flex items-center justify-between gap-2.5 rounded-r-xl">
+                    <span className="font-mono text-emerald-400 text-xs font-bold leading-snug">{hl.title}</span>
+                    {hl.evidence ? (
+                      <CitationPopover evidence={hl.evidence} sourceTier={hl.sourceTier} />
+                    ) : hl.source ? (
+                      <span className="text-[10px] font-mono text-emerald-300/80 bg-emerald-500/10 px-1.5 py-0.5 rounded truncate max-w-[130px] shrink-0">
+                        {hl.source}
+                      </span>
+                    ) : null}
                   </div>
                 ))}
               </div>
@@ -771,7 +734,7 @@ export const EvidenceDossier: React.FC<Props> = ({
               <button
                 type="button"
                 onClick={() => handleNavigateToSection('section-claims')}
-                className="text-xs font-mono text-emerald-400 hover:text-emerald-300 flex items-center gap-1.5 pt-1 cursor-pointer transition-colors"
+                className="text-xs font-mono text-emerald-400 hover:text-emerald-300 flex items-center gap-1.5 pt-0.5 cursor-pointer transition-colors"
               >
                 <span>Inspect all atomic claims &amp; citations in Full Dossier &rarr;</span>
               </button>

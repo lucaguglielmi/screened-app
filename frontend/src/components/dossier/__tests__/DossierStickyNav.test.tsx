@@ -13,28 +13,24 @@ describe('DossierStickyNav Component', () => {
     unresolvedQuestions: ['Who runs the jury?'],
   };
 
-  it('renders entity identifier, Actions menu in first row, and DetailDial in second row', () => {
+  it('renders Actions menu and DetailDial tabs', () => {
     const onDensityChange = vi.fn();
 
     render(
       <DossierStickyNav
         dossier={mockDossier}
-        entityName="Pinco Pallino Film Festival"
-        officialDomain="pincopallinofilmfestival.com"
         density="FULL_EVIDENCE"
         onDensityChange={onDensityChange}
       />
     );
 
-    // Row 1: Entity name and Actions button
-    expect(screen.getByText('Pinco Pallino Film Festival')).toBeInTheDocument();
-    expect(screen.getByText('pincopallinofilmfestival.com')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Actions/i })).toBeInTheDocument();
-
-    // Row 2: DetailDial tabs
+    // DetailDial tabs
     expect(screen.getByRole('button', { name: /Summary/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Full/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Agent/i })).toBeInTheDocument();
+
+    // Actions button in sub-navigation row
+    expect(screen.getByRole('button', { name: /Actions/i })).toBeInTheDocument();
   });
 
   it('opens Actions dropdown when Actions button is clicked', () => {
@@ -43,7 +39,6 @@ describe('DossierStickyNav Component', () => {
     render(
       <DossierStickyNav
         dossier={mockDossier}
-        entityName="Pinco Pallino Film Festival"
         density="FULL_EVIDENCE"
         onDensityChange={onDensityChange}
       />
@@ -65,7 +60,6 @@ describe('DossierStickyNav Component', () => {
     render(
       <DossierStickyNav
         dossier={mockDossier}
-        entityName="Pinco Pallino Film Festival"
         density="FULL_EVIDENCE"
         onDensityChange={onDensityChange}
       />
@@ -75,18 +69,15 @@ describe('DossierStickyNav Component', () => {
     expect(onDensityChange).toHaveBeenCalledWith('SIMPLIFIED');
   });
 
-  it('renders authenticity score pill and section jump anchors in FULL_EVIDENCE mode', () => {
+  it('renders section jump navigation items in FULL_EVIDENCE mode', () => {
     render(
       <DossierStickyNav
         dossier={mockDossier}
-        entityName="Pinco Pallino Film Festival"
         density="FULL_EVIDENCE"
         onDensityChange={vi.fn()}
-        authenticityScore={68}
       />
     );
 
-    expect(screen.getByText('Score: 68/100')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Radar' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Fees & Premiere' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '7-Vectors' })).toBeInTheDocument();

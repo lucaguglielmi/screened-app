@@ -55,11 +55,9 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
   dossier,
   entityName,
   entityId,
-  officialDomain,
   density,
   onDensityChange,
   onExport: onExportProp,
-  authenticityScore,
   disputes,
   scrollProgress: scrollProgressProp,
   isActionsMenuOpen: isActionsMenuOpenProp,
@@ -283,49 +281,54 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
   if (!dossier) return null;
 
   return (
-    <div className="w-full no-print">
-      {/* Row 1: Actions & Context Metadata (NON-STICKY: rests at top of dossier and scrolls out of view) */}
-      <div className="w-full bg-midnight-base/80 border-b border-white/[0.04] transition-all">
-        <div className="max-w-6xl mx-auto px-3 sm:px-6 md:px-8 py-2.5 flex items-center justify-between gap-2">
-          {/* Left: Entity identifier / status badge */}
-          <div className="flex items-center gap-2 min-w-0">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/10 text-[11px] font-mono text-slate-300 max-w-[210px] sm:max-w-sm truncate shadow-2xs">
-              <span className="size-1.5 rounded-full bg-tool-diligence shrink-0 animate-pulse" />
-              <span className="truncate font-semibold text-white">
-                {entityName || 'Dossier Overview'}
-              </span>
-            </span>
-            {officialDomain && (
-              <span className="hidden sm:inline-block text-[11px] font-mono text-slate-400 truncate max-w-[180px]">
-                {officialDomain}
-              </span>
-            )}
-            {authenticityScore !== undefined && (
-              <span
-                className="hidden sm:inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg border text-[11px] font-mono font-semibold shrink-0"
-                style={{
-                  color:
-                    authenticityScore >= 75
-                      ? 'var(--color-tool-diligence)'
-                      : authenticityScore >= 50
-                      ? 'rgb(245, 158, 11)'
-                      : 'rgb(244, 63, 94)',
-                  backgroundColor:
-                    authenticityScore >= 75
-                      ? 'rgba(16, 229, 153, 0.1)'
-                      : authenticityScore >= 50
-                      ? 'rgba(245, 158, 11, 0.1)'
-                      : 'rgba(244, 63, 94, 0.1)',
-                  borderColor:
-                    authenticityScore >= 75
-                      ? 'rgba(16, 229, 153, 0.3)'
-                      : authenticityScore >= 50
-                      ? 'rgba(245, 158, 11, 0.3)'
-                      : 'rgba(244, 63, 94, 0.3)',
-                }}
-              >
-                <span>Score: {authenticityScore}/100</span>
-              </span>
+    <div className="sticky top-16 z-30 w-full bg-[#040a17]/95 backdrop-blur-xl border-b border-white/[0.08] shadow-md shadow-black/50 no-print transition-all">
+      {/* Reading Scroll Progress Line */}
+      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/[0.06] pointer-events-none">
+        <div
+          className="h-full bg-gradient-to-r from-tool-diligence via-emerald-400 to-indigo-400 transition-all duration-150 ease-out"
+          style={{ width: `${activeScrollProgress}%` }}
+        />
+      </div>
+
+      <div className="max-w-6xl mx-auto px-3 sm:px-6 md:px-8 py-2.5 space-y-2">
+        {/* Row 1: Detail Dial Tabs (Summary / Full / Agent) */}
+        <div className="w-full flex items-center justify-center">
+          <div className="w-full max-w-lg">
+            <DetailDial density={density} onChange={onDensityChange} />
+          </div>
+        </div>
+
+        {/* Row 2: Section Jump Navigation (Left) + Actions Dropdown (Right) */}
+        <div className="flex items-center justify-between gap-3 border-t border-white/[0.06] pt-1.5 min-w-0">
+          {/* Section Jump Anchors (Normal navigation items, not tags) */}
+          <div className="flex items-center gap-1 overflow-x-auto pb-0.5 scrollbar-none min-w-0 flex-1">
+            {(density === 'FULL_EVIDENCE' || density === 'EVIDENCE') ? (
+              <>
+                <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider pl-1 pr-1.5 shrink-0 font-medium select-none">
+                  Jump:
+                </span>
+                <nav className="flex items-center gap-0.5 sm:gap-1 shrink-0" aria-label="Section shortcuts">
+                  {jumpAnchors.map((anchor) => {
+                    const isActive = activeSection === anchor.id;
+                    return (
+                      <button
+                        key={anchor.id}
+                        type="button"
+                        onClick={() => handleJumpToSection(anchor.id)}
+                        className={`px-2 py-1 text-xs font-mono transition-colors cursor-pointer shrink-0 rounded-md ${
+                          isActive
+                            ? 'text-tool-diligence font-semibold bg-tool-diligence/10'
+                            : 'text-slate-400 hover:text-white hover:bg-white/[0.04]'
+                        }`}
+                      >
+                        {anchor.label}
+                      </button>
+                    );
+                  })}
+                </nav>
+              </>
+            ) : (
+              <div className="flex-1" />
             )}
           </div>
 
@@ -355,176 +358,129 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
                   transition={{ duration: 0.15, ease: 'easeOut' }}
                   className="absolute right-0 top-full mt-2 w-[calc(100vw-2rem)] max-w-xs sm:w-72 p-1.5 rounded-2xl bg-midnight-void/98 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/80 z-50 space-y-1 font-sans text-xs"
                 >
-                <button
-                  type="button"
-                  onClick={() => {
-                    handleCopySummary();
-                    closeMenu();
-                  }}
-                  className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-white/[0.06] text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
-                >
-                  <div className="p-1.5 rounded-lg bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 group-hover:bg-indigo-500/25">
-                    {copiedSummary ? <Check className="size-3.5 text-emerald-400" /> : <Copy className="size-3.5" />}
-                  </div>
-                  <div className="flex flex-col min-w-0">
-                    <span className="font-semibold text-slate-100">
-                      {copiedSummary ? 'Copied to Clipboard!' : 'Copy Summary'}
-                    </span>
-                    <span className="text-[11px] text-slate-400 truncate">Executive summary &amp; checklist</span>
-                  </div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    handleCopyShareableLink();
-                    closeMenu();
-                  }}
-                  className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-white/[0.06] text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
-                >
-                  <div className="p-1.5 rounded-lg bg-sky-500/15 border border-sky-500/30 text-sky-400 group-hover:bg-sky-500/25">
-                    {shareableLinkCopied ? <Check className="size-3.5 text-emerald-400" /> : <ExternalLink className="size-3.5" />}
-                  </div>
-                  <div className="flex flex-col min-w-0">
-                    <span className="font-semibold text-slate-100">
-                      {shareableLinkCopied ? 'Link Copied!' : 'Copy Shareable Link'}
-                    </span>
-                    <span className="text-[11px] text-slate-400 truncate">Read-only view for producers</span>
-                  </div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    handlePrint();
-                    closeMenu();
-                  }}
-                  className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
-                >
-                  <div className="p-1.5 rounded-lg bg-blue-500/15 border border-blue-500/30 text-blue-400 group-hover:bg-blue-500/25">
-                    <Printer className="size-3.5" />
-                  </div>
-                  <div className="flex flex-col min-w-0">
-                    <span className="font-semibold text-slate-100">Print / Save as PDF</span>
-                    <span className="text-[11px] text-slate-400 truncate">Printable clean dossier view</span>
-                  </div>
-                </button>
-
-                {onExportProp && (
                   <button
                     type="button"
                     onClick={() => {
-                      handleExport();
+                      handleCopySummary();
+                      closeMenu();
+                    }}
+                    className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-white/[0.06] text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                  >
+                    <div className="p-1.5 rounded-lg bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 group-hover:bg-indigo-500/25">
+                      {copiedSummary ? <Check className="size-3.5 text-emerald-400" /> : <Copy className="size-3.5" />}
+                    </div>
+                    <div className="flex flex-col min-w-0">
+                      <span className="font-semibold text-slate-100">
+                        {copiedSummary ? 'Copied to Clipboard!' : 'Copy Summary'}
+                      </span>
+                      <span className="text-[11px] text-slate-400 truncate">Executive summary &amp; checklist</span>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleCopyShareableLink();
+                      closeMenu();
+                    }}
+                    className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-white/[0.06] text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                  >
+                    <div className="p-1.5 rounded-lg bg-sky-500/15 border border-sky-500/30 text-sky-400 group-hover:bg-sky-500/25">
+                      {shareableLinkCopied ? <Check className="size-3.5 text-emerald-400" /> : <ExternalLink className="size-3.5" />}
+                    </div>
+                    <div className="flex flex-col min-w-0">
+                      <span className="font-semibold text-slate-100">
+                        {shareableLinkCopied ? 'Link Copied!' : 'Copy Shareable Link'}
+                      </span>
+                      <span className="text-[11px] text-slate-400 truncate">Read-only view for producers</span>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handlePrint();
                       closeMenu();
                     }}
                     className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
                   >
-                    <div className="p-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 group-hover:bg-emerald-500/25">
-                      <Download className="size-3.5" />
+                    <div className="p-1.5 rounded-lg bg-blue-500/15 border border-blue-500/30 text-blue-400 group-hover:bg-blue-500/25">
+                      <Printer className="size-3.5" />
                     </div>
                     <div className="flex flex-col min-w-0">
-                      <span className="font-semibold text-slate-100">Export Signed Archive</span>
-                      <span className="text-[11px] text-slate-400 truncate">Markdown archive with SHA-256 seal</span>
+                      <span className="font-semibold text-slate-100">Print / Save as PDF</span>
+                      <span className="text-[11px] text-slate-400 truncate">Printable clean dossier view</span>
                     </div>
                   </button>
-                )}
 
-                <div className="border-t border-darkroom-border my-1 pt-1" />
+                  {onExportProp && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleExport();
+                        closeMenu();
+                      }}
+                      className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                    >
+                      <div className="p-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 group-hover:bg-emerald-500/25">
+                        <Download className="size-3.5" />
+                      </div>
+                      <div className="flex flex-col min-w-0">
+                        <span className="font-semibold text-slate-100">Export Signed Archive</span>
+                        <span className="text-[11px] text-slate-400 truncate">Markdown archive with SHA-256 seal</span>
+                      </div>
+                    </button>
+                  )}
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    handleCopyGeminiPrompt();
-                    closeMenu();
-                  }}
-                  className="w-full text-left px-3 py-2 rounded-xl hover:bg-darkroom-card text-indigo-300 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
-                >
-                  <Sparkles className="size-3.5 text-indigo-400 ml-1.5" />
-                  <span className="text-xs font-mono">
-                    {internalCopiedGeminiPrompt ? 'Copied Gemini Prompt!' : 'Copy Gemini Agent Prompt'}
-                  </span>
-                </button>
+                  <div className="border-t border-darkroom-border my-1 pt-1" />
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    handleCopyAiPayload();
-                    closeMenu();
-                  }}
-                  className="w-full text-left px-3 py-2 rounded-xl hover:bg-darkroom-card text-slate-300 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
-                >
-                  <Bot className="size-3.5 text-purple-400 ml-1.5" />
-                  <span className="text-xs font-mono">
-                    {copiedAiPayload ? 'Copied JSON-LD!' : 'Copy AI Graph (JSON-LD)'}
-                  </span>
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleCopyGeminiPrompt();
+                      closeMenu();
+                    }}
+                    className="w-full text-left px-3 py-2 rounded-xl hover:bg-darkroom-card text-indigo-300 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                  >
+                    <Sparkles className="size-3.5 text-indigo-400 ml-1.5" />
+                    <span className="text-xs font-mono">
+                      {internalCopiedGeminiPrompt ? 'Copied Gemini Prompt!' : 'Copy Gemini Agent Prompt'}
+                    </span>
+                  </button>
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    handleCopyRawText();
-                    closeMenu();
-                  }}
-                  className="w-full text-left px-3 py-2 rounded-xl hover:bg-darkroom-card text-slate-300 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
-                >
-                  <Code className="size-3.5 text-slate-400 ml-1.5" />
-                  <span className="text-xs font-mono">
-                    {copiedRawText ? 'Copied Raw Text!' : 'Copy Plain Text Dump'}
-                  </span>
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleCopyAiPayload();
+                      closeMenu();
+                    }}
+                    className="w-full text-left px-3 py-2 rounded-xl hover:bg-darkroom-card text-slate-300 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                  >
+                    <Bot className="size-3.5 text-purple-400 ml-1.5" />
+                    <span className="text-xs font-mono">
+                      {copiedAiPayload ? 'Copied JSON-LD!' : 'Copy AI Graph (JSON-LD)'}
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleCopyRawText();
+                      closeMenu();
+                    }}
+                    className="w-full text-left px-3 py-2 rounded-xl hover:bg-darkroom-card text-slate-300 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                  >
+                    <Code className="size-3.5 text-slate-400 ml-1.5" />
+                    <span className="text-xs font-mono">
+                      {copiedRawText ? 'Copied Raw Text!' : 'Copy Plain Text Dump'}
+                    </span>
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </div>
-    </div>
-
-      {/* Row 2 & 3: Detail Dial Tabs & Jump Anchors (STICKY: stays pinned to top-16 during scrolling) */}
-      <nav
-        aria-label="Dossier Reading Control and Tools"
-        className="sticky top-16 z-20 w-full bg-midnight-base/95 backdrop-blur-xl border-b border-white/[0.06] shadow-md shadow-black/40 transition-all"
-      >
-        {/* Reading Scroll Progress Line */}
-        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/[0.06] pointer-events-none">
-          <div
-            className="h-full bg-gradient-to-r from-tool-diligence via-emerald-400 to-indigo-400 transition-all duration-150 ease-out"
-            style={{ width: `${activeScrollProgress}%` }}
-          />
-        </div>
-
-        <div className="max-w-6xl mx-auto px-3 sm:px-6 md:px-8 py-2 space-y-2">
-          {/* Detail Dial Tabs (Summary / Full / Agent) */}
-          <div className="w-full max-w-lg mx-auto sm:max-w-none">
-            <DetailDial density={density} onChange={onDensityChange} />
-          </div>
-
-          {/* Section Jump Anchors (Visible in Full Evidence mode) */}
-          {(density === 'FULL_EVIDENCE' || density === 'EVIDENCE') && (
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none border-t border-white/[0.06] pt-1.5">
-              <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider pl-1 shrink-0 font-medium">
-                Jump:
-              </span>
-              {jumpAnchors.map((anchor) => {
-                const isActive = activeSection === anchor.id;
-                return (
-                  <button
-                    key={anchor.id}
-                    type="button"
-                    onClick={() => handleJumpToSection(anchor.id)}
-                    className={`px-2.5 py-0.5 rounded-lg text-[11px] font-mono transition-all cursor-pointer shrink-0 active:scale-95 ${
-                      isActive
-                        ? 'bg-tool-diligence/20 text-tool-diligence border border-tool-diligence/60 font-semibold shadow-xs'
-                        : 'bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 hover:text-tool-diligence border border-white/10 hover:border-tool-diligence/40'
-                    }`}
-                  >
-                    {anchor.label}
-                  </button>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      </nav>
     </div>
   );
 };

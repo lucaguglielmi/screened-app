@@ -162,21 +162,21 @@ export const DossierHero: React.FC<Props> = ({
             )}
 
             {/* Festival Watch (Parallel Monitor) Controls */}
-            <div className="flex items-center gap-2 pl-1 border-l border-white/[0.08]">
+            <div className="flex items-center gap-3 pl-2 border-l border-white/[0.08]">
               {!isWatching ? (
                 <button
                   type="button"
                   onClick={() => activateWatch()}
                   disabled={watchLoading}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono font-medium bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 hover:text-white border border-white/[0.1] transition-all cursor-pointer"
+                  className="inline-flex items-center gap-1.5 text-xs font-mono font-medium text-zinc-400 hover:text-white transition-colors cursor-pointer"
                   title="Monitor festival website for silent policy, deadline, and fee changes using Parallel Monitor"
                 >
-                  <Eye className="size-3 text-tool-diligence" />
+                  <Eye className="size-3.5 text-tool-diligence" />
                   <span>{watchLoading ? 'Activating...' : 'Watch Festival'}</span>
                 </button>
               ) : (
-                <div className="flex items-center gap-1.5">
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono font-medium bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
+                <div className="flex items-center gap-3">
+                  <div className="inline-flex items-center gap-1.5 text-xs font-mono font-medium text-emerald-400">
                     <span className="relative flex size-2">
                       <span className="animate-ping absolute inline-flex size-full rounded-full bg-emerald-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full size-2 bg-emerald-500"></span>
@@ -188,10 +188,10 @@ export const DossierHero: React.FC<Props> = ({
                     type="button"
                     onClick={() => triggerWatch()}
                     disabled={watchTriggering}
-                    className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-mono font-medium bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1.5 text-xs font-mono font-medium text-amber-400 hover:text-amber-300 transition-colors cursor-pointer"
                     title="Simulate or force immediate snapshot check for policy changes"
                   >
-                    <BellRing className="size-3 text-amber-400" />
+                    <BellRing className="size-3.5 text-amber-400" />
                     <span>{watchTriggering ? 'Checking...' : 'Trigger Drift Check'}</span>
                   </button>
                 </div>

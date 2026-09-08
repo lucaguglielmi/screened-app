@@ -229,8 +229,8 @@ export const InstitutionalFootprintSection: React.FC<Props> = ({
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
-            <Sparkles className="size-3 text-indigo-400" />
+          <span className="inline-flex items-center gap-1.5 text-xs font-mono text-indigo-300 font-medium">
+            <Sparkles className="size-3.5 text-indigo-400" />
             <span>{confirmedCount} / 4 Pillars Corroborated</span>
           </span>
         </div>
@@ -242,52 +242,50 @@ export const InstitutionalFootprintSection: React.FC<Props> = ({
           const Icon = pillar.icon;
           const isExpanded = expandedPillar === pillar.id;
 
-          const badgeClasses =
+          const statusTextColor =
             pillar.status === 'CONFIRMED'
-              ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
+              ? 'text-emerald-400'
               : pillar.status === 'FLAGGED'
-                ? 'bg-red-500/10 text-red-300 border-red-500/30'
-                : 'bg-amber-500/10 text-amber-300 border-amber-500/30';
+                ? 'text-rose-400'
+                : 'text-amber-400';
 
           const statusIcon =
             pillar.status === 'CONFIRMED' ? (
-              <ShieldCheck className="size-3.5 text-emerald-400" />
+              <ShieldCheck className="size-3.5 text-emerald-400 shrink-0" />
             ) : pillar.status === 'FLAGGED' ? (
-              <AlertTriangle className="size-3.5 text-red-400" />
+              <AlertTriangle className="size-3.5 text-rose-400 shrink-0" />
             ) : (
-              <HelpCircle className="size-3.5 text-amber-400" />
+              <HelpCircle className="size-3.5 text-amber-400 shrink-0" />
             );
 
           return (
             <div
               key={pillar.id}
-              className="rounded-xl border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.035] transition-all p-4 flex flex-col justify-between gap-3 shadow-sm"
+              className="rounded-xl border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.035] transition-all p-4 sm:p-5 flex flex-col justify-between gap-3 shadow-sm"
             >
-              <div className="space-y-2">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <div className="p-1.5 rounded-lg bg-white/[0.04] border border-white/10 text-indigo-400">
-                      <Icon className="size-4" />
-                    </div>
-                    <div>
-                      <h4 className="text-xs sm:text-sm font-semibold text-white font-sans">
-                        {pillar.title}
-                      </h4>
-                      <span className="text-[10px] font-mono text-slate-400">
-                        {pillar.domainName}
-                      </span>
-                    </div>
-                  </div>
-
-                  <span
-                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-medium border ${badgeClasses} shrink-0`}
-                  >
-                    {statusIcon}
-                    <span>{pillar.badgeLabel}</span>
-                  </span>
+              <div className="space-y-2.5">
+                {/* Status at top of main title: text + icon only (no badge border/bg) */}
+                <div className={`inline-flex items-center gap-1.5 text-xs font-mono font-semibold ${statusTextColor}`}>
+                  {statusIcon}
+                  <span>{pillar.badgeLabel}</span>
                 </div>
 
-                <p className="text-xs text-slate-300 leading-relaxed font-sans pt-1">
+                {/* Main Title as Fullwidth Row */}
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-lg bg-white/[0.04] border border-white/10 text-indigo-400 shrink-0 flex items-center justify-center">
+                    <Icon className="size-4 text-indigo-400" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h4 className="text-sm font-semibold text-white font-sans leading-snug">
+                      {pillar.title}
+                    </h4>
+                    <span className="text-xs font-mono text-slate-400 block pt-0.5">
+                      {pillar.domainName}
+                    </span>
+                  </div>
+                </div>
+
+                <p className="text-xs text-slate-300 leading-relaxed font-sans pt-0.5">
                   {pillar.description}
                 </p>
               </div>
@@ -297,7 +295,7 @@ export const InstitutionalFootprintSection: React.FC<Props> = ({
                 <button
                   type="button"
                   onClick={() => togglePillar(pillar.id)}
-                  className="w-full flex items-center justify-between text-[11px] font-mono text-indigo-400 hover:text-indigo-300 transition-colors cursor-pointer"
+                  className="w-full flex items-center justify-between text-xs font-mono text-indigo-400 hover:text-indigo-300 transition-colors cursor-pointer"
                 >
                   <span>
                     {isExpanded ? 'Hide Verification Strategy & Sources' : 'View Parallel Verification & Sources'}
@@ -308,27 +306,27 @@ export const InstitutionalFootprintSection: React.FC<Props> = ({
                 {isExpanded && (
                   <div className="space-y-2.5 pt-1 text-xs animate-fade-in font-sans">
                     <div className="p-2.5 rounded-lg bg-black/40 border border-white/5 space-y-1">
-                      <div className="text-[10px] font-mono text-slate-400 uppercase tracking-wider font-semibold">
+                      <div className="text-xs font-mono text-slate-400 uppercase tracking-wider font-semibold">
                         Why This Matters for Corroboration
                       </div>
-                      <p className="text-slate-300 text-[11px] leading-relaxed">
+                      <p className="text-slate-300 text-xs leading-relaxed">
                         {pillar.rationale}
                       </p>
                     </div>
 
                     <div className="p-2.5 rounded-lg bg-indigo-950/20 border border-indigo-500/20 space-y-1">
-                      <div className="text-[10px] font-mono text-indigo-400 uppercase tracking-wider font-semibold flex items-center gap-1">
-                        <Sparkles className="size-2.5" />
+                      <div className="text-xs font-mono text-indigo-400 uppercase tracking-wider font-semibold flex items-center gap-1">
+                        <Sparkles className="size-3" />
                         <span>Parallel API Ingestion Rule</span>
                       </div>
-                      <code className="text-[10px] font-mono text-indigo-200 block break-all">
+                      <code className="text-xs font-mono text-indigo-200 block break-all">
                         {pillar.parallelSearchStrategy}
                       </code>
                     </div>
 
                     {pillar.matchedUrls.length > 0 && (
                       <div className="space-y-1">
-                        <div className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">
+                        <div className="text-xs font-mono text-slate-400 uppercase tracking-wider font-semibold">
                           Primary Verified Records ({pillar.matchedUrls.length})
                         </div>
                         <ul className="space-y-1">
@@ -338,9 +336,9 @@ export const InstitutionalFootprintSection: React.FC<Props> = ({
                                 href={url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-[11px] font-mono text-slate-300 hover:text-indigo-300 flex items-center gap-1 truncate transition-colors underline decoration-slate-600 underline-offset-2"
+                                className="text-xs font-mono text-slate-300 hover:text-indigo-300 flex items-center gap-1.5 truncate transition-colors underline decoration-slate-600 underline-offset-2"
                               >
-                                <ExternalLink className="size-2.5 shrink-0 text-slate-400" />
+                                <ExternalLink className="size-3 shrink-0 text-slate-400" />
                                 <span className="truncate">{url}</span>
                               </a>
                             </li>
@@ -363,7 +361,7 @@ export const InstitutionalFootprintSection: React.FC<Props> = ({
           <span className="font-mono font-semibold text-slate-300 block">
             Automated Cross-Corroboration Standard
           </span>
-          <p className="text-slate-400 leading-relaxed text-[11px]">
+          <p className="text-slate-400 leading-relaxed text-xs">
             In accordance with Screened's forensic integrity principles, promotional self-declarations from submission aggregator listings are never accepted as ground truth. Verdicts require corroboration from independent corporate registrars, physical box-office lease contracts, and accredited cultural institutions.
           </p>
         </div>
