@@ -64,8 +64,8 @@ clients: "1. Filmmaker & Autonomous Agent Clients" {
   class: client_box
 
   web_ui: "Filmmaker Web Application\n(React 19 + Tailwind v4 + Vite)"
-  browser_agent: "Autonomous In-Browser Agents\n(Chrome WebMCP / Claude Computer Use / Gemini Live)"
-  headless_agent: "External Agent Desktops & IDEs\n(Claude Desktop / Cursor / Antigravity)"
+  browser_agent: "Autonomous In-Browser Agents\n(Chrome WebMCP / Google Antigravity / Gemini Live)"
+  headless_agent: "External Agent Desktops & IDEs\n(Google Antigravity / Open MCP Inspectors / CLI)"
 }
 
 protocols: "2. Ingestion & Dual-Protocol Agent Layer" {
@@ -73,7 +73,7 @@ protocols: "2. Ingestion & Dual-Protocol Agent Layer" {
 
   webmcp: "In-Browser WebMCP (WebMCP/2026)\n• window.__screened_web_mcp__\n• DOM Event Bus: webmcp:call / webmcp:result\n• Visual DOM Sync & Telemetry Spotlighting"
   
-  server_mcp: "Headless Server MCP (Anthropic MCP v1.x)\n• SSE Transport: /api/mcp/sse\n• JSON-RPC Messages: /api/mcp/messages\n• HTTP Testing: /api/mcp/rpc"
+  server_mcp: "Headless Server MCP (Open JSON-RPC 2.0 Standard)\n• SSE Transport: /api/mcp/sse\n• JSON-RPC Messages: /api/mcp/messages\n• HTTP Testing: /api/mcp/rpc"
   
   gateway: "FastAPI Application Gateway\n• REST Endpoints & SSE Event Stream\n• PII Masking Vault & Rate Limiter\n• Action Approval Sandbox Gate (SHA-256)"
 }

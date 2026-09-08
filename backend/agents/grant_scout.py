@@ -53,7 +53,7 @@ class GrantScoutAgent:
             sources = await self.parallel_tool.search(
                 queries=search_queries,
                 objective=objective,
-                mode="basic",
+                mode="fast",
                 max_results_total=8,
             )
         except Exception as e:

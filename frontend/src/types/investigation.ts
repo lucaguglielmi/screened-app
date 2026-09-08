@@ -41,3 +41,26 @@ export interface DiagramGraphPayload {
     style?: React.CSSProperties;
   }>;
 }
+
+export interface WatchAlert {
+  alertId: string;
+  alertType: string;
+  severity: 'INFO' | 'WARNING' | 'CRITICAL';
+  festivalName?: string;
+  targetUrl?: string;
+  summary: string;
+  delta?: string;
+  timestamp: string;
+}
+
+export interface FestivalWatchState {
+  status: 'active' | 'inactive' | 'pending';
+  monitorId?: string | null;
+  targetUrl?: string | null;
+  frequency?: string;
+  type?: string;
+  createdAt?: string | null;
+  lastChecked?: string | null;
+  recentAlerts?: WatchAlert[];
+}
+

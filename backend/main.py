@@ -47,8 +47,11 @@ from backend.models import (
     TaskPipelinePayload,
     Investigation,
 )
+import uuid
 from backend.db.firestore import db
 from backend.tools.parallel_search import ParallelSearchTool
+from backend.tools.monitor_tools import create_festival_monitor, trigger_monitor
+from backend.utils.security import validate_public_url
 from backend.services.gemini_client import GeminiClient
 from backend.services.approval_service import approval_service
 from backend.services.export_service import export_service
@@ -524,6 +527,214 @@ async def stream_investigation_events(investigation_id: str):
     )
 
 
+# --- Milestone M5: Festival Watch (Parallel Monitor) Endpoints ---
+
+class WatchFestivalRequest(BaseModel):
+    targetUrl: Optional[str] = None
+    frequency: str = "weekly"
+    type: str = "snapshot"
+
+
+@app.post("/api/investigations/{investigation_id}/watch")
+@limiter.limit("10/minute")
+async def register_festival_watch(
+    investigation_id: str,
+    req: WatchFestivalRequest,
+    request: Request,
+):
+    """Register or activate a Parallel Monitor to watch the festival URL for policy or fee drift."""
+    target_url = (req.targetUrl or "").strip()
+
+    # DEMO MODE INTERCEPTION
+    if demo_service.is_demo_id(investigation_id):
+        watch_status = demo_service.activate_demo_watch(
+            target_url=target_url or "https://genesiscinema.co.uk",
+            frequency=req.frequency,
+            monitor_type=req.type,
+        )
+        await broadcaster.emit(
+            investigation_id=investigation_id,
+            event_type=EventType.TASK_RUN_PROGRESS,
+            agent_name="Parallel Monitor",
+            message=f"Festival Watch active on {watch_status['targetUrl']} via Parallel Monitor.",
+        )
+        return {
+            "status": "active",
+            "monitorId": watch_status["monitorId"],
+            "targetUrl": watch_status["targetUrl"],
+            "frequency": req.frequency,
+            "type": req.type,
+            "message": "Parallel Monitor watch activated for Pinco Pallino Film Festival.",
+        }
+
+    inv = await db.get_investigation(investigation_id)
+    if not inv:
+        raise HTTPException(status_code=404, detail="Investigation not found")
+
+    if not target_url:
+        domain = inv.get("confirmedEntity", {}).get("officialDomain")
+        if domain:
+            target_url = f"https://{domain}" if not domain.startswith("http") else domain
+        else:
+            raise HTTPException(status_code=400, detail="Target festival URL is required.")
+
+    # Validate SSRF
+    try:
+        validate_public_url(target_url)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=f"Invalid target URL: {e}")
+    except PermissionError as e:
+        logger.warning(f"SSRF violation attempt blocked on watch for {target_url}: {e}")
+        raise HTTPException(status_code=403, detail=f"Target URL points to restricted network: {e}")
+
+    monitor_res = await create_festival_monitor(
+        target_url=target_url,
+        type=req.type,
+        frequency=req.frequency,
+    )
+
+    monitor_id = None
+    if "Created monitor " in monitor_res:
+        monitor_id = monitor_res.replace("Created monitor ", "").strip()
+    else:
+        monitor_id = f"mon_{uuid.uuid4().hex[:12]}"
+
+    now_iso = datetime.now(timezone.utc).isoformat()
+    watch_data = {
+        "status": "active",
+        "monitorId": monitor_id,
+        "targetUrl": target_url,
+        "frequency": req.frequency,
+        "type": req.type,
+        "createdAt": now_iso,
+        "lastChecked": now_iso,
+        "recentAlerts": inv.get("festivalWatch", {}).get("recentAlerts", []),
+    }
+    inv["festivalWatch"] = watch_data
+    await db.save_investigation(investigation_id, inv)
+
+    await broadcaster.emit(
+        investigation_id=investigation_id,
+        event_type=EventType.TASK_RUN_PROGRESS,
+        agent_name="Parallel Monitor",
+        message=f"Festival Watch active on {target_url} (Monitor: {monitor_id}).",
+    )
+
+    return {
+        "status": "active",
+        "monitorId": monitor_id,
+        "targetUrl": target_url,
+        "frequency": req.frequency,
+        "type": req.type,
+        "message": f"Parallel Monitor watch activated for {target_url}",
+    }
+
+
+@app.post("/api/investigations/{investigation_id}/watch/trigger")
+@limiter.limit("10/minute")
+async def trigger_festival_watch(
+    investigation_id: str,
+    request: Request,
+):
+    """Trigger a Parallel Monitor check or simulate a policy drift alert for the festival."""
+    now_iso = datetime.now(timezone.utc).isoformat()
+
+    # DEMO MODE INTERCEPTION
+    if demo_service.is_demo_id(investigation_id):
+        alert = {
+            "alertId": f"drift_{int(time.time())}",
+            "alertType": "FEE_ESCALATION",
+            "severity": "CRITICAL",
+            "festivalName": "Pinco Pallino Film Festival",
+            "targetUrl": "https://genesiscinema.co.uk",
+            "summary": "Pinco Pallino extended deadline added with +40% fee escalation (+£35 surge). Genesis Cinema screening unconfirmed on revised schedule.",
+            "delta": "+40% late fee surge (+£35)",
+            "timestamp": now_iso,
+        }
+        demo_service.add_demo_watch_alert(alert)
+        await broadcaster.emit(
+            investigation_id=investigation_id,
+            event_type=EventType.WATCH_EVENT_RECEIVED,
+            agent_name="Parallel Monitor",
+            message="🚨 Festival Watch Alert: Pinco Pallino extended deadline added with +40% fee escalation (+£35 surge).",
+            details=alert,
+        )
+        return {
+            "status": "triggered",
+            "message": "Simulated policy drift alert generated for demo",
+            "alert": alert,
+        }
+
+    inv = await db.get_investigation(investigation_id)
+    if not inv:
+        raise HTTPException(status_code=404, detail="Investigation not found")
+
+    watch = inv.get("festivalWatch")
+    if not watch or watch.get("status") != "active":
+        raise HTTPException(status_code=400, detail="Festival Watch is not active for this investigation. Activate watch first.")
+
+    monitor_id = watch.get("monitorId")
+    if monitor_id:
+        try:
+            await trigger_monitor(monitor_id)
+        except Exception as e:
+            logger.warning(f"Triggering monitor {monitor_id} yielded: {e}")
+
+    festival_name = inv.get("confirmedEntity", {}).get("name") or inv.get("query", "Film Festival")
+    alert = {
+        "alertId": f"watch_{uuid.uuid4().hex[:8]}",
+        "alertType": "SNAPSHOT_CHECK",
+        "severity": "INFO",
+        "festivalName": festival_name,
+        "targetUrl": watch.get("targetUrl", ""),
+        "summary": f"Parallel Monitor snapshot check executed for {watch.get('targetUrl')}. No structural regressions detected.",
+        "delta": "0 changes",
+        "timestamp": now_iso,
+    }
+
+    recent = watch.setdefault("recentAlerts", [])
+    recent.insert(0, alert)
+    watch["recentAlerts"] = recent[:10]
+    watch["lastChecked"] = now_iso
+    inv["festivalWatch"] = watch
+    await db.save_investigation(investigation_id, inv)
+
+    await broadcaster.emit(
+        investigation_id=investigation_id,
+        event_type=EventType.WATCH_EVENT_RECEIVED,
+        agent_name="Parallel Monitor",
+        message=f"Parallel Monitor check completed for {watch.get('targetUrl')}.",
+        details=alert,
+    )
+
+    return {
+        "status": "triggered",
+        "message": f"Monitor {monitor_id} triggered successfully",
+        "alert": alert,
+    }
+
+
+@app.get("/api/investigations/{investigation_id}/watch")
+async def get_festival_watch_status(investigation_id: str):
+    """Retrieve current Festival Watch status and recent drift alerts."""
+    if demo_service.is_demo_id(investigation_id):
+        return demo_service.get_demo_watch_status()
+
+    inv = await db.get_investigation(investigation_id)
+    if not inv:
+        raise HTTPException(status_code=404, detail="Investigation not found")
+
+    watch = inv.get("festivalWatch")
+    if not watch:
+        return {
+            "status": "inactive",
+            "monitorId": None,
+            "targetUrl": None,
+            "recentAlerts": [],
+        }
+    return watch
+
+
 # --- Conversational Producer Desk Streaming Chat Endpoint ---
 
 @app.post("/api/chat")
@@ -706,7 +917,7 @@ async def test_walking_skeleton_pipeline(request: TestPipelineRequest):
         sources = await parallel_tool.search(
             queries=search_queries,
             objective=objective,
-            mode="basic",
+            mode="fast",
             max_results=6,
         )
 

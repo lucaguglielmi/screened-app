@@ -17,9 +17,16 @@ async def create_festival_monitor(target_url: str, type: str = "snapshot", frequ
     """
     logger.info(f"Creating Parallel monitor for {target_url} (type={type}, freq={frequency})")
     from backend.config import settings
+    from backend.utils.security import validate_public_url
     from parallel import AsyncParallel
     import os
-    
+
+    try:
+        validate_public_url(target_url)
+    except Exception as e:
+        logger.warning(f"SSRF validation blocked monitor for URL {target_url}: {e}")
+        return f"SSRF blocked target URL: {e}"
+
     api_key = settings.parallel_api_key
     if not api_key:
         logger.warning("Parallel API key missing, create_festival_monitor fails.")
@@ -27,7 +34,7 @@ async def create_festival_monitor(target_url: str, type: str = "snapshot", frequ
 
     client = AsyncParallel(api_key=api_key)
     # Best-effort base URL detection
-    base_url = "https://screened-pludf2u7yq-nw.a.run.app" if settings.environment == "production" else "https://localhost:8000"
+    base_url = "https://screened-786241671474.europe-west2.run.app" if settings.environment == "production" else "http://localhost:8000"
     webhook_url = f"{base_url}/api/webhooks/parallel"
 
     try:

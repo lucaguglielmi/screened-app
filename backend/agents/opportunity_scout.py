@@ -124,7 +124,7 @@ Generate a cohesive submission strategy roadmap and a list of structured opportu
         sources = await self.parallel_tool.search(
             queries=search_queries,
             objective=objective,
-            mode="basic",
+            mode="fast",
             max_results_total=8,
         )
 

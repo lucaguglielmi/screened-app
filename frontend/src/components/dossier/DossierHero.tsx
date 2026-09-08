@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { FileText, MapPin, Calendar, Globe, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { FileText, MapPin, Calendar, Globe, AlertTriangle, ShieldCheck, Eye, BellRing, X, Activity } from 'lucide-react';
 import { CandidateEntity, InvestigationAuditHealth } from '../../types/investigation';
 import { VerifiedTick } from '../ui/VerifiedTick';
+import { useFestivalWatch } from '../../hooks/useFestivalWatch';
 
 interface Props {
   entity: CandidateEntity;
@@ -11,6 +12,7 @@ interface Props {
   disputesCount: number;
   auditHealth?: InvestigationAuditHealth;
   authenticityScore?: number;
+  investigationId?: string;
 }
 
 export const DossierHero: React.FC<Props> = ({
@@ -21,7 +23,22 @@ export const DossierHero: React.FC<Props> = ({
   disputesCount,
   auditHealth,
   authenticityScore = 68,
+  investigationId,
 }) => {
+  const {
+    isWatching,
+    loading: watchLoading,
+    triggering: watchTriggering,
+    watchAlert,
+    activateWatch,
+    triggerWatch,
+    dismissAlert,
+  } = useFestivalWatch({
+    investigationId: investigationId || entity.id,
+    defaultUrl: entity.officialDomain ? `https://${entity.officialDomain}` : undefined,
+    festivalName: entity.name,
+  });
+
   const [displayScore, setDisplayScore] = useState(0);
 
   useEffect(() => {
@@ -62,8 +79,45 @@ export const DossierHero: React.FC<Props> = ({
 
   return (
     <div className="pt-2 pb-6 border-b border-white/[0.06] space-y-4">
+      {/* Amber Alert Toast Banner (Festival Watch Drift Alert) */}
+      {watchAlert && (
+        <div
+          role="alert"
+          className="rounded-xl bg-amber-500/15 border border-amber-500/40 p-4 text-xs font-mono text-amber-200 shadow-lg shadow-amber-950/20 animate-in fade-in slide-in-from-top-2 duration-300"
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="size-4 text-amber-400 shrink-0 mt-0.5" />
+              <div className="space-y-1">
+                <div className="flex items-center flex-wrap gap-2 font-bold text-amber-300 text-sm">
+                  <span>🚨 Festival Watch Alert</span>
+                  <span className="px-2 py-0.5 rounded bg-amber-400/20 text-[11px] font-mono font-medium text-amber-300 border border-amber-400/30">
+                    {watchAlert.delta || 'Policy Drift'}
+                  </span>
+                </div>
+                <p className="text-amber-100/95 text-xs sm:text-sm leading-relaxed font-sans">
+                  {watchAlert.summary}
+                </p>
+                <div className="text-[10px] text-amber-400/80 pt-1 flex items-center gap-2">
+                  <Activity className="size-3 text-amber-400" />
+                  <span>Detected via Parallel Monitor snapshot · {new Date(watchAlert.timestamp).toLocaleTimeString()}</span>
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={dismissAlert}
+              className="p-1 rounded-lg hover:bg-amber-500/20 text-amber-400 hover:text-amber-200 transition-colors shrink-0"
+              title="Dismiss Alert"
+              aria-label="Dismiss Alert"
+            >
+              <X className="size-4" />
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
-        <div className="space-y-2 min-w-0 flex-1">
+        <div className="space-y-2.5 min-w-0 flex-1">
           <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-tool-diligence">
             <FileText className="size-3.5" />
             <span>Due Diligence Dossier</span>
@@ -104,6 +158,43 @@ export const DossierHero: React.FC<Props> = ({
                 </a>
               </div>
             )}
+
+            {/* Festival Watch (Parallel Monitor) Controls */}
+            <div className="flex items-center gap-2 pl-1 border-l border-white/[0.08]">
+              {!isWatching ? (
+                <button
+                  type="button"
+                  onClick={() => activateWatch()}
+                  disabled={watchLoading}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono font-medium bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 hover:text-white border border-white/[0.1] transition-all cursor-pointer"
+                  title="Monitor festival website for silent policy, deadline, and fee changes using Parallel Monitor"
+                >
+                  <Eye className="size-3 text-tool-diligence" />
+                  <span>{watchLoading ? 'Activating...' : 'Watch Festival'}</span>
+                </button>
+              ) : (
+                <div className="flex items-center gap-1.5">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono font-medium bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
+                    <span className="relative flex size-2">
+                      <span className="animate-ping absolute inline-flex size-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full size-2 bg-emerald-500"></span>
+                    </span>
+                    <span>Watching with Parallel Monitor</span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => triggerWatch()}
+                    disabled={watchTriggering}
+                    className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-mono font-medium bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 transition-colors cursor-pointer"
+                    title="Simulate or force immediate snapshot check for policy changes"
+                  >
+                    <BellRing className="size-3 text-amber-400" />
+                    <span>{watchTriggering ? 'Checking...' : 'Trigger Drift Check'}</span>
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 

@@ -1,19 +1,19 @@
 # 🔌 Screened Model Context Protocol (MCP) Server Guide
 
-> **Protocol Standard**: Model Context Protocol (Anthropic JSON-RPC 2.0)  
+> **Protocol Standard**: Model Context Protocol (Open JSON-RPC 2.0 Standard)  
 > **Server Identity**: `Screened Intelligence Core (v1.0.0)`  
 > **Status**: SPECIFIED & PENDING ROLLOUT  
 
-The **Screened MCP Server** allows headless AI assistants—such as **Claude Desktop**, **Cursor**, **Antigravity**, **LangChain**, and **CrewAI**—to connect directly to Screened’s cinema intelligence engine over standard input/output (stdio) or Server-Sent Events (SSE).
+The **Screened MCP Server** allows agent environments—including **Google Antigravity**, the **Gemini CLI**, and open MCP clients—to connect directly to Screened’s cinema intelligence engine over Server-Sent Events (SSE) or stdio. All reasoning and tool execution are powered exclusively by **Google Gemini 2.5 Pro and Google ADK**.
 
 ---
 
 ## 1. Quickstart Configuration
 
-### 1.1 Claude Desktop Setup
-Add the following configuration to your Claude Desktop configuration file:
-- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+### 1.1 Google Antigravity / Gemini Workspace Setup
+Add the following configuration to your Antigravity or Gemini MCP configuration file:
+- **Workspace**: `.agents/plugins/screened/mcp_config.json`
+- **Global**: `~/.gemini/antigravity/mcp/screened/config.json`
 
 ```json
 {

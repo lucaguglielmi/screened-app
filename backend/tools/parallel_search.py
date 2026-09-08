@@ -114,18 +114,21 @@ class ParallelSearchTool:
         self,
         queries: List[str],
         objective: str,
-        mode: str = "basic",
+        mode: str = "fast",
         max_results_total: int = 10,
+        max_results: Optional[int] = None,
         source_policy: Optional[dict] = None,
-        session_id: Optional[str] = None
+        session_id: Optional[str] = None,
+        **kwargs
     ) -> List[SourceRecord]:
         """Execute a search with Parallel Search and normalize results to SourceRecord list."""
         if not queries:
             return []
 
-        logger.info(f"Executing Parallel Search for objective: {objective} with {len(queries)} queries")
+        limit = max_results if max_results is not None else max_results_total
+        logger.info(f"Executing Parallel Search ({mode} mode) for objective: {objective} with {len(queries)} queries")
         advanced_settings = {
-            "max_results": 10,
+            "max_results": limit,
             "excerpt_settings": {"max_chars_per_result": 1500}
         }
         if source_policy:

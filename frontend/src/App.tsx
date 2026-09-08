@@ -604,6 +604,7 @@ export default function App() {
                   disputes={investigation.disputes || []}
                   deepVetting={investigation.deepVetting}
                   auditHealth={investigation.auditHealth}
+                  investigationId={investigation.id}
                   density={dossierDensity}
                   onDensityChange={setDossierDensity}
                   onNewInvestigation={() => {

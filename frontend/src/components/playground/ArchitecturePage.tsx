@@ -92,8 +92,8 @@ clients: "1. Filmmaker & Autonomous Agent Clients" {
   class: client_box
 
   web_ui: "Filmmaker Web Application\\n(React 19 + Tailwind v4 + Vite)"
-  browser_agent: "Autonomous In-Browser Agents\\n(Chrome WebMCP / Claude Computer Use / Gemini Live)"
-  headless_agent: "External Agent Desktops & IDEs\\n(Claude Desktop / Cursor / Antigravity)"
+  browser_agent: "Autonomous In-Browser Agents\\n(Chrome WebMCP / Browser Agents / Gemini Live)"
+  headless_agent: "External Agent Desktops & IDEs\\n(Google Antigravity / Gemini CLI / MCP Clients)"
 }
 
 protocols: "2. Ingestion & Dual-Protocol Agent Layer" {
@@ -101,7 +101,7 @@ protocols: "2. Ingestion & Dual-Protocol Agent Layer" {
 
   webmcp: "In-Browser WebMCP (WebMCP/2026)\\n• window.__screened_web_mcp__\\n• DOM Event Bus: webmcp:call / webmcp:result\\n• Visual DOM Sync & Telemetry Spotlighting"
   
-  server_mcp: "Headless Server MCP (Anthropic MCP v1.x)\\n• SSE Transport: /api/mcp/sse\\n• JSON-RPC Messages: /api/mcp/messages\\n• HTTP Testing: /api/mcp/rpc"
+  server_mcp: "Headless Server MCP (Open JSON-RPC 2.0)\\n• SSE Transport: /api/mcp/sse\\n• JSON-RPC Messages: /api/mcp/messages\\n• HTTP Testing: /api/mcp/rpc"
   
   gateway: "FastAPI Application Gateway\\n• REST Endpoints & SSE Event Stream\\n• PII Masking Vault & Rate Limiter\\n• Action Approval Sandbox Gate (SHA-256)"
 }
@@ -473,7 +473,7 @@ export const ArchitecturePage: React.FC = () => {
               <div className="flex items-start gap-2">
                 <Check className="w-3.5 h-3.5 text-purple-400 mt-0.5 shrink-0" />
                 <span className="text-zinc-300">
-                  <strong className="text-zinc-100">Supported Agents:</strong> Chrome with experimental agent flags, Claude Computer Use, Gemini Live browser runners, Cursor browser extensions, and Playwright/Puppeteer.
+                  <strong className="text-zinc-100">Supported Agents:</strong> Chrome with experimental agent flags, Google Antigravity browser runners, Gemini Live browser runners, and Playwright/Puppeteer.
                 </span>
               </div>
               <div className="flex items-start gap-2">
@@ -503,7 +503,7 @@ export const ArchitecturePage: React.FC = () => {
           {/* Headless Server MCP Card */}
           <div className="p-5 rounded-2xl bg-darkroom-surface border border-blue-800/40 space-y-3.5 relative overflow-hidden">
             <div className="absolute top-0 right-0 px-3 py-1 bg-blue-900/60 border-b border-l border-blue-700/50 rounded-bl-xl text-[10px] font-mono text-blue-300">
-              Anthropic MCP v1.x
+              Open MCP Standard v1.x
             </div>
             <div className="flex items-center space-x-2 text-blue-400 font-bold font-mono text-sm">
               <Terminal className="w-4 h-4" />
@@ -525,7 +525,7 @@ export const ArchitecturePage: React.FC = () => {
               <div className="flex items-start gap-2">
                 <Check className="w-3.5 h-3.5 text-blue-400 mt-0.5 shrink-0" />
                 <span className="text-zinc-300">
-                  <strong className="text-zinc-100">Supported Clients:</strong> Claude Desktop, Cursor IDE, Antigravity, and automated backend AI agents.
+                  <strong className="text-zinc-100">Supported Clients:</strong> Google Antigravity, Open MCP Inspector, Gemini CLI, and automated backend AI agents.
                 </span>
               </div>
               <div className="flex items-start gap-2">

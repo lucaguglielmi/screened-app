@@ -61,6 +61,7 @@ interface Props {
   disputes: DisputeRecord[];
   deepVetting?: DeepVettingReport;
   auditHealth?: InvestigationAuditHealth;
+  investigationId?: string;
   onNewInvestigation?: () => void;
   onDraftOutreach: (claim?: AtomicClaim) => void;
   onExport: () => void;
@@ -77,6 +78,7 @@ export const EvidenceDossier: React.FC<Props> = ({
   disputes,
   deepVetting,
   auditHealth,
+  investigationId,
   density: propDensity,
   onDensityChange: propOnDensityChange,
   onDraftOutreach,
@@ -562,6 +564,7 @@ export const EvidenceDossier: React.FC<Props> = ({
           corroboratedCount={corroboratedCount}
           disputesCount={disputes.length}
           auditHealth={auditHealth}
+          investigationId={investigationId || claims[0]?.investigationId || entity.id}
           authenticityScore={
             deepVetting?.overallAuthenticityScore ??
             (entity.name === 'Pinco Pallino Film Festival' ? 68 : 85)

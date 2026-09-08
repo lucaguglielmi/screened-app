@@ -285,8 +285,15 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
       <div className="relative z-10 pt-2 pb-1 mt-1 shrink-0">
         <ChatPromptBar onSendMessage={handleSendMessage} isLoading={isLoading} />
 
-        {/* Centered Filmmaker Feedback Link */}
-        <div className="flex items-center justify-center text-[11px] font-mono text-slate-500 pt-2 pb-0.5 select-none">
+        {/* Subtle /demo hint and Centered Filmmaker Feedback Link */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-[11px] font-mono text-slate-500 pt-2 pb-0.5 select-none">
+          <div className="flex items-center gap-1.5 text-slate-400">
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400/80 animate-pulse" />
+            <span>
+              type <code className="px-1.5 py-0.5 rounded bg-slate-800 text-cyan-300 font-semibold border border-slate-700/80">/demo</code> to see how your search will look like
+            </span>
+          </div>
+          <span className="hidden sm:inline text-slate-700">•</span>
           <button
             type="button"
             onClick={() => {

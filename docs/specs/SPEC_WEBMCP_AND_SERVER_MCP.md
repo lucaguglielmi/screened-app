@@ -330,7 +330,7 @@ The `/agents` page will feature a live **WebMCP Developer Console & Sandbox**:
 ## 6. Proper MCP Server (Headless Protocol) Specification
 
 ### 6.1 JSON-RPC 2.0 Transport Protocol
-The headless server adheres strictly to Anthropic's Model Context Protocol (MCP) standard v1.0.
+The headless server adheres strictly to the open Model Context Protocol (MCP) standard v1.0 (JSON-RPC 2.0).
 
 #### Transport A: Server-Sent Events (SSE) Endpoint
 - **SSE Connection**: `GET /api/mcp/sse`  

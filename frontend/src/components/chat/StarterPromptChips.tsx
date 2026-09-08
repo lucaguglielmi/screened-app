@@ -8,9 +8,9 @@ interface StarterPromptChipsProps {
 const STARTER_PROMPTS = [
   {
     icon: '🚨',
-    title: 'Vet Pinco Pallino (Demo Entity)',
+    title: 'Audit Rules & Leases',
     prompt:
-      'Is Pinco Pallino Film Festival legitimate? Check their physical venue bookings and entry fees.',
+      'Audit the submission terms, premiere restrictions, and screening venue leases for an independent film festival.',
     badge: 'Due Diligence',
     badgeClass: 'bg-tool-diligence/15 text-tool-diligence border border-tool-diligence/30',
   },
@@ -30,10 +30,10 @@ const STARTER_PROMPTS = [
     badgeClass: 'bg-tool-diligence/15 text-tool-diligence border border-tool-diligence/30',
   },
   {
-    icon: '📜',
-    title: 'Raindance Legitimacy',
+    icon: '⚖️',
+    title: 'Premiere Rights Risk',
     prompt:
-      'Check Raindance Film Festival accreditation, BAFTA/BIFA qualifying status, and recent filmmaker feedback.',
+      'What are the risks of surrendering a UK or European premiere to a regional non-qualifying festival?',
     badge: 'Due Diligence',
     badgeClass: 'bg-tool-diligence/15 text-tool-diligence border border-tool-diligence/30',
   },

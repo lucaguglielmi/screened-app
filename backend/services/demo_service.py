@@ -60,3 +60,47 @@ async def demo_sse_generator() -> AsyncGenerator[str, None]:
     """Yield simulated Server-Sent Events for the demo investigation."""
     async for event in _demo_sse_generator():
         yield event
+
+
+_demo_watch_state: Dict[str, Any] = {
+    "status": "inactive",
+    "monitorId": None,
+    "targetUrl": "https://genesiscinema.co.uk",
+    "frequency": "weekly",
+    "type": "snapshot",
+    "createdAt": None,
+    "lastChecked": None,
+    "recentAlerts": [],
+}
+
+
+def get_demo_watch_status() -> Dict[str, Any]:
+    """Return the current demo festival watch state."""
+    return dict(_demo_watch_state)
+
+
+def activate_demo_watch(target_url: str = "https://genesiscinema.co.uk", frequency: str = "weekly", monitor_type: str = "snapshot") -> Dict[str, Any]:
+    """Activate festival watch for the demo entity."""
+    from datetime import datetime, timezone
+    now_iso = datetime.now(timezone.utc).isoformat()
+    _demo_watch_state.update({
+        "status": "active",
+        "monitorId": "mon_demo_pinco_pallino_genesis",
+        "targetUrl": target_url or "https://genesiscinema.co.uk",
+        "frequency": frequency,
+        "type": monitor_type,
+        "createdAt": now_iso,
+        "lastChecked": now_iso,
+    })
+    return dict(_demo_watch_state)
+
+
+def add_demo_watch_alert(alert: Dict[str, Any]) -> None:
+    """Record an alert in the demo watch state."""
+    from datetime import datetime, timezone
+    _demo_watch_state["lastChecked"] = datetime.now(timezone.utc).isoformat()
+    alerts = _demo_watch_state.setdefault("recentAlerts", [])
+    alerts.insert(0, alert)
+    if len(alerts) > 10:
+        _demo_watch_state["recentAlerts"] = alerts[:10]
+

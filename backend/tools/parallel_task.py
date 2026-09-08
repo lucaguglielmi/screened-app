@@ -65,6 +65,7 @@ async def _fallback_search_and_extract(
         sources = await search_tool.search(
             queries=unique_queries,
             objective=objective,
+            mode="advanced",
             max_results_total=15,
             session_id=investigation_id,
         )

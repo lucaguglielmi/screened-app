@@ -3,7 +3,7 @@
 Implements the open Model Context Protocol specification v1.x (2024-11-05).
 Powers multi-agent cinema due diligence across three integrated interfaces:
 1. Google Antigravity & Gemini CLI Plugin (`.agents/plugins/screened/mcp_config.json`)
-2. Headless desktop MCP clients (Claude Desktop, Cursor IDE) via SSE (`/api/mcp/sse`)
+2. External agent desktop & IDE clients (Google Antigravity, MCP inspectors) via SSE (`/api/mcp/sse`)
 3. In-browser WebMCP runtime (`window.__screened_web_mcp__`) via direct JSON-RPC 2.0 (`/api/mcp`)
 
 Security & Threat Model:
