@@ -296,7 +296,7 @@ export default function App() {
         className={`relative flex-1 flex flex-row min-h-0 w-full ${
           activeTool === 'DESIGN_PLAYGROUND'
             ? 'bg-darkroom-surface'
-            : 'bg-moving-dark-gradient'
+            : 'bg-transparent'
         }`}
       >
       {/* Live System Update Notifier */}

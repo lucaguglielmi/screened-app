@@ -225,6 +225,119 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
       ctx.closePath();
     };
 
+    // Helper to generate smooth multi-harmonic contour points for a blob
+    const generateBlobContour = (
+      centerX: number,
+      centerY: number,
+      radius: number,
+      harmonicFn: (theta: number) => number,
+      m: { x: number; y: number; influence: number },
+    ) => {
+      const pointCount = 96;
+      const primaryPoints: { x: number; y: number }[] = [];
+      const innerPoints: { x: number; y: number }[] = [];
+      const outerPoints: { x: number; y: number }[] = [];
+
+      for (let i = 0; i < pointCount; i++) {
+        const theta = (i / pointCount) * Math.PI * 2;
+        const harmonic = harmonicFn(theta);
+        const rScale = 1.0 + amplitude * harmonic;
+        const r = radius * rScale;
+
+        let px = centerX + Math.cos(theta) * r;
+        let py = centerY + Math.sin(theta) * r;
+
+        // Interactive elastic membrane deflection from cursor
+        if (effectiveInteractive && m.influence > 0.02) {
+          const dxM = px - m.x;
+          const dyM = py - m.y;
+          const distM = Math.sqrt(dxM * dxM + dyM * dyM);
+          const pushRadius = isAbsolute ? 120 : 180;
+          if (distM < pushRadius && distM > 0.1) {
+            const pushFactor = Math.pow(1 - distM / pushRadius, 2) * 32 * m.influence;
+            px += (dxM / distM) * pushFactor;
+            py += (dyM / distM) * pushFactor;
+          }
+        }
+
+        primaryPoints.push({ x: px, y: py });
+
+        // Inner echo (0.86x scale)
+        const innerR = r * 0.86;
+        innerPoints.push({
+          x: centerX + (px - centerX) * (innerR / r),
+          y: centerY + (py - centerY) * (innerR / r),
+        });
+
+        // Outer echo (1.14x scale)
+        const outerR = r * 1.14;
+        outerPoints.push({
+          x: centerX + (px - centerX) * (outerR / r),
+          y: centerY + (py - centerY) * (outerR / r),
+        });
+      }
+
+      return { primaryPoints, innerPoints, outerPoints };
+    };
+
+    // Helper to render a complete blob contour layer (ambient glow, echoes, primary line)
+    const drawBlobLayer = (
+      centerX: number,
+      centerY: number,
+      radius: number,
+      points: {
+        primaryPoints: { x: number; y: number }[];
+        innerPoints: { x: number; y: number }[];
+        outerPoints: { x: number; y: number }[];
+      },
+    ) => {
+      // 1. Ambient luminescent core glow
+      ctx.save();
+      const glowGrad = ctx.createRadialGradient(
+        centerX,
+        centerY,
+        radius * 0.1,
+        centerX,
+        centerY,
+        radius * 1.25,
+      );
+      glowGrad.addColorStop(0, colorWithAlpha(activeColor, opacity * 0.12));
+      glowGrad.addColorStop(0.5, colorWithAlpha(activeColor, opacity * 0.04));
+      glowGrad.addColorStop(1, 'transparent');
+      ctx.fillStyle = glowGrad;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius * 1.25, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // 2. Outer Echo Line (Faint dashed blueprint contour)
+      ctx.save();
+      ctx.setLineDash([4, 10]);
+      drawClosedBlob(points.outerPoints);
+      ctx.strokeStyle = colorWithAlpha(activeColor, opacity * 0.22);
+      ctx.lineWidth = 0.85;
+      ctx.stroke();
+      ctx.restore();
+
+      // 3. Inner Echo Line (Delicate hairline contour)
+      ctx.save();
+      drawClosedBlob(points.innerPoints);
+      ctx.strokeStyle = colorWithAlpha(activeColor, opacity * 0.30);
+      ctx.lineWidth = 0.85;
+      ctx.stroke();
+      ctx.restore();
+
+      // 4. Primary Flowing Blob Line (Crisp, subtle glowing contour)
+      ctx.save();
+      drawClosedBlob(points.primaryPoints);
+      ctx.strokeStyle = colorWithAlpha(activeColor, opacity * 0.95);
+      ctx.lineWidth = 1.25;
+      ctx.shadowColor = colorWithAlpha(activeColor, opacity * 0.5);
+      ctx.shadowBlur = 6;
+      ctx.stroke();
+      ctx.restore();
+    };
+
     const render = (time: number) => {
       if (width === 0 || height === 0) {
         handleResize();
@@ -246,123 +359,57 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
 
       ctx.clearRect(0, 0, width, height);
 
-      // --- 1. ORGANIC BLOB DRIFT PATH (Lissajous figure-8) ---
-      // Centers the drift in a gentle orbit around the screen center
-      const blobCenterX =
-        width * 0.50 +
-        Math.sin(elapsed * 0.24 + 0.8) * width * 0.18 +
-        Math.cos(elapsed * 0.14) * width * 0.08;
-      const blobCenterY =
-        height * 0.48 +
-        Math.cos(elapsed * 0.19 + 0.4) * height * 0.15 +
-        Math.sin(elapsed * 0.31) * height * 0.06;
-
+      // --- 1. DUAL ORGANIC SHAPES IN SEPARATE SCREEN AREAS (OUT-OF-PHASE PULSATION) ---
       const minDim = Math.min(width, height);
-      const baseRadius = minDim * 0.38 * Math.max(0.3, Math.min(1.2, blobCoverage));
+      const coverage = Math.max(0.3, Math.min(1.2, blobCoverage));
 
-      // --- 2. AMBIENT LUMINESCENT CORE GLOW ---
-      // Very faint radial gradient that softly illuminates the darkroom background
-      ctx.save();
-      const glowGrad = ctx.createRadialGradient(
-        blobCenterX,
-        blobCenterY,
-        baseRadius * 0.1,
-        blobCenterX,
-        blobCenterY,
-        baseRadius * 1.3,
+      // Blob 1: Upper-Left / Mid-Left Screen Area
+      const b1CenterX =
+        width * (0.30 + Math.sin(elapsed * 0.22 + 0.6) * 0.09 + Math.cos(elapsed * 0.11) * 0.05);
+      const b1CenterY =
+        height * (0.36 + Math.cos(elapsed * 0.17 + 0.9) * 0.11 + Math.sin(elapsed * 0.26) * 0.04);
+      // Independent expansion & contraction: ~13s cycle (frequency 0.48 rad/s)
+      const b1Breathe = 1.0 + 0.16 * Math.sin(elapsed * 0.48);
+      const b1Radius = minDim * 0.28 * coverage * b1Breathe;
+
+      const blob1Points = generateBlobContour(
+        b1CenterX,
+        b1CenterY,
+        b1Radius,
+        (theta) =>
+          0.30 * Math.sin(2 * theta + elapsed * 0.38) +
+          0.22 * Math.cos(3 * theta - elapsed * 0.26) +
+          0.15 * Math.sin(4 * theta + elapsed * 0.19) +
+          0.09 * Math.cos(5 * theta - elapsed * 0.13) +
+          0.05 * Math.sin(7 * theta + elapsed * 0.09),
+        m,
       );
-      glowGrad.addColorStop(0, colorWithAlpha(activeColor, opacity * 0.16));
-      glowGrad.addColorStop(0.45, colorWithAlpha(activeColor, opacity * 0.06));
-      glowGrad.addColorStop(1, 'transparent');
-      ctx.fillStyle = glowGrad;
-      ctx.beginPath();
-      ctx.arc(blobCenterX, blobCenterY, baseRadius * 1.3, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
+      drawBlobLayer(b1CenterX, b1CenterY, b1Radius, blob1Points);
 
-      // --- 3. GENERATE CLOSED SMOOTH BLOB POINTS ---
-      const pointCount = 96; // Dense sample for silk-smooth curve
-      const primaryPoints: { x: number; y: number }[] = [];
-      const innerPoints: { x: number; y: number }[] = [];
-      const outerPoints: { x: number; y: number }[] = [];
+      // Blob 2: Lower-Right / Mid-Right Screen Area
+      const b2CenterX =
+        width * (0.70 + Math.cos(elapsed * 0.18 + 1.2) * 0.09 - Math.sin(elapsed * 0.13) * 0.05);
+      const b2CenterY =
+        height * (0.64 + Math.sin(elapsed * 0.21 + 0.3) * 0.11 - Math.cos(elapsed * 0.24) * 0.04);
+      // Independent expansion & contraction: ~19s cycle (frequency 0.33 rad/s) with 2.4 rad phase offset
+      const b2Breathe = 1.0 + 0.16 * Math.sin(elapsed * 0.33 + 2.4);
+      const b2Radius = minDim * 0.25 * coverage * b2Breathe;
 
-      for (let i = 0; i < pointCount; i++) {
-        const theta = (i / pointCount) * Math.PI * 2;
+      const blob2Points = generateBlobContour(
+        b2CenterX,
+        b2CenterY,
+        b2Radius,
+        (theta) =>
+          0.28 * Math.cos(2 * theta - elapsed * 0.32) +
+          0.20 * Math.sin(3 * theta + elapsed * 0.24 + 1.2) +
+          0.14 * Math.cos(4 * theta - elapsed * 0.17) +
+          0.08 * Math.sin(5 * theta + elapsed * 0.11) +
+          0.05 * Math.cos(7 * theta - elapsed * 0.08),
+        m,
+      );
+      drawBlobLayer(b2CenterX, b2CenterY, b2Radius, blob2Points);
 
-        // Multi-harmonic Fourier expansion creates an organic liquid membrane
-        const harmonic =
-          0.32 * Math.sin(2 * theta + elapsed * 0.36) +
-          0.24 * Math.cos(3 * theta - elapsed * 0.28) +
-          0.16 * Math.sin(4 * theta + elapsed * 0.20) +
-          0.10 * Math.cos(5 * theta - elapsed * 0.15) +
-          0.06 * Math.sin(7 * theta + elapsed * 0.12);
-
-        const rScale = 1.0 + amplitude * harmonic;
-        const r = baseRadius * rScale;
-
-        let px = blobCenterX + Math.cos(theta) * r;
-        let py = blobCenterY + Math.sin(theta) * r;
-
-        // Interactive elastic membrane deflection from cursor
-        if (effectiveInteractive && m.influence > 0.02) {
-          const dxM = px - m.x;
-          const dyM = py - m.y;
-          const distM = Math.sqrt(dxM * dxM + dyM * dyM);
-          const pushRadius = isAbsolute ? 120 : 200;
-          if (distM < pushRadius && distM > 0.1) {
-            const pushFactor = Math.pow(1 - distM / pushRadius, 2) * 35 * m.influence;
-            px += (dxM / distM) * pushFactor;
-            py += (dyM / distM) * pushFactor;
-          }
-        }
-
-        primaryPoints.push({ x: px, y: py });
-
-        // Inner echo (0.86x scale)
-        const innerR = r * 0.86;
-        innerPoints.push({
-          x: blobCenterX + (px - blobCenterX) * (innerR / r),
-          y: blobCenterY + (py - blobCenterY) * (innerR / r),
-        });
-
-        // Outer echo (1.14x scale)
-        const outerR = r * 1.14;
-        outerPoints.push({
-          x: blobCenterX + (px - blobCenterX) * (outerR / r),
-          y: blobCenterY + (py - blobCenterY) * (outerR / r),
-        });
-      }
-
-      // --- 4. RENDER CONTOUR LINES ---
-
-      // Outer Echo Line (Faint dashed blueprint contour)
-      ctx.save();
-      ctx.setLineDash([4, 10]);
-      drawClosedBlob(outerPoints);
-      ctx.strokeStyle = colorWithAlpha(activeColor, opacity * 0.25);
-      ctx.lineWidth = 0.9;
-      ctx.stroke();
-      ctx.restore();
-
-      // Inner Echo Line (Delicate hairline contour)
-      ctx.save();
-      drawClosedBlob(innerPoints);
-      ctx.strokeStyle = colorWithAlpha(activeColor, opacity * 0.35);
-      ctx.lineWidth = 0.9;
-      ctx.stroke();
-      ctx.restore();
-
-      // Primary Flowing Blob Line (Crisp, subtle glowing contour)
-      ctx.save();
-      drawClosedBlob(primaryPoints);
-      ctx.strokeStyle = colorWithAlpha(activeColor, opacity * 0.95);
-      ctx.lineWidth = 1.3;
-      ctx.shadowColor = colorWithAlpha(activeColor, opacity * 0.5);
-      ctx.shadowBlur = 6;
-      ctx.stroke();
-      ctx.restore();
-
-      // --- 5. FLOATING SUBTLE AMBIENT MOTES (Cinematic Depth) ---
+      // --- 2. FLOATING SUBTLE AMBIENT MOTES (Cinematic Depth) ---
       for (let i = 0; i < motes.length; i++) {
         const mote = motes[i];
         mote.x += mote.vx;
@@ -382,26 +429,6 @@ export const VectorFieldBackground: React.FC<LivingBackgroundProps> = ({
         ctx.beginPath();
         ctx.arc(posX, posY, mote.size, 0, Math.PI * 2);
         ctx.fill();
-      }
-
-      // --- 6. CENTER CONTENT VIGNETTE ---
-      // Ensures high contrast and zero distraction for chat text
-      if (!isAbsolute) {
-        ctx.save();
-        const vignetteGrad = ctx.createRadialGradient(
-          width * 0.5,
-          height * 0.48,
-          width * 0.15,
-          width * 0.5,
-          height * 0.48,
-          width * 0.75,
-        );
-        vignetteGrad.addColorStop(0, 'rgba(4, 10, 23, 0.14)');
-        vignetteGrad.addColorStop(0.65, 'rgba(4, 10, 23, 0.05)');
-        vignetteGrad.addColorStop(1, 'rgba(4, 10, 23, 0.0)');
-        ctx.fillStyle = vignetteGrad;
-        ctx.fillRect(0, 0, width, height);
-        ctx.restore();
       }
 
       animationFrameId = requestAnimationFrame(render);
