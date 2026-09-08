@@ -35,7 +35,19 @@ export const AgentAvatar: React.FC<AgentAvatarProps> = ({
   const [isHovered, setIsHovered] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
   const [hasRecentlyLoaded, setHasRecentlyLoaded] = useState(false);
+  const [hasUserTyped, setHasUserTyped] = useState(false);
   const wasThinkingRef = useRef(isThinking);
+
+  useEffect(() => {
+    const handleKeyDown = () => {
+      setHasUserTyped(true);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   useEffect(() => {
     if (isThinking) {
@@ -73,6 +85,7 @@ export const AgentAvatar: React.FC<AgentAvatarProps> = ({
   const isThinkingActive = currentStatus === 'thinking' || isThinking;
   const isWritingActive = currentStatus === 'writing' || isWriting || isStreaming;
   const isInteractiveActive = isHovered || isPressed || isThinkingActive || isWritingActive || hasRecentlyLoaded;
+  const shouldAnimateIdle = !hasUserTyped && currentStatus === 'idle';
 
   // Normalized size configuration:
   // All orbit rings, shockwaves, and the core orb stay strictly WITHIN the bounding box (zero negative insets).
@@ -82,30 +95,30 @@ export const AgentAvatar: React.FC<AgentAvatarProps> = ({
     sm: {
       wrapper: 'w-8 h-8',
       coreInset: 'p-1',
-      iconSize: 13,
+      iconSize: 18,
       strokeWidth: 1.2,
-      beaconSize: 'size-1.5',
+      beaconSize: 'w-1.5 h-1.5',
     },
     md: {
       wrapper: 'w-11 h-11',
       coreInset: 'p-1.5',
-      iconSize: 18,
+      iconSize: 26,
       strokeWidth: 1.5,
-      beaconSize: 'size-2',
+      beaconSize: 'w-2 h-2',
     },
     lg: {
       wrapper: 'w-16 h-16',
       coreInset: 'p-2',
-      iconSize: 26,
+      iconSize: 36,
       strokeWidth: 1.8,
-      beaconSize: 'size-2.5',
+      beaconSize: 'w-2.5 h-2.5',
     },
   }[normalizedSize];
 
-  // Rotation animation durations when active (hover, thinking, writing)
-  // When idle, duration is null/stopped (0 rotation).
-  const clockwiseDuration = isThinkingActive ? 2.0 : isWritingActive ? 3.8 : isHovered ? 5.5 : 0;
-  const counterClockwiseDuration = isThinkingActive ? 1.6 : isWritingActive ? 3.2 : isHovered ? 4.5 : 0;
+  // Rotation animation durations when active (hover, thinking, writing, or initial page load)
+  // When idle (and user has typed), duration is null/stopped (0 rotation).
+  const clockwiseDuration = isThinkingActive ? 2.0 : isWritingActive ? 3.8 : (isHovered || shouldAnimateIdle) ? 5.5 : 0;
+  const counterClockwiseDuration = isThinkingActive ? 1.6 : isWritingActive ? 3.2 : (isHovered || shouldAnimateIdle) ? 4.5 : 0;
 
   const handleClick = () => {
     if (!isInteractive) return;
@@ -164,9 +177,9 @@ export const AgentAvatar: React.FC<AgentAvatarProps> = ({
       {/* 2. DUAL CONCENTRIC ORBIT RINGS (Zero negative insets - fully contained) */}
       {/* ========================================================================= */}
       
-      {/* Outer Orbit Ring 1: Clockwise Dashed Cinema Sprocket Ring */}
+      {/* Outer Orbit Ring 1: Clockwise Dashed Ring */}
       <motion.div
-        className="absolute inset-0 pointer-events-none flex items-center justify-center"
+        className="absolute inset-0 rounded-full border-[1.5px] border-dashed border-blue-400/40 pointer-events-none"
         animate={
           clockwiseDuration > 0
             ? { rotate: 360 }
@@ -181,31 +194,11 @@ export const AgentAvatar: React.FC<AgentAvatarProps> = ({
               }
             : { duration: 0.4, ease: 'easeOut' }
         }
-      >
-        <svg className="w-full h-full p-0.5" viewBox="0 0 100 100" fill="none">
-          <circle
-            cx="50"
-            cy="50"
-            r="46"
-            stroke="url(#avatar-outer-orbit-grad)"
-            strokeWidth={config.strokeWidth * 1.5}
-            strokeDasharray={isThinkingActive ? '8 5 18 5' : isInteractiveActive ? '10 6 22 6' : '14 8'}
-            strokeLinecap="round"
-            className="transition-all duration-300"
-          />
-          <defs>
-            <linearGradient id="avatar-outer-orbit-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="var(--color-tool-ocean)" stopOpacity={isInteractiveActive ? 1 : 0.85} />
-              <stop offset="50%" stopColor="var(--color-midnight-royal)" stopOpacity={isInteractiveActive ? 0.95 : 0.7} />
-              <stop offset="100%" stopColor="var(--color-tool-diligence)" stopOpacity={isInteractiveActive ? 0.9 : 0.6} />
-            </linearGradient>
-          </defs>
-        </svg>
-      </motion.div>
+      />
 
-      {/* Inner Orbit Ring 2: Counter-Clockwise Dotted Segmented Ring */}
+      {/* Inner Orbit Ring 2: Counter-Clockwise Segmented Ring */}
       <motion.div
-        className="absolute inset-0 pointer-events-none flex items-center justify-center"
+        className="absolute inset-1 rounded-full border-[1.5px] border-t-blue-400 border-r-cyan-400 border-b-transparent border-l-transparent pointer-events-none"
         animate={
           counterClockwiseDuration > 0
             ? { rotate: -360 }
@@ -220,34 +213,24 @@ export const AgentAvatar: React.FC<AgentAvatarProps> = ({
               }
             : { duration: 0.4, ease: 'easeOut' }
         }
+      />
+
+      {/* Orbiting Satellite 1 */}
+      <motion.div
+        className="absolute inset-0 flex items-start justify-center pointer-events-none"
+        animate={clockwiseDuration > 0 ? { rotate: 360 } : { rotate: 0 }}
+        transition={clockwiseDuration > 0 ? { repeat: Infinity, duration: clockwiseDuration * 0.8, ease: 'easeInOut' } : { duration: 0.4 }}
       >
-        <svg className="w-full h-full p-1" viewBox="0 0 100 100" fill="none">
-          <circle
-            cx="50"
-            cy="50"
-            r="45"
-            stroke="url(#avatar-inner-orbit-grad)"
-            strokeWidth={config.strokeWidth * 1.2}
-            strokeDasharray={isThinkingActive ? '4 4 10 4' : isInteractiveActive ? '5 7 14 7' : '8 10'}
-            strokeLinecap="round"
-            className="transition-all duration-300"
-          />
-          <defs>
-            <linearGradient id="avatar-inner-orbit-grad" x1="100%" y1="0%" x2="0%" y2="100%">
-              <stop
-                offset="0%"
-                stopColor={isWritingActive ? 'var(--color-tool-diligence)' : 'var(--color-tool-scout)'}
-                stopOpacity={isInteractiveActive ? 1 : 0.75}
-              />
-              <stop offset="60%" stopColor="var(--color-tool-ocean)" stopOpacity={isInteractiveActive ? 0.85 : 0.55} />
-              <stop
-                offset="100%"
-                stopColor={isWritingActive ? 'var(--color-tool-ocean)' : 'var(--color-tool-scout-hover)'}
-                stopOpacity={isInteractiveActive ? 0.9 : 0.6}
-              />
-            </linearGradient>
-          </defs>
-        </svg>
+        <div className={`${config.beaconSize} rounded-full bg-cyan-400 shadow-[0_0_8px_cyan] -mt-[3px]`} />
+      </motion.div>
+
+      {/* Orbiting Satellite 2 */}
+      <motion.div
+        className="absolute inset-0 flex items-end justify-center pointer-events-none"
+        animate={counterClockwiseDuration > 0 ? { rotate: -360 } : { rotate: 0 }}
+        transition={counterClockwiseDuration > 0 ? { repeat: Infinity, duration: counterClockwiseDuration * 1.2, ease: 'easeInOut' } : { duration: 0.4 }}
+      >
+        <div className={`${config.beaconSize} rounded-full bg-blue-400 shadow-[0_0_8px_#3b82f6] -mb-[3px]`} />
       </motion.div>
 
       {/* ========================================================================= */}
