@@ -3,7 +3,7 @@
  *
  * Generated from canonical Pydantic v2 models in backend/models.py
  * Generator: scripts/generate_contracts.py
- * Timestamp: 2026-09-08T22:11:23Z
+ * Timestamp: 2026-09-08T22:11:44Z
  *
  * To regenerate, run:
  *   npm run generate-contracts  (from frontend/)
