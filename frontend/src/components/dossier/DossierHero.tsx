@@ -61,7 +61,7 @@ export const DossierHero: React.FC<Props> = ({
       : 'Review Recommended';
 
   return (
-    <div className="pt-2 pb-6 border-b border-darkroom-border/40 space-y-4">
+    <div className="pt-2 pb-6 border-b border-white/[0.06] space-y-4">
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
         <div className="space-y-2 min-w-0 flex-1">
           <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-tool-diligence">
@@ -108,7 +108,7 @@ export const DossierHero: React.FC<Props> = ({
         </div>
 
         {/* Dynamic Authenticity Score Ring */}
-        <div className="flex items-center gap-4 p-3.5 rounded-2xl bg-darkroom-surface/80 border border-darkroom-border/80 shadow-md shrink-0 self-stretch sm:self-auto justify-between sm:justify-start">
+        <div className="flex items-center gap-4 p-3.5 rounded-2xl bg-white/[0.02] shadow-md shrink-0 self-stretch sm:self-auto justify-between sm:justify-start">
           <div className="relative size-20 sm:size-22 shrink-0 flex items-center justify-center">
             <svg className="size-full -rotate-90" viewBox="0 0 80 80">
               {/* Background circle track */}
@@ -118,7 +118,7 @@ export const DossierHero: React.FC<Props> = ({
                 r="34"
                 stroke="currentColor"
                 strokeWidth="6"
-                className="text-darkroom-border/40"
+                className="text-white/10"
                 fill="none"
               />
               {/* Animated Progress Ring */}
@@ -166,19 +166,19 @@ export const DossierHero: React.FC<Props> = ({
 
       {/* Claim Metric Strip */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2">
-        <div className="py-2.5 px-3 rounded-xl bg-darkroom-surface/60 border border-darkroom-border/60 text-center">
+        <div className="py-2.5 px-3 rounded-xl bg-white/[0.02] text-center">
           <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400">Facts</div>
           <div className="text-base font-semibold text-slate-200 font-mono">{factsCount}</div>
         </div>
-        <div className="py-2.5 px-3 rounded-xl bg-darkroom-surface/60 border border-darkroom-border/60 text-center">
+        <div className="py-2.5 px-3 rounded-xl bg-white/[0.02] text-center">
           <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400">Allegations</div>
           <div className="text-base font-semibold text-slate-400 font-mono">{allegationsCount}</div>
         </div>
-        <div className="py-2.5 px-3 rounded-xl bg-darkroom-surface/60 border border-darkroom-border/60 text-center">
+        <div className="py-2.5 px-3 rounded-xl bg-white/[0.02] text-center">
           <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400">Corroborated</div>
           <div className="text-base font-semibold text-emerald-400 font-mono">{corroboratedCount}</div>
         </div>
-        <div className="py-2.5 px-3 rounded-xl bg-darkroom-surface/60 border border-darkroom-border/60 text-center">
+        <div className="py-2.5 px-3 rounded-xl bg-white/[0.02] text-center">
           <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400">Disputes</div>
           <div className="text-base font-semibold text-orange-400 font-mono">{disputesCount}</div>
         </div>

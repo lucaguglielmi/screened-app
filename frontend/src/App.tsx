@@ -28,6 +28,7 @@ import { ChatContainer } from './components/chat/ChatContainer';
 import { WhyScreened } from './components/WhyScreened';
 import { FestivalProtectionGuide } from './components/FestivalProtectionGuide';
 import { HowToUse } from './components/HowToUse';
+import { WhatCanYouDo } from './components/WhatCanYouDo';
 import { HistorySidebar } from './components/HistorySidebar';
 import { DossierStickyNav } from './components/dossier/DossierStickyNav';
 
@@ -334,7 +335,7 @@ export default function App() {
       >
         {/* Top Header Bar */}
         <header
-          className={`border-b border-darkroom-border ${activeTool === 'DESIGN_PLAYGROUND' ? 'bg-darkroom-surface' : 'bg-darkroom-surface/80 backdrop-blur'} sticky top-0 z-30 transition-colors shrink-0 no-print`}
+          className={`border-b border-white/[0.06] ${activeTool === 'DESIGN_PLAYGROUND' ? 'bg-darkroom-surface' : 'bg-[#040a17]/80 backdrop-blur'} sticky top-0 z-30 transition-colors shrink-0 no-print`}
         >
           <div className="px-4 sm:px-6 md:px-8 h-16 flex items-center justify-between gap-4">
             <div 
@@ -359,7 +360,7 @@ export default function App() {
               {hasPastSearches && (
                 <button
                   onClick={() => setIsHistoryOpen(true)}
-                  className="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-darkroom-surface hover:bg-darkroom-card text-slate-400 hover:text-indigo-300 border border-darkroom-border hover:border-indigo-500/40 transition-colors cursor-pointer text-xs font-mono flex items-center gap-1.5"
+                  className="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 hover:text-white border border-white/10 hover:border-white/20 transition-colors cursor-pointer text-xs font-mono flex items-center gap-1.5"
                   title="View Past Searches"
                 >
                   <History className="size-4 text-indigo-400" />
@@ -372,8 +373,8 @@ export default function App() {
                 onClick={toggleSound}
                 className={`p-2 rounded-xl border transition-all cursor-pointer text-xs font-mono flex items-center justify-center ${
                   soundMuted
-                    ? 'bg-darkroom-surface border-darkroom-border text-slate-400 hover:text-slate-200'
-                    : 'bg-darkroom-card border-indigo-500/40 text-indigo-300 hover:border-indigo-400 shadow-sm'
+                    ? 'bg-white/[0.04] border-white/10 text-slate-400 hover:text-slate-200'
+                    : 'bg-white/[0.08] border-indigo-500/40 text-indigo-300 hover:border-indigo-400 shadow-sm'
                 }`}
                 title={soundMuted ? 'Unmute Audio (Press M)' : 'Mute Audio (Press M)'}
               >
@@ -449,7 +450,6 @@ export default function App() {
           {activeTool === 'CONVERSATIONAL_DESK' && (
             <ChatContainer
               onLaunchDueDiligence={(q) => handleDeepScreen(q, 'chat')}
-              onNavigateToPlaygroundFeedback={() => handleSelectTool('WHY_SCREENED')}
               onOpenKeyboardHelp={() => setIsKeyboardHelpOpen(true)}
             />
           )}
@@ -507,7 +507,7 @@ export default function App() {
                         e.preventDefault();
                         handleStartInvestigation(query, 'search_form');
                       }}
-                      className="p-2 rounded-2xl bg-darkroom-surface shadow-2xl shadow-black/80 flex flex-col sm:flex-row gap-2 transition-all"
+                      className="p-2 rounded-2xl bg-white/[0.04] border border-white/10 shadow-2xl flex flex-col sm:flex-row gap-2 transition-all"
                     >
                       <div className="relative flex-1 flex items-center">
                         <Search className="size-5 absolute left-3.5 text-slate-400" />
@@ -516,7 +516,7 @@ export default function App() {
                           type="text"
                           value={query}
                           onChange={(e) => setQuery(e.target.value)}
-                          placeholder="Enter festival name (e.g. Pinco Pallino Film Festival, Sundance)..."
+                          placeholder="Search festival for due diligence (or request upcoming features)..."
                           className="w-full pl-11 pr-4 py-3 bg-transparent text-base text-white placeholder-slate-500 focus:outline-none"
                           disabled={loading}
                         />
@@ -545,7 +545,7 @@ export default function App() {
                               setQuery(name);
                               handleStartInvestigation(name, 'starter_chip');
                             }}
-                            className="px-3.5 py-1.5 rounded-xl bg-darkroom-surface text-slate-300 hover:text-white hover:bg-darkroom-card transition-all cursor-pointer text-xs font-mono shadow-md"
+                            className="px-3.5 py-1.5 rounded-xl bg-white/[0.04] text-slate-300 hover:text-white hover:bg-white/[0.08] border border-white/10 transition-all cursor-pointer text-xs font-mono shadow-md"
                           >
                             {name}
                           </button>
@@ -627,7 +627,15 @@ export default function App() {
             />
           )}
 
-          {/* View 7: Design Playground (Public Workbench) */}
+          {/* View 7: What Can You Do (Engine & Roadmap Breakdown) */}
+          {activeTool === 'WHAT_CAN_YOU_DO' && (
+            <WhatCanYouDo
+              onNavigateToDiligence={() => handleSelectTool('DUE_DILIGENCE')}
+              onNavigateToDesk={handleReset}
+            />
+          )}
+
+          {/* View 8: Design Playground (Sandbox Workbench) */}
           {activeTool === 'DESIGN_PLAYGROUND' && (
             <Suspense fallback={<div className="p-8 text-center text-slate-500 font-mono text-sm">Loading Design Playground...</div>}>
               <DesignPlayground />

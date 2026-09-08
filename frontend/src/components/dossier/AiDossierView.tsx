@@ -35,7 +35,7 @@ export const AiDossierView: React.FC<Props> = ({
   return (
     <div className="space-y-6 animate-fade-in" data-density="MACHINE_AI_INGESTION">
       {/* Autonomous Agent Banner */}
-      <div className="rounded-3xl p-5 sm:p-6 bg-gradient-to-r from-emerald-950/40 via-darkroom-surface to-darkroom-surface border border-emerald-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
+      <div className="rounded-3xl p-5 sm:p-6 bg-white/[0.02] border border-emerald-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
         <div className="space-y-1.5 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="relative flex h-2.5 w-2.5">
@@ -87,7 +87,7 @@ export const AiDossierView: React.FC<Props> = ({
             type="button"
             onClick={onDownloadMarkdown}
             disabled={downloadingMd}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-darkroom-card/90 hover:bg-darkroom-card border border-darkroom-border hover:border-slate-500 text-xs font-mono text-slate-200 hover:text-white transition-all shadow-md cursor-pointer group active:scale-95 flex-1 sm:flex-initial justify-center"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-xs font-mono text-slate-200 hover:text-white transition-all shadow-md cursor-pointer group active:scale-95 flex-1 sm:flex-initial justify-center"
             title="Download full due diligence evidence as a Markdown (.md) document"
           >
             <Download className="size-4 text-slate-400 group-hover:text-emerald-400 transition-colors" />
@@ -97,8 +97,8 @@ export const AiDossierView: React.FC<Props> = ({
       </div>
 
       {/* 1. Structured JSON-LD Code Block */}
-      <div className="rounded-3xl bg-darkroom-surface border border-darkroom-border/80 p-4 sm:p-5 shadow-2xl space-y-3 overflow-hidden">
-        <div className="flex items-center justify-between border-b border-darkroom-border/70 pb-3 flex-wrap gap-2">
+      <div className="rounded-3xl bg-white/[0.02] p-4 sm:p-5 shadow-2xl space-y-3 overflow-hidden">
+        <div className="flex items-center justify-between border-b border-white/[0.06] pb-3 flex-wrap gap-2">
           <div className="flex items-center gap-2.5">
             {/* Terminal Window Dots */}
             <div className="flex items-center gap-1.5 pr-1">
@@ -117,7 +117,7 @@ export const AiDossierView: React.FC<Props> = ({
           <button
             type="button"
             onClick={onCopyAiPayload}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-darkroom-card hover:bg-darkroom-card/80 border border-darkroom-border hover:border-slate-500 text-xs font-mono text-white transition-all cursor-pointer shadow-sm active:scale-95"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-xs font-mono text-white transition-all cursor-pointer shadow-sm active:scale-95"
           >
             {copiedAiPayload ? (
               <>
@@ -135,15 +135,15 @@ export const AiDossierView: React.FC<Props> = ({
 
         <pre
           id="screened-jsonld-payload"
-          className="p-4 rounded-2xl bg-darkroom-bg text-emerald-400 font-mono text-xs overflow-x-auto overflow-y-auto max-h-[440px] leading-relaxed select-all border border-darkroom-border/60 shadow-inner"
+          className="p-4 rounded-2xl bg-black/40 text-emerald-400 font-mono text-xs overflow-x-auto overflow-y-auto max-h-[440px] leading-relaxed select-all border border-white/10 shadow-inner"
         >
           {JSON.stringify(aiIngestionPayload, null, 2)}
         </pre>
       </div>
 
       {/* 2. Full Plain Text Raw Data Dump */}
-      <div className="rounded-3xl bg-darkroom-surface border border-darkroom-border/80 p-4 sm:p-5 shadow-2xl space-y-3 overflow-hidden">
-        <div className="flex items-center justify-between border-b border-darkroom-border/70 pb-3 flex-wrap gap-2">
+      <div className="rounded-3xl bg-white/[0.02] p-4 sm:p-5 shadow-2xl space-y-3 overflow-hidden">
+        <div className="flex items-center justify-between border-b border-white/[0.06] pb-3 flex-wrap gap-2">
           <div className="flex items-center gap-2.5">
             {/* Terminal Window Dots */}
             <div className="flex items-center gap-1.5 pr-1">
@@ -162,7 +162,7 @@ export const AiDossierView: React.FC<Props> = ({
           <button
             type="button"
             onClick={onCopyRawText}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-darkroom-card hover:bg-darkroom-card/80 border border-darkroom-border hover:border-slate-500 text-xs font-mono text-white transition-all cursor-pointer shadow-sm active:scale-95"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-xs font-mono text-white transition-all cursor-pointer shadow-sm active:scale-95"
           >
             {copiedRawText ? (
               <>
@@ -180,7 +180,7 @@ export const AiDossierView: React.FC<Props> = ({
 
         <pre
           id="screened-raw-ai-dossier"
-          className="p-4 rounded-2xl bg-darkroom-bg text-slate-200 font-mono text-xs overflow-x-auto overflow-y-auto max-h-[500px] leading-relaxed whitespace-pre-wrap break-words select-all border border-darkroom-border/60 shadow-inner"
+          className="p-4 rounded-2xl bg-black/40 text-slate-200 font-mono text-xs overflow-x-auto overflow-y-auto max-h-[500px] leading-relaxed whitespace-pre-wrap break-words select-all border border-white/10 shadow-inner"
         >
           {rawPlainTextDossier}
         </pre>

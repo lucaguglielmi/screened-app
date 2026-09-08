@@ -12,10 +12,9 @@
 
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Coins, FileText, UploadCloud, ArrowRight, AlertTriangle, CheckCircle2, ExternalLink } from 'lucide-react';
+import { Coins, FileText, UploadCloud, ArrowRight, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { GrantScoutArgs } from '../../../types/chat';
 import { soundEffects } from '../../../utils/audio';
-import { navigateTo } from '../../../router/Router';
 
 interface GrantIntakeCardProps {
   args: GrantScoutArgs;
@@ -150,18 +149,9 @@ export const GrantIntakeCard: React.FC<GrantIntakeCardProps> = ({ args }) => {
             We are currently evaluating public film grant discovery for our upcoming release cycle!
             Your parameters for <strong className="text-white">"{projectTitle}"</strong> (Budget: £{budgetTier.toLocaleString()}, Seeking: £{fundingNeeded.toLocaleString()}, Region: {filmmakerRegion}) have been recorded in our product roadmap.
           </p>
-          <div className="pt-2 flex items-center gap-3">
-            <button
-              type="button"
-              onClick={() => {
-                soundEffects.playClick();
-                navigateTo('/playground');
-              }}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 text-xs font-mono border border-emerald-500/40 transition-colors cursor-pointer"
-            >
-              <span>View in Design Playground Feedback Log</span>
-              <ExternalLink className="size-3" />
-            </button>
+          <div className="pt-2 flex items-center gap-2 text-xs font-mono text-emerald-300">
+            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>Recorded in our product backlog</span>
           </div>
         </motion.div>
       ) : (

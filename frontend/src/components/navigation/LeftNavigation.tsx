@@ -5,7 +5,7 @@ import {
   ShieldAlert,
   Coins,
   Scale,
-  Palette,
+  HelpCircle,
   Radio,
 } from 'lucide-react';
 import { ActiveTool } from '../../types/investigation';
@@ -179,24 +179,24 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange, onNaviga
           )}
         </div>
 
-        {/* Design Playground Link */}
+        {/* What Can You Do Link */}
         <div className="relative">
           <button
-            onClick={() => handleSelectTool('DESIGN_PLAYGROUND')}
-            onMouseEnter={() => setActiveTooltip('Design Playground')}
+            onClick={() => handleSelectTool('WHAT_CAN_YOU_DO')}
+            onMouseEnter={() => setActiveTooltip('What Can You Do')}
             onMouseLeave={() => setActiveTooltip(null)}
             className={`p-2.5 rounded-xl transition-all cursor-pointer ${
-              activeTool === 'DESIGN_PLAYGROUND'
-                ? 'bg-darkroom-card text-purple-400 border border-purple-500/40'
+              activeTool === 'WHAT_CAN_YOU_DO'
+                ? 'bg-darkroom-card text-tool-diligence border border-tool-diligence/40'
                 : 'hover:bg-darkroom-surface text-slate-500 hover:text-slate-300'
             }`}
-            title="Design Playground (/playground)"
+            title="What Can You Do (/what-can-you-do)"
           >
-            <Palette className="size-4.5" />
+            <HelpCircle className="size-4.5" />
           </button>
-          {activeTooltip === 'Design Playground' && (
+          {activeTooltip === 'What Can You Do' && (
             <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-darkroom-surface text-slate-100 text-sm font-medium whitespace-nowrap shadow-xl border border-darkroom-border z-50 pointer-events-none">
-              Design Playground (Workbench &amp; Feedback Log)
+              What Can You Do (Engine &amp; Roadmap)
             </div>
           )}
         </div>

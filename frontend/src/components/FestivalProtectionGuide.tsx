@@ -14,7 +14,6 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { VerifiedTick } from './ui/VerifiedTick';
-import { OrganicBlobBackground } from './common/OrganicBlobBackground';
 
 interface Props {
   onNavigateToDiligence: () => void;
@@ -120,7 +119,6 @@ export const FestivalProtectionGuide: React.FC<Props> = ({
 }) => {
   return (
     <div className="relative w-full min-h-screen text-slate-100 px-4 py-12 sm:py-20 animate-fade-in overflow-hidden">
-      <OrganicBlobBackground />
       <div className="relative z-10 max-w-4xl mx-auto space-y-16 sm:space-y-20">
         {/* Editorial Header */}
         <section className="space-y-6 text-center">
@@ -156,7 +154,7 @@ export const FestivalProtectionGuide: React.FC<Props> = ({
               return (
                 <div
                   key={idx}
-                  className="rounded-2xl p-6 sm:p-7 border border-darkroom-border bg-darkroom-surface/90 hover:border-zinc-700/80 shadow-xl space-y-5 flex flex-col justify-between"
+                  className="rounded-2xl p-5 sm:p-6 bg-white/[0.02] space-y-5 flex flex-col justify-between"
                 >
                   <div className="space-y-3.5">
                     <div className="flex items-center justify-between gap-2">
@@ -176,7 +174,7 @@ export const FestivalProtectionGuide: React.FC<Props> = ({
                     <p className="text-sm sm:text-base text-slate-300 leading-relaxed">{arch.description}</p>
                   </div>
 
-                  <div className="pt-3 border-t border-darkroom-border/60 space-y-2">
+                  <div className="pt-2 space-y-2">
                     <span className="text-xs sm:text-sm font-mono uppercase tracking-wider text-slate-400 font-semibold block">
                       Tell-Tale Warning Signs:
                     </span>
@@ -215,7 +213,7 @@ export const FestivalProtectionGuide: React.FC<Props> = ({
               return (
                 <div
                   key={step.step}
-                  className="rounded-2xl p-5 sm:p-6 border border-darkroom-border bg-darkroom-surface/90 hover:border-zinc-700/80 shadow-md flex items-start gap-4 transition-all"
+                  className="rounded-2xl p-5 sm:p-6 bg-white/[0.02] flex items-start gap-4 transition-all"
                 >
                   <div className="size-10 rounded-xl bg-midnight-royal/40 border border-tool-diligence/30 text-white font-mono font-bold flex items-center justify-center shrink-0">
                     0{step.step}
@@ -234,8 +232,8 @@ export const FestivalProtectionGuide: React.FC<Props> = ({
         </section>
 
         {/* Chargeback & Dispute Playbook */}
-        <section className="rounded-3xl p-6 sm:p-8 border border-darkroom-border bg-darkroom-surface/95 shadow-2xl space-y-6">
-          <div className="flex items-center gap-3 border-b border-darkroom-border pb-4">
+        <section className="rounded-3xl p-6 sm:p-8 bg-white/[0.02] space-y-6">
+          <div className="flex items-center gap-3 pb-3">
             <div className="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-400">
               <CreditCard className="size-5" />
             </div>
@@ -293,7 +291,7 @@ export const FestivalProtectionGuide: React.FC<Props> = ({
         </section>
 
         {/* Closing CTA */}
-        <section className="text-center p-8 sm:p-12 rounded-3xl bg-midnight-surface/80 border border-orange-500/30 space-y-6 shadow-2xl relative overflow-hidden">
+        <section className="text-center p-8 sm:p-12 rounded-3xl bg-white/[0.02] space-y-6 relative overflow-hidden">
           <div className="space-y-2 relative z-10">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-500/10 text-orange-300 font-mono text-xs border border-orange-500/20">
               <VerifiedTick size={14} />
@@ -321,7 +319,7 @@ export const FestivalProtectionGuide: React.FC<Props> = ({
             <button
               type="button"
               onClick={onNavigateToDesk}
-              className="px-4 py-3 rounded-xl bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border text-slate-300 hover:text-white text-xs font-mono flex items-center gap-2 transition-all cursor-pointer active:scale-95"
+              className="px-4 py-3 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-slate-300 hover:text-white text-xs font-mono flex items-center gap-2 transition-all cursor-pointer active:scale-95"
             >
               <Sparkles className="size-3.5 text-indigo-400" />
               <span>Ask Screened AI</span>

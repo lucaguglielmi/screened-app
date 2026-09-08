@@ -308,28 +308,12 @@ export const DesignTokensLab: React.FC = () => {
 
         {/* Vector Field Controls */}
         <div className="p-6 rounded-3xl bg-darkroom-surface grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Color Selector */}
+          {/* Color Indicator */}
           <div className="space-y-2">
             <label className="text-xs font-mono text-slate-400 uppercase">Contour Glow Color</label>
-            <div className="flex items-center gap-2">
-              {[
-                'var(--color-contour-ice)',
-                'var(--color-contour-mist)',
-                'var(--color-contour-sky)',
-                'var(--color-midnight-royal)',
-              ].map((c) => (
-                <button
-                  key={c}
-                  onClick={() => updateVfConfig({ color: c })}
-                  className={`size-7 rounded-full border-2 transition-transform cursor-pointer ${
-                    vfConfig.color === c
-                      ? 'scale-125 border-white shadow-lg'
-                      : 'border-transparent opacity-70 hover:opacity-100'
-                  }`}
-                  style={{ backgroundColor: c }}
-                  title={c}
-                />
-              ))}
+            <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-darkroom-bg border border-darkroom-border">
+              <span className="size-4 rounded-full bg-[#cbd5e1] border border-white/60 shadow-sm" />
+              <span className="text-xs font-mono text-slate-200">Site Ice Slate (`#cbd5e1`)</span>
             </div>
           </div>
 

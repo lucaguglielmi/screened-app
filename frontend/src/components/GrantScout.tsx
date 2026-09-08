@@ -358,7 +358,7 @@ export const GrantScout: React.FC<Props> = ({
               soundEffects.playClick();
               setGuidelinesModalOpen(true);
             }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-darkroom-surface border border-tool-diligence/40 hover:border-tool-diligence text-tool-diligence hover:text-white text-xs font-mono font-bold transition-all shadow-lg hover:shadow-tool-diligence/10 cursor-pointer"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] text-tool-diligence hover:text-white text-xs font-mono font-bold transition-all cursor-pointer"
           >
             <FileText className="size-4 text-tool-diligence" />
             <span>Parse Official Guidelines PDF / Text</span>
@@ -370,7 +370,7 @@ export const GrantScout: React.FC<Props> = ({
       </section>
 
       {/* Project Configuration Intake Panel */}
-      <section className="max-w-4xl mx-auto bg-darkroom-surface/90 backdrop-blur-md rounded-3xl border border-darkroom-border p-5 sm:p-7 shadow-2xl">
+      <section className="max-w-4xl mx-auto bg-white/[0.02] rounded-3xl p-5 sm:p-7">
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
             {/* Title */}
@@ -383,7 +383,7 @@ export const GrantScout: React.FC<Props> = ({
                 value={projectTitle}
                 onChange={(e) => setProjectTitle(e.target.value)}
                 placeholder="e.g. The Salt Road"
-                className="w-full px-4 py-2.5 rounded-xl bg-darkroom-card border border-darkroom-border focus:border-tool-diligence focus:outline-none text-white text-sm"
+                className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 focus:border-tool-diligence focus:outline-none text-white text-sm"
               />
             </div>
 
@@ -395,7 +395,7 @@ export const GrantScout: React.FC<Props> = ({
               <select
                 value={filmmakerRegion}
                 onChange={(e) => setFilmmakerRegion(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-darkroom-card border border-darkroom-border focus:border-tool-diligence focus:outline-none text-white text-sm"
+                className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 focus:border-tool-diligence focus:outline-none text-white text-sm"
               >
                 <option value="UK & Europe">UK & Europe</option>
                 <option value="UK & Scotland">UK & Scotland</option>
@@ -414,7 +414,7 @@ export const GrantScout: React.FC<Props> = ({
               <select
                 value={format}
                 onChange={(e) => setFormat(e.target.value as FilmFormat)}
-                className="w-full px-4 py-2.5 rounded-xl bg-darkroom-card border border-darkroom-border focus:border-tool-diligence focus:outline-none text-white text-sm"
+                className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 focus:border-tool-diligence focus:outline-none text-white text-sm"
               >
                 <option value="FEATURE">Feature Film</option>
                 <option value="SHORT">Short Film</option>
@@ -434,7 +434,7 @@ export const GrantScout: React.FC<Props> = ({
                 value={genre}
                 onChange={(e) => setGenre(e.target.value)}
                 placeholder="e.g. Drama, Thriller"
-                className="w-full px-4 py-2.5 rounded-xl bg-darkroom-card border border-darkroom-border focus:border-tool-diligence focus:outline-none text-white text-sm"
+                className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 focus:border-tool-diligence focus:outline-none text-white text-sm"
               />
             </div>
 
@@ -446,7 +446,7 @@ export const GrantScout: React.FC<Props> = ({
               <select
                 value={productionStage}
                 onChange={(e) => setProductionStage(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-darkroom-card border border-darkroom-border focus:border-tool-diligence focus:outline-none text-white text-sm"
+                className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 focus:border-tool-diligence focus:outline-none text-white text-sm"
               >
                 <option value="Development">Development (Early / Script)</option>
                 <option value="Pre-Production">Pre-Production & Packaging</option>
@@ -464,7 +464,7 @@ export const GrantScout: React.FC<Props> = ({
               <select
                 value={budgetTier}
                 onChange={(e) => setBudgetTier(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-darkroom-card border border-darkroom-border focus:border-tool-diligence focus:outline-none text-white text-sm"
+                className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 focus:border-tool-diligence focus:outline-none text-white text-sm"
               >
                 <option value="Micro / Indie (< £50k)">Micro / Indie (&lt; £50k)</option>
                 <option value="Low (< £250k)">Low (&lt; £250k)</option>
@@ -484,7 +484,7 @@ export const GrantScout: React.FC<Props> = ({
                 value={fundingNeeded}
                 onChange={(e) => setFundingNeeded(e.target.value)}
                 placeholder="e.g. £50,000"
-                className="w-full px-4 py-2.5 rounded-xl bg-darkroom-card border border-darkroom-border focus:border-tool-diligence focus:outline-none text-white text-sm font-mono"
+                className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 focus:border-tool-diligence focus:outline-none text-white text-sm font-mono"
               />
             </div>
           </div>
@@ -528,7 +528,7 @@ export const GrantScout: React.FC<Props> = ({
       {scoutResult && (
         <div className="max-w-5xl mx-auto space-y-6">
           {/* Strategy Summary & Controls */}
-          <div className="p-5 rounded-3xl bg-darkroom-surface border border-darkroom-border space-y-4">
+          <div className="p-5 rounded-3xl bg-white/[0.02] space-y-4">
             <div className="flex items-center justify-between flex-wrap gap-3">
               <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-tool-diligence">
                 <Building2 className="size-4" />
@@ -546,7 +546,7 @@ export const GrantScout: React.FC<Props> = ({
             </p>
 
             {/* Filter Pills & Sort Selector */}
-            <div className="pt-2 border-t border-darkroom-border flex items-center justify-between flex-wrap gap-3">
+            <div className="pt-2 flex items-center justify-between flex-wrap gap-3">
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-xs font-mono text-slate-400">Filter:</span>
                 {[
@@ -566,7 +566,7 @@ export const GrantScout: React.FC<Props> = ({
                     className={`px-3 py-1 rounded-xl text-xs font-mono transition-colors cursor-pointer ${
                       activeCategoryFilter === tab.id
                         ? 'bg-tool-diligence text-darkroom-bg font-bold'
-                        : 'bg-darkroom-card hover:bg-darkroom-card/80 text-slate-400 hover:text-slate-200 border border-darkroom-border'
+                        : 'bg-white/[0.05] hover:bg-white/[0.1] text-slate-400 hover:text-slate-200'
                     }`}
                   >
                     {tab.label}
@@ -585,7 +585,7 @@ export const GrantScout: React.FC<Props> = ({
                     setSortBy(nextSort);
                     soundEffects.playClick();
                   }}
-                  className="px-2.5 py-1 rounded-xl bg-darkroom-card border border-darkroom-border text-xs font-mono text-white focus:outline-none cursor-pointer"
+                  className="px-2.5 py-1 rounded-xl bg-black/40 border border-slate-700/40 text-xs font-mono text-white focus:outline-none cursor-pointer"
                 >
                   <option value="fitScore">Highest Fit Score</option>
                   <option value="deadlineDate">Upcoming Deadline</option>
@@ -602,13 +602,13 @@ export const GrantScout: React.FC<Props> = ({
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2, delay: idx * 0.05 }}
-                className="p-5 sm:p-6 rounded-3xl bg-darkroom-surface border border-darkroom-border hover:border-tool-diligence/50 transition-all shadow-xl space-y-4"
+                className="p-5 sm:p-6 rounded-3xl bg-white/[0.02] hover:bg-white/[0.04] transition-all space-y-4"
               >
                 {/* Header: Title, Funding Body & Fit Badge */}
                 <div className="flex items-start justify-between gap-4 flex-wrap sm:flex-nowrap">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-darkroom-card text-tool-diligence border border-darkroom-border">
+                      <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-white/[0.05] text-tool-diligence">
                         {grant.fundingBody}
                       </span>
                       <span className="text-xs font-mono text-slate-400">{grant.category}</span>
@@ -632,7 +632,7 @@ export const GrantScout: React.FC<Props> = ({
                 </div>
 
                 {/* Fit Rationale */}
-                <div className="p-3.5 rounded-2xl bg-darkroom-card/90 border border-darkroom-border/80 text-xs sm:text-sm text-slate-300">
+                <div className="p-3.5 rounded-2xl bg-white/[0.02] text-xs sm:text-sm text-slate-300">
                   <span className="font-semibold text-tool-diligence font-mono mr-1">
                     Strategic Fit:
                   </span>
@@ -658,7 +658,7 @@ export const GrantScout: React.FC<Props> = ({
                 )}
 
                 {/* Card Footer: Deadlines & Actions */}
-                <div className="pt-3 border-t border-darkroom-border flex items-center justify-between flex-wrap gap-3">
+                <div className="pt-3 flex items-center justify-between flex-wrap gap-3">
                   <div className="flex items-center gap-2 text-xs text-slate-400 font-mono">
                     <Clock className="size-4 text-slate-500" />
                     <span>
@@ -668,7 +668,7 @@ export const GrantScout: React.FC<Props> = ({
                       </strong>
                     </span>
                     {grant.deadlineLabel && grant.deadlineDate && (
-                      <span className="text-[10px] px-2 py-0.5 rounded bg-darkroom-card text-slate-400 border border-darkroom-border">
+                      <span className="text-[10px] px-2 py-0.5 rounded bg-white/[0.05] text-slate-400">
                         {grant.deadlineLabel}
                       </span>
                     )}
@@ -690,7 +690,7 @@ export const GrantScout: React.FC<Props> = ({
                     <button
                       type="button"
                       onClick={() => handleExportICS(grant)}
-                      className="px-3 py-1.5 rounded-xl bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border text-slate-300 hover:text-white text-xs font-mono flex items-center gap-1.5 transition-colors cursor-pointer"
+                      className="px-3 py-1.5 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-slate-300 hover:text-white text-xs font-mono flex items-center gap-1.5 transition-colors cursor-pointer"
                       title="Download .ics Calendar Event"
                     >
                       <Calendar className="size-3.5 text-tool-diligence" />
@@ -703,7 +703,7 @@ export const GrantScout: React.FC<Props> = ({
                         href={grant.guidelinesUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="px-3 py-1.5 rounded-xl bg-darkroom-card hover:bg-darkroom-surface border border-darkroom-border text-slate-300 hover:text-white text-xs font-mono flex items-center gap-1.5 transition-colors"
+                        className="px-3 py-1.5 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-slate-300 hover:text-white text-xs font-mono flex items-center gap-1.5 transition-colors"
                       >
                         <span>Official Portal</span>
                         <ExternalLink className="size-3.5" />
@@ -715,7 +715,7 @@ export const GrantScout: React.FC<Props> = ({
             ))}
 
             {filteredGrants.length === 0 && (
-              <div className="p-12 text-center text-slate-500 rounded-3xl bg-darkroom-surface border border-darkroom-border space-y-2">
+              <div className="p-12 text-center text-slate-500 rounded-3xl bg-white/[0.02] space-y-2">
                 <p>No grants found matching this category filter.</p>
                 <button
                   type="button"

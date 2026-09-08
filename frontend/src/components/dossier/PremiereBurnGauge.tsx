@@ -62,10 +62,10 @@ export const PremiereBurnGauge: React.FC<Props> = ({
 
   return (
     <div
-      className={`rounded-2xl bg-darkroom-surface/80 border border-darkroom-border/80 p-5 sm:p-6 space-y-4 transition-all ${colorConfig.glow}`}
+      className={`rounded-2xl bg-white/[0.02] p-5 sm:p-6 space-y-4 transition-all ${colorConfig.glow}`}
     >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-darkroom-border/60 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.06] pb-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <span className="p-1.5 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400">
@@ -96,7 +96,7 @@ export const PremiereBurnGauge: React.FC<Props> = ({
           <span className="font-bold text-slate-200">{data.riskScore} / 100</span>
           <span>Critical Burn (100)</span>
         </div>
-        <div className="h-3 w-full bg-darkroom-card rounded-full overflow-hidden p-0.5 border border-darkroom-border/80">
+        <div className="h-3 w-full bg-black/40 rounded-full overflow-hidden p-0.5 border border-white/10">
           <div
             className={`h-full rounded-full bg-gradient-to-r ${colorConfig.barColor} transition-all duration-700 ease-out`}
             style={{ width: `${Math.max(5, Math.min(100, data.riskScore))}%` }}
@@ -107,7 +107,7 @@ export const PremiereBurnGauge: React.FC<Props> = ({
       {/* 3 Parameter Breakdown Columns - Hidden in Summary mode */}
       {!isSummary && (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
-          <div className="p-3 rounded-xl sm:bg-darkroom-card/50 sm:border sm:border-darkroom-border/60 bg-darkroom-bg/50 space-y-1">
+          <div className="p-3 rounded-xl bg-white/[0.03] space-y-1">
             <div className="text-[11px] font-mono uppercase text-slate-400 flex items-center gap-1.5">
               <Info className="size-3 text-slate-400" />
               <span>Exclusivity Demand</span>
@@ -117,7 +117,7 @@ export const PremiereBurnGauge: React.FC<Props> = ({
             </div>
           </div>
 
-          <div className="p-3 rounded-xl sm:bg-darkroom-card/50 sm:border sm:border-darkroom-border/60 bg-darkroom-bg/50 space-y-1">
+          <div className="p-3 rounded-xl bg-white/[0.03] space-y-1">
             <div className="text-[11px] font-mono uppercase text-slate-400 flex items-center gap-1.5">
               <Award className="size-3 text-slate-400" />
               <span>Accreditation Standing</span>
@@ -127,7 +127,7 @@ export const PremiereBurnGauge: React.FC<Props> = ({
             </div>
           </div>
 
-          <div className="p-3 rounded-xl sm:bg-darkroom-card/50 sm:border sm:border-darkroom-border/60 bg-darkroom-bg/50 space-y-1">
+          <div className="p-3 rounded-xl bg-white/[0.03] space-y-1">
             <div className="text-[11px] font-mono uppercase text-slate-400 flex items-center gap-1.5">
               <ShieldCheck className="size-3 text-slate-400" />
               <span>Buyer &amp; Press Density</span>
@@ -140,7 +140,7 @@ export const PremiereBurnGauge: React.FC<Props> = ({
       )}
 
       {/* Rationale & Actionable Advice - Streamlined without nested card borders */}
-      <div className="pt-2 border-t border-darkroom-border/50 space-y-3">
+      <div className="pt-2 border-t border-white/[0.06] space-y-3">
         <div className="flex items-start gap-2.5">
           {isHigh ? (
             <XCircle className="size-4 text-rose-400 shrink-0 mt-0.5" />
@@ -161,7 +161,7 @@ export const PremiereBurnGauge: React.FC<Props> = ({
 
         {/* Guidance: Title strictly on its own row for mobile clarity */}
         {data.recommendation && (
-          <div className="mt-2 pt-2 border-t border-darkroom-border/40 space-y-1 text-xs sm:text-sm">
+          <div className="mt-2 pt-2 border-t border-white/[0.06] space-y-1 text-xs sm:text-sm">
             <div className="font-mono text-tool-diligence font-bold uppercase tracking-wider text-[11px]">
               Guidance:
             </div>

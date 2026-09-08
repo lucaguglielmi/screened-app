@@ -15,6 +15,7 @@ export const ROUTE_TITLES: Record<ActiveTool, string> = {
   FESTIVAL_PROTECTION_GUIDE: "Festival Protection Guide — Screened",
   HOW_TO_USE: "Screened Agents & WebMCP Protocol — Screened",
   AGENTS: "Screened Agents & WebMCP Protocol — Screened",
+  WHAT_CAN_YOU_DO: "What Can You Do — Platform Capabilities & Roadmap — Screened",
   DESIGN_PLAYGROUND: "Design Playground — Screened",
 };
 
@@ -117,6 +118,14 @@ export function parseCurrentRoute(pathname = window.location.pathname, search = 
     };
   }
 
+  if (cleanPath === "/what-can-you-do" || cleanPath === "/capabilities") {
+    return {
+      path: "/what-can-you-do",
+      tool: "WHAT_CAN_YOU_DO",
+      investigationId: null,
+    };
+  }
+
   if (cleanPath === "/playground") {
     return {
       path: "/playground",
@@ -152,6 +161,8 @@ export function toolToPath(tool: ActiveTool, investigationId?: string | null): s
     case "AGENTS":
     case "HOW_TO_USE":
       return "/agents";
+    case "WHAT_CAN_YOU_DO":
+      return "/what-can-you-do";
     case "DESIGN_PLAYGROUND":
       return "/playground";
     default:

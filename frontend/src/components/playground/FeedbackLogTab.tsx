@@ -64,6 +64,12 @@ const CATEGORY_MAP: Record<string, { label: string; bg: string; text: string; bo
     text: 'text-slate-300',
     border: 'border-slate-500/40',
   },
+  GOAL_FEEDBACK: {
+    label: 'Filmmaker Feedback',
+    bg: 'bg-indigo-500/20',
+    text: 'text-indigo-300',
+    border: 'border-indigo-500/40',
+  },
 };
 
 const STATUS_MAP: Record<string, { label: string; color: string }> = {
@@ -237,6 +243,7 @@ export const FeedbackLogTab: React.FC<FeedbackLogTabProps> = ({ onOpenFeedbackMo
             'CHAT_INTELLIGENCE',
             'UI_DESIGN',
             'FEATURE_REQUEST',
+            'GOAL_FEEDBACK',
             'GENERAL',
           ].map((cat) => (
             <button

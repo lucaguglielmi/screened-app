@@ -137,7 +137,7 @@ export const ForensicIntelligenceBrief: React.FC<Props> = ({ summary, festivalNa
   return (
     <div className="py-2 space-y-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-darkroom-border/50 pb-3">
+      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-white/[0.06] pb-3">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <span className="p-1.5 rounded-lg bg-orange-500/10 border border-orange-500/20 text-orange-400">
@@ -166,13 +166,13 @@ export const ForensicIntelligenceBrief: React.FC<Props> = ({ summary, festivalNa
           return (
             <div
               key={card.key}
-              className={`rounded-xl bg-darkroom-surface/80 border border-darkroom-border/80 p-4 sm:p-5 space-y-3.5 flex flex-col justify-between shadow-lg transition-all ${card.bgGlow}`}
+              className={`rounded-xl bg-white/[0.02] p-4 sm:p-5 space-y-3.5 flex flex-col justify-between shadow-lg transition-all ${card.bgGlow}`}
             >
               {/* Card Header */}
               <div className="space-y-2">
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <span className={`p-1.5 rounded-lg bg-darkroom-bg border border-darkroom-border/80 ${card.iconColor}`}>
+                    <span className={`p-1.5 rounded-lg bg-white/[0.04] ${card.iconColor}`}>
                       <Icon className="size-4" />
                     </span>
                     <h4 className="text-sm font-bold text-white font-sans">{card.title}</h4>
@@ -192,7 +192,7 @@ export const ForensicIntelligenceBrief: React.FC<Props> = ({ summary, festivalNa
               </div>
 
               {/* Expandable Details / Signals */}
-              <div className="space-y-2 pt-1 border-t border-darkroom-border/40">
+              <div className="space-y-2 pt-1 border-t border-white/[0.06]">
                 <button
                   type="button"
                   onClick={() => toggleExpand(card.key)}
@@ -233,7 +233,7 @@ export const ForensicIntelligenceBrief: React.FC<Props> = ({ summary, festivalNa
                         {item.relatedEntities.map((ent, idx) => (
                           <span
                             key={idx}
-                            className="px-1.5 py-0.5 rounded bg-darkroom-surface border border-darkroom-border text-slate-300"
+                            className="px-1.5 py-0.5 rounded bg-white/[0.04] border border-white/10 text-slate-300"
                           >
                             {ent}
                           </span>

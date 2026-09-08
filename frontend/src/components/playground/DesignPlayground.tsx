@@ -27,7 +27,7 @@ import { soundEffects } from '../../utils/audio';
 import { Workflow, Coins, MailWarning, ShieldCheck, Sparkles, Loader2, MessageSquare, Palette } from 'lucide-react';
 
 export const DesignPlayground: React.FC = () => {
-  const [activeSection, setActiveSection] = useState<'UI' | 'LOADERS' | 'CHAT' | 'ARCHITECTURE' | 'ALL'>('UI');
+  const [activeSection, setActiveSection] = useState<'UI' | 'LOADERS' | 'CHAT' | 'ARCHITECTURE' | 'FEEDBACK' | 'ALL'>('UI');
   const [activeToolSubtab, setActiveToolSubtab] = useState<
     'FESTIVAL' | 'GRANT' | 'INVITATION' | 'SCOUT' | 'COMPARE' | 'VETTING' | 'PROBES'
   >('FESTIVAL');
@@ -130,13 +130,14 @@ export const DesignPlayground: React.FC = () => {
           </div>
         </div>
 
-        {/* Consolidated 4-Topic Navigation Bar */}
+        {/* Consolidated Topic Navigation Bar */}
         <div className="max-w-7xl mx-auto flex items-center gap-2 px-4 pb-3 overflow-x-auto">
           {[
             { id: 'UI', label: 'UI & Tokens', icon: Palette },
             { id: 'LOADERS', label: 'Loaders', icon: Loader2 },
             { id: 'CHAT', label: 'Chat Related', icon: MessageSquare },
             { id: 'ARCHITECTURE', label: 'Architecture & Traces', icon: Workflow },
+            { id: 'FEEDBACK', label: 'Feedback Log', icon: MessageSquare },
             { id: 'ALL', label: 'All Components', icon: Sparkles },
           ].map((tab) => {
             const Icon = tab.icon;
@@ -146,7 +147,7 @@ export const DesignPlayground: React.FC = () => {
                 key={tab.id}
                 onClick={() => {
                   soundEffects.playClick();
-                  setActiveSection(tab.id as 'UI' | 'LOADERS' | 'CHAT' | 'ARCHITECTURE' | 'ALL');
+                  setActiveSection(tab.id as 'UI' | 'LOADERS' | 'CHAT' | 'ARCHITECTURE' | 'FEEDBACK' | 'ALL');
                 }}
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold tracking-wide transition-all cursor-pointer whitespace-nowrap ${
                   isActive
@@ -747,6 +748,15 @@ export const DesignPlayground: React.FC = () => {
             <div className="p-6 rounded-3xl bg-darkroom-surface border border-darkroom-border">
               <FeedbackLogTab onOpenFeedbackModal={() => setIsFeedbackModalOpen(true)} />
             </div>
+          </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* 5. TOPIC: FILMMAKER FEEDBACK LOG */}
+        {/* ========================================================================= */}
+        {activeSection === 'FEEDBACK' && (
+          <div className="p-6 rounded-3xl bg-darkroom-surface border border-darkroom-border animate-fade-in">
+            <FeedbackLogTab onOpenFeedbackModal={() => setIsFeedbackModalOpen(true)} />
           </div>
         )}
 

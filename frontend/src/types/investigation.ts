@@ -22,7 +22,8 @@ export type ActiveTool =
   | 'WHY_SCREENED'
   | 'FESTIVAL_PROTECTION_GUIDE'
   | 'HOW_TO_USE'
-  | 'AGENTS';
+  | 'AGENTS'
+  | 'WHAT_CAN_YOU_DO';
 
 export interface DiagramGraphPayload {
   nodes: Array<{

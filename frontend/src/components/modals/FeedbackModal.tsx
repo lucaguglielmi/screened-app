@@ -6,9 +6,6 @@ import {
   Send,
   CheckCircle2,
   Loader2,
-  CheckCircle,
-  HelpCircle,
-  XCircle,
 } from 'lucide-react';
 import { soundEffects, playSuccessChime } from '../../utils/audio';
 import { AnimatedFocusWrapper } from '../animations/AnimatedFocusWrapper';
@@ -16,59 +13,20 @@ import { AnimatedFocusWrapper } from '../animations/AnimatedFocusWrapper';
 interface FeedbackModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onViewFeedbackLog?: () => void;
 }
 
-type GoalStatus = 'YES' | 'PARTIALLY' | 'NO';
-
-const GOAL_OPTIONS: {
-  id: GoalStatus;
-  label: string;
-  sublabel: string;
-  rating: number;
-  icon: React.ReactNode;
-  color: string;
-}[] = [
-  {
-    id: 'YES',
-    label: 'Yes, completely',
-    sublabel: 'Found what I needed',
-    rating: 5,
-    icon: <CheckCircle className="size-4 text-tool-diligence" />,
-    color: 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300',
-  },
-  {
-    id: 'PARTIALLY',
-    label: 'Partially',
-    sublabel: 'Still exploring',
-    rating: 3,
-    icon: <HelpCircle className="size-4 text-amber-400" />,
-    color: 'border-amber-500/40 bg-amber-500/10 text-amber-300',
-  },
-  {
-    id: 'NO',
-    label: 'Not yet',
-    sublabel: 'Encountered blockers',
-    rating: 1,
-    icon: <XCircle className="size-4 text-rose-400" />,
-    color: 'border-rose-500/40 bg-rose-500/10 text-rose-300',
-  },
-];
-
 const RATING_LABELS: Record<number, string> = {
-  1: 'Encountered blockers / Needs work',
-  2: 'Fair experience',
-  3: 'Partially completed my goal',
+  1: 'Poor experience / Encountered blockers',
+  2: 'Fair experience / Needs improvement',
+  3: 'Good experience, partially met my needs',
   4: 'Great experience, found helpful info',
-  5: 'Completed my goal with excellence!',
+  5: 'Outstanding experience with Screened!',
 };
 
 export const FeedbackModal: React.FC<FeedbackModalProps> = ({
   isOpen,
   onClose,
-  onViewFeedbackLog,
 }) => {
-  const [goalStatus, setGoalStatus] = useState<GoalStatus>('YES');
   const [rating, setRating] = useState<number>(5);
   const [hoverRating, setHoverRating] = useState<number | null>(null);
   const [comment, setComment] = useState<string>('');
@@ -90,16 +48,10 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
 
   if (!isOpen) return null;
 
-  const handleSelectGoal = (option: (typeof GOAL_OPTIONS)[0]) => {
-    soundEffects.playClick();
-    setGoalStatus(option.id);
-    setRating(option.rating);
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!comment.trim()) {
-      setError('Please provide a brief thought or detail about your goal.');
+      setError('Please provide a brief thought or detail about your experience.');
       return;
     }
 
@@ -107,14 +59,13 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
     setError(null);
 
     try {
-      const goalPrefix = `[Goal Completed: ${goalStatus}] `;
       const res = await fetch('/api/feedback', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           rating,
-          category: 'GOAL_FEEDBACK',
-          comment: `${goalPrefix}${comment.trim()}`,
+          category: 'GENERAL',
+          comment: comment.trim(),
           authorName: authorName.trim() || undefined,
           authorEmail: authorEmail.trim() || undefined,
         }),
@@ -138,7 +89,6 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
     setComment('');
     setAuthorName('');
     setAuthorEmail('');
-    setGoalStatus('YES');
     setRating(5);
     onClose();
   };
@@ -202,19 +152,6 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
             </div>
 
             <div className="flex items-center justify-center gap-3 pt-2">
-              {onViewFeedbackLog && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    soundEffects.playClick();
-                    onClose();
-                    onViewFeedbackLog();
-                  }}
-                  className="px-4 py-2.5 rounded-xl bg-darkroom-card hover:bg-paper-border hover:bg-darkroom-border text-indigo-300 text-xs font-mono transition-colors cursor-pointer"
-                >
-                  View Feedback Log →
-                </button>
-              )}
               <button
                 type="button"
                 onClick={handleReset}
@@ -232,40 +169,11 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
               </div>
             )}
 
-            {/* 1. Main Goal Question */}
-            <div className="space-y-3">
-              <label className="text-sm font-semibold text-white block text-center">
-                Did you manage to complete your goal today?
+            {/* Star Rating */}
+            <div className="space-y-2 text-center pt-1">
+              <label className="text-sm font-semibold text-white block">
+                How would you rate your experience?
               </label>
-
-              {/* Goal Quick Select Buttons */}
-              <div className="grid grid-cols-3 gap-2.5">
-                {GOAL_OPTIONS.map((option) => {
-                  const isSelected = goalStatus === option.id;
-                  return (
-                    <button
-                      key={option.id}
-                      type="button"
-                      onClick={() => handleSelectGoal(option)}
-                      className={`p-3 rounded-2xl transition-all flex flex-col items-center justify-center text-center gap-1.5 cursor-pointer ${
-                        isSelected
-                          ? `${option.color} ring-2 ring-indigo-500/60 shadow-lg scale-102`
-                          : 'bg-darkroom-card text-slate-300 hover:bg-paper-border hover:bg-darkroom-border hover:text-white'
-                      }`}
-                    >
-                      {option.icon}
-                      <span className="text-xs font-semibold leading-tight">{option.label}</span>
-                      <span className="text-[10px] text-slate-400 font-mono hidden sm:inline">
-                        {option.sublabel}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* 2. Star Rating (Subtle secondary) */}
-            <div className="space-y-1.5 text-center pt-1">
               <div className="flex items-center justify-center gap-2">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
@@ -276,16 +184,13 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                     onClick={() => {
                       soundEffects.playClick();
                       setRating(star);
-                      if (star >= 4) setGoalStatus('YES');
-                      else if (star === 3) setGoalStatus('PARTIALLY');
-                      else setGoalStatus('NO');
                     }}
                     className="p-1 transition-transform hover:scale-125 focus:outline-none cursor-pointer"
                   >
                     <Star
-                      className={`size-6 transition-colors ${
+                      className={`size-7 transition-colors ${
                         star <= activeRating
-                          ? 'fill-amber-400 text-amber-400 drop-shadow-[0_0_6px_rgba(251,191,36,0.4)]'
+                          ? 'fill-amber-400 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]'
                           : 'text-slate-600 hover:text-slate-400'
                       }`}
                     />
@@ -297,7 +202,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
               </span>
             </div>
 
-            {/* 3. Detailed Textarea */}
+            {/* Detailed Textarea */}
             <div className="space-y-2 pt-1">
               <label className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold flex justify-between">
                 <span>Tell us more about your experience:</span>
@@ -307,7 +212,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
                 <textarea
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
-                  placeholder="What festival or goal were you working on? What went well or what can we improve?"
+                  placeholder="What went well or what can we improve? Share your feedback..."
                   rows={3}
                   className="w-full px-4 py-3 rounded-xl bg-darkroom-card text-slate-100 placeholder-slate-500 text-sm focus:bg-paper-border focus:bg-darkroom-border focus:outline-none transition-colors resize-none leading-relaxed"
                   required

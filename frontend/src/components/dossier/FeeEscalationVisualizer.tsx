@@ -79,11 +79,11 @@ export const FeeEscalationVisualizer: React.FC<Props> = ({
             onNavigateToFull();
           }
         }}
-        className={`rounded-2xl bg-darkroom-surface/80 border border-darkroom-border/80 p-5 sm:p-6 space-y-4 shadow-xl transition-all ${
-          onNavigateToFull ? 'cursor-pointer hover:border-orange-500/50 hover:bg-darkroom-surface group' : ''
+        className={`rounded-2xl bg-white/[0.02] p-5 sm:p-6 space-y-4 transition-all ${
+          onNavigateToFull ? 'cursor-pointer hover:bg-white/[0.04] group' : ''
         }`}
       >
-        <div className="flex items-center justify-between gap-3 border-b border-darkroom-border/60 pb-3">
+        <div className="flex items-center justify-between gap-3 border-b border-white/[0.06] pb-3">
           <div className="flex items-center gap-2">
             <span className="p-1.5 rounded-lg bg-tool-diligence/10 border border-tool-diligence/20 text-tool-diligence">
               <Coins className="size-4" />
@@ -104,7 +104,7 @@ export const FeeEscalationVisualizer: React.FC<Props> = ({
         </p>
 
         {onNavigateToFull && (
-          <div className="pt-2 border-t border-darkroom-border/40 flex items-center justify-between text-xs font-mono text-orange-400 group-hover:text-orange-300 transition-colors">
+          <div className="pt-2 border-t border-white/[0.06] flex items-center justify-between text-xs font-mono text-orange-400 group-hover:text-orange-300 transition-colors">
             <span>View complete fee tier schedule in Full Dossier</span>
             <ArrowRight className="size-3.5 group-hover:translate-x-1 transition-transform" />
           </div>
@@ -115,9 +115,9 @@ export const FeeEscalationVisualizer: React.FC<Props> = ({
 
   // Mode: Full View
   return (
-    <div className="rounded-2xl bg-darkroom-surface/80 border border-darkroom-border/80 p-5 sm:p-6 space-y-4 shadow-xl transition-all">
+    <div className="rounded-2xl bg-white/[0.02] p-5 sm:p-6 space-y-4 transition-all">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-darkroom-border/60 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.06] pb-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <span className="p-1.5 rounded-lg bg-tool-diligence/10 border border-tool-diligence/20 text-tool-diligence">
@@ -162,7 +162,7 @@ export const FeeEscalationVisualizer: React.FC<Props> = ({
                 className={`p-3.5 rounded-xl border flex flex-col justify-between space-y-3 transition-all ${
                   isLate && isHighSurge
                     ? 'bg-orange-500/10 border-orange-500/40 shadow-sm'
-                    : 'bg-darkroom-card/50 border-darkroom-border/60 hover:border-darkroom-border'
+                    : 'bg-white/[0.03] border-white/10'
                 }`}
               >
                 {/* Tier Title & Deadline */}
@@ -187,7 +187,7 @@ export const FeeEscalationVisualizer: React.FC<Props> = ({
 
                 {/* Amount & Bar */}
                 <div className="space-y-2">
-                  <div className="h-1.5 w-full bg-darkroom-bg rounded-full overflow-hidden">
+                  <div className="h-1.5 w-full bg-black/40 rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full ${
                         isLate && isHighSurge
@@ -222,7 +222,7 @@ export const FeeEscalationVisualizer: React.FC<Props> = ({
       </div>
 
       {/* Comparative Market Benchmark Strip - Streamlined on two separate rows to prevent horizontal squashing */}
-      <div className="pt-3 border-t border-darkroom-border/50 flex flex-col gap-2 text-xs">
+      <div className="pt-3 border-t border-white/[0.06] flex flex-col gap-2 text-xs">
         <div className="flex items-start sm:items-center gap-2.5 text-slate-300">
           <TrendingUp className="size-4 text-orange-400 shrink-0 mt-0.5 sm:mt-0" />
           <span className="leading-relaxed">

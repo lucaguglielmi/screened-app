@@ -12,7 +12,6 @@ import {
   Layers,
 } from 'lucide-react';
 import { FEATURES } from '../config/features';
-import { OrganicBlobBackground } from './common/OrganicBlobBackground';
 
 interface Props {
   onNavigateToDesk: () => void;
@@ -70,7 +69,6 @@ export const WhyScreened: React.FC<Props> = ({
 }) => {
   return (
     <div className="relative w-full min-h-screen text-slate-100 px-4 py-12 sm:py-20 animate-fade-in overflow-hidden">
-      <OrganicBlobBackground />
       <div className="relative z-10 max-w-4xl mx-auto space-y-16 sm:space-y-20">
         {/* Editorial Header */}
         <section className="space-y-6 text-center">
@@ -102,8 +100,8 @@ export const WhyScreened: React.FC<Props> = ({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Manual Vetting Card */}
-            <div className="bg-darkroom-surface/90 border border-darkroom-border rounded-2xl p-6 sm:p-7 space-y-6 shadow-xl">
-              <div className="border-b border-darkroom-border pb-3">
+            <div className="bg-white/[0.02] rounded-2xl p-5 sm:p-6 space-y-6">
+              <div className="pb-2">
                 <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest font-mono">
                   Manual Filmmaker Research
                 </h3>
@@ -139,15 +137,15 @@ export const WhyScreened: React.FC<Props> = ({
                 </div>
               </div>
 
-              <p className="text-sm sm:text-base text-slate-300 italic pt-5 border-t border-darkroom-border leading-relaxed">
+              <p className="text-sm sm:text-base text-slate-300 italic pt-4 leading-relaxed">
                 "You end up relying on fragmented hearsay in Facebook groups, or you just pay the £80
                 and hope for the best."
               </p>
             </div>
 
             {/* Screened Engine Card */}
-            <div className="bg-darkroom-card/90 border border-tool-diligence/40 rounded-2xl p-6 sm:p-7 space-y-6 shadow-xl shadow-[var(--color-tool-diligence)]/10 ring-1 ring-tool-diligence/20">
-              <div className="border-b border-darkroom-border pb-3">
+            <div className="bg-tool-diligence/[0.03] rounded-2xl p-5 sm:p-6 space-y-6">
+              <div className="pb-2">
                 <h3 className="text-sm font-bold text-tool-diligence uppercase tracking-widest font-mono flex items-center gap-2">
                   <Sparkles className="size-4" /> Screened Autonomous Engine
                 </h3>
@@ -183,7 +181,7 @@ export const WhyScreened: React.FC<Props> = ({
                 </div>
               </div>
 
-              <p className="text-sm sm:text-base text-emerald-300 font-medium pt-5 border-t border-darkroom-border leading-relaxed">
+              <p className="text-sm sm:text-base text-emerald-300 font-medium pt-4 leading-relaxed">
                 ✓ Zero subject score bias. Facts, allegations, and opinions isolated end-to-end.
               </p>
             </div>
@@ -192,7 +190,7 @@ export const WhyScreened: React.FC<Props> = ({
 
         {/* The Evidence Corpus */}
         <section className="space-y-8">
-          <div className="space-y-3 text-center max-w-2xl mx-auto border-b border-darkroom-border pb-6">
+          <div className="space-y-3 text-center max-w-2xl mx-auto pb-4">
             <span className="text-tool-diligence font-mono uppercase tracking-widest text-xs font-semibold">
               Empirical Corpus
             </span>
@@ -209,9 +207,9 @@ export const WhyScreened: React.FC<Props> = ({
             {RESEARCH_THEMES.map((item, idx) => (
               <div
                 key={idx}
-                className="bg-darkroom-surface/80 border border-darkroom-border hover:border-zinc-700/80 rounded-2xl p-6 space-y-4 transition-all"
+                className="bg-white/[0.02] rounded-2xl p-5 sm:p-6 space-y-4 transition-all"
               >
-                <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-darkroom-border pb-3">
+                <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 pb-2">
                   <h3 className="text-lg sm:text-xl font-bold font-serif text-white">
                     {idx + 1}. {item.theme}
                   </h3>
@@ -224,7 +222,7 @@ export const WhyScreened: React.FC<Props> = ({
 
                 <p className="text-sm sm:text-base text-slate-200 leading-relaxed font-normal">{item.description}</p>
 
-                <div className="pl-4 sm:pl-6 border-l-2 border-tool-diligence/50 space-y-2 py-1 bg-darkroom-card/40 rounded-r-xl pr-4">
+                <div className="pl-4 sm:pl-6 border-l-2 border-tool-diligence/50 space-y-2 py-1 bg-white/[0.02] rounded-r-xl pr-4">
                   <div className="flex items-start gap-3">
                     <Quote className="size-4 text-tool-diligence shrink-0 mt-1" />
                     <p className="text-sm sm:text-base text-slate-300 italic leading-relaxed">{item.quote}</p>
@@ -239,7 +237,7 @@ export const WhyScreened: React.FC<Props> = ({
         </section>
 
         {/* Meta-Methodology Statement */}
-        <section className="space-y-6 pt-10 border-t border-darkroom-border bg-darkroom-surface/60 rounded-3xl p-8 border">
+        <section className="space-y-6 pt-6 rounded-3xl p-6 sm:p-8 bg-white/[0.02]">
           <div className="flex items-center gap-4">
             <div className="p-3 rounded-2xl bg-tool-diligence/10 border border-tool-diligence/30 text-tool-diligence">
               <FileText className="size-6" />
@@ -266,7 +264,7 @@ export const WhyScreened: React.FC<Props> = ({
             Note: The statistics, case counts, and quotes presented above are representative composites derived from autonomous research patterns across public forums, rather than verbatim data from individual identifiable users.
           </p>
 
-          <div className="pt-6 flex flex-wrap items-center justify-between gap-6 border-t border-darkroom-border">
+          <div className="pt-4 flex flex-wrap items-center justify-between gap-6">
             <div className="flex flex-wrap items-center gap-3 text-xs font-mono text-slate-400 font-semibold uppercase tracking-wider">
               <span>Vertex AI (gemini-2.5-flash)</span>
               <span>•</span>
@@ -286,7 +284,7 @@ export const WhyScreened: React.FC<Props> = ({
               {FEATURES.ENABLE_GRANT_SCOUT && (
                 <button
                   onClick={onNavigateToScout}
-                  className="px-5 py-2.5 bg-darkroom-card hover:bg-darkroom-surface text-white border border-darkroom-border font-bold text-sm rounded-xl transition-all active:scale-95 flex items-center gap-2 cursor-pointer"
+                  className="px-5 py-2.5 bg-white/[0.05] hover:bg-white/[0.1] text-white font-bold text-sm rounded-xl transition-all active:scale-95 flex items-center gap-2 cursor-pointer"
                 >
                   <Coins className="size-4 text-emerald-400" />
                   <span>Grant Research</span>
@@ -304,7 +302,7 @@ export const WhyScreened: React.FC<Props> = ({
         </section>
 
         {/* Footer / Provenance & Engine Summary */}
-        <footer className="pt-8 border-t border-darkroom-border text-center text-xs text-slate-400 space-y-3">
+        <footer className="pt-8 text-center text-xs text-slate-400 space-y-3">
           <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
             <span className="font-medium text-slate-300">Screened — Built natively with Google ADK & Parallel Search API</span>
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-tool-diligence/10 text-tool-diligence border border-tool-diligence/20 font-mono text-xs">

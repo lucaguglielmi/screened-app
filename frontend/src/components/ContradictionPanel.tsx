@@ -68,8 +68,8 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
   };
 
   return (
-    <div className="py-4 space-y-4 border-b border-darkroom-border/30 pb-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-darkroom-border/40 pb-2.5">
+    <div className="py-4 space-y-4 border-b border-white/[0.06] pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-white/[0.06] pb-2.5">
         <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-300 font-semibold">
           <Scale className="size-3.5 text-indigo-400" />
           <span>Factual Contradictions &amp; Disputed Claims ({disputes.length})</span>
@@ -87,10 +87,10 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
           return (
             <div
               key={itemId}
-              className={`rounded-2xl border transition-all duration-200 overflow-hidden ${
+              className={`rounded-2xl transition-all duration-200 overflow-hidden ${
                 isExpanded
-                  ? 'bg-darkroom-surface/80 border-slate-600/80 shadow-lg'
-                  : 'bg-darkroom-surface/50 border-darkroom-border/60 hover:border-slate-600/60 hover:bg-darkroom-surface/70'
+                  ? 'bg-white/[0.04] shadow-lg'
+                  : 'bg-white/[0.02] hover:bg-white/[0.04]'
               }`}
             >
               {/* Clickable Header: Collapsed by Default */}
@@ -129,7 +129,7 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
                   )}
                 </div>
 
-                <div className="p-1.5 rounded-lg bg-darkroom-card/80 border border-darkroom-border/60 text-slate-400 shrink-0 mt-0.5">
+                <div className="p-1.5 rounded-lg bg-white/[0.04] text-slate-400 shrink-0 mt-0.5">
                   <ChevronDown
                     className={`size-4 transition-transform duration-200 ${
                       isExpanded ? 'rotate-180 text-white' : ''
@@ -140,12 +140,12 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
 
               {/* Expanded Inspection Section */}
               {isExpanded && (
-                <div className="p-4 sm:p-5 pt-0 sm:pt-0 space-y-3.5 border-t border-darkroom-border/40 mt-1">
+                <div className="p-4 sm:p-5 pt-0 sm:pt-0 space-y-3.5 border-t border-white/[0.06] mt-1">
                   <div className="pt-3">
                     {/* Split Comparison Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {/* Claim A */}
-              <div className="p-3 rounded-xl bg-darkroom-bg/70 border border-darkroom-border/40 space-y-1.5">
+              <div className="p-3 rounded-xl bg-white/[0.02] space-y-1.5">
                 <div className="text-[10px] font-mono uppercase text-indigo-300 font-semibold flex items-center gap-1.5">
                   <span>Position A</span>
                 </div>
@@ -187,7 +187,7 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
               </div>
 
               {/* Claim B */}
-              <div className="p-3 rounded-xl bg-darkroom-bg/70 border border-darkroom-border/40 space-y-1.5">
+              <div className="p-3 rounded-xl bg-white/[0.02] space-y-1.5">
                 <div className="text-[10px] font-mono uppercase text-orange-400 font-semibold flex items-center gap-1.5">
                   <span>Position B (Contradictory / Divergent)</span>
                 </div>
@@ -231,7 +231,7 @@ export const ContradictionPanel: React.FC<Props> = ({ disputes }) => {
 
             {/* Reconciliation Guidance */}
             {dispute.guidance && (
-              <div className="p-3 rounded-xl bg-darkroom-bg/50 border border-darkroom-border/40 flex items-start gap-2.5 text-xs">
+              <div className="p-3 rounded-xl bg-white/[0.02] flex items-start gap-2.5 text-xs">
                 <AlertTriangle className="size-4 text-orange-400 shrink-0 mt-0.5" />
                 <div className="space-y-0.5">
                   <div className="font-mono text-[10px] uppercase text-orange-400 font-bold">

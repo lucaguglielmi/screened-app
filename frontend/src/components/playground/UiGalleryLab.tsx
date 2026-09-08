@@ -194,56 +194,47 @@ export const UiGalleryLab: React.FC = () => {
           </span>
         </div>
 
-        {/* Live Preview Card */}
-        <div className="p-8 rounded-2xl bg-darkroom-bg flex flex-col sm:flex-row items-center justify-around gap-6 shadow-xl border border-darkroom-border">
-          <div className="flex flex-col items-center gap-3">
-            <span className="text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
-              Live Configured Button
+        {/* Live Buttons Display - All Variants Grouped Together */}
+        <div className="p-6 rounded-2xl bg-darkroom-surface shadow-xl border border-darkroom-border space-y-4">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold">
+              Buttons &amp; Variants (All Displayed Together)
             </span>
-            <Button
-              variant={selectedVariant}
-              size={selectedSize}
-              iconType={selectedIcon}
-              iconPosition={iconPos}
-              isLoading={isLoading}
-              disabled={isDisabled}
-              onClick={() => {
-                setClickCount((c) => c + 1);
-                logAction(
-                  `Clicked live button (${selectedVariant}, size: ${selectedSize}, icon: ${selectedIcon})`,
-                );
-              }}
-            >
-              Launch Due Diligence
-            </Button>
+            <span className="text-[11px] font-mono text-slate-400">
+              Active Icon: {selectedIcon} · Size: {selectedSize}
+            </span>
           </div>
 
-          <div className="flex flex-col items-center gap-3">
-            <span className="text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
-              Accent Tool Button
-            </span>
-            <Button
-              variant="accent"
-              size={selectedSize}
-              iconType="sparkles"
-              onClick={() => logAction('Clicked Emerald Due Diligence button')}
-            >
-              Verify Film Festival
-            </Button>
-          </div>
-
-          <div className="flex flex-col items-center gap-3">
-            <span className="text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
-              Ghost & Outline
-            </span>
-            <Button
-              variant="outline"
-              size={selectedSize}
-              iconType="external"
-              onClick={() => logAction('Clicked Outline Link button')}
-            >
-              External Audit
-            </Button>
+          <div className="flex flex-wrap items-center gap-3">
+            {(
+              [
+                'primary',
+                'secondary',
+                'outline',
+                'ghost',
+                'danger',
+                'accent',
+                'glass',
+              ] as ButtonVariant[]
+            ).map((v) => (
+              <Button
+                key={v}
+                variant={v}
+                size={selectedSize}
+                iconType={selectedIcon}
+                iconPosition={iconPos}
+                isLoading={isLoading && selectedVariant === v}
+                disabled={isDisabled}
+                onClick={() => {
+                  soundEffects.playClick();
+                  setSelectedVariant(v);
+                  setClickCount((c) => c + 1);
+                  logAction(`Clicked ${v} button (${selectedSize}, ${selectedIcon})`);
+                }}
+              >
+                {v.charAt(0).toUpperCase() + v.slice(1)}
+              </Button>
+            ))}
           </div>
         </div>
 
@@ -377,36 +368,33 @@ export const UiGalleryLab: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-          {iconOptions.map((opt) => (
-            <div
-              key={opt.type}
-              className="p-3.5 rounded-xl bg-darkroom-surface flex flex-col justify-between space-y-3 border border-darkroom-border"
-            >
-              <div>
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-zinc-200 font-mono">{opt.label}</span>
-                  <span className="text-[10px] font-mono text-zinc-500">{opt.type}</span>
-                </div>
-                <p className="text-[11px] text-zinc-400 mt-1 leading-snug line-clamp-2">{opt.desc}</p>
-              </div>
+        <div className="p-6 rounded-2xl bg-darkroom-surface border border-darkroom-border space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold">
+              Action &amp; Micro-Animation Buttons (All Displayed Together)
+            </span>
+            <span className="text-[11px] font-mono text-slate-400">
+              Hover to trigger micro-animations
+            </span>
+          </div>
 
-              <div className="pt-1">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  iconType={opt.type}
-                  className="w-full justify-between"
-                  onClick={() => {
-                    setSelectedIcon(opt.type);
-                    logAction(`Selected ${opt.label} motion preview`);
-                  }}
-                >
-                  Hover
-                </Button>
-              </div>
-            </div>
-          ))}
+          <div className="flex flex-wrap items-center gap-3">
+            {iconOptions.map((opt) => (
+              <Button
+                key={opt.type}
+                variant={selectedIcon === opt.type ? 'primary' : 'secondary'}
+                size="sm"
+                iconType={opt.type}
+                onClick={() => {
+                  soundEffects.playClick();
+                  setSelectedIcon(opt.type);
+                  logAction(`Selected ${opt.label} motion preview (${opt.desc})`);
+                }}
+              >
+                {opt.label}
+              </Button>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -679,18 +667,10 @@ export const UiGalleryLab: React.FC = () => {
         {/* Vector Field Controls */}
         <div className="p-4 rounded-2xl bg-darkroom-surface grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 border border-darkroom-border text-xs">
           <div className="space-y-1.5">
-            <label className="text-[11px] font-mono text-slate-400 uppercase">Contour Color</label>
-            <div className="flex items-center gap-2">
-              {['var(--color-tool-scout)', 'var(--color-midnight-royal)', 'var(--color-tool-diligence)', 'var(--color-royal-violet)'].map((c) => (
-                <button
-                  key={c}
-                  onClick={() => updateVfConfig({ color: c })}
-                  className={`size-6 rounded-full border transition-transform cursor-pointer ${
-                    vfConfig.color === c ? 'scale-125 border-white shadow-md' : 'border-transparent opacity-70'
-                  }`}
-                  style={{ backgroundColor: c }}
-                />
-              ))}
+            <label className="text-[11px] font-mono text-slate-400 uppercase">Site Contour Glow Color</label>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-darkroom-bg border border-darkroom-border">
+              <span className="size-4 rounded-full bg-[#cbd5e1] border border-white/60 shadow-sm" />
+              <span className="text-xs font-mono text-slate-200">Ice Slate (`#cbd5e1`)</span>
             </div>
           </div>
 

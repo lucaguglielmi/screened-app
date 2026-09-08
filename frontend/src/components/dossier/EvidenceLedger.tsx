@@ -118,10 +118,10 @@ export const EvidenceLedger: React.FC<Props> = ({
       {/* Claims Ledger Container */}
       <div
         id="section-claims"
-        className="py-4 space-y-4 scroll-mt-28 sm:scroll-mt-32 border-b border-darkroom-border/30 pb-6"
+        className="py-4 space-y-4 scroll-mt-28 sm:scroll-mt-32 border-b border-white/[0.06] pb-6"
         data-section-name="Atomic Claims & Citations"
       >
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-darkroom-border/40 pb-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.06] pb-3">
           <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold">
             <ShieldCheck className="size-3.5 text-indigo-400" />
             <span>Atomic Claims &amp; Evidence Quotes ({claims.length})</span>
@@ -137,7 +137,7 @@ export const EvidenceLedger: React.FC<Props> = ({
                 placeholder="Search claims..."
                 value={searchFilter}
                 onChange={(e) => setSearchFilter(e.target.value)}
-                className="w-full pl-7 pr-3 py-1 text-xs rounded-xl bg-darkroom-surface border border-darkroom-border/60 text-slate-200 placeholder:text-slate-500 focus:outline-hidden focus:border-indigo-400/60 font-mono"
+                className="w-full pl-7 pr-3 py-1 text-xs rounded-xl bg-white/[0.04] border border-white/10 text-slate-200 placeholder:text-slate-500 focus:outline-hidden focus:border-indigo-400/60 font-mono"
               />
             </div>
 
@@ -145,7 +145,7 @@ export const EvidenceLedger: React.FC<Props> = ({
             <select
               value={claimStatusFilter}
               onChange={(e) => setClaimStatusFilter(e.target.value)}
-              className="text-xs font-mono py-1 px-2 rounded-xl bg-darkroom-surface border border-darkroom-border/60 text-slate-300 focus:outline-hidden"
+              className="text-xs font-mono py-1 px-2 rounded-xl bg-white/[0.04] border border-white/10 text-slate-300 focus:outline-hidden"
             >
               <option value="ALL">All Statuses</option>
               <option value="CORROBORATED">Corroborated</option>
@@ -166,7 +166,7 @@ export const EvidenceLedger: React.FC<Props> = ({
               className={`px-3 py-1 rounded-lg text-xs font-mono transition-all cursor-pointer ${
                 activeDomain === dom
                   ? 'bg-midnight-royal text-white font-semibold'
-                  : 'bg-darkroom-surface/50 text-slate-400 hover:text-slate-200 hover:bg-darkroom-surface'
+                  : 'bg-white/[0.03] text-slate-400 hover:text-slate-200 hover:bg-white/[0.06]'
               }`}
             >
               {dom === 'ALL' ? 'All Domains' : dom}
@@ -177,7 +177,7 @@ export const EvidenceLedger: React.FC<Props> = ({
         {/* Filtered Claims Listing */}
         <div className="space-y-3">
           {filteredClaims.length === 0 ? (
-            <div className="p-8 rounded-2xl bg-darkroom-surface/40 border border-darkroom-border/40 text-center text-xs text-slate-400">
+            <div className="p-8 rounded-2xl bg-white/[0.02] text-center text-xs text-slate-400">
               No claims matched your filter query "{searchFilter}".
             </div>
           ) : (
@@ -186,7 +186,7 @@ export const EvidenceLedger: React.FC<Props> = ({
               return (
                 <div
                   key={claim.id}
-                  className="rounded-2xl bg-darkroom-surface/60 border border-darkroom-border/60 transition-all overflow-hidden"
+                  className="rounded-2xl bg-white/[0.02] transition-all overflow-hidden"
                 >
                   <div className="p-4 sm:p-5 flex flex-col sm:flex-row items-start justify-between gap-4">
                     <div className="space-y-2 flex-1">
@@ -224,7 +224,7 @@ export const EvidenceLedger: React.FC<Props> = ({
                                 <button
                                   type="button"
                                   onClick={() => toggleClaimSources(claim.id)}
-                                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-darkroom-card/70 hover:bg-darkroom-surface border border-darkroom-border/60 hover:border-slate-600 text-xs font-mono text-slate-300 hover:text-white transition-all cursor-pointer shadow-2xs group"
+                                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-xs font-mono text-slate-300 hover:text-white transition-all cursor-pointer shadow-2xs group"
                                 >
                                   <span className="text-emerald-400 font-semibold">✓</span>
                                   <span>
@@ -253,7 +253,7 @@ export const EvidenceLedger: React.FC<Props> = ({
                                   return (
                                     <div
                                       key={idx}
-                                      className="p-2.5 rounded-xl bg-darkroom-bg/70 border border-darkroom-border/40 space-y-1.5"
+                                      className="p-2.5 rounded-xl bg-white/[0.03] space-y-1.5"
                                     >
                                       <div className="flex items-center justify-between text-xs">
                                         <span className="font-mono text-slate-400 text-[11px] truncate max-w-[280px] sm:max-w-md">
@@ -298,7 +298,7 @@ export const EvidenceLedger: React.FC<Props> = ({
 
                       <button
                         onClick={() => onDraftOutreach(claim)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:bg-darkroom-card hover:text-indigo-400 transition-colors cursor-pointer"
+                        className="p-1.5 rounded-lg text-slate-400 hover:bg-white/[0.06] hover:text-indigo-400 transition-colors cursor-pointer"
                         title="Draft Verification Inquiry for this claim"
                       >
                         <Mail className="size-4" />
@@ -324,10 +324,10 @@ export const EvidenceLedger: React.FC<Props> = ({
       {normalizedDensity === 'FULL_EVIDENCE' && (
         <div
           id="section-sources"
-          className="py-4 space-y-4 scroll-mt-28 sm:scroll-mt-32 border-b border-darkroom-border/30 pb-6"
+          className="py-4 space-y-4 scroll-mt-28 sm:scroll-mt-32 border-b border-white/[0.06] pb-6"
           data-section-name="Discovered Web Sources"
         >
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-darkroom-border/40 pb-3 gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-white/[0.06] pb-3 gap-3">
             <div className="space-y-1">
               <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-300 font-semibold">
                 <ExternalLink className="size-3.5 text-indigo-400" />
@@ -346,7 +346,7 @@ export const EvidenceLedger: React.FC<Props> = ({
                 <span>Quality Distribution</span>
                 <span>{sources.length} Total</span>
               </div>
-              <div className="h-1.5 w-full rounded-full flex overflow-hidden bg-darkroom-card">
+              <div className="h-1.5 w-full rounded-full flex overflow-hidden bg-black/40">
                 {sourceStats.t1Pct > 0 && <div style={{ width: `${sourceStats.t1Pct}%` }} className="bg-emerald-500 transition-all duration-500" title={`Tier 1: ${sourceStats.tier1}`} />}
                 {sourceStats.t2Pct > 0 && <div style={{ width: `${sourceStats.t2Pct}%` }} className="bg-blue-500 transition-all duration-500" title={`Tier 2: ${sourceStats.tier2}`} />}
                 {sourceStats.t3Pct > 0 && <div style={{ width: `${sourceStats.t3Pct}%` }} className="bg-orange-500 transition-all duration-500" title={`Tier 3: ${sourceStats.tier3}`} />}
@@ -355,7 +355,7 @@ export const EvidenceLedger: React.FC<Props> = ({
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             {sources.map((src) => (
-              <div key={src.id} className="p-3 rounded-xl bg-darkroom-surface/50 border border-darkroom-border/50 space-y-1">
+              <div key={src.id} className="p-3 rounded-xl bg-white/[0.02] space-y-1">
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-slate-400">
                     Tier {src.sourceTier} • {src.domain}

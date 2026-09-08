@@ -51,7 +51,7 @@ export const EntityConfirmation: React.FC<Props> = ({ candidates, query, onConfi
       animate={{ opacity: 1, y: 0 }}
       className="max-w-3xl mx-auto space-y-6"
     >
-      <div className="p-6 sm:p-8 rounded-2xl bg-darkroom-surface border border-darkroom-border space-y-5 shadow-sm">
+      <div className="p-4 sm:p-8 rounded-2xl bg-white/[0.02] space-y-5">
         <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-tool-diligence">
           <Building2 className="size-4" />
           <span>Entity Confirmation Gate</span>
@@ -92,7 +92,7 @@ export const EntityConfirmation: React.FC<Props> = ({ candidates, query, onConfi
                 } ${
                   isSelected
                     ? 'border-tool-diligence bg-tool-diligence/10 shadow-md'
-                    : 'border-darkroom-border hover:border-neutral-600'
+                    : 'border-white/10 bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/20'
                 }`}
               >
                 <div className="space-y-2 flex-1">
@@ -126,7 +126,7 @@ export const EntityConfirmation: React.FC<Props> = ({ candidates, query, onConfi
                 </div>
 
                 {candidates.length > 1 && (
-                  <div className="size-6 rounded-full border flex items-center justify-center shrink-0 mt-1 border-neutral-600">
+                  <div className="size-6 rounded-full border flex items-center justify-center shrink-0 mt-1 border-white/20">
                     {isSelected && <div className="size-3 rounded-full bg-tool-diligence" />}
                   </div>
                 )}
@@ -136,7 +136,7 @@ export const EntityConfirmation: React.FC<Props> = ({ candidates, query, onConfi
         </div>
 
         {/* Optional field refinement */}
-        <div className="p-5 rounded-2xl bg-darkroom-card border border-darkroom-border space-y-3.5 text-sm">
+        <div className="p-5 rounded-2xl bg-white/[0.03] border border-white/10 space-y-3.5 text-sm">
           <div className="font-mono uppercase font-semibold text-slate-300 text-xs">
             Target Identity Parameters
           </div>
@@ -149,7 +149,7 @@ export const EntityConfirmation: React.FC<Props> = ({ candidates, query, onConfi
                 type="text"
                 value={customName}
                 onChange={(e) => setCustomName(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-darkroom-surface border border-darkroom-border text-darkroom-text font-sans focus:outline-none focus:border-tool-diligence text-base"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-white font-sans focus:outline-none focus:border-tool-diligence text-base"
               />
             </div>
             <div>
@@ -161,7 +161,7 @@ export const EntityConfirmation: React.FC<Props> = ({ candidates, query, onConfi
                 value={customDomain}
                 onChange={(e) => setCustomDomain(e.target.value)}
                 placeholder="e.g. raindance.org"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-darkroom-surface border border-darkroom-border text-darkroom-text font-sans focus:outline-none focus:border-tool-diligence text-base"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-white font-sans focus:outline-none focus:border-tool-diligence text-base"
               />
             </div>
           </div>

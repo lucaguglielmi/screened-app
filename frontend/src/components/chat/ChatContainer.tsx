@@ -18,7 +18,6 @@ import { MessageSquare } from 'lucide-react';
 
 interface ChatContainerProps {
   onLaunchDueDiligence: (festivalName: string, optionalUrl?: string) => void;
-  onNavigateToPlaygroundFeedback?: () => void;
   onOpenKeyboardHelp?: () => void;
 }
 
@@ -32,7 +31,6 @@ const INITIAL_HARDCODED_MESSAGE: ChatMessage = {
 
 export const ChatContainer: React.FC<ChatContainerProps> = ({
   onLaunchDueDiligence,
-  onNavigateToPlaygroundFeedback,
 }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([INITIAL_HARDCODED_MESSAGE]);
   const [isLoading, setIsLoading] = useState(false);
@@ -314,7 +312,6 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
       <FeedbackModal
         isOpen={isFeedbackModalOpen}
         onClose={() => setIsFeedbackModalOpen(false)}
-        onViewFeedbackLog={onNavigateToPlaygroundFeedback}
       />
     </div>
   );

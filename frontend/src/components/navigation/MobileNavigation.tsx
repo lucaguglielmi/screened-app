@@ -11,7 +11,7 @@ import {
   Scale,
   Check,
   ExternalLink,
-  Palette,
+  HelpCircle,
   Bot,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -250,16 +250,16 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
 
                 <button
                   type="button"
-                  onClick={() => handleSelect('DESIGN_PLAYGROUND')}
+                  onClick={() => handleSelect('WHAT_CAN_YOU_DO')}
                   className={`w-full px-3 py-2 rounded-xl flex items-center justify-between text-xs font-medium transition-colors ${
-                    activeTool === 'DESIGN_PLAYGROUND'
-                      ? 'text-purple-400 bg-purple-500/10 font-semibold border border-purple-500/30'
+                    activeTool === 'WHAT_CAN_YOU_DO'
+                      ? 'text-tool-diligence bg-tool-diligence/10 font-semibold border border-tool-diligence/30'
                       : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
                   }`}
                 >
                   <div className="flex items-center space-x-2">
-                    <Palette className="w-4 h-4 text-purple-400" />
-                    <span>Design Playground (UI Workbench)</span>
+                    <HelpCircle className="w-4 h-4 text-tool-diligence" />
+                    <span>What Can You Do (Engine &amp; Roadmap)</span>
                   </div>
                   <ExternalLink className="w-3.5 h-3.5 opacity-60" />
                 </button>

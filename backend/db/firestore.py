@@ -165,28 +165,35 @@ class Database:
     async def save_feedback_item(self, feedback: Any) -> None:
         data = feedback.model_dump() if hasattr(feedback, "model_dump") else feedback
         feedback_id = data.get("id")
+        if not feedback_id:
+            return
+        
+        # Always record in-memory so items are instantly visible locally and in-session
+        self._memory_store["feedback"][feedback_id] = data
         
         if self.use_memory or not self.client:
-            self._memory_store["feedback"][feedback_id] = data
             return
         try:
             self.client.collection("feedback").document(feedback_id).set(data)
         except Exception as e:
             logger.exception(f"Firestore save_feedback_item failed: {e}")
-            self._memory_store["feedback"][feedback_id] = data
 
     async def get_all_feedback_items(self) -> List[Dict[str, Any]]:
-        if self.use_memory or not self.client:
-            return sorted(list(self._memory_store["feedback"].values()), key=lambda x: self._parse_ts(x.get("timestamp")), reverse=True)
-        try:
-            docs = self.client.collection("feedback").stream()
-            res = [d.to_dict() for d in docs]
-            if not res:
-                return sorted(list(self._memory_store["feedback"].values()), key=lambda x: self._parse_ts(x.get("timestamp")), reverse=True)
-            return sorted(res, key=lambda x: self._parse_ts(x.get("timestamp")), reverse=True)
-        except Exception as e:
-            logger.exception(f"Firestore get_all_feedback_items failed: {e}")
-            return sorted(list(self._memory_store["feedback"].values()), key=lambda x: self._parse_ts(x.get("timestamp")), reverse=True)
+        # Start with in-memory feedback dictionary
+        items_map: Dict[str, Dict[str, Any]] = dict(self._memory_store["feedback"])
+        
+        # If Firestore is available, fetch and merge remote documents
+        if not self.use_memory and self.client:
+            try:
+                docs = self.client.collection("feedback").stream()
+                for d in docs:
+                    doc_data = d.to_dict()
+                    if doc_data and "id" in doc_data:
+                        items_map[doc_data["id"]] = doc_data
+            except Exception as e:
+                logger.exception(f"Firestore get_all_feedback_items failed: {e}")
+                
+        return sorted(list(items_map.values()), key=lambda x: self._parse_ts(x.get("timestamp")), reverse=True)
 
 
 db = Database()

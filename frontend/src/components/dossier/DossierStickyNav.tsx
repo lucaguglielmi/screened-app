@@ -239,10 +239,10 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
   return (
     <nav
       aria-label="Dossier Reading Control and Tools"
-      className="sticky top-16 z-20 w-full bg-midnight-base/95 backdrop-blur-xl border-b border-darkroom-border shadow-md shadow-black/40 no-print transition-all"
+      className="sticky top-16 z-20 w-full bg-midnight-base/95 backdrop-blur-xl border-b border-white/[0.06] shadow-md shadow-black/40 no-print transition-all"
     >
       {/* Reading Scroll Progress Line */}
-      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-darkroom-border/40 pointer-events-none">
+      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/[0.06] pointer-events-none">
         <div
           className="h-full bg-gradient-to-r from-tool-diligence via-emerald-400 to-indigo-400 transition-all duration-150 ease-out"
           style={{ width: `${activeScrollProgress}%` }}
@@ -254,7 +254,7 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
         <div className="flex items-center justify-between gap-2">
           {/* Left: Entity identifier / status badge */}
           <div className="flex items-center gap-2 min-w-0">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-darkroom-surface border border-darkroom-border/80 text-[11px] font-mono text-slate-300 max-w-[210px] sm:max-w-sm truncate shadow-2xs">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/10 text-[11px] font-mono text-slate-300 max-w-[210px] sm:max-w-sm truncate shadow-2xs">
               <span className="size-1.5 rounded-full bg-tool-diligence shrink-0 animate-pulse" />
               <span className="truncate font-semibold text-white">
                 {entityName || 'Dossier Overview'}
@@ -299,7 +299,7 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
             <button
               type="button"
               onClick={toggleMenu}
-              className="px-3 py-1.5 rounded-xl bg-darkroom-card/90 hover:bg-darkroom-surface border border-darkroom-border text-xs font-mono font-medium text-slate-200 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95"
+              className="px-3 py-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-xs font-mono font-medium text-slate-200 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95"
               aria-expanded={isMenuOpen}
             >
               <Sparkles className="size-3.5 text-tool-diligence shrink-0" />
@@ -318,7 +318,7 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 6, scale: 0.96 }}
                   transition={{ duration: 0.15, ease: 'easeOut' }}
-                  className="absolute right-0 top-full mt-2 w-[calc(100vw-2rem)] max-w-xs sm:w-72 p-1.5 rounded-2xl bg-darkroom-surface/98 backdrop-blur-xl border border-darkroom-border shadow-2xl shadow-black/80 z-50 space-y-1 font-sans text-xs"
+                  className="absolute right-0 top-full mt-2 w-[calc(100vw-2rem)] max-w-xs sm:w-72 p-1.5 rounded-2xl bg-midnight-void/98 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/80 z-50 space-y-1 font-sans text-xs"
                 >
                 <button
                   type="button"
@@ -326,7 +326,7 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
                     handleCopySummary();
                     closeMenu();
                   }}
-                  className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                  className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-white/[0.06] text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
                 >
                   <div className="p-1.5 rounded-lg bg-indigo-500/15 border border-indigo-500/30 text-indigo-400 group-hover:bg-indigo-500/25">
                     {copiedSummary ? <Check className="size-3.5 text-emerald-400" /> : <Copy className="size-3.5" />}
@@ -345,7 +345,7 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
                     handleCopyShareableLink();
                     closeMenu();
                   }}
-                  className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-darkroom-card text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                  className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-white/[0.06] text-slate-200 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
                 >
                   <div className="p-1.5 rounded-lg bg-sky-500/15 border border-sky-500/30 text-sky-400 group-hover:bg-sky-500/25">
                     {shareableLinkCopied ? <Check className="size-3.5 text-emerald-400" /> : <ExternalLink className="size-3.5" />}
@@ -436,7 +436,7 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
 
       {/* Row 3: Section Jump Anchors (Visible in Full Evidence mode) */}
       {(density === 'FULL_EVIDENCE' || density === 'EVIDENCE') && (
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none border-t border-darkroom-border/40 pt-1.5">
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none border-t border-white/[0.06] pt-1.5">
           <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider pl-1 shrink-0 font-medium">
             Jump:
           </span>
@@ -445,7 +445,7 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
               key={anchor.id}
               type="button"
               onClick={() => handleJumpToSection(anchor.id)}
-              className="px-2.5 py-0.5 rounded-lg bg-darkroom-surface/80 hover:bg-darkroom-card text-[11px] font-mono text-slate-300 hover:text-tool-diligence border border-darkroom-border/60 hover:border-tool-diligence/40 transition-all cursor-pointer shrink-0 active:scale-95"
+              className="px-2.5 py-0.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-[11px] font-mono text-slate-300 hover:text-tool-diligence border border-white/10 hover:border-tool-diligence/40 transition-all cursor-pointer shrink-0 active:scale-95"
             >
               {anchor.label}
             </button>

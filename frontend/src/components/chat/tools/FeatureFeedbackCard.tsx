@@ -14,19 +14,16 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, ArrowRight, CheckCircle2, Mail, ExternalLink, HelpCircle, Tag } from 'lucide-react';
+import { Sparkles, ArrowRight, CheckCircle2, Mail, HelpCircle, Tag } from 'lucide-react';
 import { FeatureFeedbackToolArgs } from '../../../types/chat';
 import { soundEffects } from '../../../utils/audio';
-import { navigateTo } from '../../../router/Router';
 
 interface FeatureFeedbackCardProps {
   args: FeatureFeedbackToolArgs;
-  onNavigateToPlayground?: () => void;
 }
 
 export const FeatureFeedbackCard: React.FC<FeatureFeedbackCardProps> = ({
   args,
-  onNavigateToPlayground,
 }) => {
   const [requirements, setRequirements] = useState('');
   const [email, setEmail] = useState(() => {
@@ -113,15 +110,6 @@ export const FeatureFeedbackCard: React.FC<FeatureFeedbackCardProps> = ({
     }
   };
 
-  const handleGoToPlayground = () => {
-    soundEffects.playClick();
-    if (onNavigateToPlayground) {
-      onNavigateToPlayground();
-    } else {
-      navigateTo('/playground');
-    }
-  };
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
@@ -177,15 +165,9 @@ export const FeatureFeedbackCard: React.FC<FeatureFeedbackCardProps> = ({
                 </span>
               )}
             </p>
-            <div className="pt-2 flex items-center gap-3">
-              <button
-                type="button"
-                onClick={handleGoToPlayground}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 text-xs font-mono border border-emerald-500/40 transition-colors cursor-pointer"
-              >
-                <span>View in Design Playground Feedback Log</span>
-                <ExternalLink className="size-3" />
-              </button>
+            <div className="pt-2 flex items-center gap-2 text-xs font-mono text-emerald-300">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Prioritized in our product roadmap</span>
             </div>
           </motion.div>
         ) : (
@@ -269,10 +251,7 @@ export const FeatureFeedbackCard: React.FC<FeatureFeedbackCardProps> = ({
             )}
 
             {/* Submit Action */}
-            <div className="pt-2 border-t border-darkroom-border flex items-center justify-between gap-3">
-              <span className="text-[11px] text-slate-500 font-mono hidden sm:inline">
-                Submissions visible in /playground Feedback Log
-              </span>
+            <div className="pt-2 border-t border-darkroom-border flex items-center justify-end gap-3">
               <button
                 type="submit"
                 disabled={isSubmitting}

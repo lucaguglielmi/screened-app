@@ -614,8 +614,8 @@ export const EvidenceDossier: React.FC<Props> = ({
             </div>
 
             {/* Chapter 1: Un-nested layout with left-accent borders */}
-            <div className="rounded-2xl p-4 sm:p-6 border border-darkroom-border/80 bg-darkroom-surface/80 space-y-4 shadow-xl">
-              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5 border-b border-darkroom-border/60 pb-3">
+            <div className="rounded-2xl p-4 sm:p-6 bg-white/[0.02] space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5 border-b border-white/[0.06] pb-3">
                 <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-orange-400 font-semibold">
                   <AlertTriangle className="size-4 text-orange-400 shrink-0" />
                   <span>Chapter 1: Things You Should Look Into ({disputes.length || 1} Points)</span>
@@ -628,7 +628,7 @@ export const EvidenceDossier: React.FC<Props> = ({
               <div className="space-y-3">
                 {disputes.length > 0 ? (
                   disputes.map((disp, idx) => (
-                    <div key={idx} className="py-3 px-4 border-l-2 border-orange-500/60 bg-darkroom-bg/40 space-y-2.5 rounded-r-xl">
+                    <div key={idx} className="py-3 px-4 border-l-2 border-orange-500/60 bg-white/[0.02] space-y-2.5 rounded-r-xl">
                       <div className="flex flex-col items-start gap-1">
                         <span className="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-orange-500/10 text-orange-400 font-semibold shrink-0">
                           {disp.category}
@@ -690,8 +690,8 @@ export const EvidenceDossier: React.FC<Props> = ({
             </div>
 
             {/* Chapter 2: Un-nested layout with left-accent borders */}
-            <div className="rounded-2xl p-4 sm:p-6 border border-darkroom-border/80 bg-darkroom-surface/80 space-y-4 shadow-xl">
-              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5 border-b border-darkroom-border/60 pb-3">
+            <div className="rounded-2xl p-4 sm:p-6 bg-white/[0.02] space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5 border-b border-white/[0.06] pb-3">
                 <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-emerald-400 font-semibold">
                   <Check className="size-4 text-emerald-400 shrink-0" />
                   <span>Chapter 2: The Good Stuff</span>
@@ -703,7 +703,7 @@ export const EvidenceDossier: React.FC<Props> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                 {positiveHighlights.map((hl, idx) => (
-                  <div key={idx} className="py-2.5 px-3.5 border-l-2 border-emerald-500/60 bg-darkroom-bg/40 space-y-1.5 rounded-r-xl">
+                  <div key={idx} className="py-2.5 px-3.5 border-l-2 border-emerald-500/60 bg-white/[0.02] space-y-1.5 rounded-r-xl">
                     <div className="flex items-center justify-between gap-2">
                       <span className="font-mono text-emerald-400 text-xs font-bold block">{hl.title}</span>
                       {hl.evidence ? (
@@ -731,8 +731,8 @@ export const EvidenceDossier: React.FC<Props> = ({
             </div>
 
             {/* Checklist (Level 1: 60-second essentials) */}
-            <div id="section-checklist" className="rounded-2xl p-5 sm:p-6 border border-darkroom-border bg-darkroom-surface/80 space-y-3" data-section-name="Filmmaker Action Checklist">
-              <div className="flex items-center justify-between border-b border-darkroom-border/40 pb-2">
+            <div id="section-checklist" className="rounded-2xl p-5 sm:p-6 bg-white/[0.02] space-y-3" data-section-name="Filmmaker Action Checklist">
+              <div className="flex items-center justify-between border-b border-white/[0.06] pb-2">
                 <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-300 font-semibold">
                   <ListChecks className="size-3.5 text-emerald-400" />
                   <span>Filmmaker Action Checklist</span>
@@ -749,7 +749,7 @@ export const EvidenceDossier: React.FC<Props> = ({
                   </li>
                 ))}
               </ul>
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-darkroom-border/40">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-white/[0.06]">
                 {dossier.filmmakerChecklist.length > 3 ? (
                   <button
                     type="button"
@@ -782,7 +782,7 @@ export const EvidenceDossier: React.FC<Props> = ({
               <CredibilityRadar claims={claims} disputes={disputes} />
             </div>
 
-            <div id="section-overview" className="py-4 space-y-2.5 scroll-mt-28 sm:scroll-mt-32 border-b border-darkroom-border/30 pb-6" data-section-name="Executive Overview">
+            <div id="section-overview" className="py-4 space-y-2.5 scroll-mt-28 sm:scroll-mt-32 border-b border-white/[0.06] pb-6" data-section-name="Executive Overview">
               <div className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-2">
                 <FileText className="size-3.5 text-indigo-400" />
                 <span>Executive Overview</span>
@@ -793,13 +793,13 @@ export const EvidenceDossier: React.FC<Props> = ({
             </div>
 
             {/* Premiere Burn Gauge & Fee Escalation Visualizer (Two Separate Full-Width Rows) */}
-            <div id="section-premiere-fee" className="flex flex-col gap-6 py-4 scroll-mt-28 sm:scroll-mt-32 border-b border-darkroom-border/30 pb-6" data-section-name="Premiere Risk & Fee Escalation">
+            <div id="section-premiere-fee" className="flex flex-col gap-6 py-4 scroll-mt-28 sm:scroll-mt-32 border-b border-white/[0.06] pb-6" data-section-name="Premiere Risk & Fee Escalation">
               <PremiereBurnGauge assessment={dossier.premiereRisk} festivalName={entity.name} isSummary={false} />
               <FeeEscalationVisualizer model={dossier.feeEscalation} festivalName={entity.name} isSummary={false} />
             </div>
 
             {/* Forensic Intelligence Brief (Scam Patterns, Jury Conflict & 4-Wall Reality) */}
-            <div id="section-forensic-brief" className="py-4 scroll-mt-28 sm:scroll-mt-32 border-b border-darkroom-border/30 pb-6" data-section-name="Forensic Intelligence Brief">
+            <div id="section-forensic-brief" className="py-4 scroll-mt-28 sm:scroll-mt-32 border-b border-white/[0.06] pb-6" data-section-name="Forensic Intelligence Brief">
               <ForensicIntelligenceBrief summary={dossier.forensicSummary} festivalName={entity.name} />
             </div>
 
@@ -818,7 +818,7 @@ export const EvidenceDossier: React.FC<Props> = ({
             )}
 
             {normalizedDensity === 'FULL_EVIDENCE' && (
-              <div id="section-network" className="py-4 space-y-3 scroll-mt-28 sm:scroll-mt-32 border-b border-darkroom-border/30 pb-6" data-section-name="Entity Architecture & Network">
+              <div id="section-network" className="py-4 space-y-3 scroll-mt-28 sm:scroll-mt-32 border-b border-white/[0.06] pb-6" data-section-name="Entity Architecture & Network">
                 <div className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-2">
                   <Layers className="size-3.5 text-indigo-400" />
                   <span>Entity Architecture &amp; Directorship Network</span>
@@ -830,10 +830,10 @@ export const EvidenceDossier: React.FC<Props> = ({
             )}
 
             {normalizedDensity === 'FULL_EVIDENCE' && (
-              <div id="section-domains" className="grid grid-cols-1 md:grid-cols-3 gap-6 py-4 scroll-mt-28 sm:scroll-mt-32 border-b border-darkroom-border/30 pb-6" data-section-name="3-Domain Synthesis">
+              <div id="section-domains" className="grid grid-cols-1 md:grid-cols-3 gap-6 py-4 scroll-mt-28 sm:scroll-mt-32 border-b border-white/[0.06] pb-6" data-section-name="3-Domain Synthesis">
                 {dossier.festivalOverview && (
                   <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold border-b border-darkroom-border/40 pb-2">
+                    <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold border-b border-white/[0.06] pb-2">
                       <Layers className="size-3.5 text-slate-400" />
                       <span>Festival Identity</span>
                     </div>
@@ -850,7 +850,7 @@ export const EvidenceDossier: React.FC<Props> = ({
                 )}
                 {dossier.organizerProfile && (
                   <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold border-b border-darkroom-border/40 pb-2">
+                    <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold border-b border-white/[0.06] pb-2">
                       <Layers className="size-3.5 text-slate-400" />
                       <span>Organizer &amp; Legal</span>
                     </div>
@@ -867,7 +867,7 @@ export const EvidenceDossier: React.FC<Props> = ({
                 )}
                 {dossier.participantFeedback && (
                   <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold border-b border-darkroom-border/40 pb-2">
+                    <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold border-b border-white/[0.06] pb-2">
                       <Layers className="size-3.5 text-slate-400" />
                       <span>Community &amp; Fees</span>
                     </div>
@@ -892,9 +892,9 @@ export const EvidenceDossier: React.FC<Props> = ({
               normalizedDensity={normalizedDensity}
             />
 
-            <div id="section-checklist" className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4 scroll-mt-28 sm:scroll-mt-32 border-b border-darkroom-border/30 pb-6" data-section-name="Filmmaker Action Checklist">
+            <div id="section-checklist" className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4 scroll-mt-28 sm:scroll-mt-32 border-b border-white/[0.06] pb-6" data-section-name="Filmmaker Action Checklist">
               <div className="space-y-3">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-300 font-semibold border-b border-darkroom-border/40 pb-2">
+                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-300 font-semibold border-b border-white/[0.06] pb-2">
                   <ListChecks className="size-3.5 text-emerald-400" />
                   <span>Filmmaker Action Checklist</span>
                 </div>
@@ -909,7 +909,7 @@ export const EvidenceDossier: React.FC<Props> = ({
               </div>
 
               <div className="space-y-3">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-300 font-semibold border-b border-darkroom-border/40 pb-2">
+                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-300 font-semibold border-b border-white/[0.06] pb-2">
                   <HelpCircle className="size-3.5 text-orange-400" />
                   <span>Unresolved Questions</span>
                 </div>
@@ -924,7 +924,7 @@ export const EvidenceDossier: React.FC<Props> = ({
               </div>
             </div>
 
-            <div className="py-5 px-6 rounded-2xl bg-darkroom-surface/40 border border-darkroom-border/40 text-slate-400 text-xs leading-relaxed space-y-2 shadow-sm">
+            <div className="py-5 px-6 rounded-2xl bg-white/[0.02] text-slate-400 text-xs leading-relaxed space-y-2 shadow-sm">
               <div className="flex items-center gap-2 text-slate-300 font-semibold font-mono text-xs uppercase tracking-wider">
                 <AlertTriangle className="size-3.5 text-orange-400 shrink-0" />
                 <span>Legal Advisory &amp; Experimental Notice</span>

@@ -598,7 +598,7 @@ export const LiveProgress: React.FC<Props> = ({
       {/* 1. Unified Progress & Pipeline Section (Unboxed, Clean & Modern) */}
       <div className="space-y-6 relative">
         {/* Top bar: Title + Status + Timers */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-darkroom-border/60 pb-4 relative z-10">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/[0.06] pb-4 relative z-10">
           <div className="space-y-1 min-w-0 flex-1">
             <div className="flex items-center gap-3 flex-wrap">
               <div className={`flex items-center gap-2 text-xs sm:text-sm font-mono uppercase tracking-wider ${status === 'FAILED' ? 'text-red-400' : 'text-tool-diligence'}`}>
@@ -615,7 +615,7 @@ export const LiveProgress: React.FC<Props> = ({
               {onCancel && status !== 'READY' && status !== 'FAILED' && status !== 'CANCELLED' && !isCelebrating && (
                 <button 
                   onClick={onCancel}
-                  className="px-2.5 py-0.5 rounded-lg bg-darkroom-surface/80 hover:bg-darkroom-surface border border-darkroom-border/60 hover:border-rose-500/50 text-slate-400 hover:text-rose-400 text-xs font-mono transition-colors cursor-pointer shadow-xs active:scale-95 flex items-center gap-1"
+                  className="px-2.5 py-0.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-rose-500/50 text-slate-400 hover:text-rose-400 text-xs font-mono transition-colors cursor-pointer shadow-xs active:scale-95 flex items-center gap-1"
                   title="Cancel active investigation"
                 >
                   <X className="size-3" />
@@ -635,7 +635,7 @@ export const LiveProgress: React.FC<Props> = ({
           </div>
 
           <div className="flex items-center gap-2 z-10 shrink-0 w-full sm:w-auto justify-between sm:justify-end">
-            <div className="px-3.5 py-1.5 rounded-xl bg-darkroom-surface/80 border border-darkroom-border/60 text-slate-200 text-xs sm:text-sm font-mono font-medium flex items-center gap-1.5 shadow-sm">
+            <div className="px-3.5 py-1.5 rounded-xl bg-white/[0.04] border border-white/10 text-slate-200 text-xs sm:text-sm font-mono font-medium flex items-center gap-1.5 shadow-sm">
               <span>⏱️ {Math.floor(elapsedSeconds / 60)}:{(elapsedSeconds % 60).toString().padStart(2, '0')}</span>
             </div>
 
@@ -649,7 +649,7 @@ export const LiveProgress: React.FC<Props> = ({
 
         {/* Mobile Compact Progress Bar */}
         <div className="block md:hidden space-y-1.5">
-          <div className="h-2 w-full bg-darkroom-surface/80 rounded-full overflow-hidden border border-darkroom-border/60">
+          <div className="h-2 w-full bg-white/[0.04] rounded-full overflow-hidden border border-white/10">
             <motion.div
               className="h-full bg-gradient-to-r from-tool-diligence via-emerald-400 to-teal-300 rounded-full shadow-sm shadow-[var(--color-tool-diligence)]/50"
               initial={{ width: 0 }}
@@ -844,7 +844,7 @@ export const LiveProgress: React.FC<Props> = ({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.2 }}
-            className="p-4 sm:p-5 rounded-2xl bg-darkroom-surface/50 border border-darkroom-border/40 flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left shadow-sm"
+            className="p-4 sm:p-5 rounded-2xl bg-white/[0.02] flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left"
           >
             <div
               className={`size-11 rounded-xl flex items-center justify-center shrink-0 ${
@@ -881,8 +881,8 @@ export const LiveProgress: React.FC<Props> = ({
 
       {/* Live SSE Activity Stream Console (Preserved Card Container) */}
       {(events.length > 0 || isPincoDemo) && (
-        <div className="rounded-3xl bg-darkroom-surface overflow-hidden shadow-2xl shadow-black/80 border border-darkroom-border/60">
-          <div className="p-4 sm:px-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-darkroom-border/60">
+        <div className="rounded-3xl bg-white/[0.02] overflow-hidden">
+          <div className="p-4 sm:px-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.06]">
             <span className="font-mono text-xs sm:text-sm uppercase tracking-wider text-slate-200 flex items-center gap-2 font-semibold">
               <span
                 className={`size-2 rounded-full bg-tool-diligence ${reducedMotion ? '' : 'animate-pulse'}`}
@@ -893,7 +893,7 @@ export const LiveProgress: React.FC<Props> = ({
 
             <div className="flex items-center gap-2 flex-wrap">
               {/* Category Filter Pills */}
-              <div className="flex items-center gap-1 p-0.5 rounded-xl bg-darkroom-bg border border-darkroom-border text-xs font-mono">
+              <div className="flex items-center gap-1 p-0.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs font-mono">
                 {[
                   { id: 'ALL', label: 'All' },
                   { id: 'QUERIES', label: 'Queries' },
@@ -927,7 +927,7 @@ export const LiveProgress: React.FC<Props> = ({
                   onClick={() => setShowEventLogTooltip((prev) => !prev)}
                   onFocus={() => setShowEventLogTooltip(true)}
                   onBlur={() => setShowEventLogTooltip(false)}
-                  className="px-3 py-1 rounded-full bg-darkroom-bg hover:bg-darkroom-card border border-darkroom-border hover:border-slate-600 text-slate-200 hover:text-white font-mono text-xs font-medium cursor-pointer transition-all flex items-center gap-1 shadow-sm select-none"
+                  className="px-3 py-1 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-white/20 text-slate-200 hover:text-white font-mono text-xs font-medium cursor-pointer transition-all flex items-center gap-1 shadow-sm select-none"
                   aria-label={`${displayEvents.length} events recorded`}
                 >
                   <span>{displayEvents.length}</span>
@@ -952,14 +952,14 @@ export const LiveProgress: React.FC<Props> = ({
           </div>
 
           <div
-            className="p-4 sm:p-5 max-h-64 overflow-y-auto space-y-2.5 text-xs sm:text-sm font-mono bg-darkroom-bg/60"
+            className="p-4 sm:p-5 max-h-64 overflow-y-auto space-y-2.5 text-xs sm:text-sm font-mono bg-black/20"
             onMouseEnter={() => setIsHoveringLog(true)}
             onMouseLeave={() => setIsHoveringLog(false)}
           >
             {displayEvents.map((evt, idx) => (
               <div
                 key={idx}
-                className="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-2.5 leading-relaxed hover:bg-darkroom-surface/40 p-2 sm:p-1.5 rounded-lg transition-colors border-b sm:border-b-0 border-darkroom-border/30 last:border-b-0 text-xs sm:text-sm"
+                className="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-2.5 leading-relaxed hover:bg-white/[0.04] p-2 sm:p-1.5 rounded-lg transition-colors border-b sm:border-b-0 border-white/[0.06] last:border-b-0 text-xs sm:text-sm"
               >
                 <div className="flex items-center gap-2 shrink-0">
                   <span className="text-slate-400 text-xs font-mono">
