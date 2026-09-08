@@ -3,7 +3,7 @@
  *
  * Generated from canonical Pydantic v2 models in backend/models.py
  * Generator: scripts/generate_contracts.py
- * Timestamp: 2026-09-08T08:25:00Z
+ * Timestamp: 2026-09-08T22:11:23Z
  *
  * To regenerate, run:
  *   npm run generate-contracts  (from frontend/)
@@ -1055,6 +1055,19 @@ export interface ParseGrantGuidelinesRequest {
   fileName: string;
   fileContent: string;
   mimeType?: string;
+}
+
+export interface PrivacyEraseRequest {
+  /** Email address to scrub across notification subscriptions and feedback. */
+  email?: string;
+  /** Session ID to scrub across conversational history. */
+  sessionId?: string;
+}
+
+export interface PrivacyEraseResponse {
+  status: string;
+  erasedRecordsCount: number;
+  message: string;
 }
 
 export interface ScoutRequest {
