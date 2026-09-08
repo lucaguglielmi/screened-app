@@ -87,7 +87,7 @@ const PROMPT_TEMPLATES: PromptTemplate[] = [
     title: 'Audit Operating Entity & Legitimacy',
     description: 'Verify company status, registration history, and active directors on Companies House.',
     prompt:
-      'Open totallyscreened.com/diligence/demo_pinco_pallino and use WebMCP to verify if the operating company is dissolved on Companies House.',
+      'Open https://totallyscreened.com/diligence/demo_pinco_pallino and use WebMCP to verify if the operating company is dissolved on Companies House.',
   },
   {
     title: 'Inspect Specific Claim & Contradictions',
@@ -873,7 +873,7 @@ export const HowToUse: React.FC<Props> = ({
               className="px-5 py-3 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-slate-200 text-sm font-semibold transition-all cursor-pointer flex items-center gap-2"
             >
               <Bot className="size-4 text-indigo-400" />
-              <span>Ask Screened Desk</span>
+              <span>Ask Screened AI Chat</span>
             </button>
 
             <button

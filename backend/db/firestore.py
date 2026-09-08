@@ -195,5 +195,58 @@ class Database:
                 
         return sorted(list(items_map.values()), key=lambda x: self._parse_ts(x.get("timestamp")), reverse=True)
 
+    async def erase_personal_data(
+        self,
+        email: Optional[str] = None,
+        session_id: Optional[str] = None,
+    ) -> int:
+        """Erases personal data records in compliance with GDPR Art. 17 (Right to Erasure)."""
+        erased_count = 0
+        email_clean = email.strip().lower() if email else None
+
+        # 1. Scrub notification email from memory investigations
+        for inv_id, inv in list(self._memory_store["investigations"].items()):
+            if email_clean and inv.get("notificationEmail", "").strip().lower() == email_clean:
+                inv["notificationEmail"] = None
+                erased_count += 1
+            if session_id and inv_id == session_id:
+                inv["userId"] = None
+                inv["notificationEmail"] = None
+                erased_count += 1
+
+        # 2. Scrub from memory feedback
+        for fb_id, fb in list(self._memory_store["feedback"].items()):
+            fb_email = (fb.get("email") or fb.get("user_email") or "").strip().lower()
+            if email_clean and fb_email == email_clean:
+                del self._memory_store["feedback"][fb_id]
+                erased_count += 1
+
+        # 3. Live Firestore scrubbing if active
+        if not self.use_memory and self.client:
+            try:
+                if email_clean:
+                    inv_docs = self.client.collection("investigations").where("notificationEmail", "==", email_clean).stream()
+                    for doc in inv_docs:
+                        doc.reference.update({"notificationEmail": None})
+                        erased_count += 1
+
+                    fb_docs = self.client.collection("feedback").stream()
+                    for doc in fb_docs:
+                        d_dict = doc.to_dict()
+                        if (d_dict.get("email") or "").strip().lower() == email_clean:
+                            doc.reference.delete()
+                            erased_count += 1
+
+                if session_id:
+                    s_doc = self.client.collection("investigations").document(session_id).get()
+                    if s_doc.exists:
+                        s_doc.reference.update({"userId": None, "notificationEmail": None})
+                        erased_count += 1
+            except Exception as e:
+                logger.exception(f"Firestore erase_personal_data failed: {e}")
+
+        logger.info(f"Erased {erased_count} personal data records for email={email_clean}, session_id={session_id}")
+        return erased_count
+
 
 db = Database()

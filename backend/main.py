@@ -1,4 +1,21 @@
-"""Main FastAPI Application for Screened."""
+"""Main FastAPI Application for Screened — Cinema Intelligence & Due Diligence Platform.
+
+PHILOSOPHY & PURPOSE:
+Screened protects independent filmmakers from predatory film festivals, fee-farming schemes,
+and unverified laurel mills. Unlike blackbox AI checkers that guess "trust scores", Screened
+strictly separates THINKING (Gemini 2.5 on Vertex AI) from FACT-FINDING (Parallel Search).
+Every claim must be corroborated by verbatim quotes from primary public records:
+- Corporate registrars (UK Companies House, OpenCorporates)
+- Physical cinema venue booking manifests (BFI Southbank, Curzon, etc.)
+- Domain archives & Wayback Machine records
+- Filmmaker dispute records and community forums
+
+CORE SERVICES:
+1. Screened AI Chat (`/api/chat`): Real-time conversational cinema intelligence assistant powered by Gemini 2.5.
+2. Deep Vetting Pipeline (`/api/investigations`): Multi-agent 360° due diligence scanning 7 forensic dimensions.
+3. Grant Scout (`/api/grants` & `/grantscout`): Matches scripts to verified institutional public cinema funds (BFI, Screen Scotland, Doc Society) without leaking sensitive IP.
+4. Model Context Protocol (`/api/mcp`): Exposes Screened intelligence to external IDEs, Google Antigravity, and browser agents via WebMCP.
+"""
 import json
 import logging
 import os
@@ -42,6 +59,8 @@ from backend.models import (
     FeedbackItem,
     FeedbackCreateRequest,
     NotificationSubscriptionRequest,
+    PrivacyEraseRequest,
+    PrivacyEraseResponse,
     CreateInvestigationRequest,
     ConfirmEntityRequest,
     TaskDisambiguatePayload,
@@ -167,6 +186,8 @@ async def global_exception_handler(request: Request, exc: Exception):
 # CORS configuration
 if settings.environment == "production":
     allowed_origins = [
+        "https://totallyscreened.com",
+        "https://www.totallyscreened.com",
         "https://screened-786241671474.europe-west2.run.app",
         "https://screened-pludf2u7yq-nw.a.run.app",
         "https://screened.app",
@@ -468,6 +489,25 @@ async def register_notification_subscriber(
     return {"status": "ok", "registered": True}
 
 
+@app.post("/api/privacy/erase", response_model=PrivacyEraseResponse)
+@limiter.limit("10/minute")
+async def erase_personal_data(req: PrivacyEraseRequest, request: Request):
+    """GDPR Article 17 Right to Erasure endpoint.
+
+    Allows filmmakers to permanently delete their notification email subscriptions,
+    feedback emails, or active session identifiers.
+    """
+    if not req.email and not req.sessionId:
+        raise HTTPException(status_code=400, detail="Either 'email' or 'sessionId' must be provided.")
+
+    erased_count = await db.erase_personal_data(email=req.email, session_id=req.sessionId)
+    return PrivacyEraseResponse(
+        status="ERASED",
+        erasedRecordsCount=erased_count,
+        message="Personal data successfully erased in compliance with GDPR Art. 17."
+    )
+
+
 
 @app.post("/api/investigations/{investigation_id}/resume")
 @limiter.limit("10/minute")
@@ -591,12 +631,14 @@ async def register_festival_watch(
         target_url=target_url,
         type=req.type,
         frequency=req.frequency,
+        investigation_id=investigation_id,
     )
 
     monitor_id = None
     if "Created monitor " in monitor_res:
         monitor_id = monitor_res.replace("Created monitor ", "").strip()
     else:
+        logger.warning(f"Parallel Monitor creation fallback for {target_url}: {monitor_res}")
         monitor_id = f"mon_{uuid.uuid4().hex[:12]}"
 
     now_iso = datetime.now(timezone.utc).isoformat()
@@ -715,6 +757,8 @@ async def trigger_festival_watch(
 @app.get("/api/investigations/{investigation_id}/watch")
 async def get_festival_watch_status(investigation_id: str):
     """Retrieve current Festival Watch status and recent drift alerts."""
+    if demo_service.is_demo_id(investigation_id):
+        return demo_service.get_demo_watch_status()
 
     inv = await db.get_investigation(investigation_id)
     if not inv:
@@ -731,7 +775,7 @@ async def get_festival_watch_status(investigation_id: str):
     return watch
 
 
-# --- Conversational Producer Desk Streaming Chat Endpoint ---
+# --- Conversational Screened AI Chat Streaming Chat Endpoint ---
 
 @app.post("/api/chat")
 @limiter.limit("20/minute")
@@ -833,7 +877,14 @@ async def draft_outreach_inquiry(investigation_id: str, req: DraftOutreachReques
 @app.post("/api/investigations/{investigation_id}/outreach/approve", response_model=OutreachDraft)
 @limiter.limit("10/minute")
 async def approve_outreach_inquiry(investigation_id: str, req: ApproveOutreachRequest, request: Request):
-    """Verify exact SHA-256 payload hash and execute simulated sandbox delivery."""
+    """Verify exact SHA-256 payload hash and execute simulated sandbox delivery.
+
+    INTENTIONAL PRE-HACKATHON SAFEGUARD:
+    Outbound outreach to festival organizers is intentionally kept in SANDBOX mode
+    prior to the hackathon. Sending live emails to third-party festivals involves
+    legal considerations, terms of agency, and compliance that will be reviewed with
+    a compliance officer post-hackathon before activating live outbound SMTP.
+    """
     try:
         draft = await approval_service.approve_and_sandbox_send(
             draft_id=req.draftId,

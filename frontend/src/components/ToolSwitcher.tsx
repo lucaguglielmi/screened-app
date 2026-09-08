@@ -17,7 +17,7 @@ export const ToolSwitcher: React.FC<Props> = ({ activeTool, onChange }) => {
 
   return (
     <div className="inline-flex p-1 rounded-2xl bg-darkroom-card border border-darkroom-border shadow-xs">
-      {/* The Desk (Conversational Agent Home) */}
+      {/* Screened AI Chat (Conversational Agent Home) */}
       <button
         onClick={() => handleSwitch('CONVERSATIONAL_DESK')}
         className={`px-3 sm:px-4 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
@@ -27,7 +27,7 @@ export const ToolSwitcher: React.FC<Props> = ({ activeTool, onChange }) => {
         }`}
       >
         <Sparkles className="size-3.5 text-tool-diligence" />
-        <span>The Desk</span>
+        <span>Screened AI Chat</span>
         <span className="hidden sm:inline text-[9px] px-1.5 py-0.5 rounded-full bg-tool-diligence/15 text-tool-diligence border border-tool-diligence/30 font-mono font-semibold">
           AI
         </span>

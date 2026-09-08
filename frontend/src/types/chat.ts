@@ -1,5 +1,5 @@
 /**
- * Producer Desk Conversational Agent Types.
+ * Screened AI Chat Conversational Agent Types.
  * Backend tools and analysis payloads are generated via scripts/generate_contracts.py.
  */
 

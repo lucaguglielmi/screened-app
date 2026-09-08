@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://screened-786241671474.europe-west2.run.app">
+  <a href="https://totallyscreened.com/">
     <img src="frontend/public/assets/screened-logo.svg" alt="Screened — Agentic Cinema Due Diligence" width="96" height="96" />
   </a>
 </p>
@@ -12,8 +12,8 @@
 </p>
 
 <p align="center">
-  <a href="https://screened-786241671474.europe-west2.run.app">
-    <img src="https://img.shields.io/badge/Live_Demo-Cloud_Run_(London)-6366F1?style=for-the-badge&logo=googlecloud&logoColor=white" alt="Live Demo" />
+  <a href="https://totallyscreened.com/">
+    <img src="https://img.shields.io/badge/Live_Demo-totallyscreened.com-6366F1?style=for-the-badge&logo=googlecloud&logoColor=white" alt="Live Demo" />
   </a>
   <a href="https://github.com/lucaguglielmi/screened-app">
     <img src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" />
@@ -27,26 +27,64 @@
 
 ---
 
-## 🎬 The Mission
+## 🎬 The Philosophy: Why Screened Exists
 
-Every year, independent filmmakers spend thousands of pounds on festival submission fees, often encountering unverified screening venues, steep fee escalations, unclear premiere policies, or awards that fail to qualify for major honors (BAFTA, BIFA, Oscars).
+Making an independent film is an act of pure dedication. Filmmakers spend years writing, shooting, and editing their stories on tight budgets. When their film is finally complete, they enter the film festival circuit—and immediately run into a costly trap:
 
-**Screened** transforms cinema due-diligence from guesswork into an autonomous, transparent multi-agent investigation. Rather than assigning an arbitrary or blackbox "trust score", Screened functions as an investigative research room:
-1. **Screened AI (Conversational Agent Hub)**: Talks with filmmakers, analyzes queries or uploaded PDF scripts/emails, and autonomously dispatches specialized tools via **Gemini Function Calling API**.
-2. **Dissects Subject Entities**: Scrutinizes legal identity, physical venues, fee schedules, jury background, and filmmaker community feedback.
-3. **Gathers Public Evidence**: Pulls verified data from official registries, festival archives, major trade publications (Variety, ScreenDaily), and community forums.
-4. **Cites Every Atomic Claim**: Direct links to verbatim quotes with source tier tags, retrieval timestamps, and SHA-256 report fingerprints.
-5. **Tri-Protocol Agent Access**: Allows external AI assistants to cross-examine dossiers via **Google Antigravity Plugin**, **WebMCP (`WebMCP/2026`)**, and **Headless Server MCP**.
-6. **Scouts Strategic Opportunities & Grants**: Matches film profiles to verified open calls and public institutional grant funds (BFI, Screen Scotland, Arts Council, Sundance) with `.ics` calendar exports.
+**The festival circuit has become an unregulated minefield.**
+- **Fee-Farming Festivals**: Events that charge £50–£100 per entry, but screen movies on a laptop in a hotel room—or don't screen them in person at all.
+- **Trophy & Laurel Mills**: Operations that accept almost every film submitted just to sell plastic trophies and digital laurels that carry zero recognition in the film industry.
+- **Predatory Deadlines**: Websites that hike prices by 200% as the deadline approaches, creating false urgency without adding any screening value.
+- **Lost Premiere Rights**: Screening at an unrecognized, unverified event can disqualify a filmmaker from major academy honors (like BAFTA, BIFA, or the Oscars).
+
+Independent creators lose thousands of pounds and months of valuable time trying to guess which festivals are real.
+
+### Our Core Principle: Proof, Not Guesses
+Most AI assistants give you a vague "trust score" based on fuzzy memory. When real money and artistic careers are at stake, that is not acceptable.
+
+**Screened is built on one simple rule: Never guess. Always prove.**
+- Screened acts like an investigative newsroom.
+- It splits the work between **reasoning** (Google Gemini) and **fact-finding** (Parallel Search).
+- Every single fact in a Screened report links directly to the **exact words on the original webpage**, with a timestamp and an audit trail.
+- If a festival makes a claim that cannot be backed up by independent public records (such as real cinema box-office bookings or official company registrations), Screened calls it out clearly.
+
+---
+
+## 🧭 How Screened Helps You
+
+Screened gives filmmakers clarity through three focused areas:
+
+```
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                               SCREENED PLATFORM                              │
+├──────────────────────────┬───────────────────────────┬───────────────────────┤
+│      1. SCREENED AI      │ 2. FESTIVAL DUE DILIGENCE │  3. PUBLIC GRANTS &   │
+│   (Conversational Hub)   │   (Investigative Report)  │   OPPORTUNITY SCOUT   │
+├──────────────────────────┼───────────────────────────┼───────────────────────┤
+│ • Friendly chat desk     │ • 4-Vector Radar check    │ • Verified public     │
+│ • Drop script / email PDF│ • Real cinema lease audit │   funds (BFI, etc.)   │
+│ • Fast, direct answers   │ • Company registry check  │ • 1-click .ics export │
+│ • 1-click report launch  │ • Verbatim quote links    │ • Packaging checklist │
+└──────────────────────────┴───────────────────────────┴───────────────────────┘
+```
+
+1. **Screened AI (The Front Desk)**: A clean, direct chat interface where you can ask questions, type a festival name, or drop an invitation email to verify if it is genuine or an automated marketing blast.
+2. **Festival Due Diligence (The Deep Dive)**: A detailed, transparent investigation that checks:
+   - **Venues**: Are they screening in a real physical cinema, or an unlisted room?
+   - **Fees**: Did their prices jump by 200% near the deadline?
+   - **Organizers**: Who runs it? Are they registered at UK Companies House? Do they operate multiple laurel mills?
+   - **Community**: What do past filmmakers say about their real screening experience?
+3. **Public Grants & Opportunity Scout**: Connects independent projects directly to verified public institutional funds (like BFI, Screen Scotland, Arts Council, and Doc Society) without compromising screenplay privacy.
 
 ---
 
 ## ⚡ Live Demo & Quick Links
 
-- **🌐 Live Cloud Run Application**: [https://screened-786241671474.europe-west2.run.app](https://screened-786241671474.europe-west2.run.app)
-- **🤖 Screened Agents & WebMCP Protocol**: [https://screened-786241671474.europe-west2.run.app/agents](https://screened-786241671474.europe-west2.run.app/agents)
-- **⚖️ Why Screened (Impact & Baseline Matrix)**: [https://screened-786241671474.europe-west2.run.app](https://screened-786241671474.europe-west2.run.app) (Click "Why Screened" in Left Nav)
-- **🎨 Interactive Design Playground & D2 Architecture Hub**: [https://screened-786241671474.europe-west2.run.app/playground](https://screened-786241671474.europe-west2.run.app/playground)
+- **🌐 Primary Application Domain**: [https://totallyscreened.com/](https://totallyscreened.com/)
+- **🤖 Screened Agents & WebMCP Protocol**: [https://totallyscreened.com/agents](https://totallyscreened.com/agents)
+- **⚖️ Why Screened (Impact & Baseline Matrix)**: [https://totallyscreened.com/](https://totallyscreened.com/) (Click "Why Screened" in Left Nav)
+- **🎨 Interactive Design Playground & D2 Architecture Hub**: [https://totallyscreened.com/playground](https://totallyscreened.com/playground)
+- **☁️ Cloud Run Direct Deployment Mirror**: [https://screened-786241671474.europe-west2.run.app](https://screened-786241671474.europe-west2.run.app)
 - **📦 GitHub Repository**: [https://github.com/lucaguglielmi/screened-app](https://github.com/lucaguglielmi/screened-app)
 - **🏢 Google Cloud Project**: `screened-hackathon` (`europe-west2` — London)
 
@@ -141,7 +179,7 @@ Screened employs an intentional **two-tier multi-agent division of labor**:
 Screened is accessible by both human filmmakers and autonomous external AI agents through three native protocols:
 - **Google Antigravity & Gemini Plugin**: Native workspace plugin located in `.agents/plugins/screened/` equipped with progressive disclosure skills (`screened-festival-diligence`, `screened-grant-scout`) and forensic rules (`rules/AGENTS.md`) connecting directly to Screened's Cloud Run MCP gateway over SSE.
 - **In-Browser WebMCP (`WebMCP/2026`)**: An in-page, DOM-accessible agent protocol exposed via `window.__screened_web_mcp__`. Browser-based AI assistants (Chrome with WebMCP flags, Claude Computer Use, Gemini Live, Cursor) can audit dossiers, inspect claims, and dispatch investigations via `webmcp:call` and `webmcp:result` DOM CustomEvents with live visual evidence spotlighting.
-- **Headless Server MCP (Anthropic MCP v1.x)**: Standardized Model Context Protocol server running over SSE (`/api/mcp/sse`) and JSON-RPC 2.0 (`/api/mcp/messages`, `/api/mcp/rpc`). Enables desktop tools (Claude Desktop, Cursor IDE, Antigravity) to query Screened's dossier ledger via 7 specialized forensic tools.
+- **Open Server MCP (JSON-RPC 2.0)**: Standardized Model Context Protocol server running over SSE (`/api/mcp/sse`) and JSON-RPC 2.0 (`/api/mcp/messages`, `/api/mcp/rpc`). Enables desktop tools (Claude Desktop, Cursor IDE, Antigravity) to query Screened's dossier ledger via specialized forensic tools.
 - *Learn more*: See the manuals in [`docs/GEMINI_ANTIGRAVITY_INTEGRATION.md`](docs/GEMINI_ANTIGRAVITY_INTEGRATION.md), [`docs/WEBMCP.md`](docs/WEBMCP.md), [`docs/MCP.md`](docs/MCP.md), and [`docs/specs/SPEC_GEMINI_ANTIGRAVITY_PLUGIN.md`](docs/specs/SPEC_GEMINI_ANTIGRAVITY_PLUGIN.md), or test tools directly in the [Screened Agents Hub](/agents).
 
 ### 11. Parallel Search Benchmark Lab & Dynamic Mode Switching (`/playground?tab=search-benchmark`)
@@ -152,7 +190,7 @@ Screened is accessible by both human filmmakers and autonomous external AI agent
 
 ### 12. Reinstated Grant Scout Diligence via `/grantscout` AI Chat Gateway
 - **Demand-Validated Evolution**: Filmmaker interest in public film funding was validated during our initial pre-flight testing.
-- **100% Operational in Test Mode**: While disabled on the general top navbar to keep the core interface laser-focused on cinema due diligence, the complete multi-agent grant diligence engine is **100% functional** when invoked via `/grantscout` (or `/grants`) in Producer Desk chat.
+- **100% Operational in Test Mode**: While disabled on the general top navbar to keep the core interface laser-focused on cinema due diligence, the complete multi-agent grant diligence engine is **100% functional** when invoked via `/grantscout` (or `/grants`) in Screened AI Chat.
 - **Verified Public Funds**: Directly searches and matches projects to accredited public institutions (BFI Filmmaking Fund, Screen Scotland, Creative Europe MEDIA, Eurimages, Doc Society).
 - **Filmmaker IP Protection & Data Minimization**: Strict compliance with our agent safety rules (`.agents/plugins/screened/rules/AGENTS.md`) — full screenplay texts and sensitive budget sheets are never dispatched to external search queries; only structural parameters (format, genre, budget tier, country) are matched.
 

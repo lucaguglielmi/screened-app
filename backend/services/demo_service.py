@@ -43,7 +43,14 @@ def is_demo_query(query: Optional[str]) -> bool:
 
 def is_demo_id(investigation_id: Optional[str]) -> bool:
     """Check whether an investigation ID corresponds to the demo payload."""
-    return investigation_id == DEMO_INVESTIGATION_ID
+    if not investigation_id:
+        return False
+    return (
+        investigation_id == DEMO_INVESTIGATION_ID
+        or investigation_id in ("demo_pinco_pallino", "demo-pinco-pallino-2026", "demo-pinco-pallino")
+        or investigation_id.startswith("demo_")
+        or investigation_id.startswith("demo-")
+    )
 
 
 def get_demo_investigation() -> Dict[str, Any]:

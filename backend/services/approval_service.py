@@ -37,7 +37,22 @@ class ApprovalService:
         draft_id: str,
         submitted_hash: str,
     ) -> OutreachDraft:
-        """Verify SHA-256 payload hash and execute sandbox simulated delivery."""
+        """Verify SHA-256 payload hash and execute sandbox simulated delivery.
+
+        ARCHITECTURAL DECISION / INTENTIONAL SANDBOXING:
+        In production, direct outbound dispatch to third-party festival organizers
+        is INTENTIONALLY MOCKED / SANDBOXED (ApprovalStatus.EXECUTED_SANDBOX).
+
+        This is strictly intentional before the hackathon:
+        1. Legal & Anti-Spam Safety: Directly delivering automated/AI-assisted emails
+           to external festival organizers without formal terms of representation,
+           indemnification, or PECR/CAN-SPAM reviews carries severe legal liability.
+        2. Filmmaker Relationship Protection: Prevents accidental escalation or burning
+           bridges with industry programmers before formal legal consensus.
+        3. Post-Hackathon Roadmap: Direct outbound SMTP transmission is a key feature
+           that is architected and ready to be activated once legal representation
+           and corporate liability frameworks are finalized with legal counsel.
+        """
         draft = await self.get_draft(draft_id)
         if not draft:
             raise ValueError(f"Draft {draft_id} not found")

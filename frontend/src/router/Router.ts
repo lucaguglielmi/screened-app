@@ -4,6 +4,7 @@ export interface ParsedRoute {
   path: string;
   tool: ActiveTool;
   investigationId: string | null;
+  legalModal?: 'terms' | 'privacy' | null;
 }
 
 export const ROUTE_TITLES: Record<ActiveTool, string> = {
@@ -49,6 +50,7 @@ export function normalizeLegacyUrl(pathname: string, search: string): string | n
   if (cleanPath === "/about") return `/why-screened${search}`;
   if (cleanPath === "/protection-guide" || cleanPath === "/festival-protection-guide") return `/guide${search}`;
   if (cleanPath === "/how-to-use") return `/agents${search}`;
+  if (cleanPath === "/what-cana-you-do" || cleanPath === "/capabilities") return `/what-can-you-do${search}`;
 
   return null;
 }
@@ -131,6 +133,24 @@ export function parseCurrentRoute(pathname = window.location.pathname, search = 
       path: "/playground",
       tool: "DESIGN_PLAYGROUND",
       investigationId: null,
+    };
+  }
+
+  if (cleanPath === "/terms") {
+    return {
+      path: "/terms",
+      tool: "CONVERSATIONAL_DESK",
+      investigationId: null,
+      legalModal: "terms",
+    };
+  }
+
+  if (cleanPath === "/privacy") {
+    return {
+      path: "/privacy",
+      tool: "CONVERSATIONAL_DESK",
+      investigationId: null,
+      legalModal: "privacy",
     };
   }
 

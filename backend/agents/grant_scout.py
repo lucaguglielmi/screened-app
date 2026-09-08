@@ -1,4 +1,15 @@
-"""Grant Scout Agent for discovering verified public funds, institutional grants, and guideline diligence."""
+"""Grant Scout Agent — Privacy-Preserving Public Cinema Funding Intelligence.
+
+PHILOSOPHY & PURPOSE:
+Independent filmmakers often lose proprietary treatments, unproduced screenplays, and budget
+details to data-scraping platforms. Screened's Grant Scout is built on strict DATA MINIMIZATION:
+- Full screenplays and pitch decks are NEVER sent to external search APIs or third parties.
+- Only structural metadata (format, genre, budget tier, country/region) is extracted for matching.
+- Focuses exclusively on non-repayable public funds and national lotteries (e.g. BFI, Screen Scotland,
+  Doc Society, Creative Europe MEDIA, Eurimages) with transparent application criteria.
+- Generates 4-pillar packaging checklists (Creative, Packaging, Financial, DEI/Social Impact)
+  to ensure filmmaker application readiness before submission deadlines.
+"""
 import json
 import logging
 import time

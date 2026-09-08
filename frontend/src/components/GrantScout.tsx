@@ -49,6 +49,7 @@ export const GrantScout: React.FC<Props> = ({
   initialStage = 'Production',
   initialRegion = 'UK & Europe',
   initialFundingNeeded = '£50,000',
+  onNavigateToDueDiligence,
 }) => {
   // Form State
   const [projectTitle, setProjectTitle] = useState(initialTitle);
@@ -708,6 +709,22 @@ export const GrantScout: React.FC<Props> = ({
                         <span>Official Portal</span>
                         <ExternalLink className="size-3.5" />
                       </a>
+                    )}
+
+                    {/* Research Due Diligence Button */}
+                    {onNavigateToDueDiligence && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          soundEffects.playClick();
+                          onNavigateToDueDiligence(grant.fundingBody || grant.title);
+                        }}
+                        className="px-3 py-1.5 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 hover:text-white text-xs font-mono flex items-center gap-1.5 transition-colors cursor-pointer"
+                        title={`Run Screened Due Diligence on ${grant.fundingBody || grant.title}`}
+                      >
+                        <ShieldCheck className="size-3.5 text-indigo-400" />
+                        <span>Research</span>
+                      </button>
                     )}
                   </div>
                 </div>

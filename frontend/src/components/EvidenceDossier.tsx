@@ -52,6 +52,7 @@ import { FeeEscalationVisualizer } from './dossier/FeeEscalationVisualizer';
 import { ForensicIntelligenceBrief } from './dossier/ForensicIntelligenceBrief';
 import { CitationPopover } from './CitationPopover';
 import { DossierSkeletonLoader } from './animations/AnimatedLoaders';
+import { InstitutionalFootprintSection } from './dossier/InstitutionalFootprintSection';
 
 interface Props {
   entity: CandidateEntity;
@@ -123,6 +124,28 @@ export const EvidenceDossier: React.FC<Props> = ({
         const yOffset = -140;
         const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
         window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }, 120);
+  };
+
+  const handleNavigateToDisputes = () => {
+    soundEffects.playClick();
+    // If user is on MACHINE_AI_INGESTION, switch to FULL_EVIDENCE first
+    if (normalizedDensity === 'MACHINE_AI_INGESTION') {
+      handleDensityChange('FULL_EVIDENCE');
+    }
+    setTimeout(() => {
+      // In simplified view target section-chapter-1; in full view target section-disputes
+      const targetId = normalizedDensity === 'SIMPLIFIED' ? 'section-chapter-1' : 'section-disputes';
+      const element = document.getElementById(targetId) || document.getElementById('section-disputes');
+      if (element) {
+        const yOffset = -140;
+        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+        element.classList.add('ring-2', 'ring-orange-500/50', 'transition-all');
+        setTimeout(() => {
+          element.classList.remove('ring-2', 'ring-orange-500/50');
+        }, 1500);
       }
     }, 120);
   };
@@ -565,6 +588,7 @@ export const EvidenceDossier: React.FC<Props> = ({
           disputesCount={disputes.length}
           auditHealth={auditHealth}
           investigationId={investigationId || claims[0]?.investigationId || entity.id}
+          onNavigateToDisputes={handleNavigateToDisputes}
           authenticityScore={
             deepVetting?.overallAuthenticityScore ??
             (entity.name === 'Pinco Pallino Film Festival' ? 68 : 85)
@@ -583,6 +607,7 @@ export const EvidenceDossier: React.FC<Props> = ({
           <DossierSkeletonLoader festivalName={entity.name} />
         ) : normalizedDensity === 'MACHINE_AI_INGESTION' ? (
           <AiDossierView
+            investigationId={investigationId || entity.id}
             entityName={entity.name}
             officialDomain={entity.officialDomain}
             claimsCount={claims.length}
@@ -627,8 +652,16 @@ export const EvidenceDossier: React.FC<Props> = ({
               />
             </div>
 
+            {/* Institutional Footprint & Wikipedia Verification */}
+            <InstitutionalFootprintSection
+              entity={entity}
+              sources={sources}
+              claims={claims}
+              deepVetting={deepVetting}
+            />
+
             {/* Chapter 1: Un-nested layout with left-accent borders */}
-            <div className="rounded-2xl p-4 sm:p-6 bg-white/[0.02] space-y-4">
+            <div id="section-chapter-1" className="scroll-mt-28 sm:scroll-mt-32 rounded-2xl p-4 sm:p-6 bg-white/[0.02] space-y-4" data-section-name="Chapter 1: Attention Items">
               <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5 border-b border-white/[0.06] pb-3">
                 <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-orange-400 font-semibold">
                   <AlertTriangle className="size-4 text-orange-400 shrink-0" />
@@ -824,6 +857,14 @@ export const EvidenceDossier: React.FC<Props> = ({
             <div id="section-previous-editions" className="scroll-mt-28 sm:scroll-mt-32" data-section-name="Previous Editions & Track Record">
               <PreviousEditionsSection previousEditions={dossier.previousEditions} festivalName={entity.name} />
             </div>
+
+            {/* Institutional Footprint & Wikipedia Verification */}
+            <InstitutionalFootprintSection
+              entity={entity}
+              sources={sources}
+              claims={claims}
+              deepVetting={deepVetting}
+            />
 
             {disputes.length > 0 && (
               <div id="section-disputes" className="scroll-mt-28 sm:scroll-mt-32" data-section-name="Contradictions & Disputes">

@@ -11,7 +11,7 @@ const archNodes: Node[] = [
   { id: 'gateway', position: { x: 350, y: 50 }, data: { label: 'FastAPI Gateway & WebMCP' }, style: { backgroundColor: 'var(--color-darkroom-bg)', color: 'var(--color-white)', border: '1px solid var(--color-blue-500)', padding: '10px', borderRadius: '8px', width: 200 } },
 
   // 3. Orchestrator
-  { id: 'producer_desk', position: { x: 650, y: 50 }, data: { label: 'ProducerDesk Agent' }, style: { backgroundColor: 'var(--color-darkroom-bg)', color: 'var(--color-white)', border: '1px solid var(--color-purple-500)', padding: '10px', borderRadius: '8px', width: 180 } },
+  { id: 'producer_desk', position: { x: 650, y: 50 }, data: { label: 'Screened AI Chat Agent' }, style: { backgroundColor: 'var(--color-darkroom-bg)', color: 'var(--color-white)', border: '1px solid var(--color-purple-500)', padding: '10px', borderRadius: '8px', width: 180 } },
   { id: 'disambiguator', position: { x: 880, y: 0 }, data: { label: 'Disambiguator Agent' }, style: { backgroundColor: 'var(--color-darkroom-bg)', color: 'var(--color-white)', border: '1px solid var(--color-purple-500)', padding: '10px', borderRadius: '8px', width: 180 } },
   { id: 'planner', position: { x: 1110, y: 0 }, data: { label: 'Planner Agent' }, style: { backgroundColor: 'var(--color-darkroom-bg)', color: 'var(--color-white)', border: '1px solid var(--color-purple-500)', padding: '10px', borderRadius: '8px', width: 180 } },
   { id: 'vetting_cluster', position: { x: 1110, y: 100 }, data: { label: 'Deep Vetting Cluster' }, style: { backgroundColor: 'var(--color-darkroom-bg)', color: 'var(--color-white)', border: '1px solid var(--color-purple-500)', padding: '10px', borderRadius: '8px', width: 180 } },

@@ -7,11 +7,20 @@ logger = logging.getLogger("screened.services.email")
 
 
 class EmailService:
-    """Service to deliver email notifications when investigations are ready."""
+    """Service to deliver email notifications when investigations are ready.
+    
+    ARCHITECTURAL NOTE / COMPLIANCE SCOPE:
+    - OUTBOUND: Sends completion notices to the authenticated filmmaker upon request.
+    - INBOUND: Intentionally DOES NOT implement SendGrid Inbound Parse webhooks for
+      ingesting third-party email responses from festival directors. This design
+      pause is intentional for the hackathon, pending consultation with a compliance
+      officer to establish GDPR/DPA data handling, PII sanitization, and evidentiary
+      quarantine protocols before enabling automated inbound communication ingestion.
+    """
 
     def __init__(self):
         self.sender_email = os.getenv("NOTIFICATIONS_SENDER_EMAIL", "reports@screened.app")
-        self.app_url = os.getenv("APP_BASE_URL", "https://screened-786241671474.europe-west2.run.app")
+        self.app_url = os.getenv("APP_BASE_URL", "https://totallyscreened.com")
 
     def generate_completion_html(self, festival_name: str, investigation_id: str) -> str:
         dossier_url = f"{self.app_url}/?id={investigation_id}"

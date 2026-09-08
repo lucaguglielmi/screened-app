@@ -31,6 +31,11 @@ import { HowToUse } from './components/HowToUse';
 import { WhatCanYouDo } from './components/WhatCanYouDo';
 import { HistorySidebar } from './components/HistorySidebar';
 import { DossierStickyNav } from './components/dossier/DossierStickyNav';
+import { CookieConsentBanner } from './components/legal/CookieConsentBanner';
+import { TermsModal } from './components/legal/TermsModal';
+import { PrivacyModal } from './components/legal/PrivacyModal';
+import { AppFooter } from './components/legal/AppFooter';
+import { AboutScreenedModal } from './components/modals/AboutScreenedModal';
 
 import { lazyWithRetry } from './utils/lazyWithRetry';
 
@@ -44,7 +49,6 @@ import { UpdateNotifier } from './components/common/UpdateNotifier';
 import { isSoundMuted, setSoundMuted, playSuccessChime } from './utils/audio';
 import { track } from './utils/analytics';
 import { triggerAppNotification } from './utils/pwaNotifications';
-import { FEATURES } from './config/features';
 import { useAppRouter } from './router/useAppRouter';
 import { useVectorFieldConfig } from './hooks/useVectorFieldConfig';
 
@@ -56,11 +60,21 @@ export default function App() {
   const [isNavLogoHovered, setIsNavLogoHovered] = useState(false);
 
   const {
+    route,
     activeTool,
     investigationId: routeInvestigationId,
     navigate,
     navigateToTool,
   } = useAppRouter();
+
+  // Legal & Policy Modals
+  const [isTermsOpen, setIsTermsOpen] = useState(false);
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+  const [isCookieSettingsOpen, setIsCookieSettingsOpen] = useState(false);
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
+
+  const showTerms = isTermsOpen || route.legalModal === 'terms';
+  const showPrivacy = isPrivacyOpen || route.legalModal === 'privacy';
 
   const handleSelectTool = (tool: ActiveTool) => {
     if (tool === 'CONVERSATIONAL_DESK') {
@@ -158,6 +172,10 @@ export default function App() {
     onCloseModals: () => {
       setIsKeyboardHelpOpen(false);
       setIsOutreachOpen(false);
+      setIsTermsOpen(false);
+      setIsPrivacyOpen(false);
+      setIsAboutOpen(false);
+      setIsCookieSettingsOpen(false);
     },
     onFocusSearch: () => {
       handleSelectTool('DUE_DILIGENCE');
@@ -454,8 +472,8 @@ export default function App() {
             />
           )}
 
-          {/* View 2: Grant & Funding Research (First-Class Workspace) */}
-          {FEATURES.ENABLE_GRANT_SCOUT && (activeTool === 'GRANT_SCOUT' || activeTool === 'OPPORTUNITY_SCOUT') && (
+          {/* View 2: Grant & Funding Research (First-Class Workspace: active via /grants URL) */}
+          {(activeTool === 'GRANT_SCOUT' || activeTool === 'OPPORTUNITY_SCOUT') && (
             <Suspense fallback={<div className="p-8 text-center text-slate-500">Loading Grant Research...</div>}>
               <GrantScout
                 initialTitle="Untitled Cinema Project"
@@ -644,6 +662,56 @@ export default function App() {
             </Suspense>
           )}
         </main>
+
+        {/* Global Legal & Information Footer */}
+        <AppFooter
+          onOpenPrivacy={() => setIsPrivacyOpen(true)}
+          onOpenTerms={() => setIsTermsOpen(true)}
+          onOpenCookieSettings={() => setIsCookieSettingsOpen(true)}
+          onOpenAbout={() => setIsAboutOpen(true)}
+        />
+
+        {/* Cookie Consent Floating Banner */}
+        <CookieConsentBanner
+          forceOpen={isCookieSettingsOpen}
+          onClose={() => setIsCookieSettingsOpen(false)}
+          onOpenPrivacy={() => setIsPrivacyOpen(true)}
+        />
+
+        {/* Terms of Service Modal */}
+        <TermsModal
+          isOpen={showTerms}
+          onClose={() => {
+            setIsTermsOpen(false);
+            if (route.legalModal === 'terms') navigate(route.path === '/terms' ? '/' : route.path);
+          }}
+          onOpenPrivacy={() => setIsPrivacyOpen(true)}
+        />
+
+        {/* Privacy Policy Modal */}
+        <PrivacyModal
+          isOpen={showPrivacy}
+          onClose={() => {
+            setIsPrivacyOpen(false);
+            if (route.legalModal === 'privacy') navigate(route.path === '/privacy' ? '/' : route.path);
+          }}
+          onOpenTerms={() => setIsTermsOpen(true)}
+          onOpenCookieSettings={() => setIsCookieSettingsOpen(true)}
+        />
+
+        {/* About Screened Modal */}
+        <AboutScreenedModal
+          isOpen={isAboutOpen}
+          onClose={() => setIsAboutOpen(false)}
+          onNavigateToDesk={() => {
+            setIsAboutOpen(false);
+            handleReset();
+          }}
+          onNavigateToDiligence={() => {
+            setIsAboutOpen(false);
+            navigateToTool('DUE_DILIGENCE');
+          }}
+        />
 
         {/* Outreach Sandbox Approval Modal */}
         <OutreachModal

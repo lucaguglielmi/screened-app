@@ -176,3 +176,14 @@ class ActivityEvent(BaseModel):
     message: str
     details: Optional[ActivityEventDetails] = None
 
+
+class PrivacyEraseRequest(BaseModel):
+    email: Optional[str] = Field(None, description="Email address to scrub across notification subscriptions and feedback.")
+    sessionId: Optional[str] = Field(None, description="Session ID to scrub across conversational history.")
+
+
+class PrivacyEraseResponse(BaseModel):
+    status: str
+    erasedRecordsCount: int
+    message: str
+

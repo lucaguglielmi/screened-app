@@ -1,4 +1,22 @@
-"""Deep Vetting Agent executing 360° forensic festival analysis (Spec 14)."""
+"""Deep Vetting Agent — Multi-Agent 360° Forensic Festival Intelligence.
+
+PHILOSOPHY & METHODOLOGY:
+Traditional evaluation tools rely on unverifiable user ratings or opaque algorithms.
+Screened's Deep Vetting Agent executes an autonomous multi-dimensional audit using Google ADK
+and Gemini 2.5 Pro, paired with real-time Parallel Search. It inspects 7 distinct forensic pillars:
+
+1. Corporate Identity: Verifies active legal status on Companies House / OpenCorporates.
+2. Domain Forensics: Checks domain creation date against claimed festival edition count.
+3. Venue Reality: Cross-references screening addresses with actual physical cinema schedules.
+4. Personnel Dossier: Audits festival directors for festival-mill networks or predatory consultancies.
+5. Rules Plagiarism: Compares entry terms against known fee-farming boilerplate templates.
+6. Alumni Footprint: Verifies past winners on IMDb, BAFTA/BIFA shortlists, and Letterboxd.
+7. Image Provenance: Reverse-searches promotional photos to detect stolen images or mockups.
+
+EVIDENTIARY STANDARD:
+No festival is flagged without at least two independent primary source citations.
+Untrusted scraped web text is strictly quarantined to prevent indirect prompt injection.
+"""
 import json
 import logging
 from typing import Dict, List, Optional, Any

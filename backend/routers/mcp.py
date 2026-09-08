@@ -16,6 +16,7 @@ Security & Threat Model:
 import asyncio
 import json
 import logging
+import os
 import uuid
 from typing import Any, Dict, List, Optional
 from fastapi import APIRouter, Request, HTTPException, Response
@@ -34,6 +35,8 @@ from backend.db.firestore import db
 logger = logging.getLogger("screened.routers.mcp")
 
 router = APIRouter(prefix="/api/mcp", tags=["mcp"])
+
+APP_BASE_URL = os.getenv("APP_BASE_URL", "https://totallyscreened.com")
 
 # In-memory registry of active SSE client queues: session_id -> asyncio.Queue
 active_sessions: Dict[str, asyncio.Queue] = {}
@@ -403,7 +406,7 @@ async def _execute_tool(name: str, args: Dict[str, Any], client_ip: str) -> Dict
                 "investigation_id": "demo_pinco_pallino",
                 "status": "READY",
                 "festival_name": "Pinco Pallino Film Festival",
-                "dossier_url": "https://totallyscreened.com/diligence/demo_pinco_pallino",
+                "dossier_url": f"{APP_BASE_URL}/diligence/demo_pinco_pallino",
                 "stream_endpoint": "/api/investigations/demo_pinco_pallino/events",
                 "message": "Loaded verified benchmark due diligence dossier."
             }
@@ -415,7 +418,7 @@ async def _execute_tool(name: str, args: Dict[str, Any], client_ip: str) -> Dict
             "status": "QUEUED",
             "festival_name": fest_name,
             "estimated_seconds": 35,
-            "dossier_url": f"https://totallyscreened.com/diligence/{inv_id}",
+            "dossier_url": f"{APP_BASE_URL}/diligence/{inv_id}",
             "stream_endpoint": f"/api/investigations/{inv_id}/events",
             "message": "Multi-agent deep vetting scan dispatched successfully."
         }

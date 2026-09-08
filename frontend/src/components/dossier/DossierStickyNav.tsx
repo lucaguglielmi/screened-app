@@ -97,6 +97,7 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
         'section-forensic-brief',
         'section-forensic-matrix',
         'section-previous-editions',
+        'section-institutional',
         'section-disputes',
         'section-claims',
         'section-checklist',
@@ -257,6 +258,7 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
     { id: 'section-forensic-brief', label: 'Forensic Brief' },
     { id: 'section-forensic-matrix', label: '7-Vectors' },
     { id: 'section-previous-editions', label: 'Editions' },
+    { id: 'section-institutional', label: 'Institutions' },
     ...(disputes && disputes.length > 0 ? [{ id: 'section-disputes', label: 'Disputes' }] : []),
     { id: 'section-claims', label: 'Claims' },
     { id: 'section-checklist', label: 'Checklist' },
@@ -281,21 +283,10 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
   if (!dossier) return null;
 
   return (
-    <nav
-      aria-label="Dossier Reading Control and Tools"
-      className="sticky top-16 z-20 w-full bg-midnight-base/95 backdrop-blur-xl border-b border-white/[0.06] shadow-md shadow-black/40 no-print transition-all"
-    >
-      {/* Reading Scroll Progress Line */}
-      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/[0.06] pointer-events-none">
-        <div
-          className="h-full bg-gradient-to-r from-tool-diligence via-emerald-400 to-indigo-400 transition-all duration-150 ease-out"
-          style={{ width: `${activeScrollProgress}%` }}
-        />
-      </div>
-
-      <div className="max-w-6xl mx-auto px-3 sm:px-6 md:px-8 py-2 space-y-2">
-        {/* Row 1: Actions & Context Metadata */}
-        <div className="flex items-center justify-between gap-2">
+    <div className="w-full no-print">
+      {/* Row 1: Actions & Context Metadata (NON-STICKY: rests at top of dossier and scrolls out of view) */}
+      <div className="w-full bg-midnight-base/80 border-b border-white/[0.04] transition-all">
+        <div className="max-w-6xl mx-auto px-3 sm:px-6 md:px-8 py-2.5 flex items-center justify-between gap-2">
           {/* Left: Entity identifier / status badge */}
           <div className="flex items-center gap-2 min-w-0">
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/10 text-[11px] font-mono text-slate-300 max-w-[210px] sm:max-w-sm truncate shadow-2xs">
@@ -486,38 +477,54 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
           </AnimatePresence>
         </div>
       </div>
-
-      {/* Row 2: Detail Dial Tabs (Summary / Full / Agent) */}
-      <div className="w-full max-w-lg mx-auto sm:max-w-none">
-        <DetailDial density={density} onChange={onDensityChange} />
-      </div>
-
-      {/* Row 3: Section Jump Anchors (Visible in Full Evidence mode) */}
-      {(density === 'FULL_EVIDENCE' || density === 'EVIDENCE') && (
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none border-t border-white/[0.06] pt-1.5">
-          <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider pl-1 shrink-0 font-medium">
-            Jump:
-          </span>
-          {jumpAnchors.map((anchor) => {
-            const isActive = activeSection === anchor.id;
-            return (
-              <button
-                key={anchor.id}
-                type="button"
-                onClick={() => handleJumpToSection(anchor.id)}
-                className={`px-2.5 py-0.5 rounded-lg text-[11px] font-mono transition-all cursor-pointer shrink-0 active:scale-95 ${
-                  isActive
-                    ? 'bg-tool-diligence/20 text-tool-diligence border border-tool-diligence/60 font-semibold shadow-xs'
-                    : 'bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 hover:text-tool-diligence border border-white/10 hover:border-tool-diligence/40'
-                }`}
-              >
-                {anchor.label}
-              </button>
-            );
-          })}
-        </div>
-      )}
     </div>
-  </nav>
+
+      {/* Row 2 & 3: Detail Dial Tabs & Jump Anchors (STICKY: stays pinned to top-16 during scrolling) */}
+      <nav
+        aria-label="Dossier Reading Control and Tools"
+        className="sticky top-16 z-20 w-full bg-midnight-base/95 backdrop-blur-xl border-b border-white/[0.06] shadow-md shadow-black/40 transition-all"
+      >
+        {/* Reading Scroll Progress Line */}
+        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/[0.06] pointer-events-none">
+          <div
+            className="h-full bg-gradient-to-r from-tool-diligence via-emerald-400 to-indigo-400 transition-all duration-150 ease-out"
+            style={{ width: `${activeScrollProgress}%` }}
+          />
+        </div>
+
+        <div className="max-w-6xl mx-auto px-3 sm:px-6 md:px-8 py-2 space-y-2">
+          {/* Detail Dial Tabs (Summary / Full / Agent) */}
+          <div className="w-full max-w-lg mx-auto sm:max-w-none">
+            <DetailDial density={density} onChange={onDensityChange} />
+          </div>
+
+          {/* Section Jump Anchors (Visible in Full Evidence mode) */}
+          {(density === 'FULL_EVIDENCE' || density === 'EVIDENCE') && (
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none border-t border-white/[0.06] pt-1.5">
+              <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider pl-1 shrink-0 font-medium">
+                Jump:
+              </span>
+              {jumpAnchors.map((anchor) => {
+                const isActive = activeSection === anchor.id;
+                return (
+                  <button
+                    key={anchor.id}
+                    type="button"
+                    onClick={() => handleJumpToSection(anchor.id)}
+                    className={`px-2.5 py-0.5 rounded-lg text-[11px] font-mono transition-all cursor-pointer shrink-0 active:scale-95 ${
+                      isActive
+                        ? 'bg-tool-diligence/20 text-tool-diligence border border-tool-diligence/60 font-semibold shadow-xs'
+                        : 'bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 hover:text-tool-diligence border border-white/10 hover:border-tool-diligence/40'
+                    }`}
+                  >
+                    {anchor.label}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </nav>
+    </div>
   );
 };

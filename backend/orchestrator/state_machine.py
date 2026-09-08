@@ -814,6 +814,9 @@ class Orchestrator:
                         festival_name=entity.name,
                         investigation_id=investigation_id,
                     )
+                    # Privacy & Data Retention: Purge filmmaker email immediately upon delivery (GDPR Art. 5(1)(e))
+                    await db.save_investigation(investigation_id, {"notificationEmail": None})
+                    logger.info(f"Purged notification email for {investigation_id} post-delivery (GDPR Art. 5(1)(e)).")
                 except Exception as em_err:
                     logger.warning(f"Could not send completion email for {investigation_id}: {em_err}")
 
@@ -920,7 +923,7 @@ def build_root_agent():
     )
     
     # 4. Other Agents
-    producer_desk = LlmAgent(name="producer_desk", description="Producer Desk", model=get_adk_model("gemini-2.5-flash"))
+    producer_desk = LlmAgent(name="producer_desk", description="Screened AI Chat", model=get_adk_model("gemini-2.5-flash"))
     opportunity_scout = LlmAgent(name="opportunity_scout", description="Opportunity Scout", model=get_adk_model("gemini-2.5-flash"))
     outreach_drafter = LlmAgent(name="outreach_drafter", description="Outreach Drafter", model=get_adk_model("gemini-2.5-flash"))
     

@@ -1,9 +1,11 @@
-import React from 'react';
-import { Bot, Sparkles, Download, Check, Copy, Code, FileText } from 'lucide-react';
+import React, { useState } from 'react';
+import { Bot, Sparkles, Download, Check, Copy, Code, FileText, Terminal, Radio, ShieldCheck, ArrowRight } from 'lucide-react';
+import { soundEffects } from '../../utils/audio';
 
 interface Props {
   entityName: string;
   officialDomain?: string;
+  investigationId?: string;
   claimsCount: number;
   sourcesCount: number;
   disputesCount: number;
@@ -20,6 +22,7 @@ interface Props {
 export const AiDossierView: React.FC<Props> = ({
   entityName,
   officialDomain,
+  investigationId,
   claimsCount,
   sourcesCount,
   disputesCount,
@@ -32,6 +35,45 @@ export const AiDossierView: React.FC<Props> = ({
   onCopyRawText,
   onDownloadMarkdown,
 }) => {
+  const [copiedWebMcp, setCopiedWebMcp] = useState(false);
+  const [copiedMcpConfig, setCopiedMcpConfig] = useState(false);
+  const [copiedAgentPrompt, setCopiedAgentPrompt] = useState(false);
+
+  const activeId = investigationId || 'demo_pinco_pallino';
+
+  const webMcpSnippet = `// In-Browser WebMCP (WebMCP/2026) - Run directly in Console or via Browser Agent:
+const response = await window.__screened_web_mcp__.callTool('screened_ask_dossier', {
+  dossier_id: '${activeId}',
+  question: 'Audit physical venue leases and Companies House filing status for ${entityName}.'
+});
+console.log('WebMCP Dossier Intelligence:', response);`;
+
+  const mcpServerConfig = JSON.stringify(
+    {
+      mcpServers: {
+        screened: {
+          url: 'https://totallyscreened.com/api/mcp/sse',
+        },
+      },
+    },
+    null,
+    2
+  );
+
+  const agentAuditPrompt = `You are an autonomous cinema intelligence auditor investigating the film festival: ${entityName} (Dossier ID: ${activeId}).
+Access the Screened WebMCP / Server MCP protocol and examine:
+1. Corporate registration and active Companies House entity status.
+2. Direct box office confirmation for advertised physical screening venues.
+3. Fee escalation tiers and submission deadline inflation.
+4. Historical filmmaker disputes and contradiction records.
+Standards: Require 2+ independent corroborating sources before accepting claims. Distinguish FACT from ALLEGATION.`;
+
+  const handleCopy = (text: string, setCopied: (v: boolean) => void) => {
+    navigator.clipboard.writeText(text);
+    soundEffects.playSuccess();
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
   return (
     <div className="space-y-6 animate-fade-in" data-density="MACHINE_AI_INGESTION">
       {/* Autonomous Agent Banner */}
@@ -93,6 +135,104 @@ export const AiDossierView: React.FC<Props> = ({
             <Download className="size-4 text-slate-400 group-hover:text-emerald-400 transition-colors" />
             <span>Download data as .md file</span>
           </button>
+        </div>
+      </div>
+
+      {/* Interactive Agent Protocol Hub: WebMCP & Server MCP */}
+      <div className="rounded-3xl p-5 sm:p-6 bg-white/[0.02] border border-white/10 shadow-xl space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.06] pb-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="p-1.5 rounded-lg bg-purple-500/10 border border-purple-500/20 text-purple-400">
+                <Radio className="size-4" />
+              </span>
+              <h3 className="font-serif text-lg sm:text-xl font-bold text-white tracking-tight">
+                Investigate with Autonomous Agents (WebMCP &amp; Server MCP)
+              </h3>
+            </div>
+            <p className="text-xs text-slate-400 font-sans">
+              Direct programmatic access for in-browser copilots (Chrome WebMCP / Claude Computer Use) and external LLMs.
+            </p>
+          </div>
+
+          <a
+            href="/agents"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 text-xs font-mono text-purple-300 hover:text-white transition-all cursor-pointer shadow-sm active:scale-95 self-start sm:self-auto"
+          >
+            <span>Full Agent Docs &amp; Sandbox</span>
+            <ArrowRight className="size-3.5" />
+          </a>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          {/* Card A: In-Browser WebMCP Execution */}
+          <div className="p-4 rounded-2xl bg-black/40 border border-white/[0.08] space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Terminal className="size-4 text-emerald-400" />
+                <span className="text-xs font-mono font-semibold text-emerald-300">In-Browser WebMCP (/2026)</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => handleCopy(webMcpSnippet, setCopiedWebMcp)}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-[11px] font-mono text-slate-200 hover:text-white cursor-pointer transition-colors active:scale-95"
+              >
+                {copiedWebMcp ? <Check className="size-3 text-emerald-400" /> : <Copy className="size-3 text-slate-400" />}
+                <span>{copiedWebMcp ? 'Copied JS!' : 'Copy JavaScript'}</span>
+              </button>
+            </div>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Exposed live in this tab via <code className="text-emerald-400 bg-emerald-950/40 px-1 py-0.5 rounded">window.__screened_web_mcp__</code>. Run this directly in the developer console:
+            </p>
+            <pre className="p-3 rounded-xl bg-midnight-void/90 text-emerald-300 font-mono text-[11px] leading-relaxed overflow-x-auto border border-white/5 select-all">
+              {webMcpSnippet}
+            </pre>
+          </div>
+
+          {/* Card B: Headless Server MCP Configuration */}
+          <div className="p-4 rounded-2xl bg-black/40 border border-white/[0.08] space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Radio className="size-4 text-purple-400" />
+                <span className="text-xs font-mono font-semibold text-purple-300">Claude Desktop &amp; Antigravity Config</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => handleCopy(mcpServerConfig, setCopiedMcpConfig)}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-[11px] font-mono text-slate-200 hover:text-white cursor-pointer transition-colors active:scale-95"
+              >
+                {copiedMcpConfig ? <Check className="size-3 text-emerald-400" /> : <Copy className="size-3 text-slate-400" />}
+                <span>{copiedMcpConfig ? 'Copied Config!' : 'Copy Config'}</span>
+              </button>
+            </div>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Connect external AI agents via SSE stream at <code className="text-purple-300 bg-purple-950/40 px-1 py-0.5 rounded text-[11px]">/api/mcp/sse</code>:
+            </p>
+            <pre className="p-3 rounded-xl bg-midnight-void/90 text-purple-200 font-mono text-[11px] leading-relaxed overflow-x-auto border border-white/5 select-all">
+              {mcpServerConfig}
+            </pre>
+          </div>
+        </div>
+
+        {/* Card C: Ready-to-Use Agent Audit Prompt */}
+        <div className="p-4 rounded-2xl bg-black/40 border border-white/[0.08] space-y-2.5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="size-4 text-indigo-400" />
+              <span className="text-xs font-mono font-semibold text-indigo-300">Autonomous Dossier Audit Prompt (Gemini / Claude / GPT)</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => handleCopy(agentAuditPrompt, setCopiedAgentPrompt)}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-[11px] font-mono text-slate-200 hover:text-white cursor-pointer transition-colors active:scale-95"
+            >
+              {copiedAgentPrompt ? <Check className="size-3 text-emerald-400" /> : <Copy className="size-3 text-slate-400" />}
+              <span>{copiedAgentPrompt ? 'Copied Prompt!' : 'Copy System Prompt'}</span>
+            </button>
+          </div>
+          <pre className="p-3 rounded-xl bg-midnight-void/90 text-slate-200 font-mono text-[11px] leading-relaxed whitespace-pre-wrap border border-white/5 select-all">
+            {agentAuditPrompt}
+          </pre>
         </div>
       </div>
 

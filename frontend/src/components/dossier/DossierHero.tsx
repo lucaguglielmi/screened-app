@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FileText, MapPin, Calendar, Globe, AlertTriangle, ShieldCheck, Eye, BellRing, X, Activity } from 'lucide-react';
+import { FileText, MapPin, Calendar, Globe, AlertTriangle, ShieldCheck, Eye, BellRing, X, Activity, ArrowDown } from 'lucide-react';
 import { CandidateEntity, InvestigationAuditHealth } from '../../types/investigation';
 import { VerifiedTick } from '../ui/VerifiedTick';
 import { useFestivalWatch } from '../../hooks/useFestivalWatch';
@@ -13,6 +13,7 @@ interface Props {
   auditHealth?: InvestigationAuditHealth;
   authenticityScore?: number;
   investigationId?: string;
+  onNavigateToDisputes?: () => void;
 }
 
 export const DossierHero: React.FC<Props> = ({
@@ -24,6 +25,7 @@ export const DossierHero: React.FC<Props> = ({
   auditHealth,
   authenticityScore = 68,
   investigationId,
+  onNavigateToDisputes,
 }) => {
   const {
     isWatching,
@@ -269,8 +271,27 @@ export const DossierHero: React.FC<Props> = ({
           <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400">Corroborated</div>
           <div className="text-base font-semibold text-emerald-400 font-mono">{corroboratedCount}</div>
         </div>
-        <div className="py-2.5 px-3 rounded-xl bg-white/[0.02] text-center">
-          <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400">Disputes</div>
+        <div
+          onClick={onNavigateToDisputes}
+          role={onNavigateToDisputes ? 'button' : undefined}
+          tabIndex={onNavigateToDisputes ? 0 : undefined}
+          onKeyDown={(e) => {
+            if (onNavigateToDisputes && (e.key === 'Enter' || e.key === ' ')) {
+              e.preventDefault();
+              onNavigateToDisputes();
+            }
+          }}
+          className={`py-2.5 px-3 rounded-xl bg-white/[0.02] text-center transition-all ${
+            onNavigateToDisputes
+              ? 'cursor-pointer hover:bg-orange-500/10 hover:border-orange-500/40 border border-transparent shadow-xs active:scale-95 group'
+              : ''
+          }`}
+          title={onNavigateToDisputes ? 'Click to jump directly to disputes & contradictions' : undefined}
+        >
+          <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 group-hover:text-orange-300 transition-colors flex items-center justify-center gap-1">
+            <span>Disputes</span>
+            {onNavigateToDisputes && <ArrowDown className="size-2.5 text-orange-400 opacity-0 group-hover:opacity-100 transition-opacity" />}
+          </div>
           <div className="text-base font-semibold text-orange-400 font-mono">{disputesCount}</div>
         </div>
       </div>

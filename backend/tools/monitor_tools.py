@@ -4,22 +4,44 @@ from google.genai.types import FunctionDeclaration, Tool, Type
 
 logger = logging.getLogger("screened.tools.monitor_tools")
 
-# Parallel API schema functions
+def _normalize_frequency(frequency: str) -> str:
+    """Normalizes frequency string to Parallel API format: <number><unit> (e.g. 7d, 1d, 1h)."""
+    f = (frequency or "").strip().lower()
+    if f in ("weekly", "1w", "week"):
+        return "7d"
+    if f in ("daily", "1d", "day"):
+        return "1d"
+    if f in ("hourly", "1h", "hour"):
+        return "1h"
+    import re
+    if re.match(r"^\d+[hdw]$", f):
+        return f
+    return "7d"
 
-async def create_festival_monitor(target_url: str, type: str = "snapshot", frequency: str = "weekly") -> str:
+
+async def create_festival_monitor(
+    target_url: str,
+    type: str = "snapshot",
+    frequency: str = "weekly",
+    investigation_id: Any = None,
+    task_run_id: Any = None,
+) -> str:
     """
     Creates a Parallel Monitor to watch a target festival's webpage or domain for updates.
     
     Args:
         target_url (str): The URL of the festival page to watch.
-        type (str): Type of monitor. Can be 'snapshot' (for specific page diffs) or 'event_stream'. Defaults to 'snapshot'.
-        frequency (str): Polling frequency. Defaults to 'weekly'.
+        type (str): Type of monitor. Can be 'snapshot' (for specific task runs) or 'event_stream'. Defaults to 'snapshot'.
+        frequency (str): Polling frequency. Defaults to 'weekly' ('7d').
+        investigation_id (str, optional): The associated investigation ID.
+        task_run_id (str, optional): The associated task run ID if snapshot mode is used.
     """
     logger.info(f"Creating Parallel monitor for {target_url} (type={type}, freq={frequency})")
     from backend.config import settings
     from backend.utils.security import validate_public_url
     from parallel import AsyncParallel
     import os
+    from urllib.parse import urlparse
 
     try:
         validate_public_url(target_url)
@@ -34,23 +56,40 @@ async def create_festival_monitor(target_url: str, type: str = "snapshot", frequ
 
     client = AsyncParallel(api_key=api_key)
     # Best-effort base URL detection
-    base_url = "https://screened-786241671474.europe-west2.run.app" if settings.environment == "production" else "http://localhost:8000"
+    base_url = os.getenv("APP_BASE_URL", "https://screened-786241671474.europe-west2.run.app") if settings.environment == "production" else "http://localhost:8000"
     webhook_url = f"{base_url}/api/webhooks/parallel"
 
+    norm_freq = _normalize_frequency(frequency)
+    monitor_type = "snapshot" if (type == "snapshot" and task_run_id) else "event_stream"
+
+    if monitor_type == "event_stream":
+        domain = urlparse(target_url).netloc or target_url
+        query = f"site:{domain} submission deadline fee rules"
+        settings_payload = {"query": query}
+    else:
+        settings_payload = {"task_run_id": task_run_id}
+
+    metadata = {"inv_id": str(investigation_id)[:16]} if investigation_id else None
+
     try:
-        res = await client.beta.monitor.create(
-            frequency=frequency,
-            type=type,
-            processor="lite",
-            webhook={"url": webhook_url},
-            target={"url": target_url}
-        )
+        kwargs: Dict[str, Any] = {
+            "frequency": norm_freq,
+            "type": monitor_type,
+            "settings": settings_payload,
+            "processor": "lite",
+            "webhook": {"url": webhook_url},
+        }
+        if metadata:
+            kwargs["metadata"] = metadata
+
+        res = await client.monitor.create(**kwargs)
         # res.id if it's an object, else dict access
         monitor_id = getattr(res, "id", None) or (res.get("id") if isinstance(res, dict) else str(res))
         return f"Created monitor {monitor_id}"
     except Exception as e:
         logger.exception(f"Failed to create monitor: {e}")
         return f"Failed to create monitor: {e}"
+
 
 async def trigger_monitor(monitor_id: str) -> str:
     """
@@ -69,11 +108,12 @@ async def trigger_monitor(monitor_id: str) -> str:
 
     client = AsyncParallel(api_key=api_key)
     try:
-        await client.beta.monitor.trigger(monitor_id)
+        await client.monitor.trigger(monitor_id)
         return "Triggered successfully"
     except Exception as e:
         logger.exception(f"Failed to trigger monitor: {e}")
         return f"Failed to trigger monitor: {e}"
+
 
 async def create_task_group(monitor_ids: List[str]) -> str:
     """
@@ -92,8 +132,7 @@ async def create_task_group(monitor_ids: List[str]) -> str:
 
     client = AsyncParallel(api_key=api_key)
     try:
-        # Creating a task group (assuming the SDK supports beta.task_group.create)
-        res = await client.beta.task_group.create(items=[{"type": "monitor", "id": mid} for mid in monitor_ids])
+        res = await client.task_group.create(metadata={"monitor_count": str(len(monitor_ids))})
         tg_id = getattr(res, "id", None) or (res.get("id") if isinstance(res, dict) else str(res))
         return f"Created task group {tg_id}"
     except Exception as e:

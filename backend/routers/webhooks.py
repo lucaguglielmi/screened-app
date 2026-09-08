@@ -54,7 +54,8 @@ async def receive_parallel_webhook(
     except Exception:
         raise HTTPException(status_code=400, detail="Invalid JSON payload")
 
-    investigation_id = data.get("metadata", {}).get("investigation_id", "system")
+    meta = data.get("metadata", {})
+    investigation_id = meta.get("investigation_id") or meta.get("inv_id") or "system"
     
     logger.info(f"Received valid webhook for {investigation_id}: {data}")
 
@@ -67,3 +68,25 @@ async def receive_parallel_webhook(
     )
 
     return {"status": "ok"}
+
+
+# ==============================================================================
+# ARCHITECTURAL DECISION / POST-HACKATHON ROADMAP:
+# Inbound Festival Director Response Processing (SendGrid Inbound Parse Webhook):
+#
+# There is currently NO inbound email webhook configured to ingest replies from
+# festival directors or organizers back into the Firestore dossier.
+#
+# THIS IS INTENTIONAL FOR THE HACKATHON:
+# Ingesting unstructured third-party communications into an active forensic evidence
+# graph introduces complex legal, compliance, and privacy considerations:
+#   1. GDPR / UK DPA: Ingesting third-party PII without prior direct consent.
+#   2. Prompt Injection & Forensic Poisoning: Hostile text in inbound emails
+#      attempting to override agent risk scoring or claim verification.
+#   3. Defamation / Disputed Evidence: Corroboration requirements before updating verdicts.
+#
+# This decision is intentionally postponed until after the hackathon and after
+# conducting a formal review with a compliance officer to establish proper data
+# sanitization, quarantine pipelines, and evidentiary standards.
+# ==============================================================================
+

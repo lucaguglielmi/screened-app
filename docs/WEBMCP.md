@@ -1,7 +1,7 @@
 # 🌐 Screened WebMCP: In-Browser Agent Protocol Guide
 
 > **Protocol Version**: `WebMCP/2026`  
-> **Target Application**: Screened (`https://totallyscreened.com`)  
+> **Target Application**: Screened (`https://totallyscreened.com/`)  
 > **Status**: ACTIVE & EXPANDING  
 
 Screened's **WebMCP (Web Model Context Protocol)** exposes structured, type-safe JSON tools directly inside the browser DOM runtime. This allows autonomous AI assistants—such as Claude Computer Use, Gemini Live browser agents, Chrome with experimental agent flags, Cursor browser runners, and Playwright/Puppeteer agents—to cross-examine festival dossiers, audit citations, and dispatch investigations without fragile screen scraping or OCR vision models.
@@ -154,4 +154,4 @@ Open Developer Tools (`F12` or `Cmd+Option+I`) on any Screened page and query `w
 
 1. **Object Freezing**: The `tools` array and `__screened_web_mcp__` root object are sealed using `Object.freeze()` on hydration to prevent malicious third-party scripts from hijacking or injecting fraudulent tools.
 2. **Indirect Prompt Injection Quarantine**: All external text retrieved from festival websites is wrapped inside boundary quarantine tags (`<untrusted_evidence_data>`) and returned as structured data attributes, ensuring LLM agents do not interpret festival text as instructions.
-3. **Origin Confinement**: Tool execution verifies that `window.location.origin` belongs to `totallyscreened.com` or local testing hosts (`localhost:5173`).
+3. **Origin Confinement**: Tool execution verifies that `window.location.origin` belongs to `totallyscreened.com`, Cloud Run deployment mirrors, or local testing hosts (`localhost:5173`, `localhost:8000`).

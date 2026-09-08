@@ -62,7 +62,7 @@ export const PremiereBurnGauge: React.FC<Props> = ({
 
   return (
     <div
-      className={`rounded-2xl bg-white/[0.02] p-5 sm:p-6 space-y-4 transition-all ${colorConfig.glow}`}
+      className={`rounded-2xl bg-white/[0.02] border border-white/10 shadow-xl backdrop-blur-sm p-5 sm:p-6 space-y-4 transition-all ${colorConfig.glow}`}
     >
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.06] pb-4">

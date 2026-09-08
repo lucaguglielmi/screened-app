@@ -1,4 +1,4 @@
-"""Producer Desk Conversational Agent with Gemini Function Calling Tools."""
+"""Screened AI Chat Conversational Agent with Gemini Function Calling Tools."""
 import json
 import logging
 from typing import AsyncGenerator, Dict, Any, List, Optional
