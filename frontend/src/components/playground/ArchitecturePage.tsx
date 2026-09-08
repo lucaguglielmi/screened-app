@@ -1,5 +1,5 @@
-import React from 'react';
-import { Workflow, Bot, Radio, FileSearch, Cpu, Server, ShieldCheck, Lock, Database, Activity, Zap } from 'lucide-react';
+import React, { useState } from 'react';
+import { Workflow, Bot, Radio, FileSearch, Cpu, Server, ShieldCheck, Lock, Database, Activity, Zap, ExternalLink, Download, Layout, Network } from 'lucide-react';
 import { ScreenedFlowCanvas } from '../diagrams/ScreenedFlowCanvas';
 import { Node, Edge, MarkerType } from '@xyflow/react';
 
@@ -12,7 +12,7 @@ const archNodes: Node[] = [
 
   // 3. Orchestrator
   { id: 'producer_desk', position: { x: 650, y: 50 }, data: { label: 'Screened AI Chat Agent' }, style: { backgroundColor: 'var(--color-darkroom-bg)', color: 'var(--color-white)', border: '1px solid var(--color-purple-500)', padding: '10px', borderRadius: '8px', width: 180 } },
-  { id: 'disambiguator', position: { x: 880, y: 0 }, data: { label: 'Disambiguator Agent' }, style: { backgroundColor: 'var(--color-darkroom-bg)', color: 'var(--color-white)', border: '1px solid var(--color-purple-500)', padding: '10px', borderRadius: '8px', width: 180 } },
+  { id: 'disambiguator', position: { x: 880, y: 0 }, data: { label: 'Disambiguator Agent' }, style: { backgroundColor: 'var(--color-darkroom-bg)', color: 'var(--color-purple-500)', border: '1px solid var(--color-purple-500)', padding: '10px', borderRadius: '8px', width: 180 } },
   { id: 'planner', position: { x: 1110, y: 0 }, data: { label: 'Planner Agent' }, style: { backgroundColor: 'var(--color-darkroom-bg)', color: 'var(--color-white)', border: '1px solid var(--color-purple-500)', padding: '10px', borderRadius: '8px', width: 180 } },
   { id: 'vetting_cluster', position: { x: 1110, y: 100 }, data: { label: 'Deep Vetting Cluster' }, style: { backgroundColor: 'var(--color-darkroom-bg)', color: 'var(--color-white)', border: '1px solid var(--color-purple-500)', padding: '10px', borderRadius: '8px', width: 180 } },
   { id: 'analysis_cluster', position: { x: 880, y: 100 }, data: { label: 'Analysis & Synthesis' }, style: { backgroundColor: 'var(--color-darkroom-bg)', color: 'var(--color-white)', border: '1px solid var(--color-purple-500)', padding: '10px', borderRadius: '8px', width: 180 } },
@@ -54,6 +54,8 @@ const archEdges: Edge[] = [
 ];
 
 export const ArchitecturePage: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'blueprint' | 'interactive'>('blueprint');
+
   return (
     <section className="space-y-8 pt-2">
       <div className="border-b border-zinc-800 pb-5">
@@ -86,9 +88,85 @@ export const ArchitecturePage: React.FC = () => {
             </span>
           </div>
         </div>
+
+        {/* View Switcher Tabs */}
+        <div className="mt-5 flex items-center justify-between border-t border-zinc-800/80 pt-4">
+          <div className="inline-flex items-center p-1 rounded-xl bg-zinc-900/90 border border-zinc-800">
+            <button
+              onClick={() => setActiveTab('blueprint')}
+              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                activeTab === 'blueprint'
+                  ? 'bg-zinc-800 text-zinc-100 shadow-sm'
+                  : 'text-zinc-400 hover:text-zinc-200'
+              }`}
+            >
+              <Layout className="w-3.5 h-3.5 text-indigo-400" />
+              <span>D2 System Blueprint</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('interactive')}
+              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                activeTab === 'interactive'
+                  ? 'bg-zinc-800 text-zinc-100 shadow-sm'
+                  : 'text-zinc-400 hover:text-zinc-200'
+              }`}
+            >
+              <Network className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Interactive Agent Flow</span>
+            </button>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <a
+              href="/assets/architecture-d2.svg"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-zinc-400 hover:text-zinc-100 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 transition-colors"
+              title="Open full resolution SVG in new tab"
+            >
+              <ExternalLink className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Open Raw SVG</span>
+            </a>
+            <a
+              href="/assets/architecture-d2.svg"
+              download="screened-architecture-d2.svg"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-zinc-400 hover:text-zinc-100 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 transition-colors"
+              title="Download compiled SVG"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Download</span>
+            </a>
+          </div>
+        </div>
       </div>
 
-      <div className="rounded-2xl border border-zinc-800/80 bg-darkroom-bg/80 overflow-hidden shadow-2xl backdrop-blur-sm h-[500px]">
+      {/* D2 Blueprint Container */}
+      {activeTab === 'blueprint' && (
+        <div className="rounded-2xl border border-zinc-800/80 bg-zinc-950/80 overflow-hidden shadow-2xl backdrop-blur-sm p-4 sm:p-6 lg:p-8">
+          <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs text-zinc-400 border-b border-zinc-800/60 pb-3">
+            <div className="flex items-center gap-2 font-mono">
+              <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-zinc-200 font-semibold">Tiered Multi-Agent Architecture</span>
+              <span className="text-zinc-500">|</span>
+              <span className="text-zinc-400">D2 v0.9.0 (Catppuccin Mauve Theme)</span>
+            </div>
+            <span className="text-[11px] text-zinc-500">
+              Source: <code className="text-zinc-400">docs/architecture-system.d2</code>
+            </span>
+          </div>
+          <div className="overflow-x-auto flex justify-center py-2">
+            <img
+              src="/assets/architecture-d2.svg"
+              alt="Screened Multi-Agent & Dual-Protocol System Architecture"
+              className="w-full max-w-5xl h-auto rounded-xl shadow-2xl border border-zinc-800/80 object-contain"
+              loading="eager"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Interactive React Flow Canvas */}
+      <div className={`rounded-2xl border border-zinc-800/80 bg-darkroom-bg/80 overflow-hidden shadow-2xl backdrop-blur-sm h-[500px] ${activeTab === 'interactive' ? 'block' : 'hidden'}`}>
         <ScreenedFlowCanvas
           nodes={archNodes}
           edges={archEdges}

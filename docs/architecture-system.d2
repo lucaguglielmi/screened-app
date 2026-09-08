@@ -1,175 +1,300 @@
 direction: down
-title: "Screened — Cloud & Multi-Agent Architecture (Google ADK, Gemini, Parallel Search & MCP)"
 
 classes: {
-  client_box: {
+  tier_clients: {
     style: {
-      fill: "#1e1e2e"
-      stroke: "#6366f1"
-      stroke-width: 2
-      border-radius: 8
-    }
-  }
-  protocol_box: {
-    style: {
-      fill: "#181825"
-      stroke: "#a855f7"
-      stroke-width: 2
-      border-radius: 8
-    }
-  }
-  adk_box: {
-    style: {
-      fill: "#1e293b"
+      fill: "#0c1222"
       stroke: "#38bdf8"
       stroke-width: 2
-      border-radius: 8
+      border-radius: 14
+      font-color: "#38bdf8"
+      shadow: true
     }
   }
-  agent_node: {
+  tier_gateway: {
     style: {
-      fill: "#0f172a"
-      stroke: "#38bdf8"
-      stroke-width: 1
-      border-radius: 6
-    }
-  }
-  reasoning_box: {
-    style: {
-      fill: "#1e1b4b"
+      fill: "#0c1222"
       stroke: "#818cf8"
       stroke-width: 2
-      border-radius: 8
+      border-radius: 14
+      font-color: "#818cf8"
+      shadow: true
     }
   }
-  evidence_box: {
+  tier_adk: {
     style: {
-      fill: "#064e3b"
-      stroke: "#10b981"
+      fill: "#0c1222"
+      stroke: "#c084fc"
       stroke-width: 2
-      border-radius: 8
+      border-radius: 14
+      font-color: "#c084fc"
+      shadow: true
     }
   }
-  cloud_box: {
+  tier_engines: {
     style: {
-      fill: "#1c1917"
+      fill: "#0c1222"
       stroke: "#f59e0b"
       stroke-width: 2
-      border-radius: 8
+      border-radius: 14
+      font-color: "#f59e0b"
+      shadow: true
+    }
+  }
+  tier_infra: {
+    style: {
+      fill: "#0c1222"
+      stroke: "#10b981"
+      stroke-width: 2
+      border-radius: 14
+      font-color: "#10b981"
+      shadow: true
+    }
+  }
+  card_blue: {
+    style: {
+      fill: "#162032"
+      stroke: "#1e3a5f"
+      stroke-width: 1
+      border-radius: 10
+      font-color: "#f8fafc"
+    }
+  }
+  card_purple: {
+    style: {
+      fill: "#1a152e"
+      stroke: "#3b2d64"
+      stroke-width: 1
+      border-radius: 10
+      font-color: "#f8fafc"
+    }
+  }
+  card_amber: {
+    style: {
+      fill: "#23180c"
+      stroke: "#633d0e"
+      stroke-width: 2
+      border-radius: 10
+      font-color: "#fef3c7"
+    }
+  }
+  card_emerald: {
+    style: {
+      fill: "#09261d"
+      stroke: "#135741"
+      stroke-width: 2
+      border-radius: 10
+      font-color: "#ecfdf5"
+    }
+  }
+  card_slate: {
+    style: {
+      fill: "#181c24"
+      stroke: "#2d3748"
+      stroke-width: 1
+      border-radius: 10
+      font-color: "#f8fafc"
     }
   }
 }
 
-clients: "1. Filmmaker & Autonomous Agent Clients" {
-  class: client_box
+clients: "1. CLIENTS & MULTI-AGENT RUNTIMES" {
+  class: tier_clients
+  grid-columns: 3
+  grid-gap: 20
 
-  web_ui: "Filmmaker Web Application\n(React 19 + Tailwind v4 + Vite)"
-  browser_agent: "Autonomous In-Browser Agents\n(Chrome WebMCP / Google Antigravity / Gemini Live)"
-  headless_agent: "External Agent Desktops & IDEs\n(Google Antigravity / Open MCP Inspectors / CLI)"
+  web: |md
+    ### Filmmaker Web Studio
+    - **React 19 + Tailwind v4 + Vite**
+    - Real-time SSE Investigation Stream
+    - Transparency Radar & Claim Ledger
+    - Visual DOM Telemetry Target
+  | { class: card_blue }
+
+  webmcp_agent: |md
+    ### Autonomous In-Browser Agents
+    - **Chrome WebMCP / Gemini Live**
+    - DOM Event Bus: `window.__screened_web_mcp__`
+    - Live Agent Co-Browsing & Form Sync
+    - Element Spotlighting & Mutation Observer
+  | { class: card_blue }
+
+  headless: |md
+    ### Headless Agents & IDEs
+    - **Google Antigravity / Cursor / Claude Code**
+    - Standard Open JSON-RPC 2.0 Clients
+    - Autonomous CI/CD Pipeline Audits
+    - Verification & Anti-Predatory Scans
+  | { class: card_blue }
 }
 
-protocols: "2. Ingestion & Dual-Protocol Agent Layer" {
-  class: protocol_box
+gateway: "2. INGESTION & DUAL-PROTOCOL GATEWAY" {
+  class: tier_gateway
+  grid-columns: 3
+  grid-gap: 20
 
-  webmcp: "In-Browser WebMCP (WebMCP/2026)\n• window.__screened_web_mcp__\n• DOM Event Bus: webmcp:call / webmcp:result\n• Visual DOM Sync & Telemetry Spotlighting"
-  
-  server_mcp: "Headless Server MCP (Open JSON-RPC 2.0 Standard)\n• SSE Transport: /api/mcp/sse\n• JSON-RPC Messages: /api/mcp/messages\n• HTTP Testing: /api/mcp/rpc"
-  
-  gateway: "FastAPI Application Gateway\n• REST Endpoints & SSE Event Stream\n• PII Masking Vault & Rate Limiter\n• Action Approval Sandbox Gate (SHA-256)"
+  webmcp_bus: |md
+    ### In-Browser WebMCP Engine
+    - WebMCP 2026 In-DOM Protocol Hub
+    - Events: `webmcp:call` / `webmcp:result`
+    - Dynamic Tool Discovery & Registration
+    - Zero-Network Client Tool Isolation
+  | { class: card_blue }
+
+  api_gw: |md
+    ### FastAPI Application Gateway
+    - High-Performance Async ASGI Hub
+    - REST Endpoints & SSE Streaming Broker
+    - Zero-PII Scrubbing & Regex Masking Vault
+    - Action Sandbox Gate (SHA-256 Approvals)
+  | { class: card_blue }
+
+  server_mcp: |md
+    ### Headless Server MCP
+    - Open MCP Protocol JSON-RPC 2.0
+    - SSE Transport: `/api/mcp/sse`
+    - Message Gateway: `/api/mcp/messages`
+    - Stdio Protocol Adapter for External IDEs
+  | { class: card_blue }
 }
 
-clients.web_ui -> protocols.gateway: "REST / SSE / WebSockets"
-clients.browser_agent -> protocols.webmcp: "DOM CustomEvents"
-protocols.webmcp -> protocols.gateway: "Tool Invocations"
-clients.headless_agent -> protocols.server_mcp: "JSON-RPC 2.0 (SSE/Stdio)"
-protocols.server_mcp -> protocols.gateway: "Internal Tool Execution"
+adk: "3. COGNITIVE MULTI-AGENT ORCHESTRATOR (Google ADK)" {
+  class: tier_adk
+  grid-columns: 4
+  grid-gap: 16
 
-orchestration: "3. Google Agent Development Kit (ADK) Orchestrator" {
-  class: adk_box
+  producer: |md
+    ### Producer Desk
+    *(LlmAgent)*
+    - Conversational Intake & Triage
+    - Dynamic Mini-UI Synthesis
+    - Lead Investigation Coordinator
+    - Filmmaker Outreach Packaging
+  | { class: card_purple }
 
-  producer_desk: "Screened AI Chat Agent (LlmAgent)\nConversational Triage, PDF Intake & Mini-UIs" {
-    class: agent_node
-  }
+  disam_plan: |md
+    ### Disambiguate & Plan
+    *(LlmAgent Cluster)*
+    - **DisambiguatorAgent**: Entity Normalization
+    - **PlannerAgent**: 3-Vector Strategy
+    - Dynamic Domain Task Formulation
+    - OpportunityScoutAgent (Grants & Calls)
+  | { class: card_purple }
 
-  disambiguator: "Disambiguator Agent (LlmAgent)\nTarget Entity Identification & Alias Resolution" {
-    class: agent_node
-  }
+  vetting: |md
+    ### Deep Vetting Cluster
+    *(ParallelAgent)*
+    - **FestivalAgent**: Leases, Rules & Fees
+    - **OrganizerAgent**: Companies House Filings
+    - **ParticipantsAgent**: Community & Jury
+    - High-Concurrency Parallel Execution
+  | { class: card_purple }
 
-  planner: "Planner Agent (LlmAgent)\nStrategy Synthesis & Domain Task Formulation" {
-    class: agent_node
-  }
-
-  vetting_cluster: "Deep Vetting Cluster (ParallelAgent)" {
-    class: adk_box
-    festival_agent: "FestivalAgent\nScreening Leases & Rules" { class: agent_node }
-    organizer_agent: "OrganizerAgent\nCompanies House Filings" { class: agent_node }
-    participants_agent: "ParticipantsAgent\nJury & Community Flags" { class: agent_node }
-  }
-
-  analysis_cluster: "Analysis & Synthesis Cluster (SequentialAgent)" {
-    class: adk_box
-    claim_extractor: "ClaimExtractorAgent\nGrounds Atomic Claims" { class: agent_node }
-    contradiction_analyst: "ContradictionAnalystAgent\nDetects Collisions & Penalty" { class: agent_node }
-    report_writer: "ReportWriterAgent\n4-Tier Dossier & SHA-256 Seal" { class: agent_node }
-  }
-
-  scout: "OpportunityScoutAgent (LlmAgent)\nGrant & Open Call Matcher (.ics)" {
-    class: agent_node
-  }
-
-  outreach: "OutreachDrafterAgent (LlmAgent)\nSHA-256 Sandboxed Inquiries" {
-    class: agent_node
-  }
-
-  producer_desk -> disambiguator: "Entity Query"
-  disambiguator -> planner: "Confirmed Subject"
-  planner -> vetting_cluster: "Parallel Execution"
-  vetting_cluster -> analysis_cluster: "Gathered Domain Evidence"
-  producer_desk -> scout: "Grant / Festival Request"
-  analysis_cluster -> outreach: "Flagged Discrepancy"
+  synthesis: |md
+    ### Analysis & Synthesis
+    *(SequentialAgent)*
+    - **ClaimExtractor**: Atomic Citations
+    - **ContradictionAnalyst**: Collisions
+    - **ReportWriter**: 4-Tier Dossier
+    - Cryptographic SHA-256 Radar Seal
+  | { class: card_purple }
 }
 
-protocols.gateway -> orchestration.producer_desk: "Dispatches Investigation"
+engines: "4. DUAL FOUNDATION ENGINES (Reasoning & Evidence)" {
+  class: tier_engines
+  grid-columns: 2
+  grid-gap: 24
 
-intelligence: "4. Reasoning Engine (Vertex AI)" {
-  class: reasoning_box
+  gemini: |md
+    ### Vertex AI — Gemini Reasoning Engine
+    - **Gemini 2.5 Pro**: Complex multi-step contradiction deduction, high-order reasoning, structured JSON Schema output, multimodal PDF intake.
+    - **Gemini 2.5 Flash**: Sub-second entity disambiguation, low-latency conversational triage, high-throughput streaming responses.
+    - **Pydantic Validation**: Native function calling with strict schema enforcement across all agent tools.
+  | { class: card_amber }
 
-  gemini_pro: "Gemini 2.5 Pro\n• Function Calling & Agent Tool Execution\n• Complex Multi-Step Contradiction Analysis\n• Multimodal Script Extraction & Dossier Synthesis"
-
-  gemini_flash: "Gemini 2.5 Flash\n• Sub-Second Entity Disambiguation\n• Low-Latency Streaming Chat Token Generation"
+  parallel: |md
+    ### Parallel API — Ground-Truth Evidence Engine
+    - **Parallel Search**: Dual-speed discovery (`fast` 700ms at $1/1k for preflight vs `advanced` multi-hop deep crawl).
+    - **Parallel Extract**: Verbatim quote extraction with cryptographic SHA-256 source hashing.
+    - **Parallel Task API**: Asynchronous cloud workers for exhaustive investigations.
+    - **Parallel Monitor**: Autonomous web change detection with HMAC-SHA256 drift verification.
+  | { class: card_emerald }
 }
 
-orchestration.producer_desk -> intelligence.gemini_pro: "Tool Calls & Chat"
-orchestration.disambiguator -> intelligence.gemini_flash: "Fast Match"
-orchestration.analysis_cluster -> intelligence.gemini_pro: "Contradiction Check"
+infra: "5. PRODUCTION CLOUD INFRASTRUCTURE (Google Cloud Platform)" {
+  class: tier_infra
+  grid-columns: 4
+  grid-gap: 16
 
-evidence: "5. Ground-Truth Evidence Engine (Parallel API)" {
-  class: evidence_box
+  cloud_run: |md
+    ### Google Cloud Run
+    - Serverless FastAPI Container
+    - Auto-Scale 0 to N Instances
+    - Region: London (`europe-west2`)
+    - Zero Cold-Start Concurrency
+  | { class: card_slate }
 
-  search: "Parallel Search\nHigh-Precision Web & Registry Discovery"
-  extract: "Parallel Extract\nVerbatim Quoted Substrings & Source Tiers"
-  findall: "Parallel FindAll\nExhaustive Grant & Festival Search"
-  task_api: "Parallel Task API\nAsynchronous Deep Investigation"
-  monitor: "Parallel Monitor\nPage Drift & Policy Change Tracking"
+  cloud_tasks: |md
+    ### Google Cloud Tasks
+    - `screened-tasks` Queue
+    - Durable Async Worker Offload
+    - OIDC Authenticated Tasks
+    - Automatic Exponential Backoff
+  | { class: card_slate }
+
+  firestore: |md
+    ### Cloud Firestore
+    - Atomic Claims Ledger
+    - State Machine Persistence
+    - Real-time Mutation Sync
+    - Zero PII Encrypted Store
+  | { class: card_slate }
+
+  observability: |md
+    ### Security & Tracing
+    - Cloud Secret Manager Key Vault
+    - OpenTelemetry Distributed Spans
+    - Cloud Trace Latency Profiling
+    - Structured Cloud Logging
+  | { class: card_slate }
 }
 
-orchestration.vetting_cluster -> evidence.search: "Domain Queries"
-orchestration.vetting_cluster -> evidence.extract: "Verbatim Proof"
-orchestration.scout -> evidence.findall: "Grant Exploration"
-evidence.monitor -> protocols.gateway: "HMAC-SHA256 Webhook (/api/webhooks/parallel)"
-
-cloud: "6. Google Cloud Platform Infrastructure" {
-  class: cloud_box
-
-  cloud_run: "Google Cloud Run (London europe-west2)\nAuto-Scaling Serverless FastAPI Container"
-  cloud_tasks: "Google Cloud Tasks (screened-tasks)\nDurable Asynchronous Queue with OIDC Auth"
-  firestore: "Google Cloud Firestore (Native Mode)\nState Machine Persistence & Claim Ledger"
-  secret_manager: "Google Cloud Secret Manager\nRuntime Secrets & Key Injection"
-  observability: "OpenTelemetry & Cloud Trace\nDistributed Spans & Structured Cloud Logging"
+clients -> gateway: "Dual MCP Protocol (WebMCP In-DOM / Server MCP JSON-RPC) & REST / SSE Streams" {
+  style: {
+    stroke: "#38bdf8"
+    stroke-width: 2
+    font-color: "#38bdf8"
+    font-size: 14
+    bold: true
+  }
 }
 
-protocols.gateway -> cloud.cloud_run: "Hosted On"
-orchestration -> cloud.cloud_tasks: "Enqueues Background Tasks"
-orchestration -> cloud.firestore: "Persists State & Claims"
-protocols.gateway -> cloud.secret_manager: "Loads API Keys"
-orchestration -> cloud.observability: "Exports Distributed Spans"
+gateway -> adk: "Dispatches Investigation Tasks to Google ADK Multi-Agent Orchestrator" {
+  style: {
+    stroke: "#818cf8"
+    stroke-width: 2
+    font-color: "#818cf8"
+    font-size: 14
+    bold: true
+  }
+}
+
+adk -> engines: "Cognitive Multi-Step Reasoning (Gemini) & Forensic Web Grounding (Parallel API)" {
+  style: {
+    stroke: "#c084fc"
+    stroke-width: 2
+    font-color: "#c084fc"
+    font-size: 14
+    bold: true
+  }
+}
+
+engines -> infra: "Durable Task Execution, State Persistence, Cryptographic Seals & Telemetry" {
+  style: {
+    stroke: "#f59e0b"
+    stroke-width: 2
+    font-color: "#f59e0b"
+    font-size: 14
+    bold: true
+  }
+}
