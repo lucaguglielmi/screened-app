@@ -123,7 +123,16 @@ export const HowToUse: React.FC<Props> = ({
   const [copiedConfig, setCopiedConfig] = useState(false);
   const [copiedResult, setCopiedResult] = useState(false);
   const [copiedPromptIdx, setCopiedPromptIdx] = useState<number | null>(null);
+  const [copiedAntigravity, setCopiedAntigravity] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
+
+  const ANTIGRAVITY_INSTALL_CMD = 'cp -r plugins/screened-gemini-plugin ~/.gemini/config/plugins/screened';
+
+  const handleCopyAntigravity = () => {
+    navigator.clipboard.writeText(ANTIGRAVITY_INSTALL_CMD);
+    setCopiedAntigravity(true);
+    setTimeout(() => setCopiedAntigravity(false), 2000);
+  };
 
   // Sandbox state (inside Agent section)
   const [sandboxTool, setSandboxTool] = useState<string>('screened_ask_dossier');
@@ -625,21 +634,103 @@ export const HowToUse: React.FC<Props> = ({
           </div>
         </section>
 
-        {/* SECTION 4: Headless Agents & Native Proper MCP Server */}
+        {/* SECTION 4: Headless Agents & Google Antigravity Plugin */}
         <section className="space-y-8">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2">
             <div className="flex flex-col sm:flex-row sm:items-center items-start gap-2 sm:gap-2.5">
               <span className="w-fit px-2.5 py-0.5 rounded-full bg-purple-500/15 border border-purple-500/40 text-purple-300 text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-1.5">
                 <Terminal className="size-3.5" />
-                <span>EXTERNAL AGENTS</span>
+                <span>EXTERNAL AGENTS &amp; PLUGINS</span>
               </span>
               <h2 className="text-xl sm:text-2xl font-bold font-serif text-white">
-                Native Agent MCP Server (Cursor, Antigravity &amp; Clients)
+                Google Antigravity Plugin &amp; Native MCP Server
               </h2>
             </div>
             <span className="text-xs font-mono text-slate-400">
-              Transport: Stdio &amp; SSE
+              Transport: SSE &amp; Stdio · Google Ecosystem First
             </span>
+          </div>
+
+          {/* Google Antigravity Spotlight Card */}
+          <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-b from-indigo-950/40 via-purple-950/20 to-white/[0.02] border border-indigo-500/30 space-y-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 shrink-0">
+                  <Sparkles className="size-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-lg sm:text-xl font-bold font-serif text-white">
+                      Google Antigravity &amp; Gemini Native Plugin
+                    </h3>
+                    <span className="px-2 py-0.5 rounded-full bg-indigo-500/20 border border-indigo-400/40 text-indigo-300 text-[10px] font-mono font-bold uppercase">
+                      HACKATHON READY
+                    </span>
+                  </div>
+                  <p className="text-xs sm:text-sm font-mono text-indigo-200/80">
+                    Zero-config discovery at <code className="text-indigo-300">.agents/plugins/screened/</code> with progressive disclosure skills
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleCopyAntigravity}
+                className="w-full sm:w-auto shrink-0 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-mono flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-lg shadow-indigo-500/20 active:scale-95"
+              >
+                {copiedAntigravity ? <Check className="size-3.5 text-emerald-300" /> : <Copy className="size-3.5" />}
+                <span>{copiedAntigravity ? 'Command Copied!' : 'Copy Global Install'}</span>
+              </button>
+            </div>
+
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
+              Screened includes a turnkey, first-class workspace plugin for <strong>Google Antigravity</strong> and the <strong>Gemini CLI</strong>. When you open this repository in Antigravity, the agent automatically mounts Screened's Cloud Run MCP endpoint, equips forensic investigation runbooks, and enforces strict anti-hallucination rules.
+            </p>
+
+            {/* Grid of Plugin Features */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 text-xs">
+              <div className="p-3.5 rounded-xl bg-black/40 border border-indigo-500/20 space-y-1.5">
+                <div className="flex items-center gap-1.5 font-bold font-mono text-indigo-300">
+                  <Zap className="size-3.5 text-indigo-400" />
+                  <span>Zero-Config Discovery</span>
+                </div>
+                <p className="text-slate-400 text-[11px] leading-relaxed">
+                  Located in <code className="text-indigo-200">.agents/plugins/screened/</code>. Antigravity connects to Cloud Run SSE automatically with no manual token or port setup.
+                </p>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-black/40 border border-indigo-500/20 space-y-1.5">
+                <div className="flex items-center gap-1.5 font-bold font-mono text-indigo-300">
+                  <ShieldCheck className="size-3.5 text-indigo-400" />
+                  <span>Forensic Rules &amp; Injection Defense</span>
+                </div>
+                <p className="text-slate-400 text-[11px] leading-relaxed">
+                  <code className="text-indigo-200">rules/AGENTS.md</code> quarantines scraped festival text inside <code className="text-indigo-200">&lt;untrusted_evidence_data&gt;</code> to defeat prompt injections.
+                </p>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-black/40 border border-indigo-500/20 space-y-1.5">
+                <div className="flex items-center gap-1.5 font-bold font-mono text-indigo-300">
+                  <Bot className="size-3.5 text-indigo-400" />
+                  <span>2 Progressive Skills</span>
+                </div>
+                <p className="text-slate-400 text-[11px] leading-relaxed">
+                  <code className="text-indigo-200">screened-festival-diligence</code> (5-vector venue &amp; fee audit) and <code className="text-indigo-200">screened-grant-scout</code> (4-pillar public fund packaging).
+                </p>
+              </div>
+            </div>
+
+            {/* Global Install Command Callout */}
+            <div className="p-3.5 rounded-xl bg-black/50 border border-indigo-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono">
+              <div className="flex items-center gap-2 text-indigo-300">
+                <Terminal className="size-4 shrink-0 text-indigo-400" />
+                <span className="text-slate-400">Install to global Antigravity:</span>
+                <code className="text-white bg-indigo-950/60 px-2 py-0.5 rounded border border-indigo-500/30 select-all break-all">
+                  cp -r plugins/screened-gemini-plugin ~/.gemini/config/plugins/screened
+                </code>
+              </div>
+              <span className="text-[11px] text-indigo-300/80 shrink-0">Available in all projects</span>
+            </div>
           </div>
 
           <div className="p-5 sm:p-6 rounded-2xl bg-white/[0.02] space-y-4">

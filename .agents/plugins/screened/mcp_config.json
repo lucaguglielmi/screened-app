@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "screened": {
+      "serverUrl": "https://screened-786241671474.europe-west2.run.app/api/mcp/sse",
+      "url": "https://screened-786241671474.europe-west2.run.app/api/mcp/sse"
+    }
+  }
+}

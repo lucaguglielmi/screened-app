@@ -1,0 +1,175 @@
+direction: down
+title: "Screened — Cloud & Multi-Agent Architecture (Google ADK, Gemini, Parallel Search & MCP)"
+
+classes: {
+  client_box: {
+    style: {
+      fill: "#1e1e2e"
+      stroke: "#6366f1"
+      stroke-width: 2
+      border-radius: 8
+    }
+  }
+  protocol_box: {
+    style: {
+      fill: "#181825"
+      stroke: "#a855f7"
+      stroke-width: 2
+      border-radius: 8
+    }
+  }
+  adk_box: {
+    style: {
+      fill: "#1e293b"
+      stroke: "#38bdf8"
+      stroke-width: 2
+      border-radius: 8
+    }
+  }
+  agent_node: {
+    style: {
+      fill: "#0f172a"
+      stroke: "#38bdf8"
+      stroke-width: 1
+      border-radius: 6
+    }
+  }
+  reasoning_box: {
+    style: {
+      fill: "#1e1b4b"
+      stroke: "#818cf8"
+      stroke-width: 2
+      border-radius: 8
+    }
+  }
+  evidence_box: {
+    style: {
+      fill: "#064e3b"
+      stroke: "#10b981"
+      stroke-width: 2
+      border-radius: 8
+    }
+  }
+  cloud_box: {
+    style: {
+      fill: "#1c1917"
+      stroke: "#f59e0b"
+      stroke-width: 2
+      border-radius: 8
+    }
+  }
+}
+
+clients: "1. Filmmaker & Autonomous Agent Clients" {
+  class: client_box
+
+  web_ui: "Filmmaker Web Application\n(React 19 + Tailwind v4 + Vite)"
+  browser_agent: "Autonomous In-Browser Agents\n(Chrome WebMCP / Claude Computer Use / Gemini Live)"
+  headless_agent: "External Agent Desktops & IDEs\n(Claude Desktop / Cursor / Antigravity)"
+}
+
+protocols: "2. Ingestion & Dual-Protocol Agent Layer" {
+  class: protocol_box
+
+  webmcp: "In-Browser WebMCP (WebMCP/2026)\n• window.__screened_web_mcp__\n• DOM Event Bus: webmcp:call / webmcp:result\n• Visual DOM Sync & Telemetry Spotlighting"
+  
+  server_mcp: "Headless Server MCP (Anthropic MCP v1.x)\n• SSE Transport: /api/mcp/sse\n• JSON-RPC Messages: /api/mcp/messages\n• HTTP Testing: /api/mcp/rpc"
+  
+  gateway: "FastAPI Application Gateway\n• REST Endpoints & SSE Event Stream\n• PII Masking Vault & Rate Limiter\n• Action Approval Sandbox Gate (SHA-256)"
+}
+
+clients.web_ui -> protocols.gateway: "REST / SSE / WebSockets"
+clients.browser_agent -> protocols.webmcp: "DOM CustomEvents"
+protocols.webmcp -> protocols.gateway: "Tool Invocations"
+clients.headless_agent -> protocols.server_mcp: "JSON-RPC 2.0 (SSE/Stdio)"
+protocols.server_mcp -> protocols.gateway: "Internal Tool Execution"
+
+orchestration: "3. Google Agent Development Kit (ADK) Orchestrator" {
+  class: adk_box
+
+  producer_desk: "Producer Desk Agent (LlmAgent)\nConversational Triage, PDF Intake & Mini-UIs" {
+    class: agent_node
+  }
+
+  disambiguator: "Disambiguator Agent (LlmAgent)\nTarget Entity Identification & Alias Resolution" {
+    class: agent_node
+  }
+
+  planner: "Planner Agent (LlmAgent)\nStrategy Synthesis & Domain Task Formulation" {
+    class: agent_node
+  }
+
+  vetting_cluster: "Deep Vetting Cluster (ParallelAgent)" {
+    class: adk_box
+    festival_agent: "FestivalAgent\nScreening Leases & Rules" { class: agent_node }
+    organizer_agent: "OrganizerAgent\nCompanies House Filings" { class: agent_node }
+    participants_agent: "ParticipantsAgent\nJury & Community Flags" { class: agent_node }
+  }
+
+  analysis_cluster: "Analysis & Synthesis Cluster (SequentialAgent)" {
+    class: adk_box
+    claim_extractor: "ClaimExtractorAgent\nGrounds Atomic Claims" { class: agent_node }
+    contradiction_analyst: "ContradictionAnalystAgent\nDetects Collisions & Penalty" { class: agent_node }
+    report_writer: "ReportWriterAgent\n4-Tier Dossier & SHA-256 Seal" { class: agent_node }
+  }
+
+  scout: "OpportunityScoutAgent (LlmAgent)\nGrant & Open Call Matcher (.ics)" {
+    class: agent_node
+  }
+
+  outreach: "OutreachDrafterAgent (LlmAgent)\nSHA-256 Sandboxed Inquiries" {
+    class: agent_node
+  }
+
+  producer_desk -> disambiguator: "Entity Query"
+  disambiguator -> planner: "Confirmed Subject"
+  planner -> vetting_cluster: "Parallel Execution"
+  vetting_cluster -> analysis_cluster: "Gathered Domain Evidence"
+  producer_desk -> scout: "Grant / Festival Request"
+  analysis_cluster -> outreach: "Flagged Discrepancy"
+}
+
+protocols.gateway -> orchestration.producer_desk: "Dispatches Investigation"
+
+intelligence: "4. Reasoning Engine (Vertex AI)" {
+  class: reasoning_box
+
+  gemini_pro: "Gemini 2.5 Pro\n• Function Calling & Agent Tool Execution\n• Complex Multi-Step Contradiction Analysis\n• Multimodal Script Extraction & Dossier Synthesis"
+
+  gemini_flash: "Gemini 2.5 Flash\n• Sub-Second Entity Disambiguation\n• Low-Latency Streaming Chat Token Generation"
+}
+
+orchestration.producer_desk -> intelligence.gemini_pro: "Tool Calls & Chat"
+orchestration.disambiguator -> intelligence.gemini_flash: "Fast Match"
+orchestration.analysis_cluster -> intelligence.gemini_pro: "Contradiction Check"
+
+evidence: "5. Ground-Truth Evidence Engine (Parallel API)" {
+  class: evidence_box
+
+  search: "Parallel Search\nHigh-Precision Web & Registry Discovery"
+  extract: "Parallel Extract\nVerbatim Quoted Substrings & Source Tiers"
+  findall: "Parallel FindAll\nExhaustive Grant & Festival Search"
+  task_api: "Parallel Task API\nAsynchronous Deep Investigation"
+  monitor: "Parallel Monitor\nPage Drift & Policy Change Tracking"
+}
+
+orchestration.vetting_cluster -> evidence.search: "Domain Queries"
+orchestration.vetting_cluster -> evidence.extract: "Verbatim Proof"
+orchestration.scout -> evidence.findall: "Grant Exploration"
+evidence.monitor -> protocols.gateway: "HMAC-SHA256 Webhook (/api/webhooks/parallel)"
+
+cloud: "6. Google Cloud Platform Infrastructure" {
+  class: cloud_box
+
+  cloud_run: "Google Cloud Run (London europe-west2)\nAuto-Scaling Serverless FastAPI Container"
+  cloud_tasks: "Google Cloud Tasks (screened-tasks)\nDurable Asynchronous Queue with OIDC Auth"
+  firestore: "Google Cloud Firestore (Native Mode)\nState Machine Persistence & Claim Ledger"
+  secret_manager: "Google Cloud Secret Manager\nRuntime Secrets & Key Injection"
+  observability: "OpenTelemetry & Cloud Trace\nDistributed Spans & Structured Cloud Logging"
+}
+
+protocols.gateway -> cloud.cloud_run: "Hosted On"
+orchestration -> cloud.cloud_tasks: "Enqueues Background Tasks"
+orchestration -> cloud.firestore: "Persists State & Claims"
+protocols.gateway -> cloud.secret_manager: "Loads API Keys"
+orchestration -> cloud.observability: "Exports Distributed Spans"

@@ -1,0 +1,8 @@
+{
+  "name": "screened-cinema-intelligence",
+  "version": "1.0.0",
+  "description": "Autonomous Cinema Due Diligence & Grant Intelligence connector for Google Antigravity & Gemini agents.",
+  "author": "Screened Team",
+  "homepage": "https://totallyscreened.com/agents",
+  "license": "Apache-2.0"
+}
