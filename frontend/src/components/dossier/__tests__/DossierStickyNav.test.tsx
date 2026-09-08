@@ -55,6 +55,7 @@ describe('DossierStickyNav Component', () => {
     expect(screen.getByText('Copy Summary')).toBeInTheDocument();
     expect(screen.getByText('Copy Shareable Link')).toBeInTheDocument();
     expect(screen.getByText('Print / Save as PDF')).toBeInTheDocument();
+    expect(screen.getByText(/Copy Gemini Agent Prompt/i)).toBeInTheDocument();
     expect(screen.getByText(/Copy AI Graph/i)).toBeInTheDocument();
   });
 

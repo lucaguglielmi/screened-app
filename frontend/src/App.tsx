@@ -614,6 +614,7 @@ export default function App() {
                   }}
                   onDraftOutreach={handleDraftOutreach}
                   onExport={handleExport}
+                  onNavigateToAgents={() => navigate('/agents')}
                 />
               )}
             </>

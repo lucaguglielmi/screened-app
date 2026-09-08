@@ -101,6 +101,18 @@ const PROMPT_TEMPLATES: PromptTemplate[] = [
     prompt:
       'Start a new due diligence dossier on Screened for the short film festival at filmfreeway.com/sample and summarize the top 3 risk indicators.',
   },
+  {
+    title: 'Search Live Dossier with Gemini / Antigravity',
+    description: 'Instruct your Gemini agent or Google Antigravity to audit venue reality, Companies House filings, and fee traps.',
+    prompt:
+      'Audit the Pinco Pallino Film Festival dossier (demo_pinco_pallino) using Screened MCP: verify venue manifest at BFI Southbank and fee escalation.',
+  },
+  {
+    title: 'Scout Public Film Grants with Gemini Agent',
+    description: 'Match non-repayable public funds (BFI, Doc Society, Creative Europe) and generate a 4-pillar packaging checklist.',
+    prompt:
+      'I have a £150,000 narrative feature in development in the UK. Use Screened grant scouting tools to match institutional funding programs and prepare an application readiness checklist.',
+  },
 ];
 
 const MCP_SERVER_CONFIG = `{
@@ -730,6 +742,46 @@ export const HowToUse: React.FC<Props> = ({
                 </code>
               </div>
               <span className="text-[11px] text-indigo-300/80 shrink-0">Available in all projects</span>
+            </div>
+
+            {/* Deep-Dive: How Gemini Queries Any Live Dossier */}
+            <div className="pt-2 border-t border-indigo-500/20 space-y-3">
+              <div className="flex items-center gap-2 text-sm font-semibold text-white font-serif">
+                <Bot className="size-4 text-indigo-400" />
+                <span>How Gemini &amp; Antigravity Interrogate Live Dossiers</span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                {/* Left: The Filmmaker Experience */}
+                <div className="p-4 rounded-xl bg-black/40 border border-white/5 space-y-2.5">
+                  <span className="text-xs font-mono font-bold text-indigo-300 flex items-center gap-1.5">
+                    <MessageSquare className="size-3.5 text-indigo-400" />
+                    <span>1. Conversational Query (Filmmaker)</span>
+                  </span>
+                  <p className="text-slate-300 leading-relaxed font-normal">
+                    Navigate to any festival dossier (e.g. <code className="text-indigo-200">/diligence/demo_pinco_pallino</code>) and click the <strong>&quot;Search this dossier with your Gemini Agent&quot;</strong> bar at the top of the dossier, or ask Gemini:
+                  </p>
+                  <blockquote className="p-2.5 rounded-lg bg-indigo-950/40 border-l-2 border-indigo-400 text-indigo-200 font-mono text-[11px] italic">
+                    &quot;Audit the Pinco Pallino dossier (demo_pinco_pallino) using Screened MCP: verify venue reality and fee escalation.&quot;
+                  </blockquote>
+                </div>
+
+                {/* Right: The Forensic Execution */}
+                <div className="p-4 rounded-xl bg-black/40 border border-white/5 space-y-2.5">
+                  <span className="text-xs font-mono font-bold text-emerald-300 flex items-center gap-1.5">
+                    <ShieldCheck className="size-3.5 text-emerald-400" />
+                    <span>2. Ground-Truth Tool Dispatch (Gemini Agent)</span>
+                  </span>
+                  <p className="text-slate-300 leading-relaxed font-normal">
+                    Under the hood, Gemini executes <code className="text-emerald-300">screened_ask_dossier</code> to retrieve verified atomic claims, verifies verbatim quotes with <code className="text-emerald-300">screened_inspect_claim</code>, and applies <code className="text-emerald-300">rules/AGENTS.md</code>:
+                  </p>
+                  <ul className="list-disc list-inside space-y-1 text-slate-400 text-[11px] font-mono">
+                    <li>Cross-references advertised venues against commercial cinema box-office manifests.</li>
+                    <li>Inspects active vs dissolved company status on UK Companies House.</li>
+                    <li>Enforces quarantine tags (&lt;untrusted_evidence_data&gt;) to contain prompt injections.</li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
 

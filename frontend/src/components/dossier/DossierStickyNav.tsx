@@ -131,6 +131,20 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
   const [internalCopiedLink, setInternalCopiedLink] = useState(false);
   const [internalCopiedAi, setInternalCopiedAi] = useState(false);
   const [internalCopiedRaw, setInternalCopiedRaw] = useState(false);
+  const [internalCopiedGeminiPrompt, setInternalCopiedGeminiPrompt] = useState(false);
+
+  const handleCopyGeminiPrompt = () => {
+    const slug =
+      entityId ||
+      (entityName === 'Pinco Pallino Film Festival'
+        ? 'demo_pinco_pallino'
+        : (entityName || '').toLowerCase().replace(/[^a-z0-9]+/g, '_'));
+    const prompt = `Audit the ${entityName || 'festival'} dossier (${slug}) using Screened MCP / Antigravity plugin: verify venue manifest and fee escalation.`;
+    navigator.clipboard.writeText(prompt);
+    soundEffects.playClick();
+    setInternalCopiedGeminiPrompt(true);
+    setTimeout(() => setInternalCopiedGeminiPrompt(false), 2000);
+  };
 
   const copiedSummary =
     copiedSummaryProp !== undefined ? copiedSummaryProp : internalCopiedSummary;
@@ -395,6 +409,20 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
                 )}
 
                 <div className="border-t border-darkroom-border my-1 pt-1" />
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    handleCopyGeminiPrompt();
+                    closeMenu();
+                  }}
+                  className="w-full text-left px-3 py-2 rounded-xl hover:bg-darkroom-card text-indigo-300 hover:text-white transition-colors flex items-center gap-2.5 cursor-pointer group"
+                >
+                  <Sparkles className="size-3.5 text-indigo-400 ml-1.5" />
+                  <span className="text-xs font-mono">
+                    {internalCopiedGeminiPrompt ? 'Copied Gemini Prompt!' : 'Copy Gemini Agent Prompt'}
+                  </span>
+                </button>
 
                 <button
                   type="button"

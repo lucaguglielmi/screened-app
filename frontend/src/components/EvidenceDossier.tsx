@@ -44,6 +44,7 @@ import {
   Check,
 } from 'lucide-react';
 import { DossierHero } from './dossier/DossierHero';
+import { DossierGeminiAgentCallout } from './dossier/DossierGeminiAgentCallout';
 import { EvidenceLedger } from './dossier/EvidenceLedger';
 import { AiDossierView } from './dossier/AiDossierView';
 import { PremiereBurnGauge } from './dossier/PremiereBurnGauge';
@@ -63,6 +64,7 @@ interface Props {
   onNewInvestigation?: () => void;
   onDraftOutreach: (claim?: AtomicClaim) => void;
   onExport: () => void;
+  onNavigateToAgents?: () => void;
   density?: DetailDensity;
   onDensityChange?: (newDensity: DetailDensity) => void;
 }
@@ -78,6 +80,7 @@ export const EvidenceDossier: React.FC<Props> = ({
   density: propDensity,
   onDensityChange: propOnDensityChange,
   onDraftOutreach,
+  onNavigateToAgents,
 }) => {
   const [internalDensity, setInternalDensity] = useState<DetailDensity>('FULL_EVIDENCE');
   const activeDensity = propDensity !== undefined ? propDensity : internalDensity;
@@ -563,6 +566,14 @@ export const EvidenceDossier: React.FC<Props> = ({
             deepVetting?.overallAuthenticityScore ??
             (entity.name === 'Pinco Pallino Film Festival' ? 68 : 85)
           }
+        />
+
+        {/* Gemini & Google Antigravity Agent Search Bar */}
+        <DossierGeminiAgentCallout
+          entity={entity}
+          dossier={dossier}
+          claimsCount={claims.length}
+          onNavigateToAgents={onNavigateToAgents}
         />
 
         {!dossier ? (

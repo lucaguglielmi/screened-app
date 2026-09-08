@@ -1,6 +1,13 @@
 /**
  * Screened In-Browser WebMCP Protocol Bridge
  * Implements WebMCP/2026 client-side execution, DOM event bus, and tamper protection.
+ *
+ * Interoperability Architecture:
+ * 1. In-Browser Agents (Chrome WebMCP flags, Gemini Live browser assistants, Claude Computer Use):
+ *    Directly invoke tools on window.__screened_web_mcp__ or dispatch "webmcp:call" CustomEvents.
+ * 2. Headless Agents (Google Antigravity, Gemini CLI, Cursor IDE, Claude Desktop):
+ *    Connect via Screened's Cloud Run MCP endpoint (/api/mcp/sse) defined in .agents/plugins/screened/.
+ * Both pathways expose identical forensic tools with zero hallucination and primary registry corroboration.
  */
 
 export interface WebMCPTool {

@@ -1,7 +1,17 @@
-"""Model Context Protocol (MCP) Router for Screened.
+"""Model Context Protocol (MCP) Router for Screened Cinema Intelligence.
 
-Implements Anthropic Model Context Protocol specification v1.x (2024-11-05).
-Supports both Server-Sent Events (SSE) and direct JSON-RPC 2.0 message handling.
+Implements the open Model Context Protocol specification v1.x (2024-11-05).
+Powers multi-agent cinema due diligence across three integrated interfaces:
+1. Google Antigravity & Gemini CLI Plugin (`.agents/plugins/screened/mcp_config.json`)
+2. Headless desktop MCP clients (Claude Desktop, Cursor IDE) via SSE (`/api/mcp/sse`)
+3. In-browser WebMCP runtime (`window.__screened_web_mcp__`) via direct JSON-RPC 2.0 (`/api/mcp`)
+
+Security & Threat Model:
+- Quarantines untrusted external crawled text inside `<untrusted_evidence_data>` tags
+- Defends against indirect prompt injection and adversarial festival submission directives
+- Enforces multi-tier token bucket rate limiting (Read: 60/min, Write: 10/min, Heavy: 3/hr)
+- Private network SSRF blocking on all submission URLs
+- Strictly enforces primary source corroboration (Companies House, commercial cinema manifests)
 """
 import asyncio
 import json
