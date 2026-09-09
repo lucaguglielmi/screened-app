@@ -186,7 +186,8 @@ export const EvidenceLedger: React.FC<Props> = ({
               return (
                 <div
                   key={claim.id}
-                  className="rounded-2xl bg-white/[0.02] transition-all overflow-hidden"
+                  id={`claim-${claim.id}`}
+                  className="rounded-2xl bg-white/[0.02] transition-all overflow-hidden scroll-mt-24"
                 >
                   <div className="p-4 sm:p-5 flex flex-col sm:flex-row items-start justify-between gap-4">
                     <div className="space-y-2 flex-1">

@@ -1001,9 +1001,14 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
                       if (onSelectClaim) {
                         onSelectClaim(String(selectedNodeData.claimId));
                       }
-                      const ledgerEl = document.getElementById('section-ledger');
-                      if (ledgerEl) {
-                        ledgerEl.scrollIntoView({ behavior: 'smooth' });
+                      const claimEl = document.getElementById(`claim-${selectedNodeData.claimId}`);
+                      if (claimEl) {
+                        claimEl.scrollIntoView({ behavior: 'smooth' });
+                      } else {
+                        const ledgerEl = document.getElementById('section-claims');
+                        if (ledgerEl) {
+                          ledgerEl.scrollIntoView({ behavior: 'smooth' });
+                        }
                       }
                     }}
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-500/40 text-indigo-300 hover:text-white font-mono text-xs transition-colors cursor-pointer"
@@ -1190,7 +1195,7 @@ export const EntityProvenanceGraph: React.FC<Props> = ({ dossier, onSelectClaim 
                 data={selectedSyndicateNode}
                 onClose={() => setSelectedSyndicateNode(null)}
                 onNavigateToLedger={() => {
-                  const ledgerEl = document.getElementById('section-ledger');
+                  const ledgerEl = document.getElementById('section-claims');
                   if (ledgerEl) {
                     ledgerEl.scrollIntoView({ behavior: 'smooth' });
                   }

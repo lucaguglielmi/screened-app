@@ -922,11 +922,11 @@ def build_root_agent():
     )
     
     # 3. Deep Vetting
-    ci = LlmAgent(name="corporate_identity", description="Inspect company registration", model=get_adk_model("gemini-2.5-pro"))
-    df = LlmAgent(name="domain_forensics", description="Inspect domain registration history", model=get_adk_model("gemini-2.5-pro"))
-    vr = LlmAgent(name="venue_reality", description="Cross-check physical theater leases", model=get_adk_model("gemini-2.5-pro"))
-    jl = LlmAgent(name="jury_laurels", description="Factually assess Festival Directors", model=get_adk_model("gemini-2.5-pro"))
-    rp = LlmAgent(name="rules_plagiarism", description="Check if submission rules are unique", model=get_adk_model("gemini-2.5-pro"))
+    ci = LlmAgent(name="corporate_identity", description="Inspect company registration", model=get_adk_model("gemini-2.5-flash"))
+    df = LlmAgent(name="domain_forensics", description="Inspect domain registration history", model=get_adk_model("gemini-2.5-flash"))
+    vr = LlmAgent(name="venue_reality", description="Cross-check physical theater leases", model=get_adk_model("gemini-2.5-flash"))
+    jl = LlmAgent(name="jury_laurels", description="Factually assess Festival Directors", model=get_adk_model("gemini-2.5-flash"))
+    rp = LlmAgent(name="rules_plagiarism", description="Check if submission rules are unique", model=get_adk_model("gemini-2.5-flash"))
 
     deep_vetting = Workflow(
         name="deep_vetting",

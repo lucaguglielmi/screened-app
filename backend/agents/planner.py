@@ -48,7 +48,7 @@ Return a detailed JSON adhering strictly to the `InvestigationPlan` schema. Ensu
 
     return LlmAgent(
         name="planner",
-        model=get_adk_model("gemini-2.5-pro"),
+        model=get_adk_model("gemini-2.5-flash"),
         instruction=instruction,
         output_schema=InvestigationPlan,
         output_key="plan",
