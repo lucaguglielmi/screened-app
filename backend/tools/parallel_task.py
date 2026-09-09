@@ -74,13 +74,10 @@ async def _fallback_search_and_extract(
             logger.warning(f"No web sources found for domain {domain}")
             return {"claims": [], "basis": []}
 
-        # Map domain string to ResearchDomain enum
-        domain_enum_map = {
-            "FESTIVAL": ResearchDomain.FESTIVAL,
-            "ORGANIZER": ResearchDomain.ORGANIZER,
-            "PARTICIPANTS": ResearchDomain.PARTICIPANTS,
-        }
-        res_domain = domain_enum_map.get(domain.upper(), ResearchDomain.FESTIVAL)
+        try:
+            res_domain = ResearchDomain(domain.upper())
+        except ValueError:
+            res_domain = ResearchDomain.FESTIVAL
 
         extracted_claims = await gemini.extract_claims_from_sources(
             subject_name=entity_name or "Film Festival",

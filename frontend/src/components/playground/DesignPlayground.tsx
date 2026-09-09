@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ChatMessage } from '../../types/chat';
+import { soundEffects } from '../../utils/audio';
 
 import { ChatBubble } from '../chat/ChatBubble';
 import { AgentThinkingPill } from '../chat/AgentThinkingPill';
@@ -24,10 +25,18 @@ import { FeedbackLogTab } from './FeedbackLogTab';
 import { ArchitecturePage } from './ArchitecturePage';
 import { SearchBenchmarkPage } from './SearchBenchmarkPage';
 import { FeedbackModal } from '../modals/FeedbackModal';
-import { soundEffects } from '../../utils/audio';
+import { PlaygroundPasswordGate } from './PlaygroundPasswordGate';
 import { Workflow, Coins, MailWarning, ShieldCheck, Loader2, MessageSquare, Palette, Zap } from 'lucide-react';
 
 export const DesignPlayground: React.FC = () => {
+  return (
+    <PlaygroundPasswordGate>
+      <DesignPlaygroundContent />
+    </PlaygroundPasswordGate>
+  );
+};
+
+const DesignPlaygroundContent: React.FC = () => {
   const [activeToolSubtab, setActiveToolSubtab] = useState<
     'FESTIVAL' | 'GRANT' | 'INVITATION' | 'SCOUT' | 'COMPARE' | 'VETTING' | 'PROBES'
   >('FESTIVAL');

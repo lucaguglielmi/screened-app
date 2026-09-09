@@ -3,6 +3,11 @@ import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { initAutoPageviewTracking, initAutoClickTracking } from './utils/analytics';
+
+// Initialize Advanced Google Analytics 4 tracking (SPA pageviews & engagement click tracking)
+initAutoPageviewTracking();
+initAutoClickTracking();
 
 // Global handler for Vite dynamic import preload failures (e.g. after a new deployment)
 window.addEventListener('vite:preloadError', (event) => {
