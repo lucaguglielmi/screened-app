@@ -542,6 +542,14 @@ class Orchestrator:
             for domain_enum, domain_result in domain_claims_raw.items():
                 domain_claims_list = domain_result.get("claims", [])
                 domain_basis_list = domain_result.get("basis", [])
+                domain_name = getattr(domain_enum, "value", str(domain_enum)).title()
+                
+                await broadcaster.emit(
+                    investigation_id=investigation_id,
+                    event_type=EventType.CLAIMS_EXTRACTING,
+                    agent_name=f"Extractor-{domain_name}",
+                    message=f"Extracting & structuring {len(domain_claims_list)} atomic claims for domain: {domain_name}...",
+                )
                 
                 domain_atomic_claims = []
                 domain_evidence_list = []
@@ -674,6 +682,12 @@ class Orchestrator:
                 # Fetch basis URLs to get content hash and verify snippets
                 basis_urls = [b.get("url") for b in domain_basis_list if isinstance(b, dict) and b.get("url")]
                 if basis_urls:
+                    await broadcaster.emit(
+                        investigation_id=investigation_id,
+                        event_type=EventType.CLAIMS_EXTRACTING,
+                        agent_name="SourceVerifier",
+                        message=f"Verifying source URLs and cryptographic excerpts across {len(basis_urls)} primary domains for {domain_name}...",
+                    )
                     await extract_tool.extract_and_verify(basis_urls, domain_evidence_list)
 
             if tracer:

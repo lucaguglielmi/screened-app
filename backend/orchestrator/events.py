@@ -2,6 +2,7 @@
 import asyncio
 import json
 import logging
+import time
 from datetime import datetime, timezone
 from enum import Enum
 from typing import AsyncGenerator, Dict, List, Optional
@@ -29,11 +30,13 @@ class EventBroadcaster:
         # Replay past events to new subscriber
         past_events = await db.get_events(investigation_id)
         for evt_data in past_events:
+            if not isinstance(evt_data, dict) or "eventType" not in evt_data:
+                continue
             try:
                 evt = ActivityEvent(**evt_data)
                 queue.put_nowait(evt)
             except Exception as e:
-                logger.exception(f"Failed to replay event: {e}")
+                logger.debug(f"Skipping unparseable event during replay: {e}")
 
         return queue
 
@@ -93,6 +96,8 @@ class EventBroadcaster:
                         try:
                             persisted_events = await db.get_events(investigation_id)
                             for evt_data in persisted_events:
+                                if not isinstance(evt_data, dict) or "eventType" not in evt_data:
+                                    continue
                                 eid = evt_data.get("id")
                                 if eid and eid not in seen_event_ids:
                                     seen_event_ids.add(eid)

@@ -468,21 +468,42 @@ export const LiveProgress: React.FC<Props> = ({
   }, [status, isCelebrating, isPincoDemo, lastServerEvent]);
 
   // Dynamic Terminal console data derived from active agent events
-  const latestActionMessage = useMemo(() => {
-    if (!events || events.length === 0) return null;
-    const last = events[events.length - 1];
-    return last?.message || null;
-  }, [events]);
+  const latestAction = useMemo(() => {
+    if (events && events.length > 0) {
+      const last = events[events.length - 1];
+      return {
+        agentName: last.agentName || 'Swarm',
+        message: last.message,
+      };
+    }
+    const stage = status || 'RESEARCHING';
+    const defaults: Record<string, { agentName: string; message: string }> = {
+      PLANNING: { agentName: 'Planner', message: 'Generating domain research questions across 7 specialized sectors...' },
+      RESEARCHING: { agentName: 'ParallelSearch', message: 'Dispatching 7-agent swarm across primary registries and archives...' },
+      EXTRACTION: { agentName: 'ClaimAssembler', message: 'Extracting atomic assertions and verifying verbatim substrings...' },
+      ANALYZING_CONTRADICTIONS: { agentName: 'ContradictionAnalyst', message: 'Cross-examining factual claims for venue conflicts and anomalies...' },
+      ASSEMBLING_DOSSIER: { agentName: 'ReportWriter', message: 'Synthesizing forensic intelligence dossier and risk checklist...' },
+    };
+    return defaults[stage] || { agentName: 'Swarm', message: 'Dispatching parallel search workers across registered domains...' };
+  }, [events, status]);
 
   const recentTerminalLines = useMemo(() => {
-    if (!events || events.length === 0) {
-      return [
-        'Initializing Google Agent Development Kit (ADK) orchestrator...',
-        'Parallel Search API: Fast mode engaged for verified primary domain grounding',
-        'Extracting primary evidence substrings & corporate registry records...'
-      ];
+    if (events && events.length > 0) {
+      const slice = events.slice(-6, -1).reverse();
+      if (slice.length > 0) {
+        return slice.map((e) => ({
+          agentName: e.agentName || 'Agent',
+          message: e.message,
+        }));
+      }
     }
-    return events.slice(-4, -1).reverse().map((e) => `[${e.agentName || 'Agent'}] ${e.message}`);
+    return [
+      { agentName: 'Orchestrator', message: 'Google Agent Development Kit (ADK) multi-agent session active' },
+      { agentName: 'PlatformScout', message: 'Scanning submission portals, earlybird windows, and fee tiers...' },
+      { agentName: 'VenueForensics', message: 'Cross-referencing physical cinema manifests and box-office screening records...' },
+      { agentName: 'OrganizerAuditor', message: 'Searching corporate registry filings and registered company numbers...' },
+      { agentName: 'FilmmakerFeedback', message: 'Crawling alumni sentiment across IMDb, Letterboxd, and community forums...' },
+    ];
   }, [events]);
 
   // Demo 5-stage progression (5s per stage: 25s total)
@@ -941,34 +962,40 @@ export const LiveProgress: React.FC<Props> = ({
                 <span>fast-mode ~650ms</span>
               </span>
               <span className="hidden sm:inline-block px-2 py-0.5 rounded bg-indigo-500/15 text-indigo-300 font-semibold border border-indigo-500/30">
-                5 parallel workers
+                7 specialist agents
               </span>
             </div>
           </div>
 
           {/* Terminal Content Body */}
-          <div className="p-3.5 sm:p-4 bg-black/40 space-y-2 text-xs">
+          <div className="p-3.5 sm:p-4 bg-black/40 space-y-2.5 text-xs">
             {/* Active Moving Command / Action Line */}
             <div className="flex items-center gap-2 text-tool-diligence font-semibold">
               <span className="text-emerald-400 shrink-0 select-none">$</span>
+              <span className="px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 text-[10px] shrink-0 font-medium">
+                {latestAction.agentName}
+              </span>
               <motion.span
-                key={latestActionMessage || 'idle'}
+                key={latestAction.message || 'idle'}
                 initial={{ opacity: 0, x: 4 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.15 }}
                 className="truncate text-xs sm:text-sm text-emerald-300"
               >
-                {latestActionMessage || 'dispatching parallel search workers across registered domains...'}
+                {latestAction.message}
               </motion.span>
               <span className="size-2 bg-tool-diligence animate-pulse shrink-0 inline-block ml-0.5" />
             </div>
 
             {/* Scrolling Recent Agent Operations */}
-            <div className="space-y-1 pt-1 border-t border-white/[0.05] text-[11px] sm:text-xs text-slate-400">
+            <div className="space-y-1.5 pt-1.5 border-t border-white/[0.05] text-[11px] sm:text-xs">
               {recentTerminalLines.map((line, lIdx) => (
-                <div key={lIdx} className="flex items-start gap-2 leading-relaxed truncate">
-                  <span className="text-slate-600 shrink-0 select-none">›</span>
-                  <span className="text-slate-400 truncate">{line}</span>
+                <div key={lIdx} className="flex items-center gap-2 leading-relaxed truncate">
+                  <span className="text-emerald-500/60 shrink-0 select-none">›</span>
+                  <span className="px-1.5 py-0.5 rounded bg-white/[0.04] text-indigo-300 border border-white/[0.08] text-[10px] shrink-0 font-medium">
+                    {line.agentName}
+                  </span>
+                  <span className="text-slate-300 truncate">{line.message}</span>
                 </div>
               ))}
             </div>
