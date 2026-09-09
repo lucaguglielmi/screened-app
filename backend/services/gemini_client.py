@@ -3,9 +3,10 @@
 NOTE: Prompt / response semantic caching and claim extraction caching with TTL
 is planned as a future improvement after initial launch to accelerate repeated festival analyses.
 """
+from __future__ import annotations
 import json
 import logging
-from typing import List, Optional
+from typing import Any, List, Optional
 import asyncio
 from google import genai
 from google.genai import types
