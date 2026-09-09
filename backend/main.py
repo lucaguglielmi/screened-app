@@ -173,6 +173,19 @@ try:
     except Exception as e:
         logger.warning(f"CloudTraceSpanExporter failed to initialize: {e}. Traces will only be available locally.")
 
+    try:
+        import opentelemetry.instrumentation.fastapi as otel_fastapi
+        _orig_get_route_details = getattr(otel_fastapi, "_get_route_details", None)
+        if _orig_get_route_details:
+            def _safe_get_route_details(scope):
+                try:
+                    return _orig_get_route_details(scope)
+                except (AttributeError, KeyError, Exception):
+                    return scope.get("path", "")
+            otel_fastapi._get_route_details = _safe_get_route_details
+    except Exception as patch_err:
+        logger.debug(f"OpenTelemetry route patch skipped: {patch_err}")
+
     FastAPIInstrumentor.instrument_app(app)
 except Exception as e:
     logger.warning(f"Could not initialize OpenTelemetry: {e}")

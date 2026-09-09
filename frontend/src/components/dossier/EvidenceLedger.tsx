@@ -297,13 +297,15 @@ export const EvidenceLedger: React.FC<Props> = ({
                     <div className="flex items-center gap-2 shrink-0 self-end sm:self-start no-print">
                       {getStatusBadge(claim.status)}
 
-                      <button
-                        onClick={() => onDraftOutreach(claim)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:bg-white/[0.06] hover:text-indigo-400 transition-colors cursor-pointer"
-                        title="Draft Verification Inquiry for this claim"
-                      >
-                        <Mail className="size-4" />
-                      </button>
+                      {claim.status !== 'CORROBORATED' && (
+                        <button
+                          onClick={() => onDraftOutreach(claim)}
+                          className="p-1.5 rounded-lg text-slate-400 hover:bg-white/[0.06] hover:text-indigo-400 transition-colors cursor-pointer"
+                          title="Draft Verification Inquiry for this claim"
+                        >
+                          <Mail className="size-4" />
+                        </button>
+                      )}
                     </div>
                   </div>
 

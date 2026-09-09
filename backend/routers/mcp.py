@@ -738,6 +738,13 @@ async def mcp_sse_endpoint(request: Request):
     )
 
 
+@router.post("/sse")
+async def mcp_post_sse_endpoint(request: Request, sessionId: Optional[str] = None):
+    """Receive JSON-RPC POST requests to /api/mcp/sse directly for clients posting to the SSE endpoint."""
+    return await mcp_messages_endpoint(request, sessionId=sessionId)
+
+
+
 @router.post("/messages")
 async def mcp_messages_endpoint(request: Request, sessionId: Optional[str] = None):
     """Receive JSON-RPC 2.0 messages from MCP client and respond or route to SSE stream."""

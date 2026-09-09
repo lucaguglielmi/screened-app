@@ -90,6 +90,15 @@ async def _run_domain_agent(
             session.state[f"{domain.value}_result"] = result
             await session_service.save_session(session)
 
+        claims_found = len(result.get("claims", [])) if isinstance(result, dict) else 0
+        basis_found = len(result.get("basis", [])) if isinstance(result, dict) else 0
+        await broadcaster.emit(
+            investigation_id=investigation_id,
+            event_type=EventType.CLAIMS_EXTRACTING,
+            agent_name=f"{domain.value}Agent",
+            message=f"Extracted {claims_found} atomic claims and {basis_found} verified web sources for {domain.value}.",
+        )
+
         return result if isinstance(result, dict) else {"claims": [], "basis": []}
     except Exception as e:
         logger.exception(f"Error in _run_domain_agent for {domain.value}: {e}")

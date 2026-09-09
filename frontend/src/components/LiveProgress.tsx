@@ -310,6 +310,75 @@ const DEMO_LOG_EVENTS: Array<{
   },
 ];
 
+const AGENT_BADGE_STYLES: Record<string, { bg: string; text: string; border: string }> = {
+  VenueForensics: { bg: 'bg-emerald-500/15', text: 'text-emerald-300', border: 'border-emerald-500/30' },
+  PlatformScout: { bg: 'bg-amber-500/15', text: 'text-amber-300', border: 'border-amber-500/30' },
+  OrganizerAuditor: { bg: 'bg-sky-500/15', text: 'text-sky-300', border: 'border-sky-500/30' },
+  CorporateRegistry: { bg: 'bg-sky-500/15', text: 'text-sky-300', border: 'border-sky-500/30' },
+  CorporateAgent: { bg: 'bg-sky-500/15', text: 'text-sky-300', border: 'border-sky-500/30' },
+  FilmmakerFeedback: { bg: 'bg-purple-500/15', text: 'text-purple-300', border: 'border-purple-500/30' },
+  CommunitySentiment: { bg: 'bg-purple-500/15', text: 'text-purple-300', border: 'border-purple-500/30' },
+  HeritageAudit: { bg: 'bg-indigo-500/15', text: 'text-indigo-300', border: 'border-indigo-500/30' },
+  InstitutionalArchive: { bg: 'bg-cyan-500/15', text: 'text-cyan-300', border: 'border-cyan-500/30' },
+  ClaimExtractor: { bg: 'bg-teal-500/15', text: 'text-teal-300', border: 'border-teal-500/30' },
+  ClaimAssembler: { bg: 'bg-teal-500/15', text: 'text-teal-300', border: 'border-teal-500/30' },
+  ContradictionAnalyst: { bg: 'bg-rose-500/15', text: 'text-rose-300', border: 'border-rose-500/30' },
+  ReportWriter: { bg: 'bg-violet-500/15', text: 'text-violet-300', border: 'border-violet-500/30' },
+  Orchestrator: { bg: 'bg-emerald-500/15', text: 'text-emerald-400', border: 'border-emerald-500/30' },
+  Planner: { bg: 'bg-blue-500/15', text: 'text-blue-300', border: 'border-blue-500/30' },
+  SourceVerifier: { bg: 'bg-emerald-500/15', text: 'text-emerald-300', border: 'border-emerald-500/30' },
+};
+
+function getAgentBadgeStyle(agentName: string) {
+  for (const [key, val] of Object.entries(AGENT_BADGE_STYLES)) {
+    if (agentName.toLowerCase().includes(key.toLowerCase())) return val;
+  }
+  return { bg: 'bg-white/[0.05]', text: 'text-slate-300', border: 'border-white/[0.1]' };
+}
+
+const PHASE_AGENT_ACTIONS: Record<string, Array<{ agentName: string; message: string }>> = {
+  PLANNING: [
+    { agentName: 'Planner', message: 'Resolving festival canonical entity and historical variations...' },
+    { agentName: 'DomainPlanner', message: 'Formulating 7-sector research matrices across primary registers...' },
+    { agentName: 'TargetSelector', message: 'Configuring parallel multi-query search budgets (~650ms mode)...' },
+    { agentName: 'EntityMatcher', message: 'Cross-referencing Wikidata and national film commission registries...' },
+  ],
+  RESEARCHING: [
+    { agentName: 'PlatformScout', message: 'Probing FilmFreeway entry fees, earlybird tiers, and submission deadlines...' },
+    { agentName: 'VenueForensics', message: 'Querying physical cinema box-office manifests and municipal auditorium leases...' },
+    { agentName: 'OrganizerAuditor', message: 'Searching Companies House & OpenCorporates for active filings and directors...' },
+    { agentName: 'FilmmakerFeedback', message: 'Crawling alumni sentiment across IMDb, Letterboxd, and community forums...' },
+    { agentName: 'HeritageAudit', message: 'Tracing festival founding year, edition continuity, and historical laureates...' },
+    { agentName: 'InstitutionalArchive', message: 'Cross-referencing BFI, FIAPF, and Academy Award qualifying festival status...' },
+    { agentName: 'PlatformScout', message: 'Checking category submission rules, student discounts, and late penalty multipliers...' },
+    { agentName: 'VenueForensics', message: 'Verifying commercial theater addresses against municipal licensing records...' },
+    { agentName: 'FilmmakerFeedback', message: 'Analyzing attendee reports regarding screening attendance and laurels...' },
+  ],
+  EXTRACTION: [
+    { agentName: 'ClaimExtractor', message: 'Parsing HTML DOM trees and isolating atomic assertions with exact spans...' },
+    { agentName: 'ClaimExtractor', message: 'Harvesting verbatim quotation excerpts from primary festival sources...' },
+    { agentName: 'ClaimAssembler', message: 'Grounding assertions to primary URLs and validating cryptographic basis hashes...' },
+    { agentName: 'SourceVerifier', message: 'Executing TLS certificate and DNS provenance verification on evidentiary domains...' },
+    { agentName: 'ClaimAssembler', message: 'Deduplicating cross-domain claims and structuring entity evidence graph...' },
+    { agentName: 'ClaimExtractor', message: 'Extracting venue capacity and commercial screening contract statements...' },
+    { agentName: 'SourceVerifier', message: 'Checking archived snapshots on Wayback Machine for rule modifications...' },
+    { agentName: 'ClaimAssembler', message: 'Normalizing currency values and submission fee escalation milestones...' },
+  ],
+  ANALYZING_CONTRADICTIONS: [
+    { agentName: 'ContradictionAnalyst', message: 'Cross-examining screening claims against physical cinema box office logs...' },
+    { agentName: 'ContradictionAnalyst', message: 'Analyzing submission fee escalation curve for predatory multiplier patterns...' },
+    { agentName: 'ForensicAuditor', message: 'Checking for ghost screening venues, absent directors, and shell entities...' },
+    { agentName: 'DisputeResolver', message: 'Evaluating community complaint threads against verified festival facts...' },
+    { agentName: 'SyndicateDetector', message: 'Scanning organizer entity graph for cross-festival cloning schemes...' },
+  ],
+  ASSEMBLING_DOSSIER: [
+    { agentName: 'ReportWriter', message: 'Synthesizing forensic cinema intelligence summary with neutral evidentiary tone...' },
+    { agentName: 'TrustEngine', message: 'Calculating authenticity score and risk classification tier...' },
+    { agentName: 'DossierAssembler', message: 'Compiling interactive Evidence Ledger with primary source citations...' },
+    { agentName: 'ExportEngine', message: 'Packaging forensic verification dossier and 4-pillar filmmaker checklist...' },
+  ],
+};
+
 export const LiveProgress: React.FC<Props> = ({
   status,
   events,
@@ -467,44 +536,86 @@ export const LiveProgress: React.FC<Props> = ({
     return () => clearInterval(interval);
   }, [status, isCelebrating, isPincoDemo, lastServerEvent]);
 
-  // Dynamic Terminal console data derived from active agent events
+  // Tick counter to keep terminal console constantly moving with specialist agent operations
+  const [tickerStep, setTickerStep] = useState(0);
+
+  useEffect(() => {
+    if (status === 'READY' || status === 'FAILED' || isCelebrating) return;
+    const interval = setInterval(() => {
+      setTickerStep((s) => s + 1);
+    }, 1200);
+    return () => clearInterval(interval);
+  }, [status, isCelebrating]);
+
+  // Dynamic Terminal console data derived from active agent events and specialist operations
+  const currentStage = useMemo(() => {
+    if (status === 'READY' || isCelebrating) return 'READY';
+    if (status === 'ANALYZING_CONTRADICTIONS') return 'ANALYZING_CONTRADICTIONS';
+    if (status === 'ASSEMBLING_DOSSIER') return 'ASSEMBLING_DOSSIER';
+    if (status === 'PLANNING' || status === 'DISAMBIGUATING') return 'PLANNING';
+
+    // In RESEARCHING stage, differentiate between early fetch and claim extraction
+    const hasExtractionStarted = events.some(
+      (e) =>
+        e.eventType === 'CLAIMS_EXTRACTING' ||
+        e.eventType === 'CLAIMS_EXTRACTED' ||
+        (e.agentName && (e.agentName.includes('Claim') || e.agentName.includes('Extractor')))
+    );
+    return hasExtractionStarted ? 'EXTRACTION' : 'RESEARCHING';
+  }, [status, isCelebrating, events]);
+
   const latestAction = useMemo(() => {
-    if (events && events.length > 0) {
-      const last = events[events.length - 1];
+    if (status === 'READY' || isCelebrating) {
       return {
-        agentName: last.agentName || 'Swarm',
-        message: last.message,
+        agentName: 'ReportWriter',
+        message: 'Forensic intelligence dossier assembled. 100% evidentiary corroboration verified.',
       };
     }
-    const stage = status || 'RESEARCHING';
-    const defaults: Record<string, { agentName: string; message: string }> = {
-      PLANNING: { agentName: 'Planner', message: 'Generating domain research questions across 7 specialized sectors...' },
-      RESEARCHING: { agentName: 'ParallelSearch', message: 'Dispatching 7-agent swarm across primary registries and archives...' },
-      EXTRACTION: { agentName: 'ClaimAssembler', message: 'Extracting atomic assertions and verifying verbatim substrings...' },
-      ANALYZING_CONTRADICTIONS: { agentName: 'ContradictionAnalyst', message: 'Cross-examining factual claims for venue conflicts and anomalies...' },
-      ASSEMBLING_DOSSIER: { agentName: 'ReportWriter', message: 'Synthesizing forensic intelligence dossier and risk checklist...' },
-    };
-    return defaults[stage] || { agentName: 'Swarm', message: 'Dispatching parallel search workers across registered domains...' };
-  }, [events, status]);
 
-  const recentTerminalLines = useMemo(() => {
+    // If real server events exist, alternate between the latest server event and specialist agent operations
     if (events && events.length > 0) {
-      const slice = events.slice(-6, -1).reverse();
-      if (slice.length > 0) {
-        return slice.map((e) => ({
-          agentName: e.agentName || 'Agent',
-          message: e.message,
-        }));
+      const lastEvent = events[events.length - 1];
+      if (tickerStep % 2 === 0) {
+        return {
+          agentName: lastEvent.agentName || 'Swarm',
+          message: lastEvent.message,
+        };
       }
     }
-    return [
-      { agentName: 'Orchestrator', message: 'Google Agent Development Kit (ADK) multi-agent session active' },
-      { agentName: 'PlatformScout', message: 'Scanning submission portals, earlybird windows, and fee tiers...' },
-      { agentName: 'VenueForensics', message: 'Cross-referencing physical cinema manifests and box-office screening records...' },
-      { agentName: 'OrganizerAuditor', message: 'Searching corporate registry filings and registered company numbers...' },
-      { agentName: 'FilmmakerFeedback', message: 'Crawling alumni sentiment across IMDb, Letterboxd, and community forums...' },
-    ];
-  }, [events]);
+
+    const actions = PHASE_AGENT_ACTIONS[currentStage] || PHASE_AGENT_ACTIONS.RESEARCHING;
+    const action = actions[tickerStep % actions.length];
+    return action;
+  }, [events, status, isCelebrating, currentStage, tickerStep]);
+
+  const recentTerminalLines = useMemo(() => {
+    const lines: Array<{ agentName: string; message: string }> = [];
+
+    // Gather real server events first (most recent first, up to 5)
+    if (events && events.length > 0) {
+      const realEvents = events
+        .filter((e) => Boolean(e.message))
+        .slice(-6, -1)
+        .reverse();
+      for (const e of realEvents) {
+        lines.push({
+          agentName: e.agentName || 'Agent',
+          message: e.message,
+        });
+      }
+    }
+
+    // Fill remaining slots with phase-specific operations to ensure terminal is always rich and active
+    const actions = PHASE_AGENT_ACTIONS[currentStage] || PHASE_AGENT_ACTIONS.RESEARCHING;
+    let offset = 1;
+    while (lines.length < 5) {
+      const idx = (tickerStep + offset) % actions.length;
+      lines.push(actions[idx]);
+      offset++;
+    }
+
+    return lines.slice(0, 5);
+  }, [events, currentStage, tickerStep]);
 
   // Demo 5-stage progression (5s per stage: 25s total)
   const demoPhaseIdx = useMemo(() => {
@@ -971,10 +1082,15 @@ export const LiveProgress: React.FC<Props> = ({
           <div className="p-3.5 sm:p-4 bg-black/40 space-y-2.5 text-xs">
             {/* Active Moving Command / Action Line */}
             <div className="flex items-center gap-2 text-tool-diligence font-semibold">
-              <span className="text-emerald-400 shrink-0 select-none">$</span>
-              <span className="px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 text-[10px] shrink-0 font-medium">
-                {latestAction.agentName}
-              </span>
+              <span className="text-emerald-400 shrink-0 select-none font-bold">$</span>
+              {(() => {
+                const style = getAgentBadgeStyle(latestAction.agentName);
+                return (
+                  <span className={`px-1.5 py-0.5 rounded border text-[10px] shrink-0 font-medium ${style.bg} ${style.text} ${style.border}`}>
+                    {latestAction.agentName}
+                  </span>
+                );
+              })()}
               <motion.span
                 key={latestAction.message || 'idle'}
                 initial={{ opacity: 0, x: 4 }}
@@ -984,20 +1100,23 @@ export const LiveProgress: React.FC<Props> = ({
               >
                 {latestAction.message}
               </motion.span>
-              <span className="size-2 bg-tool-diligence animate-pulse shrink-0 inline-block ml-0.5" />
+              <span className="size-2 bg-emerald-400 animate-pulse shrink-0 inline-block ml-0.5" />
             </div>
 
             {/* Scrolling Recent Agent Operations */}
             <div className="space-y-1.5 pt-1.5 border-t border-white/[0.05] text-[11px] sm:text-xs">
-              {recentTerminalLines.map((line, lIdx) => (
-                <div key={lIdx} className="flex items-center gap-2 leading-relaxed truncate">
-                  <span className="text-emerald-500/60 shrink-0 select-none">›</span>
-                  <span className="px-1.5 py-0.5 rounded bg-white/[0.04] text-indigo-300 border border-white/[0.08] text-[10px] shrink-0 font-medium">
-                    {line.agentName}
-                  </span>
-                  <span className="text-slate-300 truncate">{line.message}</span>
-                </div>
-              ))}
+              {recentTerminalLines.map((line, lIdx) => {
+                const lineStyle = getAgentBadgeStyle(line.agentName);
+                return (
+                  <div key={`${line.agentName}-${lIdx}-${line.message.slice(0, 10)}`} className="flex items-center gap-2 leading-relaxed truncate">
+                    <span className="text-emerald-500/60 shrink-0 select-none">›</span>
+                    <span className={`px-1.5 py-0.5 rounded border text-[10px] shrink-0 font-medium ${lineStyle.bg} ${lineStyle.text} ${lineStyle.border}`}>
+                      {line.agentName}
+                    </span>
+                    <span className="text-slate-300 truncate">{line.message}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>

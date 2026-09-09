@@ -217,14 +217,25 @@ Return a JSON object conforming to this schema:
 }}
 """
         try:
-            response = self.gemini.client.models.generate_content(
-                model="gemini-2.5-flash",
-                contents=prompt,
-                config=types.GenerateContentConfig(
-                    response_mime_type="application/json",
-                    temperature=0.1,
-                ),
-            )
+            try:
+                response = self.gemini.client.models.generate_content(
+                    model="gemini-2.5-pro",
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        response_mime_type="application/json",
+                        temperature=0.1,
+                    ),
+                )
+            except Exception as pro_err:
+                logger.warning(f"gemini-2.5-pro synthesis attempt failed ({pro_err}), falling back to gemini-2.5-flash")
+                response = self.gemini.client.models.generate_content(
+                    model="gemini-2.5-flash",
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        response_mime_type="application/json",
+                        temperature=0.1,
+                    ),
+                )
 
             raw = json.loads(response.text or "{}")
             
