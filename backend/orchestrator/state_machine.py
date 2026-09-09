@@ -20,10 +20,14 @@ except ImportError:
     inject = None
     tracer = None
 
-PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT", "")
-LOCATION = os.environ.get("GOOGLE_CLOUD_LOCATION", "")
-TASKS_QUEUE = os.environ.get("CLOUD_TASKS_QUEUE", "screened-tasks")
-OIDC_SERVICE_ACCOUNT = os.environ.get("OIDC_SERVICE_ACCOUNT_EMAIL", "")
+PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT", "").strip()
+LOCATION = os.environ.get("GOOGLE_CLOUD_LOCATION", "").strip()
+TASKS_QUEUE = (
+    (os.environ.get("CLOUD_TASKS_QUEUE") or "").strip()
+    or (os.environ.get("TASK_QUEUE_NAME") or "").strip()
+    or "screened-tasks"
+)
+OIDC_SERVICE_ACCOUNT = os.environ.get("OIDC_SERVICE_ACCOUNT_EMAIL", "").strip()
 tasks_client = None
 QUEUE_PATH = None
 

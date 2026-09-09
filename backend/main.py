@@ -362,7 +362,11 @@ def verify_internal_task_request(request: Request) -> None:
     
     queue_name = request.headers.get("X-CloudTasks-QueueName")
     if queue_name:
-        expected_queue = os.getenv("CLOUD_TASKS_QUEUE") or os.getenv("TASK_QUEUE_NAME")
+        expected_queue = (
+            (os.getenv("CLOUD_TASKS_QUEUE") or "").strip()
+            or (os.getenv("TASK_QUEUE_NAME") or "").strip()
+            or "screened-tasks"
+        )
         if not expected_queue or queue_name == expected_queue or queue_name.endswith(expected_queue):
             return
             

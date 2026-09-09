@@ -63,6 +63,8 @@ done
 echo "Deploying container to Cloud Run..."
 EXISTING_URL=$(gcloud run services describe "${SERVICE_NAME}" --project="${PROJECT_ID}" --region="${REGION}" --format="value(status.url)" 2>/dev/null || echo "")
 
+TASK_QUEUE_NAME="${TASK_QUEUE_NAME:-screened-tasks}"
+
 gcloud run deploy "${SERVICE_NAME}" \
   --project="${PROJECT_ID}" \
   --image="${IMAGE_TAG}" \
