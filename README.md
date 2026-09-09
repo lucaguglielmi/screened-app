@@ -107,8 +107,8 @@ Screened employs an intentional **two-tier multi-agent division of labor**:
 
 1. **Tier 1: Google Agent Development Kit (ADK) — Cognitive Orchestration Layer**:
    - **`DisambiguatorAgent`**: Normalizes ambiguous, messy festival names to canonical legal and commercial entities using Gemini 2.5 Flash.
-   - **`PlannerAgent`**: Decomposes the entity into three parallel investigative vectors (`ResearchDomain.FESTIVAL`, `ResearchDomain.ORGANIZER`, `ResearchDomain.PARTICIPANTS`).
-   - **`Specialized Sub-Agents` (Parallel Execution)**: Concurrent sub-agents independently research physical screening leases, corporate registrations (UK Companies House), fee structures, and filmmaker complaints.
+   - **`PlannerAgent`**: Decomposes the entity into **7 specialized parallel forensic vectors** (`FESTIVAL`, `ORGANIZER`, `PARTICIPANTS`, `FEES`, `VENUES`, `CLAIMS`, `FIT`).
+   - **`7-Agent Specialist Swarm` (Parallel Execution)**: Concurrent sub-agents independently research specific domains: `OfficialSiteCrawler`, `CorporateRegistry`, `CommunitySentiment`, `PlatformScout`, `VenueForensics`, `HeritageAudit`, and `InstitutionalArchive`.
    - **`ContradictionAnalystAgent`**: Cross-examines collected atomic claims, pinpointing discrepancies between promotional claims and physical box-office leases.
    - **`ReportWriterAgent`**: Assembles the executive dossier, calculating the Transparency Radar index and computing SHA-256 evidence seals.
 
