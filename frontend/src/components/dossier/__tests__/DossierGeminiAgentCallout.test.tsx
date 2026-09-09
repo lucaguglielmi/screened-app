@@ -36,7 +36,7 @@ describe('DossierGeminiAgentCallout', () => {
     fireEvent.click(copyBtn);
 
     expect(writeTextMock).toHaveBeenCalledWith(
-      expect.stringContaining('Audit the Pinco Pallino Film Festival dossier')
+      expect.stringContaining('Audit the Pinco Pallino Film Festival film festival')
     );
     expect(screen.getByText('Copied Prompt!')).toBeInTheDocument();
   });

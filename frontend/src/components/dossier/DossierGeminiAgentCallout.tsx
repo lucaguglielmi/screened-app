@@ -26,13 +26,13 @@ export const DossierGeminiAgentCallout: React.FC<Props> = ({
 }) => {
   const [copied, setCopied] = useState(false);
 
-  const dossierId =
+  const dossierRef =
     (entity.id && entity.id !== 'default' ? entity.id : null) ||
     (entity.name === 'Pinco Pallino Film Festival'
       ? 'demo_pinco_pallino'
       : entity.name.toLowerCase().replace(/[^a-z0-9]+/g, '_'));
 
-  const promptText = `Audit the ${entity.name} dossier (${dossierId}) using Screened MCP / Antigravity plugin: verify venue manifest, check Companies House legal status, and analyze submission fee escalation.`;
+  const promptText = `Audit the ${entity.name} film festival (Screened dossier reference: ${dossierRef}) using Screened MCP / Antigravity plugin: verify venue manifest, check Companies House legal status, and analyze submission fee escalation.`;
 
   const handleCopyPrompt = () => {
     navigator.clipboard.writeText(promptText);
