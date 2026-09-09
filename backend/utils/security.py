@@ -101,3 +101,42 @@ def sanitize_agent_query(query: str, max_length: int = 500) -> str:
     cleaned = INVISIBLE_CHARS_REGEX.sub("", str(query)).strip()
     return cleaned[:max_length]
 
+
+def get_real_client_ip(request) -> str:
+    """Safely extracts the originating client IP without trusting spoofable leftmost headers.
+    
+    1. Checks trusted proxy headers (e.g. CF-Connecting-IP if routed through Cloudflare).
+    2. Parses X-Forwarded-For from right to left, selecting the first valid public IP
+       before internal Google Front End / Cloud Load Balancer hops.
+    3. Falls back to request.client.host if available, or '127.0.0.1'.
+    """
+    # 1. Trusted Cloudflare Header
+    cf_ip = request.headers.get("cf-connecting-ip")
+    if cf_ip:
+        try:
+            parsed = ipaddress.ip_address(cf_ip.strip())
+            if not (parsed.is_private or parsed.is_link_local or parsed.is_loopback):
+                return str(parsed)
+        except ValueError:
+            pass
+
+    # 2. Google Front End / Reverse Proxy X-Forwarded-For
+    forwarded = request.headers.get("x-forwarded-for")
+    if forwarded:
+        parts = [p.strip() for p in forwarded.split(",")]
+        # Traverse right-to-left: GFE appends verified client IP to the right
+        for ip_str in reversed(parts):
+            try:
+                ip_obj = ipaddress.ip_address(ip_str)
+                if not (ip_obj.is_private or ip_obj.is_link_local or ip_obj.is_loopback):
+                    return str(ip_obj)
+            except ValueError:
+                continue
+
+    # 3. Direct client host fallback
+    if getattr(request, "client", None) and getattr(request.client, "host", None):
+        return request.client.host
+
+    return "127.0.0.1"
+
+

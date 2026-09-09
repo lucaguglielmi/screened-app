@@ -31,6 +31,7 @@ export function useSSEEvents({
 
     eventSource.onmessage = (event) => {
       try {
+        window.dispatchEvent(new CustomEvent('screened:sse-heartbeat'));
         const activityEvent: ActivityEvent = JSON.parse(event.data);
         setEvents((prev) => [...prev, activityEvent]);
 

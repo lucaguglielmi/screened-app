@@ -46,6 +46,7 @@ const DesignPlayground = lazyWithRetry(() => import('./components/playground/Des
 import { VectorFieldBackground } from './components/animations/VectorFieldBackground';
 import { AnimatedEE } from './components/animations/AnimatedEE';
 import { UpdateNotifier } from './components/common/UpdateNotifier';
+import { RateLimitNotice } from './components/common/RateLimitNotice';
 import { isSoundMuted, setSoundMuted, playSuccessChime } from './utils/audio';
 import { track } from './utils/analytics';
 import { triggerAppNotification } from './utils/pwaNotifications';
@@ -320,6 +321,9 @@ export default function App() {
       >
       {/* Live System Update Notifier */}
       <UpdateNotifier />
+
+      {/* Forensic Engine Capacity & Rate Limit Notification */}
+      <RateLimitNotice />
 
       {/* Global Organic Magnetic Vector Field Laboratory Background */}
       {activeTool !== 'DESIGN_PLAYGROUND' && vfConfig.enabledOnChat && (

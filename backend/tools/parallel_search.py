@@ -60,18 +60,38 @@ class ParallelSearchTool:
 
     async def _search_single_query(self, query: str, objective: str, mode: str, advanced_settings: dict, session_id: Optional[str]) -> List[SourceRecord]:
         logger.info(f"Parallel Search single query: {query}")
+        import random
+        max_retries = 2
+        response = None
+        for attempt in range(max_retries):
+            try:
+                async with self._semaphore:
+                    response = await asyncio.wait_for(
+                        self.async_client.search(
+                            search_queries=[query],
+                            objective=objective,
+                            mode=mode,
+                            advanced_settings=advanced_settings,
+                            session_id=session_id
+                        ),
+                        timeout=30.0
+                    )
+                break
+            except Exception as e:
+                err_str = str(e).lower()
+                is_rate_limit = "429" in err_str or "rate limit" in err_str or "quota" in err_str
+                if is_rate_limit and attempt < max_retries - 1:
+                    sleep_s = 1.5 + random.uniform(0.5, 1.0)
+                    logger.warning(f"Parallel Search rate limit on '{query}'. Retrying in {sleep_s:.2f}s: {e}")
+                    await asyncio.sleep(sleep_s)
+                    continue
+                logger.exception(f"Parallel Search single query failed for '{query}': {e}")
+                return []
+
+        if not response:
+            return []
+
         try:
-            async with self._semaphore:
-                response = await asyncio.wait_for(
-                    self.async_client.search(
-                        search_queries=[query],
-                        objective=objective,
-                        mode=mode,
-                        advanced_settings=advanced_settings,
-                        session_id=session_id
-                    ),
-                    timeout=30.0
-                )
             raw_results = getattr(response, "results", []) or []
             source_records: List[SourceRecord] = []
 
@@ -122,7 +142,7 @@ class ParallelSearchTool:
                 )
             return source_records
         except Exception as e:
-            logger.exception(f"Parallel Search single query failed for '{query}': {e}")
+            logger.exception(f"Parallel Search result parsing failed for '{query}': {e}")
             return []
 
     async def search(

@@ -35,6 +35,8 @@ from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 from fastapi import Header
 
+from backend.utils.correlation import CorrelationIdMiddleware
+from backend.utils.security import get_real_client_ip, validate_public_url
 from backend.config import settings
 from backend.routers import webhooks
 from backend.models import (
@@ -211,10 +213,35 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-limiter = Limiter(key_func=get_remote_address)
+def custom_rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded) -> JSONResponse:
+    """Structured rate-limit error response with correlation ID and retry guidance."""
+    correlation_id = getattr(request.state, "correlation_id", "unknown")
+    retry_after = getattr(exc, "retry_after", 30) or 30
+    client_ip = get_real_client_ip(request)
+    logger.warning(
+        f"Rate limit exceeded on {request.url.path} for client IP {client_ip}. Retry in {retry_after}s. [Correlation: {correlation_id}]"
+    )
+    return JSONResponse(
+        status_code=429,
+        content={
+            "error": "RATE_LIMIT_EXCEEDED",
+            "detail": f"System capacity reached. Please retry in {retry_after}s.",
+            "retryAfter": retry_after,
+            "correlationId": correlation_id,
+        },
+        headers={
+            "Retry-After": str(retry_after),
+            "X-Correlation-ID": correlation_id,
+        },
+    )
+
+
+# High-concurrency rate limiting using anti-spoofing client IP extractor
+limiter = Limiter(key_func=get_real_client_ip)
 app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_exception_handler(RateLimitExceeded, custom_rate_limit_exceeded_handler)
 app.add_middleware(SlowAPIMiddleware)
+app.add_middleware(CorrelationIdMiddleware)
 
 parallel_tool = ParallelSearchTool()
 gemini_client = GeminiClient()
@@ -303,6 +330,28 @@ async def get_version_info():
         media_type="application/json",
         headers=NO_CACHE_HEADERS,
     )
+
+
+@app.get("/api/diagnostics/capacity")
+async def get_system_capacity(request: Request):
+    """Public lightweight diagnostics and system capacity telemetry endpoint.
+    
+    Provides real-time visibility into active SSE stream counts, memory RSS,
+    and process state without exposing sensitive credentials or PII.
+    """
+    import resource
+    max_rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    # On Linux ru_maxrss is in KB; on macOS it is in Bytes
+    mem_mb = round(max_rss / 1024, 2) if max_rss < 10000000 else round(max_rss / (1024 * 1024), 2)
+    return {
+        "status": "HEALTHY",
+        "version": settings.app_version,
+        "commit": os.getenv("COMMIT_SHA", "dev"),
+        "activeSseClients": len(broadcaster._listeners),
+        "memoryRssMb": mem_mb,
+        "correlationId": getattr(request.state, "correlation_id", "unknown"),
+    }
+
 
 
 @app.get("/api/diagnostics")

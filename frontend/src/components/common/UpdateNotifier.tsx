@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { RefreshCw, Sparkles, X } from 'lucide-react';
 import { soundEffects } from '../../utils/audio';
 
@@ -52,7 +52,14 @@ export const UpdateNotifier: React.FC = () => {
     }
   }, [currentBuildTime, currentCommitSha]);
 
+  const rateLimitBackoffUntilRef = useRef<number>(0);
+
   const checkForUpdate = useCallback(async () => {
+    // If rate limited recently, suppress polling for 5 minutes
+    if (Date.now() < rateLimitBackoffUntilRef.current) {
+      return;
+    }
+
     try {
       // Use cache-busting timestamp param to ensure direct network fetch
       const res = await fetch(`/api/version?_cb=${Date.now()}`, {
@@ -62,9 +69,18 @@ export const UpdateNotifier: React.FC = () => {
         },
       });
 
+      if (res.status === 429) {
+        rateLimitBackoffUntilRef.current = Date.now() + 5 * 60 * 1000;
+        return;
+      }
+
       if (!res.ok) {
         // Fallback to version.json in static root if api/version returns non-200
         const fallbackRes = await fetch(`/version.json?_cb=${Date.now()}`);
+        if (fallbackRes.status === 429) {
+          rateLimitBackoffUntilRef.current = Date.now() + 5 * 60 * 1000;
+          return;
+        }
         if (!fallbackRes.ok) return;
         const data: VersionInfo = await fallbackRes.json();
         evaluateVersion(data);
@@ -79,11 +95,12 @@ export const UpdateNotifier: React.FC = () => {
   }, [evaluateVersion]);
 
   useEffect(() => {
-    // Initial check after 5 seconds
-    const initialTimer = setTimeout(checkForUpdate, 5000);
+    // Initial check after 10 seconds
+    const initialTimer = setTimeout(checkForUpdate, 10000);
 
-    // Periodic check every 25 seconds
-    const interval = setInterval(checkForUpdate, 25000);
+    // Periodic check every 90-120 seconds with random jitter
+    const jitterMs = Math.floor(Math.random() * 30000);
+    const interval = setInterval(checkForUpdate, 90000 + jitterMs);
 
     // Check when user switches back to tab
     const handleVisibilityChange = () => {

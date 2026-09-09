@@ -52,7 +52,36 @@ class GeminiClient:
         except Exception as e:
             logger.warning(f"Could not initialize Vertex AI client with ambient credentials: {e}. Falling back to default client.")
             self.client = genai.Client()
-        self._semaphore = asyncio.Semaphore(3)
+        self._semaphore = asyncio.Semaphore(5)
+
+    async def _generate_content_with_retry(
+        self,
+        model: str,
+        contents: Any,
+        config: Optional[types.GenerateContentConfig] = None,
+        max_retries: int = 3,
+    ):
+        """Executes Gemini generate_content with exponential jitter backoff on 429/quota limits."""
+        import random
+        last_err = None
+        for attempt in range(max_retries):
+            try:
+                async with self._semaphore:
+                    return await self.client.aio.models.generate_content(
+                        model=model,
+                        contents=contents,
+                        config=config,
+                    )
+            except Exception as e:
+                err_str = str(e).lower()
+                is_rate_limit = "429" in err_str or "resource_exhausted" in err_str or "quota" in err_str or "rate limit" in err_str
+                last_err = e
+                if is_rate_limit and attempt < max_retries - 1:
+                    sleep_s = (1.5 ** attempt) + random.uniform(0.5, 1.5)
+                    logger.warning(f"Gemini API rate limit on attempt {attempt + 1}/{max_retries}. Backing off for {sleep_s:.2f}s: {e}")
+                    await asyncio.sleep(sleep_s)
+                    continue
+                raise last_err
 
     async def extract_claims_from_sources(
         self,
@@ -123,16 +152,15 @@ Extract all relevant atomic claims in JSON format according to this schema:
 """
 
         try:
-            async with self._semaphore:
-                response = await self.client.aio.models.generate_content(
-                    model=model,
-                    contents=prompt,
-                    config=types.GenerateContentConfig(
-                        system_instruction=system_instruction,
-                        response_mime_type="application/json",
-                        temperature=0.1,
-                    ),
-                )
+            response = await self._generate_content_with_retry(
+                model=model,
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    system_instruction=system_instruction,
+                    response_mime_type="application/json",
+                    temperature=0.1,
+                ),
+            )
 
             raw_text = response.text or "[]"
             parsed_data = json.loads(raw_text)
@@ -253,12 +281,11 @@ Requirements:
 4. Keep the summary under 180 words.
 """
         try:
-            async with self._semaphore:
-                response = await self.client.aio.models.generate_content(
-                    model=model,
-                    contents=prompt,
-                    config=types.GenerateContentConfig(temperature=0.2),
-                )
+            response = await self._generate_content_with_retry(
+                model=model,
+                contents=prompt,
+                config=types.GenerateContentConfig(temperature=0.2),
+            )
             return response.text or ""
         except Exception as e:
             logger.exception(f"Gemini summary generation failed: {e}")

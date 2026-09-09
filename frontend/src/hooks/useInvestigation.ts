@@ -14,12 +14,62 @@ export type InvestigationEntryPoint =
   | 'command_palette_deep_screen'
   | 'grant_scout_deep_screen';
 
+export interface RateLimitDetail {
+  endpoint: string;
+  retryAfterSeconds: number;
+  message: string;
+  correlationId: string;
+}
+
+export async function handleScreenedApiResponse<T>(res: Response): Promise<T> {
+  if (res.status === 429) {
+    const retryAfterHeader = res.headers.get('Retry-After');
+    const retryAfter = retryAfterHeader ? parseInt(retryAfterHeader, 10) : 30;
+    const errData = await res.json().catch(() => ({}));
+    const message =
+      errData.detail ||
+      'Screened research capacity reached. Server is queuing analysis to protect registry quotas.';
+    const correlationId =
+      res.headers.get('X-Correlation-ID') || errData.correlationId || 'unknown';
+
+    window.dispatchEvent(
+      new CustomEvent<RateLimitDetail>('screened:rate-limit-exceeded', {
+        detail: {
+          endpoint: res.url,
+          retryAfterSeconds: retryAfter,
+          message,
+          correlationId,
+        },
+      })
+    );
+    throw new Error(message);
+  }
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.detail || `Server error (${res.status})`);
+  }
+
+  return res.json();
+}
+
 export function useInvestigation() {
   const [investigation, setInvestigation] = useState<Investigation | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const activeInvestigationIdRef = useRef<string | null>(null);
+  const lastSseHeartbeatRef = useRef<number>(0);
+
+  useEffect(() => {
+    const onHeartbeat = () => {
+      lastSseHeartbeatRef.current = Date.now();
+    };
+    window.addEventListener('screened:sse-heartbeat', onHeartbeat);
+    return () => {
+      window.removeEventListener('screened:sse-heartbeat', onHeartbeat);
+    };
+  }, []);
 
   useEffect(() => {
     activeInvestigationIdRef.current = investigation?.id || null;
@@ -73,13 +123,11 @@ export function useInvestigation() {
     async (id: string) => {
       try {
         const res = await fetch(`/api/investigations/${id}`);
-        if (res.ok) {
-          const data: Investigation = await res.json();
-          setInvestigation(data);
-          saveRecentInvestigation(data.id);
-          if (data.confirmedEntity?.name) {
-            saveRecentSearch(data.confirmedEntity.name);
-          }
+        const data = await handleScreenedApiResponse<Investigation>(res);
+        setInvestigation(data);
+        saveRecentInvestigation(data.id);
+        if (data.confirmedEntity?.name) {
+          saveRecentSearch(data.confirmedEntity.name);
         }
       } catch (e) {
         console.error('Failed to fetch investigation:', e);
@@ -140,7 +188,7 @@ export function useInvestigation() {
     };
   }, [fetchInvestigation]);
 
-  // Fallback polling every 3s while investigation is active
+  // Heartbeat-aware fallback polling while investigation is active
   useEffect(() => {
     if (!investigation?.id) return;
     const invId = investigation.id;
@@ -160,9 +208,14 @@ export function useInvestigation() {
 
     const pollInterval = setInterval(() => {
       if (isActiveStatus(investigation?.status)) {
+        // Heartbeat-aware lazy polling: Skip polling if active SSE message received <15s ago
+        const timeSinceHeartbeat = Date.now() - lastSseHeartbeatRef.current;
+        if (timeSinceHeartbeat < 15000 && lastSseHeartbeatRef.current > 0) {
+          return;
+        }
         fetchInvestigation(invId);
       }
-    }, 3000);
+    }, 5000);
 
     return () => {
       clearInterval(pollInterval);
@@ -225,12 +278,7 @@ export function useInvestigation() {
         }),
       });
 
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.detail || `Server error (${res.status})`);
-      }
-
-      const rawInv: Investigation = await res.json();
+      const rawInv = await handleScreenedApiResponse<Investigation>(res);
       const invString = JSON.stringify(rawInv);
       const unmaskedInvString = piiVault.unmask(invString);
       const inv: Investigation = JSON.parse(unmaskedInvString);
@@ -258,12 +306,7 @@ export function useInvestigation() {
         body: JSON.stringify(entity),
       });
 
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.detail || `Server error (${res.status})`);
-      }
-
-      const updatedInv: Investigation = await res.json();
+      const updatedInv = await handleScreenedApiResponse<Investigation>(res);
       if (investigation.id === 'demo_pinco_pallino') {
         const demoInv: Investigation = {
           ...updatedInv,
@@ -291,11 +334,7 @@ export function useInvestigation() {
       const res = await fetch(`/api/investigations/${invId}/resume`, {
         method: 'POST',
       });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.detail || `Resume failed (${res.status})`);
-      }
-      const updatedInv: Investigation = await res.json();
+      const updatedInv = await handleScreenedApiResponse<Investigation>(res);
       setInvestigation(updatedInv);
       return updatedInv;
     } catch (err) {
