@@ -702,16 +702,18 @@ export const LiveProgress: React.FC<Props> = ({
               </div>
 
               {/* Tooltip showing both Total Elapsed Time and Last Server Event Time */}
-              <div className="absolute right-0 bottom-full mb-2 w-56 p-2.5 rounded-xl bg-[#090d18] border border-slate-700/80 text-slate-200 text-xs font-mono shadow-2xl opacity-0 invisible group-hover/timer:opacity-100 group-hover/timer:visible transition-all duration-150 pointer-events-none z-40 space-y-1.5">
-                <div className="flex items-center justify-between text-[11px] text-slate-400 border-b border-white/[0.06] pb-1">
+              <div className="absolute left-0 sm:left-auto sm:right-0 top-full mt-2.5 w-56 p-2.5 rounded-xl bg-[#090d18]/95 backdrop-blur-md border border-slate-700/80 text-slate-200 text-xs font-mono shadow-2xl opacity-0 invisible group-hover/timer:opacity-100 group-hover/timer:visible group-focus-within/timer:opacity-100 group-focus-within/timer:visible transition-all duration-150 pointer-events-none z-50 space-y-1.5">
+                {/* Arrow pointer towards timer pill */}
+                <div className="absolute -top-1.5 left-6 sm:left-auto sm:right-6 size-3 rotate-45 bg-[#090d18] border-t border-l border-slate-700/80" />
+                <div className="relative z-10 flex items-center justify-between text-[11px] text-slate-400 border-b border-white/[0.06] pb-1">
                   <span>SEARCH TIMER</span>
                   <span className="text-tool-diligence font-semibold">LIVE</span>
                 </div>
-                <div className="flex items-center justify-between text-xs">
+                <div className="relative z-10 flex items-center justify-between text-xs">
                   <span className="text-slate-400">Total Elapsed:</span>
                   <span className="font-semibold text-white">{elapsedSeconds}s</span>
                 </div>
-                <div className="flex items-center justify-between text-xs">
+                <div className="relative z-10 flex items-center justify-between text-xs">
                   <span className="text-slate-400">Last Server Event:</span>
                   <span className="font-semibold text-tool-diligence">
                     {lastServerEventSecondsAgo !== null ? `${lastServerEventSecondsAgo}s ago` : 'connecting...'}
