@@ -83,7 +83,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
       normalizedText === '/byoa' ||
       normalizedText === 'byoa'
     ) {
-      window.location.href = '/mcp';
+      window.location.href = '/agents';
       return;
     }
 

@@ -19,7 +19,6 @@ export const ROUTE_TITLES: Record<ActiveTool, string> = {
   AGENTS: "Screened Agents & WebMCP Protocol — Screened",
   WHAT_CAN_YOU_DO: "What Can You Do — Platform Capabilities & Roadmap — Screened",
   DESIGN_PLAYGROUND: "Design Playground — Screened",
-  MCP_ONBOARDING: "Bring Your Own Agent (MCP) — Screened",
 };
 
 /**
@@ -76,8 +75,8 @@ export function parseCurrentRoute(pathname = window.location.pathname, search = 
   if (byoaMatch) {
     const invId = decodeURIComponent(byoaMatch[1]);
     return {
-      path: cleanPath,
-      tool: "MCP_ONBOARDING",
+      path: "/agents",
+      tool: "AGENTS",
       investigationId: invId,
     };
   }
@@ -103,8 +102,8 @@ export function parseCurrentRoute(pathname = window.location.pathname, search = 
 
   if (cleanPath === "/mcp" || cleanPath === "/byoa" || cleanPath === "/BYOA") {
     return {
-      path: "/mcp",
-      tool: "MCP_ONBOARDING",
+      path: "/agents",
+      tool: "AGENTS",
       investigationId: null,
     };
   }
@@ -206,8 +205,6 @@ export function toolToPath(tool: ActiveTool, investigationId?: string | null): s
       return "/what-can-you-do";
     case "DESIGN_PLAYGROUND":
       return "/playground";
-    case "MCP_ONBOARDING":
-      return "/mcp";
     default:
       return "/";
   }

@@ -201,28 +201,6 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange, onNaviga
           )}
         </div>
 
-        {/* MCP Onboarding Badge */}
-        <div className="relative">
-          <button
-            onClick={() => handleSelectTool('MCP_ONBOARDING')}
-            onMouseEnter={() => setActiveTooltip('Bring Your Own Agent (MCP)')}
-            onMouseLeave={() => setActiveTooltip(null)}
-            className={`p-2.5 rounded-xl transition-all cursor-pointer shadow-[0_0_15px_rgba(45,212,191,0.2)] ${
-              activeTool === 'MCP_ONBOARDING'
-                ? 'bg-teal-900/40 text-teal-400 border border-teal-500/50 shadow-[0_0_20px_rgba(45,212,191,0.4)]'
-                : 'hover:bg-darkroom-surface text-teal-600 hover:text-teal-400'
-            }`}
-            title="Bring Your Own Agent (MCP)"
-          >
-            <span className="font-mono text-xs font-bold tracking-tighter">MCP</span>
-          </button>
-          {activeTooltip === 'Bring Your Own Agent (MCP)' && (
-            <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-xl bg-darkroom-surface text-slate-100 text-sm font-medium whitespace-nowrap shadow-xl border border-darkroom-border z-50 pointer-events-none">
-              Bring Your Own Agent (MCP)
-            </div>
-          )}
-        </div>
-
         {/* Live Deployment Status Indicator (Link to /agents) */}
         <div className="relative flex flex-col items-center">
           <button
@@ -242,11 +220,7 @@ export const LeftNavigation: React.FC<Props> = ({ activeTool, onChange, onNaviga
               <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-tool-diligence" />
             </div>
             <span className="text-[9px] font-mono text-slate-400 group-hover:text-tool-diligence font-semibold tracking-tighter">
-              {typeof __COMMIT_SHA__ !== 'undefined' && __COMMIT_SHA__ !== 'unknown'
-                ? __COMMIT_SHA__.slice(0, 6)
-                : typeof __APP_VERSION__ !== 'undefined'
-                ? `v${__APP_VERSION__}`
-                : 'v0.2'}
+              MCP
             </span>
           </button>
           {activeTooltip === 'Live Deployment' && (

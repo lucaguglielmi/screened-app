@@ -44,7 +44,7 @@ const EvidenceDossier = lazyWithRetry(() => import('./components/EvidenceDossier
 const GrantScout = lazyWithRetry(() => import('./components/GrantScout').then(m => ({ default: m.GrantScout })));
 const EntityConfirmation = lazyWithRetry(() => import('./components/EntityConfirmation').then(m => ({ default: m.EntityConfirmation })));
 const DesignPlayground = lazyWithRetry(() => import('./components/playground/DesignPlayground').then(m => ({ default: m.DesignPlayground })));
-const McpOnboarding = lazyWithRetry(() => import('./components/McpOnboarding').then(m => ({ default: m.McpOnboarding })));
+
 import { VectorFieldBackground } from './components/animations/VectorFieldBackground';
 import { AnimatedEE } from './components/animations/AnimatedEE';
 import { UpdateNotifier } from './components/common/UpdateNotifier';
@@ -208,6 +208,12 @@ export default function App() {
       | 'command_palette_deep_screen'
       | 'grant_scout_deep_screen',
   ) => {
+    const lowerQuery = subjectQuery.trim().toLowerCase();
+    if (['/mcp', 'mcp', '/byoa', 'byoa'].includes(lowerQuery)) {
+      window.location.href = '/agents';
+      return;
+    }
+
     completedRef.current = null;
     setEvents([]);
     const inv = await startInvestigation(subjectQuery, entryPoint, optionalUrl);
@@ -670,11 +676,7 @@ export default function App() {
           )}
 
           {/* View 9: MCP Onboarding */}
-          {activeTool === 'MCP_ONBOARDING' && (
-            <Suspense fallback={<div className="p-8 text-center text-slate-500 font-mono text-sm">Loading MCP Config...</div>}>
-              <McpOnboarding />
-            </Suspense>
-          )}
+
         </main>
 
         {/* Global Legal & Information Footer */}

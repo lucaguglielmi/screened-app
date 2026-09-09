@@ -115,10 +115,7 @@ const MCP_SERVER_CONFIG = `{
   "mcpServers": {
     "screened": {
       "command": "npx",
-      "args": ["-y", "@totallyscreened/mcp-server"],
-      "env": {
-        "SCREENED_API_BASE": "https://totallyscreened.com"
-      }
+      "args": ["-y", "@modelcontextprotocol/server-sse", "https://api.screened.org/api/mcp/sse"]
     }
   }
 }`;
@@ -735,6 +732,34 @@ export const HowToUse: React.FC<Props> = ({
               <pre className="p-4 rounded-xl bg-black/40 text-xs sm:text-sm font-mono text-indigo-300 overflow-x-auto">
                 {MCP_SERVER_CONFIG}
               </pre>
+            </div>
+          </div>
+
+
+          {/* Agent-Friendly Dossier Block */}
+          <div className="p-5 sm:p-6 rounded-2xl bg-white/[0.02] border border-white/[0.04] space-y-4">
+            <h3 className="text-base sm:text-lg font-bold font-serif text-white">
+              Agent-Friendly Dossiers
+            </h3>
+            <p className="text-sm text-slate-300 leading-relaxed">
+              You can provide an Agent-Friendly Dossier URL (with the <code className="text-purple-300 font-mono text-xs">/BYOA</code> suffix) to your AI agent.
+              Simply copy the URL of the dossier page and paste it into your AI agent to let it securely read the extracted intelligence.
+            </p>
+            <div className="bg-black/40 border border-white/5 rounded-xl px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+               <span className="text-sm font-mono text-teal-400 truncate w-full">
+                 {typeof window !== 'undefined' ? window.location.href.replace('/agents', '/BYOA') : 'https://totallyscreened.com/diligence/.../BYOA'}
+               </span>
+               <button 
+                 onClick={() => {
+                   navigator.clipboard.writeText(typeof window !== 'undefined' ? window.location.href.replace('/agents', '/BYOA') : '');
+                   setCopiedConfig(true);
+                   setTimeout(() => setCopiedConfig(false), 2000);
+                 }}
+                 className="shrink-0 w-full sm:w-auto px-4 py-2 rounded-xl bg-teal-500/10 hover:bg-teal-500/20 text-teal-300 text-xs font-mono font-medium flex items-center justify-center gap-1.5 transition-colors cursor-pointer border border-teal-500/30"
+               >
+                 <Copy className="size-3.5" />
+                 Copy Example URL
+               </button>
             </div>
           </div>
 
