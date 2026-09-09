@@ -64,7 +64,7 @@ interface Props {
   auditHealth?: InvestigationAuditHealth;
   investigationId?: string;
   onNewInvestigation?: () => void;
-  onDraftOutreach: (claim?: AtomicClaim) => void;
+  onDraftOutreach: (claim?: AtomicClaim) => Promise<void> | void;
   onExport: () => void;
   onNavigateToAgents?: () => void;
   density?: DetailDensity;

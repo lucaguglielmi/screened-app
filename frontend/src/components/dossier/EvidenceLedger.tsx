@@ -7,6 +7,7 @@ import {
   ExternalLink,
   Mail,
   AlertTriangle,
+  Loader2,
 } from 'lucide-react';
 import { AtomicClaim, SourceRecord } from '../../types/investigation';
 import { VerifiedTick } from '../ui/VerifiedTick';
@@ -14,7 +15,7 @@ import { VerifiedTick } from '../ui/VerifiedTick';
 interface Props {
   claims: AtomicClaim[];
   sources: SourceRecord[];
-  onDraftOutreach: (claim?: AtomicClaim) => void;
+  onDraftOutreach: (claim?: AtomicClaim) => Promise<void> | void;
   normalizedDensity: string;
 }
 
@@ -28,6 +29,7 @@ export const EvidenceLedger: React.FC<Props> = ({
   const [claimStatusFilter, setClaimStatusFilter] = useState<string>('ALL');
   const [searchFilter, setSearchFilter] = useState<string>('');
   const [expandedClaimSources, setExpandedClaimSources] = useState<Record<string, boolean>>({});
+  const [draftingClaimId, setDraftingClaimId] = useState<string | null>(null);
 
   const toggleClaimSources = (claimId: string) => {
     setExpandedClaimSources((prev) => ({ ...prev, [claimId]: !prev[claimId] }));
@@ -299,11 +301,23 @@ export const EvidenceLedger: React.FC<Props> = ({
 
                       {claim.status !== 'CORROBORATED' && (
                         <button
-                          onClick={() => onDraftOutreach(claim)}
-                          className="p-1.5 rounded-lg text-slate-400 hover:bg-white/[0.06] hover:text-indigo-400 transition-colors cursor-pointer"
+                          onClick={async () => {
+                            setDraftingClaimId(claim.id);
+                            try {
+                              await onDraftOutreach(claim);
+                            } finally {
+                              setDraftingClaimId(null);
+                            }
+                          }}
+                          disabled={draftingClaimId === claim.id}
+                          className="p-1.5 rounded-lg text-slate-400 hover:bg-white/[0.06] hover:text-indigo-400 transition-colors cursor-pointer disabled:opacity-50"
                           title="Draft Verification Inquiry for this claim"
                         >
-                          <Mail className="size-4" />
+                          {draftingClaimId === claim.id ? (
+                            <Loader2 className="size-4 animate-spin text-indigo-400" />
+                          ) : (
+                            <Mail className="size-4" />
+                          )}
                         </button>
                       )}
                     </div>
