@@ -1,11 +1,8 @@
 import React from 'react';
-import { Terminal, Copy, CheckCircle2, ChevronRight } from 'lucide-react';
-import { useState } from 'react';
+import { Terminal, Copy, ChevronRight } from 'lucide-react';
 import { soundEffects } from '../utils/audio';
 
 export const McpOnboarding: React.FC = () => {
-  const [copied, setCopied] = useState(false);
-
   const mcpConfig = `{
   "mcpServers": {
     "screened": {
@@ -14,12 +11,6 @@ export const McpOnboarding: React.FC = () => {
     }
   }
 }`;
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(mcpConfig);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
 
   return (
     <div className="flex-1 w-full max-w-5xl mx-auto px-4 md:px-8 py-12 md:py-16 text-neutral-200">
@@ -39,50 +30,57 @@ export const McpOnboarding: React.FC = () => {
 
         <div className="space-y-12">
           {/* Section 1 */}
-          <section>
-            <h2 className="text-2xl font-bold text-white mb-4">1. Connect via Model Context Protocol</h2>
-            <p className="text-neutral-400 mb-6 leading-relaxed">
-              Screened provides an official, authenticated MCP Server. You can add it to AI clients like Claude Desktop, Cursor, or Google Antigravity.
+          <section className="mb-8">
+            <h2 className="text-2xl font-bold text-white mb-4">1. Configure Your Client</h2>
+            <p className="text-neutral-400 leading-relaxed mb-4">
+              Screened provides an official, authenticated MCP Server. You can add it to Google Antigravity or any other AI agent.
             </p>
-            
-            <div className="bg-neutral-900 border border-neutral-800 rounded-xl overflow-hidden">
-              <div className="flex items-center justify-between px-4 py-3 bg-neutral-950 border-b border-neutral-800">
-                <span className="text-sm font-mono text-neutral-500">claude_desktop_config.json</span>
+            <div className="bg-[#0f1115] border border-neutral-800 rounded-xl overflow-hidden">
+              <div className="px-4 py-2 bg-[#16181d] border-b border-neutral-800 flex justify-between items-center">
+                <span className="text-sm font-mono text-neutral-500">mcp_client_config.json</span>
                 <button 
-                  onClick={handleCopy}
-                  className="flex items-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors"
+                  onClick={() => {
+                    navigator.clipboard.writeText(mcpConfig);
+                    soundEffects?.playSuccess();
+                  }}
+                  className="flex items-center gap-1.5 text-xs text-neutral-400 hover:text-white transition-colors"
                 >
-                  {copied ? <CheckCircle2 className="w-4 h-4 text-teal-400" /> : <Copy className="w-4 h-4" />}
-                  {copied ? 'Copied' : 'Copy'}
+                  <Copy className="w-3.5 h-3.5" />
+                  Copy Config
                 </button>
               </div>
-              <pre className="p-4 overflow-x-auto">
-                <code className="text-sm font-mono text-teal-400">
-                  {mcpConfig}
-                </code>
+              <pre className="p-4 overflow-x-auto text-sm font-mono text-emerald-400">
+                {mcpConfig}
               </pre>
             </div>
           </section>
 
           {/* Section 2 */}
-          <section>
-            <h2 className="text-2xl font-bold text-white mb-4">2. Native Prompt Recipes</h2>
-            <p className="text-neutral-400 mb-6 leading-relaxed">
-              Once connected, your agent will automatically discover Screened's native prompt recipes. Try asking your agent:
+          <section className="mb-8">
+            <h2 className="text-2xl font-bold text-white mb-4">2. Example Prompts</h2>
+            <p className="text-neutral-400 leading-relaxed mb-4">
+              Once connected, try running one of our built-in intelligence recipes:
             </p>
-            <div className="grid gap-4">
-              <div className="p-5 rounded-xl bg-neutral-900/50 border border-neutral-800 flex items-start gap-4">
-                <ChevronRight className="w-5 h-5 text-teal-500 mt-0.5 shrink-0" />
+            <div className="space-y-3">
+              <div className="bg-neutral-900 border border-neutral-800 p-4 rounded-xl flex items-start gap-3">
+                <ChevronRight className="w-5 h-5 text-teal-500 shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="font-medium text-white mb-1">"Spawn a multi-agent review"</h3>
-                  <p className="text-sm text-neutral-500">Instructs your agent to spawn 3 sub-agents to independently review venue leases, corporate registry filings, and fee models.</p>
+                  <h4 className="text-white font-semibold mb-1">spawn_multi_agent_review</h4>
+                  <p className="text-sm text-neutral-400">Spawns a multi-agent cluster where each agent reviews a different dimension of the dossier (Box office, incorporation, sentiment).</p>
                 </div>
               </div>
-              <div className="p-5 rounded-xl bg-neutral-900/50 border border-neutral-800 flex items-start gap-4">
-                <ChevronRight className="w-5 h-5 text-teal-500 mt-0.5 shrink-0" />
+              <div className="bg-neutral-900 border border-neutral-800 p-4 rounded-xl flex items-start gap-3">
+                <ChevronRight className="w-5 h-5 text-teal-500 shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="font-medium text-white mb-1">"Run a cross-reference audit"</h3>
-                  <p className="text-sm text-neutral-500">Forces your AI to perform an active web search to find conflicting evidence that disputes Screened's findings.</p>
+                  <h4 className="text-white font-semibold mb-1">laurel_mill_fraud_check</h4>
+                  <p className="text-sm text-neutral-400">Instructs the agent to specifically look for "laurel mill" patterns, fee inflation, and fake physical screening locations.</p>
+                </div>
+              </div>
+              <div className="bg-neutral-900 border border-neutral-800 p-4 rounded-xl flex items-start gap-3">
+                <ChevronRight className="w-5 h-5 text-teal-500 shrink-0 mt-0.5" />
+                <div>
+                  <h4 className="text-white font-semibold mb-1">cross_reference_audit</h4>
+                  <p className="text-sm text-neutral-400">Directs your agent to go online and cross-reference the extracted dossier data against external film forums for conflicting evidence.</p>
                 </div>
               </div>
             </div>
@@ -93,7 +91,7 @@ export const McpOnboarding: React.FC = () => {
             <h2 className="text-2xl font-bold text-white mb-4">3. Agent-Friendly Dossiers</h2>
             <p className="text-neutral-400 leading-relaxed mb-4">
               You are currently viewing an Agent-Friendly Dossier page (with the <code>/BYOA</code> suffix). 
-              Simply copy the URL of this page and paste it into your AI agent (like Google Antigravity or ChatGPT).
+              Simply copy the URL of this page and paste it into your AI agent (like Google Antigravity or any other AI agent).
             </p>
             <div className="bg-neutral-900 border border-neutral-800 rounded-xl px-4 py-3 flex items-center justify-between">
                <span className="text-sm font-mono text-teal-400 truncate">

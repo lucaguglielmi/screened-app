@@ -171,7 +171,7 @@ Standards: Require 2+ independent corroborating sources before accepting claims.
             Want to process this intelligence with your own AI?
           </h3>
           <p className="text-sm text-neutral-300">
-            Access the raw parallel-extracted data via our Agent-Friendly API. Use the MCP server to directly query this dossier from Claude Desktop, Cursor, or Google Antigravity.
+            Access the raw parallel-extracted data via our Agent-Friendly API. Use the MCP server to directly query this dossier from Google Antigravity or any other AI agent.
           </p>
         </div>
         <button
