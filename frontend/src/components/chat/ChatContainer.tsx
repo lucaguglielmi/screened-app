@@ -75,6 +75,18 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
     setIsLoading(true);
 
     const normalizedText = userText.trim().toLowerCase();
+    
+    // Intercept MCP / BYOA commands to route directly to onboarding
+    if (
+      normalizedText === '/mcp' ||
+      normalizedText === 'mcp' ||
+      normalizedText === '/byoa' ||
+      normalizedText === 'byoa'
+    ) {
+      window.location.href = '/mcp';
+      return;
+    }
+
     if (
       normalizedText === 'demo mode' ||
       normalizedText === 'demo' ||
