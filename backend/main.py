@@ -453,7 +453,7 @@ async def task_pipeline(payload: TaskPipelinePayload, request: Request):
 
 
 @app.post("/api/investigations")
-@limiter.limit("10/minute")
+@limiter.limit("60/minute")
 async def create_investigation(req: CreateInvestigationRequest, request: Request):
     """Start a new festival investigation and trigger disambiguation."""
     query = req.query.strip()
@@ -543,7 +543,7 @@ async def register_notification_subscriber(
 
 
 @app.post("/api/privacy/erase", response_model=PrivacyEraseResponse)
-@limiter.limit("10/minute")
+@limiter.limit("60/minute")
 async def erase_personal_data(req: PrivacyEraseRequest, request: Request):
     """GDPR Article 17 Right to Erasure endpoint.
 
@@ -563,7 +563,7 @@ async def erase_personal_data(req: PrivacyEraseRequest, request: Request):
 
 
 @app.post("/api/investigations/{investigation_id}/resume")
-@limiter.limit("10/minute")
+@limiter.limit("60/minute")
 async def resume_investigation(investigation_id: str, request: Request):
     """Resume a failed or interrupted investigation."""
     try:
@@ -577,7 +577,7 @@ async def resume_investigation(investigation_id: str, request: Request):
 
 
 @app.post("/api/investigations/{investigation_id}/confirm-entity")
-@limiter.limit("10/minute")
+@limiter.limit("60/minute")
 async def confirm_entity(investigation_id: str, req: ConfirmEntityRequest, request: Request):
     """Confirm disambiguated entity and launch parallel 3-domain research core."""
     # DEMO MODE INTERCEPTION
@@ -631,7 +631,7 @@ class WatchFestivalRequest(BaseModel):
 
 
 @app.post("/api/investigations/{investigation_id}/watch")
-@limiter.limit("10/minute")
+@limiter.limit("60/minute")
 async def register_festival_watch(
     investigation_id: str,
     req: WatchFestivalRequest,
@@ -726,7 +726,7 @@ async def register_festival_watch(
 
 
 @app.post("/api/investigations/{investigation_id}/watch/trigger")
-@limiter.limit("10/minute")
+@limiter.limit("60/minute")
 async def trigger_festival_watch(
     investigation_id: str,
     request: Request,
@@ -854,7 +854,7 @@ async def chat_with_producer_desk(req: ChatRequest, request: Request):
 
 
 @app.post("/api/chat/analyze-doc", response_model=DocumentAnalysisResult)
-@limiter.limit("10/minute")
+@limiter.limit("60/minute")
 async def analyze_document_endpoint(req: DocumentAnalysisRequest, request: Request):
     """Analyzes an uploaded script, synopsis, treatment, or invitation email."""
     try:
@@ -869,7 +869,7 @@ async def analyze_document_endpoint(req: DocumentAnalysisRequest, request: Reque
 
 
 @app.post("/api/scout", response_model=ScoutResponse)
-@limiter.limit("10/minute")
+@limiter.limit("60/minute")
 async def scout_festival_opportunities(req: ScoutRequest, request: Request):
     """Discover tailored festival submission opportunities for a specific film profile."""
     try:
@@ -885,7 +885,7 @@ async def scout_festival_opportunities(req: ScoutRequest, request: Request):
 # --- Milestone M3: Sandbox Outreach & Action Approval Endpoints ---
 
 @app.post("/api/investigations/{investigation_id}/outreach/draft", response_model=OutreachDraft)
-@limiter.limit("10/minute")
+@limiter.limit("60/minute")
 async def draft_outreach_inquiry(investigation_id: str, req: DraftOutreachRequest, request: Request):
     """Draft a verification inquiry for a specific unverified claim or dispute."""
     inv = await db.get_investigation(investigation_id)
@@ -928,7 +928,7 @@ async def draft_outreach_inquiry(investigation_id: str, req: DraftOutreachReques
 
 
 @app.post("/api/investigations/{investigation_id}/outreach/approve", response_model=OutreachDraft)
-@limiter.limit("10/minute")
+@limiter.limit("60/minute")
 async def approve_outreach_inquiry(investigation_id: str, req: ApproveOutreachRequest, request: Request):
     """Verify exact SHA-256 payload hash and execute simulated sandbox delivery.
 
@@ -1095,7 +1095,7 @@ async def get_all_feedback():
 
 
 @app.post("/api/feedback", response_model=FeedbackItem)
-@limiter.limit("10/minute")
+@limiter.limit("60/minute")
 async def submit_feedback(req: FeedbackCreateRequest, request: Request):
     """Submit new filmmaker user feedback."""
     item = FeedbackItem(

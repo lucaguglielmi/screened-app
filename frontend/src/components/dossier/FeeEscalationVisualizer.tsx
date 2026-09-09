@@ -1,5 +1,5 @@
 import React from 'react';
-import { TrendingUp, AlertTriangle, Coins, Clock, CheckCircle2, ArrowRight } from 'lucide-react';
+import { TrendingUp, AlertTriangle, Coins, Clock, CheckCircle2, ArrowRight, Info } from 'lucide-react';
 import { FeeEscalationModel } from '../../types/investigation';
 
 interface Props {
@@ -15,26 +15,32 @@ export const FeeEscalationVisualizer: React.FC<Props> = ({
   isSummary = false,
   onNavigateToFull,
 }) => {
-  // Default fallback data if not provided
-  const data: FeeEscalationModel = model || {
-    currency: '£',
-    tiers: [
-      { tierName: 'Super Early', amount: 28, currency: '£', deadlineDate: '15 Jan', surgePercentage: 0 },
-      { tierName: 'Early Bird', amount: 38, currency: '£', deadlineDate: '1 Mar', surgePercentage: 35 },
-      { tierName: 'Regular', amount: 55, currency: '£', deadlineDate: '15 May', surgePercentage: 96 },
-      { tierName: 'Late Window', amount: 85, currency: '£', deadlineDate: '1 Aug', surgePercentage: 203 },
-      { tierName: 'Extended Late', amount: 98, currency: '£', deadlineDate: '15 Sep', surgePercentage: 250 },
-    ],
-    spikeAlert: 'Significant 203% fee increase detected between early and late deadlines (£28 -> £85).',
-    averageMarketFee: '£32 average for UK indie short film entries',
-    percentile: 92,
-  };
+  if (!model || !model.tiers || model.tiers.length === 0) {
+    return (
+      <div className="rounded-2xl p-5 border border-darkroom-border bg-darkroom-surface/60 text-slate-400 text-xs flex items-center gap-3">
+        <Info className="size-4 text-slate-500 shrink-0" />
+        <span>No tiered fee schedule detected in public archives. The event may operate a flat-rate entry, free submission window, or unindexed submission deadlines.</span>
+      </div>
+    );
+  }
+
+  const data = model;
+
+  if (data.tiers.length === 1) {
+    const tier = data.tiers[0];
+    return (
+      <div className="rounded-2xl p-5 border border-emerald-500/20 bg-emerald-500/5 text-emerald-400 text-xs flex items-center gap-3">
+        <CheckCircle2 className="size-4 text-emerald-500 shrink-0" />
+        <span>Flat submission fee of {tier.currency}{tier.amount} — no late deadline surge or price escalation detected.</span>
+      </div>
+    );
+  }
 
   const maxAmount = Math.max(...data.tiers.map((t) => t.amount), 100);
   const minAmount = Math.min(...data.tiers.map((t) => t.amount), 20);
   const totalSurge = data.tiers.length > 1
     ? Math.round(((data.tiers[data.tiers.length - 1].amount - data.tiers[0].amount) / data.tiers[0].amount) * 100)
-    : 250;
+    : 0;
 
   const isHighSurge = totalSurge >= 150 || (data.percentile && data.percentile >= 80);
 

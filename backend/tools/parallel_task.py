@@ -149,14 +149,25 @@ async def parallel_task_run(
             "queries": queries,
         }
 
-        from pydantic import BaseModel
+        from pydantic import BaseModel, Field
+        from typing import List, Optional
         from backend.models import ClaimKind
+
+        class TaskClaimEvidence(BaseModel):
+            sourceUrl: str
+            sourceTitle: str
+            sourceDomain: str
+            exactExcerpt: str
+            stance: str = "SUPPORTS"
 
         class TaskClaim(BaseModel):
             statement: str
             kind: ClaimKind
             subject: str
             domain: str
+            category: Optional[str] = "BACKGROUND"
+            editionYear: Optional[int] = None
+            evidence: List[TaskClaimEvidence] = []
 
         class TaskOutput(BaseModel):
             claims: List[TaskClaim]

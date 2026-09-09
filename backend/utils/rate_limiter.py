@@ -31,14 +31,14 @@ class TieredRateLimiter:
     """Multi-tiered in-memory rate limiter for MCP endpoints.
     
     Tiers:
-    - READ: 60 req/minute per client IP
-    - SCOUT: 20 req/minute per client IP
-    - HEAVY: 3 req/hour per client IP (dispatched agent deep investigations)
+    - READ: 180 req/minute per client IP
+    - SCOUT: 60 req/minute per client IP
+    - HEAVY: 30 req/hour per client IP (dispatched agent deep investigations)
     """
     TIER_CONFIGS = {
-        "READ": (60, 60.0 / 60.0),       # capacity 60, 1 per sec
-        "SCOUT": (20, 20.0 / 60.0),      # capacity 20, 0.333 per sec
-        "HEAVY": (3, 3.0 / 3600.0),      # capacity 3, 3 per hour
+        "READ": (180, 180.0 / 60.0),       # capacity 180, 3 per sec
+        "SCOUT": (60, 60.0 / 60.0),        # capacity 60, 1 per sec
+        "HEAVY": (30, 30.0 / 3600.0),      # capacity 30, 30 per hour
     }
 
     def __init__(self):
