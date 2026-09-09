@@ -1038,24 +1038,24 @@ export const LiveProgress: React.FC<Props> = ({
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: 80, opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.35, ease: 'easeOut' }}
-            className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-2xl bg-[#090d18]/95 backdrop-blur-xl border border-indigo-500/40 rounded-2xl shadow-2xl shadow-black/90 p-3.5 sm:p-4 text-white"
+            className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-2xl bg-[#060a17]/95 backdrop-blur-xl border border-white/[0.12] rounded-2xl shadow-2xl shadow-black/80 p-4 sm:p-5 text-white"
           >
             {isNotified ? (
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2.5 min-w-0">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3 min-w-0">
                   <div className="p-2 rounded-xl bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shrink-0">
-                    <VerifiedTick size={16} />
+                    <VerifiedTick size={18} />
                   </div>
                   <div className="min-w-0">
-                    <div className="text-xs font-semibold text-white flex items-center gap-2 flex-wrap truncate">
-                      <span>Notification Active for {notifyEmail}</span>
+                    <div className="text-sm sm:text-base font-semibold text-white flex items-center gap-2 flex-wrap truncate">
+                      <span>Notification active for {notifyEmail}</span>
                       {pushEnabled && (
-                        <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                        <span className="px-2 py-0.5 rounded-full text-xs font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                           {isPwa ? 'PWA Alerts On' : 'Device Alerts On'}
                         </span>
                       )}
                     </div>
-                    <div className="text-[11px] text-slate-400 truncate">
+                    <div className="text-xs sm:text-sm text-slate-400 mt-0.5 truncate">
                       {pushEnabled
                         ? "We'll alert you on this device and email you the dossier as soon as it's ready!"
                         : "We'll email you the dossier as soon as it's ready. Feel free to close this tab!"}
@@ -1068,98 +1068,96 @@ export const LiveProgress: React.FC<Props> = ({
                     soundEffects.playClick();
                     setStickyDismissed(true);
                   }}
-                  className="px-3 py-1.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.15] text-xs font-mono text-slate-200 hover:text-white transition-colors shrink-0 cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-white/[0.08] hover:bg-white/[0.15] text-xs sm:text-sm font-mono text-slate-200 hover:text-white transition-colors shrink-0 cursor-pointer"
                 >
                   Got it
                 </button>
               </div>
             ) : (
-              <div className="space-y-3">
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="p-1.5 rounded-lg bg-midnight-royal/50 border border-tool-diligence/40 text-tool-diligence shrink-0">
-                      <Bell className="size-3.5" />
-                    </div>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-xs font-bold text-white block truncate">
-                          Deep Research Running in Background
+              <div className="space-y-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2.5 flex-wrap">
+                      <h3 className="text-sm sm:text-base font-semibold text-white tracking-tight">
+                        Deep Research Running in Background
+                      </h3>
+                      {isPwa && (
+                        <span className="px-2 py-0.5 rounded-full text-xs font-mono font-medium bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">
+                          PWA Mode
                         </span>
-                        {isPwa && (
-                          <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-medium bg-tool-diligence/15 text-tool-diligence border border-tool-diligence/30">
-                            PWA Mode
-                          </span>
-                        )}
-                      </div>
-                      <span className="text-[11px] text-slate-400 block truncate">
-                        Choose how to be notified when the dossier is ready — you can safely close this tab!
-                      </span>
+                      )}
                     </div>
+                    <p className="text-xs sm:text-sm text-slate-400 mt-1">
+                      Choose how to be notified when the dossier is ready — you can safely close this tab!
+                    </p>
                   </div>
 
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        soundEffects.playClick();
-                        setStickyDismissed(true);
-                      }}
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-                      aria-label="Dismiss notification banner"
-                    >
-                      <X className="size-4" />
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      soundEffects.playClick();
+                      setStickyDismissed(true);
+                    }}
+                    className="p-1.5 -mr-1 -mt-1 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.08] transition-colors cursor-pointer shrink-0"
+                    aria-label="Dismiss notification banner"
+                  >
+                    <X className="size-4.5" />
+                  </button>
                 </div>
 
                 {/* Option 1: E-mail Notification */}
-                <form onSubmit={handleRegisterEmail} className="flex items-center gap-2">
+                <form onSubmit={handleRegisterEmail} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
                   <div className="relative flex-1">
-                    <Mail className="size-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                    <Mail className="size-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
                     <input
                       type="email"
                       value={effectiveEmail}
                       onChange={(e) => setNotifyEmail(e.target.value)}
                       placeholder="Enter your email for direct dossier link..."
-                      className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-black/60 border border-darkroom-border text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-400 font-mono"
+                      className="w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-black/50 border border-white/[0.12] focus:border-indigo-400/80 focus:ring-1 focus:ring-indigo-400/20 text-sm text-white placeholder:text-slate-500 font-mono transition-all"
                       disabled={isSubmittingNotify}
                     />
                   </div>
                   <button
                     type="submit"
                     disabled={isSubmittingNotify || !effectiveEmail.includes('@')}
-                    className="px-3.5 py-1.5 rounded-xl text-xs font-mono font-semibold transition-all flex items-center gap-1.5 cursor-pointer shrink-0 bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm disabled:opacity-40"
+                    className="px-4.5 py-2.5 rounded-xl text-sm font-mono font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0 bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98] text-white shadow-md shadow-indigo-600/20 disabled:opacity-40 disabled:cursor-not-allowed"
                   >
-                    <Mail className="size-3" />
+                    <Mail className="size-3.5" />
                     <span>{isSubmittingNotify ? 'Saving...' : 'Email Dossier'}</span>
                   </button>
                 </form>
 
-                {/* Option 2: Browser / PWA Push Notification (Triggered ONLY on explicit user click) */}
+                {/* Option 2: Browser / PWA Push Notification */}
                 {notificationSupported && (
-                  <div className="flex items-center justify-between gap-2 pt-1 border-t border-white/[0.06] text-xs">
-                    <div className="flex items-center gap-2 text-[11px] text-slate-400">
-                      <Bell className="size-3 text-tool-diligence shrink-0" />
-                      <span>
-                        {pushEnabled
-                          ? 'Browser alerts active for this device.'
-                          : 'Prefer device alerts? Get a one-time browser ping when ready.'}
-                      </span>
+                  <div className="flex items-center justify-between gap-3 pt-2 border-t border-white/[0.06]">
+                    <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-300">
+                      {pushEnabled ? (
+                        <>
+                          <span className="relative flex size-2 shrink-0">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                            <span className="relative inline-flex rounded-full size-2 bg-emerald-400" />
+                          </span>
+                          <span>
+                            {isPwa ? 'PWA alerts active for this device.' : 'Browser alerts active for this device.'}
+                          </span>
+                        </>
+                      ) : (
+                        <span>Prefer device alerts? Get a one-time browser ping when ready.</span>
+                      )}
                     </div>
-                    <button
-                      type="button"
-                      onClick={handleEnableBrowserPush}
-                      disabled={pushEnabled}
-                      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-mono font-medium transition-all cursor-pointer shrink-0 ${
-                        pushEnabled
-                          ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 cursor-default'
-                          : 'bg-white/[0.08] hover:bg-white/[0.16] border border-white/20 text-slate-200 hover:text-white active:scale-95'
-                      }`}
-                      title={pushEnabled ? 'Browser alerts already active' : 'Click to grant browser notification permission'}
-                    >
-                      {pushEnabled ? <VerifiedTick size={12} /> : <Bell className="size-3 text-tool-diligence" />}
-                      <span>{pushEnabled ? (isPwa ? 'PWA Alerts Active' : 'Browser Alerts Active') : 'Enable Browser Alert'}</span>
-                    </button>
+
+                    {!pushEnabled && (
+                      <button
+                        type="button"
+                        onClick={handleEnableBrowserPush}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono font-medium text-slate-200 hover:text-white bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 active:scale-95 transition-all cursor-pointer shrink-0"
+                        title="Click to grant browser notification permission"
+                      >
+                        <Bell className="size-3.5 text-tool-diligence" />
+                        <span>{isPwa ? 'Enable PWA Alert' : 'Enable Browser Alert'}</span>
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
