@@ -162,7 +162,7 @@ export const DossierStickyNav: React.FC<DossierStickyNavProps> = ({
       (entityName === 'Pinco Pallino Film Festival'
         ? 'demo_pinco_pallino'
         : (entityName || '').toLowerCase().replace(/[^a-z0-9]+/g, '_'));
-    const prompt = `Audit the ${entityName || 'festival'} film festival (Screened dossier reference: ${slug}) using Screened MCP / Antigravity plugin: verify venue manifest and fee escalation.`;
+    const prompt = `Audit the ${entityName || 'festival'} film festival (Screened dossier reference: ${slug}). If your environment has not yet connected Screened MCP, add the live SSE endpoint (https://totallyscreened.com/api/mcp/sse or workspace plugin .agents/plugins/screened/mcp_config.json), then execute screened_ask_dossier to verify venue manifest and fee escalation.`;
     navigator.clipboard.writeText(prompt);
     soundEffects.playClick();
     setInternalCopiedGeminiPrompt(true);

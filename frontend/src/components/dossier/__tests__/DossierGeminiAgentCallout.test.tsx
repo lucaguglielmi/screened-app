@@ -38,6 +38,9 @@ describe('DossierGeminiAgentCallout', () => {
     expect(writeTextMock).toHaveBeenCalledWith(
       expect.stringContaining('Audit the Pinco Pallino Film Festival film festival')
     );
+    expect(writeTextMock).toHaveBeenCalledWith(
+      expect.stringContaining('https://totallyscreened.com/api/mcp/sse')
+    );
     expect(screen.getByText('Copied Prompt!')).toBeInTheDocument();
   });
 });

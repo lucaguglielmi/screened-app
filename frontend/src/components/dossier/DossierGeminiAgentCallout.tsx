@@ -32,7 +32,7 @@ export const DossierGeminiAgentCallout: React.FC<Props> = ({
       ? 'demo_pinco_pallino'
       : entity.name.toLowerCase().replace(/[^a-z0-9]+/g, '_'));
 
-  const promptText = `Audit the ${entity.name} film festival (Screened dossier reference: ${dossierRef}) using Screened MCP / Antigravity plugin: verify venue manifest, check Companies House legal status, and analyze submission fee escalation.`;
+  const promptText = `Audit the ${entity.name} film festival (Screened dossier reference: ${dossierRef}). If your environment has not yet connected Screened MCP, add the live SSE endpoint (https://totallyscreened.com/api/mcp/sse or workspace plugin .agents/plugins/screened/mcp_config.json), then execute screened_ask_dossier to verify the venue manifest, check legal corporate filings, and analyze submission fee escalation.`;
 
   const handleCopyPrompt = () => {
     navigator.clipboard.writeText(promptText);
