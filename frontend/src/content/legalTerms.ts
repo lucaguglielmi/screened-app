@@ -86,7 +86,7 @@ export const PRIVACY_POLICY = {
       title: "3. Third-Party Sub-Processors & Data Flow",
       paragraphs: [
         "Screened relies on select enterprise cloud infrastructure and specialized APIs to execute investigations:",
-        "1. Google Cloud Platform (europe-west2, London): Cloud Run for serverless execution, Firestore for state caching, and Vertex AI (Gemini 2.5 Pro & Flash) for structured reasoning. Google Cloud enterprise commitments guarantee customer data is not utilized to train foundation models.",
+        "1. Google Cloud Platform (europe-west2, London): Cloud Run for serverless execution, Firestore for state caching, and Vertex AI (Gemini 2.5 Pro & Flash) for structured reasoning. Screened intentionally uses Vertex AI (Google's Enterprise ML platform) rather than standard developer APIs. This ensures enterprise-grade privacy boundaries where your documents, scripts, and queries are explicitly exempt from being used to train Google's foundation models.",
         "2. Parallel Systems Inc. (Parallel Search API): Provides web retrieval and primary registry grounding. Only public festival entity names and venue search strings are dispatched; confidential screenplays are never forwarded.",
         "3. SendGrid (Twilio Inc.): Transactional email delivery when the user explicitly requests an investigation completion email.",
         "4. Google Analytics 4 (Google LLC): Opt-in anonymized telemetry with IP masking enabled, activated only upon user consent."

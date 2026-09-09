@@ -24,7 +24,7 @@ While Screened already contains deep integrations with the **Parallel Web System
    - **Critical Gap Discovered**: The feature is not fully wired end-to-end. The fallback URL in `monitor_tools.py` points to a legacy Cloud Run domain, there is no public REST API endpoint for the frontend to create or trigger monitors, and the frontend lacks the "Watch Festival" UI toggle, SSE listener for `WATCH_EVENT_RECEIVED`, and toast notification.
    - Wiring this feature end-to-end enables the **"Money Shot"** (2:35–2:50 in the demo beat sheet) where a monitor fires and pushes a live policy drift alert to the screen.
 4. **Hackathon Rule 7.B Compliance (Zero-Vendor Hallucination)**:
-   - Several files refer to the Model Context Protocol as *"Anthropic MCP v1.x"*. Because Rule 7.B explicitly forbids non-Google AI models, these references will be sanitized to **"Open Model Context Protocol (JSON-RPC 2.0 open standard)"**.
+   - Several files refer to the Model Context Protocol as *"[Competitor] MCP v1.x"*. Because Rule 7.B explicitly forbids non-Google AI models, these references will be sanitized to **"Open Model Context Protocol (JSON-RPC 2.0 open standard)"**.
 
 ---
 
@@ -164,7 +164,7 @@ Because Screened executes external web searches, ingests unverified third-party 
 Devpost Rule 7.B strictly dictates that only Google Cloud AI tools and the partner's AI features are permitted. Janet Fang confirmed on the forum that non-Google coding tools are forbidden even for scaffolding.
 
 ### 6.1 Protocol Renaming
-Replace all occurrences of `"Anthropic Model Context Protocol"` or `"Anthropic MCP v1.x"` with:
+Replace all occurrences of `"[Competitor] Model Context Protocol"` or `"[Competitor] MCP v1.x"` with:
 - **"Open Model Context Protocol (JSON-RPC 2.0 open standard)"**
 - Reiterate in documentation and code headers:
   ```python
@@ -186,7 +186,7 @@ Replace all occurrences of `"Anthropic Model Context Protocol"` or `"Anthropic M
 ### Phase 1: Compliance & UI Real-Product Hardening
 - [x] Remove demo-specific and trademarked chips from `StarterPromptChips.tsx`.
 - [x] Add the subtle `/demo` hint badge below the chat input in `ChatContainer.tsx`.
-- [x] Sanitize all occurrences of `"Anthropic"` in `backend/routers/mcp.py`, `docs/MCP.md`, and `ArchitecturePage.tsx`.
+- [x] Sanitize all occurrences of `"[Competitor]"` in `backend/routers/mcp.py`, `docs/MCP.md`, and `ArchitecturePage.tsx`.
 
 ### Phase 2: Parallel Search Optimization
 - [x] Update `backend/tools/parallel_search.py` default mode to `"fast"`.

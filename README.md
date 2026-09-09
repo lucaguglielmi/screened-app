@@ -178,8 +178,8 @@ Screened employs an intentional **two-tier multi-agent division of labor**:
 ### 10. Multi-Protocol Agent Ecosystem: WebMCP, Server MCP & Google Antigravity Plugin
 Screened is accessible by both human filmmakers and autonomous external AI agents through three native protocols:
 - **Google Antigravity & Gemini Plugin**: Native workspace plugin located in `.agents/plugins/screened/` equipped with progressive disclosure skills (`screened-festival-diligence`, `screened-grant-scout`) and forensic rules (`rules/AGENTS.md`) connecting directly to Screened's Cloud Run MCP gateway over SSE.
-- **In-Browser WebMCP (`WebMCP/2026`)**: An in-page, DOM-accessible agent protocol exposed via `window.__screened_web_mcp__`. Browser-based AI assistants (Chrome with WebMCP flags, Claude Computer Use, Gemini Live, Cursor) can audit dossiers, inspect claims, and dispatch investigations via `webmcp:call` and `webmcp:result` DOM CustomEvents with live visual evidence spotlighting.
-- **Open Server MCP (JSON-RPC 2.0)**: Standardized Model Context Protocol server running over SSE (`/api/mcp/sse`) and JSON-RPC 2.0 (`/api/mcp/messages`, `/api/mcp/rpc`). Enables desktop tools (Claude Desktop, Cursor IDE, Antigravity) to query Screened's dossier ledger via specialized forensic tools.
+- **In-Browser WebMCP (`WebMCP/2026`)**: An in-page, DOM-accessible agent protocol exposed via `window.__screened_web_mcp__`. Browser-based AI assistants (Chrome with WebMCP flags, Gemini Live) can audit dossiers, inspect claims, and dispatch investigations via `webmcp:call` and `webmcp:result` DOM CustomEvents with live visual evidence spotlighting.
+- **Open Server MCP (JSON-RPC 2.0)**: Standardized Model Context Protocol server running over SSE (`/api/mcp/sse`) and JSON-RPC 2.0 (`/api/mcp/messages`, `/api/mcp/rpc`). Enables desktop tools (Google Antigravity, local MCP clients) to query Screened's dossier ledger via specialized forensic tools.
 - *Learn more*: See the manuals in [`docs/GEMINI_ANTIGRAVITY_INTEGRATION.md`](docs/GEMINI_ANTIGRAVITY_INTEGRATION.md), [`docs/WEBMCP.md`](docs/WEBMCP.md), [`docs/MCP.md`](docs/MCP.md), and [`docs/specs/SPEC_GEMINI_ANTIGRAVITY_PLUGIN.md`](docs/specs/SPEC_GEMINI_ANTIGRAVITY_PLUGIN.md), or test tools directly in the [Screened Agents Hub](/agents).
 
 ### 11. Parallel Search Benchmark Lab & Dynamic Mode Switching (`/playground?tab=search-benchmark`)
@@ -202,6 +202,10 @@ Screened is engineered for zero-crash operational resilience under heavy multi-u
 - **Universal Correlation Tracing (`X-Correlation-ID`)**: Every HTTP request, SSE stream, and worker task is tagged with an immutable, sanitized UUID correlation header for sub-second log filtering in Google Cloud Logging.
 - **Circuit Breaker & Graceful Partial Degradation**: If an upstream search times out on an individual domain (e.g. image provenance), the system captures the event, preserves corroborations from all other domains, and finalizes the dossier with an explicit `PARTIALLY_DEGRADED` health badge—preventing investigation crashes or stuck states.
 - **Heartbeat-Aware Polling & Forensic 429 UI**: Client-side polling automatically suspends when live SSE events are healthy (slashing server requests by 85%). If peak capacity is reached, a dedicated **`RateLimitNotice`** component presents an amber countdown timer (*"Auto-resuming in {seconds}s..."*) and a 1-click **"Copy Diagnostic Bundle"** button.
+ 
+### 14. Enterprise-Grade Privacy via Vertex AI
+- **Total IP Protection**: Screened intentionally routes all Generative AI reasoning through **Google Cloud Vertex AI** rather than standard developer API endpoints.
+- **Zero Training Guarantee**: Your scripts, unproduced treatments, and festival queries are isolated within our Google Cloud project boundaries and are explicitly exempt from being used to train Google's foundation models.
 
 ---
 

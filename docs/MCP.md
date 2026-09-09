@@ -1,10 +1,9 @@
-# 🔌 Screened Model Context Protocol (MCP) Server Guide
+# 🔌 Screened Server MCP
 
-> **Protocol Standard**: Model Context Protocol (Open JSON-RPC 2.0 Standard)  
-> **Server Identity**: `Screened Intelligence Core (v1.0.0)`  
-> **Status**: SPECIFIED & PENDING ROLLOUT  
+> **Target Application**: Screened (`https://totallyscreened.com/`)  
+> **Status**: ACTIVE & EXPANDING  
 
-The **Screened MCP Server** allows agent environments—including **Google Antigravity**, the **Gemini CLI**, and open MCP clients—to connect directly to Screened’s cinema intelligence engine over Server-Sent Events (SSE) or stdio. All reasoning and tool execution are powered exclusively by **Google Gemini 2.5 Pro and Google ADK**.
+Screened runs a standard Model Context Protocol (MCP) server over SSE to allow external AI desktops and local agents (such as Google Antigravity) to query our public investigation dossiers. All reasoning and tool execution are powered exclusively by **Google Gemini 2.5 Pro and Google ADK**.
 
 ---
 

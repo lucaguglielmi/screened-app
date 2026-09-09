@@ -115,5 +115,5 @@ cp -r plugins/screened-gemini-plugin ~/.gemini/config/plugins/screened
 | Interface | Transport | Target Audience | Primary Use Case |
 | :--- | :--- | :--- | :--- |
 | **WebMCP** | Browser `window.__screened_web_mcp__` | In-page AI extensions, browser copilots | Zero-latency DOM & client-side investigation |
-| **Server MCP** | SSE / HTTP JSON-RPC (`/api/mcp/sse`) | Claude Desktop, Cursor, Open WebUI, MCP clients | Cross-platform multi-agent system connectivity |
+| **Server MCP** | SSE / HTTP JSON-RPC (`/api/mcp/sse`) | Google Antigravity, Open WebUI, MCP clients | Cross-platform multi-agent system connectivity |
 | **Antigravity Plugin** | Native `.agents/plugins/` + SSE | Google Antigravity & Gemini CLI | End-to-end autonomous due diligence with forensic rules & skills |

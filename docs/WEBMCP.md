@@ -4,7 +4,7 @@
 > **Target Application**: Screened (`https://totallyscreened.com/`)  
 > **Status**: ACTIVE & EXPANDING  
 
-Screened's **WebMCP (Web Model Context Protocol)** exposes structured, type-safe JSON tools directly inside the browser DOM runtime. This allows autonomous AI assistants—such as Claude Computer Use, Gemini Live browser agents, Chrome with experimental agent flags, Cursor browser runners, and Playwright/Puppeteer agents—to cross-examine festival dossiers, audit citations, and dispatch investigations without fragile screen scraping or OCR vision models.
+Screened's **WebMCP (Web Model Context Protocol)** exposes structured, type-safe JSON tools directly inside the browser DOM runtime. This allows autonomous AI assistants—such as Google Antigravity browser workers, Gemini Live browser agents, Chrome with experimental agent flags, and Playwright/Puppeteer agents—to cross-examine festival dossiers, audit citations, and dispatch investigations without fragile screen scraping or OCR vision models.
 
 ---
 

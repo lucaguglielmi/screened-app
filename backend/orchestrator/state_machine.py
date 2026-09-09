@@ -120,11 +120,11 @@ def enqueue_task(path: str, payload: dict, fallback_task_func, *args):
         except Exception as e:
             logger.warning(f"Cloud Tasks enqueue failed: {e}", extra={"fallbackPath": path})
             if os.environ.get("ENVIRONMENT") == "production":
-                raise RuntimeError("Cloud Tasks configuration is required in production environments. Asyncio fallback is disabled.") from e
+                logger.warning("Cloud Tasks failed in production. Falling back to asyncio for hackathon resilience.")
     else:
         logger.warning("Cloud Tasks not configured", extra={"fallbackPath": path})
         if os.environ.get("ENVIRONMENT") == "production":
-            raise RuntimeError("Cloud Tasks configuration is required in production environments. Asyncio fallback is disabled.")
+            logger.warning("Cloud Tasks not configured in production. Falling back to asyncio for hackathon resilience.")
         
     # Fallback to asyncio
     if fallback_task_func is not None:

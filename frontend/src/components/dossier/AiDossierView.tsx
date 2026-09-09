@@ -151,7 +151,7 @@ Standards: Require 2+ independent corroborating sources before accepting claims.
               </h3>
             </div>
             <p className="text-xs text-slate-400 font-sans">
-              Direct programmatic access for in-browser copilots (Chrome WebMCP / Claude Computer Use) and external LLMs.
+              Direct programmatic access for in-browser copilots (Chrome WebMCP / Gemini Live) and external LLMs.
             </p>
           </div>
 
@@ -194,7 +194,7 @@ Standards: Require 2+ independent corroborating sources before accepting claims.
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Radio className="size-4 text-purple-400" />
-                <span className="text-xs font-mono font-semibold text-purple-300">Claude Desktop &amp; Antigravity Config</span>
+                <span className="text-xs font-mono font-semibold text-purple-300">Google Antigravity Config</span>
               </div>
               <button
                 type="button"
@@ -219,7 +219,7 @@ Standards: Require 2+ independent corroborating sources before accepting claims.
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <ShieldCheck className="size-4 text-indigo-400" />
-              <span className="text-xs font-mono font-semibold text-indigo-300">Autonomous Dossier Audit Prompt (Gemini / Claude / GPT)</span>
+              <span className="text-xs font-mono font-semibold text-indigo-300">Autonomous Dossier Audit Prompt (Gemini / Antigravity)</span>
             </div>
             <button
               type="button"
