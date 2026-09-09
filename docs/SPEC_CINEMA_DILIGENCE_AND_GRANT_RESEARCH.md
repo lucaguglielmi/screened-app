@@ -293,7 +293,7 @@ All changes to the Screened platform must meet these automated quality gates:
 
 ---
 
-## 7. Hackathon Compliance & Final Verification Checklist
+## 7. Platform Compliance & Final Verification Checklist
 
 ### 7.1 LLM & AI Framework Compliance
 * **Gemini as the Exclusive Reasoning Engine**:
@@ -318,7 +318,7 @@ All changes to the Screened platform must meet these automated quality gates:
     * *Executive Brief*: 78/100 score, 4-Vector Radar, and key red flag takeaways.
     * *Forensic Evidence & Provenance*: Full React Flow graph connecting organizers to Pallino Media Lab Ltd, verbatim cited quotes, and contradiction panels.
 
-### 7.3 Hackathon Submission Readiness Checklist
+### 7.3 Production Readiness Verification Checklist
 - [x] **Core Pillars Polished**: Screened AI, Festival Due Diligence, and Grant & Funding Research fully unified.
 - [x] **No Interrogation Forms**: Due Diligence intake reduced to Festival Name + Freeform Clues Text Area.
 - [x] **Direct Email Ingestion**: Uploaded emails immediately launch due diligence search without extraneous intermediary cards.

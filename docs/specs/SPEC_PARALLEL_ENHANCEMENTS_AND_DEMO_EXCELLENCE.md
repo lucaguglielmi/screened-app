@@ -3,8 +3,7 @@
 > **Document Version**: 1.1.0  
 > **Target System**: Screened — Cinema Intelligence & Due Diligence Platform  
 > **Status**: COMPLETED (Implemented & Verified)  
-> **Track**: Parallel Track ($7,500 1st Place) · Devpost "Agentic Cinema: The Blockbuster Hackathon"  
-> **Scope**: UI Real-Product Hardening · Parallel API Optimization (Search Modes, Extract, Task, FindAll) · End-to-End Festival Watch Monitor Architecture · Enterprise Security Posture (SSRF, Webhook HMAC, Replay Defense, Rate Limiting) · Rule 7.B Vendor Sanitization · 3-Minute Demo Video Beat Sheet  
+> **Scope**: UI Real-Product Hardening · Parallel API Optimization (Search Modes, Extract, Task, FindAll) · End-to-End Festival Watch Monitor Architecture · Enterprise Security Posture (SSRF, Webhook HMAC, Replay Defense, Rate Limiting) · Rule 7.B Vendor Sanitization
 
 ---
 
@@ -86,7 +85,7 @@ According to the latest Parallel documentation:
 
 ## 4. The "Festival Watch" Monitor Feature: End-to-End Architecture
 
-In `09-DEMO-VIDEO-NOTES.md`, the centerpiece demonstration is the **"Money Shot"** (2:35–2:50), where a festival policy change is detected live via Parallel Monitor.
+The centerpiece capability of real-time diligence is detecting festival policy changes live via Parallel Monitor.
 
 ### 4.1 Root Cause of Current Incompleteness
 1. **Host Fallback**: `backend/tools/monitor_tools.py` line 30 points to `https://screened-pludf2u7yq-nw.a.run.app` instead of live production `https://screened-786241671474.europe-west2.run.app`.
@@ -182,42 +181,7 @@ Replace all occurrences of `"Anthropic Model Context Protocol"` or `"Anthropic M
 
 ---
 
-## 7. Chapter: The 3-Minute Blockbuster Demo Blueprint
-
-This beat sheet is tailored for recording, featuring **Pinco Pallino Film Festival** as the sole, gold-standard demo showcase.
-
-### 7.1 Beat Sheet & Script Breakdown (3:00 Max)
-
-```
-0:00 - 0:20 | THE PERSONAL BACKSTORY & THE EXTRACTIVE CRISIS
-• Visual: Landing on Screened Hero. Camera on filmmaker or voiceover over the "Why Screened" comparison.
-• Script: "20 years ago, I made an indie movie that achieved a cult following in Italy. When entering the festival circuit, I saw firsthand how extractive submission fees can be. Independent filmmakers waste millions every year on predatory festivals and shell companies. I built Screened to give filmmakers autonomous forensic due diligence."
-
-0:20 - 0:50 | PRODUCER DESK & FUNCTION CALLING
-• Visual: In the chat bar, show the subtle hint: 'Tip: Type /demo to see how an accelerated forensic audit works'. Type '/demo'.
-• Visual: The Gemini 2.5 LlmAgent immediately executes configure_due_diligence and mounts the interactive FestivalIntakeCard.
-• Script: "Meet the Producer Desk, powered by Google Gemini 2.5 and Google ADK. Instead of plain text chat, Gemini executes structured function calling to mount interactive mini-UIs directly in the interface. Let's launch an accelerated audit of Pinco Pallino Film Festival."
-
-0:50 - 1:35 | THE MULTI-AGENT ADK & PARALLEL SEARCH ENGINE
-• Visual: Click 'Launch Due Diligence'. The 20-second accelerated simulation in LiveProgress takes over. Show the ADK agent tree lighting up (Planning -> ParallelSearch -> ClaimExtractor -> ContradictionAnalyst).
-• Script: "Behind the scenes, Google ADK orchestrates specialized sub-agents. FestivalAgent, OrganizerAgent, and ParticipantsAgent fire concurrent queries through Parallel Web Systems. Parallel Search operates in sub-second fast mode, retrieving public event bookings, UK Companies House filings, and community disclosures in sub-second time."
-
-1:35 - 2:15 | THE FORENSIC EVIDENCE DOSSIER & PARALLEL EXTRACT
-• Visual: The full dossier mounts. Flip the Detail Dial to 'Detailed Forensics'. Hover over Claim #1 (Genesis Cinema Studio 4) and Claim #3 (Companies House CIC filing #13984712). Pop open the verbatim excerpt citations.
-• Script: "This is the core innovation: zero-hallucination due diligence. Every single claim is pinned to a verbatim excerpt from Parallel Extract, backed by a cryptographic SHA-256 document hash. The system proves that while Pinco Pallino does have a physical venue at Genesis Cinema, its registered address is a virtual office, and its submission fees surge by 168%."
-
-2:15 - 2:40 | THE MONEY SHOT: FESTIVAL WATCH (PARALLEL MONITOR)
-• Visual: On the dossier, toggle 'Watch Festival'. Trigger the monitor update via the test button. A live amber toast slides in: '🚨 Festival Watch Alert: Pinco Pallino rule change detected via Parallel Monitor webhook.'
-• Script: "Due diligence doesn't stop at submission. Parallel Monitor continuously watches festival URLs for policy drift. When an organizer silently updates rules or hikes late fees, our HMAC-SHA256 webhook fires instantly, pushing a live alert to the filmmaker."
-
-2:40 - 3:00 | ARCHITECTURE HUB & ENTERPRISE CLOUD RUN STACK
-• Visual: Click 'Architecture' in the header. Show the interactive D2 diagram with the 8 ADK agents, the dual WebMCP/Server MCP layer, and the Google Cloud Run infrastructure.
-• Script: "Screened is fully deployed on Google Cloud Run in London, backed by Firestore, Cloud Tasks, and Secret Manager, with an open Model Context Protocol server for external agent IDEs. Built natively with Google Antigravity and Parallel Web Systems. Thank you."
-```
-
----
-
-## 8. Implementation Phasing & Tasks
+## 7. Implementation Phasing & Tasks
 
 ### Phase 1: Compliance & UI Real-Product Hardening
 - [x] Remove demo-specific and trademarked chips from `StarterPromptChips.tsx`.
@@ -242,7 +206,7 @@ This beat sheet is tailored for recording, featuring **Pinco Pallino Film Festiv
 
 ---
 
-## 9. Verification Plan
+## 8. Verification Plan
 
 ### Automated Backend Tests
 - `pytest tests/test_demo_mode.py`: Verify `/demo` triggers the Pinco Pallino dossier.
