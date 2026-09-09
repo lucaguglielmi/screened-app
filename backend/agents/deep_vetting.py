@@ -260,7 +260,7 @@ MANDATORY INSTRUCTIONS:
 
 Return a JSON object conforming strictly to the DeepVettingReport schema.
 """
-        response = self.gemini.client.models.generate_content(
+        response = await self.gemini._generate_content_with_retry(
             model="gemini-2.5-flash",
             contents=prompt,
             config=types.GenerateContentConfig(
@@ -269,7 +269,14 @@ Return a JSON object conforming strictly to the DeepVettingReport schema.
                 temperature=0.1,
             )
         )
-        data = json.loads(response.text or "{}")
+        
+        raw_text = response.text or "{}"
+        if raw_text.startswith("```json"):
+            raw_text = raw_text.strip("`").removeprefix("json").strip()
+        elif raw_text.startswith("```"):
+            raw_text = raw_text.strip("`").strip()
+            
+        data = json.loads(raw_text)
         return DeepVettingReport.model_validate(data)
 
     def _get_fallback_dimensions(self, festival_name: str, optional_url: Optional[str] = None) -> List[DeepVettingDimension]:

@@ -66,7 +66,7 @@ Return a JSON object:
 }}
 """
         try:
-            response = self.gemini.client.models.generate_content(
+            response = await self.gemini._generate_content_with_retry(
                 model="gemini-2.5-flash",
                 contents=prompt,
                 config=types.GenerateContentConfig(
@@ -74,7 +74,13 @@ Return a JSON object:
                     temperature=0.2,
                 ),
             )
-            raw = json.loads(response.text or "{}")
+            raw_text = response.text or "{}"
+            if raw_text.startswith("```json"):
+                raw_text = raw_text.strip("`").removeprefix("json").strip()
+            elif raw_text.startswith("```"):
+                raw_text = raw_text.strip("`").strip()
+                
+            raw = json.loads(raw_text)
 
             recipient_email = raw.get("recipientEmail", f"submissions@{entity.officialDomain or 'festival.org'}")
             recipient_name = raw.get("recipientName", "Festival Submissions Coordinator")

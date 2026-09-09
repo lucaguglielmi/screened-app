@@ -120,7 +120,7 @@ async def test_report_writer_parses_full_forensic_schema(sample_entity, sample_c
 
     mock_response_obj = MagicMock()
     mock_response_obj.text = json.dumps(mock_llm_response)
-    mock_models.generate_content.return_value = mock_response_obj
+    mock_gemini._generate_content_with_retry = AsyncMock(return_value=mock_response_obj)
 
     agent = ReportWriterAgent(gemini=mock_gemini)
     report = await agent.write_report(
@@ -163,10 +163,10 @@ async def test_report_writer_fallback_from_pro_to_flash(sample_entity, sample_cl
     mock_success_obj.text = json.dumps(fallback_response)
 
     # First call (gemini-2.5-pro) raises an exception; second call (gemini-2.5-flash) succeeds
-    mock_models.generate_content.side_effect = [
+    mock_gemini._generate_content_with_retry = AsyncMock(side_effect=[
         Exception("ResourceExhausted: gemini-2.5-pro quota exceeded"),
         mock_success_obj,
-    ]
+    ])
 
     agent = ReportWriterAgent(gemini=mock_gemini)
     report = await agent.write_report(
@@ -177,9 +177,9 @@ async def test_report_writer_fallback_from_pro_to_flash(sample_entity, sample_cl
     )
 
     assert report.executiveSummary == "Synthesized via fallback model."
-    assert mock_models.generate_content.call_count == 2
+    assert mock_gemini._generate_content_with_retry.call_count == 2
     # Verify the two models called
-    first_call_model = mock_models.generate_content.call_args_list[0].kwargs.get("model")
-    second_call_model = mock_models.generate_content.call_args_list[1].kwargs.get("model")
+    first_call_model = mock_gemini._generate_content_with_retry.call_args_list[0].kwargs.get("model")
+    second_call_model = mock_gemini._generate_content_with_retry.call_args_list[1].kwargs.get("model")
     assert first_call_model == "gemini-2.5-pro"
     assert second_call_model == "gemini-2.5-flash"

@@ -207,7 +207,7 @@ Return a strict JSON object with:
                     contents.append(raw_text[:8000])
                 contents.append(prompt)
 
-                response = self.gemini.client.models.generate_content(
+                response = await self.gemini._generate_content_with_retry(
                     model="gemini-2.5-flash",
                     contents=contents,
                     config=types.GenerateContentConfig(

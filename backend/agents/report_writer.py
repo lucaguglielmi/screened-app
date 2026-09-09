@@ -218,7 +218,7 @@ Return a JSON object conforming to this schema:
 """
         try:
             try:
-                response = self.gemini.client.models.generate_content(
+                response = await self.gemini._generate_content_with_retry(
                     model="gemini-2.5-pro",
                     contents=prompt,
                     config=types.GenerateContentConfig(
@@ -228,7 +228,7 @@ Return a JSON object conforming to this schema:
                 )
             except Exception as pro_err:
                 logger.warning(f"gemini-2.5-pro synthesis attempt failed ({pro_err}), falling back to gemini-2.5-flash")
-                response = self.gemini.client.models.generate_content(
+                response = await self.gemini._generate_content_with_retry(
                     model="gemini-2.5-flash",
                     contents=prompt,
                     config=types.GenerateContentConfig(
@@ -237,7 +237,13 @@ Return a JSON object conforming to this schema:
                     ),
                 )
 
-            raw = json.loads(response.text or "{}")
+            raw_text = response.text or "{}"
+            if raw_text.startswith("```json"):
+                raw_text = raw_text.strip("`").removeprefix("json").strip()
+            elif raw_text.startswith("```"):
+                raw_text = raw_text.strip("`").strip()
+                
+            raw = json.loads(raw_text)
             
             raw_editions = raw.get("previousEditions", [])
             parsed_editions = []

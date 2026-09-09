@@ -94,7 +94,7 @@ async def test_deep_vetting_ingests_sources_and_claims(monkeypatch):
 
     mock_resp = MagicMock()
     mock_resp.text = expected_report.model_dump_json()
-    mock_gemini.client.models.generate_content.return_value = mock_resp
+    mock_gemini._generate_content_with_retry = AsyncMock(return_value=mock_resp)
 
     class MockSession:
         def __init__(self):

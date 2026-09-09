@@ -51,7 +51,7 @@ def sample_sources():
 @pytest.mark.asyncio
 async def test_deep_vetting_fallback_dimensions(mock_gemini, sample_sources, monkeypatch):
     # Simulate LLM failure to test robust deterministic fallback
-    mock_gemini.client.models.generate_content.side_effect = Exception("Vertex API timeout")
+    mock_gemini._generate_content_with_retry = AsyncMock(side_effect=Exception("Vertex API timeout"))
 
     async def mock_get_session(*args, **kwargs):
         return None
@@ -116,7 +116,7 @@ async def test_deep_vetting_successful_synthesis(mock_gemini, sample_sources, mo
 
     mock_resp = MagicMock()
     mock_resp.text = mock_report.model_dump_json()
-    mock_gemini.client.models.generate_content.return_value = mock_resp
+    mock_gemini._generate_content_with_retry = AsyncMock(return_value=mock_resp)
 
     class MockSession:
         def __init__(self):
