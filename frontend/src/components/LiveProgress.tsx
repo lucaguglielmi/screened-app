@@ -1124,6 +1124,11 @@ export const LiveProgress: React.FC<Props> = ({
           </div>
         </div>
 
+        {/* MCP Terminal Callout */}
+        <div className="mt-3 text-center text-xs text-slate-400 font-mono opacity-80">
+          did you know you can access this as raw data using our official MCP ? just write /mcp in the main chat
+        </div>
+
         {/* 3. Active / Inspected Step Caption (Streamlined Title & Caption) */}
         <AnimatePresence mode="wait">
           <motion.div
