@@ -413,20 +413,77 @@ export const LiveProgress: React.FC<Props> = ({
 
   const eventsEndRef = useRef<HTMLDivElement>(null);
 
-  // Timer (runs 25s for demo mode, or continuous for live investigations)
+  const startEpochRef = useRef<number | null>(null);
+  const onCompleteRef = useRef(onComplete);
+  const [lastServerEventSecondsAgo, setLastServerEventSecondsAgo] = useState<number | null>(null);
+
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
+
+  // Last Server Event derived from events array
+  const lastServerEvent = useMemo(() => {
+    if (!events || events.length === 0) return null;
+    return events[events.length - 1];
+  }, [events]);
+
+  // Track initial event timestamp if available
+  useEffect(() => {
+    if (startEpochRef.current === null) {
+      startEpochRef.current = Date.now();
+    }
+    if (events.length > 0 && events[0]?.timestamp) {
+      const parsed = new Date(events[0].timestamp).getTime();
+      if (!isNaN(parsed) && parsed > 0 && parsed <= Date.now()) {
+        startEpochRef.current = parsed;
+      }
+    }
+  }, [investigationId, events]);
+
+  // Robust, continuous timer (wall-clock bound, immune to render cancellations)
   useEffect(() => {
     if (status === 'READY' || status === 'FAILED' || status === 'CANCELLED' || isCelebrating) return;
-    const interval = setInterval(() => {
-      setElapsedSeconds((prev) => {
-        const next = prev + 1;
-        if (isPincoDemo && next >= 25) {
-          onComplete?.();
+    
+    const tick = () => {
+      const now = Date.now();
+      const start = startEpochRef.current ?? now;
+      const diff = Math.max(0, Math.floor((now - start) / 1000));
+      setElapsedSeconds(diff);
+
+      if (lastServerEvent?.timestamp) {
+        const t = new Date(lastServerEvent.timestamp).getTime();
+        if (!isNaN(t)) {
+          setLastServerEventSecondsAgo(Math.max(0, Math.floor((now - t) / 1000)));
         }
-        return next;
-      });
-    }, 1000);
+      }
+
+      if (isPincoDemo && diff >= 25) {
+        onCompleteRef.current?.();
+      }
+    };
+
+    tick();
+    const interval = setInterval(tick, 500);
     return () => clearInterval(interval);
-  }, [status, isCelebrating, isPincoDemo, onComplete]);
+  }, [status, isCelebrating, isPincoDemo, lastServerEvent]);
+
+  // Dynamic Terminal console data derived from active agent events
+  const latestActionMessage = useMemo(() => {
+    if (!events || events.length === 0) return null;
+    const last = events[events.length - 1];
+    return last?.message || null;
+  }, [events]);
+
+  const recentTerminalLines = useMemo(() => {
+    if (!events || events.length === 0) {
+      return [
+        'Initializing Google Agent Development Kit (ADK) orchestrator...',
+        'Parallel Search API: Fast mode engaged for verified primary domain grounding',
+        'Extracting primary evidence substrings & corporate registry records...'
+      ];
+    }
+    return events.slice(-4, -1).reverse().map((e) => `[${e.agentName || 'Agent'}] ${e.message}`);
+  }, [events]);
 
   // Demo 5-stage progression (5s per stage: 25s total)
   const demoPhaseIdx = useMemo(() => {
@@ -635,8 +692,32 @@ export const LiveProgress: React.FC<Props> = ({
           </div>
 
           <div className="flex items-center gap-2 z-10 shrink-0 w-full sm:w-auto justify-between sm:justify-end">
-            <div className="px-3.5 py-1.5 rounded-xl bg-white/[0.04] border border-white/10 text-slate-200 text-xs sm:text-sm font-mono font-medium flex items-center gap-1.5 shadow-sm">
-              <span>⏱️ {Math.floor(elapsedSeconds / 60)}:{(elapsedSeconds % 60).toString().padStart(2, '0')}</span>
+            <div className="relative group/timer">
+              <div 
+                className="px-3.5 py-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-slate-200 text-xs sm:text-sm font-mono font-medium flex items-center gap-1.5 shadow-sm cursor-help transition-colors select-none"
+                tabIndex={0}
+                aria-label={`Elapsed time: ${Math.floor(elapsedSeconds / 60)} minutes ${(elapsedSeconds % 60)} seconds`}
+              >
+                <span>⏱️ {Math.floor(elapsedSeconds / 60)}:{(elapsedSeconds % 60).toString().padStart(2, '0')}</span>
+              </div>
+
+              {/* Tooltip showing both Total Elapsed Time and Last Server Event Time */}
+              <div className="absolute right-0 bottom-full mb-2 w-56 p-2.5 rounded-xl bg-[#090d18] border border-slate-700/80 text-slate-200 text-xs font-mono shadow-2xl opacity-0 invisible group-hover/timer:opacity-100 group-hover/timer:visible transition-all duration-150 pointer-events-none z-40 space-y-1.5">
+                <div className="flex items-center justify-between text-[11px] text-slate-400 border-b border-white/[0.06] pb-1">
+                  <span>SEARCH TIMER</span>
+                  <span className="text-tool-diligence font-semibold">LIVE</span>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-slate-400">Total Elapsed:</span>
+                  <span className="font-semibold text-white">{elapsedSeconds}s</span>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-slate-400">Last Server Event:</span>
+                  <span className="font-semibold text-tool-diligence">
+                    {lastServerEventSecondsAgo !== null ? `${lastServerEventSecondsAgo}s ago` : 'connecting...'}
+                  </span>
+                </div>
+              </div>
             </div>
 
             <div className="px-3.5 py-1.5 rounded-xl bg-tool-diligence/15 text-tool-diligence text-xs sm:text-sm font-mono font-semibold flex items-center gap-2">
@@ -833,6 +914,62 @@ export const LiveProgress: React.FC<Props> = ({
                 </div>
               );
             })}
+          </div>
+        </div>
+
+        {/* Terminal Execution Console Box under Progression Tabs */}
+        <div className="rounded-2xl bg-[#040711] border border-emerald-500/30 shadow-2xl overflow-hidden font-mono select-none">
+          {/* Terminal Window Header Bar */}
+          <div className="px-3.5 sm:px-4 py-2 bg-black/70 border-b border-white/[0.08] flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
+                <span className="size-2.5 rounded-full bg-rose-500/80 inline-block" />
+                <span className="size-2.5 rounded-full bg-amber-500/80 inline-block" />
+                <span className="size-2.5 rounded-full bg-emerald-500/80 inline-block" />
+              </div>
+              <span className="text-[11px] font-semibold text-slate-300 flex items-center gap-1.5 ml-2">
+                <Terminal className="size-3.5 text-tool-diligence" />
+                <span>parallel-agent-console // runtime-stream</span>
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2 text-[10px] sm:text-[11px]">
+              <span className="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-semibold border border-emerald-500/30 flex items-center gap-1">
+                <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span>fast-mode ~650ms</span>
+              </span>
+              <span className="hidden sm:inline-block px-2 py-0.5 rounded bg-indigo-500/15 text-indigo-300 font-semibold border border-indigo-500/30">
+                5 parallel workers
+              </span>
+            </div>
+          </div>
+
+          {/* Terminal Content Body */}
+          <div className="p-3.5 sm:p-4 bg-black/40 space-y-2 text-xs">
+            {/* Active Moving Command / Action Line */}
+            <div className="flex items-center gap-2 text-tool-diligence font-semibold">
+              <span className="text-emerald-400 shrink-0 select-none">$</span>
+              <motion.span
+                key={latestActionMessage || 'idle'}
+                initial={{ opacity: 0, x: 4 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.15 }}
+                className="truncate text-xs sm:text-sm text-emerald-300"
+              >
+                {latestActionMessage || 'dispatching parallel search workers across registered domains...'}
+              </motion.span>
+              <span className="size-2 bg-tool-diligence animate-pulse shrink-0 inline-block ml-0.5" />
+            </div>
+
+            {/* Scrolling Recent Agent Operations */}
+            <div className="space-y-1 pt-1 border-t border-white/[0.05] text-[11px] sm:text-xs text-slate-400">
+              {recentTerminalLines.map((line, lIdx) => (
+                <div key={lIdx} className="flex items-start gap-2 leading-relaxed truncate">
+                  <span className="text-slate-600 shrink-0 select-none">›</span>
+                  <span className="text-slate-400 truncate">{line}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 

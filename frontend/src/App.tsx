@@ -36,6 +36,7 @@ import { TermsModal } from './components/legal/TermsModal';
 import { PrivacyModal } from './components/legal/PrivacyModal';
 import { AppFooter } from './components/legal/AppFooter';
 import { AboutScreenedModal } from './components/modals/AboutScreenedModal';
+import { FeedbackModal } from './components/modals/FeedbackModal';
 
 import { lazyWithRetry } from './utils/lazyWithRetry';
 
@@ -73,6 +74,7 @@ export default function App() {
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
   const [isCookieSettingsOpen, setIsCookieSettingsOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
   const showTerms = isTermsOpen || route.legalModal === 'terms';
   const showPrivacy = isPrivacyOpen || route.legalModal === 'privacy';
@@ -672,7 +674,13 @@ export default function App() {
           onOpenPrivacy={() => setIsPrivacyOpen(true)}
           onOpenTerms={() => setIsTermsOpen(true)}
           onOpenCookieSettings={() => setIsCookieSettingsOpen(true)}
-          onOpenAbout={() => setIsAboutOpen(true)}
+          onOpenFeedback={() => setIsFeedbackOpen(true)}
+        />
+
+        {/* Filmmaker Feedback Modal */}
+        <FeedbackModal
+          isOpen={isFeedbackOpen}
+          onClose={() => setIsFeedbackOpen(false)}
         />
 
         {/* Cookie Consent Floating Banner */}

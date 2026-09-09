@@ -97,7 +97,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
             {items.map((item, iIdx) => {
               const cleaned = item.replace(/^[-*]\s+/, '').replace(/^\d+\.\s+/, '');
               return (
-                <li key={iIdx} className="text-sm md:text-base leading-relaxed text-slate-200">
+                <li key={iIdx} className="text-sm leading-relaxed text-slate-200">
                   {renderFormattedInline(cleaned)}
                 </li>
               );
@@ -107,7 +107,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
       }
 
       return (
-        <p key={pIdx} className="text-sm md:text-base leading-relaxed text-slate-200 mb-3 last:mb-0">
+        <p key={pIdx} className="text-sm leading-relaxed text-slate-200 mb-3 last:mb-0">
           {renderFormattedInline(paragraph)}
         </p>
       );
@@ -194,10 +194,10 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
           {/* Text Bubble - Full Width on Mobile */}
           {(message.content.trim() || message.attachedFile) && (
             <div
-              className={`w-full rounded-2xl px-4 py-3.5 sm:px-5 sm:py-4 text-base leading-relaxed shadow-md ${
+              className={`w-full rounded-2xl px-4 py-3.5 sm:px-5 sm:py-4 text-sm leading-relaxed shadow-md ${
                 isUser
                   ? 'bg-paper-border bg-darkroom-border text-slate-100 md:rounded-tr-none border border-darkroom-border'
-                  : 'bg-darkroom-surface text-slate-200 md:rounded-tl-none border border-darkroom-border'
+                  : 'bg-[#080d19] text-slate-200 md:rounded-tl-none border border-slate-800/80 shadow-lg'
               }`}
             >
               {message.attachedFile && (
@@ -218,9 +218,17 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
           {/* Quick Action Tabs (Under First Greeting Bubble) - Full Width on Mobile */}
           {message.id === 'initial-greeting-01' && (
             <div className="mt-3.5 space-y-2 w-full">
-              <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider block">
-                Quick Actions:
-              </span>
+              <div className="flex items-center justify-between gap-2 w-full select-none">
+                <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider">
+                  Quick Actions:
+                </span>
+                <div className="flex items-center gap-1.5 text-[11px] font-mono text-slate-400">
+                  <span>try</span>
+                  <code className="px-1.5 py-0.5 rounded bg-slate-800 text-cyan-300 font-semibold border border-slate-700/80 text-[11px]">
+                    /demo
+                  </code>
+                </div>
+              </div>
               <div className="flex flex-wrap items-center gap-2 w-full">
                 {/* Upload Action Pill */}
                 <div 

@@ -87,7 +87,7 @@ export const EntityConfirmation: React.FC<Props> = ({ candidates, query, onConfi
               <div
                 key={idx}
                 onClick={() => candidates.length > 1 && handleSelect(idx)}
-                className={`p-5 rounded-2xl border transition-all flex items-start justify-between gap-4 ${
+                className={`p-4 sm:p-5 rounded-2xl border transition-all flex items-start justify-between gap-3 sm:gap-4 ${
                   candidates.length > 1 ? 'cursor-pointer' : ''
                 } ${
                   isSelected
@@ -95,31 +95,33 @@ export const EntityConfirmation: React.FC<Props> = ({ candidates, query, onConfi
                     : 'border-white/10 bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/20'
                 }`}
               >
-                <div className="space-y-2 flex-1">
-                  <div className="flex items-center gap-2.5">
-                    <span className="font-serif font-bold text-lg sm:text-xl text-darkroom-text">
+                <div className="space-y-2 flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+                    <span className="font-serif font-bold text-base sm:text-xl text-darkroom-text break-words">
                       {c.name}
                     </span>
                     {c.foundedYear && (
                       <span className="inline-flex items-center gap-1 text-xs font-mono text-darkroom-muted">
-                        <Calendar className="size-3.5 text-slate-400" /> Est. {c.foundedYear}
+                        <Calendar className="size-3.5 text-slate-400 shrink-0" /> Est. {c.foundedYear}
                       </span>
                     )}
                   </div>
 
-                  <p className="text-base text-slate-300 leading-relaxed">
+                  <p className="text-sm text-slate-300 leading-relaxed font-sans">
                     {c.descriptor || 'Identified through Parallel Search.'}
                   </p>
 
-                  <div className="flex items-center gap-4 text-sm font-mono text-slate-400 pt-1">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm font-mono text-slate-400 pt-1">
                     {c.cityCountry && (
-                      <span className="inline-flex items-center gap-1.5">
-                        <MapPin className="size-3.5 text-slate-400" /> {c.cityCountry}
+                      <span className="inline-flex items-center gap-1.5 shrink-0">
+                        <MapPin className="size-3.5 text-slate-400 shrink-0" />
+                        <span>{c.cityCountry}</span>
                       </span>
                     )}
                     {c.officialDomain && (
-                      <span className="inline-flex items-center gap-1.5">
-                        <Globe className="size-3.5 text-slate-400" /> {c.officialDomain}
+                      <span className="inline-flex items-center gap-1.5 min-w-0">
+                        <Globe className="size-3.5 text-slate-400 shrink-0" />
+                        <span className="truncate max-w-full">{c.officialDomain}</span>
                       </span>
                     )}
                   </div>
@@ -136,11 +138,11 @@ export const EntityConfirmation: React.FC<Props> = ({ candidates, query, onConfi
         </div>
 
         {/* Optional field refinement */}
-        <div className="p-5 rounded-2xl bg-white/[0.03] border border-white/10 space-y-3.5 text-sm">
+        <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.03] border border-white/10 space-y-3.5 text-sm">
           <div className="font-mono uppercase font-semibold text-slate-300 text-xs">
             Target Identity Parameters
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div>
               <label className="block text-xs font-mono text-slate-400 mb-1.5">
                 Canonical Name
@@ -149,7 +151,7 @@ export const EntityConfirmation: React.FC<Props> = ({ candidates, query, onConfi
                 type="text"
                 value={customName}
                 onChange={(e) => setCustomName(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-white font-sans focus:outline-none focus:border-tool-diligence text-base"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-white font-sans focus:outline-none focus:border-tool-diligence text-sm sm:text-base"
               />
             </div>
             <div>
@@ -161,7 +163,7 @@ export const EntityConfirmation: React.FC<Props> = ({ candidates, query, onConfi
                 value={customDomain}
                 onChange={(e) => setCustomDomain(e.target.value)}
                 placeholder="e.g. raindance.org"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-white font-sans focus:outline-none focus:border-tool-diligence text-base"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-white font-sans focus:outline-none focus:border-tool-diligence text-sm sm:text-base"
               />
             </div>
           </div>

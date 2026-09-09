@@ -137,9 +137,8 @@ export const ChatPromptBar: React.FC<ChatPromptBarProps> = ({ onSendMessage, isL
             soundEffects.playClick();
             setIsCapabilitiesModalOpen(true);
           }}
-          className="inline-flex items-center gap-1.5 text-xs font-mono text-blue-400 hover:text-blue-300 transition-colors cursor-pointer hover:underline"
+          className="inline-flex items-center text-xs font-mono text-blue-400 hover:text-blue-300 transition-colors cursor-pointer hover:underline"
         >
-          <HelpCircle className="size-3.5 text-blue-400" />
           <span>what can I ask</span>
         </button>
       </div>

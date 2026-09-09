@@ -14,7 +14,6 @@ import { AboutScreenedModal } from '../modals/AboutScreenedModal';
 import { FeedbackModal } from '../modals/FeedbackModal';
 import { soundEffects } from '../../utils/audio';
 import { piiVault } from '../../utils/pii';
-import { MessageSquare } from 'lucide-react';
 
 interface ChatContainerProps {
   onLaunchDueDiligence: (festivalName: string, optionalUrl?: string) => void;
@@ -289,28 +288,6 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
       {/* Persistent Bottom Prompt Bar with Action Pills */}
       <div className="relative z-10 pt-2 pb-1 mt-1 shrink-0">
         <ChatPromptBar onSendMessage={handleSendMessage} isLoading={isLoading} />
-
-        {/* Subtle /demo hint and Centered Filmmaker Feedback Link */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-[11px] font-mono text-slate-500 pt-2 pb-0.5 select-none">
-          <div className="flex items-center gap-1.5 text-slate-400">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400/80 animate-pulse" />
-            <span>
-              type <code className="px-1.5 py-0.5 rounded bg-slate-800 text-cyan-300 font-semibold border border-slate-700/80">/demo</code> to see how your search will look like
-            </span>
-          </div>
-          <span className="hidden sm:inline text-slate-700">•</span>
-          <button
-            type="button"
-            onClick={() => {
-              soundEffects.playClick();
-              setIsFeedbackModalOpen(true);
-            }}
-            className="inline-flex items-center gap-1.5 text-slate-400 hover:text-indigo-300 transition-colors cursor-pointer hover:underline"
-          >
-            <MessageSquare className="size-3 text-indigo-400" />
-            <span>leave feedback</span>
-          </button>
-        </div>
       </div>
 
       {/* About Screened Modal (Triggered by Avatar Click) */}
