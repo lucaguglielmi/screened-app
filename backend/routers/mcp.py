@@ -207,6 +207,28 @@ MCP_PROMPTS = [
             {"name": "genre", "description": "Genre", "required": True},
             {"name": "country", "description": "Country", "required": True}
         ]
+    },
+    {
+        "name": "spawn_multi_agent_review",
+        "description": "Instructs the agent to spawn multiple sub-agents to independently review the dossier data by topic.",
+        "arguments": [
+            {"name": "dossier_id", "description": "ID of the investigation dossier", "required": True}
+        ]
+    },
+    {
+        "name": "laurel_mill_fraud_check",
+        "description": "Focuses the agent entirely on finding signs of predatory submission fee farming and laurel mills.",
+        "arguments": [
+            {"name": "dossier_id", "description": "ID of the investigation dossier", "required": True}
+        ]
+    },
+    {
+        "name": "cross_reference_audit",
+        "description": "Instructs the agent to perform an active web search to find conflicting evidence that disputes Screened's findings.",
+        "arguments": [
+            {"name": "dossier_id", "description": "ID of the investigation dossier", "required": True},
+            {"name": "festival_name", "description": "Name of the festival", "required": True}
+        ]
     }
 ]
 
@@ -682,6 +704,61 @@ async def _handle_jsonrpc(req_data: Dict[str, Any], client_ip: str) -> Optional[
                             "content": {
                                 "type": "text",
                                 "text": f"Scout verified public cinema funding schemes for film project '{title}' with a budget of ${p_args.get('budget_usd', 50000)} in {p_args.get('country', 'UK')}. Focus on non-repayable public lotteries, BFI funds, and regional co-production grants."
+                            }
+                        }
+                    ]
+                }
+            }
+        elif prompt_name == "spawn_multi_agent_review":
+            dossier_id = p_args.get("dossier_id", "demo_pinco_pallino")
+            return {
+                "jsonrpc": "2.0",
+                "id": rpc_id,
+                "result": {
+                    "description": f"Multi-agent review for {dossier_id}",
+                    "messages": [
+                        {
+                            "role": "user",
+                            "content": {
+                                "type": "text",
+                                "text": f"Using the Screened MCP tools, extract the full forensic JSON for dossier '{dossier_id}'. Then, spawn three sub-agents. Assign Agent 1 to review venue leases, Agent 2 to review corporate registry filings, and Agent 3 to review fee models. Once they all report back, synthesize a final executive summary."
+                            }
+                        }
+                    ]
+                }
+            }
+        elif prompt_name == "laurel_mill_fraud_check":
+            dossier_id = p_args.get("dossier_id", "demo_pinco_pallino")
+            return {
+                "jsonrpc": "2.0",
+                "id": rpc_id,
+                "result": {
+                    "description": f"Laurel mill fraud check for {dossier_id}",
+                    "messages": [
+                        {
+                            "role": "user",
+                            "content": {
+                                "type": "text",
+                                "text": f"Extract the dossier data for '{dossier_id}'. Focus entirely on analyzing the submission fee schedules and the 'laurel mill' indicators. Ignore the venue and corporate structure. Is this entity running a predatory fee-escalation scheme?"
+                            }
+                        }
+                    ]
+                }
+            }
+        elif prompt_name == "cross_reference_audit":
+            dossier_id = p_args.get("dossier_id", "demo_pinco_pallino")
+            fest = p_args.get("festival_name", "the festival")
+            return {
+                "jsonrpc": "2.0",
+                "id": rpc_id,
+                "result": {
+                    "description": f"Cross-reference audit for {dossier_id}",
+                    "messages": [
+                        {
+                            "role": "user",
+                            "content": {
+                                "type": "text",
+                                "text": f"First, retrieve the Screened findings for dossier '{dossier_id}'. Then, use your native web search capabilities to independently research '{fest}'. Identify any conflicting evidence, missing news articles, or discrepancies between your web search results and the Screened dossier."
                             }
                         }
                     ]

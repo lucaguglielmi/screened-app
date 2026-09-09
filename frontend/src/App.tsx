@@ -44,6 +44,7 @@ const EvidenceDossier = lazyWithRetry(() => import('./components/EvidenceDossier
 const GrantScout = lazyWithRetry(() => import('./components/GrantScout').then(m => ({ default: m.GrantScout })));
 const EntityConfirmation = lazyWithRetry(() => import('./components/EntityConfirmation').then(m => ({ default: m.EntityConfirmation })));
 const DesignPlayground = lazyWithRetry(() => import('./components/playground/DesignPlayground').then(m => ({ default: m.DesignPlayground })));
+const McpOnboarding = lazyWithRetry(() => import('./components/McpOnboarding').then(m => ({ default: m.McpOnboarding })));
 import { VectorFieldBackground } from './components/animations/VectorFieldBackground';
 import { AnimatedEE } from './components/animations/AnimatedEE';
 import { UpdateNotifier } from './components/common/UpdateNotifier';
@@ -665,6 +666,13 @@ export default function App() {
           {activeTool === 'DESIGN_PLAYGROUND' && (
             <Suspense fallback={<div className="p-8 text-center text-slate-500 font-mono text-sm">Loading Design Playground...</div>}>
               <DesignPlayground />
+            </Suspense>
+          )}
+
+          {/* View 9: MCP Onboarding */}
+          {activeTool === 'MCP_ONBOARDING' && (
+            <Suspense fallback={<div className="p-8 text-center text-slate-500 font-mono text-sm">Loading MCP Config...</div>}>
+              <McpOnboarding />
             </Suspense>
           )}
         </main>

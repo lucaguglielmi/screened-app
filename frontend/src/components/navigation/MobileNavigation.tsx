@@ -233,6 +233,22 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
                 </button>
 
                 <button
+                  onClick={() => onChange('MCP_ONBOARDING')}
+                  className={`w-full px-3 py-2 rounded-xl flex items-center justify-between text-xs font-medium transition-colors ${
+                    activeTool === 'MCP_ONBOARDING'
+                      ? 'text-teal-400 bg-teal-900/40 border border-teal-500/50 shadow-[0_0_10px_rgba(45,212,191,0.2)]'
+                      : 'text-teal-600 hover:text-teal-400 hover:bg-darkroom-surface'
+                  }`}
+                  title="Bring Your Own Agent (MCP)"
+                >
+                  <div className="flex items-center space-x-2">
+                    <Bot className="w-4 h-4" />
+                    <span>MCP Onboarding</span>
+                  </div>
+                  <span className="font-mono text-[10px] font-bold border border-current rounded px-1">MCP</span>
+                </button>
+
+                <button
                   type="button"
                   onClick={() => handleSelect('WHY_SCREENED')}
                   className={`w-full px-3 py-2 rounded-xl flex items-center justify-between text-xs font-medium transition-colors ${

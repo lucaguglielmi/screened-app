@@ -5,6 +5,7 @@ export interface ParsedRoute {
   tool: ActiveTool;
   investigationId: string | null;
   legalModal?: 'terms' | 'privacy' | null;
+  tab?: string;
 }
 
 export const ROUTE_TITLES: Record<ActiveTool, string> = {
@@ -18,6 +19,7 @@ export const ROUTE_TITLES: Record<ActiveTool, string> = {
   AGENTS: "Screened Agents & WebMCP Protocol — Screened",
   WHAT_CAN_YOU_DO: "What Can You Do — Platform Capabilities & Roadmap — Screened",
   DESIGN_PLAYGROUND: "Design Playground — Screened",
+  MCP_ONBOARDING: "Bring Your Own Agent (MCP) — Screened",
 };
 
 /**
@@ -69,6 +71,17 @@ export function parseCurrentRoute(pathname = window.location.pathname, search = 
 
   const cleanPath = pathname.replace(/\/+$/, "") || "/";
 
+  // Check /diligence/:id/BYOA first
+  const byoaMatch = cleanPath.match(/^\/diligence\/([^/]+)\/(?:BYOA|byoa)$/i);
+  if (byoaMatch) {
+    const invId = decodeURIComponent(byoaMatch[1]);
+    return {
+      path: cleanPath,
+      tool: "MCP_ONBOARDING",
+      investigationId: invId,
+    };
+  }
+
   // Check /diligence/:id
   const diligenceMatch = cleanPath.match(/^\/diligence\/([^/]+)$/);
   if (diligenceMatch) {
@@ -84,6 +97,14 @@ export function parseCurrentRoute(pathname = window.location.pathname, search = 
     return {
       path: "/diligence",
       tool: "DUE_DILIGENCE",
+      investigationId: null,
+    };
+  }
+
+  if (cleanPath === "/mcp" || cleanPath === "/byoa" || cleanPath === "/BYOA") {
+    return {
+      path: "/mcp",
+      tool: "MCP_ONBOARDING",
       investigationId: null,
     };
   }
@@ -185,6 +206,8 @@ export function toolToPath(tool: ActiveTool, investigationId?: string | null): s
       return "/what-can-you-do";
     case "DESIGN_PLAYGROUND":
       return "/playground";
+    case "MCP_ONBOARDING":
+      return "/mcp";
     default:
       return "/";
   }

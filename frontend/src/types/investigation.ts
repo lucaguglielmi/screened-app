@@ -23,7 +23,8 @@ export type ActiveTool =
   | 'FESTIVAL_PROTECTION_GUIDE'
   | 'HOW_TO_USE'
   | 'AGENTS'
-  | 'WHAT_CAN_YOU_DO';
+  | 'WHAT_CAN_YOU_DO'
+  | 'MCP_ONBOARDING';
 
 export interface DiagramGraphPayload {
   nodes: Array<{

@@ -77,7 +77,7 @@ Standards: Require 2+ independent corroborating sources before accepting claims.
   return (
     <div className="space-y-6 animate-fade-in" data-density="MACHINE_AI_INGESTION">
       {/* Autonomous Agent Banner */}
-      <div className="rounded-3xl p-5 sm:p-6 bg-white/[0.02] border border-emerald-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
+      <div className="rounded-3xl p-5 sm:p-6 bg-white/[0.02] border border-emerald-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl mb-4">
         <div className="space-y-1.5 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="relative flex h-2.5 w-2.5">
@@ -99,9 +99,9 @@ Standards: Require 2+ independent corroborating sources before accepting claims.
             <span className="text-slate-600">•</span>
             <span>Claims: <strong className="text-emerald-400">{claimsCount}</strong></span>
             <span className="text-slate-600">•</span>
-            <span>Sources: <strong className="text-indigo-400">{sourcesCount}</strong></span>
+            <span>Sources: <strong className="text-emerald-400">{sourcesCount}</strong></span>
             <span className="text-slate-600">•</span>
-            <span>Contradictions: <strong className="text-orange-400">{disputesCount}</strong></span>
+            <span>Disputes: <strong className="text-amber-400">{disputesCount}</strong></span>
           </div>
         </div>
 
@@ -164,7 +164,29 @@ Standards: Require 2+ independent corroborating sources before accepting claims.
           </a>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      {/* BYOA (Bring Your Own Agent) Banner Callout */}
+      <div className="rounded-3xl p-5 sm:p-6 bg-gradient-to-r from-teal-900/40 to-teal-800/20 border border-teal-500/40 shadow-[0_0_20px_rgba(45,212,191,0.15)] flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+        <div className="space-y-2">
+          <h3 className="font-bold text-white text-lg flex items-center gap-2">
+            Want to process this intelligence with your own AI?
+          </h3>
+          <p className="text-sm text-neutral-300">
+            Access the raw parallel-extracted data via our Agent-Friendly API. Use the MCP server to directly query this dossier from Claude Desktop, Cursor, or Google Antigravity.
+          </p>
+        </div>
+        <button
+          onClick={() => {
+            soundEffects.playClick();
+            window.location.href = `/diligence/${activeId}/BYOA`;
+          }}
+          className="shrink-0 px-5 py-2.5 rounded-xl bg-teal-500/20 hover:bg-teal-500/30 border border-teal-500/50 text-teal-300 hover:text-teal-200 text-sm font-bold flex items-center gap-2 transition-all cursor-pointer"
+        >
+          <span>Connect via BYOA</span>
+          <ArrowRight className="w-4 h-4" />
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Card A: In-Browser WebMCP Execution */}
           <div className="p-4 rounded-2xl bg-black/40 border border-white/[0.08] space-y-3">
             <div className="flex items-center justify-between">
