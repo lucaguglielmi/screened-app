@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  ShieldAlert,
   ShieldCheck,
   Building2,
   Globe,
@@ -121,11 +120,7 @@ export const FestivalProtectionGuide: React.FC<Props> = ({
     <div className="relative w-full min-h-screen text-slate-100 px-4 py-12 sm:py-20 animate-fade-in overflow-hidden">
       <div className="relative z-10 max-w-4xl mx-auto space-y-16 sm:space-y-20">
         {/* Editorial Header */}
-        <section className="space-y-6 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/30 text-orange-400 text-xs font-mono font-semibold uppercase tracking-widest">
-            <ShieldAlert className="size-3.5 text-orange-400" />
-            <span>Filmmaker Due Diligence Guide</span>
-          </div>
+        <section className="space-y-5 text-center">
           <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight">
             How to Evaluate Film Festivals: Due Diligence Guide
           </h1>
@@ -140,9 +135,6 @@ export const FestivalProtectionGuide: React.FC<Props> = ({
         {/* 4 Primary Risk Archetypes */}
         <section className="space-y-8 sm:space-y-10">
           <div className="text-center space-y-2">
-            <span className="text-slate-400 font-mono uppercase tracking-widest text-xs font-semibold">
-              Key Risk Indicators
-            </span>
             <h2 className="font-serif text-2xl sm:text-3xl font-bold text-white">
               4 Common Festival Risk Profiles
             </h2>
@@ -161,23 +153,20 @@ export const FestivalProtectionGuide: React.FC<Props> = ({
                       <div className="p-2.5 rounded-xl bg-orange-500/10 text-orange-400 shrink-0">
                         <Icon className="size-5" />
                       </div>
-                      <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/30 font-semibold">
+                      <span className="text-xs font-mono text-orange-400">
                         {arch.risk} RISK
                       </span>
                     </div>
 
                     <div>
                       <h3 className="text-lg sm:text-xl font-bold font-serif text-white">{arch.title}</h3>
-                      <p className="text-xs sm:text-sm text-indigo-300 font-mono mt-0.5">{arch.subtitle}</p>
+                      <p className="text-xs sm:text-sm text-slate-400 mt-0.5">{arch.subtitle}</p>
                     </div>
 
                     <p className="text-sm sm:text-base text-slate-300 leading-relaxed">{arch.description}</p>
                   </div>
 
-                  <div className="pt-2 space-y-2">
-                    <span className="text-xs sm:text-sm font-mono uppercase tracking-wider text-slate-400 font-semibold block">
-                      Tell-Tale Warning Signs:
-                    </span>
+                  <div className="pt-2">
                     <ul className="space-y-2 text-sm sm:text-base text-slate-300">
                       {arch.tellSigns.map((sign, sIdx) => (
                         <li key={sIdx} className="flex items-start gap-2">
@@ -196,9 +185,6 @@ export const FestivalProtectionGuide: React.FC<Props> = ({
         {/* 5-Step Self-Defense Protocol */}
         <section className="space-y-8 sm:space-y-10">
           <div className="text-center space-y-2">
-            <span className="text-slate-400 font-mono uppercase tracking-widest text-xs font-semibold">
-              Actionable Protocol
-            </span>
             <h2 className="font-serif text-2xl sm:text-3xl font-bold text-white">
               The 5-Step Self-Defense Protocol
             </h2>

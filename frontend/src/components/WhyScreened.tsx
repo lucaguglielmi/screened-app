@@ -8,8 +8,8 @@ import {
   Coins,
   Quote,
   CheckCircle2,
-  TrendingDown,
-  Layers,
+  AlertTriangle,
+  Users,
 } from 'lucide-react';
 import { FEATURES } from '../config/features';
 
@@ -71,11 +71,7 @@ export const WhyScreened: React.FC<Props> = ({
     <div className="relative w-full min-h-screen text-slate-100 px-4 py-12 sm:py-20 animate-fade-in overflow-hidden">
       <div className="relative z-10 max-w-4xl mx-auto space-y-16 sm:space-y-20">
         {/* Editorial Header */}
-        <section className="space-y-6 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-tool-diligence/10 border border-tool-diligence/30 text-tool-diligence text-xs font-mono font-semibold uppercase tracking-widest">
-            <Scale className="size-3.5" />
-            <span>Problem Overview &amp; Impact</span>
-          </div>
+        <section className="space-y-5 text-center">
           <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight">
             Why Screened Exists
           </h1>
@@ -90,9 +86,6 @@ export const WhyScreened: React.FC<Props> = ({
         {/* Baseline Comparison: Manual vs Autonomous */}
         <section className="space-y-8 sm:space-y-10">
           <div className="text-center space-y-2">
-            <span className="text-slate-400 font-mono uppercase tracking-widest text-xs font-semibold">
-              Workflow Comparison
-            </span>
             <h2 className="font-serif text-2xl sm:text-3xl font-bold text-white">
               Manual Vetting vs. Autonomous Diligence
             </h2>
@@ -102,7 +95,7 @@ export const WhyScreened: React.FC<Props> = ({
             {/* Manual Vetting Card */}
             <div className="bg-white/[0.02] rounded-2xl p-5 sm:p-6 space-y-6">
               <div className="pb-2">
-                <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest font-mono">
+                <h3 className="text-base sm:text-lg font-bold text-white font-serif">
                   Manual Filmmaker Research
                 </h3>
               </div>
@@ -118,21 +111,21 @@ export const WhyScreened: React.FC<Props> = ({
 
                 <div>
                   <div className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
-                    <Layers className="size-6 text-orange-400 shrink-0" />
-                    <span>20+ Browser Tabs</span>
+                    <AlertTriangle className="size-6 text-rose-400 shrink-0" />
+                    <span>Fragmented Anecdotes</span>
                   </div>
                   <p className="text-sm sm:text-base text-slate-300 mt-1 ml-9">
-                    Reddit, FilmFreeway, Companies House, blogs
+                    Scattered Reddit threads &amp; Facebook comments
                   </p>
                 </div>
 
                 <div>
                   <div className="text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
-                    <TrendingDown className="size-6 text-rose-400 shrink-0" />
-                    <span>Ungrounded Risk</span>
+                    <Users className="size-6 text-rose-400 shrink-0" />
+                    <span>Zero Corporate Cross-Checks</span>
                   </div>
                   <p className="text-sm sm:text-base text-slate-300 mt-1 ml-9">
-                    No verified source links or independent confirmation
+                    Dissolved companies &amp; fake addresses go undetected
                   </p>
                 </div>
               </div>
@@ -146,7 +139,7 @@ export const WhyScreened: React.FC<Props> = ({
             {/* Screened Engine Card */}
             <div className="bg-tool-diligence/[0.03] rounded-2xl p-5 sm:p-6 space-y-6">
               <div className="pb-2">
-                <h3 className="text-sm font-bold text-tool-diligence uppercase tracking-widest font-mono flex items-center gap-2">
+                <h3 className="text-base sm:text-lg font-bold text-tool-diligence font-serif flex items-center gap-2">
                   <Sparkles className="size-4" /> Screened Autonomous Engine
                 </h3>
               </div>
@@ -190,10 +183,7 @@ export const WhyScreened: React.FC<Props> = ({
 
         {/* The Evidence Corpus */}
         <section className="space-y-8">
-          <div className="space-y-3 text-center max-w-2xl mx-auto pb-4">
-            <span className="text-tool-diligence font-mono uppercase tracking-widest text-xs font-semibold">
-              Empirical Corpus
-            </span>
+          <div className="space-y-2 text-center max-w-2xl mx-auto pb-4">
             <h2 className="text-2xl sm:text-3xl font-bold font-serif text-white leading-tight">
               Common Grievance Vectors Harvested via Parallel Search
             </h2>

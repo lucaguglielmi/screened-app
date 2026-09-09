@@ -4,17 +4,13 @@ import {
   ShieldCheck,
   Compass,
   Sparkles,
-  MessageSquare,
   Copy,
   Check,
   Code,
   Bot,
-  Layers,
-
   CheckCircle2,
   Play,
   RotateCw,
-  Zap,
   Info,
   ArrowDown,
 } from 'lucide-react';
@@ -303,22 +299,17 @@ export const HowToUse: React.FC<Props> = ({
         </section>
 
         {/* SECTION 1: What is WebMCP & Why Does It Matter */}
-        <section className="p-5 sm:p-6 rounded-2xl bg-white/[0.02] space-y-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-tool-diligence/10 text-tool-diligence shrink-0">
-              <Sparkles className="size-5" />
-            </div>
-            <div>
-              <h2 className="text-lg sm:text-xl font-bold font-serif text-white">
-                What is WebMCP &amp; Why Does It Matter?
-              </h2>
-              <p className="text-xs sm:text-sm font-mono text-slate-400">
-                Direct browser tool execution instead of slow screen-scraping
-              </p>
-            </div>
+        <section className="p-6 sm:p-8 rounded-2xl bg-white/[0.02] border border-white/[0.04] space-y-3">
+          <div>
+            <h2 className="text-xl sm:text-2xl font-bold font-serif text-white">
+              What is WebMCP &amp; Why Does It Matter?
+            </h2>
+            <p className="text-sm text-slate-400 mt-1">
+              Direct browser tool execution instead of slow screen-scraping
+            </p>
           </div>
 
-          <p className="text-sm sm:text-base text-slate-200 leading-relaxed font-normal">
+          <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-normal pt-1">
             On ordinary websites, an AI assistant has to browse like a human: clicking around, scrolling, and taking screenshots to parse messy page layouts, which is slow and often breaks.
             With a compatible browser, your agent (such as a Gemini Live browser assistant or other AI agents) understands Screened directly through our built-in WebMCP tools. It skips clumsy browser navigation entirely, querying verified evidence, auditing sources, and cross-examining festival claims instantly and reliably.
           </p>
@@ -326,89 +317,73 @@ export const HowToUse: React.FC<Props> = ({
 
         {/* SECTION 2: How You Can Use AI Agents with Screened */}
         <section className="space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2">
-            <div className="flex flex-col sm:flex-row sm:items-center items-start gap-2 sm:gap-2.5">
-              <span className="w-fit px-2.5 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/40 text-cyan-300 text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-1.5">
-                <Compass className="size-3.5" />
-                <span>QUICK START</span>
-              </span>
-              <h2 className="text-xl sm:text-2xl font-bold font-serif text-white">
-                How You Can Use AI Agents with Screened Today
-              </h2>
-            </div>
-            <span className="text-xs font-mono text-slate-400">
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-bold font-serif text-white">
+              How You Can Use AI Agents with Screened Today
+            </h2>
+            <p className="text-sm text-slate-400 mt-1">
               Zero software installation required
-            </span>
+            </p>
           </div>
 
           {/* 3 Steps */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Step 1 */}
-            <div className="p-5 sm:p-6 rounded-2xl bg-white/[0.02] space-y-3.5 flex flex-col justify-between">
-              <div className="space-y-3">
-                <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
-                  STEP 01
-                </span>
-                <h3 className="text-base sm:text-lg font-bold text-white">Enable WebMCP or Open Your Agent</h3>
-                <p className="text-sm text-slate-300 leading-relaxed font-normal">
-                  In Chrome, activate experimental web platform flags via{' '}
-                  <code className="text-xs font-mono bg-black/40 px-1.5 py-0.5 rounded text-cyan-300 break-all">
-                    chrome://flags/#enable-experimental-web-platform-features
-                  </code>
-                  , or open your Gemini Live browser assistant or agentic workspace.
-                </p>
-              </div>
-              <div className="text-xs font-mono text-emerald-400">✓ Works on standard browsers</div>
+            <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.04] space-y-3">
+              <span className="text-xs font-mono font-semibold text-cyan-400 tracking-wider">
+                01
+              </span>
+              <h3 className="text-base sm:text-lg font-bold text-white">Enable WebMCP or Open Your Agent</h3>
+              <p className="text-sm text-slate-300 leading-relaxed font-normal">
+                In Chrome, activate experimental web platform flags via{' '}
+                <code className="text-xs font-mono bg-black/40 px-1.5 py-0.5 rounded text-cyan-300 break-all">
+                  chrome://flags/#enable-experimental-web-platform-features
+                </code>
+                , or open your Gemini Live browser assistant or agentic workspace.
+              </p>
             </div>
 
             {/* Step 2 */}
-            <div className="p-5 sm:p-6 rounded-2xl bg-white/[0.02] space-y-3.5 flex flex-col justify-between">
-              <div className="space-y-3">
-                <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
-                  STEP 02
-                </span>
-                <h3 className="text-base sm:text-lg font-bold text-white">Paste a Prompt into Your AI</h3>
-                <p className="text-sm text-slate-300 leading-relaxed font-normal">
-                  Navigate to any festival dossier (such as <code className="text-xs font-mono text-cyan-300">/diligence/demo_pinco_pallino</code>).
-                  Instruct your agent: <em>"Ask Screened whether the venue booking is verified and extract the conflicting dates."</em>
-                </p>
-              </div>
-              <div className="text-xs font-mono text-cyan-300">→ Calls screened_ask_dossier</div>
+            <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.04] space-y-3">
+              <span className="text-xs font-mono font-semibold text-cyan-400 tracking-wider">
+                02
+              </span>
+              <h3 className="text-base sm:text-lg font-bold text-white">Paste a Prompt into Your AI</h3>
+              <p className="text-sm text-slate-300 leading-relaxed font-normal">
+                Navigate to any festival dossier (such as <code className="text-xs font-mono text-cyan-300">/diligence/demo_pinco_pallino</code>).
+                Instruct your agent: <em>&quot;Ask Screened whether the venue booking is verified and extract the conflicting dates.&quot;</em>
+              </p>
             </div>
 
             {/* Step 3 */}
-            <div className="p-5 sm:p-6 rounded-2xl bg-white/[0.02] space-y-3.5 flex flex-col justify-between">
-              <div className="space-y-3">
-                <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
-                  STEP 03
-                </span>
-                <h3 className="text-base sm:text-lg font-bold text-white">Trigger Live Multi-Agent Scans</h3>
-                <p className="text-sm text-slate-300 leading-relaxed font-normal">
-                  Tell your agent: <em>"Start due diligence for Sundance Film Festival on Screened."</em>
-                  The agent executes <code className="text-xs font-mono text-tool-diligence">screened_start_investigation</code> and reads the real-time stream.
-                </p>
-              </div>
-              <div className="text-xs font-mono text-emerald-400">⚡ Autonomous Multi-Agent Scan</div>
+            <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.04] space-y-3">
+              <span className="text-xs font-mono font-semibold text-cyan-400 tracking-wider">
+                03
+              </span>
+              <h3 className="text-base sm:text-lg font-bold text-white">Trigger Live Multi-Agent Scans</h3>
+              <p className="text-sm text-slate-300 leading-relaxed font-normal">
+                Tell your agent: <em>&quot;Start due diligence for Sundance Film Festival on Screened.&quot;</em>
+                The agent executes <code className="text-xs font-mono text-tool-diligence">screened_start_investigation</code> and reads the real-time stream.
+              </p>
             </div>
           </div>
 
-          {/* Ready-Made Prompts Section - Streamlined Single-Layer Layout */}
+          {/* Ready-Made Prompts Section */}
           <div className="space-y-4 pt-2">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1">
-              <h3 className="text-base sm:text-lg font-bold font-serif text-white flex items-center gap-2">
-                <MessageSquare className="size-4.5 text-cyan-400 shrink-0" />
-                <span>Ready-Made Prompts to Paste into Your AI</span>
+            <div>
+              <h3 className="text-lg sm:text-xl font-bold font-serif text-white">
+                Ready-Made Prompts to Paste into Your AI
               </h3>
-              <span className="text-xs font-mono text-slate-400">
+              <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
                 Click any prompt to copy into clipboard
-              </span>
+              </p>
             </div>
 
             <div className="space-y-3">
               {PROMPT_TEMPLATES.map((item, idx) => (
                 <div
                   key={idx}
-                  className="p-4 sm:p-5 rounded-2xl bg-white/[0.02] hover:bg-white/[0.04] transition-all"
+                  className="p-4 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/[0.04] hover:bg-white/[0.04] transition-all"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="space-y-1 min-w-0">
@@ -423,12 +398,12 @@ export const HowToUse: React.FC<Props> = ({
                     <button
                       type="button"
                       onClick={() => handleCopyPrompt(item.prompt, idx)}
-                      className="w-full sm:w-auto shrink-0 px-4 py-2 rounded-xl bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/40 text-cyan-300 text-xs font-mono font-medium flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95"
+                      className="w-full sm:w-auto shrink-0 px-4 py-2 rounded-xl bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/30 text-cyan-300 text-xs font-mono font-medium flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95"
                     >
                       {copiedPromptIdx === idx ? (
                         <>
                           <Check className="size-3.5 text-emerald-400" />
-                          <span className="text-emerald-400 font-semibold">Copied to Clipboard!</span>
+                          <span className="text-emerald-400 font-semibold">Copied!</span>
                         </>
                       ) : (
                         <>
@@ -445,29 +420,20 @@ export const HowToUse: React.FC<Props> = ({
         </section>
 
         {/* SECTION 3: WebMCP In-Browser Toolset & Testing Lab */}
-        <section className="space-y-8">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2">
-            <div className="flex flex-col sm:flex-row sm:items-center items-start gap-2 sm:gap-2.5">
-              <span className="w-fit px-2.5 py-0.5 rounded-full bg-tool-diligence/15 border border-tool-diligence/40 text-tool-diligence text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-1.5">
-                <Bot className="size-3.5" />
-                <span>AI AGENT &amp; DEV TOOLS</span>
-              </span>
-              <h2 className="text-xl sm:text-2xl font-bold font-serif text-white">
-                WebMCP In-Browser Toolset &amp; Testing Lab
-              </h2>
-            </div>
-            <span className="text-xs font-mono text-slate-400">
-              Protocol standard: WebMCP/2026
-            </span>
+        <section className="space-y-6">
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-bold font-serif text-white">
+              WebMCP In-Browser Toolset &amp; Testing Lab
+            </h2>
+            <p className="text-sm text-slate-400 mt-1">
+              Registered in-browser tools available to compatible AI agents
+            </p>
           </div>
 
-          <div className="p-4 rounded-xl bg-white/[0.02] text-xs sm:text-sm text-slate-200 flex items-start gap-3">
-            <Info className="size-4 text-tool-diligence shrink-0 mt-0.5" />
-            <p>
-              These functions are registered directly in the browser runtime under{' '}
-              <code className="text-tool-diligence bg-black/40 px-1 py-0.5 rounded break-all">window.__screened_web_mcp__.tools</code>.
-              AI agents in compatible browsers execute them automatically. You can also test each tool directly in the live simulator below.
-            </p>
+          <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.04] text-xs sm:text-sm text-slate-300">
+            These functions are registered directly in the browser runtime under{' '}
+            <code className="text-tool-diligence bg-black/40 px-1 py-0.5 rounded break-all">window.__screened_web_mcp__.tools</code>.
+            AI agents in compatible browsers execute them automatically. You can also test each tool directly in the live simulator below.
           </div>
 
           {/* Tools Cards */}
@@ -475,85 +441,60 @@ export const HowToUse: React.FC<Props> = ({
             {WEBMCP_TOOLS.map((tool, idx) => (
               <div
                 key={idx}
-                className="rounded-2xl p-5 sm:p-6 bg-white/[0.02] space-y-3.5"
+                className="rounded-2xl p-5 sm:p-6 bg-white/[0.02] border border-white/[0.04] space-y-3"
               >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-1">
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <Code className="size-4.5 text-tool-diligence shrink-0" />
-                    <h3 className="font-mono text-sm sm:text-base font-bold text-white break-all sm:break-normal">{tool.name}</h3>
-                  </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    <span className="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-midnight-royal/30 text-indigo-300 border border-indigo-500/30">
-                      {tool.scope}
+                    <h3 className="font-mono text-base font-bold text-white break-all sm:break-normal">{tool.name}</h3>
+                    <span className="text-xs font-mono text-slate-400">
+                      ({tool.scope})
                     </span>
-                    <button
-                      type="button"
-                      onClick={() => handleToolSelect(tool.name)}
-                      className="text-xs font-mono px-2.5 py-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 transition-colors cursor-pointer flex items-center gap-1"
-                    >
-                      <span>Test in Sandbox</span>
-                      <ArrowDown className="size-3" />
-                    </button>
                   </div>
+                  <button
+                    type="button"
+                    onClick={() => handleToolSelect(tool.name)}
+                    className="text-xs font-mono px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 transition-colors cursor-pointer flex items-center gap-1.5 w-fit"
+                  >
+                    <span>Test in Sandbox</span>
+                    <ArrowDown className="size-3" />
+                  </button>
                 </div>
 
                 <p className="text-sm text-slate-200 leading-relaxed font-normal">
                   {tool.description}
                 </p>
 
-                <div className="space-y-1.5 pt-1">
-                  <span className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold block">
-                    Parameters Schema:
-                  </span>
-                  <div className="bg-black/30 p-3 rounded-xl text-xs font-mono text-slate-300 space-y-1">
-                    {Object.entries(tool.parameters).map(([param, type]) => (
-                      <div key={param} className="flex items-baseline gap-2">
-                        <span className="text-tool-diligence">{param}:</span>
-                        <span className="text-slate-400">{type}</span>
-                      </div>
-                    ))}
-                  </div>
+                <div className="bg-black/30 p-3 rounded-xl text-xs font-mono text-slate-300 space-y-1">
+                  {Object.entries(tool.parameters).map(([param, type]) => (
+                    <div key={param} className="flex items-baseline gap-2">
+                      <span className="text-tool-diligence">{param}:</span>
+                      <span className="text-slate-400">{type}</span>
+                    </div>
+                  ))}
                 </div>
 
-                <div className="text-xs font-mono text-slate-400 flex items-center gap-2 pt-1">
-                  <span className="text-indigo-400">Example invocation:</span>
-                  <span className="text-slate-300 italic">{tool.examplePrompt}</span>
+                <div className="text-xs text-slate-400 flex flex-wrap items-baseline gap-1.5 pt-0.5">
+                  <span className="text-slate-400 font-mono">Example:</span>
+                  <span className="text-slate-300 italic font-sans">&ldquo;{tool.examplePrompt}&rdquo;</span>
                 </div>
               </div>
             ))}
           </div>
 
           {/* THE INTERACTIVE TOOL SANDBOX (Situated inside the Agent section) */}
-          <div id="agent-sandbox" className="p-5 sm:p-7 rounded-2xl bg-white/[0.02] space-y-6 scroll-mt-20">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-400 shrink-0">
-                  <Zap className="size-5" />
-                </div>
-                <div>
-                  <h3 className="text-lg sm:text-xl font-bold font-serif text-white flex flex-wrap items-center gap-2">
-                    <span>WebMCP &amp; Agent Tool Simulator</span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">
-                      LIVE LAB
-                    </span>
-                  </h3>
-                  <p className="text-xs sm:text-sm font-mono text-slate-400">
-                    Simulate how AI agents invoke tools against Screened's runtime in real-time
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-mono text-emerald-400 bg-emerald-950/40 px-2.5 py-1 rounded-lg border border-emerald-500/30 flex items-center gap-1.5">
-                  <ShieldCheck className="size-3.5" />
-                  <span>SSRF &amp; Injection Filters Active</span>
-                </span>
-              </div>
+          <div id="agent-sandbox" className="p-5 sm:p-7 rounded-2xl bg-white/[0.02] border border-white/[0.04] space-y-6 scroll-mt-20">
+            <div>
+              <h3 className="text-lg sm:text-xl font-bold font-serif text-white">
+                WebMCP &amp; Agent Tool Simulator
+              </h3>
+              <p className="text-sm text-slate-400 mt-0.5">
+                Simulate how AI agents invoke tools against Screened&apos;s runtime in real-time
+              </p>
             </div>
 
             {/* Tool Picker */}
             <div className="space-y-2">
-              <label className="text-xs font-mono text-slate-300 font-semibold uppercase tracking-wider block">
+              <label className="text-xs font-mono text-slate-400 block">
                 Select Tool to Execute:
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
@@ -564,8 +505,8 @@ export const HowToUse: React.FC<Props> = ({
                     onClick={() => handleToolSelect(t.name)}
                     className={`p-3 rounded-xl font-mono text-xs text-left transition-all cursor-pointer ${
                       sandboxTool === t.name
-                        ? 'bg-amber-500/20 text-amber-300 font-bold shadow-sm'
-                        : 'bg-white/[0.03] text-slate-300 hover:bg-white/[0.06]'
+                        ? 'bg-amber-500/20 text-amber-300 font-bold shadow-sm border border-amber-500/30'
+                        : 'bg-white/[0.03] text-slate-300 hover:bg-white/[0.06] border border-transparent'
                     }`}
                   >
                     <div className="font-bold">{t.name}</div>
@@ -578,7 +519,7 @@ export const HowToUse: React.FC<Props> = ({
             {/* JSON Parameters Input */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-mono text-slate-300 font-semibold uppercase tracking-wider">
+                <label className="text-xs font-mono text-slate-400">
                   Input Parameters (JSON Schema Payload):
                 </label>
                 <button
@@ -616,7 +557,7 @@ export const HowToUse: React.FC<Props> = ({
 
               {sandboxDuration !== null && (
                 <span className="text-xs font-mono text-slate-400 bg-black/40 px-3 py-1.5 rounded-lg">
-                  ⚡ Latency: <strong className="text-emerald-400 font-bold">{sandboxDuration}ms</strong>
+                  Latency: <strong className="text-emerald-400 font-bold">{sandboxDuration}ms</strong>
                 </span>
               )}
             </div>
@@ -625,7 +566,7 @@ export const HowToUse: React.FC<Props> = ({
             {sandboxResult && (
               <div className="space-y-2 pt-4">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-mono text-slate-300 font-semibold uppercase tracking-wider flex items-center gap-2">
+                  <label className="text-xs font-mono text-slate-400 flex items-center gap-2">
                     <Code className="size-3.5 text-tool-diligence" />
                     <span>JSON-RPC 2.0 Response Content:</span>
                   </label>
@@ -647,42 +588,26 @@ export const HowToUse: React.FC<Props> = ({
         </section>
 
         {/* SECTION 4: Headless Agents & Google Antigravity Plugin */}
-        <section className="space-y-8">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2">
-            <div className="flex flex-col sm:flex-row sm:items-center items-start gap-2 sm:gap-2.5">
-              <span className="w-fit px-2.5 py-0.5 rounded-full bg-purple-500/15 border border-purple-500/40 text-purple-300 text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-1.5">
-                <Terminal className="size-3.5" />
-                <span>EXTERNAL AGENTS &amp; PLUGINS</span>
-              </span>
-              <h2 className="text-xl sm:text-2xl font-bold font-serif text-white">
-                Google Antigravity Plugin &amp; Native MCP Server
-              </h2>
-            </div>
-            <span className="text-xs font-mono text-slate-400">
-              Transport: SSE &amp; Stdio · Google Ecosystem First
-            </span>
+        <section className="space-y-6">
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-bold font-serif text-white">
+              Google Antigravity Plugin &amp; Native MCP Server
+            </h2>
+            <p className="text-sm text-slate-400 mt-1">
+              Connect Google Antigravity, Cursor, or custom agent swarms via SSE and Stdio
+            </p>
           </div>
 
           {/* Google Antigravity Spotlight Card */}
-          <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-b from-indigo-950/40 via-purple-950/20 to-white/[0.02] border border-indigo-500/30 space-y-5">
+          <div className="p-5 sm:p-6 rounded-2xl bg-white/[0.02] border border-indigo-500/20 space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 shrink-0">
-                  <Sparkles className="size-5" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-lg sm:text-xl font-bold font-serif text-white">
-                      Google Antigravity &amp; Gemini Native Plugin
-                    </h3>
-                    <span className="px-2 py-0.5 rounded-full bg-indigo-500/20 border border-indigo-400/40 text-indigo-300 text-[10px] font-mono font-bold uppercase">
-                      HACKATHON READY
-                    </span>
-                  </div>
-                  <p className="text-xs sm:text-sm font-mono text-indigo-200/80">
-                    Zero-config discovery at <code className="text-indigo-300">.agents/plugins/screened/</code> with progressive disclosure skills
-                  </p>
-                </div>
+              <div>
+                <h3 className="text-lg sm:text-xl font-bold font-serif text-white">
+                  Google Antigravity &amp; Gemini Native Plugin
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
+                  Zero-config discovery at <code className="text-indigo-300 font-mono">.agents/plugins/screened/</code>
+                </p>
               </div>
 
               <button
@@ -695,71 +620,65 @@ export const HowToUse: React.FC<Props> = ({
               </button>
             </div>
 
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
-              Screened includes a turnkey, first-class workspace plugin for <strong>Google Antigravity</strong> and the <strong>Gemini CLI</strong>. When you open this repository in Antigravity, the agent automatically mounts Screened's Cloud Run MCP endpoint, equips forensic investigation runbooks, and enforces strict anti-hallucination rules.
+            <p className="text-sm text-slate-300 leading-relaxed font-normal">
+              Screened includes a turnkey, first-class workspace plugin for <strong>Google Antigravity</strong> and the <strong>Gemini CLI</strong>. When you open this repository in Antigravity, the agent automatically mounts Screened&apos;s Cloud Run MCP endpoint, equips forensic investigation runbooks, and enforces strict anti-hallucination rules.
             </p>
 
             {/* Grid of Plugin Features */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 text-xs">
-              <div className="p-3.5 rounded-xl bg-black/40 border border-indigo-500/20 space-y-1.5">
-                <div className="flex items-center gap-1.5 font-bold font-mono text-indigo-300">
-                  <Zap className="size-3.5 text-indigo-400" />
-                  <span>Zero-Config Discovery</span>
+              <div className="p-3.5 rounded-xl bg-black/40 border border-white/5 space-y-1.5">
+                <div className="font-semibold text-white">
+                  Zero-Config Discovery
                 </div>
-                <p className="text-slate-400 text-[11px] leading-relaxed">
-                  Located in <code className="text-indigo-200">.agents/plugins/screened/</code>. Antigravity connects to Cloud Run SSE automatically with no manual token or port setup.
+                <p className="text-slate-400 text-xs leading-relaxed font-sans">
+                  Located in <code className="text-indigo-200 font-mono">.agents/plugins/screened/</code>. Antigravity connects to Cloud Run SSE automatically with no manual token setup.
                 </p>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-black/40 border border-indigo-500/20 space-y-1.5">
-                <div className="flex items-center gap-1.5 font-bold font-mono text-indigo-300">
-                  <ShieldCheck className="size-3.5 text-indigo-400" />
-                  <span>Forensic Rules &amp; Injection Defense</span>
+              <div className="p-3.5 rounded-xl bg-black/40 border border-white/5 space-y-1.5">
+                <div className="font-semibold text-white">
+                  Forensic Rules &amp; Defense
                 </div>
-                <p className="text-slate-400 text-[11px] leading-relaxed">
-                  <code className="text-indigo-200">rules/AGENTS.md</code> quarantines scraped festival text inside <code className="text-indigo-200">&lt;untrusted_evidence_data&gt;</code> to defeat prompt injections.
+                <p className="text-slate-400 text-xs leading-relaxed font-sans">
+                  <code className="text-indigo-200 font-mono">rules/AGENTS.md</code> quarantines untrusted festival text inside tags to defeat prompt injections.
                 </p>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-black/40 border border-indigo-500/20 space-y-1.5">
-                <div className="flex items-center gap-1.5 font-bold font-mono text-indigo-300">
-                  <Bot className="size-3.5 text-indigo-400" />
-                  <span>2 Progressive Skills</span>
+              <div className="p-3.5 rounded-xl bg-black/40 border border-white/5 space-y-1.5">
+                <div className="font-semibold text-white">
+                  2 Specialized Skills
                 </div>
-                <p className="text-slate-400 text-[11px] leading-relaxed">
-                  <code className="text-indigo-200">screened-festival-diligence</code> (5-vector venue &amp; fee audit) and <code className="text-indigo-200">screened-grant-scout</code> (4-pillar public fund packaging).
+                <p className="text-slate-400 text-xs leading-relaxed font-sans">
+                  <code className="text-indigo-200 font-mono">screened-festival-diligence</code> (venue &amp; fee audit) and <code className="text-indigo-200 font-mono">screened-grant-scout</code> (public funding).
                 </p>
               </div>
             </div>
 
             {/* Global Install Command Callout */}
-            <div className="p-3.5 rounded-xl bg-black/50 border border-indigo-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono">
-              <div className="flex items-center gap-2 text-indigo-300">
+            <div className="p-3.5 rounded-xl bg-black/50 border border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+              <div className="flex items-center gap-2 text-slate-300">
                 <Terminal className="size-4 shrink-0 text-indigo-400" />
                 <span className="text-slate-400">Install to global Antigravity:</span>
-                <code className="text-white bg-indigo-950/60 px-2 py-0.5 rounded border border-indigo-500/30 select-all break-all">
+                <code className="text-white bg-indigo-950/60 px-2 py-0.5 rounded border border-indigo-500/30 select-all break-all font-mono">
                   cp -r plugins/screened-gemini-plugin ~/.gemini/config/plugins/screened
                 </code>
               </div>
-              <span className="text-[11px] text-indigo-300/80 shrink-0">Available in all projects</span>
             </div>
 
             {/* Deep-Dive: How Gemini Queries Any Live Dossier */}
-            <div className="pt-2 border-t border-indigo-500/20 space-y-3">
-              <div className="flex items-center gap-2 text-sm font-semibold text-white font-serif">
-                <Bot className="size-4 text-indigo-400" />
-                <span>How Gemini &amp; Antigravity Interrogate Live Dossiers</span>
+            <div className="pt-2 border-t border-white/5 space-y-3">
+              <div className="text-sm font-semibold text-white font-serif">
+                How Gemini &amp; Antigravity Interrogate Live Dossiers
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                 {/* Left: The Filmmaker Experience */}
-                <div className="p-4 rounded-xl bg-black/40 border border-white/5 space-y-2.5">
-                  <span className="text-xs font-mono font-bold text-indigo-300 flex items-center gap-1.5">
-                    <MessageSquare className="size-3.5 text-indigo-400" />
-                    <span>1. Conversational Query (Filmmaker)</span>
-                  </span>
-                  <p className="text-slate-300 leading-relaxed font-normal">
-                    Navigate to any festival dossier (e.g. <code className="text-indigo-200">/diligence/demo_pinco_pallino</code>) and click the <strong>&quot;Search this dossier with your Gemini Agent&quot;</strong> bar at the top of the dossier, or ask Gemini:
+                <div className="p-4 rounded-xl bg-black/40 border border-white/5 space-y-2">
+                  <div className="font-semibold text-indigo-300 text-xs">
+                    1. Conversational Query (Filmmaker)
+                  </div>
+                  <p className="text-slate-300 leading-relaxed font-normal text-xs">
+                    Navigate to any festival dossier (e.g. <code className="text-indigo-200 font-mono">/diligence/demo_pinco_pallino</code>) and ask Gemini:
                   </p>
                   <blockquote className="p-2.5 rounded-lg bg-indigo-950/40 border-l-2 border-indigo-400 text-indigo-200 font-mono text-[11px] italic">
                     &quot;Audit the Pinco Pallino dossier (demo_pinco_pallino) using Screened MCP: verify venue reality and fee escalation.&quot;
@@ -767,15 +686,14 @@ export const HowToUse: React.FC<Props> = ({
                 </div>
 
                 {/* Right: The Forensic Execution */}
-                <div className="p-4 rounded-xl bg-black/40 border border-white/5 space-y-2.5">
-                  <span className="text-xs font-mono font-bold text-emerald-300 flex items-center gap-1.5">
-                    <ShieldCheck className="size-3.5 text-emerald-400" />
-                    <span>2. Ground-Truth Tool Dispatch (Gemini Agent)</span>
-                  </span>
-                  <p className="text-slate-300 leading-relaxed font-normal">
-                    Under the hood, Gemini executes <code className="text-emerald-300">screened_ask_dossier</code> to retrieve verified atomic claims, verifies verbatim quotes with <code className="text-emerald-300">screened_inspect_claim</code>, and applies <code className="text-emerald-300">rules/AGENTS.md</code>:
+                <div className="p-4 rounded-xl bg-black/40 border border-white/5 space-y-2">
+                  <div className="font-semibold text-emerald-300 text-xs">
+                    2. Ground-Truth Tool Dispatch (Gemini Agent)
+                  </div>
+                  <p className="text-slate-300 leading-relaxed font-normal text-xs">
+                    Under the hood, Gemini executes <code className="text-emerald-300 font-mono">screened_ask_dossier</code> to retrieve verified atomic claims, verifies verbatim quotes with <code className="text-emerald-300 font-mono">screened_inspect_claim</code>, and applies <code className="text-emerald-300 font-mono">rules/AGENTS.md</code>:
                   </p>
-                  <ul className="list-disc list-inside space-y-1 text-slate-400 text-[11px] font-mono">
+                  <ul className="list-disc list-inside space-y-1 text-slate-400 text-[11px]">
                     <li>Cross-references advertised venues against commercial cinema box-office manifests.</li>
                     <li>Inspects active vs dissolved company status on UK Companies House.</li>
                     <li>Enforces quarantine tags (&lt;untrusted_evidence_data&gt;) to contain prompt injections.</li>
@@ -785,20 +703,15 @@ export const HowToUse: React.FC<Props> = ({
             </div>
           </div>
 
-          <div className="p-5 sm:p-6 rounded-2xl bg-white/[0.02] space-y-4">
+          <div className="p-5 sm:p-6 rounded-2xl bg-white/[0.02] border border-white/[0.04] space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-purple-500/10 text-purple-400 shrink-0">
-                  <Terminal className="size-5" />
-                </div>
-                <div>
-                  <h3 className="text-lg sm:text-xl font-bold font-serif text-white">
-                    Model Context Protocol (MCP) Server Setup
-                  </h3>
-                  <p className="text-xs sm:text-sm font-mono text-slate-400">
-                    Connect Cursor, Antigravity, or custom agent swarms
-                  </p>
-                </div>
+              <div>
+                <h3 className="text-lg sm:text-xl font-bold font-serif text-white">
+                  Model Context Protocol (MCP) Server Setup
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
+                  Connect Cursor, Antigravity, or custom agent swarms
+                </p>
               </div>
 
               <button
@@ -814,7 +727,7 @@ export const HowToUse: React.FC<Props> = ({
             {/* Callout */}
             <div className="p-3 rounded-xl bg-purple-950/20 text-xs text-purple-200">
               <strong>How to connect:</strong> Copy the JSON block below into your MCP client configuration (such as{' '}
-              <code className="text-purple-300 bg-black/40 px-1.5 py-0.5 rounded">.cursor/mcp.json</code> or your agent settings). Your AI assistant will immediately be equipped with Screened's cinema due diligence tools.
+              <code className="text-purple-300 bg-black/40 px-1.5 py-0.5 rounded font-mono">.cursor/mcp.json</code> or your agent settings). Your AI assistant will immediately be equipped with Screened&apos;s cinema due diligence tools.
             </div>
 
             {/* Code Snippet Box */}
@@ -826,13 +739,12 @@ export const HowToUse: React.FC<Props> = ({
           </div>
 
           {/* Architecture Overview */}
-          <div className="p-5 sm:p-6 rounded-2xl bg-white/[0.02] space-y-4">
-            <h3 className="text-base sm:text-lg font-bold font-serif text-white flex items-center gap-2">
-              <Layers className="size-4.5 text-tool-diligence" />
-              <span>Agent MCP Capabilities</span>
+          <div className="p-5 sm:p-6 rounded-2xl bg-white/[0.02] border border-white/[0.04] space-y-4">
+            <h3 className="text-base sm:text-lg font-bold font-serif text-white">
+              Agent MCP Capabilities
             </h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm sm:text-base text-slate-300">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-300">
               <div className="flex items-start gap-2.5">
                 <CheckCircle2 className="size-4 text-tool-diligence shrink-0 mt-1" />
                 <span>

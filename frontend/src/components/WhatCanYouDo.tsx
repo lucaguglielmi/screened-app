@@ -11,7 +11,6 @@ import {
   Calculator,
   ArrowRight,
   CheckCircle2,
-  Sparkles,
   Layers,
   Sparkle,
 } from 'lucide-react';
@@ -30,11 +29,7 @@ export const WhatCanYouDo: React.FC<WhatCanYouDoProps> = ({
     <div className="relative w-full min-h-screen text-slate-100 px-4 py-12 sm:py-20 animate-fade-in overflow-hidden">
       <div className="relative z-10 max-w-4xl mx-auto space-y-16 sm:space-y-20">
         {/* Editorial Header */}
-        <section className="space-y-6 text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-tool-diligence/10 border border-tool-diligence/30 text-tool-diligence text-xs font-mono font-semibold uppercase tracking-widest">
-            <Sparkles className="size-3.5" />
-            <span>Platform Capabilities &amp; Roadmap</span>
-          </div>
+        <section className="space-y-5 text-center">
           <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight">
             What Can Screened Do?
           </h1>
@@ -76,9 +71,6 @@ export const WhatCanYouDo: React.FC<WhatCanYouDoProps> = ({
         {/* Section 1: Autonomous Due Diligence Engine */}
         <section className="space-y-8 sm:space-y-10">
           <div className="text-center space-y-2">
-            <span className="text-slate-400 font-mono uppercase tracking-widest text-xs font-semibold">
-              Core Intelligence Pipeline
-            </span>
             <h2 className="font-serif text-2xl sm:text-3xl font-bold text-white">
               The 5-Stage Autonomous Vetting Engine
             </h2>
@@ -95,8 +87,8 @@ export const WhatCanYouDo: React.FC<WhatCanYouDoProps> = ({
                   <div className="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-400">
                     <Search className="size-5" />
                   </div>
-                  <span className="text-xs font-mono px-2 py-0.5 rounded-md bg-indigo-500/10 text-indigo-300 border border-indigo-500/30">
-                    Stage 01
+                  <span className="text-xs font-mono font-semibold text-slate-400">
+                    01
                   </span>
                 </div>
                 <h3 className="font-serif text-lg sm:text-xl font-bold text-white">
@@ -130,8 +122,8 @@ export const WhatCanYouDo: React.FC<WhatCanYouDoProps> = ({
                   <div className="p-2.5 rounded-xl bg-blue-500/10 text-blue-400">
                     <Layers className="size-5" />
                   </div>
-                  <span className="text-xs font-mono px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-300 border border-blue-500/30">
-                    Stage 02
+                  <span className="text-xs font-mono font-semibold text-slate-400">
+                    02
                   </span>
                 </div>
                 <h3 className="font-serif text-lg sm:text-xl font-bold text-white">
@@ -165,8 +157,8 @@ export const WhatCanYouDo: React.FC<WhatCanYouDoProps> = ({
                   <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-400">
                     <FileCheck2 className="size-5" />
                   </div>
-                  <span className="text-xs font-mono px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/30">
-                    Stage 03
+                  <span className="text-xs font-mono font-semibold text-slate-400">
+                    03
                   </span>
                 </div>
                 <h3 className="font-serif text-lg sm:text-xl font-bold text-white">
@@ -200,8 +192,8 @@ export const WhatCanYouDo: React.FC<WhatCanYouDoProps> = ({
                   <div className="p-2.5 rounded-xl bg-rose-500/10 text-rose-400">
                     <AlertTriangle className="size-5" />
                   </div>
-                  <span className="text-xs font-mono px-2 py-0.5 rounded-md bg-rose-500/10 text-rose-300 border border-rose-500/30">
-                    Stage 04
+                  <span className="text-xs font-mono font-semibold text-slate-400">
+                    04
                   </span>
                 </div>
                 <h3 className="font-serif text-lg sm:text-xl font-bold text-white">
@@ -239,14 +231,11 @@ export const WhatCanYouDo: React.FC<WhatCanYouDoProps> = ({
                     <h3 className="font-serif text-lg sm:text-xl font-bold text-white">
                       Stage 05: Cryptographic SHA-256 Audit Trail
                     </h3>
-                    <p className="text-xs font-mono text-purple-300 mt-0.5">
+                    <p className="text-xs text-slate-400 mt-0.5">
                       Immutable Evidence Ledger &amp; Offline Integrity
                     </p>
                   </div>
                 </div>
-                <span className="text-xs font-mono px-2.5 py-0.5 rounded-md bg-purple-500/10 text-purple-300 border border-purple-500/30 font-semibold self-start sm:self-auto">
-                  Deterministic Hash
-                </span>
               </div>
 
               <p className="text-sm sm:text-base text-slate-200 leading-relaxed font-normal">
@@ -274,9 +263,6 @@ export const WhatCanYouDo: React.FC<WhatCanYouDoProps> = ({
         {/* Section 2: Roadmap & Upcoming Tools */}
         <section className="space-y-8 sm:space-y-10">
           <div className="text-center space-y-2">
-            <span className="text-slate-400 font-mono uppercase tracking-widest text-xs font-semibold">
-              Ecosystem Roadmap
-            </span>
             <h2 className="font-serif text-2xl sm:text-3xl font-bold text-white">
               Upcoming Cinema Intelligence Tools
             </h2>
@@ -293,7 +279,7 @@ export const WhatCanYouDo: React.FC<WhatCanYouDoProps> = ({
                   <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 shrink-0">
                     <Coins className="size-5" />
                   </div>
-                  <span className="text-[10px] font-mono font-semibold px-2.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 uppercase tracking-wider">
+                  <span className="text-xs font-mono text-slate-400">
                     In Progress
                   </span>
                 </div>
@@ -302,7 +288,7 @@ export const WhatCanYouDo: React.FC<WhatCanYouDoProps> = ({
                   <h3 className="font-serif text-lg sm:text-xl font-bold text-white">
                     Grant Scout &amp; Public Funds Match
                   </h3>
-                  <p className="text-xs sm:text-sm text-indigo-300 font-mono mt-0.5">
+                  <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
                     Institutional Public Funding Intelligence
                   </p>
                 </div>
@@ -312,10 +298,7 @@ export const WhatCanYouDo: React.FC<WhatCanYouDoProps> = ({
                 </p>
               </div>
 
-              <div className="pt-2 border-t border-white/[0.06] space-y-2">
-                <span className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold block">
-                  Key Capabilities:
-                </span>
+              <div className="pt-2 border-t border-white/[0.06]">
                 <ul className="space-y-1.5 text-xs sm:text-sm text-slate-300">
                   <li className="flex items-start gap-2">
                     <span className="text-tool-diligence font-bold">•</span>
@@ -340,7 +323,7 @@ export const WhatCanYouDo: React.FC<WhatCanYouDoProps> = ({
                   <div className="p-2.5 rounded-xl bg-blue-500/10 text-blue-400 shrink-0">
                     <Briefcase className="size-5" />
                   </div>
-                  <span className="text-[10px] font-mono font-semibold px-2.5 py-1 rounded bg-blue-500/10 border border-blue-500/30 text-blue-300 uppercase tracking-wider">
+                  <span className="text-xs font-mono text-slate-400">
                     Planned
                   </span>
                 </div>
@@ -349,7 +332,7 @@ export const WhatCanYouDo: React.FC<WhatCanYouDoProps> = ({
                   <h3 className="font-serif text-lg sm:text-xl font-bold text-white">
                     Sales Agent &amp; Distributor Forensics
                   </h3>
-                  <p className="text-xs sm:text-sm text-indigo-300 font-mono mt-0.5">
+                  <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
                     Distribution Contract &amp; Track Record Vetting
                   </p>
                 </div>
@@ -359,10 +342,7 @@ export const WhatCanYouDo: React.FC<WhatCanYouDoProps> = ({
                 </p>
               </div>
 
-              <div className="pt-2 border-t border-white/[0.06] space-y-2">
-                <span className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold block">
-                  Key Capabilities:
-                </span>
+              <div className="pt-2 border-t border-white/[0.06]">
                 <ul className="space-y-1.5 text-xs sm:text-sm text-slate-300">
                   <li className="flex items-start gap-2">
                     <span className="text-blue-400 font-bold">•</span>
@@ -387,7 +367,7 @@ export const WhatCanYouDo: React.FC<WhatCanYouDoProps> = ({
                   <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-400 shrink-0">
                     <MailWarning className="size-5" />
                   </div>
-                  <span className="text-[10px] font-mono font-semibold px-2.5 py-1 rounded bg-amber-500/10 border border-amber-500/30 text-amber-300 uppercase tracking-wider">
+                  <span className="text-xs font-mono text-slate-400">
                     Early Access
                   </span>
                 </div>
@@ -396,7 +376,7 @@ export const WhatCanYouDo: React.FC<WhatCanYouDoProps> = ({
                   <h3 className="font-serif text-lg sm:text-xl font-bold text-white">
                     Invitation &amp; Laurel Auditor
                   </h3>
-                  <p className="text-xs sm:text-sm text-indigo-300 font-mono mt-0.5">
+                  <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
                     Phishing &amp; Trophy Fee Defense
                   </p>
                 </div>
@@ -406,10 +386,7 @@ export const WhatCanYouDo: React.FC<WhatCanYouDoProps> = ({
                 </p>
               </div>
 
-              <div className="pt-2 border-t border-white/[0.06] space-y-2">
-                <span className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold block">
-                  Key Capabilities:
-                </span>
+              <div className="pt-2 border-t border-white/[0.06]">
                 <ul className="space-y-1.5 text-xs sm:text-sm text-slate-300">
                   <li className="flex items-start gap-2">
                     <span className="text-amber-400 font-bold">•</span>
@@ -434,7 +411,7 @@ export const WhatCanYouDo: React.FC<WhatCanYouDoProps> = ({
                   <div className="p-2.5 rounded-xl bg-purple-500/10 text-purple-400 shrink-0">
                     <Calculator className="size-5" />
                   </div>
-                  <span className="text-[10px] font-mono font-semibold px-2.5 py-1 rounded bg-purple-500/10 border border-purple-500/30 text-purple-300 uppercase tracking-wider">
+                  <span className="text-xs font-mono text-slate-400">
                     Research
                   </span>
                 </div>
@@ -443,7 +420,7 @@ export const WhatCanYouDo: React.FC<WhatCanYouDoProps> = ({
                   <h3 className="font-serif text-lg sm:text-xl font-bold text-white">
                     Production Tax Credit Calculator
                   </h3>
-                  <p className="text-xs sm:text-sm text-indigo-300 font-mono mt-0.5">
+                  <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
                     Jurisdiction Incentive Optimization
                   </p>
                 </div>
@@ -453,10 +430,7 @@ export const WhatCanYouDo: React.FC<WhatCanYouDoProps> = ({
                 </p>
               </div>
 
-              <div className="pt-2 border-t border-white/[0.06] space-y-2">
-                <span className="text-xs font-mono uppercase tracking-wider text-slate-400 font-semibold block">
-                  Key Capabilities:
-                </span>
+              <div className="pt-2 border-t border-white/[0.06]">
                 <ul className="space-y-1.5 text-xs sm:text-sm text-slate-300">
                   <li className="flex items-start gap-2">
                     <span className="text-purple-400 font-bold">•</span>
