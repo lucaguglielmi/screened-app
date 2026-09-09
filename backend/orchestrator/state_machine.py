@@ -478,7 +478,7 @@ class Orchestrator:
                 investigation_id=investigation_id,
                 event_type=EventType.PLAN_READY,
                 agent_name="Planner",
-                message=f"Plan generated across 3 domains with {sum(len(d.searchQueries) for d in plan.domains.values())} search queries.",
+                message=f"Plan generated across 7 specialized domains with {sum(len(d.searchQueries) for d in plan.domains.values())} search queries.",
             )
 
             # 2. Parallel Domain Research Phase
@@ -490,7 +490,7 @@ class Orchestrator:
                 investigation_id=investigation_id,
                 event_type=EventType.DOMAIN_SEARCH_STARTED,
                 agent_name="Orchestrator",
-                message="Launching FestivalAgent, OrganizerAgent, and ParticipantsAgent concurrently via Parallel Search API...",
+                message="Launching 7-Agent Parallel Swarm (PlatformScout, VenueForensics, etc.) concurrently via Parallel Search API...",
             )
 
             if tracer:

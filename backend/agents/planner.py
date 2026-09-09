@@ -29,17 +29,21 @@ from backend.agents.adk_helpers import get_adk_model
 def create_planner_adk_agent(entity_name: str, location: str, official_website: str, intent: str) -> LlmAgent:
     instruction = f"""
 You are the Lead Planning Agent for Screened.
-Your goal is to parse the user's intent regarding a specific film festival, and formulate a targeted research plan across three domains:
-1. FESTIVAL: Official entity information, venue realities, physical screening locations, and historical editions.
-2. ORGANIZER: Corporate footprint, key personnel (founders, directors, programmers, jury members), LinkedIn profile traces, Companies House / commercial registry filings, and potential conflicts of interest.
-3. PARTICIPANTS: Sentiments, allegations, fees, and alumni footprint.
+Your goal is to parse the user's intent regarding a specific film festival, and formulate a targeted research plan across 7 specialized swarm domains:
+1. FESTIVAL (OfficialSiteCrawler): Analyzing the official domain for boilerplate text, stolen assets, and structural integrity.
+2. ORGANIZER (CorporateRegistry): Corporate footprint, key personnel, LinkedIn traces, Companies House, IMDb footprints.
+3. PARTICIPANTS (CommunitySentiment): Filmmaker alumni, sentiments, allegations, Reddit, Letterboxd.
+4. FEES (PlatformScout): FilmFreeway, Festhome, deadlines, pricing escalation, submission policies.
+5. VENUES (VenueForensics): Physical cinemas, theaters, Google Maps verification, municipal records.
+6. CLAIMS (HeritageAudit): Past editions, winners, historical tracing, Wikipedia citations, news archives.
+7. FIT (InstitutionalArchive): BFI, FIAPF, Creative Europe grants, local film commissions, tax credits.
 
 Entity: {entity_name}
 Location: {location}
 Website: {official_website}
 User Intent: {intent}
 
-Return a detailed JSON adhering strictly to the `InvestigationPlan` schema. Ensure each domain has a specific objective and search queries tailored to find key individuals, LinkedIn footprints, and verified corporate registrations.
+Return a detailed JSON adhering strictly to the `InvestigationPlan` schema. Ensure each domain has a specific objective and 3-5 search queries tailored to find deep forensic evidence for that vertical.
     """
 
     return LlmAgent(
@@ -56,46 +60,44 @@ Return a detailed JSON adhering strictly to the `InvestigationPlan` schema. Ensu
 
 
 class PlannerAgent:
-    """Creates a targeted 3-domain research plan with specific Parallel Search queries."""
+    """Creates a targeted 7-domain research plan with specific Parallel Search queries."""
 
     def __init__(self, gemini: GeminiClient):
         self.gemini = gemini
 
     async def create_plan(self, entity: CandidateEntity, intent: str = "Vet before submitting") -> InvestigationPlan:
-        logger.info(f"Creating investigation plan for: {entity.name}")
+        logger.info(f"Creating 7-agent investigation plan for: {entity.name}")
 
         prompt = f"""
 You are the Lead Research Planner for Screened, a cinema due-diligence intelligence platform.
-Create a structured 3-domain research plan for investigating the following film festival:
+Create a structured 7-domain research plan for investigating the following film festival:
 
 Entity Name: {entity.name}
 Location: {entity.cityCountry or 'Unknown'}
 Official Website: {entity.officialDomain or 'Unknown'}
 Filmmaker Intent: {intent}
 
-Generate specific Parallel Search queries and questions covering 360° forensic vetting:
-1. FESTIVAL domain (physical cinema screening venues, municipal manifests, submission fee tiers, original rules vs boilerplate text, awards)
-2. ORGANIZER domain (operating legal entity name, Companies House or registry filing status, founders, festival director names, programmer and jury identities, LinkedIn profile searches, IMDb credentials, and cross-company directorships)
-3. PARTICIPANTS domain (filmmaker alumni confirmations, Letterboxd/Reddit threads, attendee reviews, fee dispute complaints, selection rates)
+Generate specific Parallel Search queries covering 360° forensic vetting across 7 specialist agents:
+1. FESTIVAL: (Official site analysis, original rules vs boilerplate text, copyright claims)
+2. ORGANIZER: (Operating legal entity name, Companies House or registry filing status, founders, directors, LinkedIn, IMDb credentials)
+3. PARTICIPANTS: (Filmmaker alumni confirmations, Letterboxd/Reddit threads, attendee reviews, complaints)
+4. FEES: (FilmFreeway, Festhome entries, fee tier escalation, late deadline surges)
+5. VENUES: (Physical cinema screening venues, theater bookings, venue proof of existence)
+6. CLAIMS: (Past editions, winners, history, site:wikipedia.org or news archives)
+7. FIT: (Institutional backing, BFI/FIAPF status, local film commission funding, grants)
 
-Return a JSON object matching this schema:
+Generate localized queries (e.g. Italian terms if in Italy). Use site:imdb.com and site:wikipedia.org where applicable.
+
+Return a JSON object matching this schema exactly:
 {{
   "domains": {{
-    "FESTIVAL": {{
-      "objective": "string",
-      "searchQueries": ["string query 1", "string query 2", "string query 3"],
-      "keyQuestions": ["question 1", "question 2"]
-    }},
-    "ORGANIZER": {{
-      "objective": "string",
-      "searchQueries": ["string query 1", "string query 2", "string query 3"],
-      "keyQuestions": ["question 1", "question 2"]
-    }},
-    "PARTICIPANTS": {{
-      "objective": "string",
-      "searchQueries": ["string query 1", "string query 2", "string query 3"],
-      "keyQuestions": ["question 1", "question 2"]
-    }}
+    "FESTIVAL": {{ "objective": "string", "searchQueries": ["query 1", "query 2"], "keyQuestions": ["q1"] }},
+    "ORGANIZER": {{ "objective": "string", "searchQueries": ["query 1", "query 2"], "keyQuestions": ["q1"] }},
+    "PARTICIPANTS": {{ "objective": "string", "searchQueries": ["query 1", "query 2"], "keyQuestions": ["q1"] }},
+    "FEES": {{ "objective": "string", "searchQueries": ["query 1", "query 2"], "keyQuestions": ["q1"] }},
+    "VENUES": {{ "objective": "string", "searchQueries": ["query 1", "query 2"], "keyQuestions": ["q1"] }},
+    "CLAIMS": {{ "objective": "string", "searchQueries": ["query 1", "query 2"], "keyQuestions": ["q1"] }},
+    "FIT": {{ "objective": "string", "searchQueries": ["query 1", "query 2"], "keyQuestions": ["q1"] }}
   }}
 }}
 """
@@ -112,42 +114,14 @@ Return a JSON object matching this schema:
             domains_data = raw.get("domains", {})
 
             domain_plans: Dict[str, DomainPlan] = {}
-
-            # Parse FESTIVAL
-            f_data = domains_data.get("FESTIVAL", {})
-            domain_plans["FESTIVAL"] = DomainPlan(
-                domain=ResearchDomain.FESTIVAL,
-                objective=f_data.get("objective", f"Investigate venues, fees, and rules for {entity.name}"),
-                searchQueries=f_data.get("searchQueries", [
-                    f"{entity.name} film festival screening venues physical",
-                    f"{entity.name} submission fees deadlines rules awards",
-                ]),
-                keyQuestions=f_data.get("keyQuestions", ["What are the physical screening venues?", "What are the entry fees?"]),
-            )
-
-            # Parse ORGANIZER
-            o_data = domains_data.get("ORGANIZER", {})
-            domain_plans["ORGANIZER"] = DomainPlan(
-                domain=ResearchDomain.ORGANIZER,
-                objective=o_data.get("objective", f"Investigate legal entity and organizers for {entity.name}"),
-                searchQueries=o_data.get("searchQueries", [
-                    f"{entity.name} company registration legal entity director",
-                    f"{entity.name} founder team organization history",
-                ]),
-                keyQuestions=o_data.get("keyQuestions", ["What legal entity operates the festival?", "Who are the directors?"]),
-            )
-
-            # Parse PARTICIPANTS
-            p_data = domains_data.get("PARTICIPANTS", {})
-            domain_plans["PARTICIPANTS"] = DomainPlan(
-                domain=ResearchDomain.PARTICIPANTS,
-                objective=p_data.get("objective", f"Investigate filmmaker feedback and attendee experience for {entity.name}"),
-                searchQueries=p_data.get("searchQueries", [
-                    f"{entity.name} filmmaker reviews experience reddit forum",
-                    f"{entity.name} festival controversy complaints feedback",
-                ]),
-                keyQuestions=p_data.get("keyQuestions", ["What is the filmmaker community feedback?", "Are there fee disputes?"]),
-            )
+            for domain_key in ["FESTIVAL", "ORGANIZER", "PARTICIPANTS", "FEES", "VENUES", "CLAIMS", "FIT"]:
+                data = domains_data.get(domain_key, {})
+                domain_plans[domain_key] = DomainPlan(
+                    domain=ResearchDomain(domain_key),
+                    objective=data.get("objective", f"Investigate {domain_key.lower()} for {entity.name}"),
+                    searchQueries=data.get("searchQueries", [f"{entity.name} {domain_key.lower()}"]),
+                    keyQuestions=data.get("keyQuestions", ["What is verified here?"]),
+                )
 
             return InvestigationPlan(
                 festivalName=entity.name,
@@ -159,23 +133,11 @@ Return a JSON object matching this schema:
             return InvestigationPlan(
                 festivalName=entity.name,
                 domains={
-                    "FESTIVAL": DomainPlan(
-                        domain=ResearchDomain.FESTIVAL,
-                        objective=f"Investigate festival profile for {entity.name}",
-                        searchQueries=[f"{entity.name} submission fees venues awards"],
-                        keyQuestions=["What are the physical venues and fee schedules?"],
-                    ),
-                    "ORGANIZER": DomainPlan(
-                        domain=ResearchDomain.ORGANIZER,
-                        objective=f"Investigate organizers for {entity.name}",
-                        searchQueries=[f"{entity.name} legal entity director company"],
-                        keyQuestions=["Who operates this festival?"],
-                    ),
-                    "PARTICIPANTS": DomainPlan(
-                        domain=ResearchDomain.PARTICIPANTS,
-                        objective=f"Investigate participant feedback for {entity.name}",
-                        searchQueries=[f"{entity.name} reviews feedback complaints"],
-                        keyQuestions=["What do past participants say?"],
-                    ),
-                },
+                    d: DomainPlan(
+                        domain=ResearchDomain(d),
+                        objective=f"Investigate {d.lower()} for {entity.name}",
+                        searchQueries=[f"{entity.name} {d.lower()} verified"],
+                        keyQuestions=["What is verified here?"],
+                    ) for d in ["FESTIVAL", "ORGANIZER", "PARTICIPANTS", "FEES", "VENUES", "CLAIMS", "FIT"]
+                }
             )

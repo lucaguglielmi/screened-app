@@ -30,7 +30,6 @@ def create_domain_agent(domain: str, investigation_id: str, entity_info: Dict[st
             processor="core"
         )
         
-        # Save to session so we can retrieve it
         session_service = FirestoreSessionService()
         session = await session_service.get_session(app_name="screened", user_id="default_user", session_id=investigation_id)
         if session:
@@ -41,10 +40,23 @@ def create_domain_agent(domain: str, investigation_id: str, entity_info: Dict[st
         
     task_tool = FunctionTool(parallel_task_run)
     
+    # 7-Agent Swarm Identities
+    identities = {
+        "FESTIVAL": "OfficialSiteCrawler Agent. Analyze official domains for structural integrity and boilerplate text.",
+        "ORGANIZER": "CorporateRegistry Agent. Investigate legal entities, Companies House, founders, and LinkedIn traces.",
+        "PARTICIPANTS": "CommunitySentiment Agent. Analyze filmmaker alumni, allegations, Reddit, and attendee reviews.",
+        "FEES": "PlatformScout Agent. Investigate FilmFreeway/Festhome entry fees, escalation tiers, and deadlines.",
+        "VENUES": "VenueForensics Agent. Verify physical cinemas, theater bookings, and municipal event records.",
+        "CLAIMS": "HeritageAudit Agent. Trace past editions, winners, historical continuity, and Wikipedia records.",
+        "FIT": "InstitutionalArchive Agent. Verify institutional backing, BFI/FIAPF status, and local grants."
+    }
+    
+    identity = identities.get(domain, f"{domain} Research Agent.")
+
     return LlmAgent(
         name=f"{domain}Agent",
         model=get_adk_model("gemini-2.5-flash"),
-        instruction=f"You are the {domain} Research Agent. Use the parallel_task_run tool to extract claims for your domain.",
+        instruction=f"You are the {identity} Use the parallel_task_run tool to extract claims for your domain.",
         tools=[task_tool]
     )
 
@@ -89,14 +101,26 @@ async def run_parallel_domain_agents(
     investigation_id: str,
     entity_info: Dict[str, Any]
 ) -> dict:
-    """Execute all three domain research agents concurrently."""
+    """Execute the full 7-agent swarm concurrently."""
     
     session_service = FirestoreSessionService()
-    f_task = _run_domain_agent(ResearchDomain.FESTIVAL, plans["FESTIVAL"], investigation_id, entity_info, session_service)
-    o_task = _run_domain_agent(ResearchDomain.ORGANIZER, plans["ORGANIZER"], investigation_id, entity_info, session_service)
-    p_task = _run_domain_agent(ResearchDomain.PARTICIPANTS, plans["PARTICIPANTS"], investigation_id, entity_info, session_service)
+    
+    domains = [
+        ResearchDomain.FESTIVAL,
+        ResearchDomain.ORGANIZER,
+        ResearchDomain.PARTICIPANTS,
+        ResearchDomain.FEES,
+        ResearchDomain.VENUES,
+        ResearchDomain.CLAIMS,
+        ResearchDomain.FIT
+    ]
+    
+    tasks = [
+        _run_domain_agent(d, plans[d.value], investigation_id, entity_info, session_service) 
+        for d in domains if d.value in plans
+    ]
 
-    f_res, o_res, p_res = await asyncio.gather(f_task, o_task, p_task, return_exceptions=True)
+    raw_results = await asyncio.gather(*tasks, return_exceptions=True)
     
     async def process_res(domain: ResearchDomain, res: Any) -> dict:
         if isinstance(res, Exception):
@@ -110,9 +134,8 @@ async def run_parallel_domain_agents(
             return {"claims": [], "basis": []}
         return res if isinstance(res, dict) else {"claims": [], "basis": []}
 
-    results = {
-        ResearchDomain.FESTIVAL: await process_res(ResearchDomain.FESTIVAL, f_res),
-        ResearchDomain.ORGANIZER: await process_res(ResearchDomain.ORGANIZER, o_res),
-        ResearchDomain.PARTICIPANTS: await process_res(ResearchDomain.PARTICIPANTS, p_res),
-    }
+    results = {}
+    for i, d in enumerate([d for d in domains if d.value in plans]):
+        results[d] = await process_res(d, raw_results[i])
+        
     return results
